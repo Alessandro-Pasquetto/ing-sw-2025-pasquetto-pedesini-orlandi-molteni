@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="500" prefWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.ConnetionController">
+
+    <TextField fx:id="serverIpTextField" layoutX="200.0" layoutY="190.0" promptText="IP server" />
+    <TextField fx:id="serverPortTextField" layoutX="200.0" layoutY="240.0" promptText="Porta" />
+
+    <HBox spacing="10" />
+
+    <!-- Bottone per connettersi al server -->
+    <Button layoutX="200.0" layoutY="339.0" onAction="#connectToServer" prefHeight="42.0" prefWidth="149.0" text="Connetti al Server" />
+    <RadioButton fx:id="socketOption" layoutX="219.0" layoutY="290.0" text="Socket" />
+    <RadioButton fx:id="rmiOption" layoutX="287.0" layoutY="290.0" text="RMI" />
+
+</AnchorPane>

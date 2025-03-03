@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.ChooseGameController">
+
+    <Button layoutX="135.0" layoutY="217.0" onAction="#createNewGame" prefHeight="42.0" prefWidth="149.0" text="Crea nuova partita" />
+
+    <TextField fx:id="usernameTextField" layoutX="226.0" layoutY="157.0" promptText="Username" />
+    <Button layoutX="313.0" layoutY="217.0" onAction="#joinToGame" prefHeight="42.0" prefWidth="149.0" text="Entra nella partita" />
+
+</AnchorPane>
