@@ -85,8 +85,6 @@ public class SocketServer {
                         message = in.readLine();
                         System.out.println(message + " sta tentando di aggiungersi ad un game");
 
-                        out.println("SpecificAnsware");
-
                         if(gameController.getGame().tryAddPlayer(message)){
                             Player player = new Player(message, 0);
                             new GameController.ClientHandler(gameController, socket, out, in, player).start();
@@ -95,11 +93,11 @@ public class SocketServer {
                                 printWriters.remove(out);
                             }
 
-                            out.println(true);
+                            out.println("true");
                             return;
                         }else{
                             System.out.println("un player non è potuto aggiungersi ad un game");
-                            out.println(false);
+                            out.println("false");
                         }
                     }
                 }

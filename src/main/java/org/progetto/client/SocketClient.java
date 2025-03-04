@@ -10,7 +10,8 @@ public class SocketClient {
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
-    private static volatile boolean closingConnection = false, stopReading = false;
+    private static String interseptMessage = "";
+    private static volatile boolean closingConnection = false, enableInterseptMessage = false;
 
     static void connect(String serverIp, int port) {
         try{
@@ -26,13 +27,15 @@ public class SocketClient {
             new Thread(() -> {
                 String message;
                 try {
-                    while (!stopReading && (message = in.readLine()) != null) {
+                    while ((message = in.readLine()) != null) {
 
-                        if(message.equals("SpecificAnsware")) {
-                            stopReading = true;
+                        if(enableInterseptMessage) {
+                            interseptMessage = message;
+                            enableInterseptMessage = false;
                         }else{
                             System.out.println(message);
                         }
+
                         //PageController.page2Controller.addMessageToUI(message);
                     }
                 } catch (IOException e) {
@@ -59,8 +62,6 @@ public class SocketClient {
         out.println(jsonMessage);
     }
 
-
-
     public static void sendName(String clientName) {
         out.println(clientName);
     }
@@ -82,16 +83,11 @@ public class SocketClient {
         out.println("joinGame");
         out.println(username);
 
+        enableInterseptMessage = true;
 
-        String response;
-        try {
-            response = in.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        stopReading = false;
-
-        System.out.println("s: " + response);
+        while(interseptMessage.equals("")) {}
+        String response = interseptMessage;
+        interseptMessage = "";
 
         if(response.equals("true")){
             System.out.println("Ti sei unito ad un game");
