@@ -51,4 +51,9 @@ public class PageController {
         stage.setScene(scene);
         stage.setTitle(title);
     }
+
+
+    static void generateGameList(int id){
+        chooseGameController.generateGameList(id);
+    }
 }

@@ -7,11 +7,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Game {
-    int id;
-    private static ArrayList<Player> players = new ArrayList<>();
+    private int id;
+    private ArrayList<Player> players = new ArrayList<>();
 
-    public Game() {
-        id = 0;
+    public Game(int idGame) {
+        this.id = idGame;
     }
 
     public void addPlayer(Player player) {

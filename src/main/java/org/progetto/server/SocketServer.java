@@ -3,11 +3,12 @@ package org.progetto.server;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import com.google.gson.Gson;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SocketServer {
 
     private static List<PrintWriter> printWriters = new ArrayList<>();
+    private static AtomicInteger currentIdGame = new AtomicInteger(0);
 
     public static void main(String[] args) {
         try{
@@ -25,12 +26,22 @@ public class SocketServer {
         }
     }
 
-    public static void updateGameList() {
+    public static void updateGameList(int idGame) {
         synchronized (printWriters) {
             for (PrintWriter out : printWriters) {
                 out.println("C'è un nuovo game");
+                out.println(idGame);
             }
         }
+    }
+
+    public static void loadGameList() {
+        /*
+        for (int i = 0; i < GameControllersQueue.getNumWaitingGames(); i++) {
+
+            GameControllersQueue.getGameController(i).getGame().;
+        }
+         */
     }
 
     static class ClientHandler extends Thread {
@@ -65,28 +76,32 @@ public class SocketServer {
                 while ((message = in.readLine()) != null) {
                     if(message.equals("newGame")) {
 
-                        GameController gameController = new GameController();
+                        int idGame = currentIdGame.getAndIncrement();
+                        GameController gameController = new GameController(idGame);
 
-                        message = in.readLine();
-                        Player player = new Player(message, 0);
+                        String nickName = in.readLine();
+                        Player player = new Player(nickName);
                         new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                         synchronized (printWriters) {
                             printWriters.remove(out);
                         }
 
-                        System.out.println(message + " ha creato una partita");
-                        updateGameList();
+                        System.out.println(nickName + " ha creato il game " + idGame);
+                        updateGameList(idGame);
 
                         return;
                     } else if (message.equals("joinGame")) {
 
-                        GameController gameController = GameControllersQueue.getGameController(0);
-                        message = in.readLine();
-                        System.out.println(message + " sta tentando di aggiungersi ad un game");
+                        int idGame = Integer.parseInt(in.readLine());
+                        String nickName = in.readLine();
 
-                        if(gameController.getGame().tryAddPlayer(message)){
-                            Player player = new Player(message, 0);
+                        System.out.println(nickName + " vuole unirsi al game " + idGame);
+
+                        GameController gameController = GameControllersQueue.getGameController(idGame);
+
+                        if(gameController.getGame().tryAddPlayer(nickName)){
+                            Player player = new Player(nickName);
                             new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                             synchronized (printWriters) {
@@ -96,7 +111,6 @@ public class SocketServer {
                             out.println("true");
                             return;
                         }else{
-                            System.out.println("un player non è potuto aggiungersi ad un game");
                             out.println("false");
                         }
                     }

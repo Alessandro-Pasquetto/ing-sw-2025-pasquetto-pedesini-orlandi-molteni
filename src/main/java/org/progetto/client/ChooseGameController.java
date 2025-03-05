@@ -1,24 +1,48 @@
 package org.progetto.client;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class ChooseGameController {
 
     @FXML
     private TextField usernameTextField;
-
     @FXML
+    private VBox chooseGameLayout;
+
     public void createNewGame() {
         // Per ora non c'è la pagina createGame quindi faccio qui
         String username = usernameTextField.getText();
-        SocketClient.createNewGame(username);
+        if(!username.isEmpty()) {
+            SocketClient.createNewGame(username);
+        }
     }
 
-    public void joinToGame() {
+    public void joinToGame(int idGame) {
         String username = usernameTextField.getText();
+        if(!username.isEmpty()) {
+            SocketClient.JoinToGame(username, idGame);
+        }
+    }
 
-        SocketClient.JoinToGame(username);
+
+    public void generateGameList(int idGame){
+
+        Label messageLabel = new Label("Game " + idGame);
+
+        Button button = new Button("Entra");
+
+        button.setOnAction(e -> {
+            joinToGame(idGame);
+        });
+
+        Platform.runLater(() -> {
+            chooseGameLayout.getChildren().addAll(messageLabel, button);
+        });
     }
 }

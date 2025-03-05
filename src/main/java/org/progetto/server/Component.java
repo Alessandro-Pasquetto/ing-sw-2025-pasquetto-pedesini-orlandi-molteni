@@ -3,7 +3,7 @@ package org.progetto.server;
 public class Component {
 
     ComponentType type;
-    int[] connections = new int[4];
+    int[] connections;
     int capacity;
 
     int rotation;

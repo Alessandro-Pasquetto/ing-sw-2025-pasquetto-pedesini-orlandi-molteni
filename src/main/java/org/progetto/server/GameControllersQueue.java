@@ -17,15 +17,15 @@ public class GameControllersQueue {
         }
     }
 
-    public static ArrayList<GameController> getGameControllers() {
-        synchronized (gameControllers) {
-            return gameControllers;
-        }
-    }
-
     public static GameController getGameController(int i) {
         synchronized (gameControllers) {
             return gameControllers.get(i);
+        }
+    }
+
+    public static int getNumWaitingGames() {
+        synchronized (gameControllers) {
+            return gameControllers.size();
         }
     }
 }

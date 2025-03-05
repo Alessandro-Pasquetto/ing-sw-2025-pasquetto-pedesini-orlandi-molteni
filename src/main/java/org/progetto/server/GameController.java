@@ -10,11 +10,11 @@ import java.util.List;
 
 class GameController {
 
-    private List<PrintWriter> printWriters = new ArrayList<>();
+    private ArrayList<PrintWriter> printWriters = new ArrayList<>();
     private Game game;
 
-    GameController() {
-        this.game = new Game();
+    GameController(int idGame) {
+        this.game = new Game(idGame);
 
         GameControllersQueue.addGameController(this);
     }
@@ -58,7 +58,7 @@ class GameController {
 
                 String message;
                 while ((message = in.readLine()) != null) {
-
+                    // Legge ciò che inviano i client collegati al game
                 }
 
             } catch (IOException e) {

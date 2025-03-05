@@ -33,7 +33,7 @@ public class SocketClient {
                             interseptMessage = message;
                             enableInterseptMessage = false;
                         }else{
-                            System.out.println(message);
+                            gameListListener(message);
                         }
 
                         //PageController.page2Controller.addMessageToUI(message);
@@ -50,6 +50,18 @@ public class SocketClient {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    private static void gameListListener(String message) {
+        System.out.println(message);
+        try {
+            message = in.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        int idGame = Integer.parseInt(message);
+
+        PageController.generateGameList(idGame);
     }
 
     /*
@@ -79,13 +91,14 @@ public class SocketClient {
         }
     }
 
-    public static void JoinToGame(String username){
+    public static void JoinToGame(String username, int idGame){
         out.println("joinGame");
+        out.println(idGame);
         out.println(username);
 
         enableInterseptMessage = true;
 
-        while(interseptMessage.equals("")) {}
+        while(interseptMessage.isEmpty()) {}
         String response = interseptMessage;
         interseptMessage = "";
 
