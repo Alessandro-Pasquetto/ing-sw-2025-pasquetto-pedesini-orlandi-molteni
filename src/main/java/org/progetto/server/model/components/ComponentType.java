@@ -1,4 +1,4 @@
-package org.progetto.server;
+package org.progetto.server.model.components;
 
 public enum ComponentType {
 

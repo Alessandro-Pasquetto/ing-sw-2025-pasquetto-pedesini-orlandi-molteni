@@ -1,12 +1,13 @@
-package org.progetto.server;
+package org.progetto.server.controller;
+
+import org.progetto.server.model.Game;
+import org.progetto.server.model.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 class GameController {
 

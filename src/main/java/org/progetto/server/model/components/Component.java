@@ -1,19 +1,17 @@
-package org.progetto.server;
+package org.progetto.server.model.components;
 
 public class Component {
 
     ComponentType type;
     int[] connections;
-    int capacity;
 
     int rotation;
     boolean hidden;
     int stockedItems;
 
-    Component(ComponentType type, int[] connections, int capacity) {
+    Component(ComponentType type, int[] connections) {
         this.type = type;
         this.connections = connections;
-        this.capacity = capacity;
 
         this.rotation = 0;
         this.hidden = false;

@@ -1,4 +1,6 @@
-package org.progetto.server;
+package org.progetto.server.controller;
+
+import org.progetto.server.model.Game;
 
 import java.util.ArrayList;
 

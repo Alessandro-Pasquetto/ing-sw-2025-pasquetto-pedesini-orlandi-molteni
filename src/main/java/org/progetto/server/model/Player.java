@@ -1,10 +1,10 @@
-package org.progetto.server;
+package org.progetto.server.model;
 
 public class Player {
     private String username;
     private int credits = 0;
 
-    Player(String username) {
+    public Player(String username) {
         this.username = username;
     }
 

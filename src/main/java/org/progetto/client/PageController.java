@@ -24,7 +24,6 @@ public class PageController {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxmlFile));
 
         Parent root = null;
-
         if(fxmlLoader.getController() == null){
             root = fxmlLoader.load();
 
