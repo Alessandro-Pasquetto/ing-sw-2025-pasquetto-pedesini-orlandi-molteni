@@ -15,4 +15,6 @@ module org.progetto{
     exports org.progetto.server.controller;
     exports org.progetto.server.model.components;
     opens org.progetto.server.model.components to com.google.gson, javafx.fxml;
+    exports org.progetto.server.model.events;
+    opens org.progetto.server.model.events to com.google.gson, javafx.fxml;
 }
