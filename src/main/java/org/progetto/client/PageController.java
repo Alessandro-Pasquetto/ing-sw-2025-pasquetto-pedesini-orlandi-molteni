@@ -27,7 +27,7 @@ public class PageController {
         if(fxmlLoader.getController() == null){
             root = fxmlLoader.load();
 
-            // Salva il controller
+            // Save the controller
             switch (fxmlFile){
                 case "connection.fxml":
                     connetionController = fxmlLoader.getController();

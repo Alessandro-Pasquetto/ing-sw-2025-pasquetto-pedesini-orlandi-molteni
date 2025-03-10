@@ -11,18 +11,34 @@ import java.util.ArrayList;
 
 class GameController {
 
-    private ArrayList<PrintWriter> printWriters = new ArrayList<>();
-    private Game game;
+    // =======================
+    // ATTRIBUTES
+    // =======================
 
-    GameController(int idGame) {
-        this.game = new Game(idGame);
+    private final ArrayList<PrintWriter> printWriters = new ArrayList<>();
+    private final Game game;
+
+    // =======================
+    // CONSTRUCTORS
+    // =======================
+
+    GameController(int idGame, int level) {
+        this.game = new Game(idGame, level);
 
         GameControllersQueue.addGameController(this);
     }
 
+    // =======================
+    // GETTERS
+    // =======================
+
     public Game getGame() {
         return game;
     }
+
+    // =======================
+    // SETTERS
+    // =======================
 
     public void addPrintWriter(PrintWriter printWriter) {
         synchronized (printWriters) {
@@ -36,12 +52,16 @@ class GameController {
         }
     }
 
+    // =======================
+    // OTHER METHODS
+    // =======================
+
     static class ClientHandler extends Thread {
-        private GameController gameController;
-        private Socket socket;
-        private PrintWriter out;
-        private BufferedReader in;
-        private Player player;
+        private final GameController gameController;
+        private final Socket socket;
+        private final PrintWriter out;
+        private final BufferedReader in;
+        private final Player player;
 
         public ClientHandler(GameController gameController, Socket socket, PrintWriter out, BufferedReader in, Player player) {
             this.gameController = gameController;
@@ -59,7 +79,7 @@ class GameController {
 
                 String message;
                 while ((message = in.readLine()) != null) {
-                    // Legge ciò che inviano i client collegati al game
+                    // Reads what the clients connected to the game send
                 }
 
             } catch (IOException e) {
@@ -67,7 +87,7 @@ class GameController {
 
                 gameController.removePrintWriter(out);
 
-                System.out.println(player.getUsername() + " si è disconnesso!");
+                System.out.println(player.getName() + " si è disconnesso!");
                 try {
                     in.close();
                     out.close();

@@ -10,8 +10,9 @@ public class SocketClient {
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
-    private static String interseptMessage = "";
-    private static volatile boolean closingConnection = false, enableInterseptMessage = false;
+    private static String interceptMessage;
+    private static volatile boolean closingConnection = false, enableInterceptMessage = false;
+    private static final Object lock = new Object();
 
     static void connect(String serverIp, int port) {
         try{
@@ -29,14 +30,15 @@ public class SocketClient {
                 try {
                     while ((message = in.readLine()) != null) {
 
-                        if(enableInterseptMessage) {
-                            interseptMessage = message;
-                            enableInterseptMessage = false;
+                        if(enableInterceptMessage) {
+                            interceptMessage = message;
+                            enableInterceptMessage = false;
+                            synchronized (lock) {
+                                lock.notify();
+                            }
                         }else{
                             gameListListener(message);
                         }
-
-                        //PageController.page2Controller.addMessageToUI(message);
                     }
                 } catch (IOException e) {
                     if(!closingConnection){
@@ -65,7 +67,7 @@ public class SocketClient {
     }
 
     /*
-    // Metodo per inviare messaggi in formato JSON
+    // Method to send messages in JSON format
     static void sendJsonMessage(NetworkMessageType type, Object obj) {
         NetworkMessage message = new NetworkMessage(type, obj);
 
@@ -81,6 +83,7 @@ public class SocketClient {
 
     public static void createNewGame(String username) {
         out.println("newGame");
+        out.println(1);
         out.println(username);
 
         System.out.println("Hai creato una partita");
@@ -96,11 +99,19 @@ public class SocketClient {
         out.println(idGame);
         out.println(username);
 
-        enableInterseptMessage = true;
+        enableInterceptMessage = true;
 
-        while(interseptMessage.isEmpty()) {}
-        String response = interseptMessage;
-        interseptMessage = "";
+        while(enableInterceptMessage) {
+
+            synchronized (lock){
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        String response = interceptMessage;
 
         if(response.equals("true")){
             System.out.println("Ti sei unito ad un game");

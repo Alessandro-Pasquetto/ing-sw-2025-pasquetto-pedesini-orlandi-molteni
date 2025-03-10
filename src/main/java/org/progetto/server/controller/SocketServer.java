@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 
 import java.io.*;
@@ -9,8 +10,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SocketServer {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private static List<PrintWriter> printWriters = new ArrayList<>();
     private static AtomicInteger currentIdGame = new AtomicInteger(0);
+
+    // =======================
+    // MAIN
+    // =======================
 
     public static void main(String[] args) {
         try{
@@ -27,6 +36,10 @@ public class SocketServer {
             System.err.println("Errore durante l'avvio del server: " + e.getMessage());
         }
     }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     public static void updateGameList(int idGame) {
         synchronized (printWriters) {
@@ -79,31 +92,34 @@ public class SocketServer {
                     if(message.equals("newGame")) {
 
                         int idGame = currentIdGame.getAndIncrement();
-                        GameController gameController = new GameController(idGame);
+                        int level = Integer.parseInt(in.readLine());
+                        GameController gameController = new GameController(idGame, level);
 
-                        String nickName = in.readLine();
-                        Player player = new Player(nickName);
+                        String name = in.readLine();
+                        Player player = new Player(name, 0);
                         new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                         synchronized (printWriters) {
                             printWriters.remove(out);
                         }
 
-                        System.out.println(nickName + " ha creato il game " + idGame);
+                        System.out.println(name + " ha creato il game " + idGame);
                         updateGameList(idGame);
 
                         return;
                     } else if (message.equals("joinGame")) {
 
                         int idGame = Integer.parseInt(in.readLine());
-                        String nickName = in.readLine();
+                        String name = in.readLine();
 
-                        System.out.println(nickName + " vuole unirsi al game " + idGame);
+                        System.out.println(name + " vuole unirsi al game " + idGame);
 
                         GameController gameController = GameControllersQueue.getGameController(idGame);
+                        Game game = gameController.getGame();
 
-                        if(gameController.getGame().tryAddPlayer(nickName)){
-                            Player player = new Player(nickName);
+
+                        if(game.tryAddPlayer(name)){
+                            Player player = new Player(name, game.getPlayersSize());
                             new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                             synchronized (printWriters) {
