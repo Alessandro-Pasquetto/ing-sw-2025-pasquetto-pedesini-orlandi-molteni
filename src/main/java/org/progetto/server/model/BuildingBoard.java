@@ -4,19 +4,29 @@ import org.progetto.server.model.components.Component;
 
 public class BuildingBoard {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private Component[][] spaceshipMatrix;
-    private ArrayList<Component> booked = new ArrayList<>();
+    private ArrayList<Component> booked;
     private Spaceship spaceship;
     private final String imgSrc;
 
+    // =======================
+    // CONSTRUCTORS
+    // =======================
+
     public BuildingBoard(Component[][] spaceshipMatrix, String imgSrc) {
-
-        this.spaceshipMatrix = spaceshipMatrix;   //type of building matrix
-        this.imgSrc = imgSrc;                     //img view path
-
+        this.spaceshipMatrix = spaceshipMatrix;
+        this.imgSrc = imgSrc;
+        this.booked = new ArrayList<>();
     }
 
-    // getter //
+    // =======================
+    // GETTERS
+    // =======================
+
     public Component[][] getSpaceshipMatrix() {
         return spaceshipMatrix;
     }
@@ -33,23 +43,20 @@ public class BuildingBoard {
         return imgSrc;
     }
 
+    // =======================
+    // SETTERS
+    // =======================
 
-    // setter //
-    public void setAsBooked(Component component) {
-         booked.add(component);  //need to handle booked flag in component
+    public boolean setAsBooked(Component component) {
+        if (booked.size() < 2) {
+            booked.add(component);  // need to handle booked flag in component
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setSpaceship(Spaceship spaceship) {
         this.spaceship = spaceship;
     }
-
-
-
-
-
-
-
-
-
-
 }

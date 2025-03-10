@@ -1,7 +1,11 @@
 package org.progetto.server.model;
 
 public class Spaceship {
-
+  
+    // =======================
+    // ATTRIBUTES
+    // =======================
+  
     private int destroyed;
     private int crewCount;
     private int boxValue;
@@ -14,10 +18,12 @@ public class Spaceship {
     private int[] shields;
     private BuildingBoard buildingBoard;
 
-    //initialize spaceship with initial values of attributes//
-    public Spaceship(int destroyed,int crewCount,int boxValue,int batteriesCount,int exposedConnectorsCount,
-              boolean alienPurple,boolean alienOrange,float shootingPower, float enginePower,int[] shields) {
-
+    // =======================
+    // CONSTRUCTORS
+    // =======================
+  
+    // Initialize spaceship with initial values of attributes
+    public Spaceship(int destroyed,int crewCount,int boxValue,int batteriesCount,int exposedConnectorsCount, boolean alienPurple,boolean alienOrange,float shootingPower, float enginePower,int[] shields) {
         this.destroyed = destroyed;
         this.crewCount = crewCount;
         this.boxValue = boxValue;
@@ -28,13 +34,12 @@ public class Spaceship {
         this.shootingPower = shootingPower;
         this.enginePower = enginePower;
         this.shields = shields;
-
     }
 
+    // =======================
+    // GETTERS
+    // =======================
 
-
-
-    // getter //
     public int getDestroyedCount() {
         return destroyed;
     }
@@ -74,9 +79,10 @@ public class Spaceship {
     public int[] getShields() {
         return shields;
     }
-
-
-    // setter //
+ 
+    // =======================
+    // SETTERS
+    // =======================
 
     public void setDestroyedCount(int destroyed) {
         this.destroyed = destroyed;
@@ -118,8 +124,10 @@ public class Spaceship {
         this.shields = shields;
     }
 
-
-
+    // =======================
+    // OTHER METHODS
+    // =======================
 
 
 }
+
