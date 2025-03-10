@@ -15,7 +15,7 @@ public class ChooseGameController {
     private VBox chooseGameLayout;
 
     public void createNewGame() {
-        // Per ora non c'è la pagina createGame quindi faccio qui
+        // For now, there is no createGame page, so I'll do it here.
         String username = usernameTextField.getText();
         if(!username.isEmpty()) {
             SocketClient.createNewGame(username);
