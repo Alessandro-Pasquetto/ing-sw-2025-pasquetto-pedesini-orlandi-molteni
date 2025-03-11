@@ -1,4 +1,6 @@
 package org.progetto.server.model.events;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Battlezone {
@@ -7,27 +9,23 @@ public class Battlezone {
     // ATTRIBUTES
     // =======================
 
-    private int penaltyDays;
-    private int penaltyCrew;
-    private int penaltyBoxes;
+    private ArrayList<ConditionPenalty> pair;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-
+    public Battlezone(ArrayList<ConditionPenalty> pair) {
+        this.pair = pair;
+    }
 
     // =======================
     // GETTERS
     // =======================
 
-
-
-    // =======================
-    // SETTERS
-    // =======================
-
-
+    public ArrayList<ConditionPenalty> getPair() {
+        return pair;
+    }
 
     // =======================
     // OTHER METHODS
