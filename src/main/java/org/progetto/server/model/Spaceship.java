@@ -13,8 +13,10 @@ public class Spaceship {
     private int exposedConnectorsCount;
     private boolean alienPurple;
     private boolean alienOrange;
-    private float shootingPower;
-    private float enginePower;
+    private float normalShootingPower;
+    private int doubleCannonCount;
+    private float normalEnginePower;
+    private int doubleEngineCount;
     private int[] shields;
     private BuildingBoard buildingBoard;
 
@@ -23,18 +25,21 @@ public class Spaceship {
     // =======================
   
     // Initialize spaceship with initial values of attributes
-    public Spaceship(int destroyed,int crewCount,int boxValue,int batteriesCount,int exposedConnectorsCount, boolean alienPurple,boolean alienOrange,float shootingPower, float enginePower,int[] shields) {
-        this.destroyed = destroyed;
-        this.crewCount = crewCount;
-        this.boxValue = boxValue;
-        this.batteriesCount = batteriesCount;
-        this.exposedConnectorsCount = exposedConnectorsCount;
-        this.alienPurple = alienPurple;
-        this.alienOrange = alienOrange;
-        this.shootingPower = shootingPower;
-        this.enginePower = enginePower;
-        this.shields = shields;
+    public Spaceship() {
+        destroyed = 0;
+        crewCount = 0;
+        boxValue = 0;
+        batteriesCount = 0;
+        exposedConnectorsCount = 0;
+        alienPurple = false;
+        alienOrange = false;
+        normalShootingPower = 0;
+        doubleCannonCount = 0;
+        doubleEngineCount = 0;
+        normalEnginePower = 0;
+        shields = new int[] { 0, 0, 0, 0};
     }
+
 
     // =======================
     // GETTERS
@@ -69,11 +74,19 @@ public class Spaceship {
     }
 
     public float getShootingPower(){
-        return shootingPower;
+        return normalShootingPower;
     }
 
-    public float getEnginePower(){
-        return enginePower;
+    public int getDoubleCannonCount() {
+        return doubleCannonCount;
+    }
+
+    public int getDoubleEngineCount(){
+        return doubleEngineCount;
+    }
+
+    public float getNormalEnginePower(){
+        return normalEnginePower;
     }
 
     public int[] getShields() {
@@ -113,11 +126,19 @@ public class Spaceship {
     }
 
     public void setShootingPower(float power) {
-        shootingPower = power;
+        normalShootingPower = power;
     }
 
-    public void setEnginePower(float power) {
-        enginePower = power;
+    public void setDoubleCannonCount(int count) {
+        doubleCannonCount = count;
+    }
+
+    public void setNormalEnginePower(float power) {
+        normalEnginePower = power;
+    }
+
+    public void setDoubleEngineCount(int count) {
+        doubleEngineCount = count;
     }
 
     public void setShields(int[] shields) {

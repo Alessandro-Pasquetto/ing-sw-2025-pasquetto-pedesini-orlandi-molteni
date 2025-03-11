@@ -8,19 +8,18 @@ public class BuildingBoard {
     // ATTRIBUTES
     // =======================
 
-    private Component[][] spaceshipMatrix;
-    private ArrayList<Component> booked;
-    private Spaceship spaceship;
+    private Component[][] spaceshipMatrix;  //composition of components
+    private  int[][] BoardMask;   //mask layer for building clearance
+    private ArrayList<Component> booked;  //list for booked components storage
     private final String imgSrc;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public BuildingBoard(Component[][] spaceshipMatrix, String imgSrc) {
-        this.spaceshipMatrix = spaceshipMatrix;
+    public BuildingBoard( String imgSrc) {
         this.imgSrc = imgSrc;
-        this.booked = new ArrayList<>();
+        this.booked = new ArrayList<>(2);
     }
 
     // =======================
@@ -35,9 +34,10 @@ public class BuildingBoard {
         return booked;
     }
 
-    public Spaceship getSpaceship() {
-        return spaceship;
+    public int[][] getBoardMask() {
+        return BoardMask;
     }
+
 
     public String getImgSrc() {
         return imgSrc;
@@ -56,7 +56,29 @@ public class BuildingBoard {
         }
     }
 
-    public void setSpaceship(Spaceship spaceship) {
-        this.spaceship = spaceship;
+
+    // =======================
+    // OTHER METHODS
+    // =======================
+
+    /**
+     * @author Lorenzo
+     * @return the loaded matrix configuration for the board
+     */
+    int[][] loadBoardMask()
+    {
+        return BoardMask;
     }
+
+    /**
+     * @author Lorenzo
+     * @return the component matrix for the spaceship initialized with null values
+     */
+    Component[][] createSpaceshipMatrix()
+    {
+        return spaceshipMatrix;
+    }
+
+
+
 }
