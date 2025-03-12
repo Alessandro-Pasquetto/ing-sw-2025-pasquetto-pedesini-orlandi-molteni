@@ -16,12 +16,12 @@ public class Player {
     // CONSTRUCTORS
     // =======================
 
-    public Player(String name, int color) {
+    public Player(String name, int color, int levelShip) {
         this.name = name;
         this.credits = 0;
         this.color = color;
         this.position = 0;
-        this.spaceship = new Spaceship();
+        this.spaceship = new Spaceship(levelShip);
     }
 
     // =======================

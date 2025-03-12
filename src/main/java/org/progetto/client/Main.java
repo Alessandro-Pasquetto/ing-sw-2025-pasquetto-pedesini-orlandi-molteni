@@ -10,8 +10,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        PageController.stage = stage;
-        PageController.start();
+        PageSwitcher.stage = stage;
+        PageSwitcher.start();
     }
 
     public static void main(String[] args) {

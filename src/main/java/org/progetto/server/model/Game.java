@@ -1,6 +1,7 @@
 package org.progetto.server.model;
 import org.progetto.server.model.components.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 // todo: check sync
 public class Game {
@@ -8,12 +9,14 @@ public class Game {
     // =======================
     // ATTRIBUTES
     // =======================
+    private final Random random;
 
     private final int id;
+    private final int numPlayers;
+    private final ArrayList<Player> players;
     private final int level;
     private GamePhase phase;
-    private final ArrayList<Player> players;
-    private final Component[] componentDeck;
+    private final ArrayList<Component> componentDeck;
     private final ArrayList<EventCard> eventCardDeck;
     private final Board board;
 
@@ -22,14 +25,16 @@ public class Game {
     // =======================
 
     // todo: set eventCardDeck, defaultTimer, timerFlipsAllowed, imgPath
-    public Game(int idGame, int level) {
+    public Game(int idGame, int numPlayers, int level) {
+        this.random = new Random();
         this.id = idGame;
+        this.numPlayers = numPlayers;
+        this.players = new ArrayList<Player>();
         this.level = level;
         this.phase = GamePhase.INIT;
-        this.players = new ArrayList<>();
-        this.componentDeck = ComponentConfig.loadComponents();
-        this.eventCardDeck = new ArrayList<>();
-        this.board = new Board(elaborateSizeBoardFromLv(level), 60,3,"imgPath");
+        this.componentDeck = loadComponents();
+        this.eventCardDeck = loadEvents();
+        this.board = new Board(elaborateSizeBoardFromLv(level), "imgPath");
     }
 
     // =======================
@@ -64,8 +69,14 @@ public class Game {
         return eventCardDeck;
     }
 
-    public Component[] getComponentDeck() {
+    public ArrayList<Component> getComponentDeck() {
         return componentDeck;
+    }
+
+    public int getComponentDeckSize() {
+        synchronized (componentDeck) {
+            return componentDeck.size();
+        }
     }
 
     public Board getBoard() {
@@ -77,7 +88,9 @@ public class Game {
     // =======================
 
     public void setPhase(GamePhase phase) {
-        this.phase = phase;
+        synchronized (this) {
+            this.phase = phase;
+        }
     }
 
     public void addPlayer(Player player) {
@@ -102,7 +115,31 @@ public class Game {
 
     public EventCard pickEventCard(){return null;}
 
-    public void loadEvents(){}
+    public Component pickComponent(Player player){
+        Component pickedComponent = null;
+        synchronized (componentDeck) {
+            int randomPos = random.nextInt(componentDeck.size());
+            pickedComponent = componentDeck.remove(randomPos);
+        }
+
+        player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
+
+        return pickedComponent;
+    }
+
+    public ArrayList<EventCard> loadEvents(){return null;}
+
+    public ArrayList<Component> loadComponents(){
+        ArrayList<Component> components = new ArrayList<>();
+        components.add(new Component(ComponentType.CANNON, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.DOUBLECANNON, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.ENGINE, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.BATTERYSTORAGE, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.ORANGEHOUSINGUNIT, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.SHIELD, new int[]{0,1,2,3}, "imgPath"));
+
+        return components;
+    }
 
     public boolean tryAddPlayer(String name) {
 

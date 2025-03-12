@@ -23,9 +23,9 @@ public class Spaceship {
     // =======================
     // CONSTRUCTORS
     // =======================
-  
+
     // Initialize spaceship with initial values of attributes
-    public Spaceship() {
+    public Spaceship(int levelShip) {
         destroyed = 0;
         crewCount = 0;
         boxValue = 0;
@@ -38,8 +38,8 @@ public class Spaceship {
         doubleEngineCount = 0;
         normalEnginePower = 0;
         shields = new int[] { 0, 0, 0, 0};
+        buildingBoard = new BuildingBoard(levelShip);
     }
-
 
     // =======================
     // GETTERS
@@ -91,6 +91,10 @@ public class Spaceship {
 
     public int[] getShields() {
         return shields;
+    }
+
+    public BuildingBoard getBuildingBoard() {
+        return buildingBoard;
     }
  
     // =======================

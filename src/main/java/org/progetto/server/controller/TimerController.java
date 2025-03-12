@@ -1,27 +1,34 @@
-package org.progetto.server.model;
+package org.progetto.server.controller;
 
-public class Timer {
+import java.util.function.Consumer;
+
+public class TimerController {
     // =======================
     // ATTRIBUTES
     // =======================
-
-    private static int defaultTimer;
-    private static int timer;
-    private static int timerFlipsAllowed;
+    Consumer<String> broadcastMessageFunction;
+    private final int defaultTimer;
+    private int timer;
+    private int timerFlipsAllowed;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public Timer(int defaultTimer, int timerFlipsAllowed) {
-        Timer.defaultTimer = defaultTimer;
-        Timer.timer = defaultTimer;
-        Timer.timerFlipsAllowed = timerFlipsAllowed;
+    public TimerController(Consumer<String> broadcastMessageFunction, int defaultTimer, int timerFlipsAllowed) {
+        this.broadcastMessageFunction = broadcastMessageFunction;
+        this.defaultTimer = defaultTimer;
+        this.timer = defaultTimer;
+        this.timerFlipsAllowed = timerFlipsAllowed;
     }
 
     // =======================
     // GETTERS
     // =======================
+
+    public synchronized int getTimer(){
+        return timer;
+    }
 
     // =======================
     // SETTERS
@@ -50,6 +57,7 @@ public class Timer {
                     Thread.sleep(1000);
                     timer--;
                     System.out.println("Timer: " + timer);
+                    broadcastMessageFunction.accept("Timer: " + timer);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

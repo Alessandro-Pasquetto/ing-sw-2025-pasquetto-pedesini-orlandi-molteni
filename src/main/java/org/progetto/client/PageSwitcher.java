@@ -7,13 +7,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PageController {
+public class PageSwitcher {
 
     static Stage stage;
-    static ConnetionController connetionController;
-    static ChooseGameController chooseGameController;
-    static CreateGameController createGameController;
-    static GameController gameController;
+    static ConnetionView connetionView;
+    static ChooseGameView chooseGameView;
+    static CreateGameView createGameView;
+    static GameView gameView;
 
     static void start() throws IOException {
         switchScene("connection.fxml", "Connection");
@@ -30,16 +30,16 @@ public class PageController {
             // Save the controller
             switch (fxmlFile){
                 case "connection.fxml":
-                    connetionController = fxmlLoader.getController();
+                    connetionView = fxmlLoader.getController();
                     break;
                 case "chooseGame.fxml":
-                    chooseGameController = fxmlLoader.getController();
+                    chooseGameView = fxmlLoader.getController();
                     break;
                 case "createGame.fxml":
-                    createGameController = fxmlLoader.getController();
+                    createGameView = fxmlLoader.getController();
                     break;
                 case "game.fxml":
-                    gameController = fxmlLoader.getController();
+                    gameView = fxmlLoader.getController();
                     break;
             }
         } else {
@@ -53,6 +53,6 @@ public class PageController {
 
 
     static void generateGameList(int id){
-        chooseGameController.generateGameList(id);
+        chooseGameView.generateGameList(id);
     }
 }

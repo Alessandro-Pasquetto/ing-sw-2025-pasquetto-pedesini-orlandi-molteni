@@ -93,10 +93,12 @@ public class SocketServer {
 
                         int idGame = currentIdGame.getAndIncrement();
                         int level = Integer.parseInt(in.readLine());
-                        GameController gameController = new GameController(idGame, level);
-
+                        int numPlayers = Integer.parseInt(in.readLine());
                         String name = in.readLine();
-                        Player player = new Player(name, 0);
+
+                        GameController gameController = new GameController(idGame, numPlayers, level);
+
+                        Player player = new Player(name, 0, level);
                         new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                         synchronized (printWriters) {
@@ -119,7 +121,7 @@ public class SocketServer {
 
 
                         if(game.tryAddPlayer(name)){
-                            Player player = new Player(name, game.getPlayersSize());
+                            Player player = new Player(name, game.getPlayersSize(), game.getLevel());
                             new GameController.ClientHandler(gameController, socket, out, in, player).start();
 
                             synchronized (printWriters) {

@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
-public class ChooseGameController {
+public class ChooseGameView {
 
     @FXML
     private TextField usernameTextField;
@@ -25,7 +25,7 @@ public class ChooseGameController {
     public void joinToGame(int idGame) {
         String username = usernameTextField.getText();
         if(!username.isEmpty()) {
-            SocketClient.JoinToGame(username, idGame);
+            SocketClient.joinToGame(username, idGame);
         }
     }
 

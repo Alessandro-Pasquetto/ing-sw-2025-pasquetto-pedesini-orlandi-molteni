@@ -1,4 +1,4 @@
 package org.progetto.client;
 
-public class GameController {
+public class CreateGameView {
 }

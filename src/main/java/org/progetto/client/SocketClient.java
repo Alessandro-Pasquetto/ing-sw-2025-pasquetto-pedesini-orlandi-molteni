@@ -22,14 +22,14 @@ public class SocketClient {
 
             System.out.println("Connesso al server!");
 
-            PageController.switchScene("chooseGame.fxml", "ChooseGame");
+            PageSwitcher.switchScene("chooseGame.fxml", "ChooseGame");
 
             // Gamelist listener
             new Thread(() -> {
                 String message;
                 try {
                     while ((message = in.readLine()) != null) {
-
+                        //todo: Maybe once the JSON messages are implemented, I’ll be able to handle it with switch(typeMessage)
                         if(enableInterceptMessage) {
                             interceptMessage = message;
                             enableInterceptMessage = false;
@@ -37,7 +37,11 @@ public class SocketClient {
                                 lock.notify();
                             }
                         }else{
-                            gameListListener(message);
+                            if(message.equals("C'è un nuovo game"))
+                                gameListListener(message);
+                            else{
+                                System.out.println(message);
+                            }
                         }
                     }
                 } catch (IOException e) {
@@ -63,7 +67,7 @@ public class SocketClient {
         }
         int idGame = Integer.parseInt(message);
 
-        PageController.generateGameList(idGame);
+        PageSwitcher.generateGameList(idGame);
     }
 
     /*
@@ -82,19 +86,21 @@ public class SocketClient {
      */
 
     public static void createNewGame(String username) {
+
         out.println("newGame");
         out.println(1);
+        out.println(4);
         out.println(username);
 
         System.out.println("Hai creato una partita");
         try {
-            PageController.switchScene("game.fxml", "Game");
+            PageSwitcher.switchScene("game.fxml", "Game");
         } catch (IOException e) {
             System.out.println("Errore nel caricamente della pagina");
         }
     }
 
-    public static void JoinToGame(String username, int idGame){
+    public static void joinToGame(String username, int idGame){
         out.println("joinGame");
         out.println(idGame);
         out.println(username);
@@ -117,13 +123,22 @@ public class SocketClient {
             System.out.println("Ti sei unito ad un game");
 
             try {
-                PageController.switchScene("game.fxml", "Game");
+                PageSwitcher.switchScene("game.fxml", "Game");
             } catch (IOException e) {
                 System.out.println("Errore nel caricamente della pagina");
             }
         }else{
             System.out.println("In quella partita c'è già un giocatore con lo stesso nome");
         }
+    }
+
+
+    public static void startGame(){
+        out.println("StartGame");
+    }
+
+    public static void pickComponent(){
+        out.println("PickComponent");
     }
 
     static void close() throws IOException {
@@ -134,6 +149,6 @@ public class SocketClient {
         in.close();
         System.out.println("Ti sei disconnesso!");
 
-        PageController.switchScene("connection.fxml", "Page1");
+        PageSwitcher.switchScene("connection.fxml", "Page1");
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 
-public class ConnetionController {
+public class ConnetionView {
 
     @FXML
     private TextField serverIpTextField;

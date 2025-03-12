@@ -7,16 +7,14 @@ public class Board {
     // =======================
 
     private final Player[] truck;
-    private final Timer timer;
     private final String imgSrc;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public Board(int sizeBoard, int defaultTimer, int timerFlipsAllowed, String imgSrc) {
+    public Board(int sizeBoard, String imgSrc) {
         this.truck = new Player[sizeBoard];
-        this.timer  = new Timer(defaultTimer, timerFlipsAllowed);
         this.imgSrc = imgSrc;
     }
 

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="500" prefWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.ConnetionController">
+<AnchorPane prefHeight="500" prefWidth="600" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.ConnetionView">
 
     <TextField fx:id="serverIpTextField" layoutX="200.0" layoutY="190.0" promptText="IP server" />
     <TextField fx:id="serverPortTextField" layoutX="200.0" layoutY="240.0" promptText="Porta" />
