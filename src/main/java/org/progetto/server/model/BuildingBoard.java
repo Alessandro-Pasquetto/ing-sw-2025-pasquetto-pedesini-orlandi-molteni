@@ -1,7 +1,13 @@
 package org.progetto.server.model;
 import java.util.ArrayList;
 
+import org.progetto.server.model.loadClasses.MaskMatrix;
 import org.progetto.server.model.components.Component;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+
+
 
 public class BuildingBoard {
 
@@ -39,6 +45,10 @@ public class BuildingBoard {
         return spaceshipMatrix;
     }
 
+    public int[][] getBoardMask() {
+        return boardMask;
+    }
+
     public ArrayList<Component> getBooked() {
         return booked;
     }
@@ -61,8 +71,15 @@ public class BuildingBoard {
     }
 
     // todo: place handComponent in spaceshipMatrix
-    // do i need to check if it's possibile (with boardMask) or after send boardMask to the client than it's not possible from the view send a wrong coord for placing the component?
-    public void placeComponent(int x, int y) {
+
+    /**
+     * @author Lorenzo
+     * @param x coordinate for placing component
+     * @param y coordinate for placing component
+     * @return true if component has been placed correctly else otherwise
+     */
+    public boolean placeComponent(int x, int y) {
+        return false;
 
     }
 
@@ -77,11 +94,32 @@ public class BuildingBoard {
 
     /**
      * @author Lorenzo
+     * @param levelShip is the game level chosen
      * @return the loaded matrix configuration for the board
      */
     private int[][] loadBoardMask(int levelShip)
     {
-        return new int[3][3];
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            MaskMatrix data = objectMapper.readValue(new File("src/main/resources/org.progetto.server/Masks.json"), MaskMatrix.class);
+
+            switch (levelShip)
+            {
+                case 1:
+                    boardMask = data.getBaseMatrix();
+                    break;
+
+                case 2:
+                    boardMask = data.getAdvancedMatrix();
+                    break;
+
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return boardMask;
     }
 
     private String loadImgSrc(int levelShip){

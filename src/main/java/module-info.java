@@ -2,8 +2,8 @@ module org.progetto{
     requires javafx.controls;
     requires javafx.fxml;
     requires org.controlsfx.controls;
-    requires java.desktop;
     requires com.google.gson;
+    requires com.fasterxml.jackson.databind;
 
     opens org.progetto.client to com.google.gson, javafx.fxml;
     opens org.progetto.server.model to com.google.gson, javafx.fxml;
@@ -16,4 +16,5 @@ module org.progetto{
     exports org.progetto.server.controller;
     exports org.progetto.server.model.components;
     exports org.progetto.server.model.events;
+    exports org.progetto.server.model.loadClasses to com.fasterxml.jackson.databind;
 }
