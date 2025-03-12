@@ -1,4 +1,7 @@
 package org.progetto.server.model.events;
+import org.progetto.server.model.Board;
+import org.progetto.server.model.Player;
+
 import java.util.List;
 
 public class OpenSpace extends EventCard {
@@ -15,8 +18,15 @@ public class OpenSpace extends EventCard {
     // OTHER METHODS
     // =======================
 
-    // In turn, starting with the leader and continuin in route order, each player declare their power. Immediately afterward each player advances as many spaces as their power
-    public void effect() {
-
+    /**
+     * Moves player ahead of a distance equal to enginePower
+     *
+     * @author Gabriele, Stefano
+     * @param board Game board
+     * @param player Current player
+     * @param enginePower Player's engine power
+     */
+    public void effect(Board board, Player player, int enginePower) {
+        board.movePlayerByDistance(player, enginePower);
     }
 }

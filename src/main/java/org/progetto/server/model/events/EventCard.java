@@ -42,11 +42,4 @@ abstract class EventCard {
     public void setImgSrc(String imgSrc) {
         this.imgSrc = imgSrc;
     }
-
-    // =======================
-    // OTHER METHODS
-    // =======================
-
-    //
-    abstract void effect();
 }

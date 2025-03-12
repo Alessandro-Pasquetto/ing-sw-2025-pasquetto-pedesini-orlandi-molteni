@@ -1,4 +1,11 @@
 package org.progetto.server.model.events;
+import javafx.util.Pair;
+import org.progetto.server.model.Board;
+import org.progetto.server.model.Player;
+import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.StorageComponent;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class LostShip extends EventCard{
@@ -23,12 +30,39 @@ public class LostShip extends EventCard{
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    public int getPenaltyCrew() {
+        return penaltyCrew;
+    }
+
+    public int getRewardCredits() {
+        return rewardCredits;
+    }
+
+    public int getPenaltyDays() {
+        return penaltyDays;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 
-    // Only for one player and the leader chooses first
-    // You can give up the indicated number of crew, and also lose the indicated number of days, to obtain the indicated number of credits
-    public void effect() {
-
+    /**
+     * The player decides to lose a specific number of crew members to get a specified number of credits, that costs a certain number of flight days
+     *
+     * @author Gabriele, Stefano
+     * @param board Game board
+     * @param player Current player
+     * @param componentsToProcess ArrayList of Pair objects that contains for each StorageComponent the number of crew members to delete
+     */
+    public void effect(Board board, Player player, ArrayList<Pair<StorageComponent, Integer>> componentsToProcess) {
+        for (Pair<StorageComponent, Integer> pair : componentsToProcess) {
+            StorageComponent component = pair.getKey();
+            component.removeItem(pair.getValue());
+        }
+        board.movePlayerByDistance(player, this.penaltyDays);
+        player.addCredits(this.rewardCredits);
     }
 }
