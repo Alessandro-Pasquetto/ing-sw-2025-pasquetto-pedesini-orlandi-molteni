@@ -29,4 +29,6 @@ public class OpenSpace extends EventCard {
     public void effect(Board board, Player player, int enginePower) {
         board.movePlayerByDistance(player, enginePower);
     }
+
+    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleCannons through the use of a battery
 }
