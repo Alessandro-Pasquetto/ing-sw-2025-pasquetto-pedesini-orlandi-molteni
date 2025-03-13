@@ -29,6 +29,8 @@ public class Pirates extends EventCard {
     // OTHER METHODS
     // =======================
 
+
+
     // Route order: the leather first
     // If the power of his ship is greater than that of the slavers, the player wins and obtains the indicated credits but loses the indicated days
     // In case of a tie (same power) nothing happens and the enemy passes to the next player

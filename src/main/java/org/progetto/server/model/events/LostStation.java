@@ -47,9 +47,6 @@ public class LostStation extends EventCard {
     // OTHER METHODS
     // =======================
 
-
-    // Choose, if the reward boxes are more than the available spaces you have left, the boxes to keep
-
     /**
      * Adds the box chosen by the player from the rewardBoxes to the given component at the specified index
      *
