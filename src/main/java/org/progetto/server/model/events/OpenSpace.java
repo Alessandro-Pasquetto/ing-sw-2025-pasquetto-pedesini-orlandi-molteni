@@ -21,7 +21,8 @@ public class OpenSpace extends EventCard {
     /**
      * Moves player ahead of a distance equal to enginePower
      *
-     * @author Gabriele, Stefano
+     * @author Gabriele
+     * @author Stefano
      * @param board Game board
      * @param player Current player
      * @param enginePower Player's engine power
@@ -30,5 +31,5 @@ public class OpenSpace extends EventCard {
         board.movePlayerByDistance(player, enginePower);
     }
 
-    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleCannons through the use of a battery
+    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleCannons through the use of a battery.
 }

@@ -52,7 +52,8 @@ public class LostShip extends EventCard{
     /**
      * The player decides to lose a specific number of crew members to get a specified number of credits, that costs a certain number of flight days
      *
-     * @author Gabriele, Stefano
+     * @author Gabriele
+     * @author Stefano
      * @param board Game board
      * @param player Current player
      * @param componentsToProcess ArrayList of Pair objects that contains for each StorageComponent the number of crew members to delete
@@ -60,7 +61,7 @@ public class LostShip extends EventCard{
     public void effect(Board board, Player player, ArrayList<Pair<StorageComponent, Integer>> componentsToProcess) {
         for (Pair<StorageComponent, Integer> pair : componentsToProcess) {
             StorageComponent component = pair.getKey();
-            component.removeItem(pair.getValue());
+            component.decrementItemsCount(pair.getValue());
         }
         board.movePlayerByDistance(player, this.penaltyDays);
         player.addCredits(this.rewardCredits);

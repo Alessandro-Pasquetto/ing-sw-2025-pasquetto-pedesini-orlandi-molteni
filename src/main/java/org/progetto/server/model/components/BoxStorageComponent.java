@@ -36,10 +36,10 @@ public class BoxStorageComponent extends StorageComponent {
     // =======================
 
     // Adds the given box to boxStorage at the given index idx
-    public boolean addItem(Box box, int idx) {
+    public boolean addBox(Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
             boxStorage[idx] = box;
-            incrementItemsCount(1);
+            this.incrementItemsCount(1);
             return true;
         } else {
             return false;
@@ -47,11 +47,10 @@ public class BoxStorageComponent extends StorageComponent {
     }
 
     // Remove the box from boxStorage at the given index idx
-    @Override
-    public boolean removeItem(int idx) {
+    public boolean removeBox(int idx) {
         if (boxStorage[idx] != null) {
             boxStorage[idx] = null;
-            decrementItemsCount(1);
+            this.decrementItemsCount(1);
             return true;
         } else {
             return false;

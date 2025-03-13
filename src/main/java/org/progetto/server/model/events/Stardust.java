@@ -36,7 +36,8 @@ public class Stardust extends EventCard {
     /**
      * Moves player back of a distance equal to exposedConnectorsCount
      *
-     * @author Gabriele, Stefano
+     * @author Gabriele
+     * @author Stefano
      * @param board Game board
      * @param player Current player
      */

@@ -32,25 +32,13 @@ public class StorageComponent extends Component {
     }
 
     // =======================
-    // SETTERS
-    // =======================
-
-    public void incrementItemsCount(int num) {
-        this.itemsCount += num;
-    }
-
-    public void decrementItemsCount(int num) {
-        this.itemsCount -= num;
-    }
-
-    // =======================
     // OTHER METHODS
     // =======================
 
     // Adds the number of items defined as parameter to the component
-    public boolean addItem(int num) {
+    public boolean incrementItemsCount(int num) {
         if (num + itemsCount < capacity) {
-            incrementItemsCount(num);
+            this.itemsCount += num;
             return true;
         } else {
             return false;
@@ -58,9 +46,9 @@ public class StorageComponent extends Component {
     }
 
     // Removes the number of items defined as parameter from the component
-    public boolean removeItem(int num) {
+    public boolean decrementItemsCount(int num) {
         if (num >= itemsCount) {
-            decrementItemsCount(num);
+            this.itemsCount -= num;
             return true;
         } else {
             return false;
