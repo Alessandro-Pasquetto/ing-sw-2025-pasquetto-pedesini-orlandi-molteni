@@ -31,6 +31,26 @@ public class Slavers extends EventCard {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    public int getFirePowerRequired() {
+        return firePowerRequired;
+    }
+
+    public int getPenaltyCrew() {
+        return penaltyCrew;
+    }
+
+    public int getPenaltyDays() {
+        return penaltyDays;
+    }
+
+    public int getRewardCredits() {
+        return rewardCredits;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 
@@ -43,7 +63,7 @@ public class Slavers extends EventCard {
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chosenDiscardedCrew(StorageComponent component) {
+    public boolean chooseDiscardedCrew(StorageComponent component) {
         if (component.getType().equals(ComponentType.HOUSINGUNIT) || component.getType().equals(ComponentType.ORANGEHOUSINGUNIT) || component.getType().equals(ComponentType.PURPLEHOUSINGUNIT)) {
             return component.decrementItemsCount(1);
         } else return false;

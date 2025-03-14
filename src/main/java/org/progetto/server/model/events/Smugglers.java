@@ -63,12 +63,12 @@ public class Smugglers extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param component BoxStorageComponent to which the box should be added
-     * @param idx Index in the storage where the box will be placed
+     * @param boxIdx Index in the storage where the box will be placed
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chosenRewardBox(BoxStorageComponent component, int idx, Box box) {
-        return component.addBox(box, idx);
+    public boolean chooseRewardBox(BoxStorageComponent component, int boxIdx, Box box) {
+        return component.addBox(box, boxIdx);
     }
 
     /**
@@ -79,38 +79,38 @@ public class Smugglers extends EventCard {
      * @author Stefano
      * @param player Current player
      * @param component BoxStorageComponent from which the box will be discarded
-     * @param idx Index in the storage where the box is placed
+     * @param boxIdx Index in the storage where the box is placed
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
-    public boolean chosenDiscardedBox(Player player, BoxStorageComponent component, int idx) {
+    public boolean chooseDiscardedBox(Player player, BoxStorageComponent component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
-        Box box = componentsBoxes[idx];
+        Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxes();
 
         if (playerBoxes[0] > 0) {
             if (box.getType().equals(BoxType.RED)) {
-                component.removeBox(idx);
+                component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[1] > 0) {
             if (box.getType().equals(BoxType.YELLOW)) {
-                component.removeBox(idx);
+                component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[2] > 0) {
             if (box.getType().equals(BoxType.GREEN)) {
-                component.removeBox(idx);
+                component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[3] > 0) {
             if (box.getType().equals(BoxType.BLUE)) {
-                component.removeBox(idx);
+                component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
@@ -127,7 +127,7 @@ public class Smugglers extends EventCard {
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chosenDiscardedBattery(StorageComponent component) {
+    public boolean chooseDiscardedBattery(StorageComponent component) {
         if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
             return component.decrementItemsCount(1);
         } else return false;
@@ -168,10 +168,11 @@ public class Smugglers extends EventCard {
     //  If player:
     //  - wins, it would ask if he wants rewardBoxes in exchange of penaltyDays.
     //          If he answers "yes", it would ask for each box contained in rewardBoxes if he wants it, otherwise the effect ends.
-    //          In the for each, if he answers "yes", the controller will call chosenRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
+    //          In the for each, if he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
     //          Otherwise, if the player answers 'no,' the controller moves to the next box in the array until there are no more left.
     //  - loses, he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones).
     //           If he has no box left, he has to discard batteries.
+    //           If he hasn't any battery left, card's effect stops.
     //           Then, the smugglers will affect next player.
     //  - draws, nothing happens.
     //           The smugglers will affect next player.

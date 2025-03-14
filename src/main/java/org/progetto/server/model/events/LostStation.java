@@ -53,17 +53,19 @@ public class LostStation extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param component BoxStorageComponent to which the box should be added
-     * @param idx Index in the storage where the box will be placed
+     * @param boxIdx Index in the storage where the box will be placed
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chosenRewardBox(BoxStorageComponent component, int idx, Box box) {
-        return component.addBox(box, idx);
+    public boolean chooseRewardBox(BoxStorageComponent component, int boxIdx, Box box) {
+        return component.addBox(box, boxIdx);
     }
 
     /**
      * If the player chooses to take the reward boxes, they are moved back by a number of days equal to penaltyDays
      *
+     * @author Gabriele
+     * @author Stefano
      * @param board Game board
      * @param player Current player
      */
@@ -73,6 +75,6 @@ public class LostStation extends EventCard {
 
     // TODO: The controller asks to each player, starting from the leader, if he wants to accept the card conditions.
     //  If so, it would ask for each box contained in rewardBoxes if he wants it.
-    //  If he answers "yes", the controller will call chosenRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
+    //  If he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
     //  Otherwise, if the player answers 'no,' the controller moves to the next box in the array until there are no more left.
 }
