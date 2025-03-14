@@ -132,10 +132,10 @@ public class Game {
     public ArrayList<Component> loadComponents(){
         ArrayList<Component> components = new ArrayList<>();
         components.add(new Component(ComponentType.CANNON, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.DOUBLECANNON, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.DOUBLE_CANNON, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.ENGINE, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.BATTERYSTORAGE, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.ORANGEHOUSINGUNIT, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.BATTERY_STORAGE, new int[]{0,1,2,3}, "imgPath"));
+        components.add(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.SHIELD, new int[]{0,1,2,3}, "imgPath"));
 
         return components;

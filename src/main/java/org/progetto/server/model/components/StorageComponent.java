@@ -6,8 +6,10 @@ public class StorageComponent extends Component {
     // ATTRIBUTES
     // =======================
 
-    private int capacity;
-    private int itemsCount;
+    private final int capacity;
+    private int itemsCount;           //does not include aliens
+    private boolean hasOrangeAlien;   //identify the presence of an alien if it's a housing unit
+    private boolean hasPurpleAlien;
 
     // =======================
     // CONSTRUCTORS
@@ -17,6 +19,8 @@ public class StorageComponent extends Component {
         super(type, connections, imgSrc);
         this.capacity = capacity;
         this.itemsCount = 0;
+        this.hasOrangeAlien = false;
+        this.hasPurpleAlien = false;
     }
 
     // =======================
@@ -30,6 +34,28 @@ public class StorageComponent extends Component {
     public int getCapacity() {
         return capacity;
     }
+
+    public boolean getOrangeAlien() {
+        return hasOrangeAlien;
+    }
+
+    public boolean getPurpleAlien() {
+        return hasPurpleAlien;
+    }
+
+
+
+    // =======================
+    // SETTERS
+    // =======================
+    public void setOrangeAlien(boolean orangeAlien) {
+        this.hasOrangeAlien = orangeAlien;
+    }
+
+    public void setPurpleAlien(boolean purpleAlien) {
+        this.hasPurpleAlien = purpleAlien;
+    }
+
 
     // =======================
     // OTHER METHODS
@@ -47,7 +73,7 @@ public class StorageComponent extends Component {
 
     // Removes the number of items defined as parameter from the component
     public boolean decrementItemsCount(int num) {
-        if (num >= itemsCount) {
+        if (num <= itemsCount) {
             this.itemsCount -= num;
             return true;
         } else {

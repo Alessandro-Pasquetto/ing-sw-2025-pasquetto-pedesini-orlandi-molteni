@@ -37,8 +37,8 @@ public class Spaceship {
         doubleCannonCount = 0;
         doubleEngineCount = 0;
         normalEnginePower = 0;
-        shields = new int[] { 0, 0, 0, 0};
-        buildingBoard = new BuildingBoard(levelShip);
+        shields = new int[] { 0, 0, 0, 0};  //[sx,up,dx,dw]
+        buildingBoard = new BuildingBoard(levelShip,this);
     }
 
     // =======================
@@ -73,7 +73,7 @@ public class Spaceship {
         return alienOrange;
     }
 
-    public float getShootingPower(){
+    public float getNormalShootingPower(){
         return normalShootingPower;
     }
 
@@ -129,7 +129,7 @@ public class Spaceship {
         alienOrange = alien;
     }
 
-    public void setShootingPower(float power) {
+    public void setNormalShootingPower(float power) {
         normalShootingPower = power;
     }
 

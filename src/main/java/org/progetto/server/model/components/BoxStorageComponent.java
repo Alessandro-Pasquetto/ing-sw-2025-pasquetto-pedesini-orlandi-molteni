@@ -9,6 +9,7 @@ public class BoxStorageComponent extends StorageComponent {
     private Box[] boxStorage;
     private boolean isRed;
 
+
     // =======================
     // CONSTRUCTORS
     // =======================

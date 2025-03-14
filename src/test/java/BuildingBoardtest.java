@@ -1,5 +1,8 @@
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
+
 import java.io.IOException;
 
 public class BuildingBoardtest {
@@ -7,7 +10,9 @@ public class BuildingBoardtest {
 
     @Test
     void Loadingtest() throws IOException {
-    BuildingBoard buildingboard = new BuildingBoard(2);
+
+    Spaceship spaceship = new Spaceship(1);
+    BuildingBoard buildingboard = spaceship.getBuildingBoard();
 
     int[][] mat = buildingboard.getBoardMask();
 

@@ -8,10 +8,11 @@ public class Component {
 
     private ComponentType type;
     private int[] connections;
-    private int rotation;
-    private boolean hidden;
-    private boolean chosen;
-    private boolean positionLocked;
+    private int rotation;  //[0,1,2,3] = [sx,up,dx,dw] for shields [sx-up,up-dx,dx-dw,dw-sx]
+    private int x_coordinate;  //x coordinate in matrix
+    private int y_coordinate;  //y coordinate in matrix
+    private boolean hidden;   //false if it was discarded
+    private boolean placed;   //true if it's in the spaceship matrix
     private String imgSrc;
 
     // =======================
@@ -23,8 +24,7 @@ public class Component {
         this.connections = connections;
         this.rotation = 0;
         this.hidden = false;
-        this.chosen = false;
-        this.positionLocked = false;
+        this.placed = false;
         this.imgSrc = imgSrc;
     }
 
@@ -48,17 +48,23 @@ public class Component {
         return hidden;
     }
 
-    public boolean isChosen() {
-        return chosen;
-    }
-
-    public boolean isPositionLocked() {
-        return positionLocked;
+    public boolean isPlaced() {
+        return placed;
     }
 
     public String getImgSrc() {
         return imgSrc;
     }
+
+    public int getX_coordinate() {
+        return x_coordinate;
+    }
+
+    public int getY_coordinate() {
+        return y_coordinate;
+    }
+
+
 
     // =======================
     // SETTERS
@@ -72,13 +78,18 @@ public class Component {
         this.hidden = hidden;
     }
 
-    public void setChosen(boolean chosen) {
-        this.chosen = chosen;
+    public void setPlaced(boolean placed) {
+        this.placed = placed;
     }
 
-    public void setPositionLocked(boolean positionLocked) {
-        this.positionLocked = positionLocked;
+    public void setX_coordinate(int x_coordinate) {
+        this.x_coordinate = x_coordinate;
     }
+
+    public void setY_coordinate(int y_coordinate) {
+        this.y_coordinate = y_coordinate;
+    }
+
 
     // =======================
     // OTHER METHODS
@@ -86,10 +97,10 @@ public class Component {
 
     // Rotates the component clockwise
     public void rotate() {
-        if (this.rotation == 3) {
-            this.rotation = 0;
+        if (rotation == 3) {
+            rotation = 0;
         } else {
-            this.rotation++;
+            rotation++;
         }
     }
 }
