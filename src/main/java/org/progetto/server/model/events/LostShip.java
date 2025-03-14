@@ -67,5 +67,7 @@ public class LostShip extends EventCard{
         player.addCredits(this.rewardCredits);
     }
 
-    // TODO: Controller has to manage the current player's decisions, giving him the possibility to choose the StorageComponent from which delete the specified number of crew members. Then, it has to create the ArrayList of Pairs, where the first element is the reference to the component and the second crew members amount to delete. When this process is ended, it calls effect() with correct params.
+    // TODO: Controller has to manage the current player's decisions, giving him the possibility to choose the StorageComponent from which delete the specified number of crew members.
+    //  Then, it has to create the ArrayList of Pairs, where the first element is the reference to the component and the second crew members amount to delete.
+    //  When this process is ended, it calls effect() with correct params.
 }
