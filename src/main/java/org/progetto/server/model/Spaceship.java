@@ -19,6 +19,7 @@ public class Spaceship {
     private int doubleEngineCount;
     private int[] shields;
     private BuildingBoard buildingBoard;
+    private int[] boxes;
 
     // =======================
     // CONSTRUCTORS
@@ -39,6 +40,7 @@ public class Spaceship {
         normalEnginePower = 0;
         shields = new int[] { 0, 0, 0, 0};  //[sx,up,dx,dw]
         buildingBoard = new BuildingBoard(levelShip,this);
+        boxes = new int[] {0, 0, 0, 0}; //[red,yellow,green,blue]
     }
 
     // =======================
@@ -96,6 +98,11 @@ public class Spaceship {
     public BuildingBoard getBuildingBoard() {
         return buildingBoard;
     }
+
+    public int[] getBoxes() {
+        return boxes;
+    }
+
  
     // =======================
     // SETTERS
@@ -148,6 +155,11 @@ public class Spaceship {
     public void setShields(int[] shields) {
         this.shields = shields;
     }
+
+   public void setBoxes(int[] boxes) {
+        this.boxes = boxes;
+   }
+
 
     // =======================
     // OTHER METHODS
