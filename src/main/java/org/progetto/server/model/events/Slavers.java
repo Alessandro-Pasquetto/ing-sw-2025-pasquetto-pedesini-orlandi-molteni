@@ -76,7 +76,6 @@ public class Slavers extends EventCard {
         } else return false;
     }
 
-
     /**
      * If the player chooses to take the reward credits, they are moved back by a number of days equal to penaltyDays
      *

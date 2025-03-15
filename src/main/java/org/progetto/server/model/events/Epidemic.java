@@ -55,7 +55,7 @@ public class Epidemic extends EventCard {
             currComponent = (StorageComponent) spaceshipMatrix[i][j];
 
             // Check if prevComponent and currComponent are connected
-            if (!areConnected(prevComponent, currComponent)) {
+            if (!buildingBoard.areConnected(prevComponent, currComponent)) {
                 return;
             }
 
