@@ -10,12 +10,6 @@ public class GameControllersQueue {
     private static final ArrayList<GameController> gameControllers = new ArrayList<>();
 
     // =======================
-    // CONSTRUCTORS
-    // =======================
-
-
-
-    // =======================
     // GETTERS
     // =======================
 
@@ -32,7 +26,7 @@ public class GameControllersQueue {
     }
 
     // =======================
-    // SETTERS
+    // OTHER METHODS
     // =======================
 
     public static void addGameController(GameController gameController) {
@@ -46,10 +40,4 @@ public class GameControllersQueue {
             gameControllers.remove(gameController);
         }
     }
-
-    // =======================
-    // OTHER METHODS
-    // =======================
-
-
 }

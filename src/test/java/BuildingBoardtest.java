@@ -11,7 +11,7 @@ public class BuildingBoardtest {
     @Test
     void Loadingtest() throws IOException {
 
-    Spaceship spaceship = new Spaceship(1);
+    Spaceship spaceship = new Spaceship(1, 0);
     BuildingBoard buildingboard = spaceship.getBuildingBoard();
 
     int[][] mat = buildingboard.getBoardMask();

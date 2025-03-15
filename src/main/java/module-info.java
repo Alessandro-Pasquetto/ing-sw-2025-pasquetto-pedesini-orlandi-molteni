@@ -2,7 +2,6 @@ module org.progetto{
     requires javafx.controls;
     requires javafx.fxml;
     requires org.controlsfx.controls;
-    requires com.google.gson;
     requires com.fasterxml.jackson.databind;
 
     opens org.progetto.client to com.google.gson, javafx.fxml;

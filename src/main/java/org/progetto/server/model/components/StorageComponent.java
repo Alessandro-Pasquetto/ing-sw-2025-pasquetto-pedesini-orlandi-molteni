@@ -43,11 +43,10 @@ public class StorageComponent extends Component {
         return hasPurpleAlien;
     }
 
-
-
     // =======================
     // SETTERS
     // =======================
+
     public void setOrangeAlien(boolean orangeAlien) {
         this.hasOrangeAlien = orangeAlien;
     }

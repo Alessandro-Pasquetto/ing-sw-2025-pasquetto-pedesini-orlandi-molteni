@@ -8,7 +8,7 @@ public class Component {
 
     private ComponentType type;
     private int[] connections;
-    private int rotation;  //[0,1,2,3] = [sx,up,dx,dw] for shields [sx-up,up-dx,dx-dw,dw-sx]
+    private int rotation;       //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
     private int x_coordinate;  //x coordinate in matrix
     private int y_coordinate;  //y coordinate in matrix
     private boolean hidden;   //false if it was discarded
@@ -64,8 +64,6 @@ public class Component {
         return y_coordinate;
     }
 
-
-
     // =======================
     // SETTERS
     // =======================
@@ -89,7 +87,6 @@ public class Component {
     public void setY_coordinate(int y_coordinate) {
         this.y_coordinate = y_coordinate;
     }
-
 
     // =======================
     // OTHER METHODS

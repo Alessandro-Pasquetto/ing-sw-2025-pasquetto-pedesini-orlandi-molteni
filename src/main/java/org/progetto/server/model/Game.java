@@ -1,40 +1,42 @@
 package org.progetto.server.model;
-import org.progetto.server.model.components.*;
-import java.util.ArrayList;
-import java.util.Random;
 
-// todo: check sync
+import org.progetto.server.model.components.*;
+import org.progetto.server.model.events.*;
+
+import java.util.ArrayList;
+
 public class Game {
 
     // =======================
     // ATTRIBUTES
     // =======================
-    private final Random random;
-
     private final int id;
-    private final int numPlayers;
+    private final int maxNumPlayers;
     private final ArrayList<Player> players;
     private final int level;
     private GamePhase phase;
     private final ArrayList<Component> componentDeck;
+    private final ArrayList<Component> visibleComponentDeck;
     private final ArrayList<EventCard> eventCardDeck;
     private final Board board;
+    private EventCard activeEventCard;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
     // todo: set eventCardDeck, defaultTimer, timerFlipsAllowed, imgPath
-    public Game(int idGame, int numPlayers, int level) {
-        this.random = new Random();
+    public Game(int idGame, int maxNumPlayers, int level) {
         this.id = idGame;
-        this.numPlayers = numPlayers;
+        this.maxNumPlayers = maxNumPlayers;
         this.players = new ArrayList<Player>();
         this.level = level;
         this.phase = GamePhase.INIT;
         this.componentDeck = loadComponents();
+        this.visibleComponentDeck = new ArrayList<>();
         this.eventCardDeck = loadEvents();
-        this.board = new Board(elaborateSizeBoardFromLv(level), "imgPath");
+        this.board = new Board(elaborateSizeBoardFromLv(), "imgPath");
+        this.activeEventCard = null;
     }
 
     // =======================
@@ -55,7 +57,7 @@ public class Game {
 
     public ArrayList<Player> getPlayers() {
         synchronized (players) {
-            return players;
+            return new ArrayList<>(players);
         }
     }
 
@@ -65,18 +67,8 @@ public class Game {
         }
     }
 
-    public ArrayList<EventCard> getEventCardDeck() {
-        return eventCardDeck;
-    }
-
-    public ArrayList<Component> getComponentDeck() {
-        return componentDeck;
-    }
-
-    public int getComponentDeckSize() {
-        synchronized (componentDeck) {
-            return componentDeck.size();
-        }
+    public int getMaxNumPlayers() {
+        return maxNumPlayers;
     }
 
     public Board getBoard() {
@@ -93,32 +85,55 @@ public class Game {
         }
     }
 
-    public void addPlayer(Player player) {
-        synchronized (players) {
-            players.add(player);
-        }
+    private synchronized void setActiveEventCard(EventCard eventCard) {
+        this.activeEventCard = eventCard;
     }
 
     // =======================
     // OTHER METHODS
     // =======================
 
-    public void startGame() {}
-
-    private void shuffleComponents() {}
-
-    private void shuffleEventCards() {}
-
-    public void startBuilding(){}
-
+    // todo: saveGame()
     public void saveGame(){}
 
-    public EventCard pickEventCard(){return null;}
+    /**
+     * @return list of the winner players
+     */
+    public ArrayList<Player> endGame() {
 
-    public Component pickComponent(Player player){
+        ArrayList<Player> winners = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getCredits() > 0) {
+                winners.add(player);
+            }
+        }
+
+        return winners;
+    }
+
+    /**
+     * @param player the new player joining the game
+     */
+    public void addPlayer(Player player) {
+        synchronized (players) {
+            players.add(player);
+        }
+    }
+
+    /**
+     * @param player the player who is picking
+     * @return the randomly picked component
+     */
+    public Component pickHiddenComponent(Player player) throws IllegalStateException{
         Component pickedComponent = null;
+
+        if(player.getSpaceship().getBuildingBoard().getHandComponent() != null)
+            throw new IllegalStateException("HandComponent already set");
+
         synchronized (componentDeck) {
-            int randomPos = random.nextInt(componentDeck.size());
+            if(componentDeck.isEmpty()) throw new IllegalStateException("Empty componentDeck");
+            int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
         }
 
@@ -127,9 +142,57 @@ public class Game {
         return pickedComponent;
     }
 
-    public ArrayList<EventCard> loadEvents(){return null;}
+    /**
+     * @param indexComponent index of the visible component picked
+     * @param player the player who is picking
+     */
+    public void pickVisibleComponent(int indexComponent, Player player) throws IllegalStateException{
+        Component pickedComponent = null;
 
-    public ArrayList<Component> loadComponents(){
+        synchronized (visibleComponentDeck) {
+            if(indexComponent >= visibleComponentDeck.size()) throw new IllegalStateException("Wrong indexComponent");
+            pickedComponent = visibleComponentDeck.remove(indexComponent);
+        }
+
+        player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
+    }
+
+    /**
+     * @return the randomly picked card
+     */
+    public EventCard pickEventCard() throws IllegalStateException {
+        EventCard pickedEventCard = null;
+        synchronized (eventCardDeck) {
+            if(eventCardDeck.isEmpty()) throw new IllegalStateException("Empty eventCardDeck");
+            int randomPos = (int) (Math.random() * eventCardDeck.size());
+            pickedEventCard = eventCardDeck.remove(randomPos);
+        }
+
+        setActiveEventCard(pickedEventCard);
+
+        return pickedEventCard;
+    }
+
+    /**
+     * @return event card deck (list of event cards)
+     */
+    private ArrayList<EventCard> loadEvents(){
+        // todo: load from json file
+        ArrayList<EventCard> eventCards = new ArrayList<>();
+        eventCards.add(new Epidemic(CardType.EPIDEMY, "imgPath"));
+        eventCards.add(new LostShip(CardType.LOSTSHIP, "imgPath", 2, 2, 1));
+        eventCards.add(new OpenSpace(CardType.OPENSPACE, "imgPath"));
+        eventCards.add(new Sabotage(CardType.SABOTAGE, "imgPath"));
+        eventCards.add(new Slavers(CardType.SLAVERS, "imgPath", 5,5,3,4));
+
+        return eventCards;
+    }
+
+    /**
+     * @return component deck (list of components)
+     */
+    private ArrayList<Component> loadComponents(){
+        // todo: load from json file
         ArrayList<Component> components = new ArrayList<>();
         components.add(new Component(ComponentType.CANNON, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.DOUBLE_CANNON, new int[]{0,1,2,3}, "imgPath"));
@@ -141,8 +204,11 @@ public class Game {
         return components;
     }
 
+    /**
+     * @param name name of the player who wants to join the game
+     * @return true if it is available, false otherwise
+     */
     public boolean tryAddPlayer(String name) {
-
         synchronized (players) {
             for (Player p : players) {
                 if (p.getName().equals(name)) {
@@ -153,7 +219,10 @@ public class Game {
         return true;
     }
 
-    private int elaborateSizeBoardFromLv(int level) {
+    /**
+     * @return the board size
+     */
+    private int elaborateSizeBoardFromLv() {
         return switch (level) {
             case 1 -> 18;
             case 2 -> 24;

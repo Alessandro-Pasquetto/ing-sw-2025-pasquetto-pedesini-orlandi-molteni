@@ -21,7 +21,7 @@ public class Player {
         this.credits = 0;
         this.color = color;
         this.position = 0;
-        this.spaceship = new Spaceship(levelShip);
+        this.spaceship = new Spaceship(levelShip, color);
     }
 
     // =======================
@@ -56,16 +56,23 @@ public class Player {
         this.position = newPosition;
     }
 
-    public void addCredits(int creditsToAdd) {
-        this.credits += creditsToAdd;
-    }
-
     // =======================
     // OTHER METHODS
     // =======================
 
-    public int throwDice(){return 0;}
+    /**
+     * @param creditsToAdd number of credits gained (if positive) or lost (if negative)
+     */
+    public void addCredits(int creditsToAdd) {
+        this.credits += creditsToAdd;
+    }
 
-    public void leaveTravel(){}
-
+    /**
+     * @return sum of the rolled
+     */
+    public int rollDice(){
+        int die1 = (int) (Math.random() * 6) + 1;
+        int die2 = (int) (Math.random() * 6) + 1;
+        return die1 + die2;
+    }
 }

@@ -12,16 +12,16 @@ public class BuildingController {
 
         switch (message){
             case "PickComponent":
-                if(game.getComponentDeckSize() > 0){
-
-                    if(player.getSpaceship().getBuildingBoard().getHandComponent() == null){
-                        Component c = game.pickComponent(player);
-                        broadcastMessageFunction.accept(player.getName() + " picked component " + c.toString());
-                    }else{
+                try{
+                    Component pickedComponent = game.pickHiddenComponent(player);
+                    broadcastMessageFunction.accept(player.getName() + " picked component " + pickedComponent.toString());
+                } catch (IllegalStateException e) {
+                    if(e.getMessage().equals("HandComponent already set"))
                         sendMessageToPlayer.accept("Hai già un componente in mano");
+
+                    if(e.getMessage().equals("Empty componentDeck")) {
+                        sendMessageToPlayer.accept("Non ci sono più componenti da pescare");
                     }
-                }else{
-                    sendMessageToPlayer.accept("Non ci sono più componenti da pescare");
                 }
                 break;
             case "Right":

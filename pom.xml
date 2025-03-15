@@ -15,17 +15,10 @@
     </properties>
 
     <dependencies>
-        <!--  Dipendenza per Gson  -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.12.1</version>
-        </dependency>
-        <!--  Dipendenza per Jackson alternativa a Gson  -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.0</version>
+            <version>2.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>

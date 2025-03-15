@@ -5,10 +5,10 @@ public class Spaceship {
     // =======================
     // ATTRIBUTES
     // =======================
-  
-    private int destroyed;
+
+    private int componentShipCount;
+    private int destroyedCount;
     private int crewCount;
-    private int boxValue;
     private int batteriesCount;
     private int exposedConnectorsCount;
     private boolean alienPurple;
@@ -17,19 +17,19 @@ public class Spaceship {
     private int doubleCannonCount;
     private float normalEnginePower;
     private int doubleEngineCount;
-    private int[] shields;
-    private BuildingBoard buildingBoard;
-    private int[] boxes;
+    private final int[] shieldCounts;  // {up, right, down, left}
+    private final int[] boxCounts;     // {red, yellow, green, blue}
+    private final BuildingBoard buildingBoard;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
     // Initialize spaceship with initial values of attributes
-    public Spaceship(int levelShip) {
-        destroyed = 0;
+    public Spaceship(int levelShip, int color) {
+        componentShipCount = 1;
+        destroyedCount = 0;
         crewCount = 0;
-        boxValue = 0;
         batteriesCount = 0;
         exposedConnectorsCount = 0;
         alienPurple = false;
@@ -38,25 +38,29 @@ public class Spaceship {
         doubleCannonCount = 0;
         doubleEngineCount = 0;
         normalEnginePower = 0;
-        shields = new int[] { 0, 0, 0, 0};  //[sx,up,dx,dw]
-        buildingBoard = new BuildingBoard(levelShip,this);
-        boxes = new int[] {0, 0, 0, 0}; //[red,yellow,green,blue]
+        shieldCounts = new int[] { 0, 0, 0, 0};
+        boxCounts = new int[] {0, 0, 0, 0};
+        buildingBoard = new BuildingBoard(levelShip, color,this);
     }
 
     // =======================
     // GETTERS
     // =======================
 
+    public int getComponentShipCount() {
+        return componentShipCount;
+    }
+
     public int getDestroyedCount() {
-        return destroyed;
+        return destroyedCount;
     }
 
     public int getCrewCount() {
         return crewCount;
     }
 
-    public int getBoxValue() {
-        return boxValue;
+    public int getBoxesValue() {
+        return 4 * boxCounts[0] + 3 * boxCounts[1] + 2 * boxCounts[2] + boxCounts[3];
     }
 
     public int getBatteriesCount() {
@@ -91,80 +95,104 @@ public class Spaceship {
         return normalEnginePower;
     }
 
-    public int[] getShields() {
-        return shields;
+    public int getIdxShieldCount(int index){
+        return shieldCounts[index];
+    }
+
+    public int[] getBoxCounts() {
+        return boxCounts;
     }
 
     public BuildingBoard getBuildingBoard() {
         return buildingBoard;
     }
 
-    public int[] getBoxes() {
-        return boxes;
-    }
-
- 
     // =======================
     // SETTERS
     // =======================
-
-    public void setDestroyedCount(int destroyed) {
-        this.destroyed = destroyed;
-    }
-
-    public void setCrew(int quantity) {
-        crewCount = quantity;
-    }
-
-    public void setBoxValue(int value) {
-        boxValue = value;
-    }
-
-    public void setBatteriesCount(int quantity) {
-        batteriesCount = quantity;
-    }
 
     public void setExposedConnectorsCount(int count) {
         exposedConnectorsCount = count;
     }
 
-    public void setAlienPurple(boolean alien) {
-        alienPurple = alien;
+    public void setAlienPurple(boolean alienPresence) {
+        alienPurple = alienPresence;
     }
 
-    public void setAlienOrange(boolean alien) {
-        alienOrange = alien;
+    public void setAlienOrange(boolean alienPresence) {
+        alienOrange = alienPresence;
     }
-
-    public void setNormalShootingPower(float power) {
-        normalShootingPower = power;
-    }
-
-    public void setDoubleCannonCount(int count) {
-        doubleCannonCount = count;
-    }
-
-    public void setNormalEnginePower(float power) {
-        normalEnginePower = power;
-    }
-
-    public void setDoubleEngineCount(int count) {
-        doubleEngineCount = count;
-    }
-
-    public void setShields(int[] shields) {
-        this.shields = shields;
-    }
-
-   public void setBoxes(int[] boxes) {
-        this.boxes = boxes;
-   }
-
 
     // =======================
-    // OTHER METHODS
+    // ADDERS
     // =======================
 
+    public void addComponentShipCount(int countToAdd) {
+        componentShipCount += countToAdd;
+    }
 
+    public void addDestroyedCount(int countToAdd) {
+        destroyedCount += countToAdd;
+    }
+
+    public void addCrewCount(int countToAdd) {
+        crewCount += countToAdd;
+    }
+
+    public void addBatteriesCount(int countToAdd) {
+        batteriesCount += countToAdd;
+    }
+
+    public void addNormalShootingPower(float powerToAdd) {
+        normalShootingPower += powerToAdd;
+    }
+
+    public void addDoubleCannonCount(int countToAdd) {
+        doubleCannonCount += countToAdd;
+    }
+
+    public void addNormalEnginePower(float powerToAdd) {
+        normalEnginePower += powerToAdd;
+    }
+
+    public void addDoubleEngineCount(int countToAdd) {
+        doubleEngineCount += countToAdd;
+    }
+
+    public void addLeftUpShieldCount(int countToAdd) {
+        shieldCounts[3] += countToAdd;
+        shieldCounts[0] += countToAdd;
+    }
+
+    public void addUpRightShieldCount(int countToAdd) {
+        shieldCounts[0] += countToAdd;
+        shieldCounts[1] += countToAdd;
+    }
+
+    public void addRightDownShieldCount(int countToAdd) {
+        shieldCounts[1] += countToAdd;
+        shieldCounts[2] += countToAdd;
+    }
+
+    public void addDownLeftShieldCount(int countToAdd) {
+        shieldCounts[2] += countToAdd;
+        shieldCounts[3] += countToAdd;
+    }
+
+    public void addRedBoxCount(int countToAdd) {
+        boxCounts[0] += countToAdd;
+    }
+
+    public void addYellowBoxCount(int countToAdd) {
+        boxCounts[1] += countToAdd;
+    }
+
+    public void addGreenBoxCount(int countToAdd) {
+        boxCounts[2] += countToAdd;
+    }
+
+    public void addBlueBoxCount(int countToAdd) {
+        boxCounts[3] += countToAdd;
+    }
 }
 

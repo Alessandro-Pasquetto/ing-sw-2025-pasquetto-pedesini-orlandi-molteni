@@ -1,7 +1,7 @@
 package org.progetto.server.model.events;
 import java.util.List;
 
-abstract class EventCard {
+public abstract class EventCard {
 
     // =======================
     // ATTRIBUTES
