@@ -107,16 +107,13 @@ public class Epidemic extends EventCard {
                     findInfectedComponents(i, j, true, null, player.getSpaceship().getBuildingBoard(), visitedCells, infectedComponents);
 
                     for (StorageComponent component : infectedComponents) {
-                        component.decrementItemsCount(1); // TODO: Bisogna gestire il decremento nelle housing unit degli alieni, non solo dei crewmate
-
-                        // if (component.getOrangeAlien()) {
-                        //     component.setOrangeAlien(false);
-                        // } else if (component.getPurpleAlien()) {
-                        //     component.setPurpleAlien(false);
-                        // } else if (component.getItemsCount() > 0) {
-                        //     component.decrementItemsCount(1);
-                        // }
-
+                        if (component.getOrangeAlien()) {
+                            component.setOrangeAlien(false);
+                        } else if (component.getPurpleAlien()) {
+                            component.setPurpleAlien(false);
+                        } else if (component.getItemsCount() > 0) {
+                            component.decrementItemsCount(1);
+                        }
                     }
                 }
 

@@ -7,7 +7,7 @@ public class Projectile {
     // =======================
 
     private ProjectileSize size;
-    private int from;
+    private int from;   // [0, 1, 2, 3] = [top, right, bottom, left]
 
     // =======================
     // CONSTRUCTORS

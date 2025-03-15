@@ -64,8 +64,15 @@ public class Slavers extends EventCard {
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
     public boolean chooseDiscardedCrew(StorageComponent component) {
-        if (component.getType().equals(ComponentType.HOUSINGUNIT) || component.getType().equals(ComponentType.ORANGEHOUSINGUNIT) || component.getType().equals(ComponentType.PURPLEHOUSINGUNIT)) {
-            return component.decrementItemsCount(1);
+        if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
+            if (component.getOrangeAlien()) {
+                component.setOrangeAlien(false);
+            } else if (component.getPurpleAlien()) {
+                component.setPurpleAlien(false);
+            } else if (component.getItemsCount() > 0) {
+                component.decrementItemsCount(1);
+            }
+            return true;
         } else return false;
     }
 
@@ -104,7 +111,7 @@ public class Slavers extends EventCard {
 
     // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries.
     //  If player:
-    //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays
+    //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays and the card's effect ends.
     //  - loses, he has to discard an amount of crew members (humans or aliens) equals to penaltyCrew.
     //           Then, the slavers will affect next player.
     //  - draws, nothing happens.

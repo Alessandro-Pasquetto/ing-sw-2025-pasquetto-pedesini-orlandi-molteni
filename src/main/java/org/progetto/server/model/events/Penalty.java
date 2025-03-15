@@ -10,16 +10,16 @@ public class Penalty {
 
     private PenaltyType type;
     private int neededAmount;
-    private ArrayList<Projectile> meteors;
+    private ArrayList<Projectile> shots;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public Penalty(PenaltyType type, int neededAmount, ArrayList<Projectile> meteors) {
+    public Penalty(PenaltyType type, int neededAmount, ArrayList<Projectile> shots) {
         this.type = type;
         this.neededAmount = neededAmount;
-        this.meteors = meteors;
+        this.shots = shots;
     }
 
     // =======================
@@ -34,8 +34,8 @@ public class Penalty {
         return neededAmount;
     }
 
-    public ArrayList<Projectile> getMeteors() {
-        return meteors;
+    public ArrayList<Projectile> getShots() {
+        return shots;
     }
 
 
