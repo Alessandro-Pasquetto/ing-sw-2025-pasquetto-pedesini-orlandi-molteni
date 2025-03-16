@@ -30,7 +30,7 @@ public class Sabotage extends EventCard {
      */
     public Player lessPopulatedSpaceship(Player[] players) {
         int minCrewCount = Integer.MAX_VALUE;
-        Player minPlayer;
+        Player minPlayer = null;
         for (Player player : players) {
             if (player.getSpaceship().getCrewCount() < minCrewCount) {
                 minCrewCount = player.getSpaceship().getCrewCount();

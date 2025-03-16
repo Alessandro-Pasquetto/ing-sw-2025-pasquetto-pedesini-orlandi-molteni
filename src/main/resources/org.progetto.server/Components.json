@@ -1,23 +1,23 @@
 [
   {
     "type": "CANNON",
-    "connections": [1, 2, 3],
+    "connections": [1, 2, 3, 3],
     "imgSrc": "imgPath"
   },
   {
     "type": "SHIELD",
-    "connections": [1, 2, 3],
+    "connections": [1, 2, 3, 3],
     "imgSrc": "imgPath"
   },
   {
     "type": "BATTERY_STORAGE",
-    "connections": [1, 2, 3],
+    "connections": [1, 2, 3, 3],
     "imgSrc": "imgPath",
     "capacity": 2
   },
   {
     "type": "BOX_STORAGE",
-    "connections": [1, 2, 3],
+    "connections": [1, 2, 3, 3],
     "imgSrc": "imgPath",
     "capacity": 2,
     "isRed": true

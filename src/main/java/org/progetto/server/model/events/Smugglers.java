@@ -85,7 +85,7 @@ public class Smugglers extends EventCard {
     public boolean chooseDiscardedBox(Player player, BoxStorageComponent component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
         Box box = componentsBoxes[boxIdx];
-        int[] playerBoxes = player.getSpaceship().getBoxes();
+        int[] playerBoxes = player.getSpaceship().getBoxCounts();
 
         if (playerBoxes[0] > 0) {
             if (box.getType().equals(BoxType.RED)) {
@@ -128,7 +128,7 @@ public class Smugglers extends EventCard {
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
     public boolean chooseDiscardedBattery(StorageComponent component) {
-        if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
+        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
             return component.decrementItemsCount(1);
         } else return false;
     }

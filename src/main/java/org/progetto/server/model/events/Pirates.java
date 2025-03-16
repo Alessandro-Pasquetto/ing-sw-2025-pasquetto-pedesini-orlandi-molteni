@@ -103,7 +103,7 @@ public class Pirates extends EventCard {
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
     public boolean chooseDiscardedBattery(StorageComponent component) {
-        if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
+        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
             return component.decrementItemsCount(1);
         } else return false;
     }
