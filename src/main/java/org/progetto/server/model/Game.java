@@ -1,9 +1,21 @@
 package org.progetto.server.model;
 
+import com.google.gson.reflect.TypeToken;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+//import org.progetto.server.model.loadClasses.ComponentDeserializer;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Game {
 
@@ -15,8 +27,8 @@ public class Game {
     private final ArrayList<Player> players;
     private final int level;
     private GamePhase phase;
-    private final ArrayList<Component> componentDeck;
-    private final ArrayList<Component> visibleComponentDeck;
+    private ArrayList<Component> componentDeck;
+    private ArrayList<Component> visibleComponentDeck;
     private final ArrayList<EventCard> eventCardDeck;
     private final Board board;
     private EventCard activeEventCard;
@@ -189,10 +201,31 @@ public class Game {
     }
 
     /**
+     * @author Lorenzo
      * @return component deck (list of components)
      */
     private ArrayList<Component> loadComponents(){
-        // todo: load from json file
+        /* WIP
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            Type listType = new TypeToken<ArrayList<Component>>() {}.getType();
+
+            FileReader reader = new FileReader("src/main/resources/org.progetto.server/Components.json");
+            ArrayList<Component> components = gson.fromJson(reader, listType);
+            reader.close();
+
+            return components;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+        */
+
         ArrayList<Component> components = new ArrayList<>();
         components.add(new Component(ComponentType.CANNON, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.DOUBLE_CANNON, new int[]{0,1,2,3}, "imgPath"));
@@ -200,7 +233,6 @@ public class Game {
         components.add(new Component(ComponentType.BATTERY_STORAGE, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{0,1,2,3}, "imgPath"));
         components.add(new Component(ComponentType.SHIELD, new int[]{0,1,2,3}, "imgPath"));
-
         return components;
     }
 

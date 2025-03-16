@@ -1,12 +1,10 @@
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 
 import java.io.IOException;
 
 public class BuildingBoardtest {
-
 
     @Test
     void Loadingtest() throws IOException {
@@ -22,5 +20,7 @@ public class BuildingBoardtest {
                 System.out.print(mat[i][j] + " ");
             }
         }
+
     }
+
 }

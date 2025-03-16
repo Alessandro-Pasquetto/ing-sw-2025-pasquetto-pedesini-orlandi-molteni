@@ -6,14 +6,14 @@ public class Component {
     // ATTRIBUTES
     // =======================
 
-    private ComponentType type;
-    private int[] connections;   //{0,1,2,3} = {n°up,n°right,n°down,n°left}
+    private final ComponentType type;
+    private final int[] connections;   //{0,1,2,3} = {n°up,n°right,n°down,n°left}
     private int rotation;        //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
     private int x_coordinate;    //x coordinate in matrix
     private int y_coordinate;    //y coordinate in matrix
     private boolean hidden;      //false if it was discarded
     private boolean placed;      //true if it's in the spaceship matrix
-    private String imgSrc;
+    private final String imgSrc;
 
     // =======================
     // CONSTRUCTORS
