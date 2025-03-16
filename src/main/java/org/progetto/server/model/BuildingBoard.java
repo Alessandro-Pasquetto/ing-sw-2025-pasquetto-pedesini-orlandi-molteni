@@ -169,7 +169,7 @@ public class BuildingBoard {
      * @return true if component has been placed correctly else otherwise
      */
     public boolean placeComponent(int y, int x) {
-        if(boardMask[y][x] == 0) {
+        if(boardMask[y][x] == 1) {
             spaceship.addComponentShipCount(1);
 
             spaceshipMatrix[y][x] = handComponent;
@@ -391,19 +391,19 @@ public class BuildingBoard {
     private boolean checkCannonValidity(Component cannon, int x, int y) {
 
         switch (cannon.getRotation()){
-            case 0:
-                if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null)
-                    return false;
-                break;
-            case 1:
-                if(x + 1 < spaceshipMatrix[0].length && spaceshipMatrix[y][x + 1] != null)
-                    return false;
-                break;
-            case 2:
+            case 0: // up
                 if(y > 0 && spaceshipMatrix[y - 1][x] != null)
                     return false;
                 break;
-            case 3:
+            case 1: // right
+                if(x + 1 < spaceshipMatrix[0].length && spaceshipMatrix[y][x + 1] != null)
+                    return false;
+                break;
+            case 2: // bottom
+                if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null)
+                    return false;
+                break;
+            case 3: // left
                 if(x > 0 && spaceshipMatrix[y][x - 1] != null)
                     return false;
                 break;
@@ -423,6 +423,7 @@ public class BuildingBoard {
 
         numComponentChecked.getAndIncrement();
         visited[y][x] = true;
+
         Component currentComponent = spaceshipMatrix[y][x];
         int currentRotation = currentComponent.getRotation();
         ComponentType currentType = currentComponent.getType();
@@ -438,13 +439,14 @@ public class BuildingBoard {
         boolean up = false, right = false, bottom = false, left = false;
 
         // up
-        if(y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
-            Component upComponent = spaceshipMatrix[y + 1][x];
+        if(y > 0 && boardMask[y - 1][x] == -1 && !visited[y - 1][x]){
+            Component upComponent = spaceshipMatrix[y - 1][x];
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
             if((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1))
                 return false;
-            up = true;
+            if(upConnection != 0 && relativeConnection != 0)
+                up = true;
         }
         // right
         if(x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && !visited[y][x + 1]){
@@ -453,34 +455,37 @@ public class BuildingBoard {
             int relativeConnection = rightComponent.getConnections()[3];
             if((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1))
                 return false;
-            right = true;
+            if(rightConnection != 0 && relativeConnection != 0)
+                right = true;
         }
         // bottom
-        if(y > 0 && boardMask[y - 1][x] == -1 && !visited[y - 1][x]){
-            Component bottomComponent = spaceshipMatrix[y - 1][x];
+        if(y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
+            Component bottomComponent = spaceshipMatrix[y + 1][x];
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
             if((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1))
                 return false;
-            bottom = true;
+            if(bottomConnection != 0 && relativeConnection != 0)
+                bottom = true;
         }
         // left
         if(x > 0 && boardMask[y][x - 1] == -1 && !visited[y][x - 1]){
-            Component leftComponent = spaceshipMatrix[y - 1][x];
+            Component leftComponent = spaceshipMatrix[y][x - 1];
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
             if((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1))
                 return false;
-            left = true;
+            if(leftConnection != 0 && relativeConnection != 0)
+                left = true;
         }
 
         boolean result = true;
         if(up)
-            result = dfsValidity(x, y + 1, visited, numComponentChecked);
+            result = dfsValidity(x, y - 1, visited, numComponentChecked);
         if(result && right)
             result = dfsValidity(x + 1, y, visited, numComponentChecked);
         if(result && bottom)
-            result = dfsValidity(x, y - 1, visited, numComponentChecked);
+            result = dfsValidity(x, y + 1, visited, numComponentChecked);
         if(result && left)
             result = dfsValidity(x - 1, y, visited, numComponentChecked);
 

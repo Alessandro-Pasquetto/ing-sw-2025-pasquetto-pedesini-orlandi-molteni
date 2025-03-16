@@ -11,20 +11,16 @@ public class BuildingBoardtest {
     @Test
     void Loadingtest() throws IOException {
 
-    Spaceship spaceship = new Spaceship(1, 0);
-    BuildingBoard buildingboard = spaceship.getBuildingBoard();
+        Spaceship spaceship = new Spaceship(1, 0);
+        BuildingBoard buildingboard = spaceship.getBuildingBoard();
 
-    int[][] mat = buildingboard.getBoardMask();
+        int[][] mat = buildingboard.getBoardMask();
 
-    for (int i = 0; i < mat.length; i++) {
-        System.out.println();
-        for (int j = 0; j < mat[i].length; j++) {
-            System.out.print(mat[i][j] + " ");
+        for (int i = 0; i < mat.length; i++) {
+            System.out.println();
+            for (int j = 0; j < mat[i].length; j++) {
+                System.out.print(mat[i][j] + " ");
+            }
         }
     }
-
-
-    }
-
-
 }

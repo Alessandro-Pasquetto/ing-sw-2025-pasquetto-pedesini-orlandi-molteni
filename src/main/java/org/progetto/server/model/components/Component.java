@@ -69,7 +69,9 @@ public class Component {
     // =======================
 
     public void setRotation(int rotation) {
-        this.rotation = rotation;
+        for (int i = 0; i < rotation; i++) {
+            rotate();
+        }
     }
 
     public void setHidden(boolean hidden) {
@@ -94,26 +96,14 @@ public class Component {
 
     // Rotates the component clockwise
     public void rotate() {
-        if (rotation == 3) {
+        if (rotation == 3)
             rotation = 0;
-        } else {
+        else
             rotation++;
 
-            for(int idx = 0; idx <= connections.length-1; idx++) {
-
-                int tmp;
-
-                if(idx == connections.length - 1) {
-                    tmp = connections[0];
-                    connections[0] = connections[connections.length - 1];
-                }
-                else{
-                    tmp = connections[idx+1];
-                    connections[idx+1] = connections[idx];
-                }
-
-
-            }
-        }
+        int saveLast = connections[3];
+        for (int i = 3; i > 0; i--)
+            connections[i] = connections[i - 1];
+        connections[0] = saveLast;
     }
 }
