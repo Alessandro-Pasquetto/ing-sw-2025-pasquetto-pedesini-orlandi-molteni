@@ -1,7 +1,10 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.StorageComponent;
 
 import java.util.ArrayList;
 
@@ -34,12 +37,20 @@ public class MeteorsRain extends EventCard {
     // OTHER METHODS
     // =======================
 
-    // WORK IN PROGRESS...
-    public Component checkExposedConnector(Game game, Player player, Projectile shot, int position) {
+    /**
+     * Returns first component hit by meteor
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param game Current game
+     * @param player Current player
+     * @param shot Current shot
+     * @param position Dices result
+     * @return first component in his trajectory if it has any exposed connector, otherwise null
+     */
+    public Component checkImpactComponent(Game game, Player player, Projectile shot, int position) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
         int row, column;
-
-        // REMINDER: mod4(Shot direction - Rotation) = Index in Connections array
 
         switch (shot.getFrom()) {
             case 0:
@@ -50,13 +61,11 @@ public class MeteorsRain extends EventCard {
                 }
                 for (int i = row; i < spaceshipMatrix.length; i++) {
                     if (spaceshipMatrix[i][column] != null) {
-                        int[] connections = spaceshipMatrix[i][column].getConnections();
-                        if (connections[spaceshipMatrix[i][column].getRotation()] > )   spaceshipMatrix[i][column].getRotation()
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return true;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
+
             case 1:
                 row = position - 5; // normalization for spaceshipMatrix
                 column = spaceshipMatrix[0].length - 1;
@@ -65,11 +74,11 @@ public class MeteorsRain extends EventCard {
                 }
                 for (int j = column; j >= 0; j--) {
                     if (spaceshipMatrix[row][j] != null) {
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return true;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;
+
             case 2:
                 row = spaceshipMatrix.length - 1;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
@@ -78,11 +87,11 @@ public class MeteorsRain extends EventCard {
                 }
                 for (int i = row; i >= 0; i--) {
                     if (spaceshipMatrix[i][column] != null) {
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return true;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
+
             case 3:
                 row = position - 5; // normalization for spaceshipMatrix
                 column = 0;
@@ -91,8 +100,7 @@ public class MeteorsRain extends EventCard {
                 }
                 for (int j = column; j < spaceshipMatrix[0].length; j++) {
                     if (spaceshipMatrix[row][j] != null) {
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return true;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;
@@ -100,23 +108,77 @@ public class MeteorsRain extends EventCard {
         return null;
     }
 
-    public void effect() {
+    /**
+     * Checks if there's at least a shield protecting the shot's origin direction
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param player Current player
+     * @param shot Current shot
+     * @return true if there is at least a shield protecting the shot's origin direction, otherwise false
+     */
+    public boolean checkShields(Player player, Projectile shot) {
+        Spaceship spaceship = player.getSpaceship();
 
+        switch (shot.getFrom()) {
+            case 0:
+                if (spaceship.getIdxShieldCount(0) > 0) {
+                    return true;
+                }
+
+            case 1:
+                if (spaceship.getIdxShieldCount(1) > 0) {
+                    return true;
+                }
+
+            case 2:
+                if (spaceship.getIdxShieldCount(2) > 0) {
+                    return true;
+                }
+
+            case 3:
+                if (spaceship.getIdxShieldCount(3) > 0) {
+                    return true;
+                }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the StorageComponent chosen by player is a battery storage
+     * If that is true, the battery will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the battery will be discarded
+     * @return true if the battery was successfully discarded, false if the battery storage is empty
+     */
+    public boolean chooseDiscardedBattery(StorageComponent component) {
+        if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
+            return component.decrementItemsCount(1);
+        } else return false;
     }
 
     // TODO: For each meteor, the controller let the leader throw the dices to find impact position.
     //  Each one of the players will be affected by that projectile simultaneously.
     //  There is two types of meteor:
-    //  - small: the controller checks if it hits an exposed connector calling checkExposedConnector().
+    //  - small: the controller checks if it hits an exposed connector calling checkImpactComponent().
     //           If returns null, the meteor does not destroy anything.
-    //           Otherwise, the controller has to check if the player has a shield pointing in the projectile direction, calling checkShields().
+    //           Otherwise, the controller has to check if that component has any exposed connector in shot direction (connections[shotDirection] > 0).
+    //           If it has any exposed connector, the controller checks if the player has a shield pointing in the projectile direction, calling checkShields().
     //           If returns true, the controller asks to player if he wants to use battery to enable it (if he has at least a battery).
-    //           Otherwise, the meteor hits the exposed connector component.
-    //  - big: the controller checks if there is a cannon in the same row/column where the meteor is coming.
-    //         If so, there are two options:
-    //         1) if it is a single cannon, it destroys the meteor without asking anything and goes to the next meteor.
-    //         2) if it is a double cannon, the controller asks to player if he wants to use a battery to enable the cannon.
-    //                                      If he answers "yes", the battery is used and the meteor destroyed; otherwise goes on.
-    //         Otherwise, the meteor hits the the spaceship.
+    //           If he wants to use it, it calls chooseDiscardedBattery().
+    //           Otherwise, the meteor hits the exposed connector component, so controller destroys previously passed component.
+    //  - big: the controller checks what's the first component in meteor's way (row/column), calling checkImpactComponent().
+    //         That returns null if there's no component in its trajectory; otherwise returns component's reference.
+    //         Controller checks component's type:
+    //         1) if it is NOT a cannon: the meteor hits the spaceship, destroying the component.
+    //         2) if it is a single cannon: checks cannon's rotation.
+    //                                      If it's directed against meteor, it destroys it without asking anything and goes to the next meteor.
+    //                                      Otherwise, it destroys the cannon.
+    //         3) if it is a double cannon, checks cannon's rotation.
+    //                                      If it's NOT directed against meteor, it destroys the cannon.
+    //                                      Otherwise, if it's directed against meteor, asks to player if he wants to use a battery to enable the cannon.
+    //                                      If he answers "yes", the battery is used and the meteor destroyed; otherwise goes on and destroys the cannon.
     //  It goes on until there are no meteor left.
 }

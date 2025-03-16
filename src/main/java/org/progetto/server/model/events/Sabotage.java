@@ -55,7 +55,7 @@ public class Sabotage extends EventCard {
      * @param player Current player
      * @return false if the cell is empty, true otherwise
      */
-    public boolean effect(int row, int column, Player player) {
+    public boolean penalty(int row, int column, Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
         if (spaceshipMatrix[row][column] != null) {
             player.getSpaceship().getBuildingBoard().destroyComponent(row, column);
@@ -64,8 +64,8 @@ public class Sabotage extends EventCard {
         else return false;
     }
 
-    // TODO: The controller calls lessPopulatedSpaceship and it return the player with the less crew.
-    //  The player chosen throws 2 dices to find the column and the row of the component that will be destroyed.
+    // TODO: The controller calls lessPopulatedSpaceship() and it return the player with the less crew.
+    //  The player chosen throws 2 dices to find the column and the row of the component that will be destroyed, calling penalty().
     //  If there is no component in the selected cell the player will throw the dices again.
     //  If after 3 double throws no component has been hit the effect ends.
 }

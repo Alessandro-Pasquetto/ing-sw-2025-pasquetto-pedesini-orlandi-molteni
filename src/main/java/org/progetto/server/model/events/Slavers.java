@@ -90,7 +90,7 @@ public class Slavers extends EventCard {
     }
 
     /**
-     * Applies the effect based on the player's firepower compared to the required threshold
+     * Defines battle's outcome
      *
      * @author Gabriele
      * @author Stefano
@@ -98,7 +98,7 @@ public class Slavers extends EventCard {
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int effect(Player player, int firePower) {
+    public int battleResult(Player player, int firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {
@@ -108,7 +108,8 @@ public class Slavers extends EventCard {
         }
     }
 
-    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries.
+    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
+    //  It calls battleResult() to know battle's outcome.
     //  If player:
     //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays and the card's effect ends.
     //  - loses, he has to discard an amount of crew members (humans or aliens) equals to penaltyCrew.

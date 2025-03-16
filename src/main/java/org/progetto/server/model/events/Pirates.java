@@ -4,6 +4,8 @@ import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.StorageComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,21 @@ public class Pirates extends EventCard {
     }
 
     /**
+     * Checks if the StorageComponent chosen by player is a battery storage
+     * If that is true, the battery will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the battery will be discarded
+     * @return true if the battery was successfully discarded, false if the battery storage is empty
+     */
+    public boolean chooseDiscardedBattery(StorageComponent component) {
+        if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
+            return component.decrementItemsCount(1);
+        } else return false;
+    }
+
+    /**
      * If the shot find a component in its trajectory, the function destroys it.
      *
      * @author Gabriele
@@ -177,7 +194,7 @@ public class Pirates extends EventCard {
     }
 
     /**
-     * Applies the effect based on the player's firepower compared to the required threshold
+     * Defines battle's outcome
      *
      * @author Gabriele
      * @author Stefano
@@ -185,7 +202,7 @@ public class Pirates extends EventCard {
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int effect(Player player, int firePower) {
+    public int battleResult(Player player, int firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {
@@ -195,7 +212,8 @@ public class Pirates extends EventCard {
         }
     }
 
-    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries.
+    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
+    //  It calls battleResult() to know battle's outcome.
     //  If player:
     //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays.
     //          Pirates are defeated, so now we have to handle the defeatedPlayers so far.
@@ -205,7 +223,7 @@ public class Pirates extends EventCard {
     //           Pirates will affect next player.
     //  If there is any defeated player, the first defeated player will throw two dices to the determinate row/column of impact.
     //  If the shot is small, the controller have to check the position of shields for each player calling checkShields(), in case it have to ask the player if he wants to use the shield or not:
-    //  - "yes", uses one battery and the spaceship is safe (for now).
+    //  - "yes", uses one battery and the spaceship is safe (for now), calling chooseDiscardedBattery().
     //  - "no", go on.
     //  It calls penaltyShot() for each defeated player, go on with the next shot until there is no more left.
     //  The card's effect ends.

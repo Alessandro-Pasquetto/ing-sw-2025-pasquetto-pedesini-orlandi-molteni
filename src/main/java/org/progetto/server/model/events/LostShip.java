@@ -3,6 +3,7 @@ import javafx.util.Pair;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.StorageComponent;
 
 import java.util.ArrayList;
@@ -50,24 +51,42 @@ public class LostShip extends EventCard{
     // =======================
 
     /**
-     * The player decides to lose a specific number of crew members to get a specified number of credits, that costs a certain number of flight days
+     * Checks if the StorageComponent chosen by player is a housing unit
+     * If that is true, the crew member will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the crew will be discarded
+     * @return true if the crew member was successfully discarded, false if the housing unit is empty
+     */
+    public boolean chooseDiscardedCrew(StorageComponent component) {
+        if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
+            if (component.getOrangeAlien()) {
+                component.setOrangeAlien(false);
+            } else if (component.getPurpleAlien()) {
+                component.setPurpleAlien(false);
+            } else if (component.getItemsCount() > 0) {
+                return component.decrementItemsCount(1);
+            }
+            return true;
+        } else return false;
+    }
+
+    /**
+     * If the player chooses to take the reward credits, they are moved back by a number of days equal to penaltyDays
      *
      * @author Gabriele
      * @author Stefano
      * @param board Game board
      * @param player Current player
-     * @param componentsToProcess ArrayList of Pair objects that contains for each StorageComponent the number of crew members to delete
      */
-    public void effect(Board board, Player player, ArrayList<Pair<StorageComponent, Integer>> componentsToProcess) {
-        for (Pair<StorageComponent, Integer> pair : componentsToProcess) {
-            StorageComponent component = pair.getKey();
-            component.decrementItemsCount(pair.getValue());
-        }
-        board.movePlayerByDistance(player, this.penaltyDays);
+    public void rewardPenalty(Board board, Player player) {
         player.addCredits(this.rewardCredits);
+        board.movePlayerByDistance(player, this.penaltyDays);
     }
 
-    // TODO: Controller has to manage the current player's decisions, giving him the possibility to choose the StorageComponent from which delete the specified number of crew members.
-    //  Then, it has to create the ArrayList of Pairs, where the first element is the reference to the component and the second crew members amount to delete.
-    //  When this process is ended, it calls effect() with correct params.
+    // TODO: The controller has to manage the current player's decisions, giving him the possibility to discard an amount of crew members (humans or aliens) equals to penaltyCrew.
+    //  This happens only if the player has at least as many crew members as penaltyCrew.
+    //  If player wants to discard crew amount required, for each crew member he has to define the housing unit from which discard a member, calling chooseDiscardedCrew().
+    //  When this process is ended, so he had discarded the correct amount of crew members, the controller calls rewardPenalty().
 }

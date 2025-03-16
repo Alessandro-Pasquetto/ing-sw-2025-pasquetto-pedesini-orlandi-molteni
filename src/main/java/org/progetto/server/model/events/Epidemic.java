@@ -93,7 +93,7 @@ public class Epidemic extends EventCard {
      * @author Stefano
      * @param player Current player
      */
-    private void findHousingUnit(Player player) {
+    public void effect(Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
         boolean[][] visitedCells = new boolean[spaceshipMatrix.length][spaceshipMatrix[0].length];
@@ -119,17 +119,6 @@ public class Epidemic extends EventCard {
 
             }
         }
-    }
-
-    /**
-     * Calls findHousingUnit()
-     *
-     * @author Gabriele
-     * @author Stefano
-     * @param player Current player
-     */
-    public void effect(Player player) {
-        findHousingUnit(player);
     }
 
     // TODO: The controller calls for each player at the same time effect().

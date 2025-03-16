@@ -69,7 +69,7 @@ public class LostStation extends EventCard {
      * @param board Game board
      * @param player Current player
      */
-    public void effect(Board board, Player player) {
+    public void penalty(Board board, Player player) {
         board.movePlayerByDistance(player, this.penaltyDays);
     }
 
@@ -77,4 +77,5 @@ public class LostStation extends EventCard {
     //  If so, it would ask for each box contained in rewardBoxes if he wants it.
     //  If he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
     //  Otherwise, if the player answers 'no,' the controller moves to the next box in the array until there are no more left.
+    //  If player had decided to take at least a reward box, calls penalty().
 }

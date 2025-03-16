@@ -29,7 +29,7 @@ public class Battlezone {
     // GETTERS
     // =======================
 
-    public ArrayList<ConditionPenalty> getPair() {
+    public ArrayList<ConditionPenalty> getCouples() {
         return couples;
     }
 
@@ -256,7 +256,7 @@ public class Battlezone {
     //  - PenaltyCrew: the player has to discard an amount of crew members (humans or aliens) equals to needAmount, calling for each crew member chooseDiscardedCrew()
     //  - PenaltyShots: the player will throw two dices to the determinate row/column of impact.
     //                  If the shot is small, the controller have to check the position of shields for the player calling checkShields(), in case it have to ask the player if he wants to use the shield or not:
-    //                  - "yes", uses one battery and the spaceship is safe (for now).
+    //                  - "yes", uses one battery and the spaceship is safe (for now), calling chooseDiscardedBattery().
     //                  - "no", go on.
     //                  It calls penaltyShot() for the player, go on with the next shot until there is no more left.
     //  - PenaltyBoxes: he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones).

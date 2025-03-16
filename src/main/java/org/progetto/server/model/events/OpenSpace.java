@@ -1,6 +1,8 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.StorageComponent;
 
 import java.util.List;
 
@@ -19,6 +21,21 @@ public class OpenSpace extends EventCard {
     // =======================
 
     /**
+     * Checks if the StorageComponent chosen by player is a battery storage
+     * If that is true, the battery will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the battery will be discarded
+     * @return true if the battery was successfully discarded, false if the battery storage is empty
+     */
+    public boolean chooseDiscardedBattery(StorageComponent component) {
+        if (component.getType().equals(ComponentType.BATTERYSTORAGE)) {
+            return component.decrementItemsCount(1);
+        } else return false;
+    }
+
+    /**
      * Moves player ahead of a distance equal to enginePower
      *
      * @author Gabriele
@@ -27,9 +44,9 @@ public class OpenSpace extends EventCard {
      * @param player Current player
      * @param enginePower Player's engine power
      */
-    public void effect(Board board, Player player, int enginePower) {
+    public void moveAhead(Board board, Player player, int enginePower) {
         board.movePlayerByDistance(player, enginePower);
     }
 
-    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleCannons through the use of a battery.
+    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleEngines through the use of a battery, calling each time chooseDiscardedBattery().
 }

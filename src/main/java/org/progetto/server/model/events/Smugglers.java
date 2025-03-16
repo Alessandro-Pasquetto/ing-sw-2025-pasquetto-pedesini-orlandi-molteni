@@ -146,7 +146,7 @@ public class Smugglers extends EventCard {
     }
 
     /**
-     * Applies the effect based on the player's firepower compared to the required threshold
+     * Defines battle's outcome
      *
      * @author Gabriele
      * @author Stefano
@@ -154,7 +154,7 @@ public class Smugglers extends EventCard {
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int effect(Player player, int firePower) {
+    public int battleResult(Player player, int firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {
@@ -164,15 +164,16 @@ public class Smugglers extends EventCard {
         }
     }
 
-    // TODO: The controller, giving to player the smugglers fire power, gives to the player the possibility to use double cannons through the use of batteries.
+    // TODO: The controller, giving to player the smugglers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
+    //  It calls battleResult() to know battle's outcome.
     //  If player:
     //  - wins, it would ask if he wants rewardBoxes in exchange of penaltyDays.
     //          If he answers "yes", it would ask for each box contained in rewardBoxes if he wants it, otherwise the effect ends.
     //          In the for each, if he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
     //          Otherwise, if the player answers 'no,' the controller moves to the next box in the array until there are no more left.
     //          At the end, the card's effect ends.
-    //  - loses, he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones).
-    //           If he has no box left, he has to discard batteries.
+    //  - loses, he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones), calling chooseDiscardedBox().
+    //           If he has no box left, he has to discard batteries calling chooseDiscardedBattery().
     //           If he hasn't any battery left, card's effect stops.
     //           Then, the smugglers will affect next player.
     //  - draws, nothing happens.
