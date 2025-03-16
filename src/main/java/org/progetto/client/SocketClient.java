@@ -52,7 +52,6 @@ public class SocketClient {
                 }
             }).start();
 
-
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -131,7 +130,6 @@ public class SocketClient {
             System.out.println("In quella partita c'è già un giocatore con lo stesso nome");
         }
     }
-
 
     public static void startGame(){
         out.println("StartGame");

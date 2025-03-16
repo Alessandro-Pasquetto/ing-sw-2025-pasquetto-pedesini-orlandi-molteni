@@ -5,7 +5,6 @@ package org.progetto.server.model.loadClasses;
  */
 public class MaskMatrix {
 
-
     // =======================
     // ATTRIBUTES
     // =======================
@@ -39,9 +38,4 @@ public class MaskMatrix {
         this.advancedMatrix = advancedMatrix;
     }
 
-
-
-
-
-    }
-
+}

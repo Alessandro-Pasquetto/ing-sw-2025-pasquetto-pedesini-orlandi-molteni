@@ -1,0 +1,33 @@
+[
+
+  {
+    "type": "LOSTSHIP",
+    "imgSrc": "imgPath",
+    "penaltyCrew": 3,
+    "rewardCredits": 2,
+    "penaltyDays": 2
+  },
+  {
+    "type": "EPIDEMY",
+    "imgSrc": "imgPath"
+  },
+  {
+    "type": "EPIDEMY",
+    "imgSrc": "imgPath"
+  },
+  {
+    "type": "PLANETS",
+    "imgSrc": "imgPath",
+    "penaltyDays": 2,
+    "rewardsForPlanets": [
+      [
+        {"type": "RED", "value": 4},
+        {"type": "BLUE", "value": 1}
+      ],
+      [
+        {"type": "GREEN", "value": 2},
+        {"type": "BLUE", "value": 1}
+      ]
+    ]
+  }
+]
