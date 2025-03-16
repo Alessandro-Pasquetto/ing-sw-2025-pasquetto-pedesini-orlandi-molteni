@@ -7,12 +7,12 @@ public class Component {
     // =======================
 
     private ComponentType type;
-    private int[] connections;
-    private int rotation;       //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
-    private int x_coordinate;  //x coordinate in matrix
-    private int y_coordinate;  //y coordinate in matrix
-    private boolean hidden;   //false if it was discarded
-    private boolean placed;   //true if it's in the spaceship matrix
+    private int[] connections;   //{0,1,2,3} = {n°up,n°right,n°down,n°left}
+    private int rotation;        //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
+    private int x_coordinate;    //x coordinate in matrix
+    private int y_coordinate;    //y coordinate in matrix
+    private boolean hidden;      //false if it was discarded
+    private boolean placed;      //true if it's in the spaceship matrix
     private String imgSrc;
 
     // =======================
@@ -98,6 +98,22 @@ public class Component {
             rotation = 0;
         } else {
             rotation++;
+
+            for(int idx = 0; idx <= connections.length-1; idx++) {
+
+                int tmp;
+
+                if(idx == connections.length - 1) {
+                    tmp = connections[0];
+                    connections[0] = connections[connections.length - 1];
+                }
+                else{
+                    tmp = connections[idx+1];
+                    connections[idx+1] = connections[idx];
+                }
+
+
+            }
         }
     }
 }

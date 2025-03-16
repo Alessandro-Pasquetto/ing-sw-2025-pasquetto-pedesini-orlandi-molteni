@@ -143,8 +143,8 @@ public class Game {
     }
 
     /**
-     * @param indexComponent index of the visible component picked
-     * @param player the player who is picking
+     * @param indexComponent is the index of the visible component picked
+     * @param player is the player who is picking
      */
     public void pickVisibleComponent(int indexComponent, Player player) throws IllegalStateException{
         Component pickedComponent = null;
@@ -205,7 +205,7 @@ public class Game {
     }
 
     /**
-     * @param name name of the player who wants to join the game
+     * @param name is the name of the player who wants to join the game
      * @return true if it is available, false otherwise
      */
     public boolean tryAddPlayer(String name) {

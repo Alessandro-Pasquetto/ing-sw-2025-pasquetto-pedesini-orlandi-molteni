@@ -101,7 +101,7 @@ public class BuildingBoard {
     }
 
     /**
-     *
+     * @author Lorenzo
      * @param type is the component type to search in the matrix
      * @return list of components found
      */
@@ -341,7 +341,42 @@ public class BuildingBoard {
         return true;
     }
 
+
+    /**
+     * @author Lorenzo
+     * @param c1 is the first component
+     * @param c2 is the second component
+     * @return true if c1 and c2 are connected
+     */
     public boolean areConnected(Component c1, Component c2) {
+
+        int[] c1_connections = c1.getConnections();
+        int[] c2_connections = c2.getConnections();
+
+        if(c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+            if ((c1_connections[3] == c2_connections[1]  && c1_connections[3]!= 0) || (c1_connections[3] == 3) || (c2_connections[1] == 3)) {
+                return true;
+            }
+        }
+
+        if(c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+            if ((c1_connections[1] == c2_connections[3]  && c1_connections[1]!= 0) || (c1_connections[1] == 3) || (c2_connections[3] == 3)) {
+                return true;
+            }
+        }
+
+        if(c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
+            if ((c1_connections[0] == c2_connections[2]  && c1_connections[0]!= 0) || (c1_connections[2] == 3) || (c2_connections[0] == 3)) {
+                return true;
+            }
+        }
+
+        if(c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
+            if ((c1_connections[2] == c2_connections[0]  && c1_connections[2]!= 0) || (c1_connections[2] == 3) || (c2_connections[0] == 3)) {
+                return true;
+            }
+        }
+
 
         return false;
     }

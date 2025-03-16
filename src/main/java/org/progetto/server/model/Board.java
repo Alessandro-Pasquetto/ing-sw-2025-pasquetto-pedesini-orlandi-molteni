@@ -39,7 +39,8 @@ public class Board {
     // =======================
 
     /**
-     * @param player the new traveler
+     * @author Alessandro
+     * @param player is the new traveler
      */
     public synchronized void addTraveler(Player player) {
         activeTravelers.add(player);
@@ -65,6 +66,7 @@ public class Board {
     }
 
     /**
+     * @author Alessandro
      * @param player the moving player
      * @param distance distance traveled by the player
      */
@@ -91,7 +93,8 @@ public class Board {
     }
 
     /**
-     * @param player the player who leaves the travel
+     * @author Alessandro
+     * @param player is the player who leaves the travel
      */
     public void leaveTravel(Player player) {
         int playerPosition = player.getPosition();

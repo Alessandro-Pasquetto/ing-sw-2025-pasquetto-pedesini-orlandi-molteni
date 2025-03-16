@@ -61,14 +61,16 @@ public class Player {
     // =======================
 
     /**
-     * @param creditsToAdd number of credits gained (if positive) or lost (if negative)
+     * @author Alessandro
+     * @param creditsToAdd is the number of credits gained (if positive) or lost (if negative)
      */
     public void addCredits(int creditsToAdd) {
         this.credits += creditsToAdd;
     }
 
     /**
-     * @return sum of the rolled
+     * @author Alessandro
+     * @return the sum of the rolled
      */
     public int rollDice(){
         int die1 = (int) (Math.random() * 6) + 1;
