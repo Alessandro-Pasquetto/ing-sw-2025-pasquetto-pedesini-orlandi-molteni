@@ -354,30 +354,37 @@ public class BuildingBoard {
         int[] c1_connections = c1.getConnections();
         int[] c2_connections = c2.getConnections();
 
-        if(c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
-            if ((c1_connections[3] == c2_connections[1]  && c1_connections[3]!= 0) || (c1_connections[3] == 3) || (c2_connections[1] == 3)) {
-                return true;
+        if (c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+            if (c1_connections[3] != 0 && c2_connections[1] != 0) {
+                if (c1_connections[3] == c2_connections[1] || c1_connections[3] == 3 || c2_connections[1] == 3) {
+                    return true;
+                }
             }
         }
 
-        if(c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
-            if ((c1_connections[1] == c2_connections[3]  && c1_connections[1]!= 0) || (c1_connections[1] == 3) || (c2_connections[3] == 3)) {
-                return true;
+        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+            if (c1_connections[1] != 0 && c2_connections[3] != 0) {
+                if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
+                    return true;
+                }
             }
         }
 
-        if(c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
-            if ((c1_connections[0] == c2_connections[2]  && c1_connections[0]!= 0) || (c1_connections[2] == 3) || (c2_connections[0] == 3)) {
-                return true;
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
+            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
+                if (c1_connections[0] == c2_connections[2] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+                    return true;
+                }
             }
         }
 
-        if(c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
-            if ((c1_connections[2] == c2_connections[0]  && c1_connections[2]!= 0) || (c1_connections[2] == 3) || (c2_connections[0] == 3)) {
-                return true;
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
+            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
+                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+                    return true;
+                }
             }
         }
-
 
         return false;
     }
