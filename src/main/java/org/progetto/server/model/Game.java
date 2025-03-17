@@ -9,12 +9,11 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-//import org.progetto.server.model.loadClasses.ComponentDeserializer;
+import org.progetto.server.model.loadClasses.ComponentDeserializer;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+
 
 
 public class Game {
@@ -205,7 +204,7 @@ public class Game {
      * @return component deck (list of components)
      */
     private ArrayList<Component> loadComponents(){
-        /* WIP
+
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
@@ -224,16 +223,7 @@ public class Game {
 
             return null;
         }
-        */
 
-        ArrayList<Component> components = new ArrayList<>();
-        components.add(new Component(ComponentType.CANNON, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.DOUBLE_CANNON, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.ENGINE, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.BATTERY_STORAGE, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{0,1,2,3}, "imgPath"));
-        components.add(new Component(ComponentType.SHIELD, new int[]{0,1,2,3}, "imgPath"));
-        return components;
     }
 
     /**

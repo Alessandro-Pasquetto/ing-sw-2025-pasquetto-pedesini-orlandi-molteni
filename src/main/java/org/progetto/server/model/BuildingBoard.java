@@ -517,4 +517,15 @@ public class BuildingBoard {
 
         return dfsValidity(xComponent, yComponent, visited, numComponentChecked) && numComponentChecked.get() == spaceship.getComponentShipCount();
     }
+
+
+    public void printBoard(){
+        for (int i = 0; i < boardMask.length; i++) {
+            System.out.println();
+            for (int j = 0; j < boardMask[i].length; j++) {
+                System.out.print(boardMask[i][j] + " ");
+            }
+        }
+    }
+
 }
