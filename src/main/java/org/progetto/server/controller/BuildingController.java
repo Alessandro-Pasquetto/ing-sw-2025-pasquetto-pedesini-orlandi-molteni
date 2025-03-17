@@ -14,7 +14,7 @@ public class BuildingController {
             case "PickComponent":
                 try{
                     Component pickedComponent = game.pickHiddenComponent(player);
-                    broadcastMessageFunction.accept(player.getName() + " picked component " + pickedComponent.toString());
+                    broadcastMessageFunction.accept("P# " + player.getName() + " picked component: " + pickedComponent.getImgSrc());
                 } catch (IllegalStateException e) {
                     if(e.getMessage().equals("HandComponent already set"))
                         sendMessageToPlayer.accept("Hai già un componente in mano");

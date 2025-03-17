@@ -50,16 +50,16 @@
     "couples":
     [
       {
-        "condition": {"type": "FirePowerRequirement"},
+        "type": "FirePowerRequirement",
         "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []},
 
       },
       {
-        "condition": {"type": "EnginePowerRequirement"},
+        "type": "EnginePowerRequirement",
         "penalty": {"type": "PenaltyBoxes", "neededAmount": 3, "shots": []}
       },
       {
-        "condition": {"type": "CrewRequirement"},
+        "type": "CrewRequirement",
         "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots":
           [
             {"size": "Small", "from": 0},

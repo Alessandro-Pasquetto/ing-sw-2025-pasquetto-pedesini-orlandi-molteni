@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PageSwitcher {
+public class PageController {
 
     static Stage stage;
     static ConnetionView connetionView;
@@ -54,5 +54,9 @@ public class PageSwitcher {
 
     static void generateGameList(int id){
         chooseGameView.generateGameList(id);
+    }
+
+    static void generateComponent(String imgComponent){
+        gameView.generateComponent(imgComponent);
     }
 }

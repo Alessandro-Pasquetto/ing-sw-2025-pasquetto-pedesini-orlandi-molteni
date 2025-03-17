@@ -23,15 +23,15 @@
   "couples":
   [
     {
-      "condition": {"type": "CrewRequirement"},
+      "type": "CrewRequirement",
       "penalty": {"type": "PenaltyDays", "neededAmount": 3, "shots": []}
     },
     {
-      "condition": {"type": "EnginePowerRequirement"},
+      "type": "EnginePowerRequirement",
       "penalty": {"type": "PenaltyCrew", "neededAmount": 2, "shots": []}
     },
     {
-      "condition": {"type": "FirePowerRequirement"},
+      "type": "FirePowerRequirement",
       "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots": [{"size": "Small", "from": 2}, {"size": "Big", "from": 2}]}
     }
   ]

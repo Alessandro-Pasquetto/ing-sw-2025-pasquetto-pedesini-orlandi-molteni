@@ -6,15 +6,15 @@ public class ConditionPenalty {
     // ATTRIBUTES
     // =======================
 
-    private Condition condition;
+    private ConditionType type;
     private Penalty penalty;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ConditionPenalty(Condition condition, Penalty penalty) {
-        this.condition = condition;
+    public ConditionPenalty(ConditionType condition, Penalty penalty) {
+        this.type = condition;
         this.penalty = penalty;
     }
 
@@ -22,8 +22,8 @@ public class ConditionPenalty {
     // GETTERS
     // =======================
 
-    public Condition getCondition() {
-        return condition;
+    public ConditionType getType() {
+        return type;
     }
 
     public Penalty getPenalty() {

@@ -32,7 +32,7 @@ public class BuildingBoard {
         this.spaceshipMatrix = createSpaceshipMatrix();
         this.booked = new ArrayList<>(2);
         this.handComponent = null;
-        this.imgSrc = loadImgSrc(levelShip);
+        this.imgSrc = loadImgShip(levelShip);
 
         placeCentralUnit(levelShip, color);
     }
@@ -149,8 +149,8 @@ public class BuildingBoard {
         return boardMask;
     }
 
-    private String loadImgSrc(int levelShip){
-        return "imgPath";
+    private String loadImgShip(int levelShip){
+        return "board" + levelShip + ".jpg";
     }
 
     /**

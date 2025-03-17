@@ -9,4 +9,9 @@
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="org.progetto.client.GameView" prefHeight="400.0" prefWidth="600.0">
     <Button layoutX="200.0" layoutY="239.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
     <Button layoutX="200.0" layoutY="339.0" onAction="#pickComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
+
+
+
+    <VBox fx:id="components" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
+
 </AnchorPane>

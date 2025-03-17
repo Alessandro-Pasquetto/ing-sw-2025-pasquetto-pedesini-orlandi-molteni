@@ -1,25 +1,25 @@
 [
   {
     "type": "CANNON",
-    "connections": [1, 2, 3, 2],
-    "imgSrc": "imgPath"
+    "connections": [0, 2, 0, 3],
+    "imgSrc": "single-cannon1.jpg"
   },
   {
     "type": "SHIELD",
-    "connections": [1, 2, 3, 1],
-    "imgSrc": "imgPath"
+    "connections": [0, 1, 3, 1],
+    "imgSrc": "shield1.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
-    "connections": [1, 2, 3, 3],
-    "imgSrc": "imgPath",
-    "capacity": 2
+    "connections": [0, 0, 0, 1],
+    "imgSrc": "battery1.jpg",
+    "capacity": 3
   },
   {
     "type": "BOX_STORAGE",
-    "connections": [1, 2, 3, 2],
-    "imgSrc": "imgPath",
+    "connections": [2, 1, 3, 0],
+    "imgSrc": "blue-box-storage1.jpg",
     "capacity": 2,
-    "isRed": true
+    "isRed": false
   }
 ]

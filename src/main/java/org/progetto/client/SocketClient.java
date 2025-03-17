@@ -22,7 +22,7 @@ public class SocketClient {
 
             System.out.println("Connesso al server!");
 
-            PageSwitcher.switchScene("chooseGame.fxml", "ChooseGame");
+            PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
             // Gamelist listener
             new Thread(() -> {
@@ -40,7 +40,13 @@ public class SocketClient {
                             if(message.equals("C'è un nuovo game"))
                                 gameListListener(message);
                             else{
-                                System.out.println(message);
+                                if(message.startsWith("P#")){
+                                    int index = message.indexOf(": ");
+                                    String result = message.substring(index + 2); // "+2" perché ": " ha lunghezza 2
+                                    System.out.println(result);
+                                    PageController.generateComponent(result);
+                                }else
+                                    System.out.println(message);
                             }
                         }
                     }
@@ -66,7 +72,7 @@ public class SocketClient {
         }
         int idGame = Integer.parseInt(message);
 
-        PageSwitcher.generateGameList(idGame);
+        PageController.generateGameList(idGame);
     }
 
     /*
@@ -93,7 +99,7 @@ public class SocketClient {
 
         System.out.println("Hai creato una partita");
         try {
-            PageSwitcher.switchScene("game.fxml", "Game");
+            PageController.switchScene("game.fxml", "Game");
         } catch (IOException e) {
             System.out.println("Errore nel caricamente della pagina");
         }
@@ -122,7 +128,7 @@ public class SocketClient {
             System.out.println("Ti sei unito ad un game");
 
             try {
-                PageSwitcher.switchScene("game.fxml", "Game");
+                PageController.switchScene("game.fxml", "Game");
             } catch (IOException e) {
                 System.out.println("Errore nel caricamente della pagina");
             }
@@ -147,6 +153,6 @@ public class SocketClient {
         in.close();
         System.out.println("Ti sei disconnesso!");
 
-        PageSwitcher.switchScene("connection.fxml", "Page1");
+        PageController.switchScene("connection.fxml", "Page1");
     }
 }
