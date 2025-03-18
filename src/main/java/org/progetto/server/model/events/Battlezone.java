@@ -61,11 +61,11 @@ public class Battlezone {
      */
     public boolean chooseDiscardedCrew(StorageComponent component) {
         if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
-            if (component.getOrangeAlien()) {
+            if (component.getOrangeAlien()) {  // if it contains an orange alien
                 component.setOrangeAlien(false);
-            } else if (component.getPurpleAlien()) {
+            } else if (component.getPurpleAlien()) {  // if it contains a purple alien
                 component.setPurpleAlien(false);
-            } else if (component.getItemsCount() > 0) {
+            } else if (component.getItemsCount() > 0) {  // if it has more than one crew member
                 return component.decrementItemsCount(1);
             }
             return true;
@@ -85,22 +85,22 @@ public class Battlezone {
         Spaceship spaceship = player.getSpaceship();
 
         switch (shot.getFrom()) {
-            case 0:
+            case 0:  // shot come from up
                 if (spaceship.getIdxShieldCount(0) > 0) {
                     return true;
                 }
 
-            case 1:
+            case 1:  // shot come from right
                 if (spaceship.getIdxShieldCount(1) > 0) {
                     return true;
                 }
 
-            case 2:
+            case 2:  // shot come from down
                 if (spaceship.getIdxShieldCount(2) > 0) {
                     return true;
                 }
 
-            case 3:
+            case 3:  // shot come from left
                 if (spaceship.getIdxShieldCount(3) > 0) {
                     return true;
                 }
@@ -124,7 +124,7 @@ public class Battlezone {
         int row, column;
 
         switch (shot.getFrom()) {
-            case 0:
+            case 0:  // shot come from left
                 row = 0;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
@@ -137,7 +137,7 @@ public class Battlezone {
                     }
                 }
                 break;
-            case 1:
+            case 1:  // shot come from left
                 row = position - 5; // normalization for spaceshipMatrix
                 column = spaceshipMatrix[0].length - 1;
                 if (row < 0 || row >= spaceshipMatrix.length) {
@@ -150,7 +150,7 @@ public class Battlezone {
                     }
                 }
                 break;
-            case 2:
+            case 2:  // shot come from left
                 row = spaceshipMatrix.length - 1;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
@@ -163,7 +163,7 @@ public class Battlezone {
                     }
                 }
                 break;
-            case 3:
+            case 3:  // shot come from left
                 row = position - 5; // normalization for spaceshipMatrix
                 column = 0;
                 if (row < 0 || row >= spaceshipMatrix.length) {
@@ -196,28 +196,28 @@ public class Battlezone {
         Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxCounts();
 
-        if (playerBoxes[0] > 0) {
+        if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[1] > 0) {
+        if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[2] > 0) {
+        if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[3] > 0) {
+        if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
                 component.removeBox(boxIdx);
                 return true;

@@ -87,28 +87,28 @@ public class Smugglers extends EventCard {
         Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxCounts();
 
-        if (playerBoxes[0] > 0) {
+        if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[1] > 0) {
+        if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[2] > 0) {
+        if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
         }
 
-        if (playerBoxes[3] > 0) {
+        if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
                 component.removeBox(boxIdx);
                 return true;

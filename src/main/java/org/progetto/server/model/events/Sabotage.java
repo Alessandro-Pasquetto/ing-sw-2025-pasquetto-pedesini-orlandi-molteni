@@ -50,8 +50,8 @@ public class Sabotage extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param row X coordinate of the cell
-     * @param column Y coordinate of the cell
+     * @param row Y coordinate of the cell
+     * @param column X coordinate of the cell
      * @param player Current player
      * @return false if the cell is empty, true otherwise
      */
