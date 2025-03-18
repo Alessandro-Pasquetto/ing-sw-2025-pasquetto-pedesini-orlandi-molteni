@@ -93,10 +93,10 @@ public class BuildingBoard {
     private void placeCentralUnit(int levelShip, int color) {
         switch (levelShip) {
             case 1:
-                spaceshipMatrix[2][2] = new StorageComponent(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
+                spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
                 break;
             case 2:
-                spaceshipMatrix[2][3] = new StorageComponent(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
+                spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
                 break;
         }
     }
@@ -177,12 +177,6 @@ public class BuildingBoard {
             spaceshipMatrix[y][x].setY_coordinate(y);
             spaceshipMatrix[y][x].setX_coordinate(x);
 
-            switch (handComponent.getType())
-            {
-                case BATTERY_STORAGE:
-                    break;
-            }
-
             boardMask[y][x] = -1;   //signal the presence of a component
             handComponent = null;
             return true;
@@ -250,14 +244,14 @@ public class BuildingBoard {
                 break;
 
             case HOUSING_UNIT:
-                StorageComponent sc = (StorageComponent) destroyedComponent;
-                if(sc.getOrangeAlien())
+                HousingUnit hu = (HousingUnit) destroyedComponent;
+                if(hu.hasOrangeAlien())
                     spaceship.setAlienOrange(false);
 
-                if(sc.getPurpleAlien())
+                if(hu.hasPurpleAlien())
                     spaceship.setAlienPurple(false);
 
-                spaceship.addCrewCount(-sc.getItemsCount());
+                spaceship.addCrewCount(-hu.getCrewCount());
                 break;
 
             case ORANGE_HOUSING_UNIT:
@@ -275,22 +269,22 @@ public class BuildingBoard {
                 break;
 
             case CENTRAL_UNIT:
-                sc = (StorageComponent) destroyedComponent;
-                if(sc.getOrangeAlien())
+                hu = (HousingUnit) destroyedComponent;
+                if(hu.hasOrangeAlien())
                     spaceship.setAlienOrange(false);
 
-                if(sc.getPurpleAlien())
+                if(hu.hasPurpleAlien())
                     spaceship.setAlienPurple(false);
 
-                spaceship.addCrewCount(-sc.getItemsCount());
+                spaceship.addCrewCount(-hu.getCrewCount());
                 break;
 
             case STRUCTURAL_UNIT:
                 break;
 
             case BATTERY_STORAGE:
-                sc = (StorageComponent) destroyedComponent;
-                spaceship.addBatteriesCount(-sc.getItemsCount());
+                BatteryStorage bs = (BatteryStorage) destroyedComponent;
+                spaceship.addBatteriesCount(-bs.getItemsCount());
                 break;
 
             case RED_BOX_STORAGE:
@@ -342,7 +336,7 @@ public class BuildingBoard {
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the left
             if (c1_connections[1] != 0 && c2_connections[3] != 0) {
                 if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
                     return true;
@@ -502,7 +496,7 @@ public class BuildingBoard {
 
         AtomicInteger numComponentChecked = new AtomicInteger(0);
 
-        return dfsValidity(xComponent, yComponent, visited, numComponentChecked) && numComponentChecked.get() == spaceship.getComponentShipCount();
+        return dfsValidity(xComponent, yComponent, visited, numComponentChecked) && numComponentChecked.get() == spaceship.getShipComponentCount();
     }
 
 
@@ -514,5 +508,128 @@ public class BuildingBoard {
             }
         }
     }
+//todo complete method
+
+//    public void initSpaceshipParams()
+//    {
+//        for(int i = 0; i < spaceshipMatrix.length; i++){
+//            for(int j = 0; j < spaceshipMatrix[i].length; j++){
+//                if(spaceshipMatrix[i][j] != null){
+//
+//                    switch(spaceshipMatrix[i][j].getType()){
+//
+//                        case CANNON:
+//                            if (spaceshipMatrix[i][j].getRotation() == 0)
+//                                spaceship.addNormalShootingPower(+1);
+//                            else
+//                                spaceship.addNormalShootingPower((float) +0.5);
+//                            break;
+//
+//                        case DOUBLE_CANNON:
+//                            spaceship.addDoubleCannonCount(+1);
+//                            break;
+//
+//                        case ENGINE:
+//                            spaceship.addNormalEnginePower(+1);
+//                            break;
+//
+//                        case DOUBLE_ENGINE:
+//                            spaceship.addDoubleEngineCount(+1);
+//                            break;
+//
+//                        case SHIELD:
+//                            switch (spaceshipMatrix[i][j].getRotation()) {
+//
+//                                case 0: // left-up
+//                                    spaceship.addLeftUpShieldCount(1);
+//                                    break;
+//
+//                                case 1: // up-right
+//                                    spaceship.addUpRightShieldCount(1);
+//                                    break;
+//
+//                                case 2: // right-down
+//                                    spaceship.addRightDownShieldCount(1);
+//                                    break;
+//
+//                                case 3: // down-left
+//                                    spaceship.addDownLeftShieldCount(1);
+//                                    break;
+//                            }
+//
+//                            break;
+//
+//                        case HOUSING_UNIT:
+//                            HousingUnit hu = (HousingUnit) spaceshipMatrix[i][j];
+//                            spaceship.addCrewCount(-hu.getCrewCount());
+//                            break;
+//
+//                        case ORANGE_HOUSING_UNIT:
+//                            List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
+//                            if(orange_units.size() == 1) {    //if only a module is present
+//                                spaceship.setAlienOrange(false);
+//                            }
+//                            break;
+//
+//                        case PURPLE_HOUSING_UNIT:
+//                            List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
+//                            if(purple_units.size() == 1) {    //if only a module is present
+//                                spaceship.setAlienPurple(false);
+//                            }
+//                            break;
+//
+//                        case CENTRAL_UNIT:
+//                            hu = (HousingUnit) destroyedComponent;
+//                            if(hu.hasOrangeAlien())
+//                                spaceship.setAlienOrange(false);
+//
+//                            if(hu.hasPurpleAlien())
+//                                spaceship.setAlienPurple(false);
+//
+//                            spaceship.addCrewCount(-hu.getCrewCount());
+//                            break;
+//
+//                        case STRUCTURAL_UNIT:
+//                            break;
+//
+//                        case BATTERY_STORAGE:
+//                            BatteryStorage bs = (BatteryStorage) destroyedComponent;
+//                            spaceship.addBatteriesCount(-bs.getItemsCount());
+//                            break;
+//
+//                        case RED_BOX_STORAGE:
+//                            BoxStorage bsc = (BoxStorage) destroyedComponent;
+//                            Box[] boxes = bsc.getBoxStorage();
+//
+//                            for (Box box : boxes) {
+//                                if(box != null)
+//                                    spaceship.addBoxCount(-1,box.getType());
+//
+//                            }
+//                            break;
+//
+//                        case BOX_STORAGE:
+//                            bsc = (BoxStorage) destroyedComponent;
+//                            boxes = bsc.getBoxStorage();
+//
+//                            for (Box box : boxes) {
+//                                if(box != null)
+//                                    spaceship.addBoxCount(-1,box.getType());
+//                            }
+//                            break;
+//
+//                        default:
+//                            break;
+//                    }
+//
+//                }
+//            }
+//        }
+//
+//
+//
+//    }
+
+
 
 }

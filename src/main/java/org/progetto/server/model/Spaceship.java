@@ -8,7 +8,7 @@ public class Spaceship {
     // ATTRIBUTES
     // =======================
 
-    private int componentShipCount;
+    private int shipComponentCount;
     private int destroyedCount;
     private int crewCount;
     private int batteriesCount;
@@ -29,7 +29,7 @@ public class Spaceship {
 
     // Initialize spaceship with initial values of attributes
     public Spaceship(int levelShip, int color) {
-        componentShipCount = 1;
+        shipComponentCount = 1;
         destroyedCount = 0;
         crewCount = 0;
         batteriesCount = 0;
@@ -49,8 +49,8 @@ public class Spaceship {
     // GETTERS
     // =======================
 
-    public int getComponentShipCount() {
-        return componentShipCount;
+    public int getShipComponentCount() {
+        return shipComponentCount;
     }
 
     public int getDestroyedCount() {
@@ -130,7 +130,7 @@ public class Spaceship {
     // =======================
 
     public void addComponentShipCount(int countToAdd) {
-        componentShipCount += countToAdd;
+        shipComponentCount += countToAdd;
     }
 
     public void addDestroyedCount(int countToAdd) {
