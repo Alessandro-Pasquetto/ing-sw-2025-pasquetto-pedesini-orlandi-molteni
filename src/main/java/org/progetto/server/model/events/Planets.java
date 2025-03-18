@@ -2,11 +2,9 @@ package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
-import org.progetto.server.model.components.BoxStorageComponent;
+import org.progetto.server.model.components.BoxStorage;
 
 import java.util.ArrayList;
-
-import java.util.List;
 
 public class Planets extends EventCard {
 
@@ -78,7 +76,7 @@ public class Planets extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardsBox(BoxStorageComponent component, int boxIdx, Box box) {
+    public boolean chooseRewardsBox(BoxStorage component, int boxIdx, Box box) {
         return component.addBox(box, boxIdx);
     }
 

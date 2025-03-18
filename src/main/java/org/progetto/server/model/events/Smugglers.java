@@ -1,9 +1,8 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Box;
-import org.progetto.server.model.components.BoxStorageComponent;
+import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.BoxType;
 import org.progetto.server.model.components.StorageComponent;
 import org.progetto.server.model.components.ComponentType;
@@ -67,7 +66,7 @@ public class Smugglers extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(BoxStorageComponent component, int boxIdx, Box box) {
+    public boolean chooseRewardBox(BoxStorage component, int boxIdx, Box box) {
         return component.addBox(box, boxIdx);
     }
 
@@ -82,7 +81,7 @@ public class Smugglers extends EventCard {
      * @param boxIdx Index in the storage where the box is placed
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
-    public boolean chooseDiscardedBox(Player player, BoxStorageComponent component, int boxIdx) {
+    public boolean chooseDiscardedBox(Player player, BoxStorage component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
         Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxCounts();

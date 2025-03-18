@@ -1,6 +1,6 @@
 package org.progetto.server.model.components;
 
-public class BoxStorageComponent extends StorageComponent {
+public class BoxStorage extends Component {
 
     // =======================
     // ATTRIBUTES
@@ -8,15 +8,17 @@ public class BoxStorageComponent extends StorageComponent {
 
     private Box[] boxStorage;
     private boolean isRed;
+    private int boxCount;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public BoxStorageComponent(ComponentType type, int[] connections, String imgSrc, int capacity, boolean isRed) {
-        super(type, connections, imgSrc, capacity);
+    public BoxStorage(ComponentType type, int[] connections, String imgSrc, int capacity, boolean isRed) {
+        super(type, connections, imgSrc);
         this.boxStorage = new Box[capacity];
         this.isRed = isRed;
+        this.boxCount = 0;
     }
 
     // =======================
@@ -35,22 +37,34 @@ public class BoxStorageComponent extends StorageComponent {
     // OTHER METHODS
     // =======================
 
-    // Adds the given box to boxStorage at the given index idx
+    /**
+     * Adds the given box to boxStorage at the given index idx
+     *
+     * @param box Box to add
+     * @param idx Storage index where to add it
+     * @return true if the box is added, otherwise false
+     */
     public boolean addBox(Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
             boxStorage[idx] = box;
-            this.incrementItemsCount(1);
+            this.boxCount += 1;
             return true;
         } else {
             return false;
         }
     }
 
-    // Remove the box from boxStorage at the given index idx
+    /**
+     * Remove the box from boxStorage at the given index idx
+     *
+     * @param idx Storage index to remove
+     * @return true if the box is deleted, otherwise false
+     */
     public boolean removeBox(int idx) {
         if (boxStorage[idx] != null) {
             boxStorage[idx] = null;
-            this.decrementItemsCount(1);
+            this.boxCount -= 1;
+            System.gc();
             return true;
         } else {
             return false;

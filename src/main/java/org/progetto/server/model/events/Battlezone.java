@@ -7,7 +7,6 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Battlezone {
 
@@ -191,7 +190,7 @@ public class Battlezone {
      * @param boxIdx Index in the storage where the box is placed
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
-    public boolean chooseDiscardedBox(Player player, BoxStorageComponent component, int boxIdx) {
+    public boolean chooseDiscardedBox(Player player, BoxStorage component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
         Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxCounts();

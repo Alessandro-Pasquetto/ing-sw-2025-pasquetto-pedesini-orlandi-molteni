@@ -1,7 +1,7 @@
 package org.progetto.server.model.loadClasses;
 
 import com.google.gson.*;
-import org.progetto.server.model.components.BoxStorageComponent;
+import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.StorageComponent;
@@ -36,12 +36,12 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
             case BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
                 isRed = jsonObject.get("isRed").getAsBoolean();
-                return new BoxStorageComponent(type,connections,imgSrc,capacity,isRed);
+                return new BoxStorage(type,connections,imgSrc,capacity,isRed);
 
             case RED_BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
                 isRed = jsonObject.get("isRed").getAsBoolean();
-                return new BoxStorageComponent(type,connections,imgSrc,capacity,isRed);
+                return new BoxStorage(type,connections,imgSrc,capacity,isRed);
 
         }
 

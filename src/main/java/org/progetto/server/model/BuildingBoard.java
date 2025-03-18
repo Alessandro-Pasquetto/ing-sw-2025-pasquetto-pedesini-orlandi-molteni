@@ -288,7 +288,7 @@ public class BuildingBoard {
                 break;
 
             case RED_BOX_STORAGE:
-                BoxStorageComponent bsc = (BoxStorageComponent) destroyedComponent;
+                BoxStorage bsc = (BoxStorage) destroyedComponent;
                 Box[] boxes = bsc.getBoxStorage();
 
                 for (Box box : boxes) {
@@ -313,7 +313,7 @@ public class BuildingBoard {
                 break;
 
             case BOX_STORAGE:
-                bsc = (BoxStorageComponent) destroyedComponent;
+                bsc = (BoxStorage) destroyedComponent;
                 boxes = bsc.getBoxStorage();
 
                 for (Box box : boxes) {
