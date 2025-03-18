@@ -1,0 +1,245 @@
+[
+  {
+    "type": "SLAVERS",
+    "imgSrc": "card1-lvl2.jpg",
+    "firePowerRequired": 7,
+    "penaltyCrew": 4,
+    "penaltyDays": 2,
+    "rewardCredits": 8
+  },
+  {
+    "type": "LOSTSTATION",
+    "imgSrc": "card2-lvl2.jpg",
+    "requiredCrew": 8,
+    "rewardBoxes":
+    [
+      {"type": "YELLOW", "value": 3},
+      {"type": "YELLOW", "value": 3},
+      {"type": "GREEN", "value": 2}
+    ],
+    "penaltyDays": 2
+  },
+  {
+    "type": "LOSTSTATION",
+    "imgSrc": "card3-lvl2.jpg",
+    "requiredCrew": 7,
+    "rewardBoxes":
+    [
+      {"type": "RED", "value": 4},
+      {"type": "YELLOW", "value": 3}
+    ],
+    "penaltyDays": 1
+  },
+  {
+    "type": "LOSTSHIP",
+    "imgSrc": "card4-lvl2.jpg",
+    "penaltyCrew": 5,
+    "rewardCredits": 8,
+    "penaltyDays": 2
+  },
+  {
+    "type": "LOSTSHIP",
+    "imgSrc": "card5-lvl2.jpg",
+    "penaltyCrew": 4,
+    "rewardCredits": 6,
+    "penaltyDays": 1
+  },
+  {
+    "type": "BATTLEZONE",
+    "imgSrc": "card6-lvl2.jpg",
+    "couples":
+    [
+      {
+        "condition": {"type": "FirePowerRequirement"},
+        "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []},
+
+      },
+      {
+        "condition": {"type": "EnginePowerRequirement"},
+        "penalty": {"type": "PenaltyBoxes", "neededAmount": 3, "shots": []}
+      },
+      {
+        "condition": {"type": "CrewRequirement"},
+        "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots":
+          [
+            {"size": "Small", "from": 0},
+            {"size": "Small", "from": 1},
+            {"size": "Big", "from": 2},
+            {"size": "Small", "from": 3}
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "type": "PLANETS",
+    "imgSrc": "card7-lvl2.jpg",
+    "penaltyDays": 3,
+    "rewardsForPlanets": [
+      [
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2}
+      ],
+      [
+        {"type": "YELLOW", "value": 3},
+        {"type": "YELLOW", "value": 3}
+      ],
+      [
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1}
+      ]
+    ]
+  },
+  {
+    "type": "PLANETS",
+    "imgSrc": "card8-lvl2.jpg",
+    "penaltyDays": 2,
+    "rewardsForPlanets": [
+      [
+        {"type": "RED", "value": 4},
+        {"type": "YELLOW", "value": 3}
+      ],
+      [
+        {"type": "YELLOW", "value": 3},
+        {"type": "GREEN", "value": 2},
+        {"type": "BLUE", "value": 1}
+      ],
+      [
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2}
+      ],
+      [
+        {"type": "YELLOW", "value": 3}
+      ]
+    ]
+  },
+  {
+    "type": "PLANETS",
+    "imgSrc": "card9-lvl2.jpg",
+    "penaltyDays": 3,
+    "rewardsForPlanets": [
+      [
+        {"type": "RED", "value": 4},
+        {"type": "RED", "value": 4}
+      ],
+      [
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2}
+      ]
+    ]
+  },
+  {
+    "type": "PLANETS",
+    "imgSrc": "card10-lvl2.jpg",
+    "penaltyDays": 4,
+    "rewardsForPlanets": [
+      [
+        {"type": "RED", "value": 4},
+        {"type": "RED", "value": 4},
+        {"type": "RED", "value": 4},
+        {"type": "YELLOW", "value": 3}
+      ],
+      [
+        {"type": "RED", "value": 4},
+        {"type": "RED", "value": 4},
+        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2}
+      ],
+      [
+        {"type": "RED", "value": 4},
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1},
+        {"type": "BLUE", "value": 1}
+      ]
+    ]
+  },
+  {
+    "type": "METEORSRAIN",
+    "imgSrc": "card11-lvl2.jpg",
+    "meteors":
+    [
+      {"size": "Small", "from": 0},
+      {"size": "Small", "from": 0},
+      {"size": "Big", "from": 1},
+      {"size": "Small", "from": 1},
+      {"size": "Small", "from": 1}
+    ]
+  },
+  {
+    "type": "METEORSRAIN",
+    "imgSrc": "card12-lvl2.jpg",
+    "meteors":
+    [
+      {"size": "Big", "from": 0},
+      {"size": "Big", "from": 0},
+      {"size": "Small", "from": 2},
+      {"size": "Small", "from": 2}
+    ]
+  },
+  {
+    "type": "METEORSRAIN",
+    "imgSrc": "card13-lvl2.jpg",
+    "meteors":
+    [
+      {"size": "Small", "from": 0},
+      {"size": "Small", "from": 0},
+      {"size": "Big", "from": 3},
+      {"size": "Small", "from": 3},
+      {"size": "Small", "from": 3}
+    ]
+  },
+  {
+    "type": "OPENSPACE",
+    "imgSrc": "card14-lvl2.jpg"
+  },
+  {
+    "type": "OPENSPACE",
+    "imgSrc": "card15-lvl2.jpg"
+  },
+  {
+    "type": "OPENSPACE",
+    "imgSrc": "card16-lvl2.jpg"
+  },
+  {
+    "type": "EPIDEMIC",
+    "imgSrc": "card17-lvl2.jpg"
+  },
+  {
+    "type": "STARDUST",
+    "imgSrc": "card18-lvl2.jpg",
+    "penaltyDays": 0
+  },
+  {
+    "type": "PIRATES",
+    "imgSrc": "card19-lvl2.jpg",
+    "firePowerRequired": 6,
+    "penaltyDays": 2,
+    "rewardCredits": 7,
+    "shots":
+    [
+      {"size": "Big", "from": 0},
+      {"size": "Small", "from": 0},
+      {"size": "Big", "from": 0}
+    ]
+  },
+  {
+    "type": "SMUGGLERS",
+    "imgSrc": "card20-lvl2.jpg",
+    "firePowerRequired": 8,
+    "penaltyBoxes": 3,
+    "penaltyDays": 1,
+    "rewardBoxes":
+    [
+      {"type": "RED", "value": 4},
+      {"type": "YELLOW", "value": 3},
+      {"type": "YELLOW", "value": 3}
+    ]
+  }
+]
