@@ -4,6 +4,7 @@ import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,9 +35,9 @@ public class Epidemic extends EventCard {
      * @param visitedCells Matrix of already visited cells
      * @param infectedComponents Set of all the infected components
      */
-    private void dfsInfectedComponents(int i, int j, boolean firstIteration, StorageComponent prevComponent, BuildingBoard buildingBoard, boolean[][] visitedCells, Set<StorageComponent> infectedComponents) {
+    private void dfsInfectedComponents(int i, int j, boolean firstIteration, HousingUnit prevComponent, BuildingBoard buildingBoard, boolean[][] visitedCells, Set<HousingUnit> infectedComponents) {
         Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
-        StorageComponent currComponent;
+        HousingUnit currComponent;
 
         if (!firstIteration) {
             // boundary checks and if the cell is not Component, already visited, or it's the first iteration of the recursion
@@ -49,7 +50,7 @@ public class Epidemic extends EventCard {
                 return;
             }
 
-            currComponent = (StorageComponent) spaceshipMatrix[i][j];
+            currComponent = (HousingUnit) spaceshipMatrix[i][j];
 
             // checks if prevComponent and currComponent are connected
             if (!buildingBoard.areConnected(prevComponent, currComponent)) {
@@ -57,7 +58,7 @@ public class Epidemic extends EventCard {
             }
 
             // check if itemsCount in the components is greater than zero
-            if (currComponent.getItemsCount() == 0 && !currComponent.getOrangeAlien() && !currComponent.getPurpleAlien()) {
+            if (currComponent.getCrewCount() == 0 && !currComponent.hasOrangeAlien() && !currComponent.hasPurpleAlien()) {
                 return;
             }
 
@@ -65,7 +66,7 @@ public class Epidemic extends EventCard {
             infectedComponents.add(prevComponent);
             infectedComponents.add(currComponent);
         } else {
-            currComponent = (StorageComponent) spaceshipMatrix[i][j];
+            currComponent = (HousingUnit) spaceshipMatrix[i][j];
         }
 
         // mark the current cell as visited
@@ -99,18 +100,18 @@ public class Epidemic extends EventCard {
             for (int j = 0; j < spaceshipMatrix[i].length; j++) {
 
                 if (spaceshipMatrix[i][j] != null && spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {  // if current component is an housing unit
-                    Set<StorageComponent> infectedComponents = new HashSet<>();
+                    Set<HousingUnit> infectedComponents = new HashSet<>();
 
                     dfsInfectedComponents(i, j, true, null, player.getSpaceship().getBuildingBoard(), visitedCells, infectedComponents);
 
                     // deletes for each infected component found one crew mate/alien
-                    for (StorageComponent component : infectedComponents) {
-                        if (component.getOrangeAlien()) {
+                    for (HousingUnit component : infectedComponents) {
+                        if (component.hasOrangeAlien()) {
                             component.setOrangeAlien(false);
-                        } else if (component.getPurpleAlien()) {
+                        } else if (component.hasPurpleAlien()) {
                             component.setPurpleAlien(false);
-                        } else if (component.getItemsCount() > 0) {
-                            component.decrementItemsCount(1);
+                        } else if (component.getCrewCount() > 0) {
+                            component.decrementCrewCount(1);
                         }
                     }
                 }

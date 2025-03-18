@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 
 public class Slavers extends EventCard {
 
@@ -59,14 +60,14 @@ public class Slavers extends EventCard {
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(StorageComponent component) {
+    public boolean chooseDiscardedCrew(HousingUnit component) {
         if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
-            if (component.getOrangeAlien()) {  // if it contains an orange alien
+            if (component.hasOrangeAlien()) {  // if it contains an orange alien
                 component.setOrangeAlien(false);
-            } else if (component.getPurpleAlien()) {  // if it contains a purple alien
+            } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
                 component.setPurpleAlien(false);
-            } else if (component.getItemsCount() > 0) {  // if it has more than one crew member
-                component.decrementItemsCount(1);
+            } else if (component.getCrewCount() > 0) {  // if it has more than one crew member
+                component.decrementCrewCount(1);
             }
             return true;
         } else return false;
