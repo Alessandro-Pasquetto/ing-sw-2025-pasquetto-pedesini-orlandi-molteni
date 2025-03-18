@@ -4,7 +4,6 @@ import com.google.gson.*;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
 
 import java.lang.reflect.Type;
 

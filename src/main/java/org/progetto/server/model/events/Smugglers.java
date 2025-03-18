@@ -4,7 +4,6 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.BoxType;
-import org.progetto.server.model.components.StorageComponent;
 import org.progetto.server.model.components.ComponentType;
 
 import java.util.ArrayList;

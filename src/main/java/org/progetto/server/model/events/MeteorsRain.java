@@ -4,7 +4,6 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
 
 import java.util.ArrayList;
 

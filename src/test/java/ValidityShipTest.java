@@ -3,9 +3,6 @@ import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 class ValidityShipTest {
 

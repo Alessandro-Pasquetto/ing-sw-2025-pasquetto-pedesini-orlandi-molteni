@@ -2,12 +2,9 @@ package org.progetto.server.model.events;
 
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -2,9 +2,6 @@ package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
-
-import java.util.List;
 
 public class OpenSpace extends EventCard {
 
