@@ -1,5 +1,7 @@
 package org.progetto.server.model;
 
+import org.progetto.server.model.components.BoxType;
+
 public class Spaceship {
   
     // =======================
@@ -179,20 +181,25 @@ public class Spaceship {
         shieldCounts[3] += countToAdd;
     }
 
-    public void addRedBoxCount(int countToAdd) {
-        boxCounts[0] += countToAdd;
-    }
+    public void addBoxCount(int countToAdd, BoxType type) {
+        switch (type)
+        {
+            case RED:
+                boxCounts[0] += countToAdd;
+                break;
 
-    public void addYellowBoxCount(int countToAdd) {
-        boxCounts[1] += countToAdd;
-    }
+            case YELLOW:
+                boxCounts[1] += countToAdd;
+                break;
 
-    public void addGreenBoxCount(int countToAdd) {
-        boxCounts[2] += countToAdd;
-    }
+            case GREEN:
+                boxCounts[2] += countToAdd;
+                break;
 
-    public void addBlueBoxCount(int countToAdd) {
-        boxCounts[3] += countToAdd;
+            case BLUE:
+                boxCounts[3] += countToAdd;
+                break;
+        }
     }
 }
 

@@ -177,6 +177,12 @@ public class BuildingBoard {
             spaceshipMatrix[y][x].setY_coordinate(y);
             spaceshipMatrix[y][x].setX_coordinate(x);
 
+            switch (handComponent.getType())
+            {
+                case BATTERY_STORAGE:
+                    break;
+            }
+
             boardMask[y][x] = -1;   //signal the presence of a component
             handComponent = null;
             return true;
@@ -292,23 +298,9 @@ public class BuildingBoard {
                 Box[] boxes = bsc.getBoxStorage();
 
                 for (Box box : boxes) {
-                    if(box == null)
-                        continue;
+                    if(box != null)
+                        spaceship.addBoxCount(-1,box.getType());
 
-                    switch (box.getType()) {
-                        case RED:
-                            spaceship.addRedBoxCount(-1);
-                            break;
-                        case YELLOW:
-                            spaceship.addYellowBoxCount(-1);
-                            break;
-                        case GREEN:
-                            spaceship.addGreenBoxCount(-1);
-                            break;
-                        case BLUE:
-                            spaceship.addBlueBoxCount(-1);
-                            break;
-                    }
                 }
                 break;
 
@@ -317,20 +309,8 @@ public class BuildingBoard {
                 boxes = bsc.getBoxStorage();
 
                 for (Box box : boxes) {
-                    if(box == null)
-                        continue;
-
-                    switch (box.getType()) {
-                        case YELLOW:
-                            spaceship.addYellowBoxCount(-1);
-                            break;
-                        case GREEN:
-                            spaceship.addGreenBoxCount(-1);
-                            break;
-                        case BLUE:
-                            spaceship.addBlueBoxCount(-1);
-                            break;
-                    }
+                    if(box != null)
+                        spaceship.addBoxCount(-1,box.getType());
                 }
                 break;
 
