@@ -21,6 +21,7 @@ public class Game {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private final int id;
     private final int maxNumPlayers;
     private final ArrayList<Player> players;

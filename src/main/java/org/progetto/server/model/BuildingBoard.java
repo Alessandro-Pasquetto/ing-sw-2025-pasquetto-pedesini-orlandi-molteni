@@ -312,7 +312,7 @@ public class BuildingBoard {
                 break;
         }
 
-        System.gc();   //call for garbage collector
+        System.gc();   // call for garbage collector
         return true;
     }
 
@@ -409,65 +409,65 @@ public class BuildingBoard {
         int currentRotation = currentComponent.getRotation();
         ComponentType currentType = currentComponent.getType();
 
-        if(currentType == ComponentType.CANNON || currentType == ComponentType.DOUBLE_CANNON) {
-            if(!checkCannonValidity(currentComponent, x, y))
+        if (currentType == ComponentType.CANNON || currentType == ComponentType.DOUBLE_CANNON) {
+            if (!checkCannonValidity(currentComponent, x, y))
                 return false;
-        }else if(currentType == ComponentType.ENGINE){
-            if(currentRotation != 0 || (y > 0 && spaceshipMatrix[y - 1][x] != null))
+        } else if (currentType == ComponentType.ENGINE){
+            if (currentRotation != 0 || (y > 0 && spaceshipMatrix[y - 1][x] != null))
                 return false;
         }
 
         boolean up = false, right = false, bottom = false, left = false;
 
         // up
-        if(y > 0 && boardMask[y - 1][x] == -1 && !visited[y - 1][x]){
+        if (y > 0 && boardMask[y - 1][x] == -1 && !visited[y - 1][x]){
             Component upComponent = spaceshipMatrix[y - 1][x];
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
-            if((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1))
+            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1))
                 return false;
-            if(upConnection != 0 && relativeConnection != 0)
+            if (upConnection != 0 && relativeConnection != 0)
                 up = true;
         }
         // right
-        if(x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && !visited[y][x + 1]){
+        if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && !visited[y][x + 1]){
             Component rightComponent = spaceshipMatrix[y][x + 1];
             int rightConnection = currentComponent.getConnections()[1];
             int relativeConnection = rightComponent.getConnections()[3];
-            if((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1))
+            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1))
                 return false;
-            if(rightConnection != 0 && relativeConnection != 0)
+            if (rightConnection != 0 && relativeConnection != 0)
                 right = true;
         }
         // bottom
-        if(y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
+        if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
             Component bottomComponent = spaceshipMatrix[y + 1][x];
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
-            if((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1))
+            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1))
                 return false;
-            if(bottomConnection != 0 && relativeConnection != 0)
+            if (bottomConnection != 0 && relativeConnection != 0)
                 bottom = true;
         }
         // left
-        if(x > 0 && boardMask[y][x - 1] == -1 && !visited[y][x - 1]){
+        if (x > 0 && boardMask[y][x - 1] == -1 && !visited[y][x - 1]){
             Component leftComponent = spaceshipMatrix[y][x - 1];
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
-            if((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1))
+            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1))
                 return false;
-            if(leftConnection != 0 && relativeConnection != 0)
+            if (leftConnection != 0 && relativeConnection != 0)
                 left = true;
         }
 
         boolean result = true;
-        if(up)
+        if (up)
             result = dfsValidity(x, y - 1, visited, numComponentChecked);
-        if(result && right)
+        if (result && right)
             result = dfsValidity(x + 1, y, visited, numComponentChecked);
-        if(result && bottom)
+        if (result && bottom)
             result = dfsValidity(x, y + 1, visited, numComponentChecked);
-        if(result && left)
+        if (result && left)
             result = dfsValidity(x - 1, y, visited, numComponentChecked);
 
         return result;
@@ -499,7 +499,6 @@ public class BuildingBoard {
         return dfsValidity(xComponent, yComponent, visited, numComponentChecked) && numComponentChecked.get() == spaceship.getShipComponentCount();
     }
 
-
     public void printBoard(){
         for (int i = 0; i < boardMask.length; i++) {
             System.out.println();
@@ -508,6 +507,7 @@ public class BuildingBoard {
             }
         }
     }
+
 //todo complete method
 
 //    public void initSpaceshipParams()

@@ -1,20 +1,32 @@
+package org.progetto.server.model;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.StorageComponent;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
+class BuildingBoardTest {
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class BuildingBoardTest {
+    @BeforeEach
+    void setUp() {
+    }
 
     @Test
-    void LoadingTest() throws IOException {
+    void getSpaceship() {
+    }
 
+    @Test
+    void getHandComponent() {
+    }
+
+    @Test
+    void getSpaceshipMatrix() {
+    }
+
+    @Test
+    void getBoardMask() {
         Spaceship spaceship = new Spaceship(1, 0);
         BuildingBoard buildingboard = spaceship.getBuildingBoard();
 
@@ -29,23 +41,31 @@ public class BuildingBoardTest {
     }
 
     @Test
-    void RotationTest()
-    {
-        Spaceship spaceship = new Spaceship(2, 1);
-
-        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
-
-        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{2, 1, 1, 1}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(4);
-
-        for (int i = 0; i < 4; i++) {
-            System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
-        }
+    void getBooked() {
     }
 
     @Test
-    void areConnectedTest() {
+    void getImgSrc() {
+    }
+
+    @Test
+    void setAsBooked() {
+    }
+
+    @Test
+    void setHandComponent() {
+    }
+
+    @Test
+    void placeComponent() {
+    }
+
+    @Test
+    void destroyComponent() {
+    }
+
+    @Test
+    void areConnected() {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -140,7 +160,7 @@ public class BuildingBoardTest {
     }
 
     @Test
-    void ValidityShipTest() {
+    void checkShipValidity() {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -163,11 +183,11 @@ public class BuildingBoardTest {
         buildingBoard.getHandComponent().setRotation(1);
         buildingBoard.placeComponent(1, 1);
 
-        buildingBoard.setHandComponent(new StorageComponent(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
         buildingBoard.getHandComponent().setRotation(1);
         buildingBoard.placeComponent(1, 4);
 
-        buildingBoard.setHandComponent(new StorageComponent(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
         buildingBoard.getHandComponent().setRotation(1);
         buildingBoard.placeComponent(1, 5);
 
@@ -189,7 +209,6 @@ public class BuildingBoardTest {
             }
         }
 
-
         System.out.println();
 
         for (int i = 0; i < spaceshipMatrix.length; i++) {
@@ -204,7 +223,11 @@ public class BuildingBoardTest {
         System.out.println();
 
         System.out.println(buildingBoard.checkShipValidity());
+
+        assertFalse(buildingBoard.checkShipValidity());
+    }
+
+    @Test
+    void printBoard() {
     }
 }
-
-
