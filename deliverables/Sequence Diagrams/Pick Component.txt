@@ -2,10 +2,10 @@ title Pick Component
 
 client-->server:pickComponent()
 
-
 client<-server:response(imgSrc)
 
-alt alt: server -> client
+space
+note over client,server: The player selects the component, which is sent to the server by the client.\nThe server then returns the component's image path, allowing the view to display it.
 
 
 

@@ -1,11 +1,16 @@
 title Join Game
 
-client-->server:PlaceComponent(int x, int y)
+client-->server:Connect()
 
+client<-server:Response(gamesIds[])
 
+alt Create Game
+client->server:CreateGame(level, numPlayers, adminName)
+else Join Game
+client->server:JoinGame(id, playerName)
 client<-server:Response()
+end
 
-alt alt: server -> client
-
-
+space
+note over client,server: Client connects to server.\nThen, server sends to player a list that contains all the available games to join.\nPlayer has two options: create his own game, or join an already created one, picked from the previous list.\nIn the first case, he selects game level, maximum number of players and his name.\nIn the second case, he tries to join the game by using its id and giving his name. He will receive success/fail response.
 

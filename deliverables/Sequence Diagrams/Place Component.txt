@@ -1,12 +1,10 @@
 title Place Component
 
-client->server:coordinates(x,y)
+client->server:Coordinates(x,y)
 
-
-client->server:rotation(r)
+client->server:Rotation(r)
 client<-server:Response()
 
-alt alt: server -> client
 
-
-
+space
+note over client,server: Player decides to place the current component in a specic cell on the matrix.\nClient sends in first component's coordinates, then its rotation.\nServer will answer with a success/fail response.
