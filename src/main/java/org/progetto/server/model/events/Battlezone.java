@@ -123,7 +123,7 @@ public class Battlezone {
         int row, column;
 
         switch (shot.getFrom()) {
-            case 0:  // shot come from left
+            case 0:  // shot come from up
                 row = 0;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
@@ -136,7 +136,7 @@ public class Battlezone {
                     }
                 }
                 break;
-            case 1:  // shot come from left
+            case 1:  // shot come from right
                 row = position - 5; // normalization for spaceshipMatrix
                 column = spaceshipMatrix[0].length - 1;
                 if (row < 0 || row >= spaceshipMatrix.length) {
@@ -149,7 +149,7 @@ public class Battlezone {
                     }
                 }
                 break;
-            case 2:  // shot come from left
+            case 2:  // shot come from down
                 row = spaceshipMatrix.length - 1;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
