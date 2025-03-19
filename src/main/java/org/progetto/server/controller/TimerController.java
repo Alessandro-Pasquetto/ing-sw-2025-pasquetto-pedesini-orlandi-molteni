@@ -6,7 +6,7 @@ public class TimerController {
     // =======================
     // ATTRIBUTES
     // =======================
-    Consumer<String> broadcastMessageFunction;
+    Consumer<Object> broadcastMessageFunction;
     private final int defaultTimer;
     private int timer;
     private int timerFlipsAllowed;
@@ -15,7 +15,7 @@ public class TimerController {
     // CONSTRUCTORS
     // =======================
 
-    public TimerController(Consumer<String> broadcastMessageFunction, int defaultTimer, int timerFlipsAllowed) {
+    public TimerController(Consumer<Object> broadcastMessageFunction, int defaultTimer, int timerFlipsAllowed) {
         this.broadcastMessageFunction = broadcastMessageFunction;
         this.defaultTimer = defaultTimer;
         this.timer = defaultTimer;
@@ -26,7 +26,7 @@ public class TimerController {
     // GETTERS
     // =======================
 
-    public synchronized int getTimer(){
+    public synchronized int getTimerInt(){
         return timer;
     }
 

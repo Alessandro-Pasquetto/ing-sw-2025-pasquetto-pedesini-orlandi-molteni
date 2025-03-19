@@ -3,8 +3,7 @@
     "type": "LOSTSTATION",
     "imgSrc": "card2-lvl1.jpg",
     "requiredCrew": 5,
-    "rewardBoxes":
-    [
+    "rewardBoxes": [
       {"type": "YELLOW", "value": 3},
       {"type": "GREEN", "value": 2}
     ],
@@ -20,8 +19,7 @@
   {
   "type": "BATTLEZONE",
   "imgSrc": "card5-lvl1.jpg",
-  "couples":
-  [
+  "couples": [
     {
       "type": "CrewRequirement",
       "penalty": {"type": "PenaltyDays", "neededAmount": 3, "shots": []}

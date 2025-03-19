@@ -1,6 +1,7 @@
 package org.progetto.server.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Board {
 
@@ -16,10 +17,10 @@ public class Board {
     // CONSTRUCTORS
     // =======================
 
-    public Board(int sizeBoard, String imgSrc) {
-        this.track = new Player[sizeBoard];
+    public Board(int levelBoard) {
+        this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
         this.activeTravelers = new ArrayList<>();
-        this.imgSrc = imgSrc;
+        this.imgSrc = "Board" + levelBoard + ".png";
     }
 
     // =======================
@@ -39,34 +40,50 @@ public class Board {
     // =======================
 
     /**
-     * @author Alessandro
-     * @param player is the new traveler
+     * @return the board size
      */
-    public synchronized void addTraveler(Player player) {
-        activeTravelers.add(player);
-
-        switch (activeTravelers.size()){
-            case 1:
-                track[4] = player;
-                player.setPosition(4);
-                break;
-            case 2:
-                track[2] = player;
-                player.setPosition(2);
-                break;
-            case 3:
-                track[1] = player;
-                player.setPosition(1);
-                break;
-            case 4:
-                track[0] = player;
-                player.setPosition(0);
-                break;
-        }
+    private int elaborateSizeBoardFromLv(int levelBoard) {
+        return switch (levelBoard) {
+            case 1 -> 18;
+            case 2 -> 24;
+            case 3 -> 34;
+            default -> 0;
+        };
     }
 
     /**
-     * @author Alessandro
+     * @param player is the new traveler
+     */
+    public synchronized void addTraveler(Player player, int levelBoard) {
+        activeTravelers.add(player);
+
+        int pos = 0;
+        switch (activeTravelers.size()){
+            case 1:
+                if(levelBoard == 1)
+                    pos = 4;
+                else if(levelBoard == 2)
+                    pos = 6;
+                break;
+            case 2:
+                if(levelBoard == 1)
+                    pos = 2;
+                else if(levelBoard == 2)
+                    pos = 3;
+                break;
+            case 3:
+                pos = 1;
+                break;
+            case 4:
+                pos = 0;
+                break;
+        }
+
+        track[pos] = player;
+        player.setPosition(pos);
+    }
+
+    /**
      * @param player the moving player
      * @param distance distance traveled by the player
      */
@@ -95,8 +112,11 @@ public class Board {
         player.setPosition(playerPosition);
     }
 
+    public void updateTurnOrder(){
+        activeTravelers.sort(Comparator.comparingInt(Player::getPosition));
+    }
+
     /**
-     * @author Alessandro
      * @param player is the player who leaves the travel
      */
     public void leaveTravel(Player player) {

@@ -1,5 +1,6 @@
 package org.progetto.client;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +22,7 @@ public class PageController {
     }
 
     static void switchScene(String fxmlFile, String title) throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxmlFile));
 
         Parent root = null;
@@ -47,8 +49,12 @@ public class PageController {
         }
 
         Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle(title);
+
+        // Execute this when the GUI thread is ready
+        Platform.runLater(() -> {
+            stage.setScene(scene);
+            stage.setTitle(title);
+        });
     }
 
 

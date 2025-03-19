@@ -49,7 +49,7 @@ public class Game {
         this.componentDeck = loadComponents();
         this.visibleComponentDeck = new ArrayList<>();
         this.eventCardDeck = loadEvents();
-        this.board = new Board(elaborateSizeBoardFromLv(), "imgPath");
+        this.board = new Board(level);
         this.activeEventCard = null;
     }
 
@@ -287,17 +287,5 @@ public class Game {
             }
         }
         return true;
-    }
-
-    /**
-     * @return the board size
-     */
-    private int elaborateSizeBoardFromLv() {
-        return switch (level) {
-            case 1 -> 18;
-            case 2 -> 24;
-            case 3 -> 34;
-            default -> 0;
-        };
     }
 }

@@ -61,7 +61,6 @@ public class Player {
     // =======================
 
     /**
-     * @author Alessandro
      * @param creditsToAdd is the number of credits gained (if positive) or lost (if negative)
      */
     public void addCredits(int creditsToAdd) {
@@ -69,7 +68,6 @@ public class Player {
     }
 
     /**
-     * @author Alessandro
      * @return the sum of the rolled
      */
     public int rollDice(){

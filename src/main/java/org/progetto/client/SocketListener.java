@@ -1,0 +1,75 @@
+package org.progetto.client;
+
+import org.progetto.messages.CreateGameMessage;
+import org.progetto.messages.GameListMessage;
+import org.progetto.messages.NotifyNewGameMessage;
+import org.progetto.messages.PickedComponentMessage;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+
+public class SocketListener extends Thread {
+
+    private static ObjectInputStream in;
+    private static boolean running = true;
+
+    public SocketListener(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (running) {
+                Object messageObj = in.readObject();
+                handlerMessage(messageObj);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            stopListener();
+        }
+    }
+
+    private void handlerMessage(Object messageObj) {
+
+        if (messageObj instanceof GameListMessage gameListMessage) {
+            ArrayList<Integer> idGames = gameListMessage.getIdGames();
+            System.out.println("Gamelist arrivata... da elaborare");
+        }
+        else if (messageObj instanceof NotifyNewGameMessage notifyNewGameMessage) {
+            PageController.generateGameList(notifyNewGameMessage.getIdGame());
+        }
+        else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
+            PageController.generateComponent(pickedComponentMessage.getImgPath());
+        }
+        else if (messageObj instanceof String messageString) {
+            switch (messageString) {
+                case "AllowedToJoinGame":
+                    SocketClient.JoinToGame();
+                    break;
+                case "NotAllowedToJoinGame":
+                    System.out.println("Username not available");
+                    break;
+                case "NotAllowedToPlaceComponent":
+                    break;
+                case "Timer expired":
+                    break;
+                default:
+                    System.out.println(messageString);
+                    break;
+            }
+        }
+    }
+
+    public static void stopListener() {
+        running = false;
+        try {
+            if (in != null)
+                in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

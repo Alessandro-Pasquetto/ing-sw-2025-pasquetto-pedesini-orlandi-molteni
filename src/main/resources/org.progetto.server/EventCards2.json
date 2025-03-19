@@ -11,8 +11,7 @@
     "type": "LOSTSTATION",
     "imgSrc": "card2-lvl2.jpg",
     "requiredCrew": 8,
-    "rewardBoxes":
-    [
+    "rewardBoxes":  [
       {"type": "YELLOW", "value": 3},
       {"type": "YELLOW", "value": 3},
       {"type": "GREEN", "value": 2}
@@ -23,8 +22,7 @@
     "type": "LOSTSTATION",
     "imgSrc": "card3-lvl2.jpg",
     "requiredCrew": 7,
-    "rewardBoxes":
-    [
+    "rewardBoxes":  [
       {"type": "RED", "value": 4},
       {"type": "YELLOW", "value": 3}
     ],
@@ -47,20 +45,19 @@
   {
     "type": "BATTLEZONE",
     "imgSrc": "card6-lvl2.jpg",
-    "couples":
-    [
+    "couples": [
       {
-        "condition": {"type": "FirePowerRequirement"},
+        "type": "FirePowerRequirement",
         "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []}
       },
       {
-        "condition": {"type": "EnginePowerRequirement"},
+        "type": "EnginePowerRequirement",
         "penalty": {"type": "PenaltyBoxes", "neededAmount": 3, "shots": []}
       },
       {
-        "condition": {"type": "CrewRequirement"},
-        "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots":
-          [
+        "type": "CrewRequirement",
+        "penalty": {"type": "PenaltyShots", "neededAmount": 0,
+          "shots":  [
             {"size": "SMALL", "from": 0},
             {"size": "SMALL", "from": 1},
             {"size": "BIG", "from": 2},
@@ -162,8 +159,7 @@
   {
     "type": "METEORSRAIN",
     "imgSrc": "card11-lvl2.jpg",
-    "meteors":
-    [
+    "meteors": [
       {"size": "SMALL", "from": 0},
       {"size": "SMALL", "from": 0},
       {"size": "BIG", "from": 1},
@@ -174,8 +170,7 @@
   {
     "type": "METEORSRAIN",
     "imgSrc": "card12-lvl2.jpg",
-    "meteors":
-    [
+    "meteors": [
       {"size": "BIG", "from": 0},
       {"size": "BIG", "from": 0},
       {"size": "SMALL", "from": 2},
@@ -185,8 +180,7 @@
   {
     "type": "METEORSRAIN",
     "imgSrc": "card13-lvl2.jpg",
-    "meteors":
-    [
+    "meteors": [
       {"size": "SMALL", "from": 0},
       {"size": "SMALL", "from": 0},
       {"size": "BIG", "from": 3},
@@ -221,11 +215,10 @@
     "firePowerRequired": 6,
     "penaltyDays": 2,
     "rewardCredits": 7,
-    "shots":
-    [
-      {"size": "Big", "from": 0},
-      {"size": "Small", "from": 0},
-      {"size": "Big", "from": 0}
+    "shots": [
+      {"size": "BIG", "from": 0},
+      {"size": "SMALL", "from": 0},
+      {"size": "BIG", "from": 0}
     ]
   },
   {
@@ -234,8 +227,7 @@
     "firePowerRequired": 8,
     "penaltyBoxes": 3,
     "penaltyDays": 1,
-    "rewardBoxes":
-    [
+    "rewardBoxes": [
       {"type": "RED", "value": 4},
       {"type": "YELLOW", "value": 3},
       {"type": "YELLOW", "value": 3}

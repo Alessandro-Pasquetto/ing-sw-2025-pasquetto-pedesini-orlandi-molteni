@@ -25,7 +25,7 @@ public class ChooseGameView {
     public void joinToGame(int idGame) {
         String username = usernameTextField.getText();
         if(!username.isEmpty()) {
-            SocketClient.joinToGame(username, idGame);
+            SocketClient.tryJoinToGame(username, idGame);
         }
     }
 
