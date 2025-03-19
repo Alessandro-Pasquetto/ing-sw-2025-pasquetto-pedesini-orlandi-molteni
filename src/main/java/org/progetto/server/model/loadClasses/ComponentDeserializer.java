@@ -1,9 +1,7 @@
 package org.progetto.server.model.loadClasses;
 
 import com.google.gson.*;
-import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.*;
 
 import java.lang.reflect.Type;
 
@@ -22,15 +20,11 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
 
             case BATTERY_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
-                return new StorageComponent(type, connections, imgSrc, capacity);
+                return new BatteryStorage(type, connections, imgSrc, capacity);
 
             case HOUSING_UNIT:
                 capacity = jsonObject.get("capacity").getAsInt();
-                return new StorageComponent(type, connections, imgSrc, capacity);
-
-            case CENTRAL_UNIT:
-                capacity = jsonObject.get("capacity").getAsInt();
-                return new StorageComponent(type, connections, imgSrc, capacity);
+                return new HousingUnit(type, connections, imgSrc, capacity);
 
             case BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
@@ -41,9 +35,7 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
                 capacity = jsonObject.get("capacity").getAsInt();
                 isRed = jsonObject.get("isRed").getAsBoolean();
                 return new BoxStorage(type,connections,imgSrc,capacity,isRed);
-
         }
-
 
         return new Component(type, connections, imgSrc);
     }
