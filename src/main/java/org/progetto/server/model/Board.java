@@ -73,11 +73,11 @@ public class Board {
     public synchronized void movePlayerByDistance(Player player, int distance) {
         int sign;
         if(distance < 0){
-            sign = 1;
+            sign = -1;
             distance *= -1;
         }
         else
-            sign = -1;
+            sign = 1;
 
         int playerPosition = player.getPosition();
 

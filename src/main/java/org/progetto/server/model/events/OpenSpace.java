@@ -46,5 +46,6 @@ public class OpenSpace extends EventCard {
         board.movePlayerByDistance(player, enginePower);
     }
 
-    // TODO: Controller has to manage the fact that each player can increment his enginePower by enabling doubleEngines through the use of a battery, calling each time chooseDiscardedBattery().
+    // TODO: Controller has to ask for each player if he wants to use a battery for his double cannons, calling each time chooseDiscardedBattery().
+    //  He asks the players starting from the leader in route order.
 }
