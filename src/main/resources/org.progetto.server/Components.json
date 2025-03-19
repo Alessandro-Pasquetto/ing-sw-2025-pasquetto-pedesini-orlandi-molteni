@@ -2,86 +2,103 @@
   {
     "type": "BATTERY_STORAGE",
     "connections": [0, 0, 0, 1],
+    "capacity": 3,
     "imgSrc": "battery1.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [2, 2, 1, 0],
+    "capacity": 3,
     "imgSrc": "battery2.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [2, 1, 0, 0],
+    "capacity": 3,
     "imgSrc": "battery3.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [2, 0, 0, 0],
+    "capacity": 3
     "imgSrc": "battery4.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [1, 1, 2, 0],
+    "capacity": 3,
     "imgSrc": "battery5.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [1, 0, 2, 0],
+    "capacity": 3
     "imgSrc": "battery6.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 0, 0, 3],
+    "capacity": 2,
     "imgSrc": "battery7.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [0, 3, 0, 3],
+    "capacity": 2,
     "imgSrc": "battery8.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [0, 0, 0, 3],
+    "capacity": 2,
     "imgSrc": "battery9.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [0, 0, 0, 3],
+    "capacity": 2,
     "imgSrc": "battery10.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 2, 2, 2],
+    "capacity": 2,
     "imgSrc": "battery11.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 1, 1, 1],
+    "capacity": 2,
     "imgSrc": "battery12.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 0, 0, 1],
+    "capacity": 2,
     "imgSrc": "battery13.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [2, 1, 2, 1],
+    "capacity": 2,
     "imgSrc": "battery14.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 2, 1, 0],
+    "capacity": 2,
     "imgSrc": "battery15.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 2, 0, 0],
+    "capacity": 2,
     "imgSrc": "battery16.jpg"
   },
   {
     "type": "BATTERY_STORAGE",
     "connections": [3, 1, 2, 0],
+    "capacity": 2,
     "imgSrc": "battery17.jpg"
   },
   {
