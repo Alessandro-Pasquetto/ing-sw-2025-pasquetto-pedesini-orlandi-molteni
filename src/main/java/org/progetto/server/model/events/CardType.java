@@ -7,7 +7,7 @@ public enum CardType {
     SMUGGLERS,
     LOSTSTATION,
     SABOTAGE,
-    EPIDEMY,
+    EPIDEMIC,
     BATTLEZONE,
     PIRATES,
     STARDUST,

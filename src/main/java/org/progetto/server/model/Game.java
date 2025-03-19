@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.progetto.server.model.loadClasses.ComponentDeserializer;
+import org.progetto.server.model.loadClasses.EventDeserializer;
 
 import java.io.FileReader;
 import java.io.IOException;
-
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class Game {
@@ -186,18 +188,61 @@ public class Game {
     }
 
     /**
+     * @author Lorenzo
      * @return event card deck (list of event cards)
      */
     private ArrayList<EventCard> loadEvents(){
-        // todo: load from json file
-        ArrayList<EventCard> eventCards = new ArrayList<>();
-        eventCards.add(new Epidemic(CardType.EPIDEMY, "imgPath"));
-        eventCards.add(new LostShip(CardType.LOSTSHIP, "imgPath", 2, 2, 1));
-        eventCards.add(new OpenSpace(CardType.OPENSPACE, "imgPath"));
-        eventCards.add(new Sabotage(CardType.SABOTAGE, "imgPath"));
-        eventCards.add(new Slavers(CardType.SLAVERS, "imgPath", 5,5,3,4));
 
-        return eventCards;
+
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(EventCard.class, new EventDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            Type listType = new TypeToken<ArrayList<EventCard>>() {}.getType();
+
+            if(level == 1) {
+
+                ArrayList<EventCard> demoDeck;
+                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCardsL.json");
+                demoDeck = gson.fromJson(reader, listType);
+                reader.close();
+
+                Collections.shuffle(demoDeck);
+
+                return demoDeck;
+
+            }
+
+            if(level == 2) {
+                ArrayList<EventCard> lv1Deck;
+                ArrayList<EventCard> lv2Deck;
+                ArrayList<EventCard> Deck = new ArrayList<>();
+
+                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
+                lv1Deck = gson.fromJson(reader, listType);
+                reader.close();
+
+                reader = new FileReader("src/main/resources/org.progetto.server/EventCards2.json");
+                lv2Deck = gson.fromJson(reader, listType);
+                reader.close();
+
+                Collections.shuffle(lv1Deck);
+                Collections.shuffle(lv2Deck);
+
+                Deck.addAll(lv1Deck.subList(0,4));
+                Deck.addAll(lv2Deck.subList(0,8));
+
+                return Deck;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+
+        return null;
     }
 
     /**

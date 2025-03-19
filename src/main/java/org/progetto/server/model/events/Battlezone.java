@@ -8,7 +8,7 @@ import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
 
-public class Battlezone {
+public class Battlezone extends EventCard{
 
     // =======================
     // ATTRIBUTES
@@ -20,7 +20,8 @@ public class Battlezone {
     // CONSTRUCTORS
     // =======================
 
-    public Battlezone(ArrayList<ConditionPenalty> couples) {
+    public Battlezone(CardType type, String imgSrc,ArrayList<ConditionPenalty> couples) {
+        super(type, imgSrc);
         this.couples = couples;
     }
 

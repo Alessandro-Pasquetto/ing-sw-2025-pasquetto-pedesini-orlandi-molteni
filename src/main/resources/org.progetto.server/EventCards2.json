@@ -50,22 +50,21 @@
     "couples":
     [
       {
-        "type": "FirePowerRequirement",
-        "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []},
-
+        "condition": {"type": "FirePowerRequirement"},
+        "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []}
       },
       {
-        "type": "EnginePowerRequirement",
+        "condition": {"type": "EnginePowerRequirement"},
         "penalty": {"type": "PenaltyBoxes", "neededAmount": 3, "shots": []}
       },
       {
-        "type": "CrewRequirement",
+        "condition": {"type": "CrewRequirement"},
         "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots":
           [
-            {"size": "Small", "from": 0},
-            {"size": "Small", "from": 1},
-            {"size": "Big", "from": 2},
-            {"size": "Small", "from": 3}
+            {"size": "SMALL", "from": 0},
+            {"size": "SMALL", "from": 1},
+            {"size": "BIG", "from": 2},
+            {"size": "SMALL", "from": 3}
           ]
         }
       }
@@ -165,11 +164,11 @@
     "imgSrc": "card11-lvl2.jpg",
     "meteors":
     [
-      {"size": "Small", "from": 0},
-      {"size": "Small", "from": 0},
-      {"size": "Big", "from": 1},
-      {"size": "Small", "from": 1},
-      {"size": "Small", "from": 1}
+      {"size": "SMALL", "from": 0},
+      {"size": "SMALL", "from": 0},
+      {"size": "BIG", "from": 1},
+      {"size": "SMALL", "from": 1},
+      {"size": "SMALL", "from": 1}
     ]
   },
   {
@@ -177,10 +176,10 @@
     "imgSrc": "card12-lvl2.jpg",
     "meteors":
     [
-      {"size": "Big", "from": 0},
-      {"size": "Big", "from": 0},
-      {"size": "Small", "from": 2},
-      {"size": "Small", "from": 2}
+      {"size": "BIG", "from": 0},
+      {"size": "BIG", "from": 0},
+      {"size": "SMALL", "from": 2},
+      {"size": "SMALL", "from": 2}
     ]
   },
   {
@@ -188,11 +187,11 @@
     "imgSrc": "card13-lvl2.jpg",
     "meteors":
     [
-      {"size": "Small", "from": 0},
-      {"size": "Small", "from": 0},
-      {"size": "Big", "from": 3},
-      {"size": "Small", "from": 3},
-      {"size": "Small", "from": 3}
+      {"size": "SMALL", "from": 0},
+      {"size": "SMALL", "from": 0},
+      {"size": "BIG", "from": 3},
+      {"size": "SMALL", "from": 3},
+      {"size": "SMALL", "from": 3}
     ]
   },
   {

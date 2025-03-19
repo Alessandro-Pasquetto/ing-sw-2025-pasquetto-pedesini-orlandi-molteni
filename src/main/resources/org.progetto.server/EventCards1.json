@@ -34,8 +34,8 @@
         "type": "FirePowerRequirement",
         "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots":
           [
-            {"size": "Small", "from": 2},
-            {"size": "Big", "from": 2}
+            {"size": "SMALL", "from": 2},
+            {"size": "BIG", "from": 2}
           ]
         }
       }
@@ -65,9 +65,9 @@
     "imgSrc": "card12-lvl1.jpg",
     "meteors":
       [
-        {"size": "Big", "from": 0},
-        {"size": "Small", "from": 3},
-        {"size": "Small", "from": 1}
+        {"size": "BIG", "from": 0},
+        {"size": "SMALL", "from": 3},
+        {"size": "SMALL", "from": 1}
       ]
   },
   {
@@ -180,9 +180,9 @@
     "imgSrc": "card10-lvl1.jpg",
     "meteors":
       [
-        {"size": "Big", "from": 0},
-        {"size": "Small", "from": 0},
-        {"size": "Big", "from": 0}
+        {"size": "BIG", "from": 0},
+        {"size": "SMALL", "from": 0},
+        {"size": "BIG", "from": 0}
       ]
   },
   {
@@ -190,11 +190,11 @@
     "imgSrc": "card11-lvl1.jpg",
     "meteors":
     [
-      {"size": "Small", "from": 0},
-      {"size": "Small", "from": 0},
-      {"size": "Small", "from": 1},
-      {"size": "Small", "from": 2},
-      {"size": "Small", "from": 3}
+      {"size": "SMALL", "from": 0},
+      {"size": "SMALL", "from": 0},
+      {"size": "SMALL", "from": 1},
+      {"size": "SMALL", "from": 2},
+      {"size": "SMALL", "from": 3}
     ]
   },
   {
@@ -217,9 +217,9 @@
     "rewardCredits": 4,
     "shots":
       [
-        {"size": "Small", "from": 0},
-        {"size": "Big", "from": 0},
-        {"size": "Small", "from": 0}
+        {"size": "SMALL", "from": 0},
+        {"size": "BIG", "from": 0},
+        {"size": "SMALL", "from": 0}
       ]
   },
   {
