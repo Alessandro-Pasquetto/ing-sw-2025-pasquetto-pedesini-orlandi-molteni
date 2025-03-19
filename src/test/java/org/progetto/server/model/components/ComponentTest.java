@@ -51,14 +51,26 @@ class ComponentTest {
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
         Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
 
-        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{2, 1, 1, 1}, "imgPath"));
+        // Standard rotation
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgPath"));
         buildingBoard.getHandComponent().setRotation(3);
 
-        for (int i = 0; i < 4; i++) {
-            System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
-        }
+        assertEquals(3, buildingBoard.getHandComponent().getRotation());
+        assertArrayEquals(new int[]{1, 2, 3, 0}, buildingBoard.getHandComponent().getConnections());
 
-        assertArrayEquals(new int[]{1, 1, 1, 2}, buildingBoard.getHandComponent().getConnections());
+        // Param greater than 3
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgPath"));
+        buildingBoard.getHandComponent().setRotation(4);
+
+        assertEquals(0, buildingBoard.getHandComponent().getRotation());
+        assertArrayEquals(new int[]{0, 1, 2, 3}, buildingBoard.getHandComponent().getConnections());
+
+        // Param fewer than 0
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgPath"));
+        buildingBoard.getHandComponent().setRotation(4);
+
+        assertEquals(0, buildingBoard.getHandComponent().getRotation());
+        assertArrayEquals(new int[]{0, 1, 2, 3}, buildingBoard.getHandComponent().getConnections());
     }
 
     @Test
@@ -79,5 +91,16 @@ class ComponentTest {
 
     @Test
     void rotate() {
+        Spaceship spaceship = new Spaceship(2, 1);
+
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
+
+        // Rotate one time
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgPath"));
+        buildingBoard.getHandComponent().rotate();
+
+        assertEquals(1, buildingBoard.getHandComponent().getRotation());
+        assertArrayEquals(new int[]{3, 0, 1, 2}, buildingBoard.getHandComponent().getConnections());
     }
 }
