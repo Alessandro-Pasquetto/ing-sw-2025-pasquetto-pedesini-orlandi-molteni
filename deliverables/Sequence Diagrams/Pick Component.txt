@@ -1,0 +1,11 @@
+title Pick Component
+
+client-->server:pickComponent()
+
+
+client<-server:response(imgSrc)
+
+alt alt: server -> client
+
+
+

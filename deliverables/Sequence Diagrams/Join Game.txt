@@ -1,0 +1,11 @@
+title Join Game
+
+client-->server:PlaceComponent(int x, int y)
+
+
+client<-server:Response()
+
+alt alt: server -> client
+
+
+
