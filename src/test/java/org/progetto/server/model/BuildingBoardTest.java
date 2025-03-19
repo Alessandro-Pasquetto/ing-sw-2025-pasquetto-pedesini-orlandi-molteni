@@ -58,6 +58,44 @@ class BuildingBoardTest {
 
     @Test
     void placeComponent() {
+        // TODO: secondo me conviene passare il component da aggiungere come parametro
+        //  Perche', ad esempio, handComponent puo' essere null ora come ora
+
+        Spaceship spaceship = new Spaceship(2, 1);
+
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
+
+        Component c;
+
+        boolean result; // function return value
+
+        // Placed in a correct place
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
+        c = buildingBoard.getHandComponent();
+
+        result = buildingBoard.placeComponent(0, 2);
+
+        assertEquals(c, spaceshipMatrix[0][2]);
+        assertTrue(result);
+
+        // Placed outside the spaceship
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
+        c = buildingBoard.getHandComponent();
+
+        result = buildingBoard.placeComponent(0, 0);
+
+        assertNull(spaceshipMatrix[0][0]);
+        assertFalse(result);
+
+        // Placed in the center cell of the spaceship
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
+        c = buildingBoard.getHandComponent();
+
+        result = buildingBoard.placeComponent(2, 3);
+
+        assertNotEquals(c, spaceshipMatrix[2][3]);
+        assertFalse(result);
     }
 
     @Test
