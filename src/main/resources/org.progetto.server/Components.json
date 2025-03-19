@@ -20,7 +20,7 @@
   {
     "type": "BATTERY_STORAGE",
     "connections": [2, 0, 0, 0],
-    "capacity": 3
+    "capacity": 3,
     "imgSrc": "battery4.jpg"
   },
   {
@@ -32,7 +32,7 @@
   {
     "type": "BATTERY_STORAGE",
     "connections": [1, 0, 2, 0],
-    "capacity": 3
+    "capacity": 3,
     "imgSrc": "battery6.jpg"
   },
   {
@@ -110,14 +110,14 @@
   },
   {
     "type": "BOX_STORAGE",
-    "connections": [1, 0, 2, 1],
+    "connections": [2, 0, 1, 2],
     "imgSrc": "blue-box-storage2.jpg",
     "capacity": 3,
     "isRed": false
   },
   {
     "type": "BOX_STORAGE",
-    "connections": [2, 1, 3, 0],
+    "connections": [1, 0, 2, 1],
     "imgSrc": "blue-box-storage3.jpg",
     "capacity": 3,
     "isRed": false
@@ -307,11 +307,6 @@
     "imgSrc": "double-engine9.jpg"
   },
   {
-    "type": "DOUBLE_ENGINE",
-    "connections": [1, 0, 0, 0],
-    "imgSrc": "double-engine9.jpg"
-  },
-  {
     "type": "HOUSING_UNIT",
     "connections": [0, 0, 3, 1],
     "imgSrc": "housing-unit1.jpg",
@@ -379,7 +374,7 @@
   },
   {
     "type": "HOUSING_UNIT",
-    "connections": [0, 1, 1, 2],
+    "connections": [0, 1, 1, 3],
     "imgSrc": "housing-unit12.jpg",
     "capacity": 2
   },
@@ -439,7 +434,7 @@
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
-    "connections": [0, 2, 0, 2],
+    "connections": [0, 2, 0, 3],
     "imgSrc": "orange-alien-housing-unit5.jpg",
     "capacity": 0
   },
