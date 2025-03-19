@@ -5,6 +5,8 @@ import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
 
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class Planets extends EventCard {
 
@@ -14,7 +16,7 @@ public class Planets extends EventCard {
 
     private boolean planetsTaken[]; // for each cell, it becomes true if that planet is taken by a player
     private ArrayList<ArrayList<Box>> rewardsForPlanets;
-    private Player[] landedPlayers; // ordered based on route order
+    private Stack<Player> landedPlayers; // ordered based on route order
     private int penaltyDays;
 
     // =======================
@@ -26,7 +28,7 @@ public class Planets extends EventCard {
         this.rewardsForPlanets = rewardsForPlanets;
         this.penaltyDays = penaltyDays;
         this.planetsTaken = new boolean[rewardsForPlanets.size()];
-        this.landedPlayers = new Player[4];
+        this.landedPlayers = new Stack<>();
     }
 
     // =======================
@@ -61,7 +63,9 @@ public class Planets extends EventCard {
     public boolean choosePlanet(Player player, int planetIdx) {
         if (planetIdx >= 0 && planetIdx < rewardsForPlanets.size()) {
             planetsTaken[planetIdx] = true;
-            landedPlayers[player.getPosition() - 1] = player;
+            if (!landedPlayers.contains(player)) {
+                landedPlayers.push(player);
+            }
             return true;
         } else return false;
     }
@@ -88,10 +92,9 @@ public class Planets extends EventCard {
      * @param board Game board
      */
     public void penalty(Board board) {
-        for (int i = 3; i >= 0; i--) {
-            if (landedPlayers[i] != null) {
-                board.movePlayerByDistance(landedPlayers[i], this.penaltyDays);
-            }
+        while (!landedPlayers.isEmpty()) {
+            board.movePlayerByDistance(landedPlayers.peek(), this.penaltyDays);
+            landedPlayers.pop();
         }
     }
 

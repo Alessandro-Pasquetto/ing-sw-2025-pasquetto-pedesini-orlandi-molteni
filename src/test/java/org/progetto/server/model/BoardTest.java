@@ -34,7 +34,7 @@ class BoardTest {
 
         // Move player ahead
         board.addTraveler(p1);
-        board.movePlayerByDistance(p1, -3);
+        board.movePlayerByDistance(p1, 3);
 
         Player[] track = board.getTrack();
 

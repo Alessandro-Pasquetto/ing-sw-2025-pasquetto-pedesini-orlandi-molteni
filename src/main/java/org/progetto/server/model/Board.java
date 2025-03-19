@@ -72,14 +72,17 @@ public class Board {
      */
     public synchronized void movePlayerByDistance(Player player, int distance) {
         int sign;
+        int playerPosition = player.getPosition();
+
+        track[playerPosition % track.length] = null;  // removes player from starting cell
+
         if(distance < 0){
             sign = -1;
-            distance *= -1;
-        }
-        else
+        } else {
             sign = 1;
+        }
 
-        int playerPosition = player.getPosition();
+        distance = Math.abs(distance);
 
         while(distance != 0) {
             playerPosition += sign;

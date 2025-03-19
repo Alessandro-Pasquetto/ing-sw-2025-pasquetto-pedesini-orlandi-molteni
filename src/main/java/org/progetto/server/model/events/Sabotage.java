@@ -3,6 +3,7 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sabotage extends EventCard {
@@ -12,7 +13,6 @@ public class Sabotage extends EventCard {
     // =======================
 
     public Sabotage(CardType type, String imgSrc) {
-
         super(type, imgSrc);
     }
 
@@ -28,16 +28,17 @@ public class Sabotage extends EventCard {
      * @param players Game's players array
      * @return the player with the fewer amount of crew members
      */
-    public Player lessPopulatedSpaceship(Player[] players) {
+    public Player lessPopulatedSpaceship(ArrayList<Player> players) {
         int minCrewCount = Integer.MAX_VALUE;
         Player minPlayer = null;
+
         for (Player player : players) {
             if (player.getSpaceship().getCrewCount() < minCrewCount) {
                 minCrewCount = player.getSpaceship().getCrewCount();
                 minPlayer = player;
             }
             else if (player.getSpaceship().getCrewCount() == minCrewCount) {
-                if (player.getPosition() < minPlayer.getPosition()) {
+                if (player.getPosition() > minPlayer.getPosition()) {
                     minPlayer = player;
                 }
             }
@@ -57,6 +58,7 @@ public class Sabotage extends EventCard {
      */
     public boolean penalty(int row, int column, Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+
         if (spaceshipMatrix[row][column] != null) {
             player.getSpaceship().getBuildingBoard().destroyComponent(row, column);
             return true;
