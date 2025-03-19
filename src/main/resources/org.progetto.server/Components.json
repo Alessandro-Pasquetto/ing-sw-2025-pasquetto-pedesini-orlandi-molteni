@@ -1,19 +1,88 @@
 [
   {
-    "type": "CANNON",
-    "connections": [0, 2, 0, 3],
-    "imgSrc": "single-cannon1.jpg"
-  },
-  {
-    "type": "SHIELD",
-    "connections": [0, 1, 3, 1],
-    "imgSrc": "shield1.jpg"
-  },
-  {
-    "type": "BATTERY_STORAGE",
+    "type": "BATTERY",
     "connections": [0, 0, 0, 1],
-    "imgSrc": "battery1.jpg",
-    "capacity": 3
+    "imgSrc": "battery1.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [2, 2, 1, 0],
+    "imgSrc": "battery2.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [2, 1, 0, 0],
+    "imgSrc": "battery3.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [2, 0, 0, 0],
+    "imgSrc": "battery4.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [1, 1, 2, 0],
+    "imgSrc": "battery5.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [1, 0, 2, 0],
+    "imgSrc": "battery6.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 0, 0, 3],
+    "imgSrc": "battery7.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [0, 3, 0, 3],
+    "imgSrc": "battery8.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "battery9.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "battery10.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 2, 2, 2],
+    "imgSrc": "battery11.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 1, 1, 1],
+    "imgSrc": "battery12.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 0, 0, 1],
+    "imgSrc": "battery13.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [2, 1, 2, 1],
+    "imgSrc": "battery14.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 2, 1, 0],
+    "imgSrc": "battery15.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 2, 0, 0],
+    "imgSrc": "battery16.jpg"
+  },
+  {
+    "type": "BATTERY",
+    "connections": [3, 1, 2, 0],
+    "imgSrc": "battery17.jpg"
   },
   {
     "type": "BOX_STORAGE",
@@ -21,5 +90,755 @@
     "imgSrc": "blue-box-storage1.jpg",
     "capacity": 2,
     "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [1, 0, 2, 1],
+    "imgSrc": "blue-box-storage2.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 1, 3, 0],
+    "imgSrc": "blue-box-storage3.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 0, 2, 0],
+    "imgSrc": "blue-box-storage4.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 2],
+    "imgSrc": "blue-box-storage5.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [1, 0, 1, 0],
+    "imgSrc": "blue-box-storage6.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 1],
+    "imgSrc": "blue-box-storage7.jpg",
+    "capacity": 3,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [3, 0, 0, 3],
+    "imgSrc": "blue-box-storage8.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 1, 2, 3],
+    "imgSrc": "blue-box-storage9.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 2, 0, 3],
+    "imgSrc": "blue-box-storage10.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 1, 0, 3],
+    "imgSrc": "blue-box-storage11.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "blue-box-storage12.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "blue-box-storage13.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 3, 0, 1],
+    "imgSrc": "blue-box-storage14.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 1, 3, 1],
+    "imgSrc": "blue-box-storage15.jpg",
+    "capacity": 2,
+    "isRed": false
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 0, 1, 3],
+    "imgSrc": "double-cannon1.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "double-cannon2.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 2, 1, 2],
+    "imgSrc": "double-cannon3.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 0, 3, 2],
+    "imgSrc": "double-cannon4.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 2, 0, 1],
+    "imgSrc": "double-cannon5.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 1, 2, 1],
+    "imgSrc": "double-cannon6.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 3, 2, 0],
+    "imgSrc": "double-cannon7.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 3, 0, 0],
+    "imgSrc": "double-cannon8.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 1, 3, 0],
+    "imgSrc": "double-cannon9.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 0, 2, 0],
+    "imgSrc": "double-cannon10.jpg"
+  },
+  {
+    "type": "DOUBLE_CANNON",
+    "connections": [0, 0, 1, 0],
+    "imgSrc": "double-cannon11.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [2, 0, 0, 3],
+    "imgSrc": "double-engine1.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [0, 3, 0, 3],
+    "imgSrc": "double-engine2.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [3, 0, 0, 2],
+    "imgSrc": "double-engine3.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [2, 2, 0, 2],
+    "imgSrc": "double-engine4.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [1, 1, 0, 1],
+    "imgSrc": "double-engine5.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [3, 1, 0, 0],
+    "imgSrc": "double-engine6.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [2, 0, 0, 0],
+    "imgSrc": "double-engine7.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [1, 3, 0, 0],
+    "imgSrc": "double-engine8.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [1, 0, 0, 0],
+    "imgSrc": "double-engine9.jpg"
+  },
+  {
+    "type": "DOUBLE_ENGINE",
+    "connections": [1, 0, 0, 0],
+    "imgSrc": "double-engine9.jpg"
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [0, 0, 3, 1],
+    "imgSrc": "housing-unit1.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [1, 2, 1, 1],
+    "imgSrc": "housing-unit2.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [1, 2, 2, 1],
+    "imgSrc": "housing-unit3.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 0, 0, 1],
+    "imgSrc": "housing-unit4.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 1, 0, 1],
+    "imgSrc": "housing-unit5.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 1, 2, 1],
+    "imgSrc": "housing-unit6.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [0, 1, 3, 2],
+    "imgSrc": "housing-unit7.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [1, 2, 0, 2],
+    "imgSrc": "housing-unit8.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 1, 2, 2],
+    "imgSrc": "housing-unit9.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [3, 0, 0, 2],
+    "imgSrc": "housing-unit10.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [0, 1, 0, 3],
+    "imgSrc": "housing-unit11.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [0, 1, 1, 2],
+    "imgSrc": "housing-unit12.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [0, 2, 0, 3],
+    "imgSrc": "housing-unit13.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [1, 0, 1, 3],
+    "imgSrc": "housing-unit14.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [1, 0, 2, 3],
+    "imgSrc": "housing-unit15.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 0, 2, 3],
+    "imgSrc": "housing-unit16.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "HOUSING_UNIT",
+    "connections": [2, 2, 0, 3],
+    "imgSrc": "housing-unit17.jpg",
+    "capacity": 2
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [1, 1, 0, 1],
+    "imgSrc": "orange-alien-housing-unit1.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [2, 1, 0, 1],
+    "imgSrc": "orange-alien-housing-unit2.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "orange-alien-housing-unit3.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [0, 0, 1, 3],
+    "imgSrc": "orange-alien-housing-unit4.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [0, 2, 0, 2],
+    "imgSrc": "orange-alien-housing-unit5.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "ORANGE_HOUSING_UNIT",
+    "connections": [1, 0, 0, 3],
+    "imgSrc": "orange-alien-housing-unit6.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [1, 2, 0, 2],
+    "imgSrc": "purple-alien-housing-unit1.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [2, 2, 0, 2],
+    "imgSrc": "purple-alien-housing-unit2.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "purple-alien-housing-unit3.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [0, 0, 2, 3],
+    "imgSrc": "purple-alien-housing-unit4.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [0, 1, 0, 3],
+    "imgSrc": "purple-alien-housing-unit5.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "PURPLE_HOUSING_UNIT",
+    "connections": [2, 0, 0, 3],
+    "imgSrc": "purple-alien-housing-unit6.jpg",
+    "capacity": 0
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 2],
+    "imgSrc": "red-box-storage1.jpg",
+    "capacity": 2,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 2, 0, 1],
+    "imgSrc": "red-box-storage2.jpg",
+    "capacity": 2,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 0, 0, 1],
+    "imgSrc": "red-box-storage3.jpg",
+    "capacity": 2,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [3, 0, 0, 3],
+    "imgSrc": "red-box-storage4.jpg",
+    "capacity": 1,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 2, 2, 3],
+    "imgSrc": "red-box-storage5.jpg",
+    "capacity": 1,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [2, 1, 0, 3],
+    "imgSrc": "red-box-storage6.jpg",
+    "capacity": 1,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [1, 1, 1, 3],
+    "imgSrc": "red-box-storage7.jpg",
+    "capacity": 1,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 3, 0, 3],
+    "imgSrc": "red-box-storage8.jpg",
+    "capacity": 1,
+    "isRed": true
+  },
+  {
+    "type": "BOX_STORAGE",
+    "connections": [0, 2, 1, 3],
+    "imgSrc": "red-box-storage9.jpg",
+    "capacity": 2,
+    "isRed": true
+  },
+  {
+    "type": "SHIELD",
+    "connections": [0, 1, 3, 1],
+    "imgSrc": "shield1.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [1, 0, 1, 1],
+    "imgSrc": "shield2.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [2, 1, 2, 1],
+    "imgSrc": "shield3.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [0, 0, 3, 2],
+    "imgSrc": "shield4.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [0, 2, 2, 2],
+    "imgSrc": "shield5.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [1, 2, 1, 2],
+    "imgSrc": "shield6.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [0, 0, 1, 3],
+    "imgSrc": "shield7.jpg"
+  },
+  {
+    "type": "SHIELD",
+    "connections": [0, 2, 2, 3],
+    "imgSrc": "shield8.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 0, 3],
+    "imgSrc": "single-cannon1.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 1, 0],
+    "imgSrc": "single-cannon2.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 1, 0],
+    "imgSrc": "single-cannon3.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 2, 0],
+    "imgSrc": "single-cannon4.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 2, 0],
+    "imgSrc": "single-cannon5.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 0, 0],
+    "imgSrc": "single-cannon6.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 2, 0],
+    "imgSrc": "single-cannon7.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 3, 0],
+    "imgSrc": "single-cannon8.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 0, 0],
+    "imgSrc": "single-cannon9.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 1, 0],
+    "imgSrc": "single-cannon10.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 3, 0],
+    "imgSrc": "single-cannon11.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 3, 1, 0],
+    "imgSrc": "single-cannon12.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 0, 1],
+    "imgSrc": "single-cannon13.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 2, 1],
+    "imgSrc": "single-cannon14.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 3, 1],
+    "imgSrc": "single-cannon15.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 1, 1],
+    "imgSrc": "single-cannon16.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 3, 1],
+    "imgSrc": "single-cannon17.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 3, 0, 1],
+    "imgSrc": "single-cannon18.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 0, 2],
+    "imgSrc": "single-cannon19.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 1, 2],
+    "imgSrc": "single-cannon20.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 3, 2],
+    "imgSrc": "single-cannon21.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 0, 2],
+    "imgSrc": "single-cannon22.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 1, 3, 2],
+    "imgSrc": "single-cannon23.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 2, 2, 2],
+    "imgSrc": "single-cannon24.jpg"
+  },
+  {
+    "type": "CANNON",
+    "connections": [0, 0, 2, 3],
+    "imgSrc": "single-cannon25.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [1, 0, 0, 3],
+    "imgSrc": "single-engine1.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 2, 0, 3],
+    "imgSrc": "single-engine2.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "single-engine3.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 0, 0, 3],
+    "imgSrc": "single-engine4.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [3, 1, 0, 2],
+    "imgSrc": "single-engine5.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [2, 0, 0, 2],
+    "imgSrc": "single-engine6.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [1, 2, 0, 2],
+    "imgSrc": "single-engine7.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 3, 0, 0],
+    "imgSrc": "single-engine8.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 3, 0, 0],
+    "imgSrc": "single-engine9.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [1, 0, 0, 0],
+    "imgSrc": "single-engine10.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [1, 0, 0, 0],
+    "imgSrc": "single-engine11.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [1, 1, 0, 0],
+    "imgSrc": "single-engine12.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [2, 0, 0, 0],
+    "imgSrc": "single-engine13.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [2, 0, 0, 0],
+    "imgSrc": "single-engine14.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 1, 0, 2],
+    "imgSrc": "single-engine15.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [3, 2, 0, 1],
+    "imgSrc": "single-engine16.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [3, 0, 0, 1],
+    "imgSrc": "single-engine17.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [2, 1, 0, 1],
+    "imgSrc": "single-engine18.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [0, 3, 0, 1],
+    "imgSrc": "single-engine19.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [2, 3, 0, 0],
+    "imgSrc": "single-engine20.jpg"
+  },
+  {
+    "type": "ENGINE",
+    "connections": [3, 2, 0, 0],
+    "imgSrc": "single-engine21.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [3, 2, 2, 3],
+    "imgSrc": "structural1.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [3, 3, 0, 1],
+    "imgSrc": "structural2.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [1, 3, 0, 3],
+    "imgSrc": "structural3.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [1, 3, 1, 3],
+    "imgSrc": "structural4.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [1, 3, 2, 3],
+    "imgSrc": "structural5.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [2, 3, 0, 3],
+    "imgSrc": "structural6.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [3, 1, 2, 3],
+    "imgSrc": "structural7.jpg"
+  },
+  {
+    "type": "STRUCTURAL_UNIT",
+    "connections": [3, 2, 0, 3],
+    "imgSrc": "structural8.jpg"
   }
 ]
