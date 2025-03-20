@@ -18,7 +18,6 @@
     <Button layoutX="200.0" layoutY="239.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
     <Button layoutX="200.0" layoutY="339.0" onAction="#pickComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
     <Button layoutX="200.0" layoutY="439.0" onAction="#rotateComponent" prefHeight="42.0" prefWidth="149.0" text="rotate" />
-    <Button layoutX="200.0" layoutY="539.0" onAction="#placeAndPickNewComponent" prefHeight="42.0" prefWidth="149.0" text= "esPickNewComponent"/>
 
     <VBox fx:id="components" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
 

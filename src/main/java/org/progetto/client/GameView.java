@@ -18,7 +18,10 @@ public class GameView {
     @FXML
     private GridPane grid;
 
-    private ImageView lastGeneratedComponent = null;
+    int rHandComponent = 0;
+    int xHandComponent = -1;
+    int yHandComponent = -1;
+    private ImageView handComponent = null;
 
     // Initialize the grid when the view is loaded
     public void initialize() {
@@ -47,9 +50,16 @@ public class GameView {
         }
     }
 
-    // Method to simulate picking a component
-    public void pickComponent(ActionEvent actionEvent) {
-        SocketClient.pickComponent();
+    public void pickComponent(ActionEvent event) {
+
+        if(handComponent == null)
+            SocketClient.pickComponent();
+        else if(xHandComponent != -1)
+            SocketClient.placeHandComponentAndPickComponent(xHandComponent, yHandComponent, rHandComponent);
+    }
+
+    public void placeHandComponentAndPickCard(ActionEvent actionEvent) {
+        SocketClient.placeHandComponentAndPickCard(xHandComponent, yHandComponent, rHandComponent, 1);
     }
 
     // Method to start the game
@@ -59,17 +69,21 @@ public class GameView {
 
     // Generate a draggable component with an image
     public void generateComponent(String imgComponent) {
+        rHandComponent = 0;
+        xHandComponent = -1;
+        yHandComponent = -1;
+
         Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgComponent)));
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
 
-        if (lastGeneratedComponent != null) {
-            disableDragAndDrop(lastGeneratedComponent);
+        if (handComponent != null) {
+            disableDragAndDrop(handComponent);
         }
 
         makeDraggable(imageView);
-        lastGeneratedComponent = imageView;
+        handComponent = imageView;
 
         Platform.runLater(() -> {
             components.getChildren().add(imageView);
@@ -77,7 +91,12 @@ public class GameView {
     }
 
     public void rotateComponent() {
-        lastGeneratedComponent.setRotate(lastGeneratedComponent.getRotate() + 90);
+        handComponent.setRotate(handComponent.getRotate() + 90);
+
+        if(rHandComponent == 3)
+            rHandComponent = 0;
+        else
+            rHandComponent++;
     }
 
     // Method to disable drag-and-drop for an ImageView
@@ -155,8 +174,6 @@ public class GameView {
                         // Check if the cell is already occupied by an ImageView (component)
                         Integer rowIndex = GridPane.getRowIndex(cell);
                         Integer colIndex = GridPane.getColumnIndex(cell);
-                        if (rowIndex == null) rowIndex = 0;  // Default if row index is not set
-                        if (colIndex == null) colIndex = 0;  // Default if column index is not set
 
                         // Check if the cell already has a child (component)
                         if (!cell.getChildren().isEmpty()) {
@@ -173,8 +190,9 @@ public class GameView {
                         imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
                         imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
 
-                        // Print the row and column index of the dropped cell
-                        System.out.println("Component dropped in cell: (" + rowIndex + ", " + colIndex + ")");
+                        // save the row and column index of the dropped cell
+                        xHandComponent = colIndex;
+                        yHandComponent = rowIndex;
 
                         droppedInCell = true;
                         break;
@@ -194,9 +212,5 @@ public class GameView {
             }
             event.consume();  // Consume the event to prevent default behavior
         });
-    }
-
-    public void placeAndPickNewComponent() {
-        generateComponent("single-cannon1.jpg");
     }
 }

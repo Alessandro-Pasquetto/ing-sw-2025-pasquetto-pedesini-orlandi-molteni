@@ -1,7 +1,6 @@
 package org.progetto.client;
 
-import org.progetto.messages.CreateGameMessage;
-import org.progetto.messages.JoinGameMessage;
+import org.progetto.messages.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -53,6 +52,14 @@ public class SocketClient {
 
     public static void startGame(){
         SocketWriter.sendMessage("StartGame");
+    }
+
+    public static void placeHandComponentAndPickComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickComponentMessage(xHandComponent, yHandComponent, rHandComponent));
+    }
+
+    public static void placeHandComponentAndPickCard(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickCardMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
     }
 
     public static void pickComponent(){

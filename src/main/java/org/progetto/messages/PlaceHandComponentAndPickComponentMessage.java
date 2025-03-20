@@ -2,7 +2,7 @@ package org.progetto.messages;
 
 import java.io.Serializable;
 
-public class PlaceComponentMessage implements Serializable {
+public class PlaceHandComponentAndPickComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -14,7 +14,7 @@ public class PlaceComponentMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
-    public PlaceComponentMessage(int x, int y, int rotation) {
+    public PlaceHandComponentAndPickComponentMessage(int x, int y, int rotation) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;

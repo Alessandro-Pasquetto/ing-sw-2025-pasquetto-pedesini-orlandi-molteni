@@ -194,9 +194,7 @@ public class BuildingBoard {
 
             if(!housingUnit.getAllowAlienOrange())
                 housingUnit.setAlienOrange(false);
-
         }
-
     }
 
 
@@ -226,9 +224,6 @@ public class BuildingBoard {
         }
 
     }
-
-
-
 
     /**
      * @author Lorenzo
@@ -277,16 +272,18 @@ public class BuildingBoard {
      * @author Lorenzo
      * @param y coordinate for placing component
      * @param x coordinate for placing component
+     * @param r rotation value of placing component
      * @return true if component has been placed correctly else otherwise
      */
-    public boolean placeComponent(int y, int x) {
+    public boolean placeComponent(int y, int x, int r) {
         if(boardMask[y][x] == 1) {
             spaceship.addComponentsShipCount(1);
 
+            handComponent.setY_coordinate(y);
+            handComponent.setX_coordinate(x);
+            handComponent.setRotation(r);
+
             spaceshipMatrix[y][x] = handComponent;
-            spaceshipMatrix[y][x].setPlaced(true);
-            spaceshipMatrix[y][x].setY_coordinate(y);
-            spaceshipMatrix[y][x].setX_coordinate(x);
 
             boardMask[y][x] = -1;   //signal the presence of a component
             handComponent = null;
@@ -653,7 +650,6 @@ public class BuildingBoard {
                                     spaceship.addDownLeftShieldCount(1);
                                     break;
                             }
-
                             break;
 
                         case HOUSING_UNIT:
@@ -673,8 +669,6 @@ public class BuildingBoard {
                                     housingUnit = (HousingUnit) housing_component;
                                     housingUnit.setAllowAlienOrange(true);
                                 }
-
-
                             }
                             break;
 
@@ -689,13 +683,11 @@ public class BuildingBoard {
                             }
                             break;
 
-
                         case CENTRAL_UNIT:
                             hu = (HousingUnit) spaceshipMatrix[y][x];
                             hu.incrementCrewCount(2);
                             spaceship.addCrewCount(hu.getCrewCount());
                             break;
-
 
                         case BATTERY_STORAGE:
                             BatteryStorage bs = (BatteryStorage) spaceshipMatrix[y][x];
@@ -703,19 +695,11 @@ public class BuildingBoard {
                             spaceship.addBatteriesCount(bs.getItemsCount());
                             break;
 
-
                         default:
                             break;
                     }
-
                 }
             }
         }
-
-
-
     }
-
-
-
 }
