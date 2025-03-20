@@ -34,7 +34,7 @@ class GameTest {
 
     @Test
     void Loadingtest() throws IOException {
-        Game game = new Game(0,4,1);
+        Game game = new Game(0,4,2);
 
 
 

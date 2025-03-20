@@ -188,6 +188,7 @@ public class Game {
     }
 
     /**
+     * Loading event cards from json file and initialize eventCardDeck
      * @author Lorenzo
      * @return event card deck (list of event cards)
      */
@@ -246,6 +247,7 @@ public class Game {
     }
 
     /**
+     * Loading all components saved on json file in to the componentDeck
      * @author Lorenzo
      * @return component deck (list of components)
      */

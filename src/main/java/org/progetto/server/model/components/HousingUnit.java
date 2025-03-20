@@ -8,9 +8,10 @@ public class HousingUnit extends Component{
 
     private int capacity;
     private int crewCount;
-    private boolean hasOrangeAlien;
-    private boolean hasPurpleAlien;
-
+    private boolean hasAlienOrange;
+    private boolean hasAlienPurple;
+    private boolean allowAlienOrange;
+    private boolean allowAlienPurple;
 
     // =======================
     // CONSTRUCTOR
@@ -20,8 +21,10 @@ public class HousingUnit extends Component{
         super(type, connections, imgSrc);
         this.capacity = capacity;
         this.crewCount = 0;
-        this.hasOrangeAlien = false;
-        this.hasPurpleAlien = false;
+        this.hasAlienOrange = false;
+        this.hasAlienPurple = false;
+        this.allowAlienOrange = false;
+        this.allowAlienPurple = false;
     }
 
 
@@ -38,23 +41,40 @@ public class HousingUnit extends Component{
     }
 
     public boolean hasOrangeAlien() {
-        return hasOrangeAlien;
+        return hasAlienOrange;
     }
 
     public boolean hasPurpleAlien() {
-        return hasPurpleAlien;
+        return hasAlienPurple;
     }
+
+    public boolean getAllowAlienOrange() {
+        return allowAlienOrange;
+    }
+
+    public boolean getAllowAlienPurple() {
+        return allowAlienPurple;
+    }
+
 
     // =======================
     // SETTERS
     // =======================
 
-    public void setOrangeAlien(boolean hasOrangeAlien) {
-        this.hasOrangeAlien = hasOrangeAlien;
+    public void setAlienOrange(boolean hasAlienOrange) {
+        this.hasAlienOrange = this.hasAlienOrange;
     }
 
-    public void setPurpleAlien(boolean hasPurpleAlien) {
-        this.hasPurpleAlien = hasPurpleAlien;
+    public void setPurpleAlien(boolean hasAlienPurple) {
+        this.hasAlienPurple = hasAlienPurple;
+    }
+
+    public void setAllowAlienOrange(boolean allowAlienOrange) {
+        this.allowAlienOrange = allowAlienOrange;
+    }
+
+    public void setAllowAlienPurple(boolean allowAlienPurple) {
+        this.allowAlienPurple = allowAlienPurple;
     }
 
     // =======================
@@ -62,6 +82,7 @@ public class HousingUnit extends Component{
     // =======================
 
     /**
+     * increment the number of crew inside the unit
      * @author Lorenzo
      * @param num is the number of crew member to add
      * @return true if the crew can be added
@@ -77,6 +98,7 @@ public class HousingUnit extends Component{
     }
 
     /**
+     * decrement the number of crew inside the unit
      * @author Lorenzo
      * @param num is the number of crew member to remove
      * @return true if the crew has been removed

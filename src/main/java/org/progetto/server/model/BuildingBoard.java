@@ -102,6 +102,56 @@ public class BuildingBoard {
     }
 
     /**
+     * check if two components are connected
+     * @author Lorenzo
+     * @param c1 is the first component
+     * @param c2 is the second component
+     * @return true if c1 and c2 are connected
+     */
+    public boolean areConnected(Component c1, Component c2) {
+
+        int[] c1_connections = c1.getConnections();
+        int[] c2_connections = c2.getConnections();
+
+        if (c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+            if (c1_connections[3] != 0 && c2_connections[1] != 0) {
+                if (c1_connections[3] == c2_connections[1] || c1_connections[3] == 3 || c2_connections[1] == 3) {
+                    return true;
+                }
+            }
+        }
+
+        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the left
+            if (c1_connections[1] != 0 && c2_connections[3] != 0) {
+                if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
+                    return true;
+                }
+            }
+        }
+
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
+            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
+                if (c1_connections[0] == c2_connections[2] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+                    return true;
+                }
+            }
+        }
+
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
+            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
+                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+
+    /**
+     * Search for component of the same type
      * @author Lorenzo
      * @param type is the component type to search in the matrix
      * @return list of components found
@@ -110,15 +160,60 @@ public class BuildingBoard {
 
         ArrayList<Component> found_list = new ArrayList<>();
 
-        for(int i = 0; i < spaceshipMatrix.length; i++) {
-            for(int j = 0; j < spaceshipMatrix[i].length; j++) {
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for(int x = 0; x < spaceshipMatrix[y].length; x++) {
 
-                if(spaceshipMatrix[i][j].getType() == type)
-                    found_list.add(spaceshipMatrix[i][j]);
+                if(spaceshipMatrix[y][x].getType() == type)
+                    found_list.add(spaceshipMatrix[y][x]);
             }
         }
         return found_list;
     }
+
+    /**
+     * check if a housing unit can contain an orange alien, if it can't the alien is removed
+     */
+    private void updateOrangeAlienAllow(){
+        List<Component> housing_units = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
+
+        for(HousingUnit housingUnit : (HousingUnit[]) housing_units.toArray()) {
+            for(HousingUnit orangeUnit : (HousingUnit[]) orange_units.toArray()) {
+                if(areConnected(orangeUnit, housingUnit)) {
+                    housingUnit.setAllowAlienOrange(true);
+                    break;
+                }
+            }
+
+            if(!housingUnit.getAllowAlienOrange())
+                housingUnit.setAlienOrange(false);
+
+        }
+
+    }
+
+
+    /**
+     * check if a housing unit can contain a purple alien
+     */
+    private void updatePurpleAlienAllow(){
+        List<Component> housing_units = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
+
+        for(HousingUnit housingUnit : (HousingUnit[]) housing_units.toArray()) {
+            for(HousingUnit purpleUnit : (HousingUnit[]) purple_units.toArray()) {
+                if(areConnected(purpleUnit, housingUnit)) {
+                    housingUnit.setAllowAlienPurple(true);
+                    break;
+                }
+            }
+
+            if(!housingUnit.getAllowAlienPurple())
+                housingUnit.setPurpleAlien(false);
+        }
+
+    }
+
 
     /**
      * @author Lorenzo
@@ -154,6 +249,7 @@ public class BuildingBoard {
     }
 
     /**
+     * create the component matrix given the mask matrix dimensions
      * @author Lorenzo
      * @return the component matrix for the spaceship initialized with null values
      */
@@ -185,7 +281,9 @@ public class BuildingBoard {
         return false;
     }
 
+
     /**
+     * Remove a component from the spaceship, update values
      * @author Lorenzo
      * @param y is the y coordinate of the component to remove
      * @param x is the x coordinate of the component to remove
@@ -259,6 +357,9 @@ public class BuildingBoard {
                 if(orange_units.size() == 1) {    //if only a module is present
                     spaceship.setAlienOrange(false);
                 }
+
+                updateOrangeAlienAllow();
+
                 break;
 
             case PURPLE_HOUSING_UNIT:
@@ -266,16 +367,13 @@ public class BuildingBoard {
                 if(purple_units.size() == 1) {    //if only a module is present
                     spaceship.setAlienPurple(false);
                 }
+
+                updatePurpleAlienAllow();
+
                 break;
 
             case CENTRAL_UNIT:
                 hu = (HousingUnit) destroyedComponent;
-                if(hu.hasOrangeAlien())
-                    spaceship.setAlienOrange(false);
-
-                if(hu.hasPurpleAlien())
-                    spaceship.setAlienPurple(false);
-
                 spaceship.addCrewCount(-hu.getCrewCount());
                 break;
 
@@ -316,52 +414,6 @@ public class BuildingBoard {
         return true;
     }
 
-
-    /**
-     * @author Lorenzo
-     * @param c1 is the first component
-     * @param c2 is the second component
-     * @return true if c1 and c2 are connected
-     */
-    public boolean areConnected(Component c1, Component c2) {
-
-        int[] c1_connections = c1.getConnections();
-        int[] c2_connections = c2.getConnections();
-
-        if (c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
-            if (c1_connections[3] != 0 && c2_connections[1] != 0) {
-                if (c1_connections[3] == c2_connections[1] || c1_connections[3] == 3 || c2_connections[1] == 3) {
-                    return true;
-                }
-            }
-        }
-
-        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the left
-            if (c1_connections[1] != 0 && c2_connections[3] != 0) {
-                if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
-                    return true;
-                }
-            }
-        }
-
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
-            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
-                if (c1_connections[0] == c2_connections[2] || c1_connections[2] == 3 || c2_connections[0] == 3) {
-                    return true;
-                }
-            }
-        }
-
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
-            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
-                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     /**
      * @param x the x coordinate of the component to checked
@@ -508,127 +560,113 @@ public class BuildingBoard {
         }
     }
 
-//todo complete method
+    /**
+     * initialize spaceship attributes after checking the ship validity
+     */
+    public void initSpaceshipParams()
+    {
+        for(int y = 0; y < spaceshipMatrix.length; y++){
+            for(int x = 0; x < spaceshipMatrix[y].length; x++){
+                if(spaceshipMatrix[y][x] != null){
 
-//    public void initSpaceshipParams()
-//    {
-//        for(int i = 0; i < spaceshipMatrix.length; i++){
-//            for(int j = 0; j < spaceshipMatrix[i].length; j++){
-//                if(spaceshipMatrix[i][j] != null){
-//
-//                    switch(spaceshipMatrix[i][j].getType()){
-//
-//                        case CANNON:
-//                            if (spaceshipMatrix[i][j].getRotation() == 0)
-//                                spaceship.addNormalShootingPower(+1);
-//                            else
-//                                spaceship.addNormalShootingPower((float) +0.5);
-//                            break;
-//
-//                        case DOUBLE_CANNON:
-//                            spaceship.addDoubleCannonCount(+1);
-//                            break;
-//
-//                        case ENGINE:
-//                            spaceship.addNormalEnginePower(+1);
-//                            break;
-//
-//                        case DOUBLE_ENGINE:
-//                            spaceship.addDoubleEngineCount(+1);
-//                            break;
-//
-//                        case SHIELD:
-//                            switch (spaceshipMatrix[i][j].getRotation()) {
-//
-//                                case 0: // left-up
-//                                    spaceship.addLeftUpShieldCount(1);
-//                                    break;
-//
-//                                case 1: // up-right
-//                                    spaceship.addUpRightShieldCount(1);
-//                                    break;
-//
-//                                case 2: // right-down
-//                                    spaceship.addRightDownShieldCount(1);
-//                                    break;
-//
-//                                case 3: // down-left
-//                                    spaceship.addDownLeftShieldCount(1);
-//                                    break;
-//                            }
-//
-//                            break;
-//
-//                        case HOUSING_UNIT:
-//                            HousingUnit hu = (HousingUnit) spaceshipMatrix[i][j];
-//                            spaceship.addCrewCount(-hu.getCrewCount());
-//                            break;
-//
-//                        case ORANGE_HOUSING_UNIT:
-//                            List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
-//                            if(orange_units.size() == 1) {    //if only a module is present
-//                                spaceship.setAlienOrange(false);
-//                            }
-//                            break;
-//
-//                        case PURPLE_HOUSING_UNIT:
-//                            List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
-//                            if(purple_units.size() == 1) {    //if only a module is present
-//                                spaceship.setAlienPurple(false);
-//                            }
-//                            break;
-//
-//                        case CENTRAL_UNIT:
-//                            hu = (HousingUnit) destroyedComponent;
-//                            if(hu.hasOrangeAlien())
-//                                spaceship.setAlienOrange(false);
-//
-//                            if(hu.hasPurpleAlien())
-//                                spaceship.setAlienPurple(false);
-//
-//                            spaceship.addCrewCount(-hu.getCrewCount());
-//                            break;
-//
-//                        case STRUCTURAL_UNIT:
-//                            break;
-//
-//                        case BATTERY_STORAGE:
-//                            BatteryStorage bs = (BatteryStorage) destroyedComponent;
-//                            spaceship.addBatteriesCount(-bs.getItemsCount());
-//                            break;
-//
-//                        case RED_BOX_STORAGE:
-//                            BoxStorage bsc = (BoxStorage) destroyedComponent;
-//                            Box[] boxes = bsc.getBoxStorage();
-//
-//                            for (Box box : boxes) {
-//                                if(box != null)
-//                                    spaceship.addBoxCount(-1,box.getType());
-//
-//                            }
-//                            break;
-//
-//                        case BOX_STORAGE:
-//                            bsc = (BoxStorage) destroyedComponent;
-//                            boxes = bsc.getBoxStorage();
-//
-//                            for (Box box : boxes) {
-//                                if(box != null)
-//                                    spaceship.addBoxCount(-1,box.getType());
-//                            }
-//                            break;
-//
-//                        default:
-//                            break;
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//
-//
-//    }
+                    spaceship.addComponentShipCount(1);
+
+                    switch(spaceshipMatrix[y][x].getType()){
+
+                        case CANNON:
+                            if (spaceshipMatrix[y][x].getRotation() == 0)
+                                spaceship.addNormalShootingPower(+1);
+                            else
+                                spaceship.addNormalShootingPower((float) +0.5);
+                            break;
+
+                        case DOUBLE_CANNON:
+                            spaceship.addDoubleCannonCount(+1);
+                            break;
+
+                        case ENGINE:
+                            spaceship.addNormalEnginePower(+1);
+                            break;
+
+                        case DOUBLE_ENGINE:
+                            spaceship.addDoubleEngineCount(+1);
+                            break;
+
+                        case SHIELD:
+                            switch (spaceshipMatrix[y][x].getRotation()) {
+
+                                case 0: // left-up
+                                    spaceship.addLeftUpShieldCount(1);
+                                    break;
+
+                                case 1: // up-right
+                                    spaceship.addUpRightShieldCount(1);
+                                    break;
+
+                                case 2: // right-down
+                                    spaceship.addRightDownShieldCount(1);
+                                    break;
+
+                                case 3: // down-left
+                                    spaceship.addDownLeftShieldCount(1);
+                                    break;
+                            }
+
+                            break;
+
+                        case HOUSING_UNIT:
+                            HousingUnit hu = (HousingUnit) spaceshipMatrix[y][x];
+                            if(!hu.getAllowAlienPurple() && !hu.getAllowAlienOrange()) {
+                                hu.incrementCrewCount(2);
+                                spaceship.addCrewCount(hu.getCrewCount());
+                            }
+                            break;
+
+                        case ORANGE_HOUSING_UNIT:
+                            HousingUnit orange_unit = (HousingUnit) spaceshipMatrix[y][x];
+                            List<Component> housingUnits = typeSearch(ComponentType.HOUSING_UNIT);
+
+                            for(HousingUnit housingUnit : (HousingUnit[]) housingUnits.toArray()){
+                                if(areConnected(orange_unit, housingUnit))
+                                    housingUnit.setAllowAlienOrange(true);
+                            }
+                            break;
+
+                        case PURPLE_HOUSING_UNIT:
+                            HousingUnit purple_unit = (HousingUnit) spaceshipMatrix[y][x];
+                            housingUnits = typeSearch(ComponentType.HOUSING_UNIT);
+                            for(HousingUnit housingUnit : (HousingUnit[]) housingUnits.toArray()){
+                                if(areConnected(purple_unit, housingUnit))
+                                    housingUnit.setAllowAlienPurple(true);
+                            }
+                            break;
+
+
+                        case CENTRAL_UNIT:
+                            hu = (HousingUnit) spaceshipMatrix[y][x];
+                            hu.incrementCrewCount(2);
+                            spaceship.addCrewCount(hu.getCrewCount());
+                            break;
+
+
+                        case BATTERY_STORAGE:
+                            BatteryStorage bs = (BatteryStorage) spaceshipMatrix[y][x];
+                            bs.incrementItemsCount(bs.getCapacity());
+                            spaceship.addBatteriesCount(bs.getItemsCount());
+                            break;
+
+
+                        default:
+                            break;
+                    }
+
+                }
+            }
+        }
+
+
+
+    }
 
 
 

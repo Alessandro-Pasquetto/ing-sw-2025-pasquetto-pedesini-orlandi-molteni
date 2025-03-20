@@ -63,7 +63,7 @@ public class Slavers extends EventCard {
     public boolean chooseDiscardedCrew(HousingUnit component) {
         if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
             if (component.hasOrangeAlien()) {  // if it contains an orange alien
-                component.setOrangeAlien(false);
+                component.setAlienOrange(false);
             } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
                 component.setPurpleAlien(false);
             } else if (component.getCrewCount() > 0) {  // if it has more than one crew member
