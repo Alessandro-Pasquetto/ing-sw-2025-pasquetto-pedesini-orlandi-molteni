@@ -65,7 +65,7 @@ public class HousingUnit extends Component{
         this.hasAlienOrange = this.hasAlienOrange;
     }
 
-    public void setPurpleAlien(boolean hasAlienPurple) {
+    public void setAlienPurple(boolean hasAlienPurple) {
         this.hasAlienPurple = hasAlienPurple;
     }
 

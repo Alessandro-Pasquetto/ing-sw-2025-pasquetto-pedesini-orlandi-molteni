@@ -65,7 +65,7 @@ public class Slavers extends EventCard {
             if (component.hasOrangeAlien()) {  // if it contains an orange alien
                 component.setAlienOrange(false);
             } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
-                component.setPurpleAlien(false);
+                component.setAlienPurple(false);
             } else if (component.getCrewCount() > 0) {  // if it has more than one crew member
                 component.decrementCrewCount(1);
             }

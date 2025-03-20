@@ -163,8 +163,10 @@ public class BuildingBoard {
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
 
-                if(spaceshipMatrix[y][x].getType() == type)
-                    found_list.add(spaceshipMatrix[y][x]);
+                if(spaceshipMatrix[y][x] != null) {
+                    if (spaceshipMatrix[y][x].getType() == type)
+                        found_list.add(spaceshipMatrix[y][x]);
+                }
             }
         }
         return found_list;
@@ -174,16 +176,21 @@ public class BuildingBoard {
      * check if a housing unit can contain an orange alien, if it can't the alien is removed
      */
     private void updateOrangeAlienAllow(){
-        List<Component> housing_units = typeSearch(ComponentType.HOUSING_UNIT);
-        List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
+        List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> orange_components = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
+        boolean allow = false;
+        for(Component housing_component : housing_components) {
+            HousingUnit housingUnit = (HousingUnit) housing_component;
+            for(Component orange_component : orange_components) {
+                HousingUnit orangeUnit = (HousingUnit) orange_component;
 
-        for(HousingUnit housingUnit : (HousingUnit[]) housing_units.toArray()) {
-            for(HousingUnit orangeUnit : (HousingUnit[]) orange_units.toArray()) {
                 if(areConnected(orangeUnit, housingUnit)) {
-                    housingUnit.setAllowAlienOrange(true);
+                    allow = true;
                     break;
                 }
             }
+
+            housingUnit.setAllowAlienOrange(allow);
 
             if(!housingUnit.getAllowAlienOrange())
                 housingUnit.setAlienOrange(false);
@@ -197,22 +204,30 @@ public class BuildingBoard {
      * check if a housing unit can contain a purple alien
      */
     private void updatePurpleAlienAllow(){
-        List<Component> housing_units = typeSearch(ComponentType.HOUSING_UNIT);
-        List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
+        List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> purple_components = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
+        boolean allow = false;
+        for(Component housing_component : housing_components) {
+            HousingUnit housingUnit = (HousingUnit) housing_component;
+            for(Component purple_component : purple_components) {
+                HousingUnit purpleUnit = (HousingUnit) purple_component;
 
-        for(HousingUnit housingUnit : (HousingUnit[]) housing_units.toArray()) {
-            for(HousingUnit purpleUnit : (HousingUnit[]) purple_units.toArray()) {
                 if(areConnected(purpleUnit, housingUnit)) {
-                    housingUnit.setAllowAlienPurple(true);
+                    allow = true;
+
                     break;
                 }
             }
 
+            housingUnit.setAllowAlienPurple(allow);
             if(!housingUnit.getAllowAlienPurple())
-                housingUnit.setPurpleAlien(false);
+                housingUnit.setAlienPurple(false);
+
         }
 
     }
+
+
 
 
     /**
@@ -296,6 +311,7 @@ public class BuildingBoard {
         spaceship.addComponentShipCount(-1);
         spaceship.addDestroyedCount(1);
         Component destroyedComponent = spaceshipMatrix[y][x];
+        boardMask[y][x] = 1;
         spaceshipMatrix[y][x] = null;
 
         switch (destroyedComponent.getType()) {
@@ -552,6 +568,9 @@ public class BuildingBoard {
     }
 
     public void printBoard(){
+
+        System.out.println();
+
         for (int i = 0; i < boardMask.length; i++) {
             System.out.println();
             for (int j = 0; j < boardMask[i].length; j++) {
@@ -568,8 +587,6 @@ public class BuildingBoard {
         for(int y = 0; y < spaceshipMatrix.length; y++){
             for(int x = 0; x < spaceshipMatrix[y].length; x++){
                 if(spaceshipMatrix[y][x] != null){
-
-                    spaceship.addComponentShipCount(1);
 
                     switch(spaceshipMatrix[y][x].getType()){
 
@@ -624,20 +641,26 @@ public class BuildingBoard {
 
                         case ORANGE_HOUSING_UNIT:
                             HousingUnit orange_unit = (HousingUnit) spaceshipMatrix[y][x];
-                            List<Component> housingUnits = typeSearch(ComponentType.HOUSING_UNIT);
-
-                            for(HousingUnit housingUnit : (HousingUnit[]) housingUnits.toArray()){
-                                if(areConnected(orange_unit, housingUnit))
+                            List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+                            HousingUnit housingUnit;
+                            for(Component housing_component :  housing_components){
+                                if(areConnected(orange_unit, housing_component)){
+                                    housingUnit = (HousingUnit) housing_component;
                                     housingUnit.setAllowAlienOrange(true);
+                                }
+
+
                             }
                             break;
 
                         case PURPLE_HOUSING_UNIT:
                             HousingUnit purple_unit = (HousingUnit) spaceshipMatrix[y][x];
-                            housingUnits = typeSearch(ComponentType.HOUSING_UNIT);
-                            for(HousingUnit housingUnit : (HousingUnit[]) housingUnits.toArray()){
-                                if(areConnected(purple_unit, housingUnit))
+                            housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+                            for(Component housing_component :  housing_components) {
+                                if (areConnected(purple_unit, housing_component)) {
+                                    housingUnit = (HousingUnit) housing_component;
                                     housingUnit.setAllowAlienPurple(true);
+                                }
                             }
                             break;
 

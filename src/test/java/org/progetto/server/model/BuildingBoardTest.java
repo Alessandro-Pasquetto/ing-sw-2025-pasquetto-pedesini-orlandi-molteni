@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BuildingBoardTest {
@@ -100,6 +101,38 @@ class BuildingBoardTest {
 
     @Test
     void destroyComponent() {
+
+        Spaceship spaceship = new Spaceship(2, 0);
+
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit t
+        Component component_1 = buildingBoard.getHandComponent();
+
+        buildingBoard.placeComponent(2, 2);
+        buildingBoard.printBoard();
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(4,spaceship.getCrewCount());
+
+
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));   //alien housing
+        Component component_2 = buildingBoard.getHandComponent();
+
+        buildingBoard.placeComponent(2, 1);
+        buildingBoard.printBoard();
+
+        buildingBoard.initSpaceshipParams();
+        HousingUnit housingUnit = (HousingUnit) component_1;
+        assertTrue(housingUnit.getAllowAlienOrange());    //component can host an alien
+
+
+        buildingBoard.destroyComponent(2,1);
+        buildingBoard.printBoard();
+        assertFalse(housingUnit.getAllowAlienOrange());   //after removing the orange unit it can't host it
+
+
     }
 
     @Test

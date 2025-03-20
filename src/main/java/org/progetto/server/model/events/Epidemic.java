@@ -109,7 +109,7 @@ public class Epidemic extends EventCard {
                         if (component.hasOrangeAlien()) {
                             component.setAlienOrange(false);
                         } else if (component.hasPurpleAlien()) {
-                            component.setPurpleAlien(false);
+                            component.setAlienPurple(false);
                         } else if (component.getCrewCount() > 0) {
                             component.decrementCrewCount(1);
                         }
