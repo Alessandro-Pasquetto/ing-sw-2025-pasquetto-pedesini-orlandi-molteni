@@ -46,8 +46,8 @@ class BoardTest {
 //        }
 
         // Move player ahead
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
         board.movePlayerByDistance(p1, 3);
 
         track = board.getTrack();
@@ -55,8 +55,8 @@ class BoardTest {
         assertEquals(p1, track[7]);
 
         // Move player behind
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
         board.movePlayerByDistance(p1, -3);
 
         track = board.getTrack();
@@ -64,9 +64,9 @@ class BoardTest {
         assertEquals(p1, track[1]);
 
         // Move ahead encountering a player
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
-        board.addTraveler(p2);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
+        board.addTraveler(p2, 1);
         board.movePlayerByDistance(p2, 2);
 
         track = board.getTrack();
@@ -74,9 +74,9 @@ class BoardTest {
         assertEquals(p2, track[5]);
 
         // Move behind encountering a player
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
-        board.addTraveler(p2);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
+        board.addTraveler(p2, 1);
         board.movePlayerByDistance(p1, -2);
 
         track = board.getTrack();
@@ -84,8 +84,8 @@ class BoardTest {
         assertEquals(p1, track[1]);
 
         // Move ahead player returning in the starting point of the track
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
         board.movePlayerByDistance(p1, 14);
 
         track = board.getTrack();
@@ -93,8 +93,8 @@ class BoardTest {
         assertEquals(p1, track[0]);
 
         // Move behind player returning in the end point of the track
-        board = new Board(18, "imgSrc");
-        board.addTraveler(p1);
+        board = new Board(1);
+        board.addTraveler(p1, 1);
         board.movePlayerByDistance(p1, -5);
 
         track = board.getTrack();

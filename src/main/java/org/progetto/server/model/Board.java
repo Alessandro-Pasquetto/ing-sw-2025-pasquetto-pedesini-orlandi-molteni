@@ -104,12 +104,17 @@ public class Board {
         while(distance != 0) {
             playerPosition += sign;
 
-            if(track[playerPosition % track.length] == null)
+            if(track[modulus(playerPosition, track.length)] == null)
                 distance--;
         }
 
-        track[playerPosition % track.length] = player;
+        track[modulus(playerPosition, track.length)] = player;
         player.setPosition(playerPosition);
+    }
+
+    private int modulus(int a, int b) {
+        int result = a % b;
+        return (result < 0) ? result + b : result;
     }
 
     public void updateTurnOrder(){
