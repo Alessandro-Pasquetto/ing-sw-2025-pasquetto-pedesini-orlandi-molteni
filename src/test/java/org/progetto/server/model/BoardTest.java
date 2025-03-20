@@ -25,30 +25,82 @@ class BoardTest {
 
     @Test
     void movePlayerByDistance() {
-        Board board = new Board(18, "imgSrc");
-
         Player p1 = new Player("gino", 0, 1);
         Player p2 = new Player("arnoldo", 1, 1);
         Player p3 = new Player("andrea", 2, 1);
         Player p4 = new Player("gianmaria", 3, 1);
 
+        Board board;
+        Player[] track;
+
+//        For loop to print current track
+
+//        int count = 0;
+//        for (Player p : track) {
+//            if (p != null) {
+//                System.out.println(count + ": " + p);
+//            } else {
+//                System.out.println(count + ": empty");
+//            }
+//            count++;
+//        }
+
         // Move player ahead
+        board = new Board(18, "imgSrc");
         board.addTraveler(p1);
         board.movePlayerByDistance(p1, 3);
 
-        Player[] track = board.getTrack();
-
-        int count = 0;
-        for (Player p : track) {
-            if (p != null) {
-                System.out.println(count + ": " + p);
-            } else {
-                System.out.println(count + ": empty");
-            }
-            count++;
-        }
+        track = board.getTrack();
 
         assertEquals(p1, track[7]);
+
+        // Move player behind
+        board = new Board(18, "imgSrc");
+        board.addTraveler(p1);
+        board.movePlayerByDistance(p1, -3);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[1]);
+
+        // Move ahead encountering a player
+        board = new Board(18, "imgSrc");
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.movePlayerByDistance(p2, 2);
+
+        track = board.getTrack();
+
+        assertEquals(p2, track[5]);
+
+        // Move behind encountering a player
+        board = new Board(18, "imgSrc");
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.movePlayerByDistance(p1, -2);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[1]);
+
+        // Move ahead player returning in the starting point of the track
+        board = new Board(18, "imgSrc");
+        board.addTraveler(p1);
+        board.movePlayerByDistance(p1, 14);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[0]);
+
+        // Move behind player returning in the end point of the track
+        board = new Board(18, "imgSrc");
+        board.addTraveler(p1);
+        board.movePlayerByDistance(p1, -5);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[17]);
+        // TODO: questo ultimo test da errore perche' non viene gestito il caso in cui la playerPosition diventa negativa!
     }
 
     @Test
