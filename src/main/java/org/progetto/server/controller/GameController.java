@@ -4,7 +4,7 @@ import org.progetto.server.model.Game;
 
 import java.util.ArrayList;
 
-class GameController extends HandlerSocket{
+class GameController{
 
     // =======================
     // ATTRIBUTES

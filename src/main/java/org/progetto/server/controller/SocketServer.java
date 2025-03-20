@@ -7,7 +7,7 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SocketServer extends HandlerSocket{
+public class SocketServer{
 
     // =======================
     // ATTRIBUTES

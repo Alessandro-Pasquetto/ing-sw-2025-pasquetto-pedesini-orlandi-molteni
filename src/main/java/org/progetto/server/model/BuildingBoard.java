@@ -281,7 +281,7 @@ public class BuildingBoard {
      */
     public boolean placeComponent(int y, int x) {
         if(boardMask[y][x] == 1) {
-            spaceship.addComponentShipCount(1);
+            spaceship.addComponentsShipCount(1);
 
             spaceshipMatrix[y][x] = handComponent;
             spaceshipMatrix[y][x].setPlaced(true);
@@ -308,7 +308,7 @@ public class BuildingBoard {
         if(boardMask[y][x] != -1)
             return false;
 
-        spaceship.addComponentShipCount(-1);
+        spaceship.addComponentsShipCount(-1);
         spaceship.addDestroyedCount(1);
         Component destroyedComponent = spaceshipMatrix[y][x];
         boardMask[y][x] = 1;
@@ -462,15 +462,17 @@ public class BuildingBoard {
     }
 
     /**
+     *
      * @param x the x coordinate of the component to checked
      * @param y the y coordinate of the component to checked
      * @param visited the already visited component list
-     * @param numComponentChecked the num of the components checked
+     * @param numComponentsChecked the num of the components checked
+     * @param exposedConnectorsCount the num of the exposed connectors in the spaceship
      * @return true if the component is validly connected, false otherwise
      */
-    private boolean dfsValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentChecked){
+    private boolean dfsValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentsChecked, AtomicInteger exposedConnectorsCount){
 
-        numComponentChecked.getAndIncrement();
+        numComponentsChecked.getAndIncrement();
         visited[y][x] = true;
 
         Component currentComponent = spaceshipMatrix[y][x];
@@ -496,6 +498,10 @@ public class BuildingBoard {
                 return false;
             if (upConnection != 0 && relativeConnection != 0)
                 up = true;
+
+        } else if (y == 0 || boardMask[y - 1][x] != -1) {
+            if(currentComponent.getConnections()[0] != 0)
+                exposedConnectorsCount.getAndIncrement();
         }
         // right
         if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && !visited[y][x + 1]){
@@ -506,6 +512,10 @@ public class BuildingBoard {
                 return false;
             if (rightConnection != 0 && relativeConnection != 0)
                 right = true;
+
+        } else if (x + 1 == spaceshipMatrix[0].length || boardMask[y][x + 1] != -1) {
+            if(currentComponent.getConnections()[1] != 0)
+                exposedConnectorsCount.getAndIncrement();
         }
         // bottom
         if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
@@ -516,6 +526,10 @@ public class BuildingBoard {
                 return false;
             if (bottomConnection != 0 && relativeConnection != 0)
                 bottom = true;
+
+        } else if (y + 1 == spaceshipMatrix.length || boardMask[y + 1][x] != -1) {
+            if(currentComponent.getConnections()[2] != 0)
+                exposedConnectorsCount.getAndIncrement();
         }
         // left
         if (x > 0 && boardMask[y][x - 1] == -1 && !visited[y][x - 1]){
@@ -526,22 +540,28 @@ public class BuildingBoard {
                 return false;
             if (leftConnection != 0 && relativeConnection != 0)
                 left = true;
+
+        } else if (x == 0 || boardMask[y][x - 1] != -1) {
+            if(currentComponent.getConnections()[3] != 0)
+                exposedConnectorsCount.getAndIncrement();
         }
 
         boolean result = true;
         if (up)
-            result = dfsValidity(x, y - 1, visited, numComponentChecked);
+            result = dfsValidity(x, y - 1, visited, numComponentsChecked, exposedConnectorsCount);
         if (result && right)
-            result = dfsValidity(x + 1, y, visited, numComponentChecked);
+            result = dfsValidity(x + 1, y, visited, numComponentsChecked, exposedConnectorsCount);
         if (result && bottom)
-            result = dfsValidity(x, y + 1, visited, numComponentChecked);
+            result = dfsValidity(x, y + 1, visited, numComponentsChecked, exposedConnectorsCount);
         if (result && left)
-            result = dfsValidity(x - 1, y, visited, numComponentChecked);
+            result = dfsValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
 
         return result;
     }
 
     /**
+     *  Check and return if the spaceship is valid and count and update the exposedConnectorsCount value of the spaceship
+     *
      * @return true if the spaceship is valid, false otherwise
      */
     public boolean checkShipValidity() throws IllegalStateException{
@@ -562,9 +582,14 @@ public class BuildingBoard {
 
         if(xComponent == -1) throw new IllegalStateException("Empty spaceship");
 
-        AtomicInteger numComponentChecked = new AtomicInteger(0);
+        AtomicInteger numComponentsChecked = new AtomicInteger(0);
+        AtomicInteger exposedConnectorsCount = new AtomicInteger(0);
 
-        return dfsValidity(xComponent, yComponent, visited, numComponentChecked) && numComponentChecked.get() == spaceship.getShipComponentCount();
+        boolean result = dfsValidity(xComponent, yComponent, visited, numComponentsChecked, exposedConnectorsCount) && numComponentsChecked.get() == spaceship.getShipComponentsCount();
+
+        spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
+
+        return result;
     }
 
     public void printBoard(){
