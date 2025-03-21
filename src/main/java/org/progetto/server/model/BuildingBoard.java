@@ -174,6 +174,7 @@ public class BuildingBoard {
 
     /**
      * check if a housing unit can contain an orange alien, if it can't the alien is removed
+     * @author Lorenzo
      */
     private void updateOrangeAlienAllow(){
         List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
@@ -200,6 +201,7 @@ public class BuildingBoard {
 
     /**
      * check if a housing unit can contain a purple alien
+     * @author Lorenzo
      */
     private void updatePurpleAlienAllow(){
         List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
@@ -293,6 +295,11 @@ public class BuildingBoard {
         return false;
     }
 
+    //controller will call destroy component for each event were a component needs to be removed, the actions sequence is the following
+    // 1. remove the component from the spaceship matrix, update mask matrix
+    // 2. update spaceship attributes
+    // 3. update housing-unit alien hosting if an alien-unit has been removed
+    // 4. check ship validity and update exposed connectors, controller will call automatically this one
 
     /**
      * Remove a component from the spaceship, update values
@@ -555,6 +562,11 @@ public class BuildingBoard {
 
         return result;
     }
+
+    //controller will call checkShipValidity at the end of the building phase and after a component has been removed,
+    //this method is also able to identify if a spaceship has been divided, in this case the controller let the player decide witch stump keep by clicking
+    // on a component of that stump
+
 
     /**
      *  Check and return if the spaceship is valid and count and update the exposedConnectorsCount value of the spaceship

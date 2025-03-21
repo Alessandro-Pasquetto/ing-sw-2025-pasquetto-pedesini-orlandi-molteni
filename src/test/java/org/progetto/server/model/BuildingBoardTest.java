@@ -98,6 +98,7 @@ class BuildingBoardTest {
 
     @Test
     void destroyComponent() {
+
         Spaceship spaceship = new Spaceship(2, 0);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -123,10 +124,33 @@ class BuildingBoardTest {
         HousingUnit housingUnit = (HousingUnit) component_1;
         assertTrue(housingUnit.getAllowAlienOrange());
 
-        // Removes the orange alien unit, so it can't host alien anymore
-        buildingBoard.destroyComponent(2,1);
+        //  update alien hosting test   //
+
+        buildingBoard.destroyComponent(2,1); // Removes the orange alien unit, so it can't host alien anymore
         buildingBoard.printBoard();
         assertFalse(housingUnit.getAllowAlienOrange());
+
+
+        //  Connectors count update test    //
+
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(2, 1, 0);
+        buildingBoard.printBoard();
+
+        buildingBoard.checkShipValidity();                                //update connectors count
+        assertEquals(8,spaceship.getExposedConnectorsCount());
+
+        buildingBoard.destroyComponent(2,1);                        //remove component and check new connectors count
+        buildingBoard.printBoard();
+        buildingBoard.checkShipValidity();
+        assertEquals(6,spaceship.getExposedConnectorsCount());
+
+
+
+
+
+
+
     }
 
     @Test
