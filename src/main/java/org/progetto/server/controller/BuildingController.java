@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import org.progetto.messages.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.PickedComponentMessage;
 import org.progetto.messages.PlaceHandComponentAndPickComponentMessage;
+import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
@@ -17,9 +18,12 @@ public class BuildingController {
             int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
             int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
             int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
-            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-            if(player.getSpaceship().getBuildingBoard().placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+            if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
                 try{
+                    String imgSrc = buildingBoard.getHandComponent().getImgSrc();
                     socketWriter.sendMessageToOtherPlayersInGame(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc));
                     Component pickedComponent = game.pickHiddenComponent(player);
                     socketWriter.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));

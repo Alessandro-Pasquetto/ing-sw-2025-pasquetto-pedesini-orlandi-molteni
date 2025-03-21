@@ -64,7 +64,7 @@ public class Battlezone extends EventCard{
             component.setAlienOrange(false);
         } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
             component.setAlienPurple(false);
-        } else {  // if it has more than one crew member
+        } else{  // if it has more than one crew member
             return component.decrementCrewCount(1);
         }
         return true;

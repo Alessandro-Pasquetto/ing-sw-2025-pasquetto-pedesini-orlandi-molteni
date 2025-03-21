@@ -1,0 +1,52 @@
+title Pick Component
+
+participant Client
+participant Server
+participant Game
+participant Board
+participant Player
+participant Spaceship
+participant BuildingBoard
+
+alt PickHiddenComponent
+
+  Client-->Server:"PickHiddenComponent"
+  Server->Game: PickHiddenComponent(player)
+  Game->Game: remove(randomPos)
+  Game->Player:
+  Player->Spaceship:getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+  
+  Server->Client: PickedComponentMessage(imgSrcComponent)
+  
+  
+else PickVisibleComponent
+
+  Client-->Server:"PickVisibleComponent", idxVisibleComponent
+  Server->Game: PickVisibleComponent(player, idxVisibleComponent)
+  Game->Game: remove(idxVisibleComponent)
+  Game->Player:
+  Player->Spaceship:getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+  
+  Server->Client: PickedComponentMessage(imgSrcComponent)
+  
+else PickBookedComponent
+
+  Client-->Server:"PickBookedComponent", idxBookedComponent
+  Server->Game: PickBookedComponent(player, idxBookedComponent)
+  Game->Game: remove(idxBookedComponent)
+  Game->Player:
+  Player->Spaceship:getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+  
+  Server->Client: PickedComponentMessage(imgSrcComponent)
+  
+end
+
+
+space
+note over Client, Server: Player selects the component, which is sent to the server by the client.\nThe server then returns the component's image path, allowing the view to display it.

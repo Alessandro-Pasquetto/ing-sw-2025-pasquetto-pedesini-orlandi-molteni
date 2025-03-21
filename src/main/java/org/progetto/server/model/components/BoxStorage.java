@@ -25,6 +25,10 @@ public class BoxStorage extends Component {
     // GETTERS
     // =======================
 
+    public int getCapacity() {
+        return boxStorage.length;
+    }
+
     public Box[] getBoxStorage() {
         return boxStorage;
     }

@@ -1,0 +1,59 @@
+title Join Game
+
+participant Client
+participant Server
+participant Game
+participant Board
+participant Player
+participant Spaceship
+participant BuildingBoard
+
+Client-->Server:Connect()
+
+Client<-Server:Response(gamesIds[])
+
+alt CreateGame
+
+  Client->Server:CreateGame(nameAdmin, numPlayers, levelGame)
+
+  Server->Game:newGame(idGame, numPlayers, level)
+
+  Game->Board:newBoard(level)
+
+  Server->Player:newPlayer(name, color, levelGame)
+
+  Player->Spaceship:newSpaceship(levelShip, color)
+
+  Spaceship->BuildingBoard:newBuildingBoard(levelShip, color, spaceship)
+
+  Server->Client:InitGameMessage(imgSrcBoard, imgSrcSpaceship, imgSrcCentralUnit)
+
+else JoinGame
+  Client->Server:JoinGame(idGame, namePlayer)
+
+  Server->Game:checkAvailableName(name)
+
+  alt checkAvailableName
+
+    Game->Server:true
+
+    Server->Player:newPlayer(name, color, levelGame)
+
+    Player->Spaceship:newSpaceship(levelShip, color)
+
+    Spaceship->BuildingBoard:newBuildingBoard(levelShip, color, spaceship)
+
+    Server->Game:addPlayer(player)
+    
+    Server->Client:"AllowedToJoinGame", InitGameMessage
+
+  else false
+
+    Game->Server:false
+    Server->Client:"NotAllowedToJoinGame"
+  end
+
+end
+
+space
+note over Client,Server: Client connects to server.\nThen, server sends to player a list that contains all the available games to join.\nPlayer has two options: create his own game, or join an already created one, picked from the previous list.\nIn the first case, he selects game level, maximum number of players and his name.\nIn the second case, he tries to join the game by using its id and giving his name. He will receive success/fail response.
