@@ -8,14 +8,14 @@
       {"type": "YELLOW", "value": 3},
       {"type": "GREEN", "value": 2}
     ],
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "LOSTSHIP",
     "imgSrc": "card3-lvl1.jpg",
     "penaltyCrew": 3,
     "rewardCredits": 4,
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "BATTLEZONE",
@@ -44,7 +44,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card8-lvl1.jpg",
-    "penaltyDays": 2,
+    "penaltyDays": -2,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -84,7 +84,7 @@
     "imgSrc": "card19-lvl1.jpg",
     "firePowerRequired": 4,
     "penaltyBoxes": 2,
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardBoxes":
     [
       {"type": "YELLOW", "value": 3},
@@ -101,23 +101,23 @@
       {"type": "RED", "value": 4},
       {"type": "RED", "value": 4}
     ],
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "LOSTSHIP",
     "imgSrc": "card4-lvl1.jpg",
     "penaltyCrew": 2,
     "rewardCredits": 3,
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "PLANETS",
     "imgSrc": "card6-lvl1.jpg",
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardsForPlanets": [
       [
         {"type": "GREEN", "value": 2},
-        {"type": "GREEN", "value": 2},
+        {"type": "GREEN", "value": 2}
       ],
       [
         {"type": "YELLOW", "value": 3}
@@ -132,7 +132,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card7-lvl1.jpg",
-    "penaltyDays": 3,
+    "penaltyDays": -3,
     "rewardsForPlanets": [
       [
         {"type": "YELLOW", "value": 3},
@@ -149,7 +149,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card9-lvl1.jpg",
-    "penaltyDays": 3,
+    "penaltyDays": -3,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -213,7 +213,7 @@
     "type": "PIRATES",
     "imgSrc": "card18-lvl1.jpg",
     "firePowerRequired": 5,
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardCredits": 4,
     "shots":
       [
@@ -227,7 +227,7 @@
     "imgSrc": "card20-lvl1.jpg",
     "firePowerRequired": 6,
     "penaltyCrew": 3,
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardCredits": 5
   }
 ]

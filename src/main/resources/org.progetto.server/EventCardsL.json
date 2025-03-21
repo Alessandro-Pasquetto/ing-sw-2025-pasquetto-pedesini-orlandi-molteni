@@ -7,14 +7,14 @@
       {"type": "YELLOW", "value": 3},
       {"type": "GREEN", "value": 2}
     ],
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "LOSTSHIP",
     "imgSrc": "card3-lvl1.jpg",
     "penaltyCrew": 3,
     "rewardCredits": 4,
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
   "type": "BATTLEZONE",
@@ -37,7 +37,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card8-lvl1.jpg",
-    "penaltyDays": 2,
+    "penaltyDays": -2,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -72,7 +72,7 @@
     "imgSrc": "card19-lvl1.jpg",
     "firePowerRequired": 4,
     "penaltyBoxes": 2,
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardBoxes":
       [
         {"type": "YELLOW", "value": 3},

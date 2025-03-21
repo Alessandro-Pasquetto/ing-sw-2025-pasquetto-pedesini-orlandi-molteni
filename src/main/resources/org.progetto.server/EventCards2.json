@@ -4,7 +4,7 @@
     "imgSrc": "card1-lvl2.jpg",
     "firePowerRequired": 7,
     "penaltyCrew": 4,
-    "penaltyDays": 2,
+    "penaltyDays": -2,
     "rewardCredits": 8
   },
   {
@@ -16,7 +16,7 @@
       {"type": "YELLOW", "value": 3},
       {"type": "GREEN", "value": 2}
     ],
-    "penaltyDays": 2
+    "penaltyDays": -2
   },
   {
     "type": "LOSTSTATION",
@@ -26,21 +26,21 @@
       {"type": "RED", "value": 4},
       {"type": "YELLOW", "value": 3}
     ],
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "LOSTSHIP",
     "imgSrc": "card4-lvl2.jpg",
     "penaltyCrew": 5,
     "rewardCredits": 8,
-    "penaltyDays": 2
+    "penaltyDays": -2
   },
   {
     "type": "LOSTSHIP",
     "imgSrc": "card5-lvl2.jpg",
     "penaltyCrew": 4,
     "rewardCredits": 6,
-    "penaltyDays": 1
+    "penaltyDays": -1
   },
   {
     "type": "BATTLEZONE",
@@ -70,7 +70,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card7-lvl2.jpg",
-    "penaltyDays": 3,
+    "penaltyDays": -3,
     "rewardsForPlanets": [
       [
         {"type": "GREEN", "value": 2},
@@ -93,7 +93,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card8-lvl2.jpg",
-    "penaltyDays": 2,
+    "penaltyDays": -2,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -116,7 +116,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card9-lvl2.jpg",
-    "penaltyDays": 3,
+    "penaltyDays": -3,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -133,7 +133,7 @@
   {
     "type": "PLANETS",
     "imgSrc": "card10-lvl2.jpg",
-    "penaltyDays": 4,
+    "penaltyDays": -4,
     "rewardsForPlanets": [
       [
         {"type": "RED", "value": 4},
@@ -213,7 +213,7 @@
     "type": "PIRATES",
     "imgSrc": "card19-lvl2.jpg",
     "firePowerRequired": 6,
-    "penaltyDays": 2,
+    "penaltyDays": -2,
     "rewardCredits": 7,
     "shots": [
       {"size": "BIG", "from": 0},
@@ -226,7 +226,7 @@
     "imgSrc": "card20-lvl2.jpg",
     "firePowerRequired": 8,
     "penaltyBoxes": 3,
-    "penaltyDays": 1,
+    "penaltyDays": -1,
     "rewardBoxes": [
       {"type": "RED", "value": 4},
       {"type": "YELLOW", "value": 3},
