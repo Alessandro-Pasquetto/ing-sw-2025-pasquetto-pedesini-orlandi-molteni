@@ -60,7 +60,6 @@ public class EventDeserializer implements JsonDeserializer<EventCard> {
                 return new Pirates(type,imgSrc,firePower,penaltyDays,rewardCredits,penaltyShots);
 
             case STARDUST:
-                penaltyDays = jsonObject.get("penaltyDays").getAsInt();
                 return new Stardust(type,imgSrc);
 
             case PLANETS:
