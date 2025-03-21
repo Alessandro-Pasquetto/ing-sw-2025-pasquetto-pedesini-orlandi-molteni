@@ -61,7 +61,7 @@ public class EventDeserializer implements JsonDeserializer<EventCard> {
 
             case STARDUST:
                 penaltyDays = jsonObject.get("penaltyDays").getAsInt();
-                return new Stardust(type,imgSrc,penaltyDays);
+                return new Stardust(type,imgSrc);
 
             case PLANETS:
                 ArrayList<ArrayList<Box>> rewardsForPlanets = context.deserialize(jsonObject.get("rewardsForPlanets"), new TypeToken<ArrayList<ArrayList<Box>>>() {}.getType());

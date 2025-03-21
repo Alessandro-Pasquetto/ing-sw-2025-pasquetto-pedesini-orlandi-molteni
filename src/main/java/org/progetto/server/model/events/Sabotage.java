@@ -33,11 +33,20 @@ public class Sabotage extends EventCard {
         Player minPlayer = null;
 
         for (Player player : players) {
-            if (player.getSpaceship().getCrewCount() < minCrewCount) {
-                minCrewCount = player.getSpaceship().getCrewCount();
+            // Calculates the current player crew count
+            int currCrewCount = player.getSpaceship().getCrewCount();
+            if (player.getSpaceship().getAlienOrange()) {
+                currCrewCount++;
+            }
+            if (player.getSpaceship().getAlienPurple()) {
+                currCrewCount++;
+            }
+
+            if (currCrewCount < minCrewCount) {
+                minCrewCount = currCrewCount;
                 minPlayer = player;
             }
-            else if (player.getSpaceship().getCrewCount() == minCrewCount) {
+            else if (currCrewCount == minCrewCount) {
                 if (player.getPosition() > minPlayer.getPosition()) {
                     minPlayer = player;
                 }
@@ -51,16 +60,16 @@ public class Sabotage extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param row Y coordinate of the cell
-     * @param column X coordinate of the cell
+     * @param y Y coordinate of the cell
+     * @param x X coordinate of the cell
      * @param player Current player
      * @return false if the cell is empty, true otherwise
      */
-    public boolean penalty(int row, int column, Player player) {
+    public boolean penalty(int y, int x, Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
-        if (spaceshipMatrix[row][column] != null) {
-            player.getSpaceship().getBuildingBoard().destroyComponent(row, column);
+        if (spaceshipMatrix[y][x] != null) {
+            player.getSpaceship().getBuildingBoard().destroyComponent(y, x);
             return true;
         }
         else return false;

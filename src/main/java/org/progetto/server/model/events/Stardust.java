@@ -7,26 +7,11 @@ import java.util.List;
 public class Stardust extends EventCard {
 
     // =======================
-    // ATTRIBUTES
-    // =======================
-
-    private int penaltyDays;
-
-    // =======================
     // CONSTRUCTORS
     // =======================
 
-    public Stardust(CardType type, String imgSrc, int penaltyDays) {
+    public Stardust(CardType type, String imgSrc) {
         super(type, imgSrc);
-        this.penaltyDays = penaltyDays;
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    public int getPenaltyDays() {
-        return penaltyDays;
     }
 
     // =======================
