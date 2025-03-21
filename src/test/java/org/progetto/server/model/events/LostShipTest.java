@@ -1,0 +1,78 @@
+package org.progetto.server.model.events;
+
+import org.junit.jupiter.api.Test;
+import org.progetto.server.model.Board;
+import org.progetto.server.model.Player;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class LostShipTest {
+
+    @Test
+    void getPenaltyCrew() {
+    }
+
+    @Test
+    void getRewardCredits() {
+    }
+
+    @Test
+    void getPenaltyDays() {
+    }
+
+    @Test
+    void chooseDiscardedCrew() {
+        HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        LostShip lostship = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 3, 3);
+        crew.incrementCrewCount(2);
+
+        //returns false if component is not a Housing Unit
+        assertFalse(lostship.chooseDiscardedCrew(notHouse));
+
+        //removes one crew member from the Housing Unit
+        assertTrue(lostship.chooseDiscardedCrew(crew));
+        assertEquals(1, crew.getCrewCount());
+
+        //removes an orange alien
+        assertTrue(lostship.chooseDiscardedCrew(orange));
+        assertFalse(crew.hasOrangeAlien());
+
+        //removes a purple alien
+        assertTrue(lostship.chooseDiscardedCrew(purple));
+        assertFalse(crew.hasPurpleAlien());
+    }
+
+    @Test
+    void rewardPenalty() {
+        Player player1 = new Player("Max", 0, 1);
+        Player player2 = new Player("Mindy", 1, 2);
+        Board board = new Board(1);
+        board.addTraveler(player1, 1);
+        board.addTraveler(player2, 1);
+        Player[] track;
+        track = board.getTrack();
+        LostShip lostShip1 = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 3, -3);
+        LostShip lostShip2 = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 2, -2);
+
+        lostShip1.rewardPenalty(board, player1);
+
+        //adds 3 credits to player1
+        assertEquals(3, player1.getCredits());
+
+        //moves player1 back 3
+        assertEquals(0, player1.getPosition());
+
+        lostShip2.rewardPenalty(board, player2);
+
+        //adds 2 credits to player2
+        assertEquals(2, player2.getCredits());
+
+        //moves player2 back 2
+        assertEquals(0, player1.getPosition());
+    }
+}

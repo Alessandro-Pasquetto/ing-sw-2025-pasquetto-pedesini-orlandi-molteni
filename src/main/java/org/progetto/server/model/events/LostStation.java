@@ -58,6 +58,7 @@ public class LostStation extends EventCard {
      * @return true if the box was successfully added, false otherwise
      */
     public boolean chooseRewardBox(BoxStorage component, int boxIdx, Box box) {
+
         return component.addBox(box, boxIdx);
     }
 
