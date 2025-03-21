@@ -11,6 +11,7 @@ public class Player {
     int color;
     int position;
     Spaceship spaceship;
+    boolean hasLeft;
 
     // =======================
     // CONSTRUCTORS
@@ -22,6 +23,7 @@ public class Player {
         this.color = color;
         this.position = 0;
         this.spaceship = new Spaceship(levelShip, color);
+        this.hasLeft = false;
     }
 
     // =======================
@@ -48,12 +50,20 @@ public class Player {
         return spaceship;
     }
 
+    public boolean getHasLeft() {
+        return hasLeft;
+    }
+
     // =======================
     // SETTERS
     // =======================
 
     public void setPosition(int newPosition) {
         this.position = newPosition;
+    }
+
+    public void setHasLeft(boolean hasLeft) {
+        this.hasLeft = hasLeft;
     }
 
     // =======================

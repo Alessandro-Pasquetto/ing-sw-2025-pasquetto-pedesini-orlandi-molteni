@@ -127,6 +127,6 @@ public class Board {
     public void leaveTravel(Player player) {
         int playerPosition = player.getPosition();
         track[playerPosition % track.length] = null;
-        player.setPosition(-1);
+        player.setHasLeft(true);
     }
 }

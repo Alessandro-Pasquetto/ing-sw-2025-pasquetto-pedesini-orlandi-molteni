@@ -46,12 +46,13 @@ public class BoxStorage extends Component {
      */
     public boolean addBox(Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
-            boxStorage[idx] = box;
-            this.boxCount += 1;
-            return true;
-        } else {
-            return false;
+            if (!box.getType().equals(BoxType.RED) || this.isRed) {  // Checks in case of red box if its is possible
+                boxStorage[idx] = box;
+                this.boxCount += 1;
+                return true;
+            }
         }
+        return false;
     }
 
     /**

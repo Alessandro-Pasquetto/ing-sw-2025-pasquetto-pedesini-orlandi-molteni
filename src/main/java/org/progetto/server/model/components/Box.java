@@ -14,7 +14,6 @@ public class Box {
     // =======================
 
     public Box(BoxType type,int value) {
-
         this.type = type;
         this.value = value;
     }
@@ -26,9 +25,8 @@ public class Box {
     public BoxType getType() {
         return type;
     }
+
     public int getValue() {
         return value;
     }
-
-
 }

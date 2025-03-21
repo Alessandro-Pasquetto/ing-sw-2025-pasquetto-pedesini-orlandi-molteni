@@ -59,9 +59,6 @@ class BuildingBoardTest {
 
     @Test
     void placeComponent() {
-        // TODO: secondo me conviene passare il component da aggiungere come parametro
-        //  Perche', ad esempio, handComponent puo' essere null ora come ora
-
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -75,7 +72,7 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(0, 2);
+        result = buildingBoard.placeComponent(0, 2, 0);
 
         assertEquals(c, spaceshipMatrix[0][2]);
         assertTrue(result);
@@ -84,7 +81,7 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(0, 0);
+        result = buildingBoard.placeComponent(0, 0, 0);
 
         assertNull(spaceshipMatrix[0][0]);
         assertFalse(result);
@@ -93,7 +90,7 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(2, 3);
+        result = buildingBoard.placeComponent(2, 3, 0);
 
         assertNotEquals(c, spaceshipMatrix[2][3]);
         assertFalse(result);
@@ -101,38 +98,35 @@ class BuildingBoardTest {
 
     @Test
     void destroyComponent() {
-
         Spaceship spaceship = new Spaceship(2, 0);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
-
+        // Adds a housing unit
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit t
         Component component_1 = buildingBoard.getHandComponent();
 
-        buildingBoard.placeComponent(2, 2);
+        buildingBoard.placeComponent(2, 2, 0);
         buildingBoard.printBoard();
 
         buildingBoard.initSpaceshipParams();
         assertEquals(4,spaceship.getCrewCount());
 
-
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));   //alien housing
+        // Adds an orange alien module, so it can host an alien
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
         Component component_2 = buildingBoard.getHandComponent();
 
-        buildingBoard.placeComponent(2, 1);
+        buildingBoard.placeComponent(2, 1, 0);
         buildingBoard.printBoard();
 
         buildingBoard.initSpaceshipParams();
         HousingUnit housingUnit = (HousingUnit) component_1;
-        assertTrue(housingUnit.getAllowAlienOrange());    //component can host an alien
+        assertTrue(housingUnit.getAllowAlienOrange());
 
-
+        // Removes the orange alien unit, so it can't host alien anymore
         buildingBoard.destroyComponent(2,1);
         buildingBoard.printBoard();
-        assertFalse(housingUnit.getAllowAlienOrange());   //after removing the orange unit it can't host it
-
-
+        assertFalse(housingUnit.getAllowAlienOrange());
     }
 
     @Test
@@ -243,32 +237,26 @@ class BuildingBoardTest {
         for (int i = 0; i < 4; i++)
             System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
 
-        buildingBoard.placeComponent(1, 3);
+        buildingBoard.placeComponent(1, 3, 0);
 
 
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(0);
-        buildingBoard.placeComponent(1, 2);
+        buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(1);
-        buildingBoard.placeComponent(1, 1);
+        buildingBoard.placeComponent(1, 1, 1);
 
         buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        buildingBoard.getHandComponent().setRotation(1);
-        buildingBoard.placeComponent(1, 4);
+        buildingBoard.placeComponent(1, 4, 1);
 
         buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        buildingBoard.getHandComponent().setRotation(1);
-        buildingBoard.placeComponent(1, 5);
+        buildingBoard.placeComponent(1, 5, 1);
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(2);
-        buildingBoard.placeComponent(3, 3);
+        buildingBoard.placeComponent(3, 3, 2);
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(0);
-        buildingBoard.placeComponent(3, 2);
+        buildingBoard.placeComponent(3, 2, 0);
 
 
         int[][] mask = buildingBoard.getBoardMask();

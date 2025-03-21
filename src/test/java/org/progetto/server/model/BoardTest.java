@@ -21,6 +21,41 @@ class BoardTest {
 
     @Test
     void addTraveler() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("arnoldo", 1, 1);
+        Player p3 = new Player("andrea", 2, 1);
+        Player p4 = new Player("gianmaria", 3, 1);
+
+        Board board;
+        Player[] track;
+
+        // Add travelers in level 1 spaceship
+        board = new Board(1);
+        board.addTraveler(p1, 1);
+        board.addTraveler(p2, 1);
+        board.addTraveler(p3, 1);
+        board.addTraveler(p4, 1);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[4]);
+        assertEquals(p2, track[2]);
+        assertEquals(p3, track[1]);
+        assertEquals(p4, track[0]);
+
+        // Add travelers in level 1 spaceship
+        board = new Board(2);
+        board.addTraveler(p1, 2);
+        board.addTraveler(p2, 2);
+        board.addTraveler(p3, 2);
+        board.addTraveler(p4, 2);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[6]);
+        assertEquals(p2, track[3]);
+        assertEquals(p3, track[1]);
+        assertEquals(p4, track[0]);
     }
 
     @Test
@@ -100,10 +135,28 @@ class BoardTest {
         track = board.getTrack();
 
         assertEquals(p1, track[17]);
-        // TODO: questo ultimo test da errore perche' non viene gestito il caso in cui la playerPosition diventa negativa!
     }
 
     @Test
     void leaveTravel() {
+        Player p1 = new Player("gino", 0, 1);
+
+        Board board;
+        Player[] track;
+
+        // Move player ahead
+        board = new Board(1);
+        board.addTraveler(p1, 1);
+        board.movePlayerByDistance(p1, 3);
+
+        track = board.getTrack();
+
+        assertEquals(p1, track[7]);
+
+        // Player leaves
+        board.leaveTravel(p1);
+
+        assertNull(track[7]);
+        assertTrue(p1.getHasLeft());
     }
 }

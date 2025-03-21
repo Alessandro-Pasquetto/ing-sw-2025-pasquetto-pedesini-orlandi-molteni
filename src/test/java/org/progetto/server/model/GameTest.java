@@ -25,7 +25,7 @@ class GameTest {
         BuildingBoard bb_1 = sp_1.getBuildingBoard();                        // get building board
         Component component = game.pickHiddenComponent(mario);               // get fist component
         bb_1.setHandComponent(component);                                    // pick fist component
-        bb_1.placeComponent(0,2);                                      // place component
+        bb_1.placeComponent(0,2, 0);                                // place component
 
         System.out.println("Hidden " + component.isHidden());
         System.out.println("Placed " + component.isPlaced());
