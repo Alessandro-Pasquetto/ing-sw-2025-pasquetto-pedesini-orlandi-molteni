@@ -204,4 +204,39 @@ public class GameView {
             event.consume();  // Consume the event to prevent default behavior
         });
     }
+
+
+
+
+    public void insertCentralUnitComponent(String imgSrcCentralUnit, int levelShip) {
+        int x = 0, y = 0;
+        if(levelShip == 1){
+            x = 2;
+            y = 2;
+        } else if (levelShip == 2) {
+            x = 3;
+            y = 2;
+        }
+
+
+        for (Node node : grid.getChildren()) {
+            Integer rowIndex = GridPane.getRowIndex(node);
+            Integer colIndex = GridPane.getColumnIndex(node);
+            if (rowIndex == null) rowIndex = 0;
+            if (colIndex == null) colIndex = 0;
+            if (rowIndex == 2 && colIndex == 2) {
+                Pane cell = (Pane) node;
+                Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgSrcCentralUnit)));
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(100);
+                imageView.setFitHeight(100);
+                cell.getChildren().add(imageView);
+
+                // Centra l'immagine nella cella
+                imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
+                imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
+                break;
+            }
+        }
+    }
 }

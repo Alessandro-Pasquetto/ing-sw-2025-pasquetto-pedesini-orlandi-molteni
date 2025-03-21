@@ -65,4 +65,12 @@ public class PageController {
     static void generateComponent(String imgComponent){
         gameView.generateComponent(imgComponent);
     }
+
+    public static void initGame(String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
+        Platform.runLater(() -> {
+            gameView.insertCentralUnitComponent(imgSrcCentralUnit, 1);
+            //gameView.loadBoardImg(imgSrcBoard);
+            //gameView.loadShipImg(imgSrcSpaceship);
+        });
+    }
 }

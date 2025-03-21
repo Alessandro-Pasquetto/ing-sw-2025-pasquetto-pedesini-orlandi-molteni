@@ -34,7 +34,7 @@ public class BuildingBoard {
         this.handComponent = null;
         this.imgSrc = loadImgShip(levelShip);
 
-        placeCentralUnit(levelShip, color);
+        placeCentralUnit(levelShip, getImgPathCentralUnitFromColor(color));
     }
 
     // =======================
@@ -69,9 +69,10 @@ public class BuildingBoard {
     // SETTERS
     // =======================
 
-    public boolean setAsBooked(Component component) {
+    public boolean setAsBooked() {
         if (booked.size() < 2) {
-            booked.add(component);  // need to handle booked flag in component
+            booked.add(handComponent);  // need to handle booked flag in component
+            handComponent = null;
             return true;
         } else {
             return false;
@@ -88,17 +89,27 @@ public class BuildingBoard {
 
     /**
      * @param levelShip the ship's level
-     * @param color the player's color
+     * @param imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
-    private void placeCentralUnit(int levelShip, int color) {
+    private void placeCentralUnit(int levelShip, String imgPathCentralUnit) {
         switch (levelShip) {
             case 1:
-                spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
+                spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
                 break;
             case 2:
-                spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, "img" + color + "path", 2);
+                spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
                 break;
         }
+    }
+
+    public String getImgPathCentralUnitFromColor(int color) {
+        return switch (color) {
+            case 0 -> "base-unit-blue.jpg";
+            case 1 -> "base-unit-green.jpg";
+            case 2 -> "base-unit-red.jpg";
+            case 3 -> "base-unit-yellow.jpg";
+            default -> throw new IllegalStateException("Unexpected value: " + color);
+        };
     }
 
     /**
@@ -147,8 +158,6 @@ public class BuildingBoard {
 
         return false;
     }
-
-
 
     /**
      * Search for component of the same type
@@ -279,6 +288,12 @@ public class BuildingBoard {
      */
     public boolean placeComponent(int y, int x, int r) {
         if(boardMask[y][x] == 1) {
+
+            // If it's not connected to at least one component returns false
+            if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
+                return false;
+            }
+
             spaceship.addComponentsShipCount(1);
 
             handComponent.setY_coordinate(y);
@@ -412,7 +427,6 @@ public class BuildingBoard {
                 for (Box box : boxes) {
                     if(box != null)
                         spaceship.addBoxCount(-1,box.getType());
-
                 }
                 break;
 

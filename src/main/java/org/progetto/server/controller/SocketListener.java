@@ -1,7 +1,9 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.CreateGameMessage;
+import org.progetto.messages.InitGameMessage;
 import org.progetto.messages.JoinGameMessage;
+import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 
@@ -47,6 +49,11 @@ public class SocketListener extends Thread {
             String name = createGameMessage.getName();
 
             clientHandler.setGameControllerAndJoin(new GameController(idGame, numPlayers, levelGame), new Player(name, 0, levelGame));
+
+            Game game = clientHandler.getGameController().getGame();
+            Player player = clientHandler.getPlayer();
+            BuildingBoard buildingBoard =  player.getSpaceship().getBuildingBoard();
+            clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgPathCentralUnitFromColor(player.getColor())));
             SocketServer.notifyNewGame(idGame);
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
@@ -58,10 +65,14 @@ public class SocketListener extends Thread {
             GameController gameController = GameControllersQueue.getGameController(idGame);
             Game game = gameController.getGame();
 
-            if(game.tryAddPlayer(name)){
-                clientHandler.setGameControllerAndJoin(gameController, new Player(name, game.getPlayersSize(), game.getLevel()));
-                clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
+            if(game.checkAvailableName(name)){
 
+                Player player = new Player(name, game.getPlayersSize(), game.getLevel());
+                BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+                clientHandler.setGameControllerAndJoin(gameController, player);
+                clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
+                clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgPathCentralUnitFromColor(player.getColor())));
             }else{
                 clientHandler.getSocketWriter().sendMessage("NotAllowedToJoinGame");
             }

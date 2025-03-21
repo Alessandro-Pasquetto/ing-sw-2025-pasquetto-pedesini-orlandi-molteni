@@ -40,6 +40,8 @@ public class Board {
     // =======================
 
     /**
+     * Returns the size of the board based on the game level
+     *
      * @return the board size
      */
     private int elaborateSizeBoardFromLv(int levelBoard) {
@@ -52,6 +54,8 @@ public class Board {
     }
 
     /**
+     * Adds a player to the list of players participating in the journey
+     *
      * @param player is the new traveler
      */
     public synchronized void addTraveler(Player player, int levelBoard) {
@@ -84,6 +88,8 @@ public class Board {
     }
 
     /**
+     * Moves the player forward on the board
+     *
      * @param player the moving player
      * @param distance distance traveled by the player
      */
@@ -91,32 +97,50 @@ public class Board {
         int sign;
         int playerPosition = player.getPosition();
 
-        track[playerPosition % track.length] = null;  // removes player from starting cell
+        track[modulus(playerPosition, track.length)] = null;  // removes player from starting cell
 
-        if(distance < 0){
+        if(distance < 0)
             sign = -1;
-        } else {
+        else
             sign = 1;
-        }
 
         distance = Math.abs(distance);
 
         while(distance != 0) {
             playerPosition += sign;
 
-            if(track[modulus(playerPosition, track.length)] == null)
+            Player trackCell = track[modulus(playerPosition, track.length)];
+
+            if(trackCell == null)
                 distance--;
+            else{
+                if(trackCell.position <= playerPosition - track.length){
+                    trackCell.setPosition(0);
+                    trackCell.setHasLeft(false);
+                    track[modulus(playerPosition, track.length)] = null;
+                }
+            }
         }
 
         track[modulus(playerPosition, track.length)] = player;
         player.setPosition(playerPosition);
     }
 
+    /**
+     * Calculate the modulus
+     *
+     * @param a the dividend
+     * @param b the divisor
+     * @return the modulus
+     */
     private int modulus(int a, int b) {
         int result = a % b;
         return (result < 0) ? result + b : result;
     }
 
+    /**
+     * Sort the active players on their position in the track
+     */
     public void updateTurnOrder(){
         activeTravelers.sort(Comparator.comparingInt(Player::getPosition));
     }
@@ -126,7 +150,8 @@ public class Board {
      */
     public void leaveTravel(Player player) {
         int playerPosition = player.getPosition();
-        track[playerPosition % track.length] = null;
-        player.setHasLeft(true);
+        track[modulus(playerPosition, track.length)] = null;
+        activeTravelers.remove(player);
+        player.setHasLeft(false);
     }
 }

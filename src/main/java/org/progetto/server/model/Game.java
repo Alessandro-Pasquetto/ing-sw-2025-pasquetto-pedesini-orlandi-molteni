@@ -111,6 +111,8 @@ public class Game {
     public void saveGame(){}
 
     /**
+     * Returns the list of players who have more than 0 credits (winners)
+     *
      * @return list of the winner players
      */
     public ArrayList<Player> endGame() {
@@ -127,6 +129,8 @@ public class Game {
     }
 
     /**
+     * Adds a player to the list of players in the game
+     *
      * @param player the new player joining the game
      */
     public void addPlayer(Player player) {
@@ -136,6 +140,8 @@ public class Game {
     }
 
     /**
+     * Randomly draws a component from the covered componentsDeck and assigns it to handComponent
+     *
      * @param player the player who is picking
      * @return the randomly picked component
      */
@@ -157,6 +163,8 @@ public class Game {
     }
 
     /**
+     * Takes a component from the discarded/visible ones and assigns it tohand Component
+     *
      * @param indexComponent is the index of the visible component picked
      * @param player is the player who is picking
      */
@@ -172,6 +180,8 @@ public class Game {
     }
 
     /**
+     * Draws a random event card
+     *
      * @return the randomly picked card
      */
     public EventCard pickEventCard() throws IllegalStateException {
@@ -275,10 +285,12 @@ public class Game {
     }
 
     /**
+     * Check if the name of the player who wants to join is available
+     *
      * @param name is the name of the player who wants to join the game
      * @return true if it is available, false otherwise
      */
-    public boolean tryAddPlayer(String name) {
+    public boolean checkAvailableName(String name) {
         synchronized (players) {
             for (Player p : players) {
                 if (p.getName().equals(name)) {

@@ -37,8 +37,11 @@ public class SocketListener extends Thread {
         }
         else if (messageObj instanceof NotifyNewGameMessage notifyNewGameMessage) {
             PageController.generateGameList(notifyNewGameMessage.getIdGame());
-        }
-        else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
+
+        } else if (messageObj instanceof InitGameMessage initGameMessage) {
+            PageController.initGame(initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
+
+        } else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
             PageController.generateComponent(pickedComponentMessage.getImgPath());
 
         } else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
