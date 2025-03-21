@@ -40,7 +40,7 @@ public class Spaceship {
         doubleCannonCount = 0;
         doubleEngineCount = 0;
         normalEnginePower = 0;
-        shieldCounts = new int[] { 0, 0, 0, 0};
+        shieldCounts = new int[] {0, 0, 0, 0};
         boxCounts = new int[] {0, 0, 0, 0};
         buildingBoard = new BuildingBoard(levelShip, color,this);
     }

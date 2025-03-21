@@ -2,6 +2,7 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.progetto.server.model.components.BoxType;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.progetto.server.model.components.BoxType.*;
@@ -399,11 +400,11 @@ class SpaceshipTest {
         assertArrayEquals(new int[] {0, 2, 0, 1}, spaceship2.getBoxCounts());
 
         //adds one green box to BoxCount in level 2 ship
-        spaceship.addBoxCount(1, GREEN);
-        assertArrayEquals(new int[] {0, 2, 1, 1}, spaceship.getBoxCounts());
+        spaceship2.addBoxCount(1, GREEN);
+        assertArrayEquals(new int[] {0, 2, 1, 1}, spaceship2.getBoxCounts());
         
         //adds one red box to BoxCount in level 2 ship
-        spaceship.addBoxCount(1, RED);
-        assertArrayEquals(new int[] {1, 2, 1, 1}, spaceship.getBoxCounts());
+        spaceship2.addBoxCount(1, RED);
+        assertArrayEquals(new int[] {1, 2, 1, 1}, spaceship2.getBoxCounts());
     }
 }
