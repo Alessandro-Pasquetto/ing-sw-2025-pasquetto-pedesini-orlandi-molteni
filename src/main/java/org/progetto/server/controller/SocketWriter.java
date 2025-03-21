@@ -76,11 +76,12 @@ public class SocketWriter extends Thread {
         }
     }
 
-    public synchronized void sendMessageToOtherPlayersiInGame(Object messageObj) {
-        ArrayList<SocketWriter> writersCopy = clientHandler.getGameController().getSocketWritersCopy();
+    public synchronized void sendMessageToOtherPlayersInGame(Object messageObj) {
+        ArrayList<SocketWriter> socketWritersCopy = new ArrayList<>(clientHandler.getGameController().getSocketWritersCopy());
 
-        for (SocketWriter sk : writersCopy) {
-            sk.sendMessage(messageObj);
+        for (SocketWriter sw : socketWritersCopy) {
+            if(!sw.equals(clientHandler.getSocketWriter()))
+                sw.sendMessage(messageObj);
         }
     }
 }

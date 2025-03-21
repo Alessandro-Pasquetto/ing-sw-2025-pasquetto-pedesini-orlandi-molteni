@@ -27,6 +27,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             SocketClient.tryJoinToGame(username, idGame);
         }
+        GameData.setNamePlayer(username);
     }
 
 

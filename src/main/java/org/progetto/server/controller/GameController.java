@@ -69,8 +69,8 @@ class GameController{
             socketWritersCopy = new ArrayList<>(socketWriters);
         }
 
-        for (SocketWriter sk : socketWritersCopy) {
-            sk.sendMessage(messageObj);
+        for (SocketWriter sw : socketWritersCopy) {
+            sw.sendMessage(messageObj);
         }
     }
 

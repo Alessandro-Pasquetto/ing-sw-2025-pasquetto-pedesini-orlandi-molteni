@@ -1,9 +1,6 @@
 package org.progetto.client;
 
-import org.progetto.messages.CreateGameMessage;
-import org.progetto.messages.GameListMessage;
-import org.progetto.messages.NotifyNewGameMessage;
-import org.progetto.messages.PickedComponentMessage;
+import org.progetto.messages.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,8 +40,11 @@ public class SocketListener extends Thread {
         }
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
             PageController.generateComponent(pickedComponentMessage.getImgPath());
-        }
-        else if (messageObj instanceof String messageString) {
+
+        } else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
+            System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " + anotherPlayerPlacedComponentMessage.getImgSrcPlacedComponent());
+
+        } else if (messageObj instanceof String messageString) {
             switch (messageString) {
                 case "AllowedToJoinGame":
                     SocketClient.JoinToGame();

@@ -18,9 +18,6 @@ public class GameView {
     @FXML
     private GridPane grid;
 
-    int rHandComponent = 0;
-    int xHandComponent = -1;
-    int yHandComponent = -1;
     private ImageView handComponent = null;
 
     // Initialize the grid when the view is loaded
@@ -54,12 +51,12 @@ public class GameView {
 
         if(handComponent == null)
             SocketClient.pickComponent();
-        else if(xHandComponent != -1)
-            SocketClient.placeHandComponentAndPickComponent(xHandComponent, yHandComponent, rHandComponent);
+        else if(GameData.getxHandComponent() != -1)
+            SocketClient.placeHandComponentAndPickComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
     }
 
     public void placeHandComponentAndPickCard(ActionEvent actionEvent) {
-        SocketClient.placeHandComponentAndPickCard(xHandComponent, yHandComponent, rHandComponent, 1);
+        SocketClient.placeHandComponentAndPickCard(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), 1);
     }
 
     // Method to start the game
@@ -69,9 +66,7 @@ public class GameView {
 
     // Generate a draggable component with an image
     public void generateComponent(String imgComponent) {
-        rHandComponent = 0;
-        xHandComponent = -1;
-        yHandComponent = -1;
+        GameData.resetHandComponent();
 
         Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgComponent)));
         ImageView imageView = new ImageView(image);
@@ -92,11 +87,7 @@ public class GameView {
 
     public void rotateComponent() {
         handComponent.setRotate(handComponent.getRotate() + 90);
-
-        if(rHandComponent == 3)
-            rHandComponent = 0;
-        else
-            rHandComponent++;
+        GameData.rotateComponent();
     }
 
     // Method to disable drag-and-drop for an ImageView
@@ -191,8 +182,8 @@ public class GameView {
                         imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
 
                         // save the row and column index of the dropped cell
-                        xHandComponent = colIndex;
-                        yHandComponent = rowIndex;
+                        GameData.setxHandComponent(colIndex);
+                        GameData.setyHandComponent(rowIndex);
 
                         droppedInCell = true;
                         break;
