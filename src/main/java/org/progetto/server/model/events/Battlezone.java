@@ -60,18 +60,14 @@ public class Battlezone extends EventCard{
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
     public boolean chooseDiscardedCrew(HousingUnit component) {
-        if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
-            if (component.hasOrangeAlien()) {  // if it contains an orange alien
-                component.setAlienOrange(false);
-                return true;
-            } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
-                component.setAlienPurple(false);
-                return true;
-            } else if (component.getCrewCount() > 0) {  // if it has more than one crew member
-                return component.decrementCrewCount(1);
-            }
+        if (component.hasOrangeAlien()) {  // if it contains an orange alien
+            component.setAlienOrange(false);
+        } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+            component.setAlienPurple(false);
+        } else{  // if it has more than one crew member
+            return component.decrementCrewCount(1);
         }
-        return false;
+        return true;
     }
 
     /**
@@ -86,28 +82,7 @@ public class Battlezone extends EventCard{
     public boolean checkShields(Player player, Projectile shot) {
         Spaceship spaceship = player.getSpaceship();
 
-        switch (shot.getFrom()) {
-            case 0:  // shot come from up
-                if (spaceship.getIdxShieldCount(0) > 0) {
-                    return true;
-                }
-
-            case 1:  // shot come from right
-                if (spaceship.getIdxShieldCount(1) > 0) {
-                    return true;
-                }
-
-            case 2:  // shot come from down
-                if (spaceship.getIdxShieldCount(2) > 0) {
-                    return true;
-                }
-
-            case 3:  // shot come from left
-                if (spaceship.getIdxShieldCount(3) > 0) {
-                    return true;
-                }
-        }
-        return false;
+        return spaceship.getIdxShieldCount(shot.getFrom()) > 0;
     }
 
     /**
@@ -246,7 +221,7 @@ public class Battlezone extends EventCard{
 
     // TODO: There are three couples of condition and penalty for each card.
     //  The controller evaluates each couple sequentially:
-    //  1) Finds witch player is the weakest for that condition (in case of draw, pick the player furthest ahead in the route order).
+    //  1) Finds which player is the weakest for that condition (in case of draw, pick the player furthest ahead in the route order).
     //  2) Applies the penalty for that player.
     //  3) Go on with the next couple.
     //  There are three types of conditions:

@@ -61,8 +61,12 @@ public class HousingUnit extends Component{
     // SETTERS
     // =======================
 
+    public void setCrewCount(int crewCount) {
+        this.crewCount = crewCount;
+    }
+
     public void setAlienOrange(boolean hasAlienOrange) {
-        this.hasAlienOrange = this.hasAlienOrange;
+        this.hasAlienOrange = hasAlienOrange;
     }
 
     public void setAlienPurple(boolean hasAlienPurple) {
@@ -88,13 +92,12 @@ public class HousingUnit extends Component{
      * @return true if the crew can be added
      */
     public boolean incrementCrewCount(int num) {
-        if(crewCount + num <= capacity) {
-            crewCount += num;
-            return true;
-        }
-        else{
+
+        if(crewCount + num > capacity)
             return false;
-        }
+
+        crewCount += num;
+        return true;
     }
 
     /**
@@ -104,14 +107,11 @@ public class HousingUnit extends Component{
      * @return true if the crew has been removed
      */
     public boolean decrementCrewCount(int num) {
-        if(crewCount - num >= 0) {
-            crewCount -= num;
-            return true;
-        }
-        else{
+
+        if(crewCount - num < 0)
             return false;
-        }
+
+        crewCount -= num;
+        return true;
     }
-
-
 }

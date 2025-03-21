@@ -114,7 +114,7 @@ public class Board {
             if(trackCell == null)
                 distance--;
             else{
-                if(trackCell.position <= playerPosition - track.length){
+                if(trackCell.getPosition() <= playerPosition - track.length){
                     trackCell.setPosition(0);
                     trackCell.setHasLeft(false);
                     track[modulus(playerPosition, track.length)] = null;

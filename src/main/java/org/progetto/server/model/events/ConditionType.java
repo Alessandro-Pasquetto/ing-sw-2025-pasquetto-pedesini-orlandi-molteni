@@ -4,5 +4,4 @@ public enum ConditionType {
     CREWREQUIREMENT,
     FIREPOWERREQUIREMENT,
     ENGINEPOWERREQUIREMENT,
-
 }

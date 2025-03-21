@@ -22,7 +22,7 @@
   "couples": [
     {
       "type": "CrewRequirement",
-      "penalty": {"type": "PenaltyDays", "neededAmount": 3, "shots": []}
+      "penalty": {"type": "PenaltyDays", "neededAmount": -3, "shots": []}
     },
     {
       "type": "EnginePowerRequirement",

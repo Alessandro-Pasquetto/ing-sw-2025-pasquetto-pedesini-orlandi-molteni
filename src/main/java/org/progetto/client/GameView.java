@@ -205,9 +205,6 @@ public class GameView {
         });
     }
 
-
-
-
     public void insertCentralUnitComponent(String imgSrcCentralUnit, int levelShip) {
         int x = 0, y = 0;
         if(levelShip == 1){
@@ -217,7 +214,6 @@ public class GameView {
             x = 3;
             y = 2;
         }
-
 
         for (Node node : grid.getChildren()) {
             Integer rowIndex = GridPane.getRowIndex(node);
@@ -232,7 +228,7 @@ public class GameView {
                 imageView.setFitHeight(100);
                 cell.getChildren().add(imageView);
 
-                // Centra l'immagine nella cella
+                // Center the image inside the cell
                 imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
                 imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
                 break;
