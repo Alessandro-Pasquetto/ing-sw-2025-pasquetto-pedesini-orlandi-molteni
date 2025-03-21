@@ -1,6 +1,7 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 
@@ -70,6 +71,21 @@ public class Slavers extends EventCard {
                 component.decrementCrewCount(1);
             }
             return true;
+        } else return false;
+    }
+
+    /**
+     * Checks if the StorageComponent chosen by player is a battery storage
+     * If that is true, the battery will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the battery will be discarded
+     * @return true if the battery was successfully discarded, false if the battery storage is empty
+     */
+    public boolean chooseDiscardedBattery(BatteryStorage component) {
+        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            return component.decrementItemsCount(1);
         } else return false;
     }
 

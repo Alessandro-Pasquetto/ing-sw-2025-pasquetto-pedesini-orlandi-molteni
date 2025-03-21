@@ -4,8 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,6 +53,21 @@ class SlaversTest {
         //removes a purple alien
         assertTrue(slavers.chooseDiscardedCrew(purple));
         assertFalse(crew.hasPurpleAlien());
+    }
+
+    @Test
+    void chooseDiscardedBattery() {
+        Slavers slavers = new Slavers(CardType.SLAVERS, "imgPath", 5, 2, -3, 3);
+        BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        battery.incrementItemsCount(2);
+
+        //returns false if component is not a Housing Unit
+        assertFalse(slavers.chooseDiscardedBattery(notBattery));
+
+        //removes one battery member from the Housing Unit
+        assertTrue(slavers.chooseDiscardedBattery(battery));
+        assertEquals(1, battery.getItemsCount());
     }
 
     @Test
