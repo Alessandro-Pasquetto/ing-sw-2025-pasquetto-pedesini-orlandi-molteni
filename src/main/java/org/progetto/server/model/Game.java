@@ -204,9 +204,7 @@ public class Game {
 
         return pickedEventCard;
     }
-
-
-    //todo fix repeted cards
+    //repeted
 
     /**
      * Loading event cards from json file and initialize visibleEventCardDecks
@@ -263,7 +261,7 @@ public class Game {
 
                 for(int i = 1; i<4; i++) {
                     Deck[i-1].add(lv1Deck.get(i));
-                    Deck[i-1].addAll(lv2Deck.subList(i+2, i+4));
+                    Deck[i-1].addAll(lv2Deck.subList(i*i+1, i*i+3));
                 }
 
                 return Deck;
