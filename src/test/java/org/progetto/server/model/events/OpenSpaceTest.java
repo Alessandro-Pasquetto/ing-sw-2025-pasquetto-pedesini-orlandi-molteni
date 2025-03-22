@@ -19,11 +19,19 @@ class OpenSpaceTest {
         OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2, "imgPath");
 
         // Returns false if component is not a Housing Unit
-        assertFalse(openspace.chooseDiscardedBattery(notBattery));
+        assertFalse(openspace.chooseDiscardedBattery((BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
         assertTrue(openspace.chooseDiscardedBattery(battery));
         assertEquals(1, battery.getItemsCount());
+
+        // Remove another battery from the storage
+        assertTrue(openspace.chooseDiscardedBattery(battery));
+        assertEquals(0, battery.getItemsCount());
+
+        // Tries to remove another battery from an empty storage
+        assertFalse(openspace.chooseDiscardedBattery(battery));
+        assertEquals(0, battery.getItemsCount());
     }
 
     @Test

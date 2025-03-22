@@ -261,11 +261,19 @@ class BattlezoneTest {
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
 
-        //returns false if component is not a Housing Unit
-        assertFalse(battlezone.chooseDiscardedBattery(notBattery));
+        // Returns false if component is not a Housing Unit
+        assertFalse(battlezone.chooseDiscardedBattery((BatteryStorage) notBattery));
 
-        //removes one battery member from the Housing Unit
+        // Removes one battery member from the Housing Unit
         assertTrue(battlezone.chooseDiscardedBattery(battery));
         assertEquals(1, battery.getItemsCount());
+
+        // Remove another battery from the storage
+        assertTrue(battlezone.chooseDiscardedBattery(battery));
+        assertEquals(0, battery.getItemsCount());
+
+        // Tries to remove another battery from an empty storage
+        assertFalse(battlezone.chooseDiscardedBattery(battery));
+        assertEquals(0, battery.getItemsCount());
     }
 }
