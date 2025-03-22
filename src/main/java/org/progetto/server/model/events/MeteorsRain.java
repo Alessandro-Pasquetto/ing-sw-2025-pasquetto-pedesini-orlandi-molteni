@@ -120,28 +120,7 @@ public class MeteorsRain extends EventCard {
     public boolean checkShields(Player player, Projectile shot) {
         Spaceship spaceship = player.getSpaceship();
 
-        switch (shot.getFrom()) {
-            case 0:  // shot come from up
-                if (spaceship.getIdxShieldCount(0) > 0) {
-                    return true;
-                }
-
-            case 1:  // shot come from right
-                if (spaceship.getIdxShieldCount(1) > 0) {
-                    return true;
-                }
-
-            case 2:  // shot come from down
-                if (spaceship.getIdxShieldCount(2) > 0) {
-                    return true;
-                }
-
-            case 3:  // shot come from left
-                if (spaceship.getIdxShieldCount(3) > 0) {
-                    return true;
-                }
-        }
-        return false;
+        return spaceship.getIdxShieldCount(shot.getFrom()) > 0;
     }
 
     /**

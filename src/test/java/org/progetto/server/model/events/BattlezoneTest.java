@@ -5,10 +5,7 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
 
@@ -197,7 +194,7 @@ class BattlezoneTest {
         assertFalse(battlezone.penaltyShot(game1, p1, s1, 9));
         assertFalse(battlezone.penaltyShot(game1, p1, s1, 10));
 
-        // bot
+        // bottom
         assertFalse(battlezone.penaltyShot(game1, p1, s3, 2));
         assertFalse(battlezone.penaltyShot(game1, p1, s3, 4));
         assertFalse(battlezone.penaltyShot(game1, p1, s3, 5));
@@ -251,10 +248,6 @@ class BattlezoneTest {
             }
         }
         System.out.println();
-
-
-        // todo: check spaceShip lv2
-
     }
 
     @Test
@@ -263,5 +256,16 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", new ArrayList<>());
+        BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        battery.incrementItemsCount(2);
+
+        //returns false if component is not a Housing Unit
+        assertFalse(battlezone.chooseDiscardedBattery(notBattery));
+
+        //removes one battery member from the Housing Unit
+        assertTrue(battlezone.chooseDiscardedBattery(battery));
+        assertEquals(1, battery.getItemsCount());
     }
 }

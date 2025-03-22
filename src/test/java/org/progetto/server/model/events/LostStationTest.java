@@ -87,14 +87,12 @@ class LostStationTest {
         LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, "imgPath", 5, rewardBoxes1, -3);
         LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, "imgPath", 6, rewardBoxes2, -2);
 
+        //moves player1 back
         lostStation1.penalty(board, player1);
-
-        //moves player1 back 3
         assertEquals(0, player1.getPosition());
 
-        lostStation2.penalty(board, player2);
-
         //moves player2 back 2
+        lostStation2.penalty(board, player2);
         assertEquals(0, player1.getPosition());
     }
 }
