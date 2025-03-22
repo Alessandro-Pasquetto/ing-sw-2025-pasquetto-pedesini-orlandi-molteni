@@ -1,6 +1,6 @@
 # Galaxy Trucker
 
-> <img src="src/main/resources/images/CodexIcon.webp" width=192px height=192 px align="right" />
+<!--> <img src="src/main/resources/images/CodexIcon.webp" width=192px height=192 px align="right" />
 
 **Galaxy Trucker** is the final test of **"Software Engineering"**, course of **"Computer Science and Engineering"** held at Polytechnic University of Milan (2024/2025).
 
@@ -71,7 +71,7 @@ To run the tests and compile the software:
 Work in Progress...
 
 
-# Game Screenshot
+## Game Screenshot
 Work in Progress...
 
 
