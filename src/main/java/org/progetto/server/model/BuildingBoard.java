@@ -237,6 +237,7 @@ public class BuildingBoard {
     }
 
     /**
+     * loading mask for the building board
      * @author Lorenzo
      * @param levelShip is the game level chosen
      * @return the loaded matrix configuration for the board

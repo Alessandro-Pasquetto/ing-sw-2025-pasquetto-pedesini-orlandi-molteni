@@ -172,7 +172,7 @@ public class Game {
     }
 
     /**
-     * Takes a component from the discarded/visible ones and assigns it tohand Component
+     * Takes a component from the discarded/visible ones and assigns it to hand Component
      *
      * @param indexComponent is the index of the visible component picked
      * @param player is the player who is picking
@@ -204,7 +204,6 @@ public class Game {
 
         return pickedEventCard;
     }
-    //repeted
 
     /**
      * Loading event cards from json file and initialize visibleEventCardDecks

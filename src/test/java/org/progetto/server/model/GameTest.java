@@ -12,39 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
-    // TODO: TEST DA RIVEDERE -> sarebbe meglio testare metodo per metodo!
-
-    @Test
-    void GameCreationTest() {
-        Game game = new Game(1,4,1);
-        Player mario = new Player("mario",0,game.getLevel());
-        Player alice = new Player("alice",1,game.getLevel());
-
-        game.addPlayer(mario);
-        game.addPlayer(alice);
-
-        Spaceship sp_1 = game.getPlayers().get(0).getSpaceship();            // get spaceship
-        BuildingBoard bb_1 = sp_1.getBuildingBoard();                        // get building board
-        Component component = game.pickHiddenComponent(mario);               // get fist component
-        bb_1.setHandComponent(component);                                    // pick fist component
-        bb_1.placeComponent(0,2, 0);                                // place component
-
-        System.out.println("Hidden " + component.isHidden());
-        System.out.println("Placed " + component.isPlaced());
-        bb_1.printBoard();
-    }
-
-    @Test
-    void Loadingtest() throws IOException {
-        Game game = new Game(0,4,2);
-        ArrayList<EventCard> test = game.composeHiddenEventDeck();
-
-
-
-    }
-
-    // ===================
-
     @BeforeEach
     void setUp() {
     }
@@ -87,18 +54,57 @@ class GameTest {
 
     @Test
     void endGame() {
+
+        Player mario = new Player("mario",1,2);
+        Player alice = new Player("alice",1,2);
+        Player bob = new Player("bob",1,2);
+
+        Game game = new Game(0, 3,2);
+        game.addPlayer(mario);
+        game.addPlayer(alice);
+        game.addPlayer(bob);
+
+        mario.addCredits(2);
+        alice.addCredits(2);
+
+        ArrayList<Player> winners = game.endGame();
+
+        assertTrue(winners.contains(mario));
+        assertTrue(winners.contains(alice));
+        assertFalse(winners.contains(bob));
+
+
     }
 
     @Test
     void addPlayer() {
+        Player mario = new Player("mario",1,2);
+        Player alice = new Player("alice",1,2);
+
+        Game game = new Game(0, 3,2);
+        game.addPlayer(mario);
+        game.addPlayer(alice);
+
+        assertTrue(game.getPlayers().contains(mario));
+        assertTrue(game.getPlayers().contains(alice));
+
     }
 
     @Test
     void pickHiddenComponent() {
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+        Component component = game.pickHiddenComponent(mario);
+        assertEquals(component, mario.getSpaceship().getBuildingBoard().getHandComponent());
     }
+
+
 
     @Test
     void pickVisibleComponent() {
+
     }
 
     @Test
