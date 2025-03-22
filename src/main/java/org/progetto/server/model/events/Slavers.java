@@ -62,18 +62,14 @@ public class Slavers extends EventCard {
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
     public boolean chooseDiscardedCrew(HousingUnit component) {
-        if (component.getType().equals(ComponentType.HOUSING_UNIT)) {
-            if (component.hasOrangeAlien()) {  // if it contains an orange alien
-                component.setAlienOrange(false);
-                return true;
-            } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
-                component.setAlienPurple(false);
-                return true;
-            } else if (component.getCrewCount() > 0) {  // if it has more than one crew member
-                return component.decrementCrewCount(1);
-            }
+        if (component.hasOrangeAlien()) {  // if it contains an orange alien
+            component.setAlienOrange(false);
+        } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+            component.setAlienPurple(false);
+        } else {  // if it has more than one crew member
+            return component.decrementCrewCount(1);
         }
-        return false;
+        return true;
     }
 
     /**
