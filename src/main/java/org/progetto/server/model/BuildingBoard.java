@@ -18,7 +18,7 @@ public class BuildingBoard {
     private Spaceship spaceship;
     private Component[][] spaceshipMatrix;  //composition of components
     private int[][] boardMask;              //mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
-    private ArrayList<Component> booked;    //list for booked components storage
+    private final Component[] booked;    //list for booked components storage
     private Component handComponent;
     private final String imgSrc;
 
@@ -30,11 +30,11 @@ public class BuildingBoard {
         this.spaceship = spaceship;
         this.boardMask = loadBoardMask(levelShip);
         this.spaceshipMatrix = createSpaceshipMatrix();
-        this.booked = new ArrayList<>(2);
+        this.booked = new Component[2];
         this.handComponent = null;
         this.imgSrc = loadImgShip(levelShip);
 
-        placeCentralUnit(levelShip, getImgPathCentralUnitFromColor(color));
+        placeCentralUnit(levelShip, getImgSrcCentralUnitFromColor(color));
     }
 
     // =======================
@@ -57,7 +57,7 @@ public class BuildingBoard {
         return boardMask;
     }
 
-    public ArrayList<Component> getBooked() {
+    public Component[] getBooked() {
         return booked;
     }
 
@@ -69,14 +69,15 @@ public class BuildingBoard {
     // SETTERS
     // =======================
 
-    public boolean setAsBooked() {
-        if (booked.size() < 2) {
-            booked.add(handComponent);  // need to handle booked flag in component
-            handComponent = null;
-            return true;
-        } else {
-            return false;
-        }
+    public void setAsBooked(int idx) throws IllegalStateException {
+        if (idx >= 0 && idx < 3) {
+            if(booked[idx] != null) {
+                booked[idx] = handComponent;  // need to handle booked flag in component
+                handComponent = null;
+            }else
+                throw new IllegalStateException("BookedCellOccupied");
+        } else
+            throw new IllegalStateException("Illegal index");
     }
 
     public void setHandComponent(Component component) {
@@ -86,6 +87,20 @@ public class BuildingBoard {
     // =======================
     // OTHER METHODS
     // =======================
+
+    /**
+     * @param color the player's color
+     * @return imgPathCentralUnit the imgPath of the central unit component with the player's color
+     */
+    public String getImgSrcCentralUnitFromColor(int color) {
+        return switch (color) {
+            case 0 -> "base-unit-blue.jpg";
+            case 1 -> "base-unit-green.jpg";
+            case 2 -> "base-unit-red.jpg";
+            case 3 -> "base-unit-yellow.jpg";
+            default -> throw new IllegalStateException("Unexpected value: " + color);
+        };
+    }
 
     /**
      * @param levelShip the ship's level
@@ -102,14 +117,46 @@ public class BuildingBoard {
         }
     }
 
-    public String getImgPathCentralUnitFromColor(int color) {
-        return switch (color) {
-            case 0 -> "base-unit-blue.jpg";
-            case 1 -> "base-unit-green.jpg";
-            case 2 -> "base-unit-red.jpg";
-            case 3 -> "base-unit-yellow.jpg";
-            default -> throw new IllegalStateException("Unexpected value: " + color);
-        };
+    /**
+     * @author Lorenzo
+     * @param y coordinate for placing component
+     * @param x coordinate for placing component
+     * @param r rotation value of placing component
+     * @return true if component has been placed correctly else otherwise
+     */
+    public boolean placeComponent(int y, int x, int r) {
+        if(boardMask[y][x] == 1) {
+
+            // If it's not connected to at least one component returns false
+            if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
+                return false;
+            }
+
+            spaceship.addComponentsShipCount(1);
+
+            handComponent.setY_coordinate(y);
+            handComponent.setX_coordinate(x);
+            handComponent.setRotation(r);
+
+            spaceshipMatrix[y][x] = handComponent;
+
+            boardMask[y][x] = -1;   //signal the presence of a component
+            handComponent = null;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void pickBookedComponent(int idx) throws IllegalStateException{
+        if (idx >= 0 && idx < 3) {
+            if(booked[idx] == null) {
+                handComponent = booked[idx];  // need to handle booked flag in component
+                booked[idx] = null;
+            }else
+                throw new IllegalStateException("BookedCellEmpty");
+        } else
+            throw new IllegalStateException("Illegal index");
     }
 
     /**
@@ -278,37 +325,6 @@ public class BuildingBoard {
     private Component[][] createSpaceshipMatrix()
     {
         return new Component[boardMask.length][boardMask[0].length];
-    }
-
-    /**
-     * @author Lorenzo
-     * @param y coordinate for placing component
-     * @param x coordinate for placing component
-     * @param r rotation value of placing component
-     * @return true if component has been placed correctly else otherwise
-     */
-    public boolean placeComponent(int y, int x, int r) {
-        if(boardMask[y][x] == 1) {
-
-            // If it's not connected to at least one component returns false
-            if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
-                return false;
-            }
-
-            spaceship.addComponentsShipCount(1);
-
-            handComponent.setY_coordinate(y);
-            handComponent.setX_coordinate(x);
-            handComponent.setRotation(r);
-
-            spaceshipMatrix[y][x] = handComponent;
-
-            boardMask[y][x] = -1;   //signal the presence of a component
-            handComponent = null;
-            return true;
-        }
-
-        return false;
     }
 
     //controller will call destroy component for each event were a component needs to be removed, the actions sequence is the following

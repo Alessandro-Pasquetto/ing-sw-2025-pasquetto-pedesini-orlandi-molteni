@@ -53,7 +53,7 @@ public class SocketListener extends Thread {
             Game game = clientHandler.getGameController().getGame();
             Player player = clientHandler.getPlayer();
             BuildingBoard buildingBoard =  player.getSpaceship().getBuildingBoard();
-            clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgPathCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
             SocketServer.notifyNewGame(idGame);
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
@@ -72,7 +72,7 @@ public class SocketListener extends Thread {
 
                 clientHandler.setGameControllerAndJoin(gameController, player);
                 clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
-                clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgPathCentralUnitFromColor(player.getColor())));
+                clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
             }else{
                 clientHandler.getSocketWriter().sendMessage("NotAllowedToJoinGame");
             }

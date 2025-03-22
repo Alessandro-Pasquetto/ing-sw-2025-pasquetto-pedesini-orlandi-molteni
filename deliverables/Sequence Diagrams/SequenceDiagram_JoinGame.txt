@@ -10,17 +10,17 @@ participant BuildingBoard
 
 Client-->Server:Connect()
 
-Client<-Server:Response(gamesIds[])
+Client<-Server:Response(gameIds[])
 
 alt CreateGame
 
-  Client->Server:CreateGame(nameAdmin, numPlayers, levelGame)
+  Client->Server:CreateGame(adminName, numPlayers, gameLevel)
 
   Server->Game:newGame(idGame, numPlayers, level)
 
   Game->Board:newBoard(level)
 
-  Server->Player:newPlayer(name, color, levelGame)
+  Server->Player:newPlayer(name, color, gameLevel)
 
   Player->Spaceship:newSpaceship(levelShip, color)
 
@@ -37,7 +37,7 @@ else JoinGame
 
     Game->Server:true
 
-    Server->Player:newPlayer(name, color, levelGame)
+    Server->Player:newPlayer(name, color, gameLevel)
 
     Player->Spaceship:newSpaceship(levelShip, color)
 

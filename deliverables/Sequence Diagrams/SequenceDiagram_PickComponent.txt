@@ -3,45 +3,46 @@ title Pick Component
 participant Client
 participant Server
 participant Game
-participant Board
 participant Player
 participant Spaceship
 participant BuildingBoard
+participant Component
+
 
 alt PickHiddenComponent
 
   Client-->Server:"PickHiddenComponent"
   Server->Game: PickHiddenComponent(player)
-  Game->Game: remove(randomPos)
+  Game->Game: removeFromDeckComponent(randomPos)
   Game->Player:
   Player->Spaceship:getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
   BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
-  
+  BuildingBoard->Component:getImgSrc()
+
   Server->Client: PickedComponentMessage(imgSrcComponent)
-  
-  
+
 else PickVisibleComponent
 
   Client-->Server:"PickVisibleComponent", idxVisibleComponent
   Server->Game: PickVisibleComponent(player, idxVisibleComponent)
-  Game->Game: remove(idxVisibleComponent)
+  Game->Game: removeFromVisibleDeckComponent(idxVisibleComponent)
   Game->Player:
   Player->Spaceship:getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
   BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
-  
+  BuildingBoard->Component:getImgSrc()
+
   Server->Client: PickedComponentMessage(imgSrcComponent)
-  
+
 else PickBookedComponent
 
   Client-->Server:"PickBookedComponent", idxBookedComponent
-  Server->Game: PickBookedComponent(player, idxBookedComponent)
-  Game->Game: remove(idxBookedComponent)
-  Game->Player:
+  Server->Player:
   Player->Spaceship:getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
-  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+  BuildingBoard->BuildingBoard: pickBookedComponent(idx)
+  BuildingBoard->Component:getImgSrc()
   
   Server->Client: PickedComponentMessage(imgSrcComponent)
   
