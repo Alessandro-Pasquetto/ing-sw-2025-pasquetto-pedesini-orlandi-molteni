@@ -10,7 +10,7 @@ The final vote is: **?/30**.
 
 
 ## The Team
-* [Alessandro Pasquetto]([https://github.com/lucanotluka](https://github.com/Alessandro-Pasquetto)) (Matricola...)
+* [Alessandro Pasquetto](https://github.com/Alessandro-Pasquetto) (Matricola...)
 * [Gabriele Pedesini](https://github.com/gabrielepedesini) (Matricola...)
 * [Stefano Molteni](https://github.com/stefano656) (Matricola...)
 * [Lorenzo Orlandi](https://github.com/CreepyToucan) (Matricola...)
@@ -28,18 +28,18 @@ The final version includes:
 * Work in Progress...
 
 ## Implemented Functionalities
-| Functionality |                                                                                                                                          Status                                                                                                                                           |
-|:-----------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Basic rules |                                                                                 ✅                                                                                  |
-| Complete rules |                                                                                  ✅                                                                                 |
-| Socket |                                                                                  ✅                                                                                |
-| RMI |                                                                                 ✅️                                                                              |
-| TUI |                                                                             ✅️                                                                             |
-| GUI |                                                                                                                                          ✅️                                                                                                                                           |
-| Multiple games |                                                                                                                                          ✅️                                                                                                                                           |
-| Resilience |                                                                ✅                                                             |
-| Persistence |                                                                                                                                           ⛔                                                                                                                                           |
-| Chat |                                                                                                                                           ⛔                                                                                                                                           |
+| Functionality     | Status    |
+|------------------|-----------|
+| Basic rules      | ✅        |
+| Complete rules   | ⚠️        |
+| Socket          | ⛔        |
+| RMI            | ⛔        |
+| TUI            | ⛔        |
+| GUI            | ⛔        |
+| Demo travel    | ⛔        |
+| Multiple games | ⛔        |
+| Resilience     | ⛔        |
+| Persistence    | ⛔        |
 
 #### Legend
 [⛔]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[⚠️]() Implementing&nbsp;&nbsp;&nbsp;&nbsp;[✅]() Implemented
