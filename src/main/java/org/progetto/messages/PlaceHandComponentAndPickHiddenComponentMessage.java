@@ -2,7 +2,7 @@ package org.progetto.messages;
 
 import java.io.Serializable;
 
-public class PlaceHandComponentAndPickCardMessage implements Serializable {
+public class PlaceHandComponentAndPickHiddenComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -10,16 +10,14 @@ public class PlaceHandComponentAndPickCardMessage implements Serializable {
     int x;
     int y;
     int rotation;
-    int idxDeck;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public PlaceHandComponentAndPickCardMessage(int x, int y, int rotation, int idxDeck) {
+    public PlaceHandComponentAndPickHiddenComponentMessage(int x, int y, int rotation) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
-        this.idxDeck = idxDeck;
     }
 
     // =======================
@@ -35,9 +33,5 @@ public class PlaceHandComponentAndPickCardMessage implements Serializable {
 
     public int getRotation() {
         return rotation;
-    }
-
-    public int getIdxDeck() {
-        return idxDeck;
     }
 }

@@ -6,9 +6,12 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
+import java.security.cert.PolicyNode;
 
 public class GameView {
 
@@ -47,21 +50,51 @@ public class GameView {
         }
     }
 
-    public void pickComponent(ActionEvent event) {
-
-        if(handComponent == null)
-            SocketClient.pickComponent();
-        else if(GameData.getxHandComponent() != -1)
-            SocketClient.placeHandComponentAndPickComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
-    }
-
-    public void placeHandComponentAndPickCard(ActionEvent actionEvent) {
-        SocketClient.placeHandComponentAndPickCard(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), 1);
+    public GridPane getGrid() {
+        return grid;
     }
 
     // Method to start the game
     public void startGame(ActionEvent actionEvent) {
         SocketClient.startGame();
+    }
+
+    public void pickHiddenComponent(ActionEvent event) {
+
+        if(handComponent == null)
+            SocketClient.pickHiddenComponent();
+        else if(GameData.getxHandComponent() != -1)
+            SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+    }
+
+    public void discardComponent(ActionEvent event) {
+        if(handComponent != null)
+            SocketClient.discardComponent();
+    }
+
+    public void removeHandComponent() {
+        Platform.runLater(() -> {
+            components.getChildren().remove(handComponent);
+            handComponent = null;
+        });
+    }
+
+    public void showEventCardDeck(ActionEvent event) {
+        int idxDeck = 0;
+        Button clickedButton = (Button) event.getSource();
+
+        idxDeck = switch (clickedButton.getId()) {
+            case "deck0" -> 0;
+            case "deck1" -> 1;
+            case "deck2" -> 2;
+            case "deck3" -> 3;
+            default -> -1;
+        };
+
+        if(handComponent == null)
+            SocketClient.showEventCardDeck(idxDeck);
+        else
+            SocketClient.placeHandComponentAndShowEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
     }
 
     // Generate a draggable component with an image
@@ -74,10 +107,10 @@ public class GameView {
         imageView.setFitHeight(100);
 
         if (handComponent != null) {
-            disableDragAndDrop(handComponent);
+            DragAndDrop.disableDragAndDrop(handComponent);
         }
 
-        makeDraggable(imageView);
+        DragAndDrop.makeDraggable(imageView);
         handComponent = imageView;
 
         Platform.runLater(() -> {
@@ -88,121 +121,6 @@ public class GameView {
     public void rotateComponent() {
         handComponent.setRotate(handComponent.getRotate() + 90);
         GameData.rotateComponent();
-    }
-
-    // Method to disable drag-and-drop for an ImageView
-    private void disableDragAndDrop(ImageView imageView) {
-        imageView.setOnMousePressed(null);
-        imageView.setOnMouseDragged(null);
-        imageView.setOnMouseReleased(null);
-    }
-
-    private void makeDraggable(ImageView imageView) {
-        // Make sure the image responds to mouse events
-        imageView.setPickOnBounds(true);
-
-        // MousePressed: save initial coordinates and layout details
-        imageView.setOnMousePressed(event -> {
-            // Save initial scene coordinates for drag detection
-            imageView.getProperties().put("initialSceneX", event.getSceneX());
-            imageView.getProperties().put("initialSceneY", event.getSceneY());
-
-            // Save the original parent and layout coordinates
-            imageView.getProperties().put("originalParent", imageView.getParent());
-            imageView.getProperties().put("originalLayoutX", imageView.getLayoutX());
-            imageView.getProperties().put("originalLayoutY", imageView.getLayoutY());
-
-            // Get the root of the scene (AnchorPane)
-            AnchorPane root = (AnchorPane) imageView.getScene().getRoot();
-            Point2D scenePos = imageView.getParent().localToScene(imageView.getLayoutX(), imageView.getLayoutY()); // Convert local position to scene coordinates
-
-            // Move the image to the root if it isn't already there
-            if (imageView.getParent() != root) {
-                ((Pane) imageView.getParent()).getChildren().remove(imageView);
-                root.getChildren().add(imageView);
-            }
-
-            // Convert scene coordinates back to local root coordinates
-            Point2D localPos = root.sceneToLocal(scenePos);
-            imageView.setLayoutX(localPos.getX());
-            imageView.setLayoutY(localPos.getY());
-
-            // Save the offset for later (used during dragging)
-            imageView.getProperties().put("dragOffsetX", event.getSceneX() - imageView.getLayoutX());
-            imageView.getProperties().put("dragOffsetY", event.getSceneY() - imageView.getLayoutY());
-            event.consume();  // Consume the event to prevent default behavior
-        });
-
-        // MouseDragged: update image position based on drag
-        imageView.setOnMouseDragged(event -> {
-            // Get the initial offset saved during MousePressed
-            double offsetX = (double) imageView.getProperties().get("dragOffsetX");
-            double offsetY = (double) imageView.getProperties().get("dragOffsetY");
-
-            // Calculate the new position of the image based on the mouse's current position
-            double newX = event.getSceneX() - offsetX;
-            double newY = event.getSceneY() - offsetY;
-
-            // Set the new position of the image
-            imageView.setLayoutX(newX);
-            imageView.setLayoutY(newY);
-
-            event.consume();  // Consume the event to prevent default behavior
-        });
-
-        // MouseReleased: drop the image onto the grid
-        imageView.setOnMouseReleased(event -> {
-            boolean droppedInCell = false;
-            double sceneX = event.getSceneX();
-            double sceneY = event.getSceneY();
-            AnchorPane root = (AnchorPane) imageView.getScene().getRoot();
-
-            // Check if the drop is inside any cell of the grid
-            for (Node node : grid.getChildren()) {
-                if (node instanceof Pane cell) {
-                    Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
-                    if (cellBounds.contains(sceneX, sceneY)) {
-                        // Check if the cell is already occupied by an ImageView (component)
-                        Integer rowIndex = GridPane.getRowIndex(cell);
-                        Integer colIndex = GridPane.getColumnIndex(cell);
-
-                        // Check if the cell already has a child (component)
-                        if (!cell.getChildren().isEmpty()) {
-                            // The cell is occupied, so prevent dropping the component here
-                            System.out.println("Cell already occupied.");
-                            break;
-                        }
-
-                        // If dropped inside a cell and the cell is not occupied, move the image into the cell
-                        root.getChildren().remove(imageView);
-                        cell.getChildren().add(imageView);
-
-                        // Center the image inside the cell
-                        imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
-                        imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
-
-                        // save the row and column index of the dropped cell
-                        GameData.setxHandComponent(colIndex);
-                        GameData.setyHandComponent(rowIndex);
-
-                        droppedInCell = true;
-                        break;
-                    }
-                }
-            }
-
-            // If the drop was not inside any cell, return the image to its original position
-            if (!droppedInCell) {
-                Object originalParent = imageView.getProperties().get("originalParent");
-                if (imageView.getParent() != originalParent && originalParent instanceof Pane) {
-                    root.getChildren().remove(imageView);
-                    ((Pane) originalParent).getChildren().add(imageView);
-                }
-                imageView.setLayoutX((double) imageView.getProperties().get("originalLayoutX"));
-                imageView.setLayoutY((double) imageView.getProperties().get("originalLayoutY"));
-            }
-            event.consume();  // Consume the event to prevent default behavior
-        });
     }
 
     public void insertCentralUnitComponent(String imgSrcCentralUnit, int levelShip) {

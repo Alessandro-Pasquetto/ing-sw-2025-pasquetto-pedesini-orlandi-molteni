@@ -410,6 +410,7 @@ class BattlezoneTest {
         }
         System.out.println();
 
+        // todo: waiting for increment of counters in spaceship
     }
 
     @Test

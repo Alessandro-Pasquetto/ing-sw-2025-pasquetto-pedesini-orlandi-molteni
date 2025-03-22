@@ -50,7 +50,7 @@ public class SocketListener extends Thread {
         } else if (messageObj instanceof String messageString) {
             switch (messageString) {
                 case "AllowedToJoinGame":
-                    SocketClient.JoinToGame();
+                    SocketClient.joinToGame();
                     break;
                 case "NotAllowedToJoinGame":
                     System.out.println("Username not available");

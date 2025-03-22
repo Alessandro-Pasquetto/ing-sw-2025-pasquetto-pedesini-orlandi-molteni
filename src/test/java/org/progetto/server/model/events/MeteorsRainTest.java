@@ -116,7 +116,7 @@ class MeteorsRainTest {
 
     @Test
     void chooseDiscardedBattery() {
-        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2,"img", new ArrayList<>());
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", new ArrayList<>());
 
         BatteryStorage notBattery = new BatteryStorage(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);

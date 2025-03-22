@@ -40,7 +40,7 @@ public class SocketClient {
         SocketWriter.sendMessage(new JoinGameMessage(idGame, username));
     }
 
-    public static void JoinToGame(){
+    public static void joinToGame(){
         System.out.println("Ti sei unito ad un game");
 
         try {
@@ -54,17 +54,27 @@ public class SocketClient {
         SocketWriter.sendMessage("StartGame");
     }
 
-    public static void placeHandComponentAndPickComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
-        SocketWriter.sendMessage(new PlaceHandComponentAndPickComponentMessage(xHandComponent, yHandComponent, rHandComponent));
+    public static void pickHiddenComponent(){
+        SocketWriter.sendMessage("PickHiddenComponent");
     }
 
-    public static void placeHandComponentAndPickCard(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
-        SocketWriter.sendMessage(new PlaceHandComponentAndPickCardMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
+    public static void placeHandComponentAndPickHiddenComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickHiddenComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
-    public static void pickComponent(){
-        SocketWriter.sendMessage("PickComponent");
+    public static void discardComponent(){
+        SocketWriter.sendMessage("DiscardComponent");
+        PageController.gameView.removeHandComponent();
     }
+
+    public static void showEventCardDeck(int idxDeck){
+
+    }
+
+    public static void placeHandComponentAndShowEventCardDeck(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndShowEventCardDeckMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
+    }
+
 
     static void close() throws IOException {
         SocketListener.stopListener();

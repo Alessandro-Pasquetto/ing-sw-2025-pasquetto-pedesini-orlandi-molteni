@@ -57,7 +57,6 @@ public class PageController {
         });
     }
 
-
     static void generateGameList(int id){
         chooseGameView.generateGameList(id);
     }

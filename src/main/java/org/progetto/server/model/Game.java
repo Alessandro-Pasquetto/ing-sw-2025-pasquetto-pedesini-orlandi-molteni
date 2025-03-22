@@ -29,8 +29,8 @@ public class Game {
     private final int level;
     private GamePhase phase;
 
-    private ArrayList<Component> componentDeck;
-    private ArrayList<Component> visibleComponentDeck;
+    private final ArrayList<Component> componentDeck;
+    private final ArrayList<Component> visibleComponentDeck;
 
     private ArrayList<EventCard> hiddenEventDeck;
     private final ArrayList<EventCard>[] visibleEventCardDecks;    //array of 3 visible event decks: [left, centre, right]
@@ -45,7 +45,7 @@ public class Game {
     // CONSTRUCTORS
     // =======================
 
-    // todo: set visibleEventCardDecks, defaultTimer, timerFlipsAllowed, imgPath
+    // todo: set visibleEventCardDecks
     public Game(int idGame, int maxNumPlayers, int level) {
         this.id = idGame;
         this.maxNumPlayers = maxNumPlayers;
@@ -172,7 +172,22 @@ public class Game {
     }
 
     /**
-     * Takes a component from the discarded/visible ones and assigns it to hand Component
+     * Takes the handComponent and adds it to the visibleComponentDeck
+     *
+     * @param player is the player who is discarding a component
+     */
+    public void discardComponent(Player player){
+        BuildingBoard board = player.getSpaceship().getBuildingBoard();
+        Component discardedComponent = board.getHandComponent();
+        board.setHandComponent(null);
+
+        synchronized (visibleComponentDeck) {
+            visibleComponentDeck.add(discardedComponent);
+        }
+    }
+
+    /**
+     * Takes a component from the discarded/visible ones and assigns it to handComponent
      *
      * @param indexComponent is the index of the visible component picked
      * @param player is the player who is picking
