@@ -3,8 +3,10 @@ package org.progetto.server.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.events.EventCard;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +37,7 @@ class GameTest {
     @Test
     void Loadingtest() throws IOException {
         Game game = new Game(0,4,2);
+        ArrayList<EventCard> test = game.composeHiddenEventDeck();
 
 
 

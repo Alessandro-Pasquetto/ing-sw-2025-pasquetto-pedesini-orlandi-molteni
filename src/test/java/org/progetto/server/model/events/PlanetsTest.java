@@ -58,7 +58,7 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
 
         // Player 1 chooses planet1
         assertTrue(planets.choosePlanet(p1, 0));
@@ -94,8 +94,8 @@ class PlanetsTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, "imgPath", 5, rewardBoxes1, -3);
-        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, "imgPath", 6, rewardBoxes2, -2);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 5, rewardBoxes1, -3);
+        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 6, rewardBoxes2, -2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, true);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, false);
         Box boxR = new Box(BoxType.RED, 4);
@@ -161,7 +161,7 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
 
         // Player 1 chooses planet2
         planets.choosePlanet(p1, 1);

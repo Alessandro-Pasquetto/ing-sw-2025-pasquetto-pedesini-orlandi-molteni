@@ -39,7 +39,7 @@ class PiratesTest {
         Projectile p3 = new Projectile(ProjectileSize.BIG, 2);
         Projectile p4 = new Projectile(ProjectileSize.SMALL, 3);
 
-        Pirates pirates = new Pirates(CardType.PIRATES, "imgPath", 5, -3, 3, new ArrayList<>());
+        Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
 
         assertFalse(pirates.checkShields(player, p1));
         assertTrue(pirates.checkShields(player, p2));
@@ -52,7 +52,7 @@ class PiratesTest {
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.BIG, 0));
         projectiles.add(new Projectile(ProjectileSize.SMALL, 3));
-        Pirates pirates = new Pirates(CardType.PIRATES, "imgPath", 5, -3, 3, projectiles);
+        Pirates pirates = new Pirates(CardType.PIRATES,2, "imgPath", 5, -3, 3, projectiles);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
@@ -109,7 +109,7 @@ class PiratesTest {
         }
         System.out.println();
 
-        Pirates pirates = new Pirates(CardType.PIRATES, "imgPath", 5, -3, 3, new ArrayList<>());
+        Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
 
         Projectile s1 = new Projectile(ProjectileSize.BIG, 0);
         Projectile s2 = new Projectile(ProjectileSize.SMALL, 1);
@@ -196,8 +196,8 @@ class PiratesTest {
         board.addTraveler(player2, 1);
         Player[] track;
         track = board.getTrack();
-        Pirates pirates1 = new Pirates(CardType.PIRATES, "imgPath", 5, -3, 3, projectiles1);
-        Pirates pirates2 = new Pirates(CardType.PIRATES, "imgPath", 6, -2, 4, projectiles2);
+        Pirates pirates1 = new Pirates(CardType.PIRATES,2, "imgPath", 5, -3, 3, projectiles1);
+        Pirates pirates2 = new Pirates(CardType.PIRATES, 2,"imgPath", 6, -2, 4, projectiles2);
 
         pirates1.rewardPenalty(board, player1);
 
@@ -226,8 +226,8 @@ class PiratesTest {
         projectiles2.add(new Projectile(ProjectileSize.SMALL, 3));
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Pirates pirates1 = new Pirates(CardType.PIRATES, "imgPath", 5, -3, 3, projectiles1);
-        Pirates pirates2 = new Pirates(CardType.PIRATES, "imgPath", 6, -2, 4, projectiles2);
+        Pirates pirates1 = new Pirates(CardType.PIRATES,2, "imgPath", 5, -3, 3, projectiles1);
+        Pirates pirates2 = new Pirates(CardType.PIRATES,2, "imgPath", 6, -2, 4, projectiles2);
 
         //compares a power equal to the one required
         assertEquals(0, pirates1.battleResult(player1, 5));

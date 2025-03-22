@@ -15,8 +15,8 @@ public class Epidemic extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Epidemic(CardType type, String imgSrc) {
-        super(type, imgSrc);
+    public Epidemic(CardType type,int level, String imgSrc) {
+        super(type, level, imgSrc);
     }
 
     // =======================

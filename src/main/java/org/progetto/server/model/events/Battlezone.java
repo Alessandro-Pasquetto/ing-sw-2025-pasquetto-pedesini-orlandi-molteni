@@ -20,8 +20,8 @@ public class Battlezone extends EventCard{
     // CONSTRUCTORS
     // =======================
 
-    public Battlezone(CardType type, String imgSrc,ArrayList<ConditionPenalty> couples) {
-        super(type, imgSrc);
+    public Battlezone(CardType type,int level, String imgSrc,ArrayList<ConditionPenalty> couples) {
+        super(type,level,imgSrc);
         this.couples = couples;
     }
 

@@ -41,8 +41,8 @@ class LostStationTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, "imgPath", 5, rewardBoxes1, -3);
-        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, "imgPath", 6, rewardBoxes2, -2);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 5, rewardBoxes1, -3);
+        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 6, rewardBoxes2, -2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, true);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, false);
         Box boxR = new Box(BoxType.RED, 4);
@@ -84,8 +84,8 @@ class LostStationTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, "imgPath", 5, rewardBoxes1, -3);
-        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, "imgPath", 6, rewardBoxes2, -2);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, rewardBoxes1, -3);
+        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, 2,"imgPath", 6, rewardBoxes2, -2);
 
         //moves player1 back
         lostStation1.penalty(board, player1);

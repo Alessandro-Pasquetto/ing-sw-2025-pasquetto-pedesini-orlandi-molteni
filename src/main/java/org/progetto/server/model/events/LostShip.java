@@ -18,8 +18,8 @@ public class LostShip extends EventCard{
     // CONSTRUCTORS
     // =======================
 
-    public LostShip(CardType type, String imgSrc, int penaltyCrew, int rewardCredits, int penaltyDays) {
-        super(type, imgSrc);
+    public LostShip(CardType type, int level,String imgSrc, int penaltyCrew, int rewardCredits, int penaltyDays) {
+        super(type, level, imgSrc);
         this.penaltyCrew = penaltyCrew;
         this.rewardCredits = rewardCredits;
         this.penaltyDays = penaltyDays;

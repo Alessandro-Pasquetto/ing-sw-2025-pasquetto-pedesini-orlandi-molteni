@@ -80,7 +80,7 @@ class EpidemicTest {
         temp.setAlienOrange(true);
 
 
-        Epidemic epidemic = new Epidemic(CardType.EPIDEMIC, "imgSrc");
+        Epidemic epidemic = new Epidemic(CardType.EPIDEMIC,2, "imgSrc");
 
         epidemic.epidemicResult(player);
 

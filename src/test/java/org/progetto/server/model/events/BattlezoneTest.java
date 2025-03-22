@@ -59,7 +59,7 @@ class BattlezoneTest {
             add(new ConditionPenalty(ConditionType.ENGINEPOWERREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, 3, new ArrayList<Projectile>())));
         }};
 
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", conditionPenalties);
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", conditionPenalties);
 
         battlezone.penaltyDays(board, p1, -4);
         battlezone.penaltyDays(board, p2, -3);
@@ -85,7 +85,7 @@ class BattlezoneTest {
     @Test
     void chooseDiscardedCrew() {
 
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", new ArrayList<>());
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
 
 
         HousingUnit housingUnit0 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
@@ -124,7 +124,7 @@ class BattlezoneTest {
         Projectile p3 = new Projectile(ProjectileSize.BIG, 2);
         Projectile p4 = new Projectile(ProjectileSize.SMALL, 3);
 
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", new ArrayList<>());
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
 
         System.out.println(player.getSpaceship().getIdxShieldCount(0) + ", " + player.getSpaceship().getIdxShieldCount(1) + ", " + player.getSpaceship().getIdxShieldCount(2) + ", " + player.getSpaceship().getIdxShieldCount(3));
 
@@ -178,7 +178,7 @@ class BattlezoneTest {
         }
         System.out.println();
 
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", new ArrayList<>());
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE,2 , "img", new ArrayList<>());
 
         Projectile s1 = new Projectile(ProjectileSize.BIG, 0);
         Projectile s2 = new Projectile(ProjectileSize.SMALL, 1);
@@ -256,7 +256,7 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedBattery() {
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, "img", new ArrayList<>());
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);

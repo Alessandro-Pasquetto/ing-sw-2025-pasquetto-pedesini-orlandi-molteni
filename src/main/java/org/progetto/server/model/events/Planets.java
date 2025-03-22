@@ -23,8 +23,8 @@ public class Planets extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Planets(CardType type, String imgSrc, ArrayList<ArrayList<Box>> rewardsForPlanets, int penaltyDays) {
-        super(type, imgSrc);
+    public Planets(CardType type,int level, String imgSrc, ArrayList<ArrayList<Box>> rewardsForPlanets, int penaltyDays) {
+        super(type,level, imgSrc);
         this.rewardsForPlanets = rewardsForPlanets;
         this.penaltyDays = penaltyDays;
         this.planetsTaken = new boolean[rewardsForPlanets.size()];

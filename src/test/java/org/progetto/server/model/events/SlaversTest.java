@@ -36,7 +36,7 @@ class SlaversTest {
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        Slavers slavers = new Slavers(CardType.SLAVERS, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2,"imgPath", 5, 2, -3, 3);
         crew.incrementCrewCount(2);
 
         //returns false if component is not a Housing Unit
@@ -57,7 +57,7 @@ class SlaversTest {
 
     @Test
     void chooseDiscardedBattery() {
-        Slavers slavers = new Slavers(CardType.SLAVERS, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
@@ -79,8 +79,8 @@ class SlaversTest {
         board.addTraveler(player2, 1);
         Player[] track;
         track = board.getTrack();
-        Slavers slavers1 = new Slavers(CardType.SLAVERS, "imgPath", 5, 2, -3, 3);
-        Slavers slavers2 = new Slavers(CardType.SLAVERS, "imgPath", 6, 3, -2, 4);
+        Slavers slavers1 = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers2 = new Slavers(CardType.SLAVERS,2, "imgPath", 6, 3, -2, 4);
 
         slavers1.rewardPenalty(board, player1);
 
@@ -103,8 +103,8 @@ class SlaversTest {
     void battleResult() {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Slavers slavers1 = new Slavers(CardType.SLAVERS, "imgPath", 5, 2, -3, 3);
-        Slavers slavers2 = new Slavers(CardType.SLAVERS, "imgPath", 6, 3, -2, 4);
+        Slavers slavers1 = new Slavers(CardType.SLAVERS, 2,"imgPath", 5, 2, -3, 3);
+        Slavers slavers2 = new Slavers(CardType.SLAVERS, 2,"imgPath", 6, 3, -2, 4);
 
         //compares a power equal to the one required
         assertEquals(0, slavers1.battleResult(player1, 5));

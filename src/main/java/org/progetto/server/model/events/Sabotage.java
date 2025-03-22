@@ -12,8 +12,8 @@ public class Sabotage extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Sabotage(CardType type, String imgSrc) {
-        super(type, imgSrc);
+    public Sabotage(CardType type, int level, String imgSrc) {
+        super(type, level, imgSrc);
     }
 
     // =======================

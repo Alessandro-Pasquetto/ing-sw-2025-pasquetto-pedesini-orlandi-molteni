@@ -20,8 +20,8 @@ public class Slavers extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Slavers(CardType type, String imgSrc, int firePowerRequired, int penaltyCrew, int penaltyDays, int rewardCredits) {
-        super(type, imgSrc);
+    public Slavers(CardType type, int level, String imgSrc, int firePowerRequired, int penaltyCrew, int penaltyDays, int rewardCredits) {
+        super(type, level, imgSrc);
         this.firePowerRequired = firePowerRequired;
         this.penaltyCrew = penaltyCrew;
         this.penaltyDays = penaltyDays;

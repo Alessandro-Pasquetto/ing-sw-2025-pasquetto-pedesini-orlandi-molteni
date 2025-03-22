@@ -9,13 +9,15 @@ public abstract class EventCard {
 
     private CardType type;
     private String imgSrc;
+    private int level;
 
     // =======================
     // CONSTRUCTOR
     // =======================
 
-    public EventCard(CardType type, String imgSrc) {
+    public EventCard(CardType type, int level,String imgSrc) {
         this.type = type;
+        this.level = level;
         this.imgSrc = imgSrc;
     }
 
@@ -30,6 +32,11 @@ public abstract class EventCard {
     public String getImgSrc() {
         return imgSrc;
     }
+
+    public int getLevel() {
+        return level;
+    }
+
 
     // =======================
     // SETTERS

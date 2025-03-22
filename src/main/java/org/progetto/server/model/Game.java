@@ -14,7 +14,6 @@ import org.progetto.server.model.loadClasses.EventDeserializer;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 
 
@@ -29,17 +28,24 @@ public class Game {
     private final ArrayList<Player> players;
     private final int level;
     private GamePhase phase;
+
     private ArrayList<Component> componentDeck;
     private ArrayList<Component> visibleComponentDeck;
-    private final ArrayList<EventCard> eventCardDeck;
+
+    private ArrayList<EventCard> hiddenEventDeck;
+    private final ArrayList<EventCard>[] visibleEventCardDecks;    //array of 3 visible event decks: [left, centre, right]
+    private  boolean[] eventDeckAvailable;                           //direct relation to visibleEventCardDecks, true means that deck is on a player hand
+
     private final Board board;
     private EventCard activeEventCard;
+
+
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    // todo: set eventCardDeck, defaultTimer, timerFlipsAllowed, imgPath
+    // todo: set visibleEventCardDecks, defaultTimer, timerFlipsAllowed, imgPath
     public Game(int idGame, int maxNumPlayers, int level) {
         this.id = idGame;
         this.maxNumPlayers = maxNumPlayers;
@@ -48,7 +54,9 @@ public class Game {
         this.phase = GamePhase.INIT;
         this.componentDeck = loadComponents();
         this.visibleComponentDeck = new ArrayList<>();
-        this.eventCardDeck = loadEvents();
+        this.hiddenEventDeck = new ArrayList<>();
+        this.visibleEventCardDecks = loadEvents();
+        this.eventDeckAvailable = new boolean[] {true,true,true};
         this.board = new Board(level);
         this.activeEventCard = null;
     }
@@ -88,6 +96,7 @@ public class Game {
     public Board getBoard() {
         return board;
     }
+
 
     // =======================
     // SETTERS
@@ -181,15 +190,14 @@ public class Game {
 
     /**
      * Draws a random event card
-     *
      * @return the randomly picked card
      */
     public EventCard pickEventCard() throws IllegalStateException {
         EventCard pickedEventCard = null;
-        synchronized (eventCardDeck) {
-            if(eventCardDeck.isEmpty()) throw new IllegalStateException("Empty eventCardDeck");
-            int randomPos = (int) (Math.random() * eventCardDeck.size());
-            pickedEventCard = eventCardDeck.remove(randomPos);
+        synchronized (hiddenEventDeck) {
+            if(hiddenEventDeck.isEmpty()) throw new IllegalStateException("Empty visibleEventCardDecks");
+            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
         setActiveEventCard(pickedEventCard);
@@ -197,13 +205,15 @@ public class Game {
         return pickedEventCard;
     }
 
+
+    //todo fix repeted cards
+
     /**
-     * Loading event cards from json file and initialize eventCardDeck
+     * Loading event cards from json file and initialize visibleEventCardDecks
      * @author Lorenzo
      * @return event card deck (list of event cards)
      */
-    private ArrayList<EventCard> loadEvents(){
-
+    private ArrayList<EventCard>[] loadEvents(){
 
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
@@ -221,14 +231,20 @@ public class Game {
 
                 Collections.shuffle(demoDeck);
 
-                return demoDeck;
+                hiddenEventDeck = demoDeck;
+
+                return null;
 
             }
 
             if(level == 2) {
                 ArrayList<EventCard> lv1Deck;
                 ArrayList<EventCard> lv2Deck;
-                ArrayList<EventCard> Deck = new ArrayList<>();
+
+                ArrayList<EventCard>[] Deck = (ArrayList<EventCard>[]) new ArrayList[3];
+                for (int i = 0; i < 3; i++) {
+                    Deck[i] = new ArrayList<>();
+                }
 
                 FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
                 lv1Deck = gson.fromJson(reader, listType);
@@ -241,8 +257,14 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
-                Deck.addAll(lv1Deck.subList(0,4));
-                Deck.addAll(lv2Deck.subList(0,8));
+                hiddenEventDeck.add(lv1Deck.getFirst());
+                hiddenEventDeck.addAll(lv2Deck.subList(0,2));
+
+
+                for(int i = 1; i<4; i++) {
+                    Deck[i-1].add(lv1Deck.get(i));
+                    Deck[i-1].addAll(lv2Deck.subList(i+2, i+4));
+                }
 
                 return Deck;
             }
@@ -299,5 +321,62 @@ public class Game {
             }
         }
         return true;
+    }
+
+    /**
+     * pick-up a visible event deck
+     * @author Lorenzo
+     * @param idx of the deck that the player wants to pick-up
+     * @return the deck picked if available
+     */
+    public ArrayList<EventCard> pickUpEventCardDeck(int idx){
+
+        if(eventDeckAvailable[idx]){
+            eventDeckAvailable[idx] = false;
+            return visibleEventCardDecks[idx];
+        }
+        else
+            return null;
+    }
+
+    /**
+     * put-down the visible event-deck
+     * @author Lorenzo
+     * @param idx
+     * @return true if the event-deck can be return to the board
+     */
+    public boolean putDownEventDeck(int idx){
+        if(!eventDeckAvailable[idx]) {
+            eventDeckAvailable[idx] = true;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /**
+     * Compose the hidden deck after the building phase
+     * @author Lorenzo
+     * @return the hiddenDeck composed if all the visible decks where available
+     */
+    public ArrayList<EventCard> composeHiddenEventDeck() {
+
+        ArrayList<EventCard> Deck = new ArrayList<>();
+
+        Deck.addAll(hiddenEventDeck);
+
+        for(int i = 0; i < 3; i++) {
+            if(eventDeckAvailable[i])
+                Deck.addAll(visibleEventCardDecks[i]);
+
+            else
+                return null;
+        }
+
+        Collections.shuffle(Deck);
+        while(Deck.getFirst().getLevel() != level)
+            Collections.shuffle(Deck);
+
+        return Deck;
     }
 }

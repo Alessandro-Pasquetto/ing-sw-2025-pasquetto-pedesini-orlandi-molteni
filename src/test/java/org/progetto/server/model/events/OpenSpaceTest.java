@@ -16,7 +16,7 @@ class OpenSpaceTest {
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
 
-        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, "imgPath");
+        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2, "imgPath");
 
         // Returns false if component is not a Housing Unit
         assertFalse(openspace.chooseDiscardedBattery(notBattery));
@@ -33,7 +33,7 @@ class OpenSpaceTest {
 
         board.addTraveler(player, 1);
 
-        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, "imgPath");
+        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE,2 , "imgPath");
 
         // Calls moveAhead method
         openspace.moveAhead(board, player, 5);

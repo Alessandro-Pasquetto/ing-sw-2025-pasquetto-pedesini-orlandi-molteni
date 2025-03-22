@@ -42,7 +42,7 @@ class SabotageTest {
         players.add(p3);
         players.add(p4);
 
-        Sabotage sabotage = new Sabotage(CardType.SABOTAGE, "imgPath");
+        Sabotage sabotage = new Sabotage(CardType.SABOTAGE,2, "imgPath");
 
         // Asserts that p3 is the player with the less populated ship
         assertEquals(p3, sabotage.lessPopulatedSpaceship(players));
@@ -68,7 +68,7 @@ class SabotageTest {
         buildingBoard.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
         buildingBoard.placeComponent(2, 1, 0);
 
-        Sabotage sabotage = new Sabotage(CardType.SABOTAGE, "imgPath");
+        Sabotage sabotage = new Sabotage(CardType.SABOTAGE, 2,"imgPath");
 
         // Tries carry out the penalty on not occupied cell
         assertFalse(sabotage.penalty(1, 1, player));

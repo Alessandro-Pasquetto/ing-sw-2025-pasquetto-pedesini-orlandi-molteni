@@ -42,8 +42,8 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, "imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, "imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 6, 2, -2, rewardBoxes2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, true);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, false);
         Box boxR = new Box(BoxType.RED, 4);
@@ -79,7 +79,7 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(new Box(BoxType.RED, 4));
         rewardBoxes.add(new Box(BoxType.GREEN, 2));
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, "imgPath", 5, 2, -3, rewardBoxes);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
@@ -107,8 +107,8 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, "imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, "imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 6, 2, -2, rewardBoxes2);
 
         //moves player1 back 3
         smugglers1.penalty(board, player1);
@@ -129,8 +129,8 @@ class SmugglersTest {
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, "imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, "imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 6, 2, -2, rewardBoxes2);
 
         //compares a power equal to the one required
         assertEquals(0, smugglers1.battleResult(player1, 5));

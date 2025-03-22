@@ -20,8 +20,8 @@ public class Smugglers extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Smugglers(CardType type, String imgSrc, int firePowerRequired, int penaltyBoxes, int penaltyDays, ArrayList<Box> rewardBoxes) {
-        super(type, imgSrc);
+    public Smugglers(CardType type, int level,String imgSrc, int firePowerRequired, int penaltyBoxes, int penaltyDays, ArrayList<Box> rewardBoxes) {
+        super(type, level, imgSrc);
         this.firePowerRequired = firePowerRequired;
         this.penaltyBoxes = penaltyBoxes;
         this.penaltyDays = penaltyDays;

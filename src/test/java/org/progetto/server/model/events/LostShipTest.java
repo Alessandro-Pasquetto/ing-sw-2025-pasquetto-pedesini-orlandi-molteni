@@ -28,7 +28,7 @@ class LostShipTest {
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        LostShip lostship = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 3, 3);
+        LostShip lostship = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, 3);
         crew.incrementCrewCount(2);
 
         //returns false if component is not a Housing Unit
@@ -56,8 +56,8 @@ class LostShipTest {
         board.addTraveler(player2, 1);
         Player[] track;
         track = board.getTrack();
-        LostShip lostShip1 = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 3, -3);
-        LostShip lostShip2 = new LostShip(CardType.LOSTSHIP, "imgPath", 1, 2, -2);
+        LostShip lostShip1 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, -3);
+        LostShip lostShip2 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 2, -2);
 
         lostShip1.rewardPenalty(board, player1);
 

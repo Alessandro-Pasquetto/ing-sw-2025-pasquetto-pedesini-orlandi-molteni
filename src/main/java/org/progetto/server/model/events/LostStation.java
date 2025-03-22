@@ -20,8 +20,8 @@ public class LostStation extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public LostStation(CardType type, String imgSrc, int requiredCrew, ArrayList<Box> rewardBoxes, int penaltyDays) {
-        super(type, imgSrc);
+    public LostStation(CardType type,int level,String imgSrc, int requiredCrew, ArrayList<Box> rewardBoxes, int penaltyDays) {
+        super(type, level,imgSrc);
         this.requiredCrew = requiredCrew;
         this.rewardBoxes = rewardBoxes;
         this.penaltyDays = penaltyDays;
