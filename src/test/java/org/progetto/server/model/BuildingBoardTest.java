@@ -144,13 +144,6 @@ class BuildingBoardTest {
         buildingBoard.printBoard();
         buildingBoard.checkShipValidity();
         assertEquals(6,spaceship.getExposedConnectorsCount());
-
-
-
-
-
-
-
     }
 
     @Test

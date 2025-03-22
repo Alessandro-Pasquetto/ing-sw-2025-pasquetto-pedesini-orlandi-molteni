@@ -140,17 +140,17 @@ public class BuildingBoard {
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 under c2
-            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
-                if (c1_connections[0] == c2_connections[2] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 above c2
+            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
+                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
                     return true;
                 }
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 above c2
-            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
-                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 under c2
+            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
+                if (c1_connections[0] == c2_connections[2] || c1_connections[0] == 3 || c2_connections[2] == 3) {
                     return true;
                 }
             }
@@ -489,7 +489,6 @@ public class BuildingBoard {
      * @return true if the component is validly connected, false otherwise
      */
     private boolean dfsValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentsChecked, AtomicInteger exposedConnectorsCount){
-
         numComponentsChecked.getAndIncrement();
         visited[y][x] = true;
 

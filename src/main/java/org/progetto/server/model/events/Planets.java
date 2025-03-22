@@ -47,6 +47,10 @@ public class Planets extends EventCard {
         return penaltyDays;
     }
 
+    public Stack<Player> getLandedPlayers() {
+        return landedPlayers;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
@@ -62,12 +66,13 @@ public class Planets extends EventCard {
      */
     public boolean choosePlanet(Player player, int planetIdx) {
         if (planetIdx >= 0 && planetIdx < rewardsForPlanets.size()) {
-            planetsTaken[planetIdx] = true;
-            if (!landedPlayers.contains(player)) {
+            if (!planetsTaken[planetIdx]) {
+                planetsTaken[planetIdx] = true;
                 landedPlayers.push(player);
+                return true;
             }
-            return true;
-        } else return false;
+        }
+        return false;
     }
 
     /**
@@ -80,7 +85,7 @@ public class Planets extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardsBox(BoxStorage component, int boxIdx, Box box) {
+    public boolean chooseRewardBox(BoxStorage component, int boxIdx, Box box) {
         return component.addBox(box, boxIdx);
     }
 
