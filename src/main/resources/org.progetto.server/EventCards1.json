@@ -1,6 +1,7 @@
 [
   {
     "type": "LOSTSTATION",
+    "level": 1,
     "imgSrc": "card2-lvl1.jpg",
     "requiredCrew": 5,
     "rewardBoxes":
@@ -12,6 +13,7 @@
   },
   {
     "type": "LOSTSHIP",
+    "level": 1,
     "imgSrc": "card3-lvl1.jpg",
     "penaltyCrew": 3,
     "rewardCredits": 4,
@@ -19,6 +21,7 @@
   },
   {
     "type": "BATTLEZONE",
+    "level": 1,
     "imgSrc": "card5-lvl1.jpg",
     "couples":
     [
@@ -43,6 +46,7 @@
   },
   {
     "type": "PLANETS",
+    "level": 1,
     "imgSrc": "card8-lvl1.jpg",
     "penaltyDays": -2,
     "rewardsForPlanets": [
@@ -62,6 +66,7 @@
   },
   {
     "type": "METEORSRAIN",
+    "level": 1,
     "imgSrc": "card12-lvl1.jpg",
     "meteors":
       [
@@ -72,14 +77,17 @@
   },
   {
     "type": "OPENSPACE",
+    "level": 1,
     "imgSrc": "card16-lvl1.jpg"
   },
   {
     "type": "STARDUST",
+    "level": 1,
     "imgSrc": "card17-lvl1.jpg"
   },
   {
     "type": "SMUGGLERS",
+    "level": 1,
     "imgSrc": "card19-lvl1.jpg",
     "firePowerRequired": 4,
     "penaltyBoxes": 2,
@@ -93,6 +101,7 @@
   },
   {
     "type": "LOSTSTATION",
+    "level": 1,
     "imgSrc": "card1-lvl1.jpg",
     "requiredCrew": 6,
     "rewardBoxes":
@@ -104,6 +113,7 @@
   },
   {
     "type": "LOSTSHIP",
+    "level": 1,
     "imgSrc": "card4-lvl1.jpg",
     "penaltyCrew": 2,
     "rewardCredits": 3,
@@ -111,6 +121,7 @@
   },
   {
     "type": "PLANETS",
+    "level": 1,
     "imgSrc": "card6-lvl1.jpg",
     "penaltyDays": -1,
     "rewardsForPlanets": [
@@ -130,6 +141,7 @@
   },
   {
     "type": "PLANETS",
+    "level": 1,
     "imgSrc": "card7-lvl1.jpg",
     "penaltyDays": -3,
     "rewardsForPlanets": [
@@ -147,6 +159,7 @@
   },
   {
     "type": "PLANETS",
+    "level": 1,
     "imgSrc": "card9-lvl1.jpg",
     "penaltyDays": -3,
     "rewardsForPlanets": [
@@ -176,6 +189,7 @@
   },
   {
     "type": "METEORSRAIN",
+    "level": 1,
     "imgSrc": "card10-lvl1.jpg",
     "meteors":
       [
@@ -186,6 +200,7 @@
   },
   {
     "type": "METEORSRAIN",
+    "level": 1,
     "imgSrc": "card11-lvl1.jpg",
     "meteors":
     [
@@ -198,18 +213,22 @@
   },
   {
     "type": "OPENSPACE",
+    "level": 1,
     "imgSrc": "card13-lvl1.jpg"
   },
   {
     "type": "OPENSPACE",
+    "level": 1,
     "imgSrc": "card14-lvl1.jpg"
   },
   {
     "type": "OPENSPACE",
+    "level": 1,
     "imgSrc": "card15-lvl1.jpg"
   },
   {
     "type": "PIRATES",
+    "level": 1,
     "imgSrc": "card18-lvl1.jpg",
     "firePowerRequired": 5,
     "penaltyDays": -1,
@@ -223,6 +242,7 @@
   },
   {
     "type": "SLAVERS",
+    "level": 1,
     "imgSrc": "card20-lvl1.jpg",
     "firePowerRequired": 6,
     "penaltyCrew": 3,

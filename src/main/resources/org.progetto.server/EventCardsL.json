@@ -1,6 +1,7 @@
 [
   {
     "type": "LOSTSTATION",
+    "level": 0,
     "imgSrc": "card2-lvl1.jpg",
     "requiredCrew": 5,
     "rewardBoxes": [
@@ -11,31 +12,34 @@
   },
   {
     "type": "LOSTSHIP",
+    "level": 0,
     "imgSrc": "card3-lvl1.jpg",
     "penaltyCrew": 3,
     "rewardCredits": 4,
     "penaltyDays": -1
   },
   {
-  "type": "BATTLEZONE",
-  "imgSrc": "card5-lvl1.jpg",
-  "couples": [
-    {
-      "type": "CrewRequirement",
-      "penalty": {"type": "PenaltyDays", "neededAmount": -3, "shots": []}
-    },
-    {
-      "type": "EnginePowerRequirement",
-      "penalty": {"type": "PenaltyCrew", "neededAmount": 2, "shots": []}
-    },
-    {
-      "type": "FirePowerRequirement",
-      "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots": [{"size": "Small", "from": 2}, {"size": "Big", "from": 2}]}
-    }
-  ]
+    "type": "BATTLEZONE",
+    "level": 0,
+    "imgSrc": "card5-lvl1.jpg",
+    "couples": [
+      {
+        "type": "CrewRequirement",
+        "penalty": {"type": "PenaltyDays", "neededAmount": -3, "shots": []}
+      },
+      {
+        "type": "EnginePowerRequirement",
+        "penalty": {"type": "PenaltyCrew", "neededAmount": 2, "shots": []}
+      },
+      {
+        "type": "FirePowerRequirement",
+        "penalty": {"type": "PenaltyShots", "neededAmount": 0, "shots": [{"size": "Small", "from": 2}, {"size": "Big", "from": 2}]}
+      }
+    ]
   },
   {
     "type": "PLANETS",
+    "level": 0,
     "imgSrc": "card8-lvl1.jpg",
     "penaltyDays": -2,
     "rewardsForPlanets": [
@@ -55,19 +59,23 @@
   },
   {
     "type": "METEORSRAIN",
+    "level": 0,
     "imgSrc": "card12-lvl1.jpg",
     "meteors": [{"size": "Big", "from": 0}, {"size": "Small", "from": 3}, {"size": "Small", "from": 1}]
   },
   {
     "type": "OPENSPACE",
+    "level": 0,
     "imgSrc": "card16-lvl1.jpg"
   },
   {
     "type": "STARDUST",
+    "level": 0,
     "imgSrc": "card17-lvl1.jpg"
   },
   {
     "type": "SMUGGLERS",
+    "level": 0,
     "imgSrc": "card19-lvl1.jpg",
     "firePowerRequired": 4,
     "penaltyBoxes": 2,
