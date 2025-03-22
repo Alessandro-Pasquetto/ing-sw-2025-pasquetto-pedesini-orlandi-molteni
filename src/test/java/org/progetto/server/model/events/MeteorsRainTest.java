@@ -52,7 +52,7 @@ class MeteorsRainTest {
         assertTrue(bb.placeComponent(3, 3, 0));
 
 
-        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, "img", new ArrayList<>());
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", new ArrayList<>());
 
         Projectile s1 = new Projectile(ProjectileSize.BIG, 0);
         Projectile s2 = new Projectile(ProjectileSize.SMALL, 1);
@@ -106,7 +106,7 @@ class MeteorsRainTest {
         Projectile p3 = new Projectile(ProjectileSize.BIG, 2);
         Projectile p4 = new Projectile(ProjectileSize.SMALL, 3);
 
-        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, "img", new ArrayList<>());
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", new ArrayList<>());
 
         assertFalse(meteorsRain.checkShields(player, p1));
         assertTrue(meteorsRain.checkShields(player, p2));
@@ -116,7 +116,7 @@ class MeteorsRainTest {
 
     @Test
     void chooseDiscardedBattery() {
-        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, "img", new ArrayList<>());
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2,"img", new ArrayList<>());
 
         BatteryStorage notBattery = new BatteryStorage(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
