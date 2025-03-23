@@ -59,12 +59,15 @@ public class Battlezone extends EventCard{
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(HousingUnit component) {
+    public boolean chooseDiscardedCrew(Player activePlayer,HousingUnit component) {
         if (component.hasOrangeAlien()) {  // if it contains an orange alien
+            activePlayer.getSpaceship().setAlienOrange(false);
             component.setAlienOrange(false);
         } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+            activePlayer.getSpaceship().setAlienOrange(false);
             component.setAlienPurple(false);
         } else{  // if it has more than one crew member
+            activePlayer.getSpaceship().addCrewCount(-1);
             return component.decrementCrewCount(1);
         }
         return true;
@@ -175,6 +178,7 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -182,6 +186,7 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -189,6 +194,7 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -196,6 +202,7 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -213,8 +220,9 @@ public class Battlezone extends EventCard{
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chooseDiscardedBattery(BatteryStorage component) {
+    public boolean chooseDiscardedBattery(BatteryStorage component,Player activePlayer) {
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            activePlayer.getSpaceship().addBatteriesCount(-1);
             return component.decrementItemsCount(1);
         } else return false;
     }

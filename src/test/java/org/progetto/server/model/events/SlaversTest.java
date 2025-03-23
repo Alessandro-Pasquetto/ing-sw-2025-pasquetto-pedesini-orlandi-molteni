@@ -32,6 +32,9 @@ class SlaversTest {
 
     @Test
     void chooseDiscardedCrew() {
+
+        Player mario = new Player("mario",0,2);
+
         HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -40,41 +43,44 @@ class SlaversTest {
         crew.incrementCrewCount(2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedCrew(notHouse));
+        assertFalse(slavers.chooseDiscardedCrew(mario,notHouse));
 
         //removes one crew member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedCrew(crew));
+        assertTrue(slavers.chooseDiscardedCrew(mario,crew));
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
-        assertTrue(slavers.chooseDiscardedCrew(orange));
+        assertTrue(slavers.chooseDiscardedCrew(mario,orange));
         assertFalse(crew.hasOrangeAlien());
 
         //removes a purple alien
-        assertTrue(slavers.chooseDiscardedCrew(purple));
+        assertTrue(slavers.chooseDiscardedCrew(mario,purple));
         assertFalse(crew.hasPurpleAlien());
     }
 
     @Test
     void chooseDiscardedBattery() {
+
+        Player mario = new Player("mario",0,2);
+
         Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedBattery((BatteryStorage) notBattery));
+        assertFalse(slavers.chooseDiscardedBattery((BatteryStorage) notBattery,mario));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedBattery(battery));
+        assertTrue(slavers.chooseDiscardedBattery(battery,mario));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(slavers.chooseDiscardedBattery(battery));
+        assertTrue(slavers.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(slavers.chooseDiscardedBattery(battery));
+        assertFalse(slavers.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
     }
 

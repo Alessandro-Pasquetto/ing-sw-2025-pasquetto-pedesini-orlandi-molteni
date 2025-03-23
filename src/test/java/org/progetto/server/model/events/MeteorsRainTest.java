@@ -116,6 +116,9 @@ class MeteorsRainTest {
 
     @Test
     void chooseDiscardedBattery() {
+
+        Player mario = new Player("mario", 0, 1);
+
         MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", new ArrayList<>());
 
         BatteryStorage notBattery = new BatteryStorage(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -123,18 +126,18 @@ class MeteorsRainTest {
         battery.incrementItemsCount(2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(meteorsRain.chooseDiscardedBattery((BatteryStorage) notBattery));
+        assertFalse(meteorsRain.chooseDiscardedBattery((BatteryStorage) notBattery,mario));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(meteorsRain.chooseDiscardedBattery(battery));
+        assertTrue(meteorsRain.chooseDiscardedBattery(battery,mario));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(meteorsRain.chooseDiscardedBattery(battery));
+        assertTrue(meteorsRain.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(meteorsRain.chooseDiscardedBattery(battery));
+        assertFalse(meteorsRain.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
     }
 }

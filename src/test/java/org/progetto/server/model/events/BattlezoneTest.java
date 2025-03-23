@@ -87,6 +87,7 @@ class BattlezoneTest {
 
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
 
+        Player mario = new Player("mario",0,2);
 
         HousingUnit housingUnit0 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
@@ -102,11 +103,11 @@ class BattlezoneTest {
         HousingUnit housingUnitAlienPurple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
         housingUnitAlienPurple.setAlienPurple(true);
 
-        assertFalse(battlezone.chooseDiscardedCrew(housingUnit0));
-        assertTrue(battlezone.chooseDiscardedCrew(housingUnit1));
-        assertTrue(battlezone.chooseDiscardedCrew(housingUnit2));
-        assertTrue(battlezone.chooseDiscardedCrew(housingUnitAlienOrange));
-        assertTrue(battlezone.chooseDiscardedCrew(housingUnitAlienPurple));
+        assertFalse(battlezone.chooseDiscardedCrew(mario,housingUnit0));
+        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnit1));
+        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnit2));
+        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnitAlienOrange));
+        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnitAlienPurple));
 
         assertEquals(0, housingUnit1.getCrewCount());
         assertEquals(1, housingUnit2.getCrewCount());
@@ -415,24 +416,27 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedBattery() {
+
+        Player mario = new Player("mario",0,2);
+
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         battery.incrementItemsCount(2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(battlezone.chooseDiscardedBattery((BatteryStorage) notBattery));
+        assertFalse(battlezone.chooseDiscardedBattery((BatteryStorage) notBattery,mario));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(battlezone.chooseDiscardedBattery(battery));
+        assertTrue(battlezone.chooseDiscardedBattery(battery,mario));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(battlezone.chooseDiscardedBattery(battery));
+        assertTrue(battlezone.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(battlezone.chooseDiscardedBattery(battery));
+        assertFalse(battlezone.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
     }
 }

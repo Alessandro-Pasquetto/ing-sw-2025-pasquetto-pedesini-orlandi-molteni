@@ -54,12 +54,15 @@ public class LostShip extends EventCard{
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(HousingUnit component) {
+    public boolean chooseDiscardedCrew(Player activePLayer,HousingUnit component) {
         if (component.hasOrangeAlien()) {  // if it contains an orange alien
+            activePLayer.getSpaceship().setAlienOrange(false);
             component.setAlienOrange(false);
         } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+            activePLayer.getSpaceship().setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member
+            activePLayer.getSpaceship().addCrewCount(-1);
             return component.decrementCrewCount(1);
         }
         return true;

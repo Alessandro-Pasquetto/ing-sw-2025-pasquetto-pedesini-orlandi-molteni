@@ -35,7 +35,7 @@ public class Game {
 
     private ArrayList<EventCard> hiddenEventDeck;
     private final ArrayList<EventCard>[] visibleEventCardDecks;    //array of 3 visible event decks: [left, centre, right]
-    private final boolean[] eventDeckAvailable;                          //direct relation to visibleEventCardDecks, true means that deck is on a player hand
+    private final Player[] eventDeckAvailable;                    //direct relation to visibleEventCardDecks, if a player is present than he's using it
 
     private final Board board;
     private EventCard activeEventCard;
@@ -57,7 +57,7 @@ public class Game {
         this.visibleComponentDeck = new ArrayList<>();
         this.hiddenEventDeck = new ArrayList<>();
         this.visibleEventCardDecks = loadEvents();
-        this.eventDeckAvailable = new boolean[] {true,true,true};
+        this.eventDeckAvailable = new Player[] {null,null,null};
         this.board = new Board(level);
         this.activeEventCard = null;
         this.activePlayer = null;
@@ -195,6 +195,7 @@ public class Game {
         if(discardedComponent == null)
             throw new IllegalStateException("EmptyHandComponent");
 
+        discardedComponent.setHidden(false);
         buildingBoard.setHandComponent(null);
 
         synchronized (visibleComponentDeck) {
@@ -362,27 +363,30 @@ public class Game {
      * pick-up a visible event deck
      * @author Lorenzo
      * @param idx of the deck that the player wants to pick-up
+     * @param player is the player that wants to pick up the deck
      * @return the deck picked if available
      */
-    public ArrayList<EventCard> pickUpEventCardDeck(int idx){
+    public ArrayList<EventCard> pickUpEventCardDeck(Player player,int idx){
 
-        if(eventDeckAvailable[idx]){
-            eventDeckAvailable[idx] = false;
-            return visibleEventCardDecks[idx];
+        synchronized (eventDeckAvailable) {
+            if (eventDeckAvailable[idx] == null) {
+                eventDeckAvailable[idx] = player;
+                return visibleEventCardDecks[idx];
+            } else
+                return null;
         }
-        else
-            return null;
     }
 
     /**
      * put-down the visible event-deck
      * @author Lorenzo
      * @param idx
+     * @param player is the player that wants to put-down the deck
      * @return true if the event-deck can be return to the board
      */
-    public boolean putDownEventDeck(int idx){
-        if(!eventDeckAvailable[idx]) {
-            eventDeckAvailable[idx] = true;
+    public boolean putDownEventDeck(Player player,int idx){
+        if(eventDeckAvailable[idx].equals(player)) {
+            eventDeckAvailable[idx] = null;
             return true;
         }
         else
@@ -399,7 +403,7 @@ public class Game {
         ArrayList<EventCard> Deck = new ArrayList<>(hiddenEventDeck);
 
         for(int i = 0; i < 3; i++) {
-            if(eventDeckAvailable[i])
+            if(eventDeckAvailable[i] == null)
                 Deck.addAll(visibleEventCardDecks[i]);
             else
                 return null;

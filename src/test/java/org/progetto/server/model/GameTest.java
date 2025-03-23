@@ -165,6 +165,39 @@ class GameTest {
     }
 
     @Test
+    void loadEvents(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickUpEventCardDeck(mario,0));
+
+    }
+
+    @Test
+    void loadComponents(){
+
+    }
+
+
+    @Test
+    void pickUpEventCardDeck(){
+
+    }
+
+    @Test
+    void putDownEventDeck(){
+
+    }
+
+    @Test
+    void composeHiddenEventDec(){
+
+    }
+
+
+    @Test
     void pickHiddenComponent() {
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
@@ -176,11 +209,49 @@ class GameTest {
 
     @Test
     void pickVisibleComponent() {
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0,3,2);
+
+        game.addPlayer(mario);
+
+        Component component_discarded = game.pickHiddenComponent(mario);
+        game.discardComponent(mario);
+
+        game.pickVisibleComponent(0,mario);
+
+        Component component_picked = mario.getSpaceship().getBuildingBoard().getHandComponent();
+
+        assertEquals(component_picked,component_discarded);
+
+
+    }
+
+    @Test
+    void discardComponent() {
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0,3,2);
+
+        game.addPlayer(mario);
+
+        Component component_discarded = game.pickHiddenComponent(mario);
+        game.discardComponent(mario);
+
+        assertNull(mario.getSpaceship().getBuildingBoard().getHandComponent());
+
 
     }
 
     @Test
     void pickEventCard() {
+
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0,3,2);
+
+        game.addPlayer(mario);
+
+        EventCard picked = game.pickEventCard();
+
+        //todo
     }
 
     @Test

@@ -52,22 +52,22 @@ class SmugglersTest {
         Box boxB = new Box(BoxType.BLUE, 1);
 
         //adds a red box to a red box storage
-        assertTrue(smugglers1.chooseRewardBox(boxStorage1, 0, boxR));
+        assertTrue(smugglers1.chooseRewardBox(player1,boxStorage1, 0, boxR));
 
         //tries to add a red box to a box storage
-        assertFalse(smugglers1.chooseRewardBox(boxStorage2, 0, boxR));
+        assertFalse(smugglers1.chooseRewardBox(player1,boxStorage2, 0, boxR));
 
         //tries to add a red box to a red box storage in an already taken place
-        assertFalse(smugglers1.chooseRewardBox(boxStorage1, 0, boxR));
+        assertFalse(smugglers1.chooseRewardBox(player1,boxStorage1, 0, boxR));
 
         //adds a green box to a red box storage
-        assertTrue(smugglers1.chooseRewardBox(boxStorage1, 1, boxG));
+        assertTrue(smugglers1.chooseRewardBox(player1,boxStorage1, 1, boxG));
 
         //adds a yellow box in a box storage
-        assertTrue(smugglers2.chooseRewardBox(boxStorage2, 0, boxY));
+        assertTrue(smugglers2.chooseRewardBox(player1,boxStorage2, 0, boxY));
 
         //adds a blue box in a box storage
-        assertTrue(smugglers2.chooseRewardBox(boxStorage2, 1, boxB));
+        assertTrue(smugglers2.chooseRewardBox(player1,boxStorage2, 1, boxB));
     }
 
     @Test
@@ -76,6 +76,9 @@ class SmugglersTest {
 
     @Test
     void chooseDiscardedBattery() {
+
+        Player player1 = new Player("Max", 0, 1);
+
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(new Box(BoxType.RED, 4));
         rewardBoxes.add(new Box(BoxType.GREEN, 2));
@@ -85,18 +88,18 @@ class SmugglersTest {
         battery.incrementItemsCount(2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(smugglers.chooseDiscardedBattery((BatteryStorage) notBattery));
+        assertFalse(smugglers.chooseDiscardedBattery((BatteryStorage) notBattery,player1));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(smugglers.chooseDiscardedBattery(battery));
+        assertTrue(smugglers.chooseDiscardedBattery(battery,player1));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(smugglers.chooseDiscardedBattery(battery));
+        assertTrue(smugglers.chooseDiscardedBattery(battery,player1));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(smugglers.chooseDiscardedBattery(battery));
+        assertFalse(smugglers.chooseDiscardedBattery(battery,player1));
         assertEquals(0, battery.getItemsCount());
     }
 

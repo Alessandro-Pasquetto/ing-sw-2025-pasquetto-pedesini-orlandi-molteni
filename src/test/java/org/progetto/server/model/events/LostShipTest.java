@@ -24,6 +24,9 @@ class LostShipTest {
 
     @Test
     void chooseDiscardedCrew() {
+
+        Player mario = new Player("mario",0 ,2);
+
         HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -32,18 +35,18 @@ class LostShipTest {
         crew.incrementCrewCount(2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(lostship.chooseDiscardedCrew(notHouse));
+        assertFalse(lostship.chooseDiscardedCrew(mario,notHouse));
 
         //removes one crew member from the Housing Unit
-        assertTrue(lostship.chooseDiscardedCrew(crew));
+        assertTrue(lostship.chooseDiscardedCrew(mario,crew));
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
-        assertTrue(lostship.chooseDiscardedCrew(orange));
+        assertTrue(lostship.chooseDiscardedCrew(mario,orange));
         assertFalse(crew.hasOrangeAlien());
 
         //removes a purple alien
-        assertTrue(lostship.chooseDiscardedCrew(purple));
+        assertTrue(lostship.chooseDiscardedCrew(mario,purple));
         assertFalse(crew.hasPurpleAlien());
     }
 

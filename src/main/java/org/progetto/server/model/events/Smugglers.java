@@ -62,7 +62,8 @@ public class Smugglers extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(BoxStorage component, int boxIdx, Box box) {
+    public boolean chooseRewardBox(Player activePLayer, BoxStorage component, int boxIdx, Box box) {
+        activePLayer.getSpaceship().addBoxCount(1,box.getType());
         return component.addBox(box, boxIdx);
     }
 
@@ -84,6 +85,7 @@ public class Smugglers extends EventCard {
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -91,6 +93,7 @@ public class Smugglers extends EventCard {
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -98,6 +101,7 @@ public class Smugglers extends EventCard {
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -105,6 +109,7 @@ public class Smugglers extends EventCard {
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
+                player.getSpaceship().addBoxCount(-1,box.getType());
                 component.removeBox(boxIdx);
                 return true;
             } else return false;
@@ -122,8 +127,9 @@ public class Smugglers extends EventCard {
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chooseDiscardedBattery(BatteryStorage component) {
+    public boolean chooseDiscardedBattery(BatteryStorage component,Player activePlayer) {
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            activePlayer.getSpaceship().addBatteriesCount(-1);
             return component.decrementItemsCount(1);
         } else return false;
     }

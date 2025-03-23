@@ -61,12 +61,15 @@ public class Slavers extends EventCard {
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(HousingUnit component) {
+    public boolean chooseDiscardedCrew(Player activePlayer,HousingUnit component) {
         if (component.hasOrangeAlien()) {  // if it contains an orange alien
+            activePlayer.getSpaceship().setAlienOrange(false);
             component.setAlienOrange(false);
         } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+            activePlayer.getSpaceship().setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member
+            activePlayer.getSpaceship().addCrewCount(-1);
             return component.decrementCrewCount(1);
         }
         return true;
@@ -81,8 +84,9 @@ public class Slavers extends EventCard {
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chooseDiscardedBattery(BatteryStorage component) {
+    public boolean chooseDiscardedBattery(BatteryStorage component,Player activePlayer) {
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            activePlayer.getSpaceship().addBatteriesCount(-1);
             return component.decrementItemsCount(1);
         } else return false;
     }

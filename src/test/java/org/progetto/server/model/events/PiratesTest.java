@@ -49,6 +49,9 @@ class PiratesTest {
 
     @Test
     void chooseDiscardedBattery() {
+
+        Player mario = new Player("mario", 0, 1);
+
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.BIG, 0));
         projectiles.add(new Projectile(ProjectileSize.SMALL, 3));
@@ -58,18 +61,18 @@ class PiratesTest {
         battery.incrementItemsCount(2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(pirates.chooseDiscardedBattery((BatteryStorage) notBattery));
+        assertFalse(pirates.chooseDiscardedBattery((BatteryStorage) notBattery,mario));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(pirates.chooseDiscardedBattery(battery));
+        assertTrue(pirates.chooseDiscardedBattery(battery,mario));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(pirates.chooseDiscardedBattery(battery));
+        assertTrue(pirates.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(pirates.chooseDiscardedBattery(battery));
+        assertFalse(pirates.chooseDiscardedBattery(battery,mario));
         assertEquals(0, battery.getItemsCount());
     }
 

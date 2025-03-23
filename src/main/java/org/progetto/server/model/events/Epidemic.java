@@ -107,10 +107,13 @@ public class Epidemic extends EventCard {
                     // deletes for each infected component found one crew mate/alien
                     for (HousingUnit component : infectedComponents) {
                         if (component.hasOrangeAlien()) {
+                            player.getSpaceship().setAlienOrange(false);
                             component.setAlienOrange(false);
                         } else if (component.hasPurpleAlien()) {
+                            player.getSpaceship().setAlienPurple(false);
                             component.setAlienPurple(false);
                         } else if (component.getCrewCount() > 0) {
+                            player.getSpaceship().addCrewCount(-1);
                             component.decrementCrewCount(1);
                         }
                     }

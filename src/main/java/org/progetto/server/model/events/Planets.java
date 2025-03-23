@@ -85,7 +85,8 @@ public class Planets extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(BoxStorage component, int boxIdx, Box box) {
+    public boolean chooseRewardBox(Player activePlayer,BoxStorage component, int boxIdx, Box box) {
+        activePlayer.getSpaceship().addBoxCount(1,box.getType());
         return component.addBox(box, boxIdx);
     }
 
