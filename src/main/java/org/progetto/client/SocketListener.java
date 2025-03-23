@@ -48,6 +48,13 @@ public class SocketListener extends Thread {
             System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " + anotherPlayerPlacedComponentMessage.getImgSrcPlacedComponent());
 
         } else if (messageObj instanceof String messageString) {
+
+            if(((String) messageObj).startsWith("Timer: ")){
+                int timer = Integer.parseInt((String) messageString.split("Timer: ")[1]);
+                PageController.gameView.updateTimer(timer);
+                return;
+            }
+
             switch (messageString) {
                 case "AllowedToJoinGame":
                     SocketClient.joinToGame();

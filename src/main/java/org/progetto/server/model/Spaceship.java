@@ -161,26 +161,48 @@ public class Spaceship {
         doubleEngineCount += countToAdd;
     }
 
+    /**
+     * Increment the shield counter towards the left-up
+     * @param countToAdd the number of shields to add
+     */
     public void addLeftUpShieldCount(int countToAdd) {
         shieldCounts[3] += countToAdd;
         shieldCounts[0] += countToAdd;
     }
 
+    /**
+     * Increment the shield counter towards the up-right
+     * @param countToAdd the number of shields to add
+     */
     public void addUpRightShieldCount(int countToAdd) {
         shieldCounts[0] += countToAdd;
         shieldCounts[1] += countToAdd;
     }
 
+    /**
+     * Increment the shield counter towards the right-down
+     * @param countToAdd the number of shields to add
+     */
     public void addRightDownShieldCount(int countToAdd) {
         shieldCounts[1] += countToAdd;
         shieldCounts[2] += countToAdd;
     }
 
+    /**
+     * Increment the shield counter towards the down-left
+     * @param countToAdd the number of shields to add
+     */
     public void addDownLeftShieldCount(int countToAdd) {
         shieldCounts[2] += countToAdd;
         shieldCounts[3] += countToAdd;
     }
 
+    /**
+     * Increase the number of boxes of the specified type
+     *
+     * @param countToAdd the number of boxes to add
+     * @param type the type of the added box
+     */
     public void addBoxCount(int countToAdd, BoxType type) {
         switch (type)
         {

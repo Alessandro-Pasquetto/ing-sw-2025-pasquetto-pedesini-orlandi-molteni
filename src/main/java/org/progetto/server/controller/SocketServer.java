@@ -13,8 +13,8 @@ public class SocketServer{
     // ATTRIBUTES
     // =======================
 
-    private static List<SocketWriter> socketWriters = new ArrayList<>();
-    private static AtomicInteger currentIdGame = new AtomicInteger(0);
+    private static final List<SocketWriter> socketWriters = new ArrayList<>();
+    private static final AtomicInteger currentIdGame = new AtomicInteger(0);
 
     // =======================
     // MAIN
@@ -23,7 +23,7 @@ public class SocketServer{
     public static void main(String[] args) {
         try{
             ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Server in ascolto sulla porta 8080...");
+            System.out.println("Server listening on port 8080...");
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -60,20 +60,15 @@ public class SocketServer{
         }
     }
 
-    public static void notifyNewGame(int idGame){
+    public static void broadcastMessage(Object messageObj) {
+        ArrayList<SocketWriter> socketWritersCopy;
+
         synchronized (socketWriters) {
-            for (SocketWriter sk : socketWriters) {
-                sk.sendMessage(new NotifyNewGameMessage(idGame));
-            }
+            socketWritersCopy = new ArrayList<>(socketWriters);
         }
-    }
 
-    public static void loadGameList() {
-        /*
-        for (int i = 0; i < GameControllersQueue.getNumWaitingGames(); i++) {
-
-            GameControllersQueue.getGameController(i).getGame().;
+        for (SocketWriter sw : socketWritersCopy) {
+            sw.sendMessage(messageObj);
         }
-         */
     }
 }

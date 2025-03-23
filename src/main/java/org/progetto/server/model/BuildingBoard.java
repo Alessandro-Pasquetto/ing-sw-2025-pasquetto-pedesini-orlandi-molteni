@@ -69,17 +69,6 @@ public class BuildingBoard {
     // SETTERS
     // =======================
 
-    public void setAsBooked(int idx) throws IllegalStateException {
-        if (idx >= 0 && idx < 2 && handComponent != null) {
-            if (booked[idx] != null) {
-                booked[idx] = handComponent;  // need to handle booked flag in component
-                handComponent = null;
-            } else
-                throw new IllegalStateException("BookedCellOccupied");
-        } else
-            throw new IllegalStateException("Illegal index");
-    }
-
     public void setHandComponent(Component component) {
         handComponent = component;
     }
@@ -89,6 +78,8 @@ public class BuildingBoard {
     // =======================
 
     /**
+     * Passing the player's color number it returns the imgSrc of the centralUnitComponent
+     *
      * @param color the player's color
      * @return imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
@@ -103,6 +94,8 @@ public class BuildingBoard {
     }
 
     /**
+     * Add the centralUnit to the spaceship
+     *
      * @param levelShip the ship's level
      * @param imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
@@ -115,6 +108,7 @@ public class BuildingBoard {
                 spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
                 break;
         }
+        // There is no need to increment the componentCount in the spaceship because it is set by default to 1
     }
 
     /**
@@ -125,38 +119,59 @@ public class BuildingBoard {
      * @return true if component has been placed correctly else otherwise
      */
     public boolean placeComponent(int y, int x, int r) {
-        if(boardMask[y][x] == 1) {
+        if(boardMask[y][x] != 1)
+            return false;
 
-            // If it's not connected to at least one component returns false
-            if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
-                return false;
-            }
-
-            spaceship.addComponentsShipCount(1);
-
-            handComponent.setY_coordinate(y);
-            handComponent.setX_coordinate(x);
-            handComponent.setRotation(r);
-
-            spaceshipMatrix[y][x] = handComponent;
-
-            boardMask[y][x] = -1;   //signal the presence of a component
-            handComponent = null;
-            return true;
+        // If it's not connected to at least one component returns false
+        if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
+            return false;
         }
 
-        return false;
+        spaceship.addComponentsShipCount(1);
+
+        handComponent.setY_coordinate(y);
+        handComponent.setX_coordinate(x);
+        handComponent.setRotation(r);
+
+        spaceshipMatrix[y][x] = handComponent;
+
+        boardMask[y][x] = -1;   //signal the presence of a component
+        handComponent = null;
+        return true;
     }
 
+    /**
+     * Move the handComponent to position idx in the booked array
+     *
+     * @param idx the index of the booking cell where I want to place the handComponent
+     */
+    public void setAsBooked(int idx) throws IllegalStateException {
+        if(handComponent == null)
+            throw new IllegalStateException("EmptyHandComponent");
+        if(idx < 0 || idx > 1)
+            throw new IllegalStateException("IllegalIndex");
+        if(booked[idx] != null)
+            throw new IllegalStateException("BookedCellOccupied");
+
+        booked[idx] = handComponent;
+        handComponent = null;
+    }
+
+    /**
+     * Takes the component from the booked ones
+     *
+     * @param idx the index of the booked cell from which I want to take the component
+     */
     public void pickBookedComponent(int idx) throws IllegalStateException{
-        if (idx >= 0 && idx < 3) {
-            if(booked[idx] == null) {
-                handComponent = booked[idx];  // need to handle booked flag in component
-                booked[idx] = null;
-            }else
-                throw new IllegalStateException("BookedCellEmpty");
-        } else
-            throw new IllegalStateException("Illegal index");
+        if(handComponent != null)
+            throw new IllegalStateException("FullHandComponent");
+        if(idx < 0 || idx > 1)
+            throw new IllegalStateException("IllegalIndex");
+        if(booked[idx] == null)
+            throw new IllegalStateException("EmptyBookedCell");
+
+        handComponent = booked[idx];
+        booked[idx] = null;
     }
 
     /**

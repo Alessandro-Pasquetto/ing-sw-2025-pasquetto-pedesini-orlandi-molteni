@@ -3,15 +3,13 @@ package org.progetto.client;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
-import java.security.cert.PolicyNode;
 
 public class GameView {
 
@@ -20,6 +18,9 @@ public class GameView {
 
     @FXML
     private GridPane grid;
+
+    @FXML
+    private Label timerLabel;
 
     private ImageView handComponent = null;
 
@@ -55,7 +56,7 @@ public class GameView {
     }
 
     // Method to start the game
-    public void startGame(ActionEvent actionEvent) {
+    public void startGame(ActionEvent event) {
         SocketClient.startGame();
     }
 
@@ -118,6 +119,17 @@ public class GameView {
         });
     }
 
+    public void updateTimer(int timer) {
+        int minutes = timer / 60;
+        int seconds = timer % 60;
+
+        String timeText = String.format("%02d:%02d", minutes, seconds);
+
+        Platform.runLater(() -> {
+            timerLabel.setText(timeText);
+        });
+    }
+
     public void rotateComponent() {
         handComponent.setRotate(handComponent.getRotate() + 90);
         GameData.rotateComponent();
@@ -138,7 +150,7 @@ public class GameView {
             Integer colIndex = GridPane.getColumnIndex(node);
             if (rowIndex == null) rowIndex = 0;
             if (colIndex == null) colIndex = 0;
-            if (rowIndex == 2 && colIndex == 2) {
+            if (rowIndex == y && colIndex == x) {
                 Pane cell = (Pane) node;
                 Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgSrcCentralUnit)));
                 ImageView imageView = new ImageView(image);

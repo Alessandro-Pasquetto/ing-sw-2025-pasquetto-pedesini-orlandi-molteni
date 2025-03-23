@@ -34,7 +34,7 @@ public class Game {
 
     private ArrayList<EventCard> hiddenEventDeck;
     private final ArrayList<EventCard>[] visibleEventCardDecks;    //array of 3 visible event decks: [left, centre, right]
-    private  boolean[] eventDeckAvailable;                           //direct relation to visibleEventCardDecks, true means that deck is on a player hand
+    private final boolean[] eventDeckAvailable;                          //direct relation to visibleEventCardDecks, true means that deck is on a player hand
 
     private final Board board;
     private EventCard activeEventCard;
@@ -97,7 +97,6 @@ public class Game {
         return board;
     }
 
-
     // =======================
     // SETTERS
     // =======================
@@ -116,7 +115,11 @@ public class Game {
     // OTHER METHODS
     // =======================
 
-    // todo: saveGame()
+    // todo: saveGame
+    /**
+     * Does it save the data of players who disconnect?
+     *
+     */
     public void saveGame(){}
 
     /**
@@ -158,10 +161,11 @@ public class Game {
         Component pickedComponent = null;
 
         if(player.getSpaceship().getBuildingBoard().getHandComponent() != null)
-            throw new IllegalStateException("HandComponent already set");
+            throw new IllegalStateException("FullHandComponent");
 
         synchronized (componentDeck) {
-            if(componentDeck.isEmpty()) throw new IllegalStateException("Empty componentDeck");
+            if(componentDeck.isEmpty())
+                throw new IllegalStateException("EmptyComponentDeck");
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
         }
@@ -176,10 +180,15 @@ public class Game {
      *
      * @param player is the player who is discarding a component
      */
-    public void discardComponent(Player player){
-        BuildingBoard board = player.getSpaceship().getBuildingBoard();
-        Component discardedComponent = board.getHandComponent();
-        board.setHandComponent(null);
+    public void discardComponent(Player player) throws IllegalStateException{
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        Component discardedComponent = buildingBoard.getHandComponent();
+
+        if(discardedComponent == null)
+            throw new IllegalStateException("EmptyHandComponent");
+
+        buildingBoard.setHandComponent(null);
 
         synchronized (visibleComponentDeck) {
             visibleComponentDeck.add(discardedComponent);
@@ -195,22 +204,30 @@ public class Game {
     public void pickVisibleComponent(int indexComponent, Player player) throws IllegalStateException{
         Component pickedComponent = null;
 
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        if(buildingBoard.getHandComponent() != null)
+            throw new IllegalStateException("FullHandComponent");
+
         synchronized (visibleComponentDeck) {
-            if(indexComponent >= visibleComponentDeck.size()) throw new IllegalStateException("Wrong indexComponent");
+            if(indexComponent >= visibleComponentDeck.size())
+                throw new IllegalStateException("IllegalIndexComponent");
             pickedComponent = visibleComponentDeck.remove(indexComponent);
         }
 
-        player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
+        buildingBoard.setHandComponent(pickedComponent);
     }
 
     /**
      * Draws a random event card
+     *
      * @return the randomly picked card
      */
     public EventCard pickEventCard() throws IllegalStateException {
         EventCard pickedEventCard = null;
         synchronized (hiddenEventDeck) {
-            if(hiddenEventDeck.isEmpty()) throw new IllegalStateException("Empty visibleEventCardDecks");
+            if(hiddenEventDeck.isEmpty())
+                throw new IllegalStateException("EmptyVisibleEventCardDecks");
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
@@ -315,7 +332,6 @@ public class Game {
 
             return null;
         }
-
     }
 
     /**
@@ -373,14 +389,11 @@ public class Game {
      */
     public ArrayList<EventCard> composeHiddenEventDeck() {
 
-        ArrayList<EventCard> Deck = new ArrayList<>();
-
-        Deck.addAll(hiddenEventDeck);
+        ArrayList<EventCard> Deck = new ArrayList<>(hiddenEventDeck);
 
         for(int i = 0; i < 3; i++) {
             if(eventDeckAvailable[i])
                 Deck.addAll(visibleEventCardDecks[i]);
-
             else
                 return null;
         }

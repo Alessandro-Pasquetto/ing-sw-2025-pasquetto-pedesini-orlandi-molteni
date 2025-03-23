@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import org.progetto.messages.CreateGameMessage;
 import org.progetto.messages.InitGameMessage;
 import org.progetto.messages.JoinGameMessage;
+import org.progetto.messages.NotifyNewGameMessage;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -12,8 +13,8 @@ import java.io.ObjectInputStream;
 
 public class SocketListener extends Thread {
 
-    private ClientHandler clientHandler;
-    private ObjectInputStream in;
+    private final ClientHandler clientHandler;
+    private final ObjectInputStream in;
     private boolean running = true;
 
     public SocketListener(ClientHandler clientHandler, ObjectInputStream in) {
@@ -29,7 +30,7 @@ public class SocketListener extends Thread {
                 if(clientHandler.getGameController() == null)
                     handlerLobbyMessages(messageObj);
                 else
-                    handlerGameMessage(messageObj);
+                    handlerGameMessages(messageObj);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -54,7 +55,7 @@ public class SocketListener extends Thread {
             Player player = clientHandler.getPlayer();
             BuildingBoard buildingBoard =  player.getSpaceship().getBuildingBoard();
             clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
-            SocketServer.notifyNewGame(idGame);
+            SocketServer.broadcastMessage(new NotifyNewGameMessage(idGame));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
 
@@ -79,7 +80,7 @@ public class SocketListener extends Thread {
         }
     }
 
-    private void handlerGameMessage(Object messageObj) {
+    private void handlerGameMessages(Object messageObj) {
         GameController gameController = clientHandler.getGameController();
         Game game = gameController.getGame();
         Player player = clientHandler.getPlayer();
@@ -93,7 +94,7 @@ public class SocketListener extends Thread {
                 if(gameController.getTimerObj().getTimerInt() > 0)
                     BuildingController.handle(gameController::broadcastMessage, clientHandler.getSocketWriter(), game, player, messageObj);
                 else
-                    clientHandler.getSocketWriter().sendMessage("Timer scaduto");
+                    clientHandler.getSocketWriter().sendMessage("TimerExpired");
                 break;
 
             case TRAVEL:
@@ -109,7 +110,7 @@ public class SocketListener extends Thread {
                 break;
 
             default:
-                System.out.println("Fase di gioco inesistente");
+                System.out.println("InvalidGamePhase");
                 break;
         }
     }

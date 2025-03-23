@@ -28,10 +28,10 @@ public class BuildingController {
                     Component pickedComponent = game.pickHiddenComponent(player);
                     socketWriter.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
                 } catch (IllegalStateException e) {
-                    if(e.getMessage().equals("HandComponent already set"))
-                        socketWriter.sendMessage("HandComponentFull");
+                    if(e.getMessage().equals("FullHandComponent"))
+                        socketWriter.sendMessage("FullHandComponent");
 
-                    if(e.getMessage().equals("Empty componentDeck"))
+                    if(e.getMessage().equals("EmptyComponentDeck"))
                         socketWriter.sendMessage("EmptyComponentDeck");
                 }
             }else
@@ -45,15 +45,20 @@ public class BuildingController {
                         socketWriter.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 
                     } catch (IllegalStateException e) {
-                        if(e.getMessage().equals("HandComponent already set"))
-                            socketWriter.sendMessage("HandComponentFull");
+                        if(e.getMessage().equals("FullHandComponent"))
+                            socketWriter.sendMessage("FullHandComponent");
 
-                        if(e.getMessage().equals("Empty componentDeck"))
+                        if(e.getMessage().equals("EmptyComponentDeck"))
                             socketWriter.sendMessage("EmptyComponentDeck");
                     }
                     break;
                 case "DiscardComponent":
-                    game.discardComponent(player);
+                    try {
+                        game.discardComponent(player);
+                    }catch (IllegalStateException e) {
+                        if(e.getMessage().equals("EmptyHandComponent"))
+                            socketWriter.sendMessage("EmptyHandComponent");
+                    }
                     break;
                 default:
                     break;

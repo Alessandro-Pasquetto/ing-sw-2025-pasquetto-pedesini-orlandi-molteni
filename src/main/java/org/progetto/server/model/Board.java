@@ -146,6 +146,8 @@ public class Board {
     }
 
     /**
+     * Makes a player abandon the journey
+     *
      * @param player is the player who leaves the travel
      */
     public void leaveTravel(Player player) {

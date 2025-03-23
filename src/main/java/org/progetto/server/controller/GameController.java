@@ -78,4 +78,8 @@ class GameController{
         timer.startTimer();
     }
 
+    public void handleMessage(Object messageObj) {
+
+    }
+
 }
