@@ -70,11 +70,11 @@ public class BuildingBoard {
     // =======================
 
     public void setAsBooked(int idx) throws IllegalStateException {
-        if (idx >= 0 && idx < 3) {
-            if(booked[idx] != null) {
+        if (idx >= 0 && idx < 2 && handComponent != null) {
+            if (booked[idx] != null) {
                 booked[idx] = handComponent;  // need to handle booked flag in component
                 handComponent = null;
-            }else
+            } else
                 throw new IllegalStateException("BookedCellOccupied");
         } else
             throw new IllegalStateException("Illegal index");
@@ -160,7 +160,8 @@ public class BuildingBoard {
     }
 
     /**
-     * check if two components are connected
+     * Check if two components are connected
+     *
      * @author Lorenzo
      * @param c1 is the first component
      * @param c2 is the second component
@@ -208,6 +209,7 @@ public class BuildingBoard {
 
     /**
      * Search for component of the same type
+     *
      * @author Lorenzo
      * @param type is the component type to search in the matrix
      * @return list of components found
@@ -229,7 +231,8 @@ public class BuildingBoard {
     }
 
     /**
-     * check if a housing unit can contain an orange alien, if it can't the alien is removed
+     * Check if a housing unit can contain an orange alien, if it can't the alien is removed
+     *
      * @author Lorenzo
      */
     private void updateOrangeAlienAllow(){
@@ -256,7 +259,8 @@ public class BuildingBoard {
 
 
     /**
-     * check if a housing unit can contain a purple alien
+     * Check if a housing unit can contain a purple alien
+     *
      * @author Lorenzo
      */
     private void updatePurpleAlienAllow(){
@@ -284,7 +288,8 @@ public class BuildingBoard {
     }
 
     /**
-     * loading mask for the building board
+     * Loading mask for the building board
+     *
      * @author Lorenzo
      * @param levelShip is the game level chosen
      * @return the loaded matrix configuration for the board
@@ -314,11 +319,12 @@ public class BuildingBoard {
     }
 
     private String loadImgShip(int levelShip){
-        return "board" + levelShip + ".jpg";
+        return "spaceship" + levelShip + ".jpg";
     }
 
     /**
-     * create the component matrix given the mask matrix dimensions
+     * Create the component matrix given the mask matrix dimensions
+     *
      * @author Lorenzo
      * @return the component matrix for the spaceship initialized with null values
      */
@@ -335,6 +341,7 @@ public class BuildingBoard {
 
     /**
      * Remove a component from the spaceship, update values
+     *
      * @author Lorenzo
      * @param y is the y coordinate of the component to remove
      * @param x is the x coordinate of the component to remove
@@ -497,7 +504,6 @@ public class BuildingBoard {
     }
 
     /**
-     *
      * @param x the x coordinate of the component to checked
      * @param y the y coordinate of the component to checked
      * @param visited the already visited component list
@@ -599,7 +605,7 @@ public class BuildingBoard {
 
 
     /**
-     *  Check and return if the spaceship is valid and count and update the exposedConnectorsCount value of the spaceship
+     * Check and return if the spaceship is valid and count and update the exposedConnectorsCount value of the spaceship
      *
      * @return true if the spaceship is valid, false otherwise
      */
@@ -644,7 +650,7 @@ public class BuildingBoard {
     }
 
     /**
-     * initialize spaceship attributes after checking the ship validity
+     * Initialize spaceship attributes after checking the ship validity
      */
     public void initSpaceshipParams()
     {

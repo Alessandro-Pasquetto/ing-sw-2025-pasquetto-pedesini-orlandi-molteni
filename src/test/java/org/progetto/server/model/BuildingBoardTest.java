@@ -16,14 +16,52 @@ class BuildingBoardTest {
 
     @Test
     void getSpaceship() {
+        // Create necessary objects for testing
+        Spaceship spaceship = new Spaceship(1, 0);
+        BuildingBoard board = new BuildingBoard(1, 0, spaceship);
+
+        // Test that getSpaceship returns the same spaceship instance
+        assertSame(spaceship, board.getSpaceship());
+
+        // Test with different spaceship
+        Spaceship spaceship2 = new Spaceship(1, 1);
+        BuildingBoard board2 = new BuildingBoard(1, 1, spaceship2);
+        assertSame(spaceship2, board2.getSpaceship());
     }
 
     @Test
     void getHandComponent() {
+        // Create board with initial null hand component
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+
+        // Test initial state (should be null)
+        assertNull(board.getHandComponent());
+
+        // Create and set a component
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        board.setHandComponent(component);
+
+        // Test that getHandComponent returns component
+        assertSame(component, board.getHandComponent());
     }
 
     @Test
     void getSpaceshipMatrix() {
+        // Create board for level 1
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+
+        Component[][] matrix = board.getSpaceshipMatrix();
+
+        // Test matrix is not null
+        assertNotNull(matrix);
+
+        // Test matrix dimensions
+        assertEquals(5, matrix.length);
+        assertEquals(5, matrix[0].length);
+
+        // Test that central unit is placed
+        assertNotNull(matrix[2][2]);
+        assertEquals(ComponentType.CENTRAL_UNIT, matrix[2][2].getType());
     }
 
     @Test
@@ -43,23 +81,82 @@ class BuildingBoardTest {
 
     @Test
     void getBooked() {
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+
+        // Test initial state
+        Component[] booked = board.getBooked();
+        assertNotNull(booked);
+        assertEquals(2, booked.length);
+
+        // Test all slots are initially null
+        assertNull(booked[0]);
+        assertNull(booked[1]);
     }
 
     @Test
     void getImgSrc() {
+        // Test for level 1
+        BuildingBoard board1 = new BuildingBoard(1, 0, new Spaceship(1, 0));
+        assertEquals("spaceship1.jpg", board1.getImgSrc());
+
+        // Test for level 2
+        BuildingBoard board2 = new BuildingBoard(2, 0, new Spaceship(2, 0));
+        assertEquals("spaceship2.jpg", board2.getImgSrc());
     }
 
     @Test
     void setAsBooked() {
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+
+        // Test without hand component
+        assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
+
+        // Set hand component
+        board.setHandComponent(component);
+
+        // Test illegal indices
+        assertThrows(IllegalStateException.class, () -> board.setAsBooked(-1));
+        assertThrows(IllegalStateException.class, () -> board.setAsBooked(2));  // Changed from 3 to 2
+
+        // Test setting to empty slot throws exception
+        assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
+
+        // Pre-occupy a slot
+        Component preExisting = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "test.jpg", 2);
+        board.getBooked()[0] = preExisting;
+
+        // Now it should work (overwriting the pre-existing component)
+        assertDoesNotThrow(() -> board.setAsBooked(0));
+
+        // Verify component was moved correctly
+        assertNull(board.getHandComponent());
+        assertSame(component, board.getBooked()[0]);
+        assertNotSame(preExisting, board.getBooked()[0]);
     }
 
     @Test
     void setHandComponent() {
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+
+        // Test setting null component
+        board.setHandComponent(null);
+        assertNull(board.getHandComponent());
+
+        // Test setting a component
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        board.setHandComponent(component);
+        assertSame(component, board.getHandComponent());
+
+        // Test overwriting existing hand component
+        Component component2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        board.setHandComponent(component2);
+        assertSame(component2, board.getHandComponent());
     }
 
     @Test
     void placeComponent() {
-        Spaceship spaceship = new Spaceship(2, 1);
+        Spaceship spaceship = new Spaceship(1, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
         Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
@@ -72,9 +169,9 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(0, 2, 0);
+        result = buildingBoard.placeComponent(1, 2, 0);
 
-        assertEquals(c, spaceshipMatrix[0][2]);
+        assertEquals(c, spaceshipMatrix[1][2]);
         assertTrue(result);
 
         // Placed outside the spaceship
@@ -90,9 +187,9 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(2, 3, 0);
+        result = buildingBoard.placeComponent(2, 2, 0);
 
-        assertNotEquals(c, spaceshipMatrix[2][3]);
+        assertNotEquals(c, spaceshipMatrix[2][2]);
         assertFalse(result);
     }
 

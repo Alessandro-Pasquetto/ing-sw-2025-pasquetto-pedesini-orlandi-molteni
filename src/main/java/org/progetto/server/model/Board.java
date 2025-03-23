@@ -20,7 +20,7 @@ public class Board {
     public Board(int levelBoard) {
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
         this.activeTravelers = new ArrayList<>();
-        this.imgSrc = "Board" + levelBoard + ".png";
+        this.imgSrc = "board" + levelBoard + ".png";
     }
 
     // =======================
@@ -152,6 +152,6 @@ public class Board {
         int playerPosition = player.getPosition();
         track[modulus(playerPosition, track.length)] = null;
         activeTravelers.remove(player);
-        player.setHasLeft(false);
+        player.setHasLeft(true);
     }
 }

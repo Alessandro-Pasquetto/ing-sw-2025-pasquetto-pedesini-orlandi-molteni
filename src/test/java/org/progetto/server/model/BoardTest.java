@@ -13,10 +13,28 @@ class BoardTest {
 
     @Test
     void getTrack() {
+        // Level 1 board
+        Board board1 = new Board(1);
+        assertEquals(18, board1.getTrack().length);
+
+        // Level 2 board
+        Board board2 = new Board(2);
+        assertEquals(24, board2.getTrack().length);
+
+        // Verify that the returned array is the same instance
+        Player[] track = board1.getTrack();
+        assertSame(track, board1.getTrack());
     }
 
     @Test
     void getImgSrc() {
+        // Level 1 board
+        Board board1 = new Board(1);
+        assertEquals("board1.png", board1.getImgSrc());
+
+        // Level 2 board
+        Board board2 = new Board(2);
+        assertEquals("board2.png", board2.getImgSrc());
     }
 
     @Test
