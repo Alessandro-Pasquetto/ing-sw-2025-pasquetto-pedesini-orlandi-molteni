@@ -172,27 +172,55 @@ class GameTest {
         game.addPlayer(mario);
 
         assertNotNull(game.pickUpEventCardDeck(mario,0));
-
     }
 
     @Test
     void loadComponents(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
 
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickHiddenComponent(mario));
     }
 
 
     @Test
     void pickUpEventCardDeck(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickUpEventCardDeck(mario,0));
 
     }
 
     @Test
     void putDownEventDeck(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+
+        game.pickUpEventCardDeck(mario,0);
+        assertTrue(game.putDownEventCardDeck(mario,0));
+        assertFalse(game.putDownEventCardDeck(mario,1));
+
+
 
     }
 
     @Test
     void composeHiddenEventDec(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickEventCard());
+
 
     }
 

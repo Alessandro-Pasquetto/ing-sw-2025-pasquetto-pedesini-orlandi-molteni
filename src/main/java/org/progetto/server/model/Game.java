@@ -384,8 +384,8 @@ public class Game {
      * @param player is the player that wants to put-down the deck
      * @return true if the event-deck can be return to the board
      */
-    public boolean putDownEventDeck(Player player,int idx){
-        if(eventDeckAvailable[idx].equals(player)) {
+    public boolean putDownEventCardDeck(Player player,int idx){
+        if((eventDeckAvailable[idx] != null) && (eventDeckAvailable[idx].equals(player))) {
             eventDeckAvailable[idx] = null;
             return true;
         }
