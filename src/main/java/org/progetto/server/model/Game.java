@@ -15,6 +15,7 @@ import org.progetto.server.model.loadClasses.EventDeserializer;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Game {
@@ -38,8 +39,8 @@ public class Game {
 
     private final Board board;
     private EventCard activeEventCard;
-
-
+    private Player activePlayer;
+    private final AtomicInteger numReadyPlayers;
 
     // =======================
     // CONSTRUCTORS
@@ -59,6 +60,8 @@ public class Game {
         this.eventDeckAvailable = new boolean[] {true,true,true};
         this.board = new Board(level);
         this.activeEventCard = null;
+        this.activePlayer = null;
+        this.numReadyPlayers = new AtomicInteger(0);
     }
 
     // =======================
@@ -107,7 +110,7 @@ public class Game {
         }
     }
 
-    private synchronized void setActiveEventCard(EventCard eventCard) {
+    private void setActiveEventCard(EventCard eventCard) {
         this.activeEventCard = eventCard;
     }
 
@@ -219,7 +222,7 @@ public class Game {
     }
 
     /**
-     * Draws a random event card
+     * Draws a random event card and set as active
      *
      * @return the randomly picked card
      */
@@ -227,7 +230,7 @@ public class Game {
         EventCard pickedEventCard = null;
         synchronized (hiddenEventDeck) {
             if(hiddenEventDeck.isEmpty())
-                throw new IllegalStateException("EmptyVisibleEventCardDecks");
+                throw new IllegalStateException("EmptyHiddenEventCardDeck");
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
@@ -403,5 +406,12 @@ public class Game {
             Collections.shuffle(Deck);
 
         return Deck;
+    }
+
+    public void addReadyPlayers(boolean isToAdd) {
+        if(isToAdd)
+            numReadyPlayers.getAndIncrement();
+        else
+            numReadyPlayers.getAndDecrement();
     }
 }

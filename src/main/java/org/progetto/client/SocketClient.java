@@ -12,7 +12,7 @@ public class SocketClient {
         try{
             socket = new Socket(serverIp, port);
 
-            System.out.println("Connesso al server!");
+            System.out.println("Connected to the server!");
 
             PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
@@ -32,7 +32,7 @@ public class SocketClient {
         try {
             PageController.switchScene("game.fxml", "Game");
         } catch (IOException e) {
-            System.out.println("Errore nel caricamente della pagina");
+            System.out.println("Error loading the page");
         }
     }
 
@@ -41,12 +41,12 @@ public class SocketClient {
     }
 
     public static void joinToGame(){
-        System.out.println("Ti sei unito ad un game");
+        System.out.println("You joined a game");
 
         try {
             PageController.switchScene("game.fxml", "Game");
         } catch (IOException e) {
-            System.out.println("Errore nel caricamente della pagina");
+            System.out.println("Error loading the page");
         }
     }
 
@@ -80,7 +80,7 @@ public class SocketClient {
         SocketListener.stopListener();
         SocketWriter.stopWriter();
         socket.close();
-        System.out.println("Ti sei disconnesso!");
+        System.out.println("You have disconnected!");
 
         PageController.switchScene("connection.fxml", "Page1");
     }

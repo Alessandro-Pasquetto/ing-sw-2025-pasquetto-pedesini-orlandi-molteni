@@ -20,7 +20,7 @@ class GameController{
 
     GameController(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
-        this.timer = new TimerController(this::broadcastMessage,60,3);
+        this.timer = new TimerController(this::broadcastMessage,40,0);
         GameControllersQueue.addGameController(this);
     }
 

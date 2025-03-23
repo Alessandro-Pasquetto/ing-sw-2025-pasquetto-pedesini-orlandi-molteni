@@ -65,7 +65,8 @@ public class TimerController {
 
             if (timer == 0) {
                 if(timerFlipsAllowed == 0) {
-                    System.out.println("Timer scaduto!");
+                    broadcastMessageFunction.accept("Timer expired!");
+                    System.out.println("Timer expired");
                 }
             }
         }).start();
