@@ -13,10 +13,19 @@ class BatteryStorageTest {
 
     @Test
     void getCapacity() {
+        BatteryStorage bs = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 0, 1, 0},"imgSrc",4);
+
+        assertEquals(4, bs.getCapacity());
     }
 
     @Test
     void getItemsCount() {
+        BatteryStorage bs = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 0, 1, 0},"imgSrc",4);
+
+        assertEquals(0, bs.getItemsCount());
+
+        bs.incrementItemsCount(2);
+        assertEquals(2, bs.getItemsCount());
     }
 
     @Test

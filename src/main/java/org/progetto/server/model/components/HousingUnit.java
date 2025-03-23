@@ -27,7 +27,6 @@ public class HousingUnit extends Component{
         this.allowAlienPurple = false;
     }
 
-
     // =======================
     // GETTERS
     // =======================
@@ -55,7 +54,6 @@ public class HousingUnit extends Component{
     public boolean getAllowAlienPurple() {
         return allowAlienPurple;
     }
-
 
     // =======================
     // SETTERS
@@ -86,7 +84,8 @@ public class HousingUnit extends Component{
     // =======================
 
     /**
-     * increment the number of crew inside the unit
+     * Increment the number of crew inside the unit
+     *
      * @author Lorenzo
      * @param num is the number of crew member to add
      * @return true if the crew can be added
@@ -101,7 +100,8 @@ public class HousingUnit extends Component{
     }
 
     /**
-     * decrement the number of crew inside the unit
+     * Decrement the number of crew inside the unit
+     *
      * @author Lorenzo
      * @param num is the number of crew member to remove
      * @return true if the crew has been removed

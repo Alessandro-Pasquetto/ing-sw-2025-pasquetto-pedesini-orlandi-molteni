@@ -100,6 +100,10 @@ public class Game {
         return board;
     }
 
+    public AtomicInteger getNumReadyPlayers() {
+        return numReadyPlayers;
+    }
+
     // =======================
     // SETTERS
     // =======================

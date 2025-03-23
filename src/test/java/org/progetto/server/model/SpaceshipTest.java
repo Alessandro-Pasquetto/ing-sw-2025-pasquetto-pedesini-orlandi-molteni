@@ -15,74 +15,192 @@ class SpaceshipTest {
 
     @Test
     void getShipComponentCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(1, spaceship.getShipComponentsCount());
+
+        spaceship.addComponentsShipCount(2);
+        assertEquals(3, spaceship.getShipComponentsCount());
     }
 
     @Test
     void getDestroyedCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getDestroyedCount());
+
+        spaceship.addDestroyedCount(1);
+        assertEquals(1, spaceship.getDestroyedCount());
     }
 
     @Test
     void getCrewCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getCrewCount());
+
+        spaceship.addCrewCount(2);
+        assertEquals(2, spaceship.getCrewCount());
     }
 
     @Test
     void getBoxesValue() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getBoxesValue());
+
+        spaceship.addBoxCount(1, BoxType.RED);
+        spaceship.addBoxCount(1, BoxType.YELLOW);
+        spaceship.addBoxCount(1, BoxType.GREEN);
+        spaceship.addBoxCount(1, BoxType.BLUE);
+        assertEquals(10, spaceship.getBoxesValue());
     }
 
     @Test
     void getBatteriesCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getBatteriesCount());
+
+        spaceship.addBatteriesCount(3);
+        assertEquals(3, spaceship.getBatteriesCount());
     }
 
     @Test
     void getExposedConnectorsCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getExposedConnectorsCount());
+
+        spaceship.setExposedConnectorsCount(2);
+        assertEquals(2, spaceship.getExposedConnectorsCount());
     }
 
     @Test
     void getAlienPurple() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertFalse(spaceship.getAlienPurple());
+
+        spaceship.setAlienPurple(true);
+        assertTrue(spaceship.getAlienPurple());
     }
 
     @Test
     void getAlienOrange() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertFalse(spaceship.getAlienOrange());
+
+        spaceship.setAlienOrange(true);
+        assertTrue(spaceship.getAlienOrange());
     }
 
     @Test
     void getNormalShootingPower() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getNormalShootingPower());
+
+        spaceship.addNormalShootingPower(2.5f);
+        assertEquals(2.5f, spaceship.getNormalShootingPower());
     }
 
     @Test
     void getDoubleCannonCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getDoubleCannonCount());
+
+        spaceship.addDoubleCannonCount(1);
+        assertEquals(1, spaceship.getDoubleCannonCount());
     }
 
     @Test
     void getDoubleEngineCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getDoubleEngineCount());
+
+        spaceship.addDoubleEngineCount(1);
+        assertEquals(1, spaceship.getDoubleEngineCount());
     }
 
     @Test
     void getNormalEnginePower() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getNormalEnginePower());
+
+        spaceship.addNormalEnginePower(3.5f);
+        assertEquals(3.5f, spaceship.getNormalEnginePower());
     }
 
     @Test
     void getIdxShieldCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getIdxShieldCount(0)); // UP
+        assertEquals(0, spaceship.getIdxShieldCount(1)); // RIGHT
+        assertEquals(0, spaceship.getIdxShieldCount(2)); // DOWN
+        assertEquals(0, spaceship.getIdxShieldCount(3)); // LEFT
+
+        spaceship.addLeftUpShieldCount(1);
+        assertEquals(1, spaceship.getIdxShieldCount(0)); // UP
+        assertEquals(0, spaceship.getIdxShieldCount(1)); // RIGHT
+        assertEquals(0, spaceship.getIdxShieldCount(2)); // DOWN
+        assertEquals(1, spaceship.getIdxShieldCount(3)); // LEFT
     }
 
     @Test
     void getBoxCounts() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertArrayEquals(new int[]{0, 0, 0, 0}, spaceship.getBoxCounts());
+
+        spaceship.addBoxCount(1, BoxType.RED);
+        spaceship.addBoxCount(2, BoxType.BLUE);
+        assertArrayEquals(new int[]{1, 0, 0, 2}, spaceship.getBoxCounts());
     }
 
     @Test
     void getBuildingBoard() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertNotNull(spaceship.getBuildingBoard());
     }
 
     @Test
     void setExposedConnectorsCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        spaceship.setExposedConnectorsCount(3);
+        assertEquals(3, spaceship.getExposedConnectorsCount());
+
+        spaceship.setExposedConnectorsCount(5);
+        assertEquals(5, spaceship.getExposedConnectorsCount());
     }
 
     @Test
     void setAlienPurple() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        spaceship.setAlienPurple(true);
+        assertTrue(spaceship.getAlienPurple());
+
+        spaceship.setAlienPurple(false);
+        assertFalse(spaceship.getAlienPurple());
     }
 
     @Test
     void setAlienOrange() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        spaceship.setAlienOrange(true);
+        assertTrue(spaceship.getAlienOrange());
+
+        spaceship.setAlienOrange(false);
+        assertFalse(spaceship.getAlienOrange());
     }
 
     @Test

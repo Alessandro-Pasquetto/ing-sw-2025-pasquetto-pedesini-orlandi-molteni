@@ -81,6 +81,7 @@ public class Player {
     /**
      * Adds credits to the player
      *
+     * @author Alessandro
      * @param creditsToAdd is the number of credits gained (if positive) or lost (if negative)
      */
     public void addCredits(int creditsToAdd) {
@@ -90,11 +91,12 @@ public class Player {
     /**
      * Returns the sum of the roll of two dice
      *
+     * @author Alessandro
      * @return the sum of the roll of two dice
      */
-    public int rollDice(){
-        int die1 = (int) (Math.random() * 6) + 1;
-        int die2 = (int) (Math.random() * 6) + 1;
-        return die1 + die2;
+    public int rollDice() {
+        int dice1 = (int) (Math.random() * 6) + 1;
+        int dice2 = (int) (Math.random() * 6) + 1;
+        return dice1 + dice2;
     }
 }

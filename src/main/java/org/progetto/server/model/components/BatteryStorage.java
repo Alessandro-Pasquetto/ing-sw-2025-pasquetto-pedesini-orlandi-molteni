@@ -54,6 +54,7 @@ public class BatteryStorage extends Component {
     /**
      * Removes the number of items defined as parameter from the component
      *
+     * @author Gabriele
      * @param num Amount to remove
      * @return true if it got decreased, otherwise false
      */

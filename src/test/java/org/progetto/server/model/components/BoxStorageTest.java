@@ -12,11 +12,29 @@ class BoxStorageTest {
     }
 
     @Test
+    void getCapacity() {
+        // Setup
+        BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3, false);
+
+        assertEquals(3, bs.getCapacity());
+    }
+
+    @Test
     void getBoxStorage() {
+        BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3, false);
+
+        assertNotNull(bs.getBoxStorage());
+        assertEquals(3, bs.getBoxStorage().length);
+        assertNull(bs.getBoxStorage()[0]);
     }
 
     @Test
     void isRed() {
+        BoxStorage redStorage = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 0, 1, 0},"imgSrc",3,true);
+        BoxStorage notRedStorage = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 0, 1, 0},"imgSrc",3,false);
+
+        assertTrue(redStorage.isRed());
+        assertFalse(notRedStorage.isRed());
     }
 
     @Test
@@ -25,7 +43,7 @@ class BoxStorageTest {
         BoxStorage bs2;
 
         // Adds a new box into a normal box storage
-        bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3, false);
+        bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3, false);
         Box box1 = new Box(BoxType.GREEN, 2);
 
         assertTrue(bs1.addBox(box1, 0));
@@ -50,7 +68,7 @@ class BoxStorageTest {
 
 
         // Adds a new box into a red box storage
-        bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3, true);
+        bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3, true);
         Box box5 = new Box(BoxType.GREEN, 2);
 
         assertTrue(bs2.addBox(box5, 0));
@@ -76,7 +94,7 @@ class BoxStorageTest {
 
     @Test
     void removeBox() {
-        BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3, false);
+        BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3, false);
 
         Box box = new Box(BoxType.GREEN, 2);
         bs.addBox(box, 0);

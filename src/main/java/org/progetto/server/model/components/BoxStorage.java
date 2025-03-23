@@ -44,6 +44,7 @@ public class BoxStorage extends Component {
     /**
      * Adds the given box to boxStorage at the given index idx
      *
+     * @author Gabriele
      * @param box Box to add
      * @param idx Storage index where to add it
      * @return true if the box is added, otherwise false
@@ -62,6 +63,7 @@ public class BoxStorage extends Component {
     /**
      * Remove the box from boxStorage at the given index idx
      *
+     * @author Gabriele
      * @param idx Storage index to remove
      * @return true if the box is deleted, otherwise false
      */
