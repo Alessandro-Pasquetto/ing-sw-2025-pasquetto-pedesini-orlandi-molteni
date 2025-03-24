@@ -1,10 +1,11 @@
+<img src="/src/main/resources/org/progetto/client/img/game-cover.jpg" width=136px height=192px align="right" />
+
+
 # Galaxy Trucker
 
-<!--> <img src="src/main/resources/images/CodexIcon.webp" width=192px height=192 px align="right" />
+**Galaxy Trucker** is the final test of **Software Engineering**, course of Computer Science and Engineering held at Polytechnic University of Milan (2024/2025).
 
-**Galaxy Trucker** is the final test of **"Software Engineering"**, course of **"Computer Science and Engineering"** held at Polytechnic University of Milan (2024/2025).
-
-**Teacher:** San Pietro Pierluigi
+**Teacher**: San Pietro Pierluigi
 
 The final vote is: **?/30**.
 
@@ -24,8 +25,6 @@ The final version includes:
 * Source code of the implementation;
 * Source code of unity tests.
 * [PowerPoint Presentation]() of our project.
-
-* Work in Progress...
 
 ## Implemented Functionalities
 | Functionality     | Status    |
@@ -52,37 +51,28 @@ The final version includes:
 -->
 
 ## Test cases
-The tests made for the Model package - 22 classes - has a total Line coverage of 97% (487/500).
+The tests made for the Model package - N classes - has a total Line coverage of z% (x/y).
 
 **Coverage criteria: code lines.**
 
-| Package | Tested Class        | Coverage |
-|:-----------------------|:--------------------|:------------------------------------:|
-| Model | Global Package      | 487/500 (97%)
-| Model | Cards         | 146/149 (97%)
-| Model | Objectives | 52/56 (92%)
-| Model | Others          | 289/295 (98%)
-
-
+| Package | Tested Class   | Coverage |
+|:-----------------------|:---------------|:------------------------------------:|
+| Model | Global Package | x/y (z%)
+| Model | Other          | x/y (z%)
 
 ## Compile and Run
-To run the tests and compile the software:
-
 Work in Progress...
-
 
 ## Game Screenshot
 Work in Progress...
-
 
 ## Software used
 
 **Signavio** - Initial UML
 
-**sequencediagram.org** Sequence diagrams
+**sequencediagram.org** - Sequence diagrams
 
-**Intellij IDEA Ultimate** - main IDE
+**Intellij IDEA Ultimate** - Main IDE
 
 ## Copyright
-
 Galaxy Trucker Board Game is copyrighted.
