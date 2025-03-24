@@ -50,4 +50,4 @@ end
 
 
 space
-note over Client, Server: Player selects the component, which is sent to the server by the client.\nThe server then returns the component's image path, allowing the view to display it.
+note over Client, Server: Player has three choices: pick an hidden component, pick a visible component or pick a booked component.\nIn the first case, the chosen component is removed from component deck and set as hand component.\nIn the second case, the chosen component is removed from visible component deck and set as hand component.\nIn the third case, the chosen component is removed from booked component array and set as hand component.

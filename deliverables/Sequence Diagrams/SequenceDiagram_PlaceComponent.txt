@@ -108,4 +108,4 @@ else PlaceHandComponentAndShowEventCardDeck
   end
 end
 space
-note over Client, Server: Player decides to place the current component in a specic cell on the matrix.\nClient sends in first component's coordinates, then its rotation.\nServer will answer with a success/fail response.
+note over Client, Server: Components could be placed in four possible scenarios: when player picks a hidden, visible or booked component, or when he asks to see the event card deck.\nIn all these cases, the component could be placed correctly, or it could be impossible to be placed.\nIf the placement of the hand component is invalid, the Server responds with "ImpossiblePlaceComponent".
