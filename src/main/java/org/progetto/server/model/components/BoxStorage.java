@@ -1,5 +1,8 @@
 package org.progetto.server.model.components;
 
+import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
+
 public class BoxStorage extends Component {
 
     // =======================
@@ -49,11 +52,12 @@ public class BoxStorage extends Component {
      * @param idx Storage index where to add it
      * @return true if the box is added, otherwise false
      */
-    public boolean addBox(Box box, int idx) {
+    public boolean addBox(Spaceship spaceship, Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
             if (!box.getType().equals(BoxType.RED) || this.isRed) {  // Checks in case of red box if its is possible
                 boxStorage[idx] = box;
                 this.boxCount += 1;
+                spaceship.addBoxCount(1, box.getType());
                 return true;
             }
         }
@@ -67,7 +71,7 @@ public class BoxStorage extends Component {
      * @param idx Storage index to remove
      * @return true if the box is deleted, otherwise false
      */
-    public boolean removeBox(int idx) {
+    public boolean removeBox(Spaceship spaceship, int idx) {
         if (boxStorage[idx] != null) {
             boxStorage[idx] = null;
             this.boxCount -= 1;

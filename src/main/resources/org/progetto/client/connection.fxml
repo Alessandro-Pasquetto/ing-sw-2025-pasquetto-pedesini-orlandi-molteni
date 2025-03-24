@@ -13,7 +13,6 @@
 
     <HBox spacing="10" />
 
-    <!-- Bottone per connettersi al server -->
     <Button layoutX="200.0" layoutY="339.0" onAction="#connectToServer" prefHeight="42.0" prefWidth="149.0" text="Connetti al Server" />
     <RadioButton fx:id="socketOption" layoutX="219.0" layoutY="290.0" text="Socket" />
     <RadioButton fx:id="rmiOption" layoutX="287.0" layoutY="290.0" text="RMI" />

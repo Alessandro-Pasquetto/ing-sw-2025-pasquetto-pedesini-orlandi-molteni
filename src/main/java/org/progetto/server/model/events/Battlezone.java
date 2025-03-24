@@ -166,46 +166,52 @@ public class Battlezone extends EventCard{
      *
      * @author Gabriele
      * @author Stefano
-     * @param player Current player
+     * @param spaceship the spaceship of the current player
      * @param component BoxStorageComponent from which the box will be discarded
      * @param boxIdx Index in the storage where the box is placed
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
-    public boolean chooseDiscardedBox(Player player, BoxStorage component, int boxIdx) {
+    public boolean chooseDiscardedBox(Spaceship spaceship, BoxStorage component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
-        Box box = componentsBoxes[boxIdx];
-        int[] playerBoxes = player.getSpaceship().getBoxCounts();
 
-        if (box == null) return false;
+        if(boxIdx >= component.getCapacity())
+            return false;
+
+        Box box = componentsBoxes[boxIdx];
+
+        if(box == null)
+            return false;
+
+        int[] playerBoxes = spaceship.getBoxCounts();
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
@@ -226,7 +232,8 @@ public class Battlezone extends EventCard{
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
             activePlayer.getSpaceship().addBatteriesCount(-1);
             return component.decrementItemsCount(1);
-        } else return false;
+        }
+        return false;
     }
 
     // TODO: There are three couples of condition and penalty for each card.

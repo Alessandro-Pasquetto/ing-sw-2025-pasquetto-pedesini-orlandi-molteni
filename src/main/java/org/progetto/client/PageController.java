@@ -4,9 +4,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class PageController {
 
@@ -17,6 +19,8 @@ public class PageController {
     static GameView gameView;
 
     static void start() throws IOException {
+        Image icon = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/icon.png")));
+        stage.getIcons().add(icon);
         switchScene("connection.fxml", "Connection");
         stage.show();
     }

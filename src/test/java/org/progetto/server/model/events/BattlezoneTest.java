@@ -1,10 +1,7 @@
 package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.Board;
-import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Game;
-import org.progetto.server.model.Player;
+import org.progetto.server.model.*;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
@@ -368,14 +365,12 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedBox() {
-        Player p = new Player("a", 1, 1);
+        Spaceship s = new Spaceship(1, 0);
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 1, "img", new ArrayList<>());
 
         BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3, false);
-        bs1.addBox(new Box(BoxType.YELLOW, 3),2);
-        p.getSpaceship().addBoxCount(1, BoxType.YELLOW);
-        bs1.addBox(new Box(BoxType.GREEN, 2),1);
-        p.getSpaceship().addBoxCount(1, BoxType.GREEN);
+        bs1.addBox(s, new Box(BoxType.YELLOW, 3),2);
+        bs1.addBox(s, new Box(BoxType.GREEN, 2),1);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
             if(bs1.getBoxStorage()[i] == null)
@@ -385,10 +380,10 @@ class BattlezoneTest {
         }
         System.out.println();
 
-        assertFalse(battlezone.chooseDiscardedBox(p, bs1, 0));
-        assertFalse(battlezone.chooseDiscardedBox(p, bs1, 1));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs1, 0));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs1, 1));
         assertNotEquals(null, (bs1.getBoxStorage()[1]));
-        assertTrue(battlezone.chooseDiscardedBox(p, bs1, 2));
+        assertTrue(battlezone.chooseDiscardedBox(s, bs1, 2));
         assertNull(bs1.getBoxStorage()[2]);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
@@ -402,8 +397,8 @@ class BattlezoneTest {
 
         BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
 
-        bs2.addBox(new Box(BoxType.GREEN, 2),0);
-        bs2.addBox(new Box(BoxType.YELLOW, 3),2);
+        bs2.addBox(s, new Box(BoxType.GREEN, 2),0);
+        bs2.addBox(s, new Box(BoxType.RED, 4),2);
 
         for (int i = 0; i < bs2.getCapacity(); i++) {
             if(bs2.getBoxStorage()[i] == null)
@@ -413,7 +408,10 @@ class BattlezoneTest {
         }
         System.out.println();
 
-        // todo: waiting for increment of counters in spaceship
+        assertFalse(battlezone.chooseDiscardedBox(s, bs2, 0));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs2, 1));
+        assertTrue(battlezone.chooseDiscardedBox(s, bs2, 2));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs2, 3));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
@@ -62,9 +63,9 @@ public class Smugglers extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(Player activePLayer, BoxStorage component, int boxIdx, Box box) {
-        activePLayer.getSpaceship().addBoxCount(1,box.getType());
-        return component.addBox(box, boxIdx);
+    public boolean chooseRewardBox(Spaceship spaceship, BoxStorage component, int boxIdx, Box box) {
+        spaceship.addBoxCount(1,box.getType());
+        return component.addBox(spaceship ,box, boxIdx);
     }
 
     /**
@@ -73,44 +74,44 @@ public class Smugglers extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param player Current player
+     * @param spaceship the spaceship of the current player
      * @param component BoxStorageComponent from which the box will be discarded
      * @param boxIdx Index in the storage where the box is placed
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
-    public boolean chooseDiscardedBox(Player player, BoxStorage component, int boxIdx) {
+    public boolean chooseDiscardedBox(Spaceship spaceship, BoxStorage component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
         Box box = componentsBoxes[boxIdx];
-        int[] playerBoxes = player.getSpaceship().getBoxCounts();
+        int[] playerBoxes = spaceship.getBoxCounts();
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box.getType().equals(BoxType.YELLOW)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box.getType().equals(BoxType.GREEN)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box.getType().equals(BoxType.BLUE)) {
-                player.getSpaceship().addBoxCount(-1,box.getType());
-                component.removeBox(boxIdx);
+                spaceship.addBoxCount(-1,box.getType());
+                component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }

@@ -1,6 +1,7 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
 
@@ -57,9 +58,9 @@ public class LostStation extends EventCard {
      * @param box Box to be added
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(Player activePlayer,BoxStorage component, int boxIdx, Box box) {
-        activePlayer.getSpaceship().addBoxCount(1,box.getType());
-        return component.addBox(box, boxIdx);
+    public boolean chooseRewardBox(Spaceship spaceship, BoxStorage component, int boxIdx, Box box) {
+        spaceship.addBoxCount(1,box.getType());
+        return component.addBox(spaceship, box, boxIdx);
     }
 
     /**

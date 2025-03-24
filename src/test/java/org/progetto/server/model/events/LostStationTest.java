@@ -51,22 +51,22 @@ class LostStationTest {
         Box boxB = new Box(BoxType.BLUE, 1);
 
         //adds a red box to a red box storage
-        assertTrue(lostStation1.chooseRewardBox(player1,boxStorage1, 0, boxR));
+        assertTrue(lostStation1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
 
         //tries to add a red box to a box storage
-        assertFalse(lostStation1.chooseRewardBox(player1,boxStorage2, 0, boxR));
+        assertFalse(lostStation1.chooseRewardBox(player1.getSpaceship(), boxStorage2, 0, boxR));
 
         //tries to add a red box to a red box storage in an already taken place
-        assertFalse(lostStation1.chooseRewardBox(player1,boxStorage1, 0, boxR));
+        assertFalse(lostStation1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
 
         //adds a green box to a red box storage
-        assertTrue(lostStation1.chooseRewardBox(player1,boxStorage1, 1, boxG));
+        assertTrue(lostStation1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 1, boxG));
 
         //adds a yellow box in a box storage
-        assertTrue(lostStation2.chooseRewardBox(player1,boxStorage2, 0, boxY));
+        assertTrue(lostStation2.chooseRewardBox(player1.getSpaceship(), boxStorage2, 0, boxY));
 
         //adds a blue box in a box storage
-        assertTrue(lostStation2.chooseRewardBox(player1,boxStorage2, 1, boxB));
+        assertTrue(lostStation2.chooseRewardBox(player1.getSpaceship(), boxStorage2, 1, boxB));
     }
 
     @Test
