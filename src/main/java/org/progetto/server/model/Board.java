@@ -42,6 +42,7 @@ public class Board {
     /**
      * Returns the size of the board based on the game level
      *
+     * @author Alessandro
      * @return the board size
      */
     private int elaborateSizeBoardFromLv(int levelBoard) {
@@ -56,6 +57,7 @@ public class Board {
     /**
      * Adds a player to the list of players participating in the journey
      *
+     * @author Alessandro
      * @param player is the new traveler
      */
     public synchronized void addTraveler(Player player, int levelBoard) {
@@ -90,6 +92,7 @@ public class Board {
     /**
      * Moves the player forward on the board
      *
+     * @author Alessandro
      * @param player the moving player
      * @param distance distance traveled by the player
      */
@@ -129,6 +132,7 @@ public class Board {
     /**
      * Calculate the modulus
      *
+     * @author Alessandro
      * @param a the dividend
      * @param b the divisor
      * @return the modulus
@@ -140,14 +144,17 @@ public class Board {
 
     /**
      * Sort the active players on their position in the track
+     *
+     * @author Alessandro
      */
-    public void updateTurnOrder(){
+    public void updateTurnOrder() {
         activeTravelers.sort(Comparator.comparingInt(Player::getPosition));
     }
 
     /**
      * Makes a player abandon the journey
      *
+     * @author Alessandro
      * @param player is the player who leaves the travel
      */
     public void leaveTravel(Player player) {

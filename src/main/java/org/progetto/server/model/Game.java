@@ -132,6 +132,7 @@ public class Game {
     /**
      * Returns the list of players who have more than 0 credits (winners)
      *
+     * @author Alessandro
      * @return list of the winner players
      */
     public ArrayList<Player> endGame() {
@@ -150,6 +151,7 @@ public class Game {
     /**
      * Adds a player to the list of players in the game
      *
+     * @author Alessandro
      * @param player the new player joining the game
      */
     public void addPlayer(Player player) {
@@ -161,6 +163,7 @@ public class Game {
     /**
      * Randomly draws a component from the covered componentsDeck and assigns it to handComponent
      *
+     * @author Alessandro
      * @param player the player who is picking
      * @return the randomly picked component
      */
@@ -185,6 +188,7 @@ public class Game {
     /**
      * Takes the handComponent and adds it to the visibleComponentDeck
      *
+     * @author Alessandro
      * @param player is the player who is discarding a component
      */
     public void discardComponent(Player player) throws IllegalStateException{
@@ -206,8 +210,9 @@ public class Game {
     /**
      * Takes a component from the discarded/visible ones and assigns it to handComponent
      *
-     * @param indexComponent is the index of the visible component picked
-     * @param player is the player who is picking
+     * @author Alessandro
+     * @param indexComponent Is the index of the visible component picked
+     * @param player Is the player who is picking
      */
     public void pickVisibleComponent(int indexComponent, Player player) throws IllegalStateException{
         Component pickedComponent = null;
@@ -229,6 +234,7 @@ public class Game {
     /**
      * Draws a random event card and set as active
      *
+     * @author Alessandro
      * @return the randomly picked card
      */
     public EventCard pickEventCard() throws IllegalStateException {
@@ -247,6 +253,7 @@ public class Game {
 
     /**
      * Loading event cards from json file and initialize visibleEventCardDecks
+     *
      * @author Lorenzo
      * @return event card deck (list of event cards)
      */
@@ -317,6 +324,7 @@ public class Game {
 
     /**
      * Loading all components saved on json file in to the componentDeck
+     *
      * @author Lorenzo
      * @return component deck (list of components)
      */
@@ -345,6 +353,7 @@ public class Game {
     /**
      * Check if the name of the player who wants to join is available
      *
+     * @author Alessandro
      * @param name is the name of the player who wants to join the game
      * @return true if it is available, false otherwise
      */
@@ -360,10 +369,11 @@ public class Game {
     }
 
     /**
-     * pick-up a visible event deck
+     * Pick-up a visible event deck
+     *
      * @author Lorenzo
-     * @param idx of the deck that the player wants to pick-up
-     * @param player is the player that wants to pick up the deck
+     * @param idx Index of the deck that the player wants to pick-up
+     * @param player Is the player that wants to pick up the deck
      * @return the deck picked if available
      */
     public ArrayList<EventCard> pickUpEventCardDeck(Player player,int idx){
@@ -378,13 +388,14 @@ public class Game {
     }
 
     /**
-     * put-down the visible event-deck
+     * Put-down the visible event-deck
+     *
      * @author Lorenzo
-     * @param idx
-     * @param player is the player that wants to put-down the deck
-     * @return true if the event-deck can be return to the board
+     * @param idx Deck index
+     * @param player Is the player that wants to put-down the deck
+     * @return true if the event-deck can be put down on the board
      */
-    public boolean putDownEventCardDeck(Player player,int idx){
+    public boolean putDownEventCardDeck(Player player, int idx){
         if((eventDeckAvailable[idx] != null) && (eventDeckAvailable[idx].equals(player))) {
             eventDeckAvailable[idx] = null;
             return true;
@@ -395,6 +406,7 @@ public class Game {
 
     /**
      * Compose the hidden deck after the building phase
+     *
      * @author Lorenzo
      * @return the hiddenDeck composed if all the visible decks where available
      */
@@ -416,6 +428,12 @@ public class Game {
         return Deck;
     }
 
+    /**
+     * Changes numReadyPlayer value
+     *
+     * @author Alessandro
+     * @param isToAdd Defines increment/decrement
+     */
     public void addReadyPlayers(boolean isToAdd) {
         if(isToAdd)
             numReadyPlayers.getAndIncrement();

@@ -8,18 +8,20 @@ public class MaskMatrix {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private int[][] baseMatrix;
     private int[][] advancedMatrix;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public MaskMatrix() {}
 
+    public MaskMatrix() {}
 
     // =======================
     // GETTERS
     // =======================
+
     public int[][] getBaseMatrix() {
         return baseMatrix;
     }
@@ -30,6 +32,7 @@ public class MaskMatrix {
     // =======================
     // SETTERS
     // =======================
+
     public void setBaseMatrix(int[][] baseMatrix) {
         this.baseMatrix = baseMatrix;
     }

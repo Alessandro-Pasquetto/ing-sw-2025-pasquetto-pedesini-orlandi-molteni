@@ -163,6 +163,8 @@ public class Spaceship {
 
     /**
      * Increment the shield counter towards the left-up
+     *
+     * @author Alessandro
      * @param countToAdd the number of shields to add
      */
     public void addLeftUpShieldCount(int countToAdd) {
@@ -172,6 +174,8 @@ public class Spaceship {
 
     /**
      * Increment the shield counter towards the up-right
+     *
+     * @author Alessandro
      * @param countToAdd the number of shields to add
      */
     public void addUpRightShieldCount(int countToAdd) {
@@ -181,6 +185,8 @@ public class Spaceship {
 
     /**
      * Increment the shield counter towards the right-down
+     *
+     * @author Alessandro
      * @param countToAdd the number of shields to add
      */
     public void addRightDownShieldCount(int countToAdd) {
@@ -190,6 +196,8 @@ public class Spaceship {
 
     /**
      * Increment the shield counter towards the down-left
+     *
+     * @author Alessandro
      * @param countToAdd the number of shields to add
      */
     public void addDownLeftShieldCount(int countToAdd) {
@@ -200,6 +208,7 @@ public class Spaceship {
     /**
      * Increase the number of boxes of the specified type
      *
+     * @author Lorenzo
      * @param countToAdd the number of boxes to add
      * @param type the type of the added box
      */

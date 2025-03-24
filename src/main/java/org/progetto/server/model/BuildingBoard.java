@@ -80,6 +80,7 @@ public class BuildingBoard {
     /**
      * Passing the player's color number it returns the imgSrc of the centralUnitComponent
      *
+     * @author Alessandro
      * @param color the player's color
      * @return imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
@@ -94,8 +95,9 @@ public class BuildingBoard {
     }
 
     /**
-     * Add the centralUnit to the spaceship
+     * Adds the centralUnit to the spaceship
      *
+     * @author Alessandro
      * @param levelShip the ship's level
      * @param imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
@@ -112,11 +114,13 @@ public class BuildingBoard {
     }
 
     /**
+     * Places the handComponent in the specified coordinates, with specified rotation
+     *
      * @author Lorenzo
      * @param y coordinate for placing component
      * @param x coordinate for placing component
      * @param r rotation value of placing component
-     * @return true if component has been placed correctly else otherwise
+     * @return true if component has been placed correctly, otherwise false
      */
     public boolean placeComponent(int y, int x, int r) {
         if(boardMask[y][x] != 1)
@@ -143,6 +147,7 @@ public class BuildingBoard {
     /**
      * Move the handComponent to position idx in the booked array
      *
+     * @author Alessandro
      * @param idx the index of the booking cell where I want to place the handComponent
      */
     public void setAsBooked(int idx) throws IllegalStateException {
@@ -160,6 +165,7 @@ public class BuildingBoard {
     /**
      * Takes the component from the booked ones
      *
+     * @author Alessandro
      * @param idx the index of the booked cell from which I want to take the component
      */
     public void pickBookedComponent(int idx) throws IllegalStateException{

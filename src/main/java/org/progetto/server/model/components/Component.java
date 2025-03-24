@@ -94,7 +94,11 @@ public class Component {
     // OTHER METHODS
     // =======================
 
-    // Rotates the component clockwise
+    /**
+     * Rotates of ninety degrees the component (clockwise)
+     *
+     * @author Lorenzo
+     */
     public void rotate() {
         if (rotation == 3)
             rotation = 0;
