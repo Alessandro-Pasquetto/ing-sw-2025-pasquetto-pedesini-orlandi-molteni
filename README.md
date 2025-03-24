@@ -1,6 +1,6 @@
 # Galaxy Trucker
 
-<img src="/src/main/resources/org/progetto/client/img/game-cover.jpg" width=136px height=192px align="right" />
+<img src="/extra/game-cover.jpg" width=115px height=160px align="right" />
 
 **Galaxy Trucker** is the final test of **Software Engineering**, course of Computer Science and Engineering held at Polytechnic University of Milan (2024/2025).
 
