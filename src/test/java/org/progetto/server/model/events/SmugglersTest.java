@@ -85,21 +85,21 @@ class SmugglersTest {
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(2);
+        battery.incrementItemsCount(player1.getSpaceship(),2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(smugglers.chooseDiscardedBattery((BatteryStorage) notBattery,player1));
+        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(),(BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(smugglers.chooseDiscardedBattery(battery,player1));
+        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(smugglers.chooseDiscardedBattery(battery,player1));
+        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(smugglers.chooseDiscardedBattery(battery,player1));
+        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
         assertEquals(0, battery.getItemsCount());
     }
 

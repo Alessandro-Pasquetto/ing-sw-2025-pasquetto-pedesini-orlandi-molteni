@@ -760,7 +760,7 @@ public class BuildingBoard {
 
                         case BATTERY_STORAGE:
                             BatteryStorage bs = (BatteryStorage) spaceshipMatrix[y][x];
-                            bs.incrementItemsCount(bs.getCapacity());
+                            bs.incrementItemsCount(spaceship,bs.getCapacity());
                             spaceship.addBatteriesCount(bs.getItemsCount());
                             break;
 

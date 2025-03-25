@@ -17,23 +17,23 @@ class OpenSpaceTest {
 
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(2);
+        battery.incrementItemsCount(mario.getSpaceship(),2);
 
         OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2, "imgPath");
 
         // Returns false if component is not a Housing Unit
-        assertFalse(openspace.chooseDiscardedBattery((BatteryStorage) notBattery,mario));
+        assertFalse(openspace.chooseDiscardedBattery(mario.getSpaceship(),(BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(openspace.chooseDiscardedBattery(battery,mario));
+        assertTrue(openspace.chooseDiscardedBattery(mario.getSpaceship(),battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(openspace.chooseDiscardedBattery(battery,mario));
+        assertTrue(openspace.chooseDiscardedBattery(mario.getSpaceship(),battery));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(openspace.chooseDiscardedBattery(battery,mario));
+        assertFalse(openspace.chooseDiscardedBattery(mario.getSpaceship(),battery));
         assertEquals(0, battery.getItemsCount());
     }
 

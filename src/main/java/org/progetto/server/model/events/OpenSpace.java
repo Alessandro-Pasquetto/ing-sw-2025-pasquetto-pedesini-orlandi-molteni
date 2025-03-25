@@ -1,6 +1,7 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 
@@ -27,10 +28,9 @@ public class OpenSpace extends EventCard {
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chooseDiscardedBattery(BatteryStorage component,Player activePlayer) {
+    public boolean chooseDiscardedBattery(Spaceship spaceship,BatteryStorage component) {
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            activePlayer.getSpaceship().addBatteriesCount(-1);
-            return component.decrementItemsCount(1);
+            return component.decrementItemsCount(spaceship,1);
         } else return false;
     }
 

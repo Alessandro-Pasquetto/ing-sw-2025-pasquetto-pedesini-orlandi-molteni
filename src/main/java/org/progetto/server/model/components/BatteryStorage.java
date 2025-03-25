@@ -1,5 +1,8 @@
 package org.progetto.server.model.components;
 
+import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
+
 public class BatteryStorage extends Component {
     
     // =======================
@@ -42,8 +45,9 @@ public class BatteryStorage extends Component {
      * @param num Amount to add
      * @return true if it got incremented, otherwise false
      */
-    public boolean incrementItemsCount(int num) {
+    public boolean incrementItemsCount(Spaceship spaceship,int num) {
         if (num + itemsCount <= capacity) {
+            spaceship.addBatteriesCount(num);
             this.itemsCount += num;
             return true;
         } else {
@@ -58,8 +62,9 @@ public class BatteryStorage extends Component {
      * @param num Amount to remove
      * @return true if it got decreased, otherwise false
      */
-    public boolean decrementItemsCount(int num) {
+    public boolean decrementItemsCount(Spaceship spaceship,int num) {
         if (num <= itemsCount) {
+            spaceship.addBatteriesCount(-num);
             this.itemsCount -= num;
             return true;
         } else {

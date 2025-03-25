@@ -18,3 +18,4 @@
     <RadioButton fx:id="rmiOption" layoutX="287.0" layoutY="290.0" text="RMI" />
 
 </AnchorPane>
+
