@@ -22,6 +22,11 @@ class MeteorsRainTest {
 
     @Test
     void getMeteors() {
+        ArrayList<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(ProjectileSize.BIG, 0));
+        projectiles.add(new Projectile(ProjectileSize.SMALL, 3));
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", projectiles);
+        assertEquals(projectiles, meteorsRain.getMeteors());
     }
 
     @Test

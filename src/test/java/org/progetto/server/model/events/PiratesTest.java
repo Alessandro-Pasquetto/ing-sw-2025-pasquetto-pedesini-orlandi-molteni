@@ -15,18 +15,29 @@ class PiratesTest {
 
     @Test
     void getFirePowerRequired() {
+        Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
+        assertEquals(5, pirates.getFirePowerRequired());
     }
 
     @Test
     void getPenaltyDays() {
+        Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
+        assertEquals(-3, pirates.getPenaltyDays());
     }
 
     @Test
     void getRewardCredits() {
+        Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
+        assertEquals(3, pirates.getRewardCredits());
     }
 
     @Test
     void getPenaltyShots() {
+        ArrayList<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(ProjectileSize.BIG, 0));
+        projectiles.add(new Projectile(ProjectileSize.SMALL, 3));
+        Pirates pirates = new Pirates(CardType.PIRATES,2, "imgPath", 5, -3, 3, projectiles);
+        assertEquals(projectiles, pirates.getPenaltyShots());
     }
 
     @Test

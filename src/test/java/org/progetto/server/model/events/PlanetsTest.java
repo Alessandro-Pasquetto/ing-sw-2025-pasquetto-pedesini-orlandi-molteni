@@ -21,14 +21,60 @@ class PlanetsTest {
 
     @Test
     void getPlanetsTaken() {
+        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
+
+        ArrayList<Box> planet1 = new ArrayList<>();
+        planet1.add(new Box(BoxType.RED, 4));
+        planet1.add(new Box(BoxType.YELLOW, 3));
+
+        ArrayList<Box> planet2 = new ArrayList<>();
+        planet2.add(new Box(BoxType.RED, 4));
+        planet2.add(new Box(BoxType.YELLOW, 3));
+
+        ArrayList<Box> planet3 = new ArrayList<>();
+        planet2.add(new Box(BoxType.RED, 4));
+        planet2.add(new Box(BoxType.YELLOW, 3));
+
+        rewardsForPlanets.add(planet1);
+        rewardsForPlanets.add(planet2);
+        rewardsForPlanets.add(planet3);
+
+        // Card creation
+        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+
+        assertArrayEquals(new boolean[]{false, false, false}, planets.getPlanetsTaken());
     }
 
     @Test
     void getRewardsForPlanets() {
+        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
+
+        ArrayList<Box> planet1 = new ArrayList<>();
+        planet1.add(new Box(BoxType.RED, 4));
+        planet1.add(new Box(BoxType.YELLOW, 3));
+
+        ArrayList<Box> planet2 = new ArrayList<>();
+        planet2.add(new Box(BoxType.RED, 4));
+        planet2.add(new Box(BoxType.YELLOW, 3));
+
+        ArrayList<Box> planet3 = new ArrayList<>();
+        planet2.add(new Box(BoxType.RED, 4));
+        planet2.add(new Box(BoxType.YELLOW, 3));
+
+        rewardsForPlanets.add(planet1);
+        rewardsForPlanets.add(planet2);
+        rewardsForPlanets.add(planet3);
+
+        // Card creation
+        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+
+        assertEquals(rewardsForPlanets, planets.getRewardsForPlanets());
     }
 
     @Test
     void getPenaltyDays() {
+        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
+        assertEquals(-2, planets.getPenaltyDays());
     }
 
     @Test

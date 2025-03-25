@@ -16,14 +16,23 @@ class LostStationTest {
 
     @Test
     void getRequiredCrew() {
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, new ArrayList<>(), -3);
+        assertEquals(5, lostStation1.getRequiredCrew());
     }
 
     @Test
     void getRewardBoxes() {
+        ArrayList<Box> rewardBoxes = new ArrayList<>();
+        rewardBoxes.add(new Box(BoxType.RED, 4));
+        rewardBoxes.add(new Box(BoxType.GREEN, 2));
+        LostStation lostStation = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, rewardBoxes, -3);
+        assertEquals(rewardBoxes, lostStation.getRewardBoxes());
     }
 
     @Test
     void getPenaltyDays() {
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, new ArrayList<>(), -3);
+        assertEquals(-3, lostStation1.getPenaltyDays());
     }
 
     @Test

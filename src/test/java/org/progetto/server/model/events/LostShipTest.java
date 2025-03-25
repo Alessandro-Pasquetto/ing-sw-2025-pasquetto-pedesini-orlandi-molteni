@@ -12,14 +12,20 @@ class LostShipTest {
 
     @Test
     void getPenaltyCrew() {
+        LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
+        assertEquals(3, lostShip.getPenaltyCrew());
     }
 
     @Test
     void getRewardCredits() {
+        LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
+        assertEquals(4, lostShip.getRewardCredits());
     }
 
     @Test
     void getPenaltyDays() {
+        LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
+        assertEquals(-2, lostShip.getPenaltyDays());
     }
 
     @Test

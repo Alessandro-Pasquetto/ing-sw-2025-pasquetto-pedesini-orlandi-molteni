@@ -16,18 +16,26 @@ class SlaversTest {
 
     @Test
     void getFirePowerRequired() {
+        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        assertEquals(5, slavers.getFirePowerRequired());
     }
 
     @Test
     void getPenaltyCrew() {
+        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        assertEquals(2, slavers.getPenaltyCrew());
     }
 
     @Test
     void getPenaltyDays() {
+        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        assertEquals(-3, slavers.getPenaltyDays());
     }
 
     @Test
     void getRewardCredits() {
+        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        assertEquals(3, slavers.getRewardCredits());
     }
 
     @Test

@@ -17,10 +17,6 @@ class StardustTest {
     }
 
     @Test
-    void getPenaltyDays() {
-    }
-
-    @Test
     void penalty() {
         Board board = new Board(1);
         Player player = new Player("gino", 0, 1);

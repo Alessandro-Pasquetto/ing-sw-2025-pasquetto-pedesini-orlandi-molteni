@@ -13,18 +13,28 @@ class SmugglersTest {
 
     @Test
     void getFirePowerRequired() {
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        assertEquals(5, smugglers.getFirePowerRequired());
     }
 
     @Test
     void getPenaltyBoxes() {
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        assertEquals(2, smugglers.getPenaltyBoxes());
     }
 
     @Test
     void getPenaltyDays() {
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        assertEquals(-3, smugglers.getPenaltyDays());
     }
 
     @Test
     void getRewardBoxes() {
+        ArrayList<Box> rewardBoxes = new ArrayList<>();
+        rewardBoxes.add(new Box(BoxType.RED, 4));
+        rewardBoxes.add(new Box(BoxType.GREEN, 2));
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
     }
 
     @Test
