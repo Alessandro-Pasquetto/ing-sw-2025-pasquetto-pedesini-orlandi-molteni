@@ -176,6 +176,8 @@ public class Battlezone extends EventCard{
         Box box = componentsBoxes[boxIdx];
         int[] playerBoxes = player.getSpaceship().getBoxCounts();
 
+        if (box == null) return false;
+
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
                 player.getSpaceship().addBoxCount(-1,box.getType());

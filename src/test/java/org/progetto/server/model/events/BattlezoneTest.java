@@ -373,7 +373,9 @@ class BattlezoneTest {
 
         BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3, false);
         bs1.addBox(new Box(BoxType.YELLOW, 3),2);
+        p.getSpaceship().addBoxCount(1, BoxType.YELLOW);
         bs1.addBox(new Box(BoxType.GREEN, 2),1);
+        p.getSpaceship().addBoxCount(1, BoxType.GREEN);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
             if(bs1.getBoxStorage()[i] == null)
