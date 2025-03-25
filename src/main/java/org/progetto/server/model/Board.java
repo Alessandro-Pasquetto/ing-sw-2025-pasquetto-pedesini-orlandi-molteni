@@ -35,6 +35,10 @@ public class Board {
         return imgSrc;
     }
 
+    public ArrayList<Player> getActiveTravelers() {
+        return activeTravelers;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
@@ -49,7 +53,6 @@ public class Board {
         return switch (levelBoard) {
             case 1 -> 18;
             case 2 -> 24;
-            case 3 -> 34;
             default -> 0;
         };
     }
@@ -118,8 +121,7 @@ public class Board {
                 distance--;
             else{
                 if(trackCell.getPosition() <= playerPosition - track.length){
-                    trackCell.setPosition(0);
-                    trackCell.setHasLeft(false);
+                    trackCell.setHasLeft(true);
                     track[modulus(playerPosition, track.length)] = null;
                 }
             }
@@ -143,12 +145,12 @@ public class Board {
     }
 
     /**
-     * Sort the active players on their position in the track
+     * Sort the active players on their position in the track, from the leader to the rest
      *
      * @author Alessandro
      */
     public void updateTurnOrder() {
-        activeTravelers.sort(Comparator.comparingInt(Player::getPosition));
+        activeTravelers.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
 
     /**

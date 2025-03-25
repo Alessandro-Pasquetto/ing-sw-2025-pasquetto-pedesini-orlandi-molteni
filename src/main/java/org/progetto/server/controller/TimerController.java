@@ -1,5 +1,7 @@
 package org.progetto.server.controller;
 
+import org.progetto.messages.TimerMessage;
+
 import java.util.function.Consumer;
 
 public class TimerController {
@@ -57,7 +59,7 @@ public class TimerController {
                     Thread.sleep(1000);
                     timer--;
                     System.out.println("Timer: " + timer);
-                    broadcastMessageFunction.accept("Timer: " + timer);
+                    broadcastMessageFunction.accept(new TimerMessage(timer));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

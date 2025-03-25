@@ -177,4 +177,31 @@ class BoardTest {
         assertNull(track[7]);
         assertTrue(p1.getHasLeft());
     }
+
+    @Test
+    void updateTurnOrder() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("alessandro", 1, 1);
+        Player p3 = new Player("giulia", 2, 1);
+        Player p4 = new Player("arnoldo", 3, 1);
+
+        Board board = new Board(1);
+
+        board.addTraveler(p2, 1);
+        board.addTraveler(p3, 1);
+        board.addTraveler(p4, 1);
+        board.addTraveler(p1, 1);
+
+        p1.setPosition(4);
+        p2.setPosition(3);
+        p3.setPosition(2);
+        p4.setPosition(1);
+
+        board.updateTurnOrder();
+
+        assertEquals(p1, board.getActiveTravelers().get(0));
+        assertEquals(p2, board.getActiveTravelers().get(1));
+        assertEquals(p3, board.getActiveTravelers().get(2));
+        assertEquals(p4, board.getActiveTravelers().get(3));
+    }
 }

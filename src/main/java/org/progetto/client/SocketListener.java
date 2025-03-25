@@ -47,13 +47,11 @@ public class SocketListener extends Thread {
         } else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
             System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " + anotherPlayerPlacedComponentMessage.getImgSrcPlacedComponent());
 
-        } else if (messageObj instanceof String messageString) {
+        } else if (messageObj instanceof TimerMessage timerMessage) {
+            int timer = timerMessage.getTime();
+            PageController.gameView.updateTimer(timer);
 
-            if(((String) messageObj).startsWith("Timer: ")){
-                int timer = Integer.parseInt((String) messageString.split("Timer: ")[1]);
-                PageController.gameView.updateTimer(timer);
-                return;
-            }
+        } else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
                 case "AllowedToJoinGame":
