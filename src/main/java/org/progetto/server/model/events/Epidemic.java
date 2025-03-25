@@ -113,8 +113,7 @@ public class Epidemic extends EventCard {
                             player.getSpaceship().setAlienPurple(false);
                             component.setAlienPurple(false);
                         } else if (component.getCrewCount() > 0) {
-                            player.getSpaceship().addCrewCount(-1);
-                            component.decrementCrewCount(1);
+                            component.decrementCrewCount(player.getSpaceship(),1);
                         }
                     }
                 }

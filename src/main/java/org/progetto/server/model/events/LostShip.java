@@ -1,6 +1,7 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 
@@ -54,16 +55,15 @@ public class LostShip extends EventCard{
      * @param component StorageComponent from which the crew will be discarded
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(Player activePLayer,HousingUnit component) {
+    public boolean chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) {
         if (component.hasOrangeAlien()) {  // if it contains an orange alien
-            activePLayer.getSpaceship().setAlienOrange(false);
+            spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
         } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
-            activePLayer.getSpaceship().setAlienPurple(false);
+            spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member
-            activePLayer.getSpaceship().addCrewCount(-1);
-            return component.decrementCrewCount(1);
+            return component.decrementCrewCount(spaceship,1);
         }
         return true;
     }

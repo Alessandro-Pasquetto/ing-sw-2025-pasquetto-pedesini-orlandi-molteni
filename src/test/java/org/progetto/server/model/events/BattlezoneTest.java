@@ -100,11 +100,11 @@ class BattlezoneTest {
         HousingUnit housingUnitAlienPurple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
         housingUnitAlienPurple.setAlienPurple(true);
 
-        assertFalse(battlezone.chooseDiscardedCrew(mario,housingUnit0));
-        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnit1));
-        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnit2));
-        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnitAlienOrange));
-        assertTrue(battlezone.chooseDiscardedCrew(mario,housingUnitAlienPurple));
+        assertFalse(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit0));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit1));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit2));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnitAlienOrange));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnitAlienPurple));
 
         assertEquals(0, housingUnit1.getCrewCount());
         assertEquals(1, housingUnit2.getCrewCount());

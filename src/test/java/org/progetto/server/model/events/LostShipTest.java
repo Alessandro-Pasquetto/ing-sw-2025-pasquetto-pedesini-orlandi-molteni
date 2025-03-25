@@ -38,23 +38,23 @@ class LostShipTest {
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         LostShip lostship = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, 3);
-        crew.incrementCrewCount(2);
+        crew.incrementCrewCount(mario.getSpaceship(),2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(lostship.chooseDiscardedCrew(mario,notHouse));
+        assertFalse(lostship.chooseDiscardedCrew(mario.getSpaceship(),notHouse));
 
         //removes one crew member from the Housing Unit
-        assertTrue(lostship.chooseDiscardedCrew(mario,crew));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),crew));
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
         orange.setAlienOrange(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario,orange));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),orange));
         assertFalse(crew.hasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario,purple));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),purple));
         assertFalse(crew.hasPurpleAlien());
     }
 

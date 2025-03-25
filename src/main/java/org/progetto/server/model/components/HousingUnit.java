@@ -1,5 +1,7 @@
 package org.progetto.server.model.components;
 
+import org.progetto.server.model.Spaceship;
+
 public class HousingUnit extends Component{
 
     // =======================
@@ -87,14 +89,16 @@ public class HousingUnit extends Component{
      * Increment the number of crew inside the unit
      *
      * @author Lorenzo
+     * @param spaceship spaceship where we want to update parameters
      * @param num is the number of crew member to add
      * @return true if the crew can be added
      */
-    public boolean incrementCrewCount(int num) {
+    public boolean incrementCrewCount(Spaceship spaceship, int num) {
 
         if(crewCount + num > capacity)
             return false;
 
+        spaceship.addCrewCount(num);
         crewCount += num;
         return true;
     }
@@ -103,14 +107,16 @@ public class HousingUnit extends Component{
      * Decrement the number of crew inside the unit
      *
      * @author Lorenzo
+     * @param spaceship spaceship where we want to update parameters
      * @param num is the number of crew member to remove
      * @return true if the crew has been removed
      */
-    public boolean decrementCrewCount(int num) {
+    public boolean decrementCrewCount(Spaceship spaceship, int num) {
 
         if(crewCount - num < 0)
             return false;
 
+        spaceship.addCrewCount(-num);
         crewCount -= num;
         return true;
     }

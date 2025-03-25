@@ -724,8 +724,7 @@ public class BuildingBoard {
                         case HOUSING_UNIT:
                             HousingUnit hu = (HousingUnit) spaceshipMatrix[y][x];
                             if(!hu.getAllowAlienPurple() && !hu.getAllowAlienOrange()) {
-                                hu.incrementCrewCount(2);
-                                spaceship.addCrewCount(hu.getCrewCount());
+                                hu.incrementCrewCount(spaceship,2);
                             }
                             break;
 
@@ -754,14 +753,12 @@ public class BuildingBoard {
 
                         case CENTRAL_UNIT:
                             hu = (HousingUnit) spaceshipMatrix[y][x];
-                            hu.incrementCrewCount(2);
-                            spaceship.addCrewCount(hu.getCrewCount());
+                            hu.incrementCrewCount(spaceship,2);
                             break;
 
                         case BATTERY_STORAGE:
                             BatteryStorage bs = (BatteryStorage) spaceshipMatrix[y][x];
                             bs.incrementItemsCount(spaceship,bs.getCapacity());
-                            spaceship.addBatteriesCount(bs.getItemsCount());
                             break;
 
                         default:
