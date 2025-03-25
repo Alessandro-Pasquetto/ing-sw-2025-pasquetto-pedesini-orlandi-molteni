@@ -2,10 +2,8 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.components.BoxType;
-
+import org.progetto.server.model.components.Box;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.progetto.server.model.components.BoxType.*;
 
 class SpaceshipTest {
 
@@ -49,10 +47,10 @@ class SpaceshipTest {
 
         assertEquals(0, spaceship.getBoxesValue());
 
-        spaceship.addBoxCount(1, BoxType.RED);
-        spaceship.addBoxCount(1, BoxType.YELLOW);
-        spaceship.addBoxCount(1, BoxType.GREEN);
-        spaceship.addBoxCount(1, BoxType.BLUE);
+        spaceship.addBoxCount(1, Box.RED);
+        spaceship.addBoxCount(1, Box.YELLOW);
+        spaceship.addBoxCount(1, Box.GREEN);
+        spaceship.addBoxCount(1, Box.BLUE);
         assertEquals(10, spaceship.getBoxesValue());
     }
 
@@ -158,8 +156,8 @@ class SpaceshipTest {
 
         assertArrayEquals(new int[]{0, 0, 0, 0}, spaceship.getBoxCounts());
 
-        spaceship.addBoxCount(1, BoxType.RED);
-        spaceship.addBoxCount(2, BoxType.BLUE);
+        spaceship.addBoxCount(1, Box.RED);
+        spaceship.addBoxCount(2, Box.BLUE);
         assertArrayEquals(new int[]{1, 0, 0, 2}, spaceship.getBoxCounts());
     }
 
@@ -484,45 +482,45 @@ class SpaceshipTest {
         Spaceship spaceship = new Spaceship(1,2);
 
         //adds one green box to BoxCount in level 1 ship
-        spaceship.addBoxCount(1, GREEN);
+        spaceship.addBoxCount(1, Box.GREEN);
         assertArrayEquals(new int[] {0, 0, 1, 0}, spaceship.getBoxCounts());
 
         //adds one red box to BoxCount in level 1 ship
-        spaceship.addBoxCount(1, RED);
+        spaceship.addBoxCount(1, Box.RED);
         assertArrayEquals(new int[] {1, 0, 1, 0}, spaceship.getBoxCounts());
 
         //adds one green box to BoxCount in level 1 ship
-        spaceship.addBoxCount(1, GREEN);
+        spaceship.addBoxCount(1, Box.GREEN);
         assertArrayEquals(new int[] {1, 0, 2, 0}, spaceship.getBoxCounts());
 
         //adds one yellow box to BoxCount in level 1 ship
-        spaceship.addBoxCount(1, YELLOW);
+        spaceship.addBoxCount(1, Box.YELLOW);
         assertArrayEquals(new int[] {1, 1, 2, 0}, spaceship.getBoxCounts());
 
         //adds one blue box to BoxCount in level 1 ship
-        spaceship.addBoxCount(1, BLUE);
+        spaceship.addBoxCount(1, Box.BLUE);
         assertArrayEquals(new int[] {1, 1, 2, 1}, spaceship.getBoxCounts());
 
         Spaceship spaceship2 = new Spaceship(2,1);
 
         //adds one yellow box to BoxCount in level 2 ship
-        spaceship2.addBoxCount(1, YELLOW);
+        spaceship2.addBoxCount(1, Box.YELLOW);
         assertArrayEquals(new int[] {0, 1, 0, 0}, spaceship2.getBoxCounts());
 
         //adds one yellow box to BoxCount in level 2 ship
-        spaceship2.addBoxCount(1, YELLOW);
+        spaceship2.addBoxCount(1, Box.YELLOW);
         assertArrayEquals(new int[] {0, 2, 0, 0}, spaceship2.getBoxCounts());
 
         //adds one blue box to BoxCount in level 2 ship
-        spaceship2.addBoxCount(1, BLUE);
+        spaceship2.addBoxCount(1, Box.BLUE);
         assertArrayEquals(new int[] {0, 2, 0, 1}, spaceship2.getBoxCounts());
 
         //adds one green box to BoxCount in level 2 ship
-        spaceship2.addBoxCount(1, GREEN);
+        spaceship2.addBoxCount(1, Box.GREEN);
         assertArrayEquals(new int[] {0, 2, 1, 1}, spaceship2.getBoxCounts());
         
         //adds one red box to BoxCount in level 2 ship
-        spaceship2.addBoxCount(1, RED);
+        spaceship2.addBoxCount(1, Box.RED);
         assertArrayEquals(new int[] {1, 2, 1, 1}, spaceship2.getBoxCounts());
     }
 }

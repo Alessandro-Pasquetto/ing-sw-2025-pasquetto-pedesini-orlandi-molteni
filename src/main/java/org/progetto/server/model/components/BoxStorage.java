@@ -48,10 +48,10 @@ public class BoxStorage extends Component {
      */
     public boolean addBox(Spaceship spaceship, Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
-            if (!box.getType().equals(BoxType.RED) || type.equals(ComponentType.RED_BOX_STORAGE)) {  // Checks in case of red box if its is possible
+            if (box != Box.RED || type.equals(ComponentType.RED_BOX_STORAGE)) {  // Checks in case of red box if its is possible
                 boxStorage[idx] = box;
                 this.boxCount += 1;
-                spaceship.addBoxCount(1, box.getType());
+                spaceship.addBoxCount(1, box);
                 return true;
             }
         }

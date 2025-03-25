@@ -1,32 +1,19 @@
 package org.progetto.server.model.components;
 
-public class Box {
+public enum Box {
 
-    // =======================
-    // ATTRIBUTES
-    // =======================
+    BLUE(1),
+    GREEN(2),
+    YELLOW(3),
+    RED(4);
 
-    private BoxType type;
-    private int value;
+    private final int value;
 
-    // =======================
-    // CONSTRUCTORS
-    // =======================
-
-    public Box(BoxType type,int value) {
-        this.type = type;
+    Box(int value) {
         this.value = value;
     }
 
-    // =======================
-    // GETTERS
-    // =======================
-
-    public BoxType getType() {
-        return type;
-    }
-
     public int getValue() {
-        return value;
+        return this.value;
     }
 }

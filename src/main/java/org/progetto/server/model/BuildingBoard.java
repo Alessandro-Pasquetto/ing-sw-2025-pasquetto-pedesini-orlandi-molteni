@@ -471,7 +471,7 @@ public class BuildingBoard {
 
                 for (Box box : boxes) {
                     if(box != null)
-                        spaceship.addBoxCount(-1,box.getType());
+                        spaceship.addBoxCount(-1, box);
                 }
                 break;
 
@@ -481,7 +481,7 @@ public class BuildingBoard {
 
                 for (Box box : boxes) {
                     if(box != null)
-                        spaceship.addBoxCount(-1,box.getType());
+                        spaceship.addBoxCount(-1, box);
                 }
                 break;
 

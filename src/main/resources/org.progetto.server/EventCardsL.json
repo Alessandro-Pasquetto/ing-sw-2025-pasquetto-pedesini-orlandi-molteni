@@ -4,10 +4,7 @@
     "level": 0,
     "imgSrc": "card2-lvl1.jpg",
     "requiredCrew": 5,
-    "rewardBoxes": [
-      {"type": "YELLOW", "value": 3},
-      {"type": "GREEN", "value": 2}
-    ],
+    "rewardBoxes": ["YELLOW", "GREEN"],
     "penaltyDays": -1
   },
   {
@@ -43,18 +40,9 @@
     "imgSrc": "card8-lvl1.jpg",
     "penaltyDays": -2,
     "rewardsForPlanets": [
-      [
-        {"type": "RED", "value": 4},
-        {"type": "RED", "value": 4}
-      ],
-      [
-        {"type": "RED", "value": 4},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "YELLOW", "value": 3}
-      ]
+      ["RED", "RED"],
+      ["RED", "BLUE", "BLUE"],
+      ["YELLOW"]
     ]
   },
   {
@@ -81,10 +69,6 @@
     "penaltyBoxes": 2,
     "penaltyDays": -1,
     "rewardBoxes":
-      [
-        {"type": "YELLOW", "value": 3},
-        {"type": "GREEN", "value": 2},
-        {"type": "BLUE", "value": 1}
-      ]
+      ["YELLOW", "GREEN", "BLUE"]
   }
 ]

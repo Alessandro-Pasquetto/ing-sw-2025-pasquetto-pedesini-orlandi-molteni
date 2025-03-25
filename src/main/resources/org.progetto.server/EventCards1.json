@@ -4,11 +4,7 @@
     "level": 1,
     "imgSrc": "card2-lvl1.jpg",
     "requiredCrew": 5,
-    "rewardBoxes":
-    [
-      {"type": "YELLOW", "value": 3},
-      {"type": "GREEN", "value": 2}
-    ],
+    "rewardBoxes": ["YELLOW", "GREEN"],
     "penaltyDays": -1
   },
   {
@@ -50,18 +46,9 @@
     "imgSrc": "card8-lvl1.jpg",
     "penaltyDays": -2,
     "rewardsForPlanets": [
-      [
-        {"type": "RED", "value": 4},
-        {"type": "RED", "value": 4}
-      ],
-      [
-        {"type": "RED", "value": 4},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "YELLOW", "value": 3}
-      ]
+      ["RED", "RED"],
+      ["RED", "BLUE", "BLUE"],
+      ["YELLOW"]
     ]
   },
   {
@@ -92,23 +79,14 @@
     "firePowerRequired": 4,
     "penaltyBoxes": 2,
     "penaltyDays": -1,
-    "rewardBoxes":
-    [
-      {"type": "YELLOW", "value": 3},
-      {"type": "GREEN", "value": 2},
-      {"type": "BLUE", "value": 1}
-    ]
+    "rewardBoxes": ["YELLOW", "GREEN", "BLUE"]
   },
   {
     "type": "LOSTSTATION",
     "level": 1,
     "imgSrc": "card1-lvl1.jpg",
     "requiredCrew": 6,
-    "rewardBoxes":
-    [
-      {"type": "RED", "value": 4},
-      {"type": "RED", "value": 4}
-    ],
+    "rewardBoxes": ["RED", "RED"],
     "penaltyDays": -1
   },
   {
@@ -125,18 +103,9 @@
     "imgSrc": "card6-lvl1.jpg",
     "penaltyDays": -1,
     "rewardsForPlanets": [
-      [
-        {"type": "GREEN", "value": 2},
-        {"type": "GREEN", "value": 2}
-      ],
-      [
-        {"type": "YELLOW", "value": 3}
-      ],
-      [
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ]
+      ["GREEN", "GREEN"],
+      ["YELLOW"],
+      ["BLUE", "BLUE", "BLUE"]
     ]
   },
   {
@@ -145,16 +114,8 @@
     "imgSrc": "card7-lvl1.jpg",
     "penaltyDays": -3,
     "rewardsForPlanets": [
-      [
-        {"type": "YELLOW", "value": 3},
-        {"type": "GREEN", "value": 2},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "YELLOW", "value": 3},
-        {"type": "YELLOW", "value": 3}
-      ]
+      ["YELLOW", "GREEN", "BLUE", "BLUE"],
+      ["YELLOW", "YELLOW"]
     ]
   },
   {
@@ -163,28 +124,10 @@
     "imgSrc": "card9-lvl1.jpg",
     "penaltyDays": -3,
     "rewardsForPlanets": [
-      [
-        {"type": "RED", "value": 4},
-        {"type": "GREEN", "value": 2},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "RED", "value": 4},
-        {"type": "YELLOW", "value": 3},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "RED", "value": 4},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1},
-        {"type": "BLUE", "value": 1}
-      ],
-      [
-        {"type": "RED", "value": 4},
-        {"type": "GREEN", "value": 2}
-      ]
+      ["RED", "GREEN", "BLUE", "BLUE", "BLUE"],
+      ["RED", "YELLOW", "BLUE"],
+      ["RED", "BLUE", "BLUE", "BLUE"],
+      ["RED", "GREEN"]
     ]
   },
   {

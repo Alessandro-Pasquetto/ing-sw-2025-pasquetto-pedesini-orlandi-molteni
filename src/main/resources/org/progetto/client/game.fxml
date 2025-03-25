@@ -19,7 +19,7 @@
     <Button layoutX="14.0" layoutY="14.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
     <Button layoutX="226.0" layoutY="14.0" onAction="#pickHiddenComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
     <Button layoutX="437.0" layoutY="14.0" onAction="#rotateComponent" prefHeight="42.0" prefWidth="149.0" text="rotate" />
-    <VBox fx:id="components" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
+    <VBox fx:id="volatileComponent" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
 
     <Button fx:id="deck0" layoutX="451.0" layoutY="413.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck0" />
     <Button fx:id="deck1" layoutX="451.0" layoutY="455.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck1" />

@@ -64,7 +64,7 @@ public class Smugglers extends EventCard {
      * @return true if the box was successfully added, false otherwise
      */
     public boolean chooseRewardBox(Spaceship spaceship, BoxStorage component, int boxIdx, Box box) {
-        spaceship.addBoxCount(1,box.getType());
+        spaceship.addBoxCount(1, box);
         return component.addBox(spaceship ,box, boxIdx);
     }
 
@@ -87,39 +87,38 @@ public class Smugglers extends EventCard {
 
         Box box = componentsBoxes[boxIdx];
 
+        if(box == null)
+            return false;
+
         int[] playerBoxes = spaceship.getBoxCounts();
 
-        if(box == null){
-            return false;
-        }
-
         if (playerBoxes[0] > 0) {  // if he has at least a red box
-            if (box.getType().equals(BoxType.RED)) {
-                spaceship.addBoxCount(-1,box.getType());
+            if (box == Box.RED) {
+                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
-            if (box.getType().equals(BoxType.YELLOW)) {
-                spaceship.addBoxCount(-1,box.getType());
+            if (box == Box.YELLOW) {
+                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
-            if (box.getType().equals(BoxType.GREEN)) {
-                spaceship.addBoxCount(-1,box.getType());
+            if (box == Box.GREEN) {
+                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
         }
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
-            if (box.getType().equals(BoxType.BLUE)) {
-                spaceship.addBoxCount(-1,box.getType());
+            if (box == Box.BLUE) {
+                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;

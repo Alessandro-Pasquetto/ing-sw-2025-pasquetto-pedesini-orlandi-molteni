@@ -14,7 +14,7 @@ import javafx.scene.layout.*;
 public class GameView {
 
     @FXML
-    private VBox components;
+    private VBox volatileComponent;
 
     @FXML
     private GridPane grid;
@@ -74,10 +74,16 @@ public class GameView {
     }
 
     public void removeHandComponent() {
-        Platform.runLater(() -> {
-            components.getChildren().remove(handComponent);
-            handComponent = null;
-        });
+
+        Node parent = handComponent.getParent();
+
+        if (parent instanceof VBox)
+            volatileComponent.getChildren().remove(handComponent);
+
+        else if (parent instanceof Pane pane)
+            pane.getChildren().remove(handComponent);
+
+        handComponent = null;
     }
 
     public void showEventCardDeck(ActionEvent event) {
@@ -115,7 +121,7 @@ public class GameView {
         handComponent = imageView;
 
         Platform.runLater(() -> {
-            components.getChildren().add(imageView);
+            volatileComponent.getChildren().add(imageView);
         });
     }
 

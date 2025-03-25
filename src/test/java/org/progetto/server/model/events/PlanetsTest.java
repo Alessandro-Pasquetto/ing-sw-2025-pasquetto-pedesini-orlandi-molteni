@@ -6,7 +6,6 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.BoxType;
 import org.progetto.server.model.components.ComponentType;
 
 import java.util.ArrayList;
@@ -24,16 +23,16 @@ class PlanetsTest {
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
         ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(new Box(BoxType.RED, 4));
-        planet1.add(new Box(BoxType.YELLOW, 3));
+        planet1.add(Box.RED);
+        planet1.add(Box.YELLOW);
 
         ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         ArrayList<Box> planet3 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         rewardsForPlanets.add(planet1);
         rewardsForPlanets.add(planet2);
@@ -50,16 +49,16 @@ class PlanetsTest {
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
         ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(new Box(BoxType.RED, 4));
-        planet1.add(new Box(BoxType.YELLOW, 3));
+        planet1.add(Box.RED);
+        planet1.add(Box.YELLOW);
 
         ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         ArrayList<Box> planet3 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         rewardsForPlanets.add(planet1);
         rewardsForPlanets.add(planet2);
@@ -88,16 +87,16 @@ class PlanetsTest {
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
         ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(new Box(BoxType.RED, 4));
-        planet1.add(new Box(BoxType.YELLOW, 3));
+        planet1.add(Box.RED);
+        planet1.add(Box.YELLOW);
 
         ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         ArrayList<Box> planet3 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         rewardsForPlanets.add(planet1);
         rewardsForPlanets.add(planet2);
@@ -135,19 +134,19 @@ class PlanetsTest {
         track = board.getTrack();
 
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
-        rewardBoxes1.add(new Box(BoxType.RED, 4));
-        rewardBoxes1.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes1.add(Box.RED);
+        rewardBoxes1.add(Box.GREEN);
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
-        rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
-        rewardBoxes2.add(new Box(BoxType.BLUE, 2));
+        rewardBoxes2.add(Box.YELLOW);
+        rewardBoxes2.add(Box.BLUE);
         LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 5, rewardBoxes1, -3);
         LostStation lostStation2 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 6, rewardBoxes2, -2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        Box boxR = new Box(BoxType.RED, 4);
-        Box boxY = new Box(BoxType.YELLOW, 3);
-        Box boxG = new Box(BoxType.GREEN, 2);
-        Box boxB = new Box(BoxType.BLUE, 1);
+        Box boxR = Box.RED;
+        Box boxY = Box.YELLOW;
+        Box boxG = Box.GREEN;
+        Box boxB = Box.BLUE;
 
         //adds a red box to a red box storage
         assertTrue(lostStation1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
@@ -191,16 +190,16 @@ class PlanetsTest {
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
         ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(new Box(BoxType.RED, 4));
-        planet1.add(new Box(BoxType.YELLOW, 3));
+        planet1.add(Box.RED);
+        planet1.add(Box.YELLOW);
 
         ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         ArrayList<Box> planet3 = new ArrayList<>();
-        planet2.add(new Box(BoxType.RED, 4));
-        planet2.add(new Box(BoxType.YELLOW, 3));
+        planet2.add(Box.RED);
+        planet2.add(Box.YELLOW);
 
         rewardsForPlanets.add(planet1);
         rewardsForPlanets.add(planet2);

@@ -1,6 +1,6 @@
 package org.progetto.server.model;
 
-import org.progetto.server.model.components.BoxType;
+import org.progetto.server.model.components.Box;
 
 public class Spaceship {
   
@@ -210,10 +210,10 @@ public class Spaceship {
      *
      * @author Lorenzo
      * @param countToAdd the number of boxes to add
-     * @param type the type of the added box
+     * @param box the box to add
      */
-    public void addBoxCount(int countToAdd, BoxType type) {
-        switch (type)
+    public void addBoxCount(int countToAdd, Box box) {
+        switch (box)
         {
             case RED:
                 boxCounts[0] += countToAdd;

@@ -33,8 +33,8 @@ class SmugglersTest {
     @Test
     void getRewardBoxes() {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
-        rewardBoxes.add(new Box(BoxType.RED, 4));
-        rewardBoxes.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes.add(Box.RED);
+        rewardBoxes.add(Box.GREEN);
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
     }
 
@@ -48,19 +48,19 @@ class SmugglersTest {
         Player[] track;
         track = board.getTrack();
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
-        rewardBoxes1.add(new Box(BoxType.RED, 4));
-        rewardBoxes1.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes1.add(Box.RED);
+        rewardBoxes1.add(Box.GREEN);
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
-        rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
-        rewardBoxes2.add(new Box(BoxType.BLUE, 2));
+        rewardBoxes2.add(Box.YELLOW);
+        rewardBoxes2.add(Box.BLUE);
         Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes1);
         Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 6, 2, -2, rewardBoxes2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        Box boxR = new Box(BoxType.RED, 4);
-        Box boxY = new Box(BoxType.YELLOW, 3);
-        Box boxG = new Box(BoxType.GREEN, 2);
-        Box boxB = new Box(BoxType.BLUE, 1);
+        Box boxR = Box.RED;
+        Box boxY = Box.YELLOW;
+        Box boxG = Box.GREEN;
+        Box boxB = Box.BLUE;
 
         //adds a red box to a red box storage
         assertTrue(smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
@@ -87,8 +87,8 @@ class SmugglersTest {
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
 
         BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
-        bs1.addBox(s, new Box(BoxType.YELLOW, 3),2);
-        bs1.addBox(s, new Box(BoxType.GREEN, 2),1);
+        bs1.addBox(s, Box.YELLOW,2);
+        bs1.addBox(s, Box.GREEN,1);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
             if(bs1.getBoxStorage()[i] == null)
@@ -115,8 +115,8 @@ class SmugglersTest {
 
         BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
 
-        bs2.addBox(s, new Box(BoxType.GREEN, 2),0);
-        bs2.addBox(s, new Box(BoxType.RED, 4),2);
+        bs2.addBox(s, Box.GREEN,0);
+        bs2.addBox(s, Box.RED,2);
 
         for (int i = 0; i < bs2.getCapacity(); i++) {
             if(bs2.getBoxStorage()[i] == null)
@@ -138,8 +138,8 @@ class SmugglersTest {
         Player player1 = new Player("Max", 0, 1);
 
         ArrayList<Box> rewardBoxes = new ArrayList<>();
-        rewardBoxes.add(new Box(BoxType.RED, 4));
-        rewardBoxes.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes.add(Box.RED);
+        rewardBoxes.add(Box.GREEN);
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -171,11 +171,11 @@ class SmugglersTest {
         Player[] track;
         track = board.getTrack();
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
-        rewardBoxes1.add(new Box(BoxType.RED, 4));
-        rewardBoxes1.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes1.add(Box.RED);
+        rewardBoxes1.add(Box.GREEN);
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
-        rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
-        rewardBoxes2.add(new Box(BoxType.BLUE, 2));
+        rewardBoxes2.add(Box.YELLOW);
+        rewardBoxes2.add(Box.BLUE);
         Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
         Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 6, 2, -2, rewardBoxes2);
 
@@ -191,11 +191,11 @@ class SmugglersTest {
     @Test
     void battleResult() {
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
-        rewardBoxes1.add(new Box(BoxType.RED, 4));
-        rewardBoxes1.add(new Box(BoxType.GREEN, 2));
+        rewardBoxes1.add(Box.RED);
+        rewardBoxes1.add(Box.GREEN);
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
-        rewardBoxes2.add(new Box(BoxType.YELLOW, 4));
-        rewardBoxes2.add(new Box(BoxType.BLUE, 2));
+        rewardBoxes2.add(Box.YELLOW);
+        rewardBoxes2.add(Box.BLUE);
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
         Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
