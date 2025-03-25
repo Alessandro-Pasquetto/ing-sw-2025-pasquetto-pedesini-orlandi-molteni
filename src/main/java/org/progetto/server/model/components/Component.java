@@ -6,7 +6,7 @@ public class Component {
     // ATTRIBUTES
     // =======================
 
-    private final ComponentType type;
+    protected final ComponentType type;
     private final int[] connections;   //{0,1,2,3} = {n°up,n°right,n°down,n°left}
     private int rotation;        //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
     private int x_coordinate;    //x coordinate in matrix

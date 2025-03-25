@@ -10,17 +10,15 @@ public class BoxStorage extends Component {
     // =======================
 
     private Box[] boxStorage;
-    private boolean isRed;
     private int boxCount;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public BoxStorage(ComponentType type, int[] connections, String imgSrc, int capacity, boolean isRed) {
+    public BoxStorage(ComponentType type, int[] connections, String imgSrc, int capacity) {
         super(type, connections, imgSrc);
         this.boxStorage = new Box[capacity];
-        this.isRed = isRed;
         this.boxCount = 0;
     }
 
@@ -34,10 +32,6 @@ public class BoxStorage extends Component {
 
     public Box[] getBoxStorage() {
         return boxStorage;
-    }
-
-    public boolean isRed() {
-        return isRed;
     }
 
     // =======================
@@ -54,7 +48,7 @@ public class BoxStorage extends Component {
      */
     public boolean addBox(Spaceship spaceship, Box box, int idx) {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
-            if (!box.getType().equals(BoxType.RED) || this.isRed) {  // Checks in case of red box if its is possible
+            if (!box.getType().equals(BoxType.RED) || type.equals(ComponentType.RED_BOX_STORAGE)) {  // Checks in case of red box if its is possible
                 boxStorage[idx] = box;
                 this.boxCount += 1;
                 spaceship.addBoxCount(1, box.getType());

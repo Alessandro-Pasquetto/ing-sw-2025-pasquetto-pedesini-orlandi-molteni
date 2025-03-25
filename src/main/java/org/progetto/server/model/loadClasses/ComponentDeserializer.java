@@ -14,7 +14,6 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
         String imgSrc = jsonObject.get("imgSrc").getAsString();
         int[] connections = context.deserialize(jsonObject.get("connections"), int[].class);
         int capacity;
-        boolean isRed;
 
         switch (type) {
 
@@ -28,13 +27,11 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
 
             case BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
-                isRed = jsonObject.get("isRed").getAsBoolean();
-                return new BoxStorage(type,connections,imgSrc,capacity,isRed);
+                return new BoxStorage(type,connections,imgSrc,capacity);
 
             case RED_BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
-                isRed = jsonObject.get("isRed").getAsBoolean();
-                return new BoxStorage(type,connections,imgSrc,capacity,isRed);
+                return new BoxStorage(type,connections,imgSrc,capacity);
         }
 
         return new Component(type, connections, imgSrc);

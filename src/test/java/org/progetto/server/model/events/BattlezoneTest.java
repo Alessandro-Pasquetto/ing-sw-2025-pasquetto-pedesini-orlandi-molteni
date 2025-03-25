@@ -368,7 +368,7 @@ class BattlezoneTest {
         Spaceship s = new Spaceship(1, 0);
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 1, "img", new ArrayList<>());
 
-        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3, false);
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
         bs1.addBox(s, new Box(BoxType.YELLOW, 3),2);
         bs1.addBox(s, new Box(BoxType.GREEN, 2),1);
 
@@ -395,7 +395,7 @@ class BattlezoneTest {
         System.out.println();
 
 
-        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
 
         bs2.addBox(s, new Box(BoxType.GREEN, 2),0);
         bs2.addBox(s, new Box(BoxType.RED, 4),2);

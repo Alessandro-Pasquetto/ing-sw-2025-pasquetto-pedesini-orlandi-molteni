@@ -55,8 +55,8 @@ class SmugglersTest {
         rewardBoxes2.add(new Box(BoxType.BLUE, 2));
         Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes1);
         Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 6, 2, -2, rewardBoxes2);
-        BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, true);
-        BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, false);
+        BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         Box boxR = new Box(BoxType.RED, 4);
         Box boxY = new Box(BoxType.YELLOW, 3);
         Box boxG = new Box(BoxType.GREEN, 2);
@@ -86,7 +86,7 @@ class SmugglersTest {
         Spaceship s = new Spaceship(1, 0);
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
 
-        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3, false);
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
         bs1.addBox(s, new Box(BoxType.YELLOW, 3),2);
         bs1.addBox(s, new Box(BoxType.GREEN, 2),1);
 
@@ -113,7 +113,7 @@ class SmugglersTest {
         System.out.println();
 
 
-        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
 
         bs2.addBox(s, new Box(BoxType.GREEN, 2),0);
         bs2.addBox(s, new Box(BoxType.RED, 4),2);
