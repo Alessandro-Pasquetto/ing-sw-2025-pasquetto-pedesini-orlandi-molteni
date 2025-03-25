@@ -277,9 +277,9 @@ class GameTest {
 
         game.addPlayer(mario);
 
-        EventCard picked = game.pickEventCard();
+        assertNotNull(game.pickEventCard());
 
-        //todo
+
     }
 
     @Test
