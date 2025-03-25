@@ -3,6 +3,7 @@ package org.progetto.server.model.events;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
@@ -82,6 +83,53 @@ class SmugglersTest {
 
     @Test
     void chooseDiscardedBox() {
+        Spaceship s = new Spaceship(1, 0);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3, false);
+        bs1.addBox(s, new Box(BoxType.YELLOW, 3),2);
+        bs1.addBox(s, new Box(BoxType.GREEN, 2),1);
+
+        for (int i = 0; i < bs1.getCapacity(); i++) {
+            if(bs1.getBoxStorage()[i] == null)
+                System.out.print("NULL, ");
+            else
+                System.out.print(bs1.getBoxStorage()[i].getValue() + ", ");
+        }
+        System.out.println();
+
+        assertFalse(smugglers.chooseDiscardedBox(s, bs1, 0));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs1, 1));
+        assertNotEquals(null, (bs1.getBoxStorage()[1]));
+        assertTrue(smugglers.chooseDiscardedBox(s, bs1, 2));
+        assertNull(bs1.getBoxStorage()[2]);
+
+        for (int i = 0; i < bs1.getCapacity(); i++) {
+            if(bs1.getBoxStorage()[i] == null)
+                System.out.print("NULL, ");
+            else
+                System.out.print(bs1.getBoxStorage()[i].getValue() + ", ");
+        }
+        System.out.println();
+
+
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+
+        bs2.addBox(s, new Box(BoxType.GREEN, 2),0);
+        bs2.addBox(s, new Box(BoxType.RED, 4),2);
+
+        for (int i = 0; i < bs2.getCapacity(); i++) {
+            if(bs2.getBoxStorage()[i] == null)
+                System.out.print("NULL, ");
+            else
+                System.out.print(bs2.getBoxStorage()[i].getValue() + ", ");
+        }
+        System.out.println();
+
+        assertFalse(smugglers.chooseDiscardedBox(s, bs2, 0));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs2, 1));
+        assertTrue(smugglers.chooseDiscardedBox(s, bs2, 2));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs2, 3));
     }
 
     @Test

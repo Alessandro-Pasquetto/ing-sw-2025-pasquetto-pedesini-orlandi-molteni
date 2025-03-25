@@ -81,8 +81,17 @@ public class Smugglers extends EventCard {
      */
     public boolean chooseDiscardedBox(Spaceship spaceship, BoxStorage component, int boxIdx) {
         Box[] componentsBoxes = component.getBoxStorage();
+
+        if(boxIdx >= component.getCapacity())
+            return false;
+
         Box box = componentsBoxes[boxIdx];
+
         int[] playerBoxes = spaceship.getBoxCounts();
+
+        if(box == null){
+            return false;
+        }
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box.getType().equals(BoxType.RED)) {
