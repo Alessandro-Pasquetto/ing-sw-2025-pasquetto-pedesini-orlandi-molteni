@@ -42,10 +42,12 @@ class LostShipTest {
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
+        orange.setAlienOrange(true);
         assertTrue(lostship.chooseDiscardedCrew(mario,orange));
         assertFalse(crew.hasOrangeAlien());
 
         //removes a purple alien
+        purple.setAlienPurple(true);
         assertTrue(lostship.chooseDiscardedCrew(mario,purple));
         assertFalse(crew.hasPurpleAlien());
     }

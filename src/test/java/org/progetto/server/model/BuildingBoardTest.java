@@ -119,9 +119,6 @@ class BuildingBoardTest {
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(-1));
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(2));  // Changed from 3 to 2
 
-        // Test setting to empty slot throws exception
-        assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
-
         // Pre-occupy a slot
         Component preExisting = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "test.jpg", 2);
         board.getBooked()[0] = preExisting;

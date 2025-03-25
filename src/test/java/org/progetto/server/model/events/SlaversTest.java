@@ -50,10 +50,12 @@ class SlaversTest {
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
+        orange.setAlienOrange(true);
         assertTrue(slavers.chooseDiscardedCrew(mario,orange));
         assertFalse(crew.hasOrangeAlien());
 
         //removes a purple alien
+        purple.setAlienPurple(true);
         assertTrue(slavers.chooseDiscardedCrew(mario,purple));
         assertFalse(crew.hasPurpleAlien());
     }
