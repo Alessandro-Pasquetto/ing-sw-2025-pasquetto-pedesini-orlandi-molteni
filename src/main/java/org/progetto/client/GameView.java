@@ -9,7 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import org.progetto.client.connection.HandlerMessage;
+import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.server.connection.rmi.RmiServer;
 
 
 public class GameView {
@@ -58,17 +61,28 @@ public class GameView {
 
     // Method to start the game
     public void startGame(ActionEvent event) {
-        SocketClient.startGame();
+
+        if(HandlerMessage.getIsSocket())
+            SocketClient.startGame();
+        else
+            RmiClientSender.startGame();
     }
 
     public void pickHiddenComponent(ActionEvent event) {
 
         if(handComponent == null)
-            SocketClient.pickHiddenComponent();
+            if(HandlerMessage.getIsSocket())
+                SocketClient.pickHiddenComponent();
+            else
+                RmiClientSender.pickHiddenComponent();
         else if(GameData.getxHandComponent() != -1)
-            SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+            if(HandlerMessage.getIsSocket())
+                SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+            else
+                RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
     }
 
+    // todo: RMI version
     public void discardComponent(ActionEvent event) {
         if(handComponent != null)
             SocketClient.discardComponent();

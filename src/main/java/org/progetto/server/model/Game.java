@@ -3,15 +3,12 @@ package org.progetto.server.model;
 import com.google.gson.reflect.TypeToken;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.progetto.server.model.loadClasses.ComponentDeserializer;
 import org.progetto.server.model.loadClasses.EventDeserializer;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
@@ -80,6 +77,17 @@ public class Game {
         return phase;
     }
 
+    public Player getPlayerByName(String name) throws IllegalStateException {
+        synchronized (players) {
+            for (Player player : players) {
+                if (player.getName().equals(name)) {
+                    return player;
+                }
+            }
+        }
+        throw new IllegalStateException("PlayerNameNotFound");
+    }
+
     public ArrayList<Player> getPlayers() {
         synchronized (players) {
             return new ArrayList<>(players);
@@ -98,6 +106,14 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public EventCard getActiveEventCard() {
+        return activeEventCard;
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
     }
 
     public AtomicInteger getNumReadyPlayers() {

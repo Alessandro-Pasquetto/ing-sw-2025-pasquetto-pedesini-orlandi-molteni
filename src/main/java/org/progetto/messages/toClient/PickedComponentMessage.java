@@ -1,25 +1,27 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class NotifyNewGameMessage implements Serializable {
+public class PickedComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
-    int idGame;
+
+    private String imgPath;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public NotifyNewGameMessage(int idGame) {
-        this.idGame = idGame;
+    public PickedComponentMessage(String imgPath) {
+        this.imgPath = imgPath;
     }
 
     // =======================
     // GETTERS
     // =======================
-    public int getIdGame() {
-        return idGame;
+
+    public String getImgPath() {
+        return imgPath;
     }
 }

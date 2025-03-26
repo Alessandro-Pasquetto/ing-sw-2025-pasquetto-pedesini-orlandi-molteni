@@ -3,22 +3,21 @@ package org.progetto.server.connection.socket;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class SocketServer{
+public class SocketServer extends Thread {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
     private static final List<SocketWriter> socketWriters = new ArrayList<>();
-    private static final AtomicInteger currentIdGame = new AtomicInteger(0);
 
     // =======================
     // MAIN
     // =======================
 
-    public static void main(String[] args) {
+    @Override
+    public void run() {
         try{
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("SocketServer listening on port 8080...");
@@ -32,14 +31,6 @@ public class SocketServer{
         } catch (IOException e) {
             System.err.println("Errore durante l'avvio del server: " + e.getMessage());
         }
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    public static int getCurrentIdGameAndIncrement() {
-        return currentIdGame.getAndIncrement();
     }
 
     // =======================
@@ -58,7 +49,7 @@ public class SocketServer{
         }
     }
 
-    public static void broadcastMessage(Object messageObj) {
+    public static void broadcastLobbyMessage(Object messageObj) {
         ArrayList<SocketWriter> socketWritersCopy;
 
         synchronized (socketWriters) {
@@ -67,6 +58,19 @@ public class SocketServer{
 
         for (SocketWriter sw : socketWritersCopy) {
             sw.sendMessage(messageObj);
+        }
+    }
+
+    public static void broadcastLobbyMessageToOthers(SocketWriter sender, Object messageObj) {
+        ArrayList<SocketWriter> socketWritersCopy;
+
+        synchronized (socketWriters) {
+            socketWritersCopy = new ArrayList<>(socketWriters);
+        }
+
+        for (SocketWriter sw : socketWritersCopy) {
+            if(!sw.equals(sender))
+                sw.sendMessage(messageObj);
         }
     }
 }

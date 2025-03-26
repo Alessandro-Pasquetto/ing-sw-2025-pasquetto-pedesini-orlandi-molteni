@@ -1,4 +1,4 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 

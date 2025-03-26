@@ -6,7 +6,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import org.progetto.client.connection.HandlerMessage;
+import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.server.connection.rmi.RmiServer;
 
 public class ChooseGameView {
 
@@ -19,14 +22,22 @@ public class ChooseGameView {
         // For now, there is no createGame page, so I'll do it here.
         String username = usernameTextField.getText();
         if(!username.isEmpty()) {
-            SocketClient.createNewGame(username);
+
+            if(HandlerMessage.getIsSocket())
+                SocketClient.createNewGame(username);
+            else
+                RmiClientSender.createGame(username);
         }
     }
 
     public void joinToGame(int idGame) {
         String username = usernameTextField.getText();
         if(!username.isEmpty()) {
-            SocketClient.tryJoinToGame(username, idGame);
+
+            if(HandlerMessage.getIsSocket())
+                SocketClient.tryJoinToGame(username, idGame);
+            else
+                RmiClientSender.tryJoinToGame(username, idGame);
         }
         GameData.setNamePlayer(username);
     }

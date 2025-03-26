@@ -16,6 +16,7 @@ module org.progetto{
     opens org.progetto.client.connection.rmi to java.rmi;
 
     exports org.progetto.client;
+    exports org.progetto.client.connection.rmi;
     exports org.progetto.server.model;
     exports org.progetto.server.controller;
     exports org.progetto.server.model.components;
@@ -23,4 +24,6 @@ module org.progetto{
     exports org.progetto.server.model.loadClasses to com.fasterxml.jackson.databind;
     exports org.progetto.server.connection.socket;
     exports org.progetto.server.connection.rmi;
+    exports org.progetto.messages.toClient;
+    exports org.progetto.server.internalMessages;
 }

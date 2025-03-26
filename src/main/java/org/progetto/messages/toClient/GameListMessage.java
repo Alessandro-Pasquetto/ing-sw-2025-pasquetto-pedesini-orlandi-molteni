@@ -1,4 +1,4 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ public class GameListMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    ArrayList<Integer> idGames;
+    private ArrayList<Integer> idGames;
 
     // =======================
     // CONSTRUCTORS

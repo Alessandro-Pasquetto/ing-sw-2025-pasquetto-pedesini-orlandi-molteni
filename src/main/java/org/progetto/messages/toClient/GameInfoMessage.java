@@ -1,20 +1,24 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
+
+import org.progetto.server.controller.GameManager;
+import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 
-public class InitGameMessage implements Serializable {
+public class GameInfoMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
-    String imgPathBoard;
-    String imgPathSpaceship;
-    String imgPathCentralUnit;
+
+    private String imgPathBoard;
+    private String imgPathSpaceship;
+    private String imgPathCentralUnit;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public InitGameMessage(String imgPathBoard, String imgPathSpaceship, String imgPathCentralUnit) {
+    public GameInfoMessage(String imgPathBoard, String imgPathSpaceship, String imgPathCentralUnit) {
         this.imgPathBoard = imgPathBoard;
         this.imgPathSpaceship = imgPathSpaceship;
         this.imgPathCentralUnit = imgPathCentralUnit;
@@ -23,6 +27,7 @@ public class InitGameMessage implements Serializable {
     // =======================
     // GETTERS
     // =======================
+
     public String getImgPathBoard() {
         return imgPathBoard;
     }

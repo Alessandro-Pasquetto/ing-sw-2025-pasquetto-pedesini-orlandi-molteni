@@ -1,26 +1,28 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class PickedComponentMessage implements Serializable {
+public class TimerMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
-    String imgPath;
+
+    private int time;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public PickedComponentMessage(String imgPath) {
-        this.imgPath = imgPath;
+
+    public TimerMessage(int time) {
+        this.time = time;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public String getImgPath() {
-        return imgPath;
+    public int getTime() {
+        return time;
     }
 }

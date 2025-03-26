@@ -1,7 +1,11 @@
 package org.progetto.client.connection.socket;
 
 import org.progetto.client.PageController;
-import org.progetto.messages.*;
+import org.progetto.client.connection.HandlerMessage;
+import org.progetto.messages.toServer.CreateGameMessage;
+import org.progetto.messages.toServer.JoinGameMessage;
+import org.progetto.messages.toServer.PlaceHandComponentAndPickHiddenComponentMessage;
+import org.progetto.messages.toServer.PlaceHandComponentAndShowEventCardDeckMessage;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,9 +15,11 @@ public class SocketClient {
 
     public static void connect(String serverIp, int port) {
         try{
+            HandlerMessage.setIsSocket(true);
+
             socket = new Socket(serverIp, port);
 
-            System.out.println("Connected to the server!");
+            System.out.println("Connected to the socketServer!");
 
             PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
@@ -26,29 +32,11 @@ public class SocketClient {
     }
 
     public static void createNewGame(String name) {
-
         SocketWriter.sendMessage(new CreateGameMessage(1, 4, name));
-
-        System.out.println("You have created a new game");
-        try {
-            PageController.switchScene("game.fxml", "Game");
-        } catch (IOException e) {
-            System.out.println("Error loading the page");
-        }
     }
 
     public static void tryJoinToGame(String username, int idGame){
         SocketWriter.sendMessage(new JoinGameMessage(idGame, username));
-    }
-
-    public static void joinToGame(){
-        System.out.println("You joined a game");
-
-        try {
-            PageController.switchScene("game.fxml", "Game");
-        } catch (IOException e) {
-            System.out.println("Error loading the page");
-        }
     }
 
     public static void startGame(){

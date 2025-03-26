@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.TimerMessage;
+import org.progetto.messages.toClient.TimerMessage;
 
 import java.util.function.Consumer;
 

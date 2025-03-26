@@ -1,16 +1,15 @@
 package org.progetto.server.connection.socket;
 
-import org.progetto.messages.CreateGameMessage;
-import org.progetto.messages.InitGameMessage;
-import org.progetto.messages.JoinGameMessage;
-import org.progetto.messages.NotifyNewGameMessage;
-import org.progetto.server.controller.BuildingController;
-import org.progetto.server.controller.GameController;
-import org.progetto.server.controller.GameControllersQueue;
-import org.progetto.server.controller.InitController;
-import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Game;
-import org.progetto.server.model.Player;
+import org.progetto.messages.toClient.NotifyNewGameMessage;
+import org.progetto.messages.toClient.PickedComponentMessage;
+import org.progetto.messages.toServer.CreateGameMessage;
+import org.progetto.messages.toClient.GameInfoMessage;
+import org.progetto.messages.toServer.JoinGameMessage;
+import org.progetto.messages.toServer.PlaceHandComponentAndPickHiddenComponentMessage;
+import org.progetto.server.controller.*;
+import org.progetto.server.internalMessages.InternalGameInfo;
+import org.progetto.server.model.*;
+import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,7 +30,7 @@ public class SocketListener extends Thread {
         try {
             while (running) {
                 Object messageObj = in.readObject();
-                if(clientHandler.getGameController() == null)
+                if(clientHandler.getGameManager() == null)
                     handlerLobbyMessages(messageObj);
                 else
                     handlerGameMessages(messageObj);
@@ -48,55 +47,86 @@ public class SocketListener extends Thread {
     private void handlerLobbyMessages(Object messageObj) {
         if (messageObj instanceof CreateGameMessage createGameMessage) {
 
-            int idGame = SocketServer.getCurrentIdGameAndIncrement();
             int levelGame = createGameMessage.getLevelGame();
             int numPlayers = createGameMessage.getNumPlayers();
             String name = createGameMessage.getName();
 
-            clientHandler.setGameControllerAndJoin(new GameController(idGame, numPlayers, levelGame), new Player(name, 0, levelGame));
+            InternalGameInfo internalGameInfo = LobbyController.createGame(name, levelGame, numPlayers);
 
-            Game game = clientHandler.getGameController().getGame();
-            Player player = clientHandler.getPlayer();
-            BuildingBoard buildingBoard =  player.getSpaceship().getBuildingBoard();
-            clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
-            SocketServer.broadcastMessage(new NotifyNewGameMessage(idGame));
+            GameManager gameManager = internalGameInfo.getGameManager();
+            Game game = gameManager.getGame();
+            Board board = game.getBoard();
+            Player player = internalGameInfo.getPlayer();
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+            clientHandler.initPlayerConnection(gameManager, player);
+
+            LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(gameManager.getGame().getId()), clientHandler.getSocketWriter(), null);
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
 
             int idGame = joinGameMessage.getIdGame();
             String name = joinGameMessage.getName();
 
-
-            GameController gameController = GameControllersQueue.getGameController(idGame);
-            Game game = gameController.getGame();
-
-            if(game.checkAvailableName(name)){
-
-                Player player = new Player(name, game.getPlayersSize(), game.getLevel());
-                BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-
-                clientHandler.setGameControllerAndJoin(gameController, player);
-                clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
-                clientHandler.getSocketWriter().sendMessage(new InitGameMessage(game.getBoard().getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
-            }else{
-                clientHandler.getSocketWriter().sendMessage("NotAllowedToJoinGame");
+            InternalGameInfo internalGameInfo = null;
+            try {
+                internalGameInfo = LobbyController.joinGame(idGame, name);
+            } catch (IllegalStateException e) {
+                if(e.getMessage().equals("NotAvailableName"))
+                    clientHandler.getSocketWriter().sendMessage("NotAvailableName");
+                return;
             }
+
+            GameManager gameManager = internalGameInfo.getGameManager();
+            Game game = gameManager.getGame();
+            Board board = game.getBoard();
+            Player player = internalGameInfo.getPlayer();
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+            clientHandler.initPlayerConnection(gameManager, player);
+            clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
         }
     }
 
     private void handlerGameMessages(Object messageObj) {
-        GameController gameController = clientHandler.getGameController();
-        Game game = gameController.getGame();
+        SocketWriter socketWriter = clientHandler.getSocketWriter();
+        GameManager gameManager = clientHandler.getGameManager();
+        Game game = gameManager.getGame();
         Player player = clientHandler.getPlayer();
 
         switch (game.getPhase()) {
             case INIT:
-                InitController.handle(gameController::startTimer, gameController::broadcastMessage, game, player, messageObj);
+                GameController.startGame(gameManager);
                 break;
 
             case BUILDING:
-                if(gameController.getTimerObj().getTimerInt() > 0)
-                    BuildingController.handle(gameController::broadcastMessage, clientHandler.getSocketWriter(), game, player, messageObj);
+                if(gameManager.getTimerObj().getTimerInt() > 0){
+                    if(messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
+                        int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
+                        int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
+                        int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
+
+                        GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
+                    }else if(messageObj instanceof String messageString){
+                        switch (messageString){
+                            case "PickHiddenComponent":
+                                GameController.pickHiddenComponent(game, player, socketWriter, null);
+                                break;
+                            case "DiscardComponent":
+                                try {
+                                    game.discardComponent(player);
+                                }catch (IllegalStateException e) {
+                                    if(e.getMessage().equals("EmptyHandComponent"))
+                                        socketWriter.sendMessage("EmptyHandComponent");
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
                 else
                     clientHandler.getSocketWriter().sendMessage("TimerExpired");
                 break;

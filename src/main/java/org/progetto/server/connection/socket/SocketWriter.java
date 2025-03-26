@@ -1,4 +1,5 @@
 package org.progetto.server.connection.socket;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -52,7 +53,6 @@ public class SocketWriter extends Thread {
         this.clientHandler = clientHandler;
     }
 
-
     // =======================
     // OTHER METHODS
     // =======================
@@ -77,7 +77,7 @@ public class SocketWriter extends Thread {
     }
 
     public synchronized void sendMessageToOtherPlayersInGame(Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy = new ArrayList<>(clientHandler.getGameController().getSocketWritersCopy());
+        ArrayList<SocketWriter> socketWritersCopy = new ArrayList<>(clientHandler.getGameManager().getSocketWritersCopy());
 
         for (SocketWriter sw : socketWritersCopy) {
             if(!sw.equals(clientHandler.getSocketWriter()))

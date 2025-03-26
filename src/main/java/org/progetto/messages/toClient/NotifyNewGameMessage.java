@@ -1,28 +1,26 @@
-package org.progetto.messages;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class TimerMessage implements Serializable {
+public class NotifyNewGameMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private int time;
+    private int idGame;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-
-    public TimerMessage(int time) {
-        this.time = time;
+    public NotifyNewGameMessage(int idGame) {
+        this.idGame = idGame;
     }
 
     // =======================
     // GETTERS
     // =======================
-
-    public int getTime() {
-        return time;
+    public int getIdGame() {
+        return idGame;
     }
 }

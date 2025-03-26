@@ -1,4 +1,4 @@
-package org.progetto.messages;
+package org.progetto.messages.toServer;
 
 public class ShowEventCardDeckMessage {
 
