@@ -1,5 +1,6 @@
-package org.progetto.client;
+package org.progetto.client.connection.socket;
 
+import org.progetto.client.PageController;
 import org.progetto.messages.*;
 
 import java.io.IOException;

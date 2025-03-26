@@ -1,10 +1,11 @@
 package org.progetto.server.controller;
 
+import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.Game;
 
 import java.util.ArrayList;
 
-class GameController{
+public class GameController{
 
     // =======================
     // ATTRIBUTES
@@ -18,7 +19,7 @@ class GameController{
     // CONSTRUCTORS
     // =======================
 
-    GameController(int idGame, int numPlayers, int level) {
+    public GameController(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
         this.timer = new TimerController(this::broadcastMessage,40,0);
         GameControllersQueue.addGameController(this);

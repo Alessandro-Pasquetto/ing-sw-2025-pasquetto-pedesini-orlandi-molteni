@@ -1,6 +1,4 @@
-package org.progetto.server.controller;
-
-import org.progetto.messages.NotifyNewGameMessage;
+package org.progetto.server.connection.socket;
 
 import java.io.*;
 import java.net.*;
@@ -23,7 +21,7 @@ public class SocketServer{
     public static void main(String[] args) {
         try{
             ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Server listening on port 8080...");
+            System.out.println("SocketServer listening on port 8080...");
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();

@@ -16,7 +16,7 @@ public class PageController {
     static ConnetionView connetionView;
     static ChooseGameView chooseGameView;
     static CreateGameView createGameView;
-    static GameView gameView;
+    public static GameView gameView;
 
     static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/icon.png")));
@@ -25,7 +25,7 @@ public class PageController {
         stage.show();
     }
 
-    static void switchScene(String fxmlFile, String title) throws IOException {
+    public static void switchScene(String fxmlFile, String title) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxmlFile));
 
@@ -61,11 +61,11 @@ public class PageController {
         });
     }
 
-    static void generateGameList(int id){
+    public static void generateGameList(int id){
         chooseGameView.generateGameList(id);
     }
 
-    static void generateComponent(String imgComponent){
+    public static void generateComponent(String imgComponent){
         gameView.generateComponent(imgComponent);
     }
 

@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.client.connection.rmi.RmiClientSender;
 
 public class ConnetionView {
 
@@ -45,7 +47,7 @@ public class ConnetionView {
             if (socketOption.isSelected()) {
                 SocketClient.connect(serverIp, serverPort);
             } else if (rmiOption.isSelected()) {
-                // RMI connection
+                RmiClientSender.connect(serverIp, serverPort);
             }
 
         }catch (NumberFormatException e) {

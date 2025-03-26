@@ -1,5 +1,6 @@
-package org.progetto.client;
+package org.progetto.client.connection.socket;
 
+import org.progetto.client.PageController;
 import org.progetto.messages.*;
 
 import java.io.*;
@@ -8,7 +9,7 @@ import java.net.Socket;
 public class SocketClient {
     private static Socket socket;
 
-    static void connect(String serverIp, int port) {
+    public static void connect(String serverIp, int port) {
         try{
             socket = new Socket(serverIp, port);
 
@@ -24,9 +25,9 @@ public class SocketClient {
         }
     }
 
-    public static void createNewGame(String username) {
+    public static void createNewGame(String name) {
 
-        SocketWriter.sendMessage(new CreateGameMessage(1, 4, username));
+        SocketWriter.sendMessage(new CreateGameMessage(1, 4, name));
 
         System.out.println("You have created a new game");
         try {

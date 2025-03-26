@@ -1,5 +1,7 @@
-package org.progetto.server.controller;
+package org.progetto.server.connection.socket;
 
+
+import org.progetto.server.controller.GameController;
 import org.progetto.server.model.Player;
 
 import java.io.*;

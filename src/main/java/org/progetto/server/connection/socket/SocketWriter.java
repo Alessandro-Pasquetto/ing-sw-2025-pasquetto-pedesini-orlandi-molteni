@@ -1,4 +1,4 @@
-package org.progetto.server.controller;
+package org.progetto.server.connection.socket;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;

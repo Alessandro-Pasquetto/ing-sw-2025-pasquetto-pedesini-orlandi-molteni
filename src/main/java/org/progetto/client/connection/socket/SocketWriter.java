@@ -1,7 +1,6 @@
-package org.progetto.client;
+package org.progetto.client.connection.socket;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
