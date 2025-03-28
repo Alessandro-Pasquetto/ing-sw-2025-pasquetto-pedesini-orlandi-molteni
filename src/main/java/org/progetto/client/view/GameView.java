@@ -1,4 +1,4 @@
-package org.progetto.client;
+package org.progetto.client.view;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -9,10 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import org.progetto.client.GameData;
+import org.progetto.client.Main;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
-import org.progetto.server.connection.rmi.RmiServer;
 
 
 public class GameView {

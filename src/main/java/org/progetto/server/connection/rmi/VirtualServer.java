@@ -10,7 +10,7 @@ public interface VirtualServer extends Remote {
     void connect(VirtualView view) throws RemoteException;
     void createGame(VirtualView view, String name, int gameLevel, int numPlayers) throws RemoteException;
     void joinGame(VirtualView view, int idGame, String name) throws RemoteException;
-    void startGame(VirtualView view) throws RemoteException;
-    void pickHiddenComponent(VirtualView view, String name) throws RemoteException;
-    void placeHandComponentAndPickHiddenComponent(VirtualView view, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException;
+    void startGame(VirtualView view, int idGame) throws RemoteException;
+    void pickHiddenComponent(VirtualView view, int idGame, String name) throws RemoteException;
+    void placeHandComponentAndPickHiddenComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException;
 }

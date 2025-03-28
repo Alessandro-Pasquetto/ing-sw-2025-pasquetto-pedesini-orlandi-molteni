@@ -16,12 +16,12 @@ public class LobbyController {
     // Send message to all clients in lobby
     public static void broadcastLobbyMessage(Object messageObj) {
         SocketServer.broadcastLobbyMessage(messageObj);
-        RmiServer.broadcastMessage(messageObj);
+        RmiServer.broadcastLobbyMessage(messageObj);
     }
 
     public static void broadcastLobbyMessageToOthers(Object messageObj, SocketWriter swSender, VirtualView vvSender) {
         SocketServer.broadcastLobbyMessageToOthers(swSender, messageObj);
-        RmiServer.broadcastMessageToOthers(vvSender, messageObj);
+        RmiServer.broadcastLobbyMessageToOthers(vvSender, messageObj);
     }
 
     // Create game objects and player, add player to the game
@@ -38,7 +38,7 @@ public class LobbyController {
 
     public static InternalGameInfo joinGame(int idGame ,String name) throws IllegalStateException{
 
-        GameManager gameManager = GameManagersQueue.getGameManager(idGame);
+        GameManager gameManager = GameManagersMaps.getWaitingGameManager(idGame);
         Game game = gameManager.getGame();
 
         if(!game.checkAvailableName(name))

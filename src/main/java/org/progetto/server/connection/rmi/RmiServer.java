@@ -1,14 +1,11 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualView;
-import org.progetto.server.controller.GameManager;
-import org.progetto.server.model.Player;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RmiServer extends Thread {
 
@@ -16,8 +13,7 @@ public class RmiServer extends Thread {
     // ATTRIBUTES
     // =======================
 
-    private static final ArrayList<VirtualView> rmiClients = new ArrayList<>();
-    private final static HashMap<VirtualView, GameManager> virtualViewGameManager = new HashMap<>();
+    private static final ArrayList<VirtualView> lobbyRmiClients = new ArrayList<>();
 
     // =======================
     // MAIN
@@ -40,40 +36,28 @@ public class RmiServer extends Thread {
     // OTHER FUNCTIONS
     // =======================
 
-    public static void addRmiClient(VirtualView rmiClient) {
-        synchronized (rmiClients) {
-            rmiClients.add(rmiClient);
+    public static void addLobbyRmiClient(VirtualView rmiClient) {
+        synchronized (lobbyRmiClients) {
+            lobbyRmiClients.add(rmiClient);
         }
     }
 
-    public static void removeRmiClient(VirtualView rmiClient) {
-        synchronized (rmiClients) {
-            rmiClients.remove(rmiClient);
+    public static void removeLobbyRmiClient(VirtualView rmiClient) {
+        synchronized (lobbyRmiClients) {
+            lobbyRmiClients.remove(rmiClient);
         }
     }
 
-    public static void addVirtualViewGameManager(VirtualView rmiClient, GameManager gameManager) {
-        synchronized (virtualViewGameManager) {
-            virtualViewGameManager.put(rmiClient, gameManager);
-        }
-    }
+    public static void broadcastLobbyMessage(Object messageObj) {
 
-    public static GameManager getVirtualViewGameManager(VirtualView rmiClient) {
-        synchronized (virtualViewGameManager) {
-            return virtualViewGameManager.get(rmiClient);
-        }
-    }
+        ArrayList<VirtualView> lobbyRmiClientsCopy;
 
-    public static void broadcastMessage(Object messageObj) {
-
-        ArrayList<VirtualView> rmiClientsCopy;
-
-        synchronized (rmiClients) {
-            rmiClientsCopy = new ArrayList<>(rmiClients);
+        synchronized (lobbyRmiClients) {
+            lobbyRmiClientsCopy = new ArrayList<>(lobbyRmiClients);
         }
 
         try{
-            for (VirtualView vv : rmiClientsCopy) {
+            for (VirtualView vv : lobbyRmiClientsCopy) {
                 vv.sendMessage(messageObj);
             }
         } catch (RemoteException e) {
@@ -81,16 +65,16 @@ public class RmiServer extends Thread {
         }
     }
 
-    public static void broadcastMessageToOthers(VirtualView sender, Object messageObj) {
+    public static void broadcastLobbyMessageToOthers(VirtualView sender, Object messageObj) {
 
-        ArrayList<VirtualView> rmiClientsCopy;
+        ArrayList<VirtualView> lobbyRmiClientsCopy;
 
-        synchronized (rmiClients) {
-            rmiClientsCopy = new ArrayList<>(rmiClients);
+        synchronized (lobbyRmiClients) {
+            lobbyRmiClientsCopy = new ArrayList<>(lobbyRmiClients);
         }
 
         try{
-            for (VirtualView vv : rmiClientsCopy) {
+            for (VirtualView vv : lobbyRmiClientsCopy) {
                 if(!vv.equals(sender))
                     vv.sendMessage(messageObj);
             }

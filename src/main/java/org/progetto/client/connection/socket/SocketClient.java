@@ -1,5 +1,6 @@
 package org.progetto.client.connection.socket;
 
+import org.progetto.client.GameData;
 import org.progetto.client.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.messages.toServer.CreateGameMessage;
@@ -31,12 +32,12 @@ public class SocketClient {
         }
     }
 
-    public static void createNewGame(String name) {
-        SocketWriter.sendMessage(new CreateGameMessage(1, 4, name));
+    public static void createNewGame() {
+        SocketWriter.sendMessage(new CreateGameMessage(1, 4, GameData.getNamePlayer()));
     }
 
-    public static void tryJoinToGame(String username, int idGame){
-        SocketWriter.sendMessage(new JoinGameMessage(idGame, username));
+    public static void tryJoinToGame(int idGame){
+        SocketWriter.sendMessage(new JoinGameMessage(idGame, GameData.getNamePlayer()));
     }
 
     public static void startGame(){

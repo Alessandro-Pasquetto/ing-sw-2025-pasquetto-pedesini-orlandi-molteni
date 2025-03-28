@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.GameData;
 import org.progetto.client.PageController;
 import org.progetto.messages.toClient.*;
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class HandlerMessage {
         } else if (messageObj instanceof GameInfoMessage initGameMessage) {
 
             System.out.println("You have created a new game");
+            GameData.setIdGame(initGameMessage.getIdGame());
 
             try {
                 PageController.switchScene("game.fxml", "Game");

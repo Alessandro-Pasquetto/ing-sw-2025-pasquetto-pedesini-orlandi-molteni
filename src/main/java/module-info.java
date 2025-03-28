@@ -26,4 +26,6 @@ module org.progetto{
     exports org.progetto.server.connection.rmi;
     exports org.progetto.messages.toClient;
     exports org.progetto.server.internalMessages;
+    exports org.progetto.client.view;
+    opens org.progetto.client.view to com.google.gson, javafx.fxml;
 }

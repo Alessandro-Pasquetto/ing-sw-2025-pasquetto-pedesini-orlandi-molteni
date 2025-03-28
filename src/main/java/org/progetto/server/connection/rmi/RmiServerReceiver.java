@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.controller.GameManager;
+import org.progetto.server.controller.GameManagersMaps;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Board;
@@ -23,7 +24,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void connect(VirtualView rmiClient) throws RemoteException {
-        RmiServer.addRmiClient(rmiClient);
+        RmiServer.addLobbyRmiClient(rmiClient);
     }
 
     @Override
@@ -33,16 +34,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         GameManager gameManager = internalGameInfo.getGameManager();
         Game game = gameManager.getGame();
+        int idGame = game.getId();
         Board board = game.getBoard();
         Player player = internalGameInfo.getPlayer();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        RmiServer.removeRmiClient(view);
+        RmiServer.removeLobbyRmiClient(view);
         gameManager.addRmiClient(view);
-        RmiServer.addVirtualViewGameManager(view, gameManager);
+        GameManagersMaps.addWaitingGameManager(idGame, gameManager);
 
-        LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(game.getId()), null, view);
-        view.sendMessage(new GameInfoMessage(board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(idGame), null, view);
+        view.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 
     @Override
@@ -63,22 +65,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         Player player = internalGameInfo.getPlayer();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        RmiServer.removeRmiClient(view);
+        RmiServer.removeLobbyRmiClient(view);
         gameManager.addRmiClient(view);
-        RmiServer.addVirtualViewGameManager(view, gameManager);
 
         view.sendMessage("AllowedToJoinGame");
-        view.sendMessage(new GameInfoMessage(board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        view.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 
     @Override
-    public void startGame(VirtualView view) throws RemoteException {
-        GameController.startGame(RmiServer.getVirtualViewGameManager(view));
+    public void startGame(VirtualView view, int idGame) throws RemoteException {
+        GameController.startGame(GameManagersMaps.getGameManager(idGame));
     }
 
     @Override
-    public void pickHiddenComponent(VirtualView view, String name) throws RemoteException{
-        GameManager gameManager = RmiServer.getVirtualViewGameManager(view);
+    public void pickHiddenComponent(VirtualView view, int idGame, String name) throws RemoteException{
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
         Player player = null;
         try {
             player = gameManager.getGame().getPlayerByName(name);
@@ -91,8 +92,8 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void placeHandComponentAndPickHiddenComponent(VirtualView view, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException{
-        GameManager gameManager = RmiServer.getVirtualViewGameManager(view);
+    public void placeHandComponentAndPickHiddenComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException{
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
         Player player = null;
         try {
             player = gameManager.getGame().getPlayerByName(name);

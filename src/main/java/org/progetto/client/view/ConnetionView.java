@@ -1,4 +1,4 @@
-package org.progetto.client;
+package org.progetto.client.view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;

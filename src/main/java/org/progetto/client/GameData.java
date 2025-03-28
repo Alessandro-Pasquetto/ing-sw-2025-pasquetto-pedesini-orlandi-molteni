@@ -5,6 +5,7 @@ public class GameData {
     // =======================
     // ATTRIBUTES
     // =======================
+    private static int idGame;
     private static String namePlayer;
 
     private static int rHandComponent = 0;
@@ -14,6 +15,11 @@ public class GameData {
     // =======================
     // GETTERS
     // =======================
+
+
+    public static int getIdGame() {
+        return idGame;
+    }
 
     public static String getNamePlayer(){
         return namePlayer;
@@ -34,6 +40,11 @@ public class GameData {
     // =======================
     // SETTERS
     // =======================
+
+
+    public static void setIdGame(int idGame) {
+        GameData.idGame = idGame;
+    }
 
     public static void setNamePlayer(String namePlayer){
         GameData.namePlayer = namePlayer;
