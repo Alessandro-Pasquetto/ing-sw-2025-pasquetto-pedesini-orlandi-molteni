@@ -206,8 +206,9 @@ public class Game {
      *
      * @author Alessandro
      * @param player is the player who is discarding a component
+     * @return the imgSrc of the discarded component
      */
-    public void discardComponent(Player player) throws IllegalStateException{
+    public String discardComponent(Player player) throws IllegalStateException{
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
         Component discardedComponent = buildingBoard.getHandComponent();
@@ -221,6 +222,7 @@ public class Game {
         synchronized (visibleComponentDeck) {
             visibleComponentDeck.add(discardedComponent);
         }
+        return discardedComponent.getImgSrc();
     }
 
     /**

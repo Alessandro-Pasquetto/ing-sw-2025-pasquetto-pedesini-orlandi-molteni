@@ -242,15 +242,14 @@ class GameTest {
 
         game.addPlayer(mario);
 
-        Component component_discarded = game.pickHiddenComponent(mario);
-        game.discardComponent(mario);
+        Component nextDiscardedComponent = game.pickHiddenComponent(mario);
+        String imgSrcDiscardedComponent = game.discardComponent(mario);
 
-        game.pickVisibleComponent(0,mario);
+        game.pickVisibleComponent(0, mario);
 
         Component component_picked = mario.getSpaceship().getBuildingBoard().getHandComponent();
 
-        assertEquals(component_picked,component_discarded);
-
+        assertEquals(component_picked, nextDiscardedComponent);
 
     }
 
@@ -261,8 +260,8 @@ class GameTest {
 
         game.addPlayer(mario);
 
-        Component component_discarded = game.pickHiddenComponent(mario);
-        game.discardComponent(mario);
+        Component pickedComponent = game.pickHiddenComponent(mario);
+        String imgSrcDiscardedComponent = game.discardComponent(mario);
 
         assertNull(mario.getSpaceship().getBuildingBoard().getHandComponent());
 

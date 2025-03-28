@@ -158,23 +158,15 @@ public class GameController {
             return;
         }
 
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        try{
+            String imgSrc = gameManager.getGame().discardComponent(player);
+            gameManager.broadcastGameMessageToOthers( new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
 
-        if(buildingBoard.getHandComponent() != null){
-            String imgSrc = buildingBoard.getHandComponent().getImgSrc();
-
-            try{
-                gameManager.getGame().discardComponent(player);
-                gameManager.broadcastGameMessageToOthers( new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
-
-            }catch (IllegalStateException e){
-                if(e.getMessage().equals("EmptyHandComponent"))
-                    sendMessage("EmptyHandComponent", swSender, vvSender);
-                else
-                    sendMessage(e.getMessage(), swSender, vvSender);
-            }
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("EmptyHandComponent"))
+                sendMessage("EmptyHandComponent", swSender, vvSender);
+            else
+                sendMessage(e.getMessage(), swSender, vvSender);
         }
-        else
-            sendMessage("ImpossibleDiscardComponent", swSender, vvSender);
     }
 }
