@@ -1,20 +1,14 @@
 package org.progetto.server.model;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.events.EventCard;
-
-import java.io.IOException;
+import org.progetto.server.model.events.CardType;
+import org.progetto.server.model.events.Epidemic;
+import org.progetto.server.model.events.Sabotage;
 import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void getId() {
@@ -38,6 +32,17 @@ class GameTest {
     void getPhase() {
         Game game = new Game(1, 4, 2);
         assertEquals(GamePhase.INIT, game.getPhase());
+    }
+
+    @Test
+    void getPlayerByName(){
+        Game game = new Game(1, 4, 2);
+        game.addPlayer(new Player("mario",1,2));
+        Player alice = new Player("alice",1,2);
+        game.addPlayer(alice);
+        game.addPlayer(new Player("bob",1,2));
+
+        assertEquals(alice, game.getPlayerByName("alice"));
     }
 
     @Test
@@ -102,6 +107,38 @@ class GameTest {
     }
 
     @Test
+    void getActiveEventCard(){
+        Game game = new Game(0, 3,2);
+
+        game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
+        assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
+
+        game.setActiveEventCard(new Sabotage(CardType.SABOTAGE, 2, "img"));
+        assertEquals(CardType.SABOTAGE, game.getActiveEventCard().getType());
+        assertNotEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
+    }
+
+    @Test
+    void getActivePlayer(){
+        Game game = new Game(0,3,2);
+        Player player = new Player("tom", 1, 1);
+
+        game.setActivePlayer(player);
+    }
+
+    @Test
+    void getNumReadyPlayers(){
+        Game game = new Game(0,3,2);
+
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(false);
+
+        assertEquals(2, game.getNumReadyPlayers());
+    }
+
+    @Test
     void setPhase() {
         Game game = new Game(1, 4, 2);
 
@@ -123,6 +160,48 @@ class GameTest {
         // Test setting to END
         game.setPhase(GamePhase.ENDGAME);
         assertEquals(GamePhase.ENDGAME, game.getPhase());
+    }
+
+    @Test
+    void setActiveEventCard(){
+        Game game = new Game(0, 3,2);
+
+        game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
+        assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
+
+        game.setActiveEventCard(new Sabotage(CardType.SABOTAGE, 2, "img"));
+        assertEquals(CardType.SABOTAGE, game.getActiveEventCard().getType());
+        assertNotEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
+    }
+
+    @Test
+    void setActivePlayer(){
+        Game game = new Game(0, 3,2);
+        Player player = new Player("tom", 1, 1);
+
+        game.setActivePlayer(player);
+
+        assertEquals(player, game.getActivePlayer());
+    }
+
+    @Test
+    void loadEvents(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickUpEventCardDeck(mario,0));
+    }
+
+    @Test
+    void loadComponents(){
+        Player mario = new Player("mario", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        game.addPlayer(mario);
+
+        assertNotNull(game.pickHiddenComponent(mario));
     }
 
     @Test
@@ -165,27 +244,6 @@ class GameTest {
     }
 
     @Test
-    void loadEvents(){
-        Player mario = new Player("mario", 1, 2);
-        Game game = new Game(0, 3, 2);
-
-        game.addPlayer(mario);
-
-        assertNotNull(game.pickUpEventCardDeck(mario,0));
-    }
-
-    @Test
-    void loadComponents(){
-        Player mario = new Player("mario", 1, 2);
-        Game game = new Game(0, 3, 2);
-
-        game.addPlayer(mario);
-
-        assertNotNull(game.pickHiddenComponent(mario));
-    }
-
-
-    @Test
     void pickUpEventCardDeck(){
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
@@ -193,35 +251,28 @@ class GameTest {
         game.addPlayer(mario);
 
         assertNotNull(game.pickUpEventCardDeck(mario,0));
-
     }
 
     @Test
-    void putDownEventDeck(){
+    void putDownEventCardDeck(){
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
 
-
         game.pickUpEventCardDeck(mario,0);
         assertTrue(game.putDownEventCardDeck(mario,0));
         assertFalse(game.putDownEventCardDeck(mario,1));
-
-
-
     }
 
     @Test
-    void composeHiddenEventDec(){
+    void composeHiddenEventDeck(){
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
 
         assertNotNull(game.pickEventCard());
-
-
     }
 
 
@@ -250,7 +301,6 @@ class GameTest {
         Component component_picked = mario.getSpaceship().getBuildingBoard().getHandComponent();
 
         assertEquals(component_picked, nextDiscardedComponent);
-
     }
 
     @Test
@@ -264,8 +314,6 @@ class GameTest {
         String imgSrcDiscardedComponent = game.discardComponent(mario);
 
         assertNull(mario.getSpaceship().getBuildingBoard().getHandComponent());
-
-
     }
 
     @Test
@@ -277,11 +325,29 @@ class GameTest {
         game.addPlayer(mario);
 
         assertNotNull(game.pickEventCard());
-
-
     }
 
     @Test
-    void tryAddPlayer() {
+    void checkAvailableName() {
+        Game game = new Game(0,3,2);
+        game.addPlayer(new Player("alice",1,2));
+        game.addPlayer(new Player("matteo",1,2));
+
+        assertFalse(game.checkAvailableName("alice"));
+        assertFalse(game.checkAvailableName("matteo"));
+        assertTrue(game.checkAvailableName("gianfranco"));
+        assertTrue(game.checkAvailableName("francesco"));
+    }
+
+    @Test
+    void addReadyPlayers(){
+        Game game = new Game(0,3,2);
+
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(true);
+        game.addReadyPlayers(false);
+
+        assertEquals(2, game.getNumReadyPlayers());
     }
 }

@@ -87,7 +87,7 @@ class PlayerTest {
 
         player.setIsReady(true, game);
 
-        assertEquals(1, game.getNumReadyPlayers().get());
+        assertEquals(1, game.getNumReadyPlayers());
     }
 
     @Test

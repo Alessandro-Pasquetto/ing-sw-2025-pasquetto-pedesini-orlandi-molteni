@@ -116,8 +116,8 @@ public class Game {
         return activePlayer;
     }
 
-    public AtomicInteger getNumReadyPlayers() {
-        return numReadyPlayers;
+    public int getNumReadyPlayers() {
+        return numReadyPlayers.get();
     }
 
     // =======================
@@ -130,13 +130,120 @@ public class Game {
         }
     }
 
-    private void setActiveEventCard(EventCard eventCard) {
-        this.activeEventCard = eventCard;
+    public void setActiveEventCard(EventCard eventCard) {
+        synchronized (this) {
+            this.activeEventCard = eventCard;
+        }
+    }
+
+    public void setActivePlayer(Player player) {
+        synchronized (this) {
+            this.activePlayer = player;
+        }
     }
 
     // =======================
     // OTHER METHODS
     // =======================
+
+    /**
+     * Loading event cards from json file and initialize visibleEventCardDecks
+     *
+     * @author Lorenzo
+     * @return event card deck (list of event cards)
+     */
+    private ArrayList<EventCard>[] loadEvents(){
+
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(EventCard.class, new EventDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            Type listType = new TypeToken<ArrayList<EventCard>>() {}.getType();
+
+            if(level == 1) {
+
+                ArrayList<EventCard> demoDeck;
+                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCardsL.json");
+                demoDeck = gson.fromJson(reader, listType);
+                reader.close();
+
+                Collections.shuffle(demoDeck);
+
+                hiddenEventDeck = demoDeck;
+
+                return null;
+
+            }
+
+            if(level == 2) {
+                ArrayList<EventCard> lv1Deck;
+                ArrayList<EventCard> lv2Deck;
+
+                ArrayList<EventCard>[] Deck = (ArrayList<EventCard>[]) new ArrayList[3];
+                for (int i = 0; i < 3; i++) {
+                    Deck[i] = new ArrayList<>();
+                }
+
+                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
+                lv1Deck = gson.fromJson(reader, listType);
+                reader.close();
+
+                reader = new FileReader("src/main/resources/org.progetto.server/EventCards2.json");
+                lv2Deck = gson.fromJson(reader, listType);
+                reader.close();
+
+                Collections.shuffle(lv1Deck);
+                Collections.shuffle(lv2Deck);
+
+                hiddenEventDeck.add(lv1Deck.getFirst());
+                hiddenEventDeck.addAll(lv2Deck.subList(0,2));
+
+
+                for(int i = 1; i<4; i++) {
+                    Deck[i-1].add(lv1Deck.get(i));
+                    Deck[i-1].addAll(lv2Deck.subList(i*i+1, i*i+3));
+                }
+
+                return Deck;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * Loading all components saved on json file in to the componentDeck
+     *
+     * @author Lorenzo
+     * @return component deck (list of components)
+     */
+    private ArrayList<Component> loadComponents(){
+
+        try {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            Type listType = new TypeToken<ArrayList<Component>>() {}.getType();
+
+            FileReader reader = new FileReader("src/main/resources/org.progetto.server/Components.json");
+            ArrayList<Component> components = gson.fromJson(reader, listType);
+            reader.close();
+
+            return components;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
 
     // todo: saveGame
     /**
@@ -267,105 +374,6 @@ public class Game {
         setActiveEventCard(pickedEventCard);
 
         return pickedEventCard;
-    }
-
-    /**
-     * Loading event cards from json file and initialize visibleEventCardDecks
-     *
-     * @author Lorenzo
-     * @return event card deck (list of event cards)
-     */
-    private ArrayList<EventCard>[] loadEvents(){
-
-        try {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(EventCard.class, new EventDeserializer());
-            Gson gson = gsonBuilder.create();
-
-            Type listType = new TypeToken<ArrayList<EventCard>>() {}.getType();
-
-            if(level == 1) {
-
-                ArrayList<EventCard> demoDeck;
-                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCardsL.json");
-                demoDeck = gson.fromJson(reader, listType);
-                reader.close();
-
-                Collections.shuffle(demoDeck);
-
-                hiddenEventDeck = demoDeck;
-
-                return null;
-
-            }
-
-            if(level == 2) {
-                ArrayList<EventCard> lv1Deck;
-                ArrayList<EventCard> lv2Deck;
-
-                ArrayList<EventCard>[] Deck = (ArrayList<EventCard>[]) new ArrayList[3];
-                for (int i = 0; i < 3; i++) {
-                    Deck[i] = new ArrayList<>();
-                }
-
-                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
-                lv1Deck = gson.fromJson(reader, listType);
-                reader.close();
-
-                reader = new FileReader("src/main/resources/org.progetto.server/EventCards2.json");
-                lv2Deck = gson.fromJson(reader, listType);
-                reader.close();
-
-                Collections.shuffle(lv1Deck);
-                Collections.shuffle(lv2Deck);
-
-                hiddenEventDeck.add(lv1Deck.getFirst());
-                hiddenEventDeck.addAll(lv2Deck.subList(0,2));
-
-
-                for(int i = 1; i<4; i++) {
-                    Deck[i-1].add(lv1Deck.get(i));
-                    Deck[i-1].addAll(lv2Deck.subList(i*i+1, i*i+3));
-                }
-
-                return Deck;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return null;
-        }
-
-        return null;
-    }
-
-    /**
-     * Loading all components saved on json file in to the componentDeck
-     *
-     * @author Lorenzo
-     * @return component deck (list of components)
-     */
-    private ArrayList<Component> loadComponents(){
-
-        try {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
-            Gson gson = gsonBuilder.create();
-
-            Type listType = new TypeToken<ArrayList<Component>>() {}.getType();
-
-            FileReader reader = new FileReader("src/main/resources/org.progetto.server/Components.json");
-            ArrayList<Component> components = gson.fromJson(reader, listType);
-            reader.close();
-
-            return components;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-            return null;
-        }
     }
 
     /**
