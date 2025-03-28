@@ -83,10 +83,17 @@ public class GameView {
                 RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
     }
 
-    // todo: RMI version
+    /**
+     * handle discard communication between view and controller
+     * @author lorenzo
+     * @param event
+     */
     public void discardComponent(ActionEvent event) {
         if(handComponent != null)
-            SocketClient.discardComponent();
+            if(HandlerMessage.getIsSocket())
+                SocketClient.discardComponent();
+            else
+                RmiClientSender.discardComponent();
     }
 
     public void removeHandComponent() {

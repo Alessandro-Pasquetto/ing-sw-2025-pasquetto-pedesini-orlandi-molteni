@@ -68,4 +68,19 @@ public class RmiClientSender{
             throw new RuntimeException(e);
         }
     }
+
+
+    /**
+     * non ho idea di cosa faccia ale perfavore help :')
+     * @author Lorenzo
+     *
+     */
+    public static void discardComponent(){
+        try {
+            server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualView;
+import org.progetto.messages.toClient.AnotherPlayerDiscardComponentMessage;
 import org.progetto.messages.toClient.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.PickedComponentMessage;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -71,4 +72,37 @@ public class GameController {
         }else
             sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
     }
+
+    /**
+     * handle the player decision to discard its hand component
+     * @author Lorenzo
+     * @param gameManager is the class that manage the current game
+     * @param player is the one that want to discard a cart
+     * @param swSender sender for socket
+     * @param vvSender registry for RMI
+     */
+    public static void discardComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualView vvSender) {
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        if(buildingBoard.getHandComponent() != null){
+            String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+
+            try{
+                gameManager.getGame().discardComponent(player);
+                gameManager.broadcastGameMessageToOthers( new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
+
+            }catch (IllegalStateException e){
+                if(e.getMessage().equals("EmptyHandComponent"))
+                    sendMessage("EmptyHandComponent", swSender, vvSender);
+                else
+                    sendMessage(e.getMessage(), swSender, vvSender);
+            }
+        }
+        else
+            sendMessage("ImpossibleDiscardComponent", swSender, vvSender);
+
+    }
+
+
 }

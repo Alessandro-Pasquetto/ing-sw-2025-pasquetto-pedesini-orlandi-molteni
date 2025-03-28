@@ -105,4 +105,31 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, null, view);
     }
+
+
+    /**
+     * allows client to call for discardComponent with RMI in server proxy
+     * @author Lorenzo
+     * @param view is the interface we want to address to
+     * @param idGame were we want to discard
+     * @param name of the player that want to discard
+     * @throws RemoteException if a player with name in idGame was not found
+     */
+
+    @Override
+    public void discardComponent(VirtualView view,int idGame, String name) throws RemoteException {
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                view.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.discardComponent(gameManager, player, null, view);
+    }
+
+
 }
