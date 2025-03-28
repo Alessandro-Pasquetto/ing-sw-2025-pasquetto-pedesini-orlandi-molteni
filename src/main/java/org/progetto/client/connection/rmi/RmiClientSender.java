@@ -61,6 +61,14 @@ public class RmiClientSender{
         }
     }
 
+    public static void pickVisibleComponent(){
+        try {
+            server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), -1); // non so dove pescare l'idx :C
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
         try {
             server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
@@ -69,6 +77,13 @@ public class RmiClientSender{
         }
     }
 
+    public static void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
+        try {
+            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * non ho idea di cosa faccia ale perfavore help :')

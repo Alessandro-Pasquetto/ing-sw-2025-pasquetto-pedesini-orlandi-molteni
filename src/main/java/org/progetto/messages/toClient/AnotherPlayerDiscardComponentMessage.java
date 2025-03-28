@@ -2,7 +2,7 @@ package org.progetto.messages.toClient;
 
 public class AnotherPlayerDiscardComponentMessage {
 
-// =======================
+    // =======================
     // ATTRIBUTES
     // =======================
 
@@ -20,7 +20,6 @@ public class AnotherPlayerDiscardComponentMessage {
         this.namePlayer = namePlayer;
         this.imgSrcDiscardedComponent = imgSrcDiscardedComponent;
     }
-
 
     // =======================
     // GETTERS

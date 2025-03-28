@@ -16,7 +16,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameController {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private static final AtomicInteger currentIdGame = new AtomicInteger(0);
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     private static void sendMessage(Object message, SocketWriter swSender, VirtualView vvSender){
         if(swSender != null)
@@ -58,6 +66,27 @@ public class GameController {
         }
     }
 
+    public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, SocketWriter swSender, VirtualView vvSender){
+
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        try{
+            gameManager.getGame().pickVisibleComponent(componentIdx, player);
+            Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
+            sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("FullHandComponent"))
+                sendMessage("FullHandComponent", swSender, vvSender);
+
+            if(e.getMessage().equals("IllegalIndexComponent"))
+                sendMessage("IllegalIndexComponent", swSender, vvSender);
+        }
+    }
+
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualView vvSender) {
 
         if(gameManager.timerExpired()){
@@ -85,8 +114,37 @@ public class GameController {
             sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
     }
 
+    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, SocketWriter swSender, VirtualView vvSender) {
+
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+        if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            try{
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
+                gameManager.getGame().pickVisibleComponent(componentIdx, player);
+                Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
+                sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+
+            } catch (IllegalStateException e) {
+                if (e.getMessage().equals("FullHandComponent"))
+                    sendMessage("FullHandComponent", swSender, vvSender);
+
+                if (e.getMessage().equals("IllegalIndexComponent"))
+                    sendMessage("IllegalIndexComponent", swSender, vvSender);
+            }
+        }else
+            sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
+    }
+
     /**
-     * handle the player decision to discard its hand component
+     * Handle the player decision to discard its hand component
+     *
      * @author Lorenzo
      * @param gameManager is the class that manage the current game
      * @param player is the one that want to discard a cart

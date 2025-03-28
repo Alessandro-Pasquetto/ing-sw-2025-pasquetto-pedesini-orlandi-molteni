@@ -13,6 +13,7 @@ public class PickedComponentMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
+
     public PickedComponentMessage(String imgPath) {
         this.imgPath = imgPath;
     }

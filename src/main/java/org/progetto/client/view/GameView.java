@@ -83,9 +83,24 @@ public class GameView {
                 RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
     }
 
+    public void pickVisibleComponent(ActionEvent event) {
+
+        if(handComponent == null)
+            if(HandlerMessage.getIsSocket())
+                SocketClient.pickHiddenComponent();
+            else
+                RmiClientSender.pickHiddenComponent();
+        else if(GameData.getxHandComponent() != -1)
+            if(HandlerMessage.getIsSocket())
+                SocketClient.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+            else
+                RmiClientSender.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+    }
+
     /**
-     * handle discard communication between view and controller
-     * @author lorenzo
+     * Handle discard communication between view and controller
+     *
+     * @author Lorenzo
      * @param event
      */
     public void discardComponent(ActionEvent event) {

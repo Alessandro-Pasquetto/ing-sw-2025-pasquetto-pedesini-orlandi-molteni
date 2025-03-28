@@ -18,9 +18,17 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer{
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     protected RmiServerReceiver() throws RemoteException {
         super();
     }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     @Override
     public void connect(VirtualView rmiClient) throws RemoteException {
@@ -93,6 +101,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void pickVisibleComponent(VirtualView view, int idGame, String name, int idx) throws RemoteException{
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                view.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.pickVisibleComponent(gameManager, player, idx, null, view);
+    }
+
+    @Override
     public void placeHandComponentAndPickHiddenComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagersMaps.getGameManager(idGame);
         Player player = null;
@@ -107,16 +130,30 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, null, view);
     }
 
+    @Override
+    public void placeHandComponentAndPickVisibleComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException{
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                view.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, null, view);
+    }
 
     /**
-     * allows client to call for discardComponent with RMI in server proxy
+     * Allows client to call for discardComponent with RMI in server proxy
+     *
      * @author Lorenzo
      * @param view is the interface we want to address to
      * @param idGame were we want to discard
      * @param name of the player that want to discard
      * @throws RemoteException if a player with name in idGame was not found
      */
-
     @Override
     public void discardComponent(VirtualView view,int idGame, String name) throws RemoteException {
         GameManager gameManager = GameManagersMaps.getGameManager(idGame);
@@ -131,6 +168,4 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         GameController.discardComponent(gameManager, player, null, view);
     }
-
-
 }

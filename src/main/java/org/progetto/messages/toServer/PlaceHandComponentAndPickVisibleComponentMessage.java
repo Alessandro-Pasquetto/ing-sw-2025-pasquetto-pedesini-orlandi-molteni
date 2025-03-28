@@ -1,8 +1,6 @@
 package org.progetto.messages.toServer;
 
-import java.io.Serializable;
-
-public class PlaceHandComponentAndPickHiddenComponentMessage implements Serializable {
+public class PlaceHandComponentAndPickVisibleComponentMessage {
 
     // =======================
     // ATTRIBUTES
@@ -16,7 +14,7 @@ public class PlaceHandComponentAndPickHiddenComponentMessage implements Serializ
     // CONSTRUCTORS
     // =======================
 
-    public PlaceHandComponentAndPickHiddenComponentMessage(int x, int y, int rotation) {
+    public PlaceHandComponentAndPickVisibleComponentMessage(int x, int y, int rotation) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;

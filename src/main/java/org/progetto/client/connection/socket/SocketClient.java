@@ -3,10 +3,7 @@ package org.progetto.client.connection.socket;
 import org.progetto.client.GameData;
 import org.progetto.client.PageController;
 import org.progetto.client.connection.HandlerMessage;
-import org.progetto.messages.toServer.CreateGameMessage;
-import org.progetto.messages.toServer.JoinGameMessage;
-import org.progetto.messages.toServer.PlaceHandComponentAndPickHiddenComponentMessage;
-import org.progetto.messages.toServer.PlaceHandComponentAndShowEventCardDeckMessage;
+import org.progetto.messages.toServer.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -48,8 +45,16 @@ public class SocketClient {
         SocketWriter.sendMessage("PickHiddenComponent");
     }
 
+    public static void pickVisibleComponent(){
+        SocketWriter.sendMessage("PickVisibleComponent");
+    }
+
     public static void placeHandComponentAndPickHiddenComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickHiddenComponentMessage(xHandComponent, yHandComponent, rHandComponent));
+    }
+
+    public static void placeHandComponentAndPickVisibleComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickVisibleComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
     public static void discardComponent(){

@@ -11,7 +11,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LobbyController {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private static final AtomicInteger currentIdGame = new AtomicInteger(0);
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     // Send message to all clients in lobby
     public static void broadcastLobbyMessage(Object messageObj) {

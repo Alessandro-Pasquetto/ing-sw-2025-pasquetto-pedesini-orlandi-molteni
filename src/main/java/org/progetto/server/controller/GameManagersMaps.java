@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import java.util.HashMap;
 
 public class GameManagersMaps {
+
     // =======================
     // ATTRIBUTES
     // =======================
