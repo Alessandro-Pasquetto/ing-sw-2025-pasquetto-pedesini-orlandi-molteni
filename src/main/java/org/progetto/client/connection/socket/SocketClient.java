@@ -53,8 +53,8 @@ public class SocketClient {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickHiddenComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
-    public static void placeHandComponentAndPickVisibleComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
-        SocketWriter.sendMessage(new PlaceHandComponentAndPickVisibleComponentMessage(xHandComponent, yHandComponent, rHandComponent));
+    public static void placeHandComponentAndPickVisibleComponent(int xHandComponent, int yHandComponent, int rHandComponent, int componentIdx) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickVisibleComponentMessage(xHandComponent, yHandComponent, rHandComponent, componentIdx));
     }
 
     public static void discardComponent(){

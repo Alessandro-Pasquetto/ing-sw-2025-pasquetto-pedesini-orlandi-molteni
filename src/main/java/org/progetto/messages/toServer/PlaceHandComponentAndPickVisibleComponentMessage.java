@@ -9,15 +9,17 @@ public class PlaceHandComponentAndPickVisibleComponentMessage {
     int x;
     int y;
     int rotation;
+    int componentIdx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PlaceHandComponentAndPickVisibleComponentMessage(int x, int y, int rotation) {
+    public PlaceHandComponentAndPickVisibleComponentMessage(int x, int y, int rotation, int componentIdx) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+        this.componentIdx = componentIdx;
     }
 
     // =======================
@@ -34,5 +36,9 @@ public class PlaceHandComponentAndPickVisibleComponentMessage {
 
     public int getRotation() {
         return rotation;
+    }
+
+    public int getComponentIdx() {
+        return componentIdx;
     }
 }

@@ -92,9 +92,9 @@ public class GameView {
                 RmiClientSender.pickHiddenComponent();
         else if(GameData.getxHandComponent() != -1)
             if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+                SocketClient.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), -1);
             else
-                RmiClientSender.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+                RmiClientSender.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), -1);
     }
 
     /**

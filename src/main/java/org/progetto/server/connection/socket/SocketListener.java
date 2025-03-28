@@ -2,10 +2,8 @@ package org.progetto.server.connection.socket;
 
 import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.messages.toClient.PickedComponentMessage;
-import org.progetto.messages.toServer.CreateGameMessage;
+import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
-import org.progetto.messages.toServer.JoinGameMessage;
-import org.progetto.messages.toServer.PlaceHandComponentAndPickHiddenComponentMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
@@ -103,13 +101,24 @@ public class SocketListener extends Thread {
                 break;
 
             case BUILDING:
-                if(messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
+                if (messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
                     int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
                     int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
-
                     GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
-                }else if(messageObj instanceof String messageString){
+
+                } else if (messageObj instanceof PickVisibleComponent pickVisibleComponent) {
+                    int componentIdx = pickVisibleComponent.getComponentIdx();
+                    GameController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter, null);
+
+                } else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
+                    int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
+                    int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
+                    int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
+                    int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
+                    GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, socketWriter, null);
+
+                } else if (messageObj instanceof String messageString) {
                     switch (messageString){
                         case "PickHiddenComponent":
                             GameController.pickHiddenComponent(gameManager, player, socketWriter, null);

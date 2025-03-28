@@ -77,9 +77,9 @@ public class RmiClientSender{
         }
     }
 
-    public static void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
+    public static void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx){
         try {
-            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }

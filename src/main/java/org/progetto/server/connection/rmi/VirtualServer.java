@@ -14,6 +14,6 @@ public interface VirtualServer extends Remote {
     void pickHiddenComponent(VirtualView view, int idGame, String name) throws RemoteException;
     void pickVisibleComponent(VirtualView view, int idGame, String name, int idx) throws RemoteException;
     void placeHandComponentAndPickHiddenComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException;
-    void placeHandComponentAndPickVisibleComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx) throws RemoteException;
+    void placeHandComponentAndPickVisibleComponent(VirtualView view, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException;
     void discardComponent(VirtualView view,int idGame,String name) throws RemoteException;
 }
