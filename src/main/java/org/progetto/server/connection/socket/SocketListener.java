@@ -115,14 +115,11 @@ public class SocketListener extends Thread {
                             case "PickHiddenComponent":
                                 GameController.pickHiddenComponent(game, player, socketWriter, null);
                                 break;
+
                             case "DiscardComponent":
-                                try {
-                                    game.discardComponent(player);
-                                }catch (IllegalStateException e) {
-                                    if(e.getMessage().equals("EmptyHandComponent"))
-                                        socketWriter.sendMessage("EmptyHandComponent");
-                                }
+                                GameController.discardComponent(gameManager,player,socketWriter,null);
                                 break;
+
                             default:
                                 break;
                         }
