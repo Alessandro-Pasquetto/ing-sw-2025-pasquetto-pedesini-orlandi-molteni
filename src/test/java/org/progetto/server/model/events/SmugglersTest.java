@@ -134,10 +134,10 @@ class SmugglersTest {
         assertTrue(smugglers.chooseDiscardedBox(s, bs2, 2));
         assertFalse(smugglers.chooseDiscardedBox(s, bs2, 3));
 
-        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
 
-        bs3.addBox(s, new Box(BoxType.GREEN, 2),0);
-        bs3.addBox(s, new Box(BoxType.BLUE, 1),1);
+        bs3.addBox(s, Box.GREEN,0);
+        bs3.addBox(s, Box.BLUE,1);
 
         assertTrue(smugglers.chooseDiscardedBox(s, bs2, 0));
         assertFalse(smugglers.chooseDiscardedBox(s, bs3, 1));

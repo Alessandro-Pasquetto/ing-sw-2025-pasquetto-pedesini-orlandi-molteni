@@ -6,7 +6,6 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.BoxType;
 import org.progetto.server.model.components.ComponentType;
 
 import java.util.ArrayList;
@@ -135,8 +134,8 @@ class PlanetsTest {
         track = board.getTrack();
 
         Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
-        BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, true);
-        BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2, false);
+        BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         Box boxR = Box.RED;
         Box boxY = Box.YELLOW;
         Box boxG = Box.GREEN;
