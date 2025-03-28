@@ -103,30 +103,26 @@ public class SocketListener extends Thread {
                 break;
 
             case BUILDING:
-                if(gameManager.getTimerObj().getTimerInt() > 0){
-                    if(messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
-                        int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
-                        int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
-                        int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
+                if(messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
+                    int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
+                    int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
+                    int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
 
-                        GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
-                    }else if(messageObj instanceof String messageString){
-                        switch (messageString){
-                            case "PickHiddenComponent":
-                                GameController.pickHiddenComponent(game, player, socketWriter, null);
-                                break;
+                    GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
+                }else if(messageObj instanceof String messageString){
+                    switch (messageString){
+                        case "PickHiddenComponent":
+                            GameController.pickHiddenComponent(gameManager, player, socketWriter, null);
+                            break;
 
-                            case "DiscardComponent":
-                                GameController.discardComponent(gameManager,player,socketWriter,null);
-                                break;
+                        case "DiscardComponent":
+                            GameController.discardComponent(gameManager,player,socketWriter,null);
+                            break;
 
-                            default:
-                                break;
-                        }
+                        default:
+                            break;
                     }
                 }
-                else
-                    clientHandler.getSocketWriter().sendMessage("TimerExpired");
                 break;
 
             case TRAVEL:

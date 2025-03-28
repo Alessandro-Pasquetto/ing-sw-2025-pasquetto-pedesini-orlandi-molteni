@@ -55,8 +55,8 @@ public class GameManager {
         return game;
     }
 
-    public TimerController getTimerObj() {
-        return timer;
+    public boolean timerExpired() {
+        return timer.getTimerInt() == 0;
     }
 
     // =======================

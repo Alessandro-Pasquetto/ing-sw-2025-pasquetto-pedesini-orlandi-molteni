@@ -38,9 +38,15 @@ public class GameController {
         gameManager.startTimer();
     }
 
-    public static void pickHiddenComponent(Game game, Player player, SocketWriter swSender, VirtualView vvSender){
+    public static void pickHiddenComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualView vvSender){
+
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
         try{
-            Component pickedComponent = game.pickHiddenComponent(player);
+            Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
             sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
 
         } catch (IllegalStateException e) {
@@ -53,6 +59,12 @@ public class GameController {
     }
 
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualView vvSender) {
+
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
@@ -83,6 +95,11 @@ public class GameController {
      */
     public static void discardComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualView vvSender) {
 
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         if(buildingBoard.getHandComponent() != null){
@@ -101,8 +118,5 @@ public class GameController {
         }
         else
             sendMessage("ImpossibleDiscardComponent", swSender, vvSender);
-
     }
-
-
 }

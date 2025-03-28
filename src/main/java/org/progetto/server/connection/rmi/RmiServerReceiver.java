@@ -88,7 +88,8 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
                 view.sendMessage("PlayerNameNotFound");
             return;
         }
-        GameController.pickHiddenComponent(gameManager.getGame(), player, null, view);
+
+        GameController.pickHiddenComponent(gameManager, player, null, view);
     }
 
     @Override
