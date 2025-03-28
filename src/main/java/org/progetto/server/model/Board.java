@@ -120,10 +120,8 @@ public class Board {
             if(trackCell == null)
                 distance--;
             else{
-                if(trackCell.getPosition() <= playerPosition - track.length){
-                    trackCell.setHasLeft(true);
-                    track[modulus(playerPosition, track.length)] = null;
-                }
+                if(trackCell.getPosition() <= playerPosition - track.length)
+                    leaveTravel(trackCell);
             }
         }
 

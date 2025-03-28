@@ -6,13 +6,13 @@ public class Player {
     // ATTRIBUTES
     // =======================
 
-    String name;
-    int credits;
-    int color;
-    int position;
-    Spaceship spaceship;
-    boolean hasLeft;
-    boolean isReady;
+    private String name;
+    private int credits;
+    private int color;
+    private int position;
+    private Spaceship spaceship;
+    private boolean hasLeft;
+    private boolean isReady;
 
     // =======================
     // CONSTRUCTORS

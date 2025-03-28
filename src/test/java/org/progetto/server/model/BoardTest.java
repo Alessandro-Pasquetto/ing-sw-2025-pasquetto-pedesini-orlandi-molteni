@@ -80,8 +80,6 @@ class BoardTest {
     void movePlayerByDistance() {
         Player p1 = new Player("gino", 0, 1);
         Player p2 = new Player("arnoldo", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("gianmaria", 3, 1);
 
         Board board;
         Player[] track;
@@ -153,6 +151,23 @@ class BoardTest {
         track = board.getTrack();
 
         assertEquals(p1, track[17]);
+
+        // Player1 laps player2
+        board = new Board(1);
+        track = board.getTrack();
+
+        board.addTraveler(p1, 1);
+        board.addTraveler(p2, 1);
+
+        int pos2 = p2.getPosition();
+
+        board.movePlayerByDistance(p1, 16);
+
+        assertEquals(false, p1.getHasLeft());
+
+        assertFalse(p1.getHasLeft());
+        assertTrue(p2.getHasLeft());
+        assertNull(track[pos2]);
     }
 
     @Test
