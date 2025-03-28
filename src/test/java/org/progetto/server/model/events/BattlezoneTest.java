@@ -12,6 +12,14 @@ class BattlezoneTest {
 
     @Test
     void getCouples() {
+        ArrayList<ConditionPenalty> conditionPenalties = new ArrayList<ConditionPenalty>() {{
+            add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, 3, new ArrayList<Projectile>())));
+            add(new ConditionPenalty(ConditionType.FIREPOWERREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, 3, new ArrayList<Projectile>())));
+            add(new ConditionPenalty(ConditionType.ENGINEPOWERREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, 3, new ArrayList<Projectile>())));
+        }};
+
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", conditionPenalties);
+        assertEquals(conditionPenalties, battlezone.getCouples());
     }
 
     @Test
@@ -384,6 +392,7 @@ class BattlezoneTest {
         assertFalse(battlezone.chooseDiscardedBox(s, bs1, 1));
         assertNotEquals(null, (bs1.getBoxStorage()[1]));
         assertTrue(battlezone.chooseDiscardedBox(s, bs1, 2));
+        assertTrue(battlezone.chooseDiscardedBox(s, bs1, 1));
         assertNull(bs1.getBoxStorage()[2]);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
@@ -412,6 +421,18 @@ class BattlezoneTest {
         assertFalse(battlezone.chooseDiscardedBox(s, bs2, 1));
         assertTrue(battlezone.chooseDiscardedBox(s, bs2, 2));
         assertFalse(battlezone.chooseDiscardedBox(s, bs2, 3));
+
+        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+
+        bs3.addBox(s, new Box(BoxType.GREEN, 2),0);
+        bs3.addBox(s, new Box(BoxType.BLUE, 1),1);
+
+        assertTrue(battlezone.chooseDiscardedBox(s, bs2, 0));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs3, 1));
+        assertTrue(battlezone.chooseDiscardedBox(s, bs3, 0));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs1, 2));
+        assertTrue(battlezone.chooseDiscardedBox(s, bs3, 1));
+        assertFalse(battlezone.chooseDiscardedBox(s, bs3, 2));
     }
 
     @Test

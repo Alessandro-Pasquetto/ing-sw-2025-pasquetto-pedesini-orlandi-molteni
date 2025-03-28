@@ -36,6 +36,7 @@ class SmugglersTest {
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
         Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
+        assertEquals(rewardBoxes, smugglers.getRewardBoxes());
     }
 
     @Test
@@ -102,6 +103,8 @@ class SmugglersTest {
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 1));
         assertNotEquals(null, (bs1.getBoxStorage()[1]));
         assertTrue(smugglers.chooseDiscardedBox(s, bs1, 2));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs1, 3));
+        assertTrue(smugglers.chooseDiscardedBox(s, bs1, 1));
         assertNull(bs1.getBoxStorage()[2]);
 
         for (int i = 0; i < bs1.getCapacity(); i++) {
@@ -130,6 +133,18 @@ class SmugglersTest {
         assertFalse(smugglers.chooseDiscardedBox(s, bs2, 1));
         assertTrue(smugglers.chooseDiscardedBox(s, bs2, 2));
         assertFalse(smugglers.chooseDiscardedBox(s, bs2, 3));
+
+        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3, true);
+
+        bs3.addBox(s, new Box(BoxType.GREEN, 2),0);
+        bs3.addBox(s, new Box(BoxType.BLUE, 1),1);
+
+        assertTrue(smugglers.chooseDiscardedBox(s, bs2, 0));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs3, 1));
+        assertTrue(smugglers.chooseDiscardedBox(s, bs3, 0));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs1, 2));
+        assertTrue(smugglers.chooseDiscardedBox(s, bs3, 1));
+        assertFalse(smugglers.chooseDiscardedBox(s, bs3, 2));
     }
 
     @Test

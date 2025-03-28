@@ -16,10 +16,7 @@ class HousingUnitTest {
     void getCapacity() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        assertEquals(0, housingUnit.getCrewCount());
-
-        housingUnit.setCrewCount(2);
-        assertEquals(2, housingUnit.getCrewCount());
+        assertEquals(3, housingUnit.getCapacity());
     }
 
     @Test
