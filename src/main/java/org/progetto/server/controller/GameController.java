@@ -252,6 +252,38 @@ public class GameController {
     }
 
     /**
+     * Handle the player decision to book a component
+     *
+     * @author Lorenzo
+     * @param gameManager is the class that manage the current game
+     * @param player is the one that want to discard a cart
+     * @param idx where the booked component will be inserted
+     * @param swSender sender for socket
+     * @param vvSender registry for RMI
+     */
+    public static void bookComponent(GameManager gameManager,Player player,int idx, SocketWriter swSender, VirtualClient vvSender) {
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        try {
+            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
+
+            gameManager.getGame().getPlayers().get(gameManager.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().setAsBooked(idx);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),swSender, vvSender);
+
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("HemptyHandComponent"))
+                sendMessage("HemptyHandComponent", swSender, vvSender);
+            else if (e.getMessage().equals("IllegalIndex"))
+                sendMessage("IllegalIndex", swSender, vvSender);
+            else if (e.getMessage().equals("BookedCellOccupied"))
+                sendMessage("BookedCellOccupied", swSender, vvSender);
+        }
+    }
+
+    /**
      * Handles player decision to pick-up a specific eventCard deck
      *
      * @author Gabriele
