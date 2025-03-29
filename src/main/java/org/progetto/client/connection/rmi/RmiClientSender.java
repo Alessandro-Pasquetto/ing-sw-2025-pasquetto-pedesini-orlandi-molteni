@@ -91,13 +91,24 @@ public class RmiClientSender{
     }
 
     /**
-     * non ho idea di cosa faccia ale perfavore help :')
-     * @author Lorenzo
-     *
+     * allows RMI on client to call for the respective method on RMI server
+     * * @author Lorenzo
      */
     public static void discardComponent(){
         try {
             server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * allows RMI on client to call for the respective method on RMI server
+     * * @author Lorenzo
+     */
+    public static void bookComponent(int idx){
+        try {
+            server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), idx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }

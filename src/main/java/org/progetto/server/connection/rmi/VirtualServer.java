@@ -14,4 +14,6 @@ public interface VirtualServer extends Remote {
     void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException;
     void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException;
     void discardComponent(VirtualClient virtualClient,int idGame,String name) throws RemoteException;
+    void bookComponent(VirtualClient virtualClient,int idGame, String name, int idx) throws RemoteException;
+
 }

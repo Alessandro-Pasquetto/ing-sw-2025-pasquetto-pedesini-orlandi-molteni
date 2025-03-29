@@ -110,30 +110,38 @@ public class SocketListener extends Thread {
                     int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
                     GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
 
-                } else if (messageObj instanceof PickVisibleComponent pickVisibleComponent) {
+                }
+                else if (messageObj instanceof PickVisibleComponent pickVisibleComponent) {
                     int componentIdx = pickVisibleComponent.getComponentIdx();
                     GameController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter, null);
 
-                } else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
+                }
+                else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
                     int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
                     int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
                     int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
                     GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, socketWriter, null);
 
-                } else if (messageObj instanceof String messageString) {
-                    switch (messageString){
-                        case "PickHiddenComponent":
-                            GameController.pickHiddenComponent(gameManager, player, socketWriter, null);
-                            break;
+                }
+                else if (messageObj instanceof BookComponentMessage bookComponentMessage) {      //handle incoming book message
+                    int idx = bookComponentMessage.getBookIdx();
+                    GameController.bookComponent(gameManager, player, idx, socketWriter, null);
+                }
 
-                        case "DiscardComponent":
-                            GameController.discardComponent(gameManager,player,socketWriter,null);
-                            break;
+                else if (messageObj instanceof String messageString) {
+                            switch (messageString){
+                                case "PickHiddenComponent":
+                                    GameController.pickHiddenComponent(gameManager, player, socketWriter, null);
+                                    break;
 
-                        default:
-                            break;
-                    }
+                                case "DiscardComponent":
+                                    GameController.discardComponent(gameManager,player,socketWriter,null);
+                                    break;
+
+                                default:
+                                    break;
+                            }
                 }
                 break;
 
