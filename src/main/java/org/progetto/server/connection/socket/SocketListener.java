@@ -1,13 +1,11 @@
 package org.progetto.server.connection.socket;
 
 import org.progetto.messages.toClient.NotifyNewGameMessage;
-import org.progetto.messages.toClient.PickedComponentMessage;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
-import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -111,7 +109,7 @@ public class SocketListener extends Thread {
                     GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
                 }
 
-                else if (messageObj instanceof PickVisibleComponent pickVisibleComponent) {
+                else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
                     int componentIdx = pickVisibleComponent.getComponentIdx();
                     GameController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter, null);
                 }
@@ -132,7 +130,7 @@ public class SocketListener extends Thread {
                     GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, socketWriter, null);
                 }
 
-                else if (messageObj instanceof PickUpEventCardDeck pickUpEventCardDeck) {
+                else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {
                     int deckIdx = pickUpEventCardDeck.getDeckIdx();
                     GameController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter, null);
                 }
@@ -149,7 +147,11 @@ public class SocketListener extends Thread {
                             break;
 
                         case "DiscardComponent":
-                            GameController.discardComponent(gameManager,player,socketWriter,null);
+                            GameController.discardComponent(gameManager, player, socketWriter,null);
+                            break;
+
+                        case "PutDownEventCardDeck":
+                            GameController.putDownEventCardDeck(gameManager, player, socketWriter,null);
                             break;
 
                         default:

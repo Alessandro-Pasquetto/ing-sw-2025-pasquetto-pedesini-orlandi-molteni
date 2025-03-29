@@ -19,6 +19,7 @@ public class GameInfoMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
+
     public GameInfoMessage(int idGame, String imgPathBoard, String imgPathSpaceship, String imgPathCentralUnit) {
         this.idGame = idGame;
         this.imgPathBoard = imgPathBoard;
@@ -29,6 +30,7 @@ public class GameInfoMessage implements Serializable {
     // =======================
     // GETTERS
     // =======================
+
     public int getIdGame() {
         return idGame;
     }

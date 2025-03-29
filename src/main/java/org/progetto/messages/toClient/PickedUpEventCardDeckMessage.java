@@ -5,7 +5,7 @@ import org.progetto.server.model.events.EventCard;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PickedUpEventCardDeck implements Serializable {
+public class PickedUpEventCardDeckMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -17,7 +17,7 @@ public class PickedUpEventCardDeck implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PickedUpEventCardDeck(ArrayList<EventCard> eventCardsDeck) {
+    public PickedUpEventCardDeckMessage(ArrayList<EventCard> eventCardsDeck) {
         this.eventCardsDeck = new ArrayList<>(eventCardsDeck);
     }
 

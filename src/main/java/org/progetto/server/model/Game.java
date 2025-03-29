@@ -11,6 +11,7 @@ import org.progetto.server.model.loadClasses.ComponentDeserializer;
 import org.progetto.server.model.loadClasses.EventDeserializer;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -31,8 +32,8 @@ public class Game {
     private final ArrayList<Component> visibleComponentDeck;
 
     private ArrayList<EventCard> hiddenEventDeck;
-    private final ArrayList<EventCard>[] visibleEventCardDecks;    //array of 3 visible event decks: [left, centre, right]
-    private final Player[] eventDeckAvailable;                    //direct relation to visibleEventCardDecks, if a player is present than he's using it
+    private final ArrayList<EventCard>[] visibleEventCardDecks;    // array of 3 visible event decks: [left, centre, right]
+    private final Player[] eventDeckAvailable;                     // direct relation to visibleEventCardDecks, if a player is present than he's using it
 
     private final Board board;
     private EventCard activeEventCard;
@@ -402,10 +403,14 @@ public class Game {
      * @param player Is the player that wants to pick up the deck
      * @return the deck picked if available
      */
-    public ArrayList<EventCard> pickUpEventCardDeck(Player player,int idx) throws IllegalStateException{
+    public ArrayList<EventCard> pickUpEventCardDeck(Player player, int idx) throws IllegalStateException{
+
+        if (idx < 0 || idx >= eventDeckAvailable.length) {
+            throw new IllegalStateException("IllegalIndexEventCardDeck");
+        }
 
         synchronized (eventDeckAvailable) {
-            if (eventDeckAvailable[idx] == null) {
+            if (eventDeckAvailable[idx] == null && !Arrays.asList(eventDeckAvailable).contains(player)) {
                 eventDeckAvailable[idx] = player;
                 return visibleEventCardDecks[idx];
             } else
@@ -416,18 +421,21 @@ public class Game {
     /**
      * Put-down the visible event-deck
      *
-     * @author Lorenzo
-     * @param idx Deck index
-     * @param player Is the player that wants to put-down the deck
-     * @return true if the event-deck can be put down on the board
+     * @author Gabriele
+     * @param player is the player that wants to put-down the deck
+     * @return the idx of the deck put down
      */
-    public boolean putDownEventCardDeck(Player player, int idx){
-        if((eventDeckAvailable[idx] != null) && (eventDeckAvailable[idx].equals(player))) {
-            eventDeckAvailable[idx] = null;
-            return true;
+    public int putDownEventCardDeck(Player player) throws IllegalStateException {
+        synchronized (eventDeckAvailable) {
+            for (int i = 0; i < eventDeckAvailable.length; i++) {
+                if (eventDeckAvailable[i] != null && eventDeckAvailable[i].equals(player)) {
+                    eventDeckAvailable[i] = null;
+                    return i;
+                }
+            }
         }
-        else
-            return false;
+
+        throw new IllegalStateException("NoCardTakenByPlayer");
     }
 
     /**

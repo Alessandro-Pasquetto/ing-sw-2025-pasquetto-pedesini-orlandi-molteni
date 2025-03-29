@@ -212,7 +212,7 @@ public class GameController {
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
                 ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
-                sendMessage(new PickedUpEventCardDeck(eventCardsDeck), swSender, vvSender);
+                sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck), swSender, vvSender);
                 gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
 
             } catch (IllegalStateException e) {
@@ -274,8 +274,8 @@ public class GameController {
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),swSender, vvSender);
 
         }catch (IllegalStateException e){
-            if(e.getMessage().equals("HemptyHandComponent"))
-                sendMessage("HemptyHandComponent", swSender, vvSender);
+            if(e.getMessage().equals("EmptyHandComponent"))
+                sendMessage("EmptyHandComponent", swSender, vvSender);
             else if (e.getMessage().equals("IllegalIndex"))
                 sendMessage("IllegalIndex", swSender, vvSender);
             else if (e.getMessage().equals("BookedCellOccupied"))
@@ -302,12 +302,33 @@ public class GameController {
 
         try{
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
-            sendMessage(new PickedUpEventCardDeck(eventCardsDeck), swSender, vvSender);
+            sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck), swSender, vvSender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
                 sendMessage("EventCardDeckIsAlreadyTaken", swSender, vvSender);
+            if(e.getMessage().equals("IllegalIndexEventCardDeck"))
+                sendMessage("IllegalIndexEventCardDeck", swSender, vvSender);
+            else
+                sendMessage(e.getMessage(), swSender, vvSender);
+        }
+    }
+
+    public static void putDownEventCardDeck(GameManager gameManager, Player player, SocketWriter swSender, VirtualClient vvSender) {
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        try{
+            int deckIdx = gameManager.getGame().putDownEventCardDeck(player);
+            sendMessage("EventCardDeckPutDown", swSender, vvSender);
+            gameManager.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), swSender, vvSender);
+
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NoCardTakenByPlayer"))
+                sendMessage("NoCardTakenByPlayer", swSender, vvSender);
             else
                 sendMessage(e.getMessage(), swSender, vvSender);
         }

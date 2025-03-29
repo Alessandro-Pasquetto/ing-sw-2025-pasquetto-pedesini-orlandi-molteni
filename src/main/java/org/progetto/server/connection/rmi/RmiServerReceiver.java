@@ -194,9 +194,9 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
 
     /**
-     *Allows client to call for bookedComponent with RMI in server proxy
+     * Allows client to call for bookedComponent with RMI in server proxy
      *
-     * @Author lorenzo
+     * @author lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to discard
      * @param name of the player that want to discard
@@ -218,7 +218,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameController.bookComponent(gameManager,player,idx,null,virtualClient);
     }
 
-
     @Override
     public void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, String name, int deckIdx) throws RemoteException {
         GameManager gameManager = GameManagersMaps.getGameManager(idGame);
@@ -232,5 +231,20 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         GameController.pickUpEventCardDeck(gameManager, player, deckIdx, null, virtualClient);
+    }
+
+    @Override
+    public void putDownEventCardDeck(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.putDownEventCardDeck(gameManager, player, null, virtualClient);
     }
 }

@@ -2,27 +2,27 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class PickVisibleComponent implements Serializable {
+public class PickUpEventCardDeckMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    int componentIdx;
+    private int deckIdx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PickVisibleComponent(int componentIdx) {
-        this.componentIdx = componentIdx;
+    public PickUpEventCardDeckMessage(int deckIdx) {
+        this.deckIdx = deckIdx;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public int getComponentIdx() {
-        return componentIdx;
+    public int getDeckIdx() {
+        return deckIdx;
     }
 }

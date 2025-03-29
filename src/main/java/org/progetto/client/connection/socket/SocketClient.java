@@ -90,7 +90,11 @@ public class SocketClient {
     }
 
     public static void pickUpEventCardDeck(int idxDeck){
-        SocketWriter.sendMessage(new PickUpEventCardDeck(idxDeck));
+        SocketWriter.sendMessage(new PickUpEventCardDeckMessage(idxDeck));
+    }
+
+    public static void putDownEventCardDeck(){
+        SocketWriter.sendMessage("PutDownEventCardDeck");
     }
 
     static void close() throws IOException {

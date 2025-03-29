@@ -133,4 +133,12 @@ public class RmiClientSender{
             throw new RuntimeException(e);
         }
     }
+
+    public static void putDownEventCardDeck() {
+        try {
+            server.putDownEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
