@@ -1,6 +1,6 @@
 package org.progetto.server.connection.rmi;
 
-import org.progetto.client.connection.rmi.VirtualView;
+import org.progetto.client.connection.rmi.VirtualClient;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -13,7 +13,7 @@ public class RmiServer extends Thread {
     // ATTRIBUTES
     // =======================
 
-    private static final ArrayList<VirtualView> lobbyRmiClients = new ArrayList<>();
+    private static final ArrayList<VirtualClient> lobbyRmiClients = new ArrayList<>();
 
     // =======================
     // MAIN
@@ -36,13 +36,15 @@ public class RmiServer extends Thread {
     // OTHER FUNCTIONS
     // =======================
 
-    public static void addLobbyRmiClient(VirtualView rmiClient) {
+    // Methods to set and communicate with the rmiClients in the lobby
+
+    public static void addLobbyRmiClient(VirtualClient rmiClient) {
         synchronized (lobbyRmiClients) {
             lobbyRmiClients.add(rmiClient);
         }
     }
 
-    public static void removeLobbyRmiClient(VirtualView rmiClient) {
+    public static void removeLobbyRmiClient(VirtualClient rmiClient) {
         synchronized (lobbyRmiClients) {
             lobbyRmiClients.remove(rmiClient);
         }
@@ -50,14 +52,14 @@ public class RmiServer extends Thread {
 
     public static void broadcastLobbyMessage(Object messageObj) {
 
-        ArrayList<VirtualView> lobbyRmiClientsCopy;
+        ArrayList<VirtualClient> lobbyRmiClientsCopy;
 
         synchronized (lobbyRmiClients) {
             lobbyRmiClientsCopy = new ArrayList<>(lobbyRmiClients);
         }
 
         try{
-            for (VirtualView vv : lobbyRmiClientsCopy) {
+            for (VirtualClient vv : lobbyRmiClientsCopy) {
                 vv.sendMessage(messageObj);
             }
         } catch (RemoteException e) {
@@ -65,16 +67,16 @@ public class RmiServer extends Thread {
         }
     }
 
-    public static void broadcastLobbyMessageToOthers(VirtualView sender, Object messageObj) {
+    public static void broadcastLobbyMessageToOthers(VirtualClient sender, Object messageObj) {
 
-        ArrayList<VirtualView> lobbyRmiClientsCopy;
+        ArrayList<VirtualClient> lobbyRmiClientsCopy;
 
         synchronized (lobbyRmiClients) {
             lobbyRmiClientsCopy = new ArrayList<>(lobbyRmiClients);
         }
 
         try{
-            for (VirtualView vv : lobbyRmiClientsCopy) {
+            for (VirtualClient vv : lobbyRmiClientsCopy) {
                 if(!vv.equals(sender))
                     vv.sendMessage(messageObj);
             }

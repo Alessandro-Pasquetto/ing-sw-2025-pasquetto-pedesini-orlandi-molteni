@@ -12,6 +12,9 @@ public class RmiClientSender{
 
     private static VirtualServer server = null;
 
+    /**
+     * Method to connect to the RMI server
+     */
     public static void connect(String serverIp, int serverPort) {
         try {
             HandlerMessage.setIsSocket(false);
@@ -27,6 +30,8 @@ public class RmiClientSender{
             e.printStackTrace();
         }
     }
+
+    // The following methods call functions implemented in the RmiServerReceiver
 
     public static void createGame() {
         System.out.println("You have created a new game");

@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.client.connection.rmi.VirtualView;
+import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.rmi.RmiServer;
 import org.progetto.server.connection.socket.SocketServer;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -27,7 +27,7 @@ public class LobbyController {
         RmiServer.broadcastLobbyMessage(messageObj);
     }
 
-    public static void broadcastLobbyMessageToOthers(Object messageObj, SocketWriter swSender, VirtualView vvSender) {
+    public static void broadcastLobbyMessageToOthers(Object messageObj, SocketWriter swSender, VirtualClient vvSender) {
         SocketServer.broadcastLobbyMessageToOthers(swSender, messageObj);
         RmiServer.broadcastLobbyMessageToOthers(vvSender, messageObj);
     }

@@ -18,6 +18,11 @@ public class HandlerMessage {
         HandlerMessage.isSocket = isSocket;
     }
 
+    /**
+     * Method that handles the messages coming from the server
+     *
+     * @param messageObj the message that has arrived
+     */
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof GameListMessage gameListMessage) {

@@ -2,7 +2,6 @@ package org.progetto.server.connection.socket;
 
 import org.progetto.server.controller.GameManager;
 import org.progetto.server.model.Player;
-
 import java.io.*;
 
 public class ClientHandler {
@@ -10,17 +9,17 @@ public class ClientHandler {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private GameManager gameManager;
     private Player player;
-    private SocketListener socketListener;
-    private SocketWriter socketWriter;
+    private final SocketListener socketListener;
+    private final SocketWriter socketWriter;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
     public ClientHandler(ObjectOutputStream out, ObjectInputStream in) {
-
         gameManager = null;
         player = null;
         socketWriter = new SocketWriter(this, out);

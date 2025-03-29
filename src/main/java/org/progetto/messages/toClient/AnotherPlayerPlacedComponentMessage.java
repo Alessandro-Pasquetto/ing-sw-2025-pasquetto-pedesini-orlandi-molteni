@@ -8,11 +8,11 @@ public class AnotherPlayerPlacedComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    String namePlayer;
-    int xPlacedComponent;
-    int yPlacedComponent;
-    int rPlacedComponent;
-    String imgSrcPlacedComponent;
+    private String namePlayer;
+    private int xPlacedComponent;
+    private int yPlacedComponent;
+    private int rPlacedComponent;
+    private String imgSrcPlacedComponent;
 
     // =======================
     // CONSTRUCTORS

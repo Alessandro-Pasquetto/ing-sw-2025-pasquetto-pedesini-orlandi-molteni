@@ -61,16 +61,14 @@ public class GameView {
     }
 
     // Method to start the game
-    public void startGame(ActionEvent event) {
-
+    public void startGame() {
         if(HandlerMessage.getIsSocket())
             SocketClient.startGame();
         else
             RmiClientSender.startGame();
     }
 
-    public void pickHiddenComponent(ActionEvent event) {
-
+    public void pickHiddenComponent() {
         if(handComponent == null)
             if(HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
@@ -83,8 +81,7 @@ public class GameView {
                 RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
     }
 
-    public void pickVisibleComponent(ActionEvent event) {
-
+    public void pickVisibleComponent() {
         if(handComponent == null)
             if(HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
@@ -101,18 +98,21 @@ public class GameView {
      * Handle discard communication between view and controller
      *
      * @author Lorenzo
-     * @param event
      */
-    public void discardComponent(ActionEvent event) {
-        if(handComponent != null)
-            if(HandlerMessage.getIsSocket())
+    public void discardComponent() {
+        if(handComponent != null){
+            if(HandlerMessage.getIsSocket()) {
                 SocketClient.discardComponent();
-            else
+            }
+            else {
                 RmiClientSender.discardComponent();
+            }
+
+            removeHandComponent();
+        }
     }
 
-    public void removeHandComponent() {
-
+    private void removeHandComponent() {
         Node parent = handComponent.getParent();
 
         if (parent instanceof VBox)

@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.client.connection.rmi.VirtualView;
+import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.Game;
 import java.rmi.RemoteException;
@@ -13,7 +13,7 @@ public class GameManager {
     // =======================
 
     private final ArrayList<SocketWriter> socketWriters = new ArrayList<>();
-    private final ArrayList<VirtualView> rmiClients = new ArrayList<>();
+    private final ArrayList<VirtualClient> rmiClients = new ArrayList<>();
     private final Game game;
     private final TimerController timer;
 
@@ -41,8 +41,8 @@ public class GameManager {
         return socketWritersCopy;
     }
 
-    public ArrayList<VirtualView> getRmiClientsCopy() {
-        ArrayList<VirtualView> rmiClientsCopy;
+    public ArrayList<VirtualClient> getRmiClientsCopy() {
+        ArrayList<VirtualClient> rmiClientsCopy;
 
         synchronized (rmiClients) {
             rmiClientsCopy = new ArrayList<>(rmiClients);
@@ -75,13 +75,13 @@ public class GameManager {
         }
     }
 
-    public void addRmiClient(VirtualView rmiClient){
+    public void addRmiClient(VirtualClient rmiClient){
         synchronized (rmiClients){
             rmiClients.add(rmiClient);
         }
     }
 
-    public void removeRmiClient(VirtualView rmiClient){
+    public void removeRmiClient(VirtualClient rmiClient){
         synchronized (rmiClients){
             rmiClients.remove(rmiClient);
         }
@@ -94,18 +94,18 @@ public class GameManager {
             sw.sendMessage(messageObj);
         }
 
-        ArrayList<VirtualView> rmiClientsCopy = getRmiClientsCopy();
+        ArrayList<VirtualClient> rmiClientsCopy = getRmiClientsCopy();
 
         try{
-            for (VirtualView vv : rmiClientsCopy) {
-                vv.sendMessage(messageObj);
+            for (VirtualClient vc : rmiClientsCopy) {
+                vc.sendMessage(messageObj);
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void broadcastGameMessageToOthers(Object messageObj, SocketWriter swSender, VirtualView vvSender) {
+    public void broadcastGameMessageToOthers(Object messageObj, SocketWriter swSender, VirtualClient vcSender) {
         ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
 
         for (SocketWriter sw : socketWritersCopy) {
@@ -113,12 +113,12 @@ public class GameManager {
                 sw.sendMessage(messageObj);
         }
 
-        ArrayList<VirtualView> rmiClientsCopy = getRmiClientsCopy();
+        ArrayList<VirtualClient> rmiClientsCopy = getRmiClientsCopy();
 
         try{
-            for (VirtualView vv : rmiClientsCopy) {
-                if(!vv.equals(vvSender))
-                    vv.sendMessage(messageObj);
+            for (VirtualClient vc : rmiClientsCopy) {
+                if(!vc.equals(vcSender))
+                    vc.sendMessage(messageObj);
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);

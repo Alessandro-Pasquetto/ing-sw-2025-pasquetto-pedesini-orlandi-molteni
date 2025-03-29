@@ -1,16 +1,18 @@
 package org.progetto.messages.toClient;
 
-public class AnotherPlayerDiscardComponentMessage {
+import java.io.Serializable;
+
+public class AnotherPlayerDiscardComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    String namePlayer;
-    int xPlacedComponent;
-    int yPlacedComponent;
-    int rPlacedComponent;
-    String imgSrcDiscardedComponent;
+    private String namePlayer;
+    private int xPlacedComponent;
+    private int yPlacedComponent;
+    private int rPlacedComponent;
+    private String imgSrcDiscardedComponent;
 
     // =======================
     // CONSTRUCTORS

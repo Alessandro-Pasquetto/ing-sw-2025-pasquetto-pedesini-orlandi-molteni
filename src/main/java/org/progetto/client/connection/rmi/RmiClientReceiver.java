@@ -1,11 +1,10 @@
 package org.progetto.client.connection.rmi;
 
 import org.progetto.client.connection.HandlerMessage;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class RmiClientReceiver extends UnicastRemoteObject implements VirtualView {
+public class RmiClientReceiver extends UnicastRemoteObject implements VirtualClient {
 
     private static RmiClientReceiver instance = null;
 
@@ -20,6 +19,9 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualVie
         return instance;
     }
 
+    /**
+     * Method called by the server to notify changes to the client
+     */
     @Override
     public void sendMessage(Object objMessage) throws RemoteException {
         HandlerMessage.handleMessage(objMessage);

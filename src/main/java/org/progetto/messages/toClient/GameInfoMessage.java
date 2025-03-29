@@ -11,7 +11,7 @@ public class GameInfoMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int idGame;
+    private int idGame;
     private String imgPathBoard;
     private String imgPathSpaceship;
     private String imgPathCentralUnit;

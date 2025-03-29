@@ -11,6 +11,9 @@ import java.net.Socket;
 public class SocketClient {
     private static Socket socket;
 
+    /**
+     * Method to connect to the socket server
+     */
     public static void connect(String serverIp, int port) {
         try{
             HandlerMessage.setIsSocket(true);
@@ -59,7 +62,6 @@ public class SocketClient {
 
     public static void discardComponent(){
         SocketWriter.sendMessage("DiscardComponent");
-        PageController.gameView.removeHandComponent();
     }
 
     public static void showEventCardDeck(int idxDeck){

@@ -6,9 +6,11 @@ public class GameData {
     // ATTRIBUTES
     // =======================
 
+    // Client data that I want to store
     private static int idGame;
     private static String namePlayer;
 
+    // Temporary data of the handComponent in view
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = -1;
@@ -62,11 +64,14 @@ public class GameData {
     // =======================
 
     public static void rotateComponent(){
-        GameData.rHandComponent++;
+        if(rHandComponent == 3)
+            rHandComponent = 0;
+        else
+            rHandComponent++;
     }
 
     public static void resetHandComponent(){
-        xHandComponent = -1;
+        xHandComponent = -1; // If it has not been placed in the matrix yet
         yHandComponent = -1;
         rHandComponent = 0;
     }

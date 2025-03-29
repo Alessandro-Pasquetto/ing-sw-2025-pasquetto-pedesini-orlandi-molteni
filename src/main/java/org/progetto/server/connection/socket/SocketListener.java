@@ -23,6 +23,9 @@ public class SocketListener extends Thread {
         this.in = in;
     }
 
+    /**
+     * Method that receives the messages sent by the socket clients
+     */
     @Override
     public void run() {
         try {
@@ -39,7 +42,7 @@ public class SocketListener extends Thread {
     }
 
     // =======================
-    // OTHER METHODS
+    // Methods that handle the messages by calling the necessary functions
     // =======================
 
     private void handlerLobbyMessages(Object messageObj) {

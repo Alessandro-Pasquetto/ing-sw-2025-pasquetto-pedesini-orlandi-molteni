@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.client.connection.rmi.VirtualView;
+import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.AnotherPlayerDiscardComponentMessage;
 import org.progetto.messages.toClient.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.PickedComponentMessage;
@@ -8,7 +8,6 @@ import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Game;
 import org.progetto.server.model.components.Component;
 
 import java.rmi.RemoteException;
@@ -26,7 +25,7 @@ public class GameController {
     // OTHER METHODS
     // =======================
 
-    private static void sendMessage(Object message, SocketWriter swSender, VirtualView vvSender){
+    private static void sendMessage(Object message, SocketWriter swSender, VirtualClient vvSender){
         if(swSender != null)
             swSender.sendMessage(message);
         else {
@@ -46,7 +45,7 @@ public class GameController {
         gameManager.startTimer();
     }
 
-    public static void pickHiddenComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualView vvSender){
+    public static void pickHiddenComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualClient vvSender){
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
@@ -66,7 +65,7 @@ public class GameController {
         }
     }
 
-    public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, SocketWriter swSender, VirtualView vvSender){
+    public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, SocketWriter swSender, VirtualClient vvSender){
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
@@ -87,7 +86,7 @@ public class GameController {
         }
     }
 
-    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualView vvSender) {
+    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
@@ -114,7 +113,7 @@ public class GameController {
             sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
     }
 
-    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, SocketWriter swSender, VirtualView vvSender) {
+    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
@@ -151,7 +150,7 @@ public class GameController {
      * @param swSender sender for socket
      * @param vvSender registry for RMI
      */
-    public static void discardComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualView vvSender) {
+    public static void discardComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
