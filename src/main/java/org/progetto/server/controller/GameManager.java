@@ -23,7 +23,7 @@ public class GameManager {
 
     public GameManager(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
-        this.timer = new TimerController(this::broadcastGameMessage,40,0);
+        this.timer = new TimerController(this::broadcastGameMessage,80,0);
         GameManagersMaps.addWaitingGameManager(idGame, this);
     }
 

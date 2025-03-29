@@ -6,6 +6,7 @@ import org.progetto.client.connection.HandlerMessage;
 import org.progetto.messages.toServer.*;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class SocketClient {
@@ -18,17 +19,37 @@ public class SocketClient {
         try{
             HandlerMessage.setIsSocket(true);
 
+            if (!isSocketServerReachable(serverIp, port)) {
+                System.out.println("Error: The port " + port + " is not available for socket connection");
+                return;
+            }
+
             socket = new Socket(serverIp, port);
 
             System.out.println("Connected to the socketServer!");
-
             PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
             new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
             new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
 
         }catch(IOException e){
-            e.printStackTrace();
+            System.out.println("Error connecting to the socket server");
+        }
+    }
+
+    /**
+     * Check if the port is open for a socket communication
+     */
+    public static boolean isSocketServerReachable(String serverIp, int port) {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(serverIp, port), 200);
+            socket.setSoTimeout(200);
+
+            int testByte = socket.getInputStream().read();
+
+            return testByte != -1;
+        } catch (IOException e) {
+            return false;
         }
     }
 

@@ -28,7 +28,7 @@ public class RmiServer extends Thread {
 
             System.out.println("RMIServer listening on port 1099...");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error RMI server: " + e.getMessage());
         }
     }
 

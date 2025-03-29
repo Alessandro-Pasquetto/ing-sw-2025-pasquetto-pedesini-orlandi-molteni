@@ -22,7 +22,9 @@ public class GameView {
     private VBox volatileComponent;
 
     @FXML
-    private GridPane grid;
+    private GridPane spaceshipMatrix;
+    @FXML
+    private GridPane bookedArray;
 
     @FXML
     private Label timerLabel;
@@ -38,26 +40,30 @@ public class GameView {
     private void setupGrid(int size) {
         int cellSize = 100;
 
-        // Add column and row constraints to define cell size
         for (int i = 0; i < size; i++) {
             ColumnConstraints colConstraints = new ColumnConstraints(cellSize);
-            grid.getColumnConstraints().add(colConstraints);
+            spaceshipMatrix.getColumnConstraints().add(colConstraints);
+
             RowConstraints rowConstraints = new RowConstraints(cellSize);
-            grid.getRowConstraints().add(rowConstraints);
+            spaceshipMatrix.getRowConstraints().add(rowConstraints);
         }
 
-        // Add cells to the grid
+        // spaceshipMatrix
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Pane cell = new Pane();
                 cell.setStyle("-fx-border-color: black; -fx-background-color: rgba(255,255,255,0.3);");
-                grid.add(cell, col, row);
+                spaceshipMatrix.add(cell, col, row);
             }
         }
     }
 
-    public GridPane getGrid() {
-        return grid;
+    public GridPane getSpaceshipMatrix() {
+        return spaceshipMatrix;
+    }
+
+    public GridPane getBookedArray() {
+        return bookedArray;
     }
 
     // Method to start the game
@@ -69,16 +75,30 @@ public class GameView {
     }
 
     public void pickHiddenComponent() {
-        if(handComponent == null)
-            if(HandlerMessage.getIsSocket())
+        if (handComponent == null) {
+            if (HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
             else
                 RmiClientSender.pickHiddenComponent();
-        else if(GameData.getxHandComponent() != -1)
-            if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
-            else
-                RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+        }
+        else if (GameData.getxHandComponent() != -1){
+            if (GameData.getyHandComponent() != -1){
+                if (HandlerMessage.getIsSocket())
+                    SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+                else
+                    RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+            }
+            else {
+                System.out.println("Save in bookedList and pick hidden component");
+                /*
+                if(HandlerMessage.getIsSocket())
+                    SocketClient.
+                else
+                    RmiClientSender.
+
+                 */
+            }
+        }
     }
 
     public void pickVisibleComponent() {
@@ -146,7 +166,6 @@ public class GameView {
                 SocketClient.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
             else
                 RmiClientSender.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
-
     }
 
     // Generate a draggable component with an image
@@ -157,6 +176,8 @@ public class GameView {
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
+
+        System.out.println("x: " + GameData.getxHandComponent() + " y: " + GameData.getyHandComponent());
 
         if (handComponent != null) {
             DragAndDrop.disableDragAndDrop(handComponent);
@@ -196,7 +217,7 @@ public class GameView {
             y = 2;
         }
 
-        for (Node node : grid.getChildren()) {
+        for (Node node : spaceshipMatrix.getChildren()) {
             Integer rowIndex = GridPane.getRowIndex(node);
             Integer colIndex = GridPane.getColumnIndex(node);
             if (rowIndex == null) rowIndex = 0;

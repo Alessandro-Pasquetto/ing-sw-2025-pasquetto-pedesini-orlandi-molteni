@@ -5,8 +5,12 @@ import org.progetto.client.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.server.connection.rmi.VirtualServer;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class RmiClientSender{
 
@@ -27,7 +31,7 @@ public class RmiClientSender{
             PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error connecting to the RMI server");
         }
     }
 

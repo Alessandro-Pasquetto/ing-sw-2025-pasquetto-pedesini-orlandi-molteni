@@ -4,28 +4,43 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.view.GameView">
+<AnchorPane prefHeight="824.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.view.GameView">
     <stylesheets>
         <URL value="@style/game_style.css" />
     </stylesheets>
+    <VBox fx:id="volatileComponent" alignment="CENTER" layoutX="190.0" layoutY="160.0" prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;"> </VBox>
 
-    <GridPane fx:id="grid" gridLinesVisible="true" layoutX="50.0" layoutY="50.0">
+    <GridPane fx:id="spaceshipMatrix" gridLinesVisible="true" layoutX="290.0" layoutY="160.0"> </GridPane>
 
+    <GridPane fx:id="bookedArray" gridLinesVisible="true" layoutX="702.0" layoutY="160.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="100.0" />
+            <ColumnConstraints prefWidth="100.0" />
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints prefHeight="100" />
+        </rowConstraints>
+   
+        <Pane style="-fx-border-color: black; -fx-background-color: black;" GridPane.columnIndex="0" />
+        <Pane style="-fx-border-color: black; -fx-background-color: black;" GridPane.columnIndex="1" />
     </GridPane>
 
-    <Button layoutX="14.0" layoutY="14.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
-    <Button layoutX="226.0" layoutY="14.0" onAction="#pickHiddenComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
-    <Button layoutX="437.0" layoutY="14.0" onAction="#rotateComponent" prefHeight="42.0" prefWidth="149.0" text="rotate" />
-    <VBox fx:id="volatileComponent" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
+    <Button layoutX="166.0" layoutY="84.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
+    <Button layoutX="14.0" layoutY="198.0" onAction="#pickHiddenComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
+    <Button layoutX="775.0" layoutY="88.0" onAction="#rotateComponent" prefHeight="42.0" prefWidth="149.0" text="rotate" />
 
-    <Button fx:id="deck0" layoutX="451.0" layoutY="413.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck0" />
-    <Button fx:id="deck1" layoutX="451.0" layoutY="455.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck1" />
+    <Button fx:id="deck0" layoutX="917.0" layoutY="589.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck0" />
+    <Button fx:id="deck1" layoutX="917.0" layoutY="631.0" onAction="#showEventCardDeck" prefHeight="42.0" prefWidth="149.0" text="showEventCardDeck1" />
 
-    <Button layoutX="14.0" layoutY="447.0" onAction="#discardComponent" prefHeight="42.0" prefWidth="149.0" text="discardComponent" />
+    <Button layoutX="14.0" layoutY="568.0" onAction="#discardComponent" prefHeight="42.0" prefWidth="149.0" text="discardComponent" />
 
-    <Label fx:id="timerLabel" layoutX="272.0" layoutY="459.0" style="-fx-font-size: 24;" text="00:00" />
+    <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" style="-fx-font-size: 24;" text="00:00" />
 
 </AnchorPane>

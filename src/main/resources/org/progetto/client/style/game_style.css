@@ -1,6 +1,6 @@
 .root {
     -fx-background-image: url("../img/cardboard/spaceship1.jpg");
-    -fx-background-size: 600px 400px;
+    -fx-background-size: 750px;
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
 }

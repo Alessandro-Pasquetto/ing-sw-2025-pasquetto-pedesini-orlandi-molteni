@@ -25,6 +25,7 @@ public class DragAndDrop {
 
         // MousePressed: save initial coordinates and layout details
         imageView.setOnMousePressed(event -> {
+
             // Save initial scene coordinates for drag detection
             imageView.getProperties().put("initialSceneX", event.getSceneX());
             imageView.getProperties().put("initialSceneY", event.getSceneY());
@@ -80,7 +81,7 @@ public class DragAndDrop {
             AnchorPane root = (AnchorPane) imageView.getScene().getRoot();
 
             // Check if the drop is inside any cell of the grid
-            for (Node node : PageController.gameView.getGrid().getChildren()) {
+            for (Node node : PageController.gameView.getSpaceshipMatrix().getChildren()) {
                 if (node instanceof Pane cell) {
                     Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                     if (cellBounds.contains(sceneX, sceneY)) {
@@ -112,6 +113,40 @@ public class DragAndDrop {
                     }
                 }
             }
+
+            for (Node node : PageController.gameView.getBookedArray().getChildren()) {
+                if (node instanceof Pane cell) {
+                    Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
+                    if (cellBounds.contains(sceneX, sceneY)) {
+                        // Check if the cell is already occupied by an ImageView (component)
+                        Integer colIndex = GridPane.getColumnIndex(cell);
+
+                        // Check if the cell already has a child (component)
+                        if (!cell.getChildren().isEmpty()) {
+                            // The cell is occupied, so prevent dropping the component here
+                            System.out.println("Cell already occupied.");
+                            break;
+                        }
+
+                        // If dropped inside a cell and the cell is not occupied, move the image into the cell
+                        root.getChildren().remove(imageView);
+                        cell.getChildren().add(imageView);
+
+                        // Center the image inside the cell
+                        imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
+                        imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
+
+                        // save the row and column index of the dropped cell
+                        GameData.setxHandComponent(colIndex);
+                        GameData.setyHandComponent(-1);
+
+                        droppedInCell = true;
+                        break;
+                    }
+                }
+            }
+
+            System.out.println("x: " + GameData.getxHandComponent() + " y: " + GameData.getyHandComponent());
 
             // If the drop was not inside any cell, return the image to its original position
             if (!droppedInCell) {
