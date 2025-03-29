@@ -37,7 +37,6 @@ public abstract class EventCard {
         return level;
     }
 
-
     // =======================
     // SETTERS
     // =======================

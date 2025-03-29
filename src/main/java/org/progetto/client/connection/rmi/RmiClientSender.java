@@ -90,6 +90,14 @@ public class RmiClientSender{
         }
     }
 
+    public static void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx){
+        try {
+            server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * allows RMI on client to call for the respective method on RMI server
      * * @author Lorenzo
@@ -114,4 +122,11 @@ public class RmiClientSender{
         }
     }
 
+    public static void pickUpEventCardDeck(int deckIdx) {
+        try {
+            server.pickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), deckIdx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -402,14 +402,14 @@ public class Game {
      * @param player Is the player that wants to pick up the deck
      * @return the deck picked if available
      */
-    public ArrayList<EventCard> pickUpEventCardDeck(Player player,int idx){
+    public ArrayList<EventCard> pickUpEventCardDeck(Player player,int idx) throws IllegalStateException{
 
         synchronized (eventDeckAvailable) {
             if (eventDeckAvailable[idx] == null) {
                 eventDeckAvailable[idx] = player;
                 return visibleEventCardDecks[idx];
             } else
-                return null;
+                throw new IllegalStateException("EventCardDeckIsAlreadyTaken");
         }
     }
 

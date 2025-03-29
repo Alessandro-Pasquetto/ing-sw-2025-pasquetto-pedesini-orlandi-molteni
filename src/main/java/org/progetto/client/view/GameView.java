@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.progetto.client.GameData;
-import org.progetto.client.Main;
+import org.progetto.client.MainClient;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
@@ -137,16 +137,23 @@ public class GameView {
         };
 
         if(handComponent == null)
-            SocketClient.showEventCardDeck(idxDeck);
+            if(HandlerMessage.getIsSocket())
+                SocketClient.pickUpEventCardDeck(idxDeck);
+            else
+                RmiClientSender.pickUpEventCardDeck(idxDeck);
         else
-            SocketClient.placeHandComponentAndShowEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
+            if(HandlerMessage.getIsSocket())
+                SocketClient.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
+            else
+                RmiClientSender.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
+
     }
 
     // Generate a draggable component with an image
     public void generateComponent(String imgComponent) {
         GameData.resetHandComponent();
 
-        Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgComponent)));
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgComponent)));
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
@@ -196,7 +203,7 @@ public class GameView {
             if (colIndex == null) colIndex = 0;
             if (rowIndex == y && colIndex == x) {
                 Pane cell = (Pane) node;
-                Image image = new Image(String.valueOf(Main.class.getResource("img/components/" + imgSrcCentralUnit)));
+                Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgSrcCentralUnit)));
                 ImageView imageView = new ImageView(image);
                 imageView.setFitWidth(100);
                 imageView.setFitHeight(100);

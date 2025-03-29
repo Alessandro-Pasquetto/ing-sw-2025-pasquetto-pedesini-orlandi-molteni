@@ -23,7 +23,7 @@ public class PageController {
     public static GameView gameView;
 
     static void start() throws IOException {
-        Image icon = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/icon.png")));
+        Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/icon.png")));
         stage.getIcons().add(icon);
         switchScene("connection.fxml", "Connection");
         stage.show();
@@ -31,7 +31,7 @@ public class PageController {
 
     public static void switchScene(String fxmlFile, String title) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxmlFile));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource(fxmlFile));
 
         Parent root = null;
         if(fxmlLoader.getController() == null){

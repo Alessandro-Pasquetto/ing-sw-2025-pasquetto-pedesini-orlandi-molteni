@@ -153,6 +153,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, null, virtualClient);
     }
 
+    @Override
+    public void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, String name, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException {
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, null, virtualClient);
+    }
+
     /**
      * Allows client to call for discardComponent with RMI in server proxy
      *
@@ -203,4 +218,19 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameController.bookComponent(gameManager,player,idx,null,virtualClient);
     }
 
+
+    @Override
+    public void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, String name, int deckIdx) throws RemoteException {
+        GameManager gameManager = GameManagersMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getGame().getPlayerByName(name);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        GameController.pickUpEventCardDeck(gameManager, player, deckIdx, null, virtualClient);
+    }
 }

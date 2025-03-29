@@ -2,11 +2,12 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class PlaceHandComponentAndShowEventCardDeckMessage implements Serializable {
+public class PlaceHandComponentAndPickUpEventCardDeckMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
+
     int x;
     int y;
     int rotation;
@@ -15,7 +16,8 @@ public class PlaceHandComponentAndShowEventCardDeckMessage implements Serializab
     // =======================
     // CONSTRUCTORS
     // =======================
-    public PlaceHandComponentAndShowEventCardDeckMessage(int x, int y, int rotation, int idxDeck) {
+
+    public PlaceHandComponentAndPickUpEventCardDeckMessage(int x, int y, int rotation, int idxDeck) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
@@ -25,6 +27,7 @@ public class PlaceHandComponentAndShowEventCardDeckMessage implements Serializab
     // =======================
     // GETTERS
     // =======================
+
     public int getX() {
         return x;
     }

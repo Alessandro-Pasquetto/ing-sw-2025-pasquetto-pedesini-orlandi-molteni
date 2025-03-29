@@ -3,7 +3,6 @@ package org.progetto.client.connection.socket;
 import org.progetto.client.GameData;
 import org.progetto.client.PageController;
 import org.progetto.client.connection.HandlerMessage;
-import org.progetto.messages.toClient.AnotherPlayerBookedComponentMessage;
 import org.progetto.messages.toServer.*;
 
 import java.io.*;
@@ -61,27 +60,17 @@ public class SocketClient {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickVisibleComponentMessage(xHandComponent, yHandComponent, rHandComponent, componentIdx));
     }
 
+    public static void placeHandComponentAndPickUpEventCardDeck(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickUpEventCardDeckMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
+    }
+
     public static void discardComponent(){
         SocketWriter.sendMessage("DiscardComponent");
     }
 
-    public static void showEventCardDeck(int idxDeck){
-
+    public static void pickUpEventCardDeck(int idxDeck){
+        SocketWriter.sendMessage(new PickUpEventCardDeck(idxDeck));
     }
-
-    public static void placeHandComponentAndShowEventCardDeck(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
-        SocketWriter.sendMessage(new PlaceHandComponentAndShowEventCardDeckMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
-    }
-
-    /**
-     * handle book message communication from client to server
-     * @author lorenzo
-     * @param idx
-     */
-    public static void bookComponent(int idx){
-        SocketWriter.sendMessage(new BookComponentMessage(idx));
-    }
-
 
     static void close() throws IOException {
         SocketListener.stopListener();

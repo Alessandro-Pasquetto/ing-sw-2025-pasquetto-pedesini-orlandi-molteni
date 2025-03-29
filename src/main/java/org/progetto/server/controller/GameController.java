@@ -1,17 +1,16 @@
 package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.AnotherPlayerBookedComponentMessage;
-import org.progetto.messages.toClient.AnotherPlayerDiscardComponentMessage;
-import org.progetto.messages.toClient.AnotherPlayerPlacedComponentMessage;
-import org.progetto.messages.toClient.PickedComponentMessage;
+import org.progetto.messages.toClient.*;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.events.EventCard;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameController {
@@ -46,6 +45,15 @@ public class GameController {
         gameManager.startTimer();
     }
 
+    /**
+     * Handles player decision to pick a hidden component
+     *
+     * @author Alessandro
+     * @param gameManager
+     * @param player
+     * @param swSender
+     * @param vvSender
+     */
     public static void pickHiddenComponent(GameManager gameManager, Player player, SocketWriter swSender, VirtualClient vvSender){
 
         if(gameManager.timerExpired()){
@@ -66,6 +74,16 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles player decision to pick a visible component
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param componentIdx
+     * @param swSender
+     * @param vvSender
+     */
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, SocketWriter swSender, VirtualClient vvSender){
 
         if(gameManager.timerExpired()){
@@ -87,6 +105,18 @@ public class GameController {
         }
     }
 
+    /**
+     * Handles player decision to pick hidden component, and place current hand component
+     *
+     * @author Alessandro
+     * @param gameManager
+     * @param player
+     * @param yPlaceComponent
+     * @param xPlaceComponent
+     * @param rPlaceComponent
+     * @param swSender
+     * @param vvSender
+     */
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
@@ -114,6 +144,19 @@ public class GameController {
             sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
     }
 
+    /**
+     * Handles player decision to pick visible component, and place current hand component
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param yPlaceComponent
+     * @param xPlaceComponent
+     * @param rPlaceComponent
+     * @param componentIdx
+     * @param swSender
+     * @param vvSender
+     */
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
@@ -143,7 +186,46 @@ public class GameController {
     }
 
     /**
-     * Handle the player decision to discard its hand component
+     * Handles player decision to pick-up a specific eventCard deck, and place current hand component
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param yPlaceComponent
+     * @param xPlaceComponent
+     * @param rPlaceComponent
+     * @param deckIdx
+     * @param swSender
+     * @param vvSender
+     */
+    public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx, SocketWriter swSender, VirtualClient vvSender) {
+
+        if(gameManager.timerExpired()){
+            sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+        if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            try{
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
+                ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
+                sendMessage(new PickedUpEventCardDeck(eventCardsDeck), swSender, vvSender);
+                gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
+
+            } catch (IllegalStateException e) {
+                if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
+                    sendMessage("EventCardDeckIsAlreadyTaken", swSender, vvSender);
+            }
+        }else
+            sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
+    }
+
+    /**
+     * Handles the player decision to discard its hand component
+     *
      * @author Lorenzo
      * @param gameManager is the class that manage the current game
      * @param player is the one that want to discard a cart
@@ -169,43 +251,33 @@ public class GameController {
         }
     }
 
-
     /**
-     * Handle the player decision to book a component
+     * Handles player decision to pick-up a specific eventCard deck
+     *
+     * @author Gabriele
      * @param gameManager
-     * @param gameManager is the class that manage the current game
-     * @param player is the one that want to discard a cart
-     * @param idx where the booked component will be inserted
-     * @param swSender sender for socket
-     * @param vvSender registry for RMI
+     * @param player
+     * @param deckIdx
+     * @param swSender
+     * @param vvSender
      */
-    public static void bookComponent(GameManager gameManager,Player player,int idx, SocketWriter swSender, VirtualClient vvSender) {
+    public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, SocketWriter swSender, VirtualClient vvSender) {
 
         if(gameManager.timerExpired()){
             sendMessage("TimerExpired", swSender, vvSender);
             return;
         }
 
-        try {
-
-            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-
-            gameManager.getGame().getPlayers().get(gameManager.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().setAsBooked(idx);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),swSender, vvSender);
-
+        try{
+            ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
+            sendMessage(new PickedUpEventCardDeck(eventCardsDeck), swSender, vvSender);
+            gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
 
         }catch (IllegalStateException e){
-            if(e.getMessage().equals("HemptyHandComponent"))
-                sendMessage("HemptyHandComponent", swSender, vvSender);
-            else if (e.getMessage().equals("IllegalIndex")) 
-                sendMessage("IllegalIndex", swSender, vvSender);
-            else if (e.getMessage().equals("BookedCellOccupied"))
-                sendMessage("BookedCellOccupied", swSender, vvSender);
+            if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
+                sendMessage("EventCardDeckIsAlreadyTaken", swSender, vvSender);
+            else
+                sendMessage(e.getMessage(), swSender, vvSender);
         }
-
-
     }
-
-
-
 }
