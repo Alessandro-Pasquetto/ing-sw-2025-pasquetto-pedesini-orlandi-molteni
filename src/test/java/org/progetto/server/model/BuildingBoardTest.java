@@ -340,8 +340,8 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         buildingBoard.getHandComponent().setRotation(0);
 
-        for (int i = 0; i < 4; i++)
-            System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
+//        for (int i = 0; i < 4; i++)
+//            System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
 
         buildingBoard.placeComponent(1, 3, 0);
 
@@ -367,27 +367,26 @@ class BuildingBoardTest {
 
         int[][] mask = buildingBoard.getBoardMask();
 
-        for (int i = 0; i < mask.length; i++) {
-            System.out.println();
-            for (int j = 0; j < mask[i].length; j++) {
-                System.out.printf("%-5s", mask[i][j] + " ");
-            }
-        }
+//        for (int i = 0; i < mask.length; i++) {
+//            System.out.println();
+//            for (int j = 0; j < mask[i].length; j++) {
+//                System.out.printf("%-5s", mask[i][j] + " ");
+//            }
+//        }
+//        System.out.println();
 
-        System.out.println();
-
-        for (int i = 0; i < spaceshipMatrix.length; i++) {
-            System.out.println();
-            for (int j = 0; j < spaceshipMatrix[0].length; j++) {
-                String value = (spaceshipMatrix[i][j] == null) ? "NULL" : spaceshipMatrix[i][j].getType().toString() + "-" + spaceshipMatrix[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-
-        System.out.println();
-        System.out.println();
-
-        System.out.println(buildingBoard.checkShipValidity());
+//        for (int i = 0; i < spaceshipMatrix.length; i++) {
+//            System.out.println();
+//            for (int j = 0; j < spaceshipMatrix[0].length; j++) {
+//                String value = (spaceshipMatrix[i][j] == null) ? "NULL" : spaceshipMatrix[i][j].getType().toString() + "-" + spaceshipMatrix[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//
+//        System.out.println();
+//        System.out.println();
+//
+//        System.out.println(buildingBoard.checkShipValidity());
 
         assertFalse(buildingBoard.checkShipValidity());
     }

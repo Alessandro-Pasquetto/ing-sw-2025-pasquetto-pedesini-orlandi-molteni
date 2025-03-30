@@ -116,20 +116,20 @@ class PiratesTest {
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         assertTrue(bb1.placeComponent(3, 3, 0));
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
 
         Pirates pirates = new Pirates(CardType.PIRATES, 2,"imgPath", 5, -3, 3, new ArrayList<>());
 
@@ -156,20 +156,20 @@ class PiratesTest {
         assertFalse(pirates.penaltyShot(game1, p1, s3, 9));
         assertFalse(pirates.penaltyShot(game1, p1, s3, 10));
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
 
         // right
         assertFalse(pirates.penaltyShot(game1, p1, s2, 3));
@@ -187,20 +187,20 @@ class PiratesTest {
         assertFalse(pirates.penaltyShot(game1, p1, s4, 9));
         assertFalse(pirates.penaltyShot(game1, p1, s4, 10));
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
     }
 
     @Test
