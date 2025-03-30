@@ -20,17 +20,65 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
-    static Stage stage;
-    static ConnetionView connetionView;
-    static ChooseGameView chooseGameView;
-    static CreateGameView createGameView;
-    public static GameView gameView;
+    private static Stage stage;
+    private static ConnetionView connetionView;
+    private static ChooseGameView chooseGameView;
+    private static CreateGameView createGameView;
+    private static GameView gameView;
+
+    // =======================
+    // GETTERS
+    // =======================
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public static ConnetionView getConnetionView() {
+        return connetionView;
+    }
+
+    public static ChooseGameView getChooseGameView() {
+        return chooseGameView;
+    }
+
+    public static CreateGameView getCreateGameView() {
+        return createGameView;
+    }
+
+    public static GameView getGameView() {
+        return gameView;
+    }
+
+    // =======================
+    // SETTERS
+    // =======================
+
+    public static void setStage(Stage stage) {
+        PageController.stage = stage;
+    }
+
+    public static void setConnetionView(ConnetionView connetionView) {
+        PageController.connetionView = connetionView;
+    }
+
+    public static void setChooseGameView(ChooseGameView chooseGameView) {
+        PageController.chooseGameView = chooseGameView;
+    }
+
+    public static void setCreateGameView(CreateGameView createGameView) {
+        PageController.createGameView = createGameView;
+    }
+
+    public static void setGameView(GameView gameView) {
+        PageController.gameView = gameView;
+    }
 
     // =======================
     // OTHER METHODS
     // =======================
 
-    static void start() throws IOException {
+    public static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/icon.png")));
         stage.getIcons().add(icon);
         switchScene("connection.fxml", "Connection");

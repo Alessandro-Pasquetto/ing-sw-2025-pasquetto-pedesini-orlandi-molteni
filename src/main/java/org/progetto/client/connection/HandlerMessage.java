@@ -55,7 +55,7 @@ public class HandlerMessage {
 
         } else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
-            PageController.gameView.updateTimer(timer);
+            PageController.getGameView().updateTimer(timer);
 
         } else if (messageObj instanceof String messageString) {
 

@@ -80,7 +80,7 @@ public class DragAndDrop {
             AnchorPane root = (AnchorPane) imageView.getScene().getRoot();
 
             // Check if the drop is inside any cell of the grid
-            for (Node node : PageController.gameView.getSpaceshipMatrix().getChildren()) {
+            for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
                 if (node instanceof Pane cell) {
                     Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                     if (cellBounds.contains(sceneX, sceneY)) {
@@ -113,7 +113,7 @@ public class DragAndDrop {
                 }
             }
 
-            for (Node node : PageController.gameView.getBookedArray().getChildren()) {
+            for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
                 if (node instanceof Pane cell) {
                     Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                     if (cellBounds.contains(sceneX, sceneY)) {

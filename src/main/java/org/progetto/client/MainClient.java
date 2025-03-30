@@ -11,7 +11,7 @@ public class MainClient extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        PageController.stage = stage;
+        PageController.setStage(stage);
 
         PageController.start();
     }
