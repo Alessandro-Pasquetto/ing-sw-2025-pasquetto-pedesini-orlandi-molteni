@@ -1,12 +1,16 @@
-package org.progetto.server.controller;
+package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.socket.SocketWriter;
+import org.progetto.server.controller.TimerController;
 import org.progetto.server.model.Game;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class GameManager {
+/**
+ * All game communication data to handle multiple clients (Socket/RMI)
+ */
+public class GameCommunicationHandler {
 
     // =======================
     // ATTRIBUTES
@@ -21,10 +25,10 @@ public class GameManager {
     // CONSTRUCTORS
     // =======================
 
-    public GameManager(int idGame, int numPlayers, int level) {
+    public GameCommunicationHandler(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
         this.timer = new TimerController(this::broadcastGameMessage,80,0);
-        GameManagersMaps.addWaitingGameManager(idGame, this);
+        GameCommunicationHandlerMaps.addWaitingGameManager(idGame, this);
     }
 
     // =======================

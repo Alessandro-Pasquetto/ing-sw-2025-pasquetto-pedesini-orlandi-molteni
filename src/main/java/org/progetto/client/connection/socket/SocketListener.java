@@ -1,21 +1,33 @@
 package org.progetto.client.connection.socket;
 
-import org.progetto.client.PageController;
 import org.progetto.client.connection.HandlerMessage;
-import org.progetto.messages.toClient.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
+/**
+ * Socket message listener for messages coming from server
+ */
 public class SocketListener extends Thread {
+
+    // =======================
+    // ATTRIBUTES
+    // =======================
 
     private static ObjectInputStream in;
     private static boolean running = true;
 
+    // =======================
+    // CONSTRUCTORS
+    // =======================
+
     public SocketListener(ObjectInputStream in) {
         this.in = in;
     }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     @Override
     public void run() {

@@ -2,6 +2,7 @@ package org.progetto.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.progetto.client.gui.PageController;
 
 import java.io.IOException;
 

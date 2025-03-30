@@ -1,4 +1,4 @@
-package org.progetto.client;
+package org.progetto.client.gui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -6,21 +6,29 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.progetto.client.view.ChooseGameView;
-import org.progetto.client.view.ConnetionView;
-import org.progetto.client.view.CreateGameView;
-import org.progetto.client.view.GameView;
+import org.progetto.client.MainClient;
 
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * GUI page controller
+ */
 public class PageController {
+
+    // =======================
+    // ATTRIBUTES
+    // =======================
 
     static Stage stage;
     static ConnetionView connetionView;
     static ChooseGameView chooseGameView;
     static CreateGameView createGameView;
     public static GameView gameView;
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/icon.png")));

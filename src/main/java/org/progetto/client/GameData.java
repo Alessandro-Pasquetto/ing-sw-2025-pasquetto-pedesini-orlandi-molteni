@@ -1,5 +1,8 @@
 package org.progetto.client;
 
+/**
+ * Client data useful to track game evolution
+ */
 public class GameData {
 
     // =======================

@@ -4,6 +4,9 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Interface to make model's methods visible from RMI client
+ */
 public interface VirtualServer extends Remote {
     void connect(VirtualClient virtualClient) throws RemoteException;
     void createGame(VirtualClient virtualClient, String name, int gameLevel, int numPlayers) throws RemoteException;

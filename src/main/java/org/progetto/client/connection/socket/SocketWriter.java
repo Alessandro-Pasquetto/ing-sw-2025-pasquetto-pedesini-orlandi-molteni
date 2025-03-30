@@ -4,16 +4,31 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Socket message writer that sends messages to server
+ */
 public class SocketWriter extends Thread {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private static ObjectOutputStream out = null;
-    private static BlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
+    private static LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
     private static boolean running = true;
+
+    // =======================
+    // CONSTRUCTORS
+    // =======================
 
     public SocketWriter(ObjectOutputStream out) {
         this.out = out;
         this.messageQueue = new LinkedBlockingQueue<>();
     }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     @Override
     public void run() {

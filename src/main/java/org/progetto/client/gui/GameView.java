@@ -1,4 +1,4 @@
-package org.progetto.client.view;
+package org.progetto.client.gui;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

@@ -3,6 +3,7 @@ package org.progetto.server.connection.socket;
 import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
+import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.controller.*;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
@@ -10,6 +11,9 @@ import org.progetto.server.model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+/**
+ * Socket message listener for messages coming from a single client
+ */
 public class SocketListener extends Thread {
 
     private final ClientHandler clientHandler;
@@ -45,27 +49,25 @@ public class SocketListener extends Thread {
 
     private void handlerLobbyMessages(Object messageObj) {
         if (messageObj instanceof CreateGameMessage createGameMessage) {
-
             int levelGame = createGameMessage.getLevelGame();
             int numPlayers = createGameMessage.getNumPlayers();
             String name = createGameMessage.getName();
 
             InternalGameInfo internalGameInfo = LobbyController.createGame(name, levelGame, numPlayers);
 
-            GameManager gameManager = internalGameInfo.getGameManager();
-            Game game = gameManager.getGame();
+            GameCommunicationHandler gameCommunicationHandler = internalGameInfo.getGameManager();
+            Game game = gameCommunicationHandler.getGame();
             int idGame = game.getId();
             Board board = game.getBoard();
             Player player = internalGameInfo.getPlayer();
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-            clientHandler.initPlayerConnection(gameManager, player);
+            clientHandler.initPlayerConnection(gameCommunicationHandler, player);
 
-            LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(gameManager.getGame().getId()), clientHandler.getSocketWriter(), null);
+            LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(gameCommunicationHandler.getGame().getId()), clientHandler.getSocketWriter(), null);
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
-
             int idGame = joinGameMessage.getIdGame();
             String name = joinGameMessage.getName();
 
@@ -78,13 +80,13 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            GameManager gameManager = internalGameInfo.getGameManager();
-            Game game = gameManager.getGame();
+            GameCommunicationHandler gameCommunicationHandler = internalGameInfo.getGameManager();
+            Game game = gameCommunicationHandler.getGame();
             Board board = game.getBoard();
             Player player = internalGameInfo.getPlayer();
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-            clientHandler.initPlayerConnection(gameManager, player);
+            clientHandler.initPlayerConnection(gameCommunicationHandler, player);
             clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
         }
@@ -92,13 +94,13 @@ public class SocketListener extends Thread {
 
     private void handlerGameMessages(Object messageObj) {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
-        GameManager gameManager = clientHandler.getGameManager();
-        Game game = gameManager.getGame();
+        GameCommunicationHandler gameCommunicationHandler = clientHandler.getGameManager();
+        Game game = gameCommunicationHandler.getGame();
         Player player = clientHandler.getPlayer();
 
         switch (game.getPhase()) {
             case INIT:
-                GameController.startGame(gameManager);
+                GameController.startGame(gameCommunicationHandler);
                 break;
 
             case BUILDING:
@@ -106,12 +108,12 @@ public class SocketListener extends Thread {
                     int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
                     int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
-                    GameController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
+                    BuildingController.placeHandComponentAndPickHiddenComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter, null);
                 }
 
                 else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
                     int componentIdx = pickVisibleComponent.getComponentIdx();
-                    GameController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter, null);
+                    BuildingController.pickVisibleComponent(gameCommunicationHandler, player, componentIdx, socketWriter, null);
                 }
 
                 else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
@@ -119,7 +121,7 @@ public class SocketListener extends Thread {
                     int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
                     int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
                     int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
-                    GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, socketWriter, null);
+                    BuildingController.placeHandComponentAndPickVisibleComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, socketWriter, null);
                 }
 
                 else if (messageObj instanceof PlaceHandComponentAndPickUpEventCardDeckMessage placeHandComponentAndPickUpEventCardDeckMessage) {
@@ -127,31 +129,31 @@ public class SocketListener extends Thread {
                     int xPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getX();
                     int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
                     int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
-                    GameController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, socketWriter, null);
+                    BuildingController.placeHandComponentAndPickVisibleComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, socketWriter, null);
                 }
 
                 else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {
                     int deckIdx = pickUpEventCardDeck.getDeckIdx();
-                    GameController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter, null);
+                    BuildingController.pickUpEventCardDeck(gameCommunicationHandler, player, deckIdx, socketWriter, null);
                 }
 
                 else if (messageObj instanceof BookComponentMessage bookComponentMessage) {      //handle incoming book message
                     int idx = bookComponentMessage.getBookIdx();
-                    GameController.bookComponent(gameManager, player, idx, socketWriter, null);
+                    BuildingController.bookComponent(gameCommunicationHandler, player, idx, socketWriter, null);
                 }
 
                 else if (messageObj instanceof String messageString) {
                     switch (messageString){
                         case "PickHiddenComponent":
-                            GameController.pickHiddenComponent(gameManager, player, socketWriter, null);
+                            BuildingController.pickHiddenComponent(gameCommunicationHandler, player, socketWriter, null);
                             break;
 
                         case "DiscardComponent":
-                            GameController.discardComponent(gameManager, player, socketWriter,null);
+                            BuildingController.discardComponent(gameCommunicationHandler, player, socketWriter,null);
                             break;
 
                         case "PutDownEventCardDeck":
-                            GameController.putDownEventCardDeck(gameManager, player, socketWriter,null);
+                            BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, socketWriter,null);
                             break;
 
                         default:

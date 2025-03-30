@@ -1,4 +1,4 @@
-package org.progetto.client.view;
+package org.progetto.client.gui;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -8,7 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.GameData;
-import org.progetto.client.PageController;
 
 public class DragAndDrop {
 

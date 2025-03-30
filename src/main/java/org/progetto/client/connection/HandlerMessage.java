@@ -1,11 +1,14 @@
 package org.progetto.client.connection;
 
 import org.progetto.client.GameData;
-import org.progetto.client.PageController;
+import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Handles messages coming from server
+ */
 public class HandlerMessage {
 
     private static boolean isSocket = false;
@@ -33,7 +36,6 @@ public class HandlerMessage {
             PageController.generateGameList(notifyNewGameMessage.getIdGame());
 
         } else if (messageObj instanceof GameInfoMessage initGameMessage) {
-
             System.out.println("You have created a new game");
             GameData.setIdGame(initGameMessage.getIdGame());
 

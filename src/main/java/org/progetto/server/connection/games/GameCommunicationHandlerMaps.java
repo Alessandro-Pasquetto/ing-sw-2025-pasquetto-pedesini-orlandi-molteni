@@ -1,27 +1,32 @@
-package org.progetto.server.controller;
+package org.progetto.server.connection.games;
 
 import java.util.HashMap;
 
-public class GameManagersMaps {
+/**
+ * Class to handle:
+ * - waitingGamesManager: map of non started games
+ * - allGamesManager: map of already started games
+ */
+public class GameCommunicationHandlerMaps {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private static final HashMap<Integer, GameManager> waitingGamesManager = new HashMap<>();
-    private static final HashMap<Integer, GameManager> allGamesManager = new HashMap<>();
+    private static final HashMap<Integer, GameCommunicationHandler> waitingGamesManager = new HashMap<>();
+    private static final HashMap<Integer, GameCommunicationHandler> allGamesManager = new HashMap<>();
 
     // =======================
     // GETTERS
     // =======================
 
-    public static GameManager getWaitingGameManager(int idGame) {
+    public static GameCommunicationHandler getWaitingGameManager(int idGame) {
         synchronized (waitingGamesManager) {
             return waitingGamesManager.get(idGame);
         }
     }
 
-    public static GameManager getGameManager(int idGame) {
+    public static GameCommunicationHandler getGameManager(int idGame) {
         synchronized (allGamesManager) {
             return allGamesManager.get(idGame);
         }
@@ -37,12 +42,12 @@ public class GameManagersMaps {
     // OTHER METHODS
     // =======================
 
-    public static void addWaitingGameManager(int idGame, GameManager gameManager) {
+    public static void addWaitingGameManager(int idGame, GameCommunicationHandler gameCommunicationHandler) {
         synchronized (waitingGamesManager) {
-            waitingGamesManager.put(idGame, gameManager);
+            waitingGamesManager.put(idGame, gameCommunicationHandler);
         }
         synchronized (allGamesManager) {
-            allGamesManager.put(idGame, gameManager);
+            allGamesManager.put(idGame, gameCommunicationHandler);
         }
     }
 

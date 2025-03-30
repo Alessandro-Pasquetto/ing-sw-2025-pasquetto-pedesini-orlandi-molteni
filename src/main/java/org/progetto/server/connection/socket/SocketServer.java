@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * Handles socket clients connection and messages
+ */
 public class SocketServer extends Thread {
 
     // =======================

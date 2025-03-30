@@ -7,6 +7,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 
+/**
+ * Handles RMI clients connection and messages
+ */
 public class RmiServer extends Thread {
 
     // =======================

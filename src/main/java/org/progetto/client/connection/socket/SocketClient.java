@@ -1,7 +1,7 @@
 package org.progetto.client.connection.socket;
 
 import org.progetto.client.GameData;
-import org.progetto.client.PageController;
+import org.progetto.client.gui.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.messages.toServer.*;
 
@@ -9,8 +9,20 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * Handles the invocation of methods on the server
+ */
 public class SocketClient {
+
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     private static Socket socket;
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     /**
      * Method to connect to the socket server

@@ -1,16 +1,12 @@
 package org.progetto.client.connection.rmi;
 
 import org.progetto.client.GameData;
-import org.progetto.client.PageController;
+import org.progetto.client.gui.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.server.connection.rmi.VirtualServer;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 public class RmiClientSender{
 

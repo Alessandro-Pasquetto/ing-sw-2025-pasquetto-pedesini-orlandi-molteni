@@ -4,10 +4,15 @@ import org.progetto.messages.toClient.TimerMessage;
 
 import java.util.function.Consumer;
 
+/**
+ * Timer controller class
+ */
 public class TimerController {
+
     // =======================
     // ATTRIBUTES
     // =======================
+
     Consumer<Object> broadcastMessageFunction;
     private final int defaultTimer;
     private int timer;

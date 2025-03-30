@@ -1,6 +1,8 @@
 package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.games.GameCommunicationHandler;
+import org.progetto.server.connection.games.GameCommunicationHandlerMaps;
 import org.progetto.server.connection.rmi.RmiServer;
 import org.progetto.server.connection.socket.SocketServer;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -9,6 +11,9 @@ import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Lobby controller class
+ */
 public class LobbyController {
 
     // =======================
@@ -36,26 +41,26 @@ public class LobbyController {
     public static InternalGameInfo createGame(String name, int levelGame, int numPlayers){
         int idGame = currentIdGame.getAndIncrement();
 
-        GameManager gameManager = new GameManager(idGame, numPlayers, levelGame);
+        GameCommunicationHandler gameCommunicationHandler = new GameCommunicationHandler(idGame, numPlayers, levelGame);
         Player player = new Player(name, 0, levelGame);
 
-        gameManager.getGame().addPlayer(player);
+        gameCommunicationHandler.getGame().addPlayer(player);
 
-        return new InternalGameInfo(gameManager, player);
+        return new InternalGameInfo(gameCommunicationHandler, player);
     }
 
     public static InternalGameInfo joinGame(int idGame ,String name) throws IllegalStateException{
 
-        GameManager gameManager = GameManagersMaps.getWaitingGameManager(idGame);
-        Game game = gameManager.getGame();
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getWaitingGameManager(idGame);
+        Game game = gameCommunicationHandler.getGame();
 
         if(!game.checkAvailableName(name))
             throw new IllegalStateException("NotAvailableName");
 
         Player player = new Player(name, game.getPlayersSize(), game.getLevel());
 
-        gameManager.getGame().addPlayer(player);
+        gameCommunicationHandler.getGame().addPlayer(player);
 
-        return new InternalGameInfo(gameManager, player);
+        return new InternalGameInfo(gameCommunicationHandler, player);
     }
 }

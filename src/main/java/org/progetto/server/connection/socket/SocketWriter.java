@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Socket message writer that sends messages to a single client
+ */
 public class SocketWriter extends Thread {
 
     private ClientHandler clientHandler;
     private ObjectOutputStream out;
-    private BlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
     private boolean running = true;
 
     public SocketWriter(ClientHandler clientHandler, ObjectOutputStream out) {

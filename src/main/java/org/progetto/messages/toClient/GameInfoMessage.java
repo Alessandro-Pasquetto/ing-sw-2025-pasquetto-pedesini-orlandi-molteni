@@ -1,8 +1,5 @@
 package org.progetto.messages.toClient;
 
-import org.progetto.server.controller.GameManager;
-import org.progetto.server.model.Player;
-
 import java.io.Serializable;
 
 public class GameInfoMessage implements Serializable {
