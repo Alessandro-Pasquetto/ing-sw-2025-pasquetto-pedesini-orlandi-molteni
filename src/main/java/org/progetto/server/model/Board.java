@@ -10,7 +10,8 @@ public class Board {
     // =======================
 
     private final Player[] track;
-    private final ArrayList<Player> activeTravelers ;
+    private final ArrayList<Player> activeTravelers;
+    private final ArrayList<Player> readyTravelers;   // order: first player ready -> last one
     private final String imgSrc;
 
     // =======================
@@ -20,6 +21,7 @@ public class Board {
     public Board(int levelBoard) {
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
         this.activeTravelers = new ArrayList<>();
+        this.readyTravelers = new ArrayList<>();
         this.imgSrc = "board" + levelBoard + ".png";
     }
 
@@ -31,12 +33,16 @@ public class Board {
         return track;
     }
 
-    public String getImgSrc() {
-        return imgSrc;
-    }
-
     public ArrayList<Player> getActiveTravelers() {
         return activeTravelers;
+    }
+
+    public ArrayList<Player> getReadyTravelers() {
+        return readyTravelers;
+    }
+
+    public String getImgSrc() {
+        return imgSrc;
     }
 
     // =======================
@@ -55,6 +61,20 @@ public class Board {
             case 2 -> 24;
             default -> 0;
         };
+    }
+
+    /**
+     * Adds a player to the list of ready ones
+     *
+     * @author Gabriele
+     * @param player reference to ready player
+     */
+    public synchronized void addReadyTraveler(Player player) {
+        if (readyTravelers.contains(player)){
+            throw new IllegalStateException("PlayerIsAlreadyReady");
+        }
+
+        readyTravelers.add(player);
     }
 
     /**

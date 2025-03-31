@@ -30,6 +30,7 @@ public class AnotherPlayerDiscardComponentMessage implements Serializable {
     public String getNamePlayer() {
         return namePlayer;
     }
+
     public String getImgSrcDiscardedComponent() {
         return imgSrcDiscardedComponent;
     }

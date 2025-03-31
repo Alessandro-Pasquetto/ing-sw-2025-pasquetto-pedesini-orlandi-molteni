@@ -99,8 +99,9 @@ public class RmiClientSender{
     }
 
     /**
-     * allows RMI on client to call for the respective method on RMI server
-     * * @author Lorenzo
+     * Allows RMI on client to call for the respective method on RMI server
+     *
+     * @author Lorenzo
      */
     public static void discardComponent(){
         try {
@@ -111,8 +112,10 @@ public class RmiClientSender{
     }
 
     /**
-     * allows RMI on client to call for the respective method on RMI server
-     * * @author Lorenzo
+     * Allows RMI on client to call for the respective method on RMI server
+     *
+     * @author Lorenzo
+     * @param idx
      */
     public static void bookComponent(int idx){
         try {
@@ -139,7 +142,8 @@ public class RmiClientSender{
     }
 
     /**
-     * allows client to call for the destroyComponent method on RMI server
+     * Allows client to call for the destroyComponent method on RMI server
+     *
      * @author Lorenzo
      * @param yComponent
      * @param xComponent
@@ -152,4 +156,11 @@ public class RmiClientSender{
         }
     }
 
+    public static void readyPlayer() {
+        try {
+            server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

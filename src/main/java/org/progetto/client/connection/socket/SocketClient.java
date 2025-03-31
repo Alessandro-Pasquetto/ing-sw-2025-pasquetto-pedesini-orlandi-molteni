@@ -113,6 +113,10 @@ public class SocketClient {
         SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
     }
 
+    static void playerReady() {
+        SocketWriter.sendMessage("Ready");
+    }
+
     static void close() throws IOException {
         SocketListener.stopListener();
         SocketWriter.stopWriter();

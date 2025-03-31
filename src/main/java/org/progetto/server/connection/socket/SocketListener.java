@@ -163,6 +163,10 @@ public class SocketListener extends Thread {
                             BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, socketWriter,null);
                             break;
 
+                        case "Ready":
+                            BuildingController.playerReady(gameCommunicationHandler, player, socketWriter,null);
+                            break;
+
                         default:
                             break;
                     }

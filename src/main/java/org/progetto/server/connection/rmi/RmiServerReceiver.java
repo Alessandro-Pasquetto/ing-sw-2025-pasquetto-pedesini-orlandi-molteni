@@ -253,7 +253,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
      * @throws RemoteException if a player with name in idGame was not found
      */
     @Override
-    public void destroyComponent(VirtualClient virtualClient,int idGame,String name,int yComponent, int xComponent) throws RemoteException {
+    public void destroyComponent(VirtualClient virtualClient, int idGame, String name, int yComponent, int xComponent) throws RemoteException {
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
         Player player = null;
         try{
@@ -264,8 +264,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.destroyComponent(gameCommunicationHandler,player,yComponent,xComponent,null,virtualClient);
-
+        BuildingController.destroyComponent(gameCommunicationHandler, player, yComponent, xComponent, null, virtualClient);
     }
 
+    @Override
+    public void playerReady(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameCommunicationHandler.getGame().getPlayerByName(name);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        BuildingController.playerReady(gameCommunicationHandler, player, null, virtualClient);
+    }
 }

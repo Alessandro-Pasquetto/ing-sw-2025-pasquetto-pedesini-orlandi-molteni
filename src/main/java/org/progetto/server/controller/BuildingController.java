@@ -216,7 +216,7 @@ public class BuildingController {
 
         try{
             String imgSrc = gameCommunicationHandler.getGame().discardComponent(player);
-            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
@@ -237,6 +237,7 @@ public class BuildingController {
      * @param vvSender registry for RMI
      */
     public static void bookComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int idx, SocketWriter swSender, VirtualClient vvSender) {
+
         if(gameCommunicationHandler.timerExpired()){
             GameController.sendMessage("TimerExpired", swSender, vvSender);
             return;
@@ -290,7 +291,17 @@ public class BuildingController {
         }
     }
 
+    /**
+     * Handles player decision to put-down a current eventCard deck
+     *
+     * @author Gabriele
+     * @param gameCommunicationHandler
+     * @param player
+     * @param swSender
+     * @param vvSender
+     */
     public static void putDownEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender) {
+
         if(gameCommunicationHandler.timerExpired()){
             GameController.sendMessage("TimerExpired", swSender, vvSender);
             return;
@@ -310,7 +321,8 @@ public class BuildingController {
     }
 
     /**
-     * handles the destruction of a component
+     * Handles the destruction of a component
+     *
      * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
      * @param player owner of the spaceship
@@ -336,4 +348,32 @@ public class BuildingController {
             }
     }
 
+    /**
+     * Defines a player ready for the game
+     *
+     * @author Gabriele
+     * @param gameCommunicationHandler
+     * @param player
+     * @param swSender
+     * @param vvSender
+     */
+    public static void playerReady(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender) {
+
+        if(gameCommunicationHandler.timerExpired()){
+            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            return;
+        }
+
+        try{
+            gameCommunicationHandler.getGame().getBoard().addReadyTraveler(player);
+            GameController.sendMessage("YouAreReady", swSender, vvSender);
+            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), swSender, vvSender);
+
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerIsAlreadyReady"))
+                GameController.sendMessage("PlayerIsAlreadyReady", swSender, vvSender);
+            else
+                GameController.sendMessage(e.getMessage(), swSender, vvSender);
+        }
+    }
 }
