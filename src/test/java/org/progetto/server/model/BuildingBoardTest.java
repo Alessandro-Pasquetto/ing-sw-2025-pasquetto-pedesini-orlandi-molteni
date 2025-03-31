@@ -460,4 +460,67 @@ class BuildingBoardTest {
     @Test
     void printBoard() {
     }
+
+    @Test
+    void initSpaceshipParams(){
+        Spaceship spaceship = new Spaceship(2,1);
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        // Cannons (x2)
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(1, 3, 0);
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(1, 4, 1);
+
+        // Engine
+        buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 3, 0);
+
+        // DoubleEngine
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 4, 0);
+
+        // Shields (x2)
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 5, 1);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(1, 2, 3);
+
+        // BatteryStorage
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+        buildingBoard.placeComponent(3, 2, 0);
+
+        // DoubleCannon
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 1, 0);
+
+        System.out.println();
+        System.out.printf("%-20s", "-");
+        for (int i = 0; i < 5; i++) {
+            System.out.printf("%-20s", 5 + i);
+        }
+        for (int i = 0; i < buildingBoard.getSpaceshipMatrix().length; i++) {
+               System.out.println();
+            System.out.printf("%-20s", 5 + i);
+            for (int j = 0; j < buildingBoard.getSpaceshipMatrix()[0].length; j++) {
+                String value = (buildingBoard.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrix()[i][j].getRotation();
+                System.out.printf("%-20s", value);
+            }
+        }
+        System.out.println();
+
+        assertTrue(buildingBoard.checkShipValidity());
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1.5, spaceship.getNormalShootingPower());
+        assertEquals(1, spaceship.getDoubleCannonCount());
+        assertEquals(1, spaceship.getNormalEnginePower());
+        assertEquals(1, spaceship.getDoubleEngineCount());
+        assertEquals(1, spaceship.getIdxShieldCount(1));
+        assertEquals(1, spaceship.getIdxShieldCount(2));
+        assertEquals(1, spaceship.getIdxShieldCount(0));
+        assertEquals(1, spaceship.getIdxShieldCount(3));
+        assertEquals(2, spaceship.getBatteriesCount());
+    }
 }

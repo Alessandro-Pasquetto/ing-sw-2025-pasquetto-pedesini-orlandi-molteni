@@ -102,4 +102,11 @@ class BoxStorageTest {
         // Tries to remove an empty cell
         assertFalse(bs.removeBox(s, 1));
     }
+
+    @Test
+    void getValue(){
+        Box box = Box.GREEN;
+
+        assertEquals(2, box.getValue());
+    }
 }
