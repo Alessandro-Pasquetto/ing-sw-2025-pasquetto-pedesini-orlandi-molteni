@@ -440,7 +440,6 @@ public class Game {
 
     /**
      * Compose the hidden deck after the building phase
-     *
      * @author Lorenzo
      * @return the hiddenDeck composed if all the visible decks where available
      */

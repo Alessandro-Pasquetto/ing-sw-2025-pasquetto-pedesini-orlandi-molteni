@@ -300,8 +300,9 @@ class GameTest {
     void composeHiddenEventDeck(){
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
-
         game.addPlayer(mario);
+
+        game.composeHiddenEventDeck();
 
         assertNotNull(game.pickEventCard());
     }

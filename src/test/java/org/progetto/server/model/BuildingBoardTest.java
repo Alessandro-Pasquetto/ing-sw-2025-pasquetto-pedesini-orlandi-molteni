@@ -2,10 +2,7 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BuildingBoardTest {
@@ -119,13 +116,56 @@ class BuildingBoardTest {
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(-1));
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(2));  // Changed from 3 to 2
 
+
         // Now it should work (overwriting the pre-existing component)
         assertDoesNotThrow(() -> board.setAsBooked(0));
 
         // Verify component was moved correctly
         assertNull(board.getHandComponent());
         assertSame(component, board.getBooked()[0]);
+
+        //Test cell occupied
+        board.setHandComponent(component);
+        assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
+
+
+
+
+
+
+
     }
+
+    @Test
+    void pickBookedComponent(){
+
+        BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+
+        // Test empty booked list
+        assertThrows(IllegalStateException.class, () -> board.pickBookedComponent(0));
+
+        //set booked component
+        board.setHandComponent(component);
+        board.setAsBooked(0);
+
+        // Test illegal indices
+        assertThrows(IllegalStateException.class, () -> board.pickBookedComponent(-1));
+        assertThrows(IllegalStateException.class, () -> board.pickBookedComponent(2));
+
+        //Test not empty hand
+        board.setHandComponent(component);
+        assertThrows(IllegalStateException.class, () -> board.pickBookedComponent(0));
+
+
+        // Verify component was moved correctly
+        board.setHandComponent(null);
+        board.pickBookedComponent(0);
+        assertSame(component,board.getHandComponent());
+        assertNull(board.getBooked()[0]);
+
+    }
+
 
     @Test
     void setHandComponent() {
@@ -183,6 +223,15 @@ class BuildingBoardTest {
 
         assertNotEquals(c, spaceshipMatrix[2][2]);
         assertFalse(result);
+
+        //Placed away from a placed component
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
+        c = buildingBoard.getHandComponent();
+
+        result = buildingBoard.placeComponent(4, 3, 0);
+
+        assertFalse(result);
+
     }
 
     @Test
@@ -227,14 +276,12 @@ class BuildingBoardTest {
         buildingBoard.destroyComponent(2,1);
 
 
-
         // test allow purple alien //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
         assertTrue(housingUnit.getAllowAlienPurple());
-
 
         //  update purple alien hosting test   //
         buildingBoard.destroyComponent(2,1); // Removes the purple alien unit, so it can't host alien anymore
@@ -251,19 +298,210 @@ class BuildingBoardTest {
         buildingBoard.destroyComponent(1,2); // Removes the purple alien unit, another unit is present
         assertTrue(housingUnit.getAllowAlienPurple());
 
+        // reset spaceship //
+        buildingBoard.destroyComponent(2,1);
 
+
+        // Removing frontal cannon //
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getNormalShootingPower());
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getNormalShootingPower());
+
+        // Removing tilted cannon //
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 1);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(0.5,spaceship.getNormalShootingPower());
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getNormalShootingPower());
+
+
+        // Removing double cannon //
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getDoubleCannonCount());
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getDoubleCannonCount());
+
+
+        // Removing engine //
+        buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getNormalEnginePower());
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getNormalEnginePower());
+
+        // Removing double engine //
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getDoubleEngineCount());
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getDoubleEngineCount());
+
+
+        // Removing left-up shield //
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getIdxShieldCount(0));
+        assertEquals(1,spaceship.getIdxShieldCount(3));
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getIdxShieldCount(0));
+        assertEquals(0,spaceship.getIdxShieldCount(3));
+
+
+        // Removing up-right shield //
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 1);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getIdxShieldCount(0));
+        assertEquals(1,spaceship.getIdxShieldCount(1));
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getIdxShieldCount(0));
+        assertEquals(0,spaceship.getIdxShieldCount(1));
+
+
+        // Removing right-down shield //
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 2);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getIdxShieldCount(1));
+        assertEquals(1,spaceship.getIdxShieldCount(2));
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getIdxShieldCount(1));
+        assertEquals(0,spaceship.getIdxShieldCount(2));
+
+
+        // Removing down-left shield //
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 3);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1,spaceship.getIdxShieldCount(2));
+        assertEquals(1,spaceship.getIdxShieldCount(3));
+
+        buildingBoard.destroyComponent(2,1);
+
+        assertEquals(0,spaceship.getIdxShieldCount(2));
+        assertEquals(0,spaceship.getIdxShieldCount(3));
+
+       // removing housing unit with alien orange //
+        housingUnit.setAlienOrange(true);
+        buildingBoard.destroyComponent(2,2);
+        assertFalse(spaceship.getAlienOrange());
+
+        // removing housing unit with alien purple //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit
+        housing_unit = buildingBoard.getHandComponent();
+        buildingBoard.placeComponent(2, 2, 0);
+        housingUnit = (HousingUnit) housing_unit;
+        housingUnit.setAlienPurple(true);
+        buildingBoard.destroyComponent(2,2);
+        assertFalse(spaceship.getAlienPurple());
+
+
+        // removing central unit //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.placeComponent(2, 2, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(4,spaceship.getCrewCount());
+
+        buildingBoard.destroyComponent(2,2);
+
+        assertEquals(2,spaceship.getCrewCount());
+
+        // removing structural unit //
+        buildingBoard.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 2, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertTrue(buildingBoard.destroyComponent(2,2));
+
+
+        // removing battery storage //
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.placeComponent(2, 2, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(2,spaceship.getBatteriesCount());
+
+        buildingBoard.destroyComponent(2,2);
+
+        assertEquals(0,spaceship.getBatteriesCount());
+
+
+        // removing box storage //
+        buildingBoard.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        Component box_component = buildingBoard.getHandComponent();
+        BoxStorage box_storage = (BoxStorage) box_component;
+        buildingBoard.placeComponent(2, 2, 0);
+        box_storage.addBox(spaceship, Box.YELLOW,0);
+        buildingBoard.initSpaceshipParams();
+
+        assertArrayEquals(new int[]{0,1,0,0},spaceship.getBoxCounts());
+        buildingBoard.destroyComponent(2,2);
+        assertArrayEquals(new int[]{0,0,0,0},spaceship.getBoxCounts());
+
+        // removing redBox storage //
+        buildingBoard.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        box_component = buildingBoard.getHandComponent();
+        box_storage = (BoxStorage) box_component;
+        buildingBoard.placeComponent(2, 2, 0);
+        box_storage.addBox(spaceship, Box.YELLOW,0);
+        buildingBoard.initSpaceshipParams();
+
+        buildingBoard.initSpaceshipParams();
+
+        assertTrue(buildingBoard.destroyComponent(2,2));
 
 
         //  Connectors count update test    //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
-        buildingBoard.placeComponent(2, 1, 0);
+        buildingBoard.placeComponent(2, 2, 0);
+
 
         buildingBoard.checkShipValidity();                                //update connectors count
-        assertEquals(8,spaceship.getExposedConnectorsCount());
-
-        buildingBoard.destroyComponent(2,1);                        //remove component and check new connectors count
-        buildingBoard.checkShipValidity();
         assertEquals(6,spaceship.getExposedConnectorsCount());
+
+        buildingBoard.destroyComponent(2,2);                        //remove component and check new connectors count
+        buildingBoard.checkShipValidity();
+        assertEquals(4,spaceship.getExposedConnectorsCount());
+
+        // destroy null component //
+        assertFalse(buildingBoard.destroyComponent(4,3));
+
+
     }
 
     @Test
