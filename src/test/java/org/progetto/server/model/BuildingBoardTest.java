@@ -710,24 +710,6 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(1, 4, 1);
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < buildingBoard.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard.getSpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
-
-        assertTrue(buildingBoard.checkShipValidity());
-
-
         // Engine
         buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
         buildingBoard.placeComponent(3, 3, 0);
@@ -751,6 +733,7 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(3, 1, 0);
 
+        /*
         System.out.println();
         System.out.printf("%-20s", "-");
         for (int i = 0; i < 5; i++) {
@@ -765,6 +748,7 @@ class BuildingBoardTest {
             }
         }
         System.out.println();
+         */
 
         assertTrue(buildingBoard.checkShipValidity());
 

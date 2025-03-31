@@ -44,6 +44,8 @@ class GameTest {
         game.addPlayer(new Player("bob",1,2));
 
         assertEquals(alice, game.getPlayerByName("alice"));
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.getPlayerByName("matteo"));
+        assertEquals("PlayerNameNotFound", exception.getMessage());
     }
 
     @Test
@@ -316,6 +318,8 @@ class GameTest {
         game.addPlayer(mario);
         Component component = game.pickHiddenComponent(mario);
         assertEquals(component, mario.getSpaceship().getBuildingBoard().getHandComponent());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.pickHiddenComponent(mario));
+        assertEquals("FullHandComponent", exception.getMessage());
     }
 
     @Test
