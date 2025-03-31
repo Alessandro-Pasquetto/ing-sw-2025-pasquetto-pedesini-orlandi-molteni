@@ -29,4 +29,5 @@ public class Projectile {
     public int getFrom() {
         return from;
     }
+
 }

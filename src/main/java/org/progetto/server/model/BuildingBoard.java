@@ -657,18 +657,6 @@ public class BuildingBoard {
         return result;
     }
 
-    public void printBoard(){
-
-        System.out.println();
-
-        for (int i = 0; i < boardMask.length; i++) {
-            System.out.println();
-            for (int j = 0; j < boardMask[i].length; j++) {
-                System.out.print(boardMask[i][j] + " ");
-            }
-        }
-    }
-
     /**
      * Initialize spaceship attributes after checking the ship validity
      */

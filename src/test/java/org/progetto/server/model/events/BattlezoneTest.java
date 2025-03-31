@@ -251,7 +251,7 @@ class BattlezoneTest {
 
 
         // check spaceShip lv2
-        System.out.println("Check spaceship lv2");
+//        System.out.println("Check spaceship lv2");
 
         Game game2 = new Game(1, 3, 2);
         Player p2 = new Player("a", 1, 2);

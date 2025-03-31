@@ -71,12 +71,12 @@ class BuildingBoardTest {
 
         int[][] mat = buildingboard.getBoardMask();
 
-        for (int i = 0; i < mat.length; i++) {
-            System.out.println();
-            for (int j = 0; j < mat[i].length; j++) {
-                System.out.print(mat[i][j] + " ");
-            }
-        }
+//        for (int i = 0; i < mat.length; i++) {
+//            System.out.println();
+//            for (int j = 0; j < mat[i].length; j++) {
+//                System.out.print(mat[i][j] + " ");
+//            }
+//        }
     }
 
     @Test
@@ -197,7 +197,6 @@ class BuildingBoardTest {
         Component component_1 = buildingBoard.getHandComponent();
 
         buildingBoard.placeComponent(2, 2, 0);
-        buildingBoard.printBoard();
 
         buildingBoard.initSpaceshipParams();
         assertEquals(4,spaceship.getCrewCount());
@@ -207,7 +206,6 @@ class BuildingBoardTest {
         Component component_2 = buildingBoard.getHandComponent();
 
         buildingBoard.placeComponent(2, 1, 0);
-        buildingBoard.printBoard();
 
         buildingBoard.initSpaceshipParams();
         HousingUnit housingUnit = (HousingUnit) component_1;
@@ -216,7 +214,6 @@ class BuildingBoardTest {
         //  update alien hosting test   //
 
         buildingBoard.destroyComponent(2,1); // Removes the orange alien unit, so it can't host alien anymore
-        buildingBoard.printBoard();
         assertFalse(housingUnit.getAllowAlienOrange());
 
 
@@ -224,13 +221,11 @@ class BuildingBoardTest {
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
         buildingBoard.placeComponent(2, 1, 0);
-        buildingBoard.printBoard();
 
         buildingBoard.checkShipValidity();                                //update connectors count
         assertEquals(8,spaceship.getExposedConnectorsCount());
 
         buildingBoard.destroyComponent(2,1);                        //remove component and check new connectors count
-        buildingBoard.printBoard();
         buildingBoard.checkShipValidity();
         assertEquals(6,spaceship.getExposedConnectorsCount());
     }

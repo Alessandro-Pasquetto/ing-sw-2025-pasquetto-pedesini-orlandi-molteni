@@ -91,13 +91,13 @@ class SmugglersTest {
         bs1.addBox(s, Box.YELLOW,2);
         bs1.addBox(s, Box.GREEN,1);
 
-        for (int i = 0; i < bs1.getCapacity(); i++) {
-            if(bs1.getBoxStorage()[i] == null)
-                System.out.print("NULL, ");
-            else
-                System.out.print(bs1.getBoxStorage()[i].getValue() + ", ");
-        }
-        System.out.println();
+//        for (int i = 0; i < bs1.getCapacity(); i++) {
+//            if(bs1.getBoxStorage()[i] == null)
+//                System.out.print("NULL, ");
+//            else
+//                System.out.print(bs1.getBoxStorage()[i].getValue() + ", ");
+//        }
+//        System.out.println();
 
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 0));
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 1));
