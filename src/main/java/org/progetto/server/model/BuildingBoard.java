@@ -552,9 +552,11 @@ public class BuildingBoard {
         if (currentType == ComponentType.CANNON || currentType == ComponentType.DOUBLE_CANNON) {
             if (!checkCannonValidity(currentComponent, x, y))
                 return false;
-        } else if (currentType == ComponentType.ENGINE){
-            if (currentRotation != 0 || (y > 0 && spaceshipMatrix[y - 1][x] != null))
+
+        } else if (currentType == ComponentType.ENGINE || currentType == ComponentType.DOUBLE_ENGINE) {
+            if (currentRotation != 0 || (y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null)){
                 return false;
+            }
         }
 
         boolean up = false, right = false, bottom = false, left = false;
