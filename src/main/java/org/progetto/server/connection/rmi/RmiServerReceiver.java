@@ -57,7 +57,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         gameCommunicationHandler.addRmiClient(player, virtualClient);
         GameCommunicationHandlerMaps.addWaitingGameManager(idGame, gameCommunicationHandler);
 
-        LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(idGame), null, virtualClient);
+        LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(idGame), virtualClient);
         virtualClient.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 
@@ -87,7 +87,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void startGame(VirtualClient virtualClient, int idGame) throws RemoteException {
-        GameController.startGame(GameCommunicationHandlerMaps.getGameManager(idGame));
+        GameController.startGame(GameCommunicationHandlerMaps.getGameManager(idGame), virtualClient);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.pickHiddenComponent(gameCommunicationHandler, player, null, virtualClient);
+        BuildingController.pickHiddenComponent(gameCommunicationHandler, player, virtualClient);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.pickVisibleComponent(gameCommunicationHandler, player, idx, null, virtualClient);
+        BuildingController.pickVisibleComponent(gameCommunicationHandler, player, idx, virtualClient);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickHiddenComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, null, virtualClient);
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, virtualClient);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickVisibleComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, null, virtualClient);
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, virtualClient);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, null, virtualClient);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, virtualClient);
     }
 
     /**
@@ -184,7 +184,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.discardComponent(gameCommunicationHandler, player, null, virtualClient);
+        BuildingController.discardComponent(gameCommunicationHandler, player, virtualClient);
     }
 
     /**
@@ -207,7 +207,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.bookComponent(gameCommunicationHandler,player,idx,null,virtualClient);
+        BuildingController.bookComponent(gameCommunicationHandler, player, idx, virtualClient);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.pickUpEventCardDeck(gameCommunicationHandler, player, deckIdx, null, virtualClient);
+        BuildingController.pickUpEventCardDeck(gameCommunicationHandler, player, deckIdx, virtualClient);
     }
 
     @Override
@@ -237,7 +237,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, null, virtualClient);
+        BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, virtualClient);
     }
 
     /**
@@ -261,7 +261,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.destroyComponent(gameCommunicationHandler, player, yComponent, xComponent, null, virtualClient);
+        BuildingController.destroyComponent(gameCommunicationHandler, player, yComponent, xComponent, virtualClient);
     }
 
     @Override
@@ -276,28 +276,28 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.playerReady(gameCommunicationHandler, player, null, virtualClient);
+        BuildingController.playerReady(gameCommunicationHandler, player, virtualClient);
     }
 
     @Override
     public void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
 
-        BuildingController.resetTimer(gameCommunicationHandler, null, virtualClient);
+        BuildingController.resetTimer(gameCommunicationHandler, virtualClient);
     }
 
     @Override
-    public void rollDice(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
+    public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameCommunicationHandler.getGame().getPlayerByName(name);
+            player = gameCommunicationHandler.getPlayerByVirtualClient(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNameNotFound"))
                 virtualClient.sendMessage("PlayerNameNotFound");
             return;
         }
 
-        EventController.rollDice(gameCommunicationHandler, player, null, virtualClient);
+        EventController.rollDice(gameCommunicationHandler, player, virtualClient);
     }
 }

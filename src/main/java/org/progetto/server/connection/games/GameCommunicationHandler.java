@@ -1,6 +1,7 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.model.Game;
@@ -136,11 +137,11 @@ public class GameCommunicationHandler {
         }
     }
 
-    public void broadcastGameMessageToOthers(Object messageObj, SocketWriter swSender, VirtualClient vcSender) {
+    public void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
         ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
 
         for (SocketWriter sw : socketWritersCopy) {
-            if(!sw.equals(swSender))
+            if(!sw.equals(sender))
                 sw.sendMessage(messageObj);
         }
 
@@ -148,7 +149,7 @@ public class GameCommunicationHandler {
 
         try{
             for (VirtualClient vc : rmiClientsCopy) {
-                if(!vc.equals(vcSender))
+                if(!vc.equals(sender))
                     vc.sendMessage(messageObj);
             }
         } catch (RemoteException e) {

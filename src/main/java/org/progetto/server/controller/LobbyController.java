@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.games.GameCommunicationHandlerMaps;
 import org.progetto.server.connection.rmi.RmiServer;
@@ -32,9 +33,16 @@ public class LobbyController {
         RmiServer.broadcastLobbyMessage(messageObj);
     }
 
-    public static void broadcastLobbyMessageToOthers(Object messageObj, SocketWriter swSender, VirtualClient vvSender) {
-        SocketServer.broadcastLobbyMessageToOthers(swSender, messageObj);
-        RmiServer.broadcastLobbyMessageToOthers(vvSender, messageObj);
+    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
+
+        if(sender instanceof SocketWriter){
+            SocketServer.broadcastLobbyMessageToOthers(sender, messageObj);
+            RmiServer.broadcastLobbyMessage(messageObj);
+        }else{
+            RmiServer.broadcastLobbyMessageToOthers(sender, messageObj);
+            SocketServer.broadcastLobbyMessage(messageObj);
+        }
+
     }
 
     // Create game objects and player, add player to the game

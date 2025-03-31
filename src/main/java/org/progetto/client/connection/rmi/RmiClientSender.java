@@ -174,7 +174,7 @@ public class RmiClientSender{
 
     public static void rollDice() {
         try {
-            server.rollDice(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+            server.rollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

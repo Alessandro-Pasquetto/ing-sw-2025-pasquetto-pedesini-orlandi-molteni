@@ -1,6 +1,7 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.Sender;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -70,7 +71,7 @@ public class RmiServer extends Thread {
         }
     }
 
-    public static void broadcastLobbyMessageToOthers(VirtualClient sender, Object messageObj) {
+    public static void broadcastLobbyMessageToOthers(Sender sender, Object messageObj) {
 
         ArrayList<VirtualClient> lobbyRmiClientsCopy;
 

@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
@@ -28,26 +29,25 @@ public class BuildingController {
      * @author Alessandro
      * @param gameCommunicationHandler
      * @param player
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void pickHiddenComponent(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender){
+    public static void pickHiddenComponent(GameCommunicationHandler gameCommunicationHandler, Player player, Sender sender) throws RemoteException{
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             Component pickedComponent = gameCommunicationHandler.getGame().pickHiddenComponent(player);
-            GameController.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+            sender.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
-                GameController.sendMessage("FullHandComponent", swSender, vvSender);
+                sender.sendMessage("FullHandComponent");
 
             if(e.getMessage().equals("EmptyComponentDeck"))
-                GameController.sendMessage("EmptyComponentDeck", swSender, vvSender);
+                sender.sendMessage("EmptyComponentDeck");
         }
     }
 
@@ -58,27 +58,26 @@ public class BuildingController {
      * @param gameCommunicationHandler
      * @param player
      * @param componentIdx
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void pickVisibleComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int componentIdx, SocketWriter swSender, VirtualClient vvSender){
+    public static void pickVisibleComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int componentIdx, Sender sender) throws RemoteException{
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             gameCommunicationHandler.getGame().pickVisibleComponent(componentIdx, player);
             Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
-            GameController.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+            sender.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
-                GameController.sendMessage("FullHandComponent", swSender, vvSender);
+                sender.sendMessage("FullHandComponent");
 
             if(e.getMessage().equals("IllegalIndexComponent"))
-                GameController.sendMessage("IllegalIndexComponent", swSender, vvSender);
+                sender.sendMessage("IllegalIndexComponent");
         }
     }
 
@@ -91,13 +90,12 @@ public class BuildingController {
      * @param yPlaceComponent
      * @param xPlaceComponent
      * @param rPlaceComponent
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void placeHandComponentAndPickHiddenComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, SocketWriter swSender, VirtualClient vvSender) {
+    public static void placeHandComponentAndPickHiddenComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
@@ -106,19 +104,19 @@ public class BuildingController {
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
             try{
-                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 Component pickedComponent = gameCommunicationHandler.getGame().pickHiddenComponent(player);
-                GameController.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+                sender.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("FullHandComponent"))
-                    GameController.sendMessage("FullHandComponent", swSender, vvSender);
+                    sender.sendMessage("FullHandComponent");
 
                 if (e.getMessage().equals("EmptyComponentDeck"))
-                    GameController.sendMessage("EmptyComponentDeck", swSender, vvSender);
+                    sender.sendMessage("EmptyComponentDeck");
             }
         }else
-            GameController.sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
+            sender.sendMessage("ImpossiblePlaceComponent");
     }
 
     /**
@@ -131,13 +129,12 @@ public class BuildingController {
      * @param xPlaceComponent
      * @param rPlaceComponent
      * @param componentIdx
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void placeHandComponentAndPickVisibleComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, SocketWriter swSender, VirtualClient vvSender) {
+    public static void placeHandComponentAndPickVisibleComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
@@ -146,20 +143,20 @@ public class BuildingController {
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
             try{
-                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 gameCommunicationHandler.getGame().pickVisibleComponent(componentIdx, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
-                GameController.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()), swSender, vvSender);
+                sender.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("FullHandComponent"))
-                    GameController.sendMessage("FullHandComponent", swSender, vvSender);
+                    sender.sendMessage("FullHandComponent");
 
                 if (e.getMessage().equals("IllegalIndexComponent"))
-                    GameController.sendMessage("IllegalIndexComponent", swSender, vvSender);
+                    sender.sendMessage("IllegalIndexComponent");
             }
         }else
-            GameController.sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
+            sender.sendMessage("ImpossiblePlaceComponent");
     }
 
     /**
@@ -172,13 +169,12 @@ public class BuildingController {
      * @param xPlaceComponent
      * @param rPlaceComponent
      * @param deckIdx
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void placeHandComponentAndPickUpEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx, SocketWriter swSender, VirtualClient vvSender) {
+    public static void placeHandComponentAndPickUpEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
@@ -187,17 +183,17 @@ public class BuildingController {
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
             try{
-                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), swSender, vvSender);
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 ArrayList<EventCard> eventCardsDeck = gameCommunicationHandler.getGame().pickUpEventCardDeck(player, deckIdx);
-                GameController.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck), swSender, vvSender);
-                gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
+                sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));
+                gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
             } catch (IllegalStateException e) {
                 if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
-                    GameController.sendMessage("EventCardDeckIsAlreadyTaken", swSender, vvSender);
+                    sender.sendMessage("EventCardDeckIsAlreadyTaken");
             }
         }else
-            GameController.sendMessage("ImpossiblePlaceComponent", swSender, vvSender);
+            sender.sendMessage("ImpossiblePlaceComponent");
     }
 
     /**
@@ -206,25 +202,24 @@ public class BuildingController {
      * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
      * @param player is the one that want to discard a cart
-     * @param swSender sender for socket
-     * @param vvSender registry for RMI
+     * @param sender
      */
-    public static void discardComponent(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender) {
+    public static void discardComponent(GameCommunicationHandler gameCommunicationHandler, Player player, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             String imgSrc = gameCommunicationHandler.getGame().discardComponent(player);
-            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), swSender, vvSender);
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
-                GameController.sendMessage("EmptyHandComponent", swSender, vvSender);
+                sender.sendMessage("EmptyHandComponent");
             else
-                GameController.sendMessage(e.getMessage(), swSender, vvSender);
+                sender.sendMessage(e.getMessage());
         }
     }
 
@@ -235,13 +230,12 @@ public class BuildingController {
      * @param gameCommunicationHandler is the class that manage the current game
      * @param player is the one that want to discard a cart
      * @param idx where the booked component will be inserted
-     * @param swSender sender for socket
-     * @param vvSender registry for RMI
+     * @param sender
      */
-    public static void bookComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int idx, SocketWriter swSender, VirtualClient vvSender) {
+    public static void bookComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int idx, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
@@ -249,15 +243,15 @@ public class BuildingController {
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
             gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().setAsBooked(idx);
-            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),swSender, vvSender);
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
-                GameController.sendMessage("EmptyHandComponent", swSender, vvSender);
+                sender.sendMessage("EmptyHandComponent");
             else if (e.getMessage().equals("IllegalIndex"))
-                GameController.sendMessage("IllegalIndex", swSender, vvSender);
+                sender.sendMessage("IllegalIndex");
             else if (e.getMessage().equals("BookedCellOccupied"))
-                GameController.sendMessage("BookedCellOccupied", swSender, vvSender);
+                sender.sendMessage("BookedCellOccupied");
         }
     }
 
@@ -268,28 +262,27 @@ public class BuildingController {
      * @param gameCommunicationHandler
      * @param player
      * @param deckIdx
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void pickUpEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, int deckIdx, SocketWriter swSender, VirtualClient vvSender) {
+    public static void pickUpEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, int deckIdx, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             ArrayList<EventCard> eventCardsDeck = gameCommunicationHandler.getGame().pickUpEventCardDeck(player, deckIdx);
-            GameController.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck), swSender, vvSender);
-            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), swSender, vvSender);
+            sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));
+            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
-                GameController.sendMessage("EventCardDeckIsAlreadyTaken", swSender, vvSender);
+                sender.sendMessage("EventCardDeckIsAlreadyTaken");
             if(e.getMessage().equals("IllegalIndexEventCardDeck"))
-                GameController.sendMessage("IllegalIndexEventCardDeck", swSender, vvSender);
+                sender.sendMessage("IllegalIndexEventCardDeck");
             else
-                GameController.sendMessage(e.getMessage(), swSender, vvSender);
+                sender.sendMessage(e.getMessage());
         }
     }
 
@@ -299,26 +292,25 @@ public class BuildingController {
      * @author Gabriele
      * @param gameCommunicationHandler
      * @param player
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void putDownEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender) {
+    public static void putDownEventCardDeck(GameCommunicationHandler gameCommunicationHandler, Player player, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             int deckIdx = gameCommunicationHandler.getGame().putDownEventCardDeck(player);
-            GameController.sendMessage("EventCardDeckPutDown", swSender, vvSender);
-            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), swSender, vvSender);
+            sender.sendMessage("EventCardDeckPutDown");
+            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NoEventCardDeckTaken"))
-                GameController.sendMessage("NoEventCardDeckTaken", swSender, vvSender);
+                sender.sendMessage("NoEventCardDeckTaken");
             else
-                GameController.sendMessage(e.getMessage(), swSender, vvSender);
+                sender.sendMessage(e.getMessage());
         }
     }
 
@@ -330,22 +322,21 @@ public class BuildingController {
      * @param player owner of the spaceship
      * @param yComponent coordinate
      * @param xComponent coordinate
-     * @param swSender sender for socket
-     * @param vvSender registry for RMI
+     * @param sender
      */
-    public static void destroyComponent(GameCommunicationHandler gameCommunicationHandler, Player player,int yComponent, int xComponent, SocketWriter swSender ,VirtualClient vvSender) {
+    public static void destroyComponent(GameCommunicationHandler gameCommunicationHandler, Player player,int yComponent, int xComponent, Sender sender) throws RemoteException {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
             String imgSrc = buildingBoard.getHandComponent().getImgSrc();
             buildingBoard.destroyComponent(yComponent,xComponent);
 
-            GameController.sendMessage("ComponentDestroyed", swSender, vvSender);  //forse da aggiungere un messaggio con parametri
-            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), swSender, vvSender);
+            sender.sendMessage("ComponentDestroyed");  //forse da aggiungere un messaggio con parametri
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), sender);
 
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("EmptyComponentCell"))
-                GameController.sendMessage("EmptyComponentCell", swSender, vvSender);
+                sender.sendMessage("EmptyComponentCell");
         }
     }
 
@@ -355,36 +346,35 @@ public class BuildingController {
      * @author Gabriele
      * @param gameCommunicationHandler
      * @param player
-     * @param swSender
-     * @param vvSender
+     * @param sender
      */
-    public static void playerReady(GameCommunicationHandler gameCommunicationHandler, Player player, SocketWriter swSender, VirtualClient vvSender) {
+    public static void playerReady(GameCommunicationHandler gameCommunicationHandler, Player player, Sender sender) throws RemoteException {
 
         if(gameCommunicationHandler.timerExpired()){
-            GameController.sendMessage("TimerExpired", swSender, vvSender);
+            sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
             gameCommunicationHandler.getGame().getBoard().addReadyTraveler(player);
-            GameController.sendMessage("YouAreReady", swSender, vvSender);
-            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), swSender, vvSender);
+            sender.sendMessage("YouAreReady");
+            gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerIsAlreadyReady"))
-                GameController.sendMessage("PlayerIsAlreadyReady", swSender, vvSender);
+                sender.sendMessage("PlayerIsAlreadyReady");
             else
-                GameController.sendMessage(e.getMessage(), swSender, vvSender);
+                sender.sendMessage(e.getMessage());
         }
     }
 
 
-    public static void resetTimer(GameCommunicationHandler gameCommunicationHandler, SocketWriter swSender, VirtualClient vvSender){
+    public static void resetTimer(GameCommunicationHandler gameCommunicationHandler, Sender sender) throws RemoteException{
         try {
             gameCommunicationHandler.getTimerController().resetTimer();
         }catch (IllegalStateException e){
             if(e.getMessage().equals("ImpossibleToResetTimer"))
-                GameController.sendMessage("ImpossibleToResetTimer", swSender, vvSender);
+                sender.sendMessage("ImpossibleToResetTimer");
         }
     }
 
@@ -396,17 +386,15 @@ public class BuildingController {
             if(!player.getSpaceship().getBuildingBoard().checkShipValidity()){
                 game.addReadyPlayers(false);
 
-                SocketWriter sw = gameCommunicationHandler.getSocketWriterByPlayer(player);
+                Sender sender = gameCommunicationHandler.getSocketWriterByPlayer(player);
 
-                if(sw != null){
-                    sw.sendMessage("NotValidSpaceShip");
-                }else{
-                    VirtualClient vc = gameCommunicationHandler.getVirtualClientByPlayer(player);
-                    try {
-                        vc.sendMessage("NotValidSpaceShip");
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+                if(sender == null)
+                    sender = gameCommunicationHandler.getVirtualClientByPlayer(player);
+
+                try {
+                    sender.sendMessage("NotValidSpaceShip");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

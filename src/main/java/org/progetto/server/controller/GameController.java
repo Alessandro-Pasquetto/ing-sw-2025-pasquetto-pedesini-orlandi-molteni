@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
@@ -29,19 +30,13 @@ public class GameController {
     // OTHER METHODS
     // =======================
 
-    static void sendMessage(Object message, SocketWriter swSender, VirtualClient vvSender){
-        if(swSender != null)
-            swSender.sendMessage(message);
-        else {
-            try {
-                vvSender.sendMessage(message);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    public static void startGame(GameCommunicationHandler gameCommunicationHandler, Sender sender) throws RemoteException {
 
-    public static void startGame(GameCommunicationHandler gameCommunicationHandler){
+        if(gameCommunicationHandler.getGame().getPhase() != GamePhase.INIT){
+            sender.sendMessage("GameAlreadyStarted");
+            return;
+        }
+
         gameCommunicationHandler.broadcastGameMessage("StartGame");
 
         gameCommunicationHandler.getGame().setPhase(GamePhase.BUILDING);

@@ -1,5 +1,7 @@
 package org.progetto.server.connection.socket;
 
+import org.progetto.server.connection.Sender;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -68,7 +70,7 @@ public class SocketServer extends Thread {
         }
     }
 
-    public static void broadcastLobbyMessageToOthers(SocketWriter sender, Object messageObj) {
+    public static void broadcastLobbyMessageToOthers(Sender sender, Object messageObj) {
         ArrayList<SocketWriter> socketWritersCopy;
 
         synchronized (socketWriters) {

@@ -1,5 +1,7 @@
 package org.progetto.server.connection.socket;
 
+import org.progetto.server.connection.Sender;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Socket message writer that sends messages to a single client
  */
-public class SocketWriter extends Thread {
+public class SocketWriter extends Thread implements Sender {
 
     private ClientHandler clientHandler;
     private ObjectOutputStream out;
@@ -71,6 +73,7 @@ public class SocketWriter extends Thread {
         }
     }
 
+    @Override
     public synchronized void sendMessage(Object messageObj) {
         try {
             messageQueue.put(messageObj);
