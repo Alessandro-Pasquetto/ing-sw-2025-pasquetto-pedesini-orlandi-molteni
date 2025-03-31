@@ -318,16 +318,30 @@ class GameTest {
         game.addPlayer(mario);
         Component component = game.pickHiddenComponent(mario);
         assertEquals(component, mario.getSpaceship().getBuildingBoard().getHandComponent());
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.pickHiddenComponent(mario));
-        assertEquals("FullHandComponent", exception.getMessage());
+
+        IllegalStateException exception1 = assertThrows(IllegalStateException.class, () -> game.pickHiddenComponent(mario));
+        assertEquals("FullHandComponent", exception1.getMessage());
+
+        game.discardComponent(mario);
+
+        for (int i = 0; i < 151; i++) {
+            game.pickHiddenComponent(mario);
+            game.discardComponent(mario);
+        }
+
+        IllegalStateException exception2 = assertThrows(IllegalStateException.class, () -> game.pickHiddenComponent(mario));
+        assertEquals("EmptyComponentDeck", exception2.getMessage());
+
     }
 
     @Test
     void pickVisibleComponent() {
         Player mario = new Player("mario", 1, 2);
+        Player teo = new Player("teo", 1, 2);
         Game game = new Game(0,3,2);
 
         game.addPlayer(mario);
+        game.addPlayer(teo);
 
         Component nextDiscardedComponent = game.pickHiddenComponent(mario);
         String imgSrcDiscardedComponent = game.discardComponent(mario);
@@ -337,6 +351,12 @@ class GameTest {
         Component component_picked = mario.getSpaceship().getBuildingBoard().getHandComponent();
 
         assertEquals(component_picked, nextDiscardedComponent);
+
+        IllegalStateException exception1 = assertThrows(IllegalStateException.class, () -> game.pickVisibleComponent(0, mario));
+        assertEquals("FullHandComponent", exception1.getMessage());
+
+        IllegalStateException exception2 = assertThrows(IllegalStateException.class, () -> game.pickVisibleComponent(0, teo));
+        assertEquals("IllegalIndexComponent", exception2.getMessage());
     }
 
     @Test
@@ -345,6 +365,9 @@ class GameTest {
         Game game = new Game(0,3,2);
 
         game.addPlayer(mario);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.discardComponent(mario));
+        assertEquals("EmptyHandComponent", exception.getMessage());
 
         Component pickedComponent = game.pickHiddenComponent(mario);
         String imgSrcDiscardedComponent = game.discardComponent(mario);

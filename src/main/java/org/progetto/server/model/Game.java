@@ -454,9 +454,8 @@ public class Game {
                 return null;
         }
 
-        Collections.shuffle(Deck);
-        while(Deck.getFirst().getLevel() != level)
-            Collections.shuffle(Deck);
+        do Collections.shuffle(Deck);
+        while (Deck.getFirst().getLevel() != level);
 
         return Deck;
     }
