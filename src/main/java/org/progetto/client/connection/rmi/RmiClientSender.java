@@ -137,4 +137,19 @@ public class RmiClientSender{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * allows client to call for the destroyComponent method on RMI server
+     * @author Lorenzo
+     * @param yComponent
+     * @param xComponent
+     */
+    public static void destroyComponent(int yComponent, int xComponent){
+        try {
+            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(),yComponent,xComponent);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

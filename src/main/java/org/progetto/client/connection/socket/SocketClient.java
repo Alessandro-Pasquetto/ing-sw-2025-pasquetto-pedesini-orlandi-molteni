@@ -109,6 +109,10 @@ public class SocketClient {
         SocketWriter.sendMessage("PutDownEventCardDeck");
     }
 
+    public static void destroyComponent(int yComponent, int xComponent){
+        SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
+    }
+
     static void close() throws IOException {
         SocketListener.stopListener();
         SocketWriter.stopWriter();

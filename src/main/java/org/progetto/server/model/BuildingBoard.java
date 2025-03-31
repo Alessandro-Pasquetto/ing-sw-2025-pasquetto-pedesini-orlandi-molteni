@@ -377,129 +377,130 @@ public class BuildingBoard {
      * @param x is the x coordinate of the component to remove
      * @return true if the component can be removed
      */
-    public boolean destroyComponent(int y, int x) {
+    public void destroyComponent(int y, int x) throws IllegalStateException {
         if(boardMask[y][x] != -1)
-            return false;
+           throw new IllegalStateException("EmptyComponentCell");
 
-        spaceship.addComponentsShipCount(-1);
-        spaceship.addDestroyedCount(1);
-        Component destroyedComponent = spaceshipMatrix[y][x];
-        boardMask[y][x] = 1;
-        spaceshipMatrix[y][x] = null;
+        else {
+            spaceship.addComponentsShipCount(-1);
+            spaceship.addDestroyedCount(1);
+            Component destroyedComponent = spaceshipMatrix[y][x];
+            boardMask[y][x] = 1;
+            spaceshipMatrix[y][x] = null;
 
-        switch (destroyedComponent.getType()) {
+            switch (destroyedComponent.getType()) {
 
-            case CANNON:
-                if (destroyedComponent.getRotation() == 0)
-                    spaceship.addNormalShootingPower(-1);
-                else
-                    spaceship.addNormalShootingPower((float) -0.5);
-                break;
+                case CANNON:
+                    if (destroyedComponent.getRotation() == 0)
+                        spaceship.addNormalShootingPower(-1);
+                    else
+                        spaceship.addNormalShootingPower((float) -0.5);
+                    break;
 
-            case DOUBLE_CANNON:
-                spaceship.addDoubleCannonCount(-1);
-                break;
+                case DOUBLE_CANNON:
+                    spaceship.addDoubleCannonCount(-1);
+                    break;
 
-            case ENGINE:
-                spaceship.addNormalEnginePower(-1);
-                break;
+                case ENGINE:
+                    spaceship.addNormalEnginePower(-1);
+                    break;
 
-            case DOUBLE_ENGINE:
-                spaceship.addDoubleEngineCount(-1);
-                break;
+                case DOUBLE_ENGINE:
+                    spaceship.addDoubleEngineCount(-1);
+                    break;
 
-            case SHIELD:
-                switch (destroyedComponent.getRotation()) {
+                case SHIELD:
+                    switch (destroyedComponent.getRotation()) {
 
-                    case 0: // left-up
-                        spaceship.addLeftUpShieldCount(-1);
-                        break;
+                        case 0: // left-up
+                            spaceship.addLeftUpShieldCount(-1);
+                            break;
 
-                    case 1: // up-right
-                        spaceship.addUpRightShieldCount(-1);
-                        break;
+                        case 1: // up-right
+                            spaceship.addUpRightShieldCount(-1);
+                            break;
 
-                    case 2: // right-down
-                        spaceship.addRightDownShieldCount(-1);
-                        break;
+                        case 2: // right-down
+                            spaceship.addRightDownShieldCount(-1);
+                            break;
 
-                    case 3: // down-left
-                        spaceship.addDownLeftShieldCount(-1);
-                        break;
-                }
+                        case 3: // down-left
+                            spaceship.addDownLeftShieldCount(-1);
+                            break;
+                    }
 
-                break;
+                    break;
 
-            case HOUSING_UNIT:
-                HousingUnit hu = (HousingUnit) destroyedComponent;
-                if(hu.hasOrangeAlien())
-                    spaceship.setAlienOrange(false);
+                case HOUSING_UNIT:
+                    HousingUnit hu = (HousingUnit) destroyedComponent;
+                    if (hu.hasOrangeAlien())
+                        spaceship.setAlienOrange(false);
 
-                if(hu.hasPurpleAlien())
-                    spaceship.setAlienPurple(false);
+                    if (hu.hasPurpleAlien())
+                        spaceship.setAlienPurple(false);
 
-                spaceship.addCrewCount(-hu.getCrewCount());
-                break;
+                    spaceship.addCrewCount(-hu.getCrewCount());
+                    break;
 
-            case ORANGE_HOUSING_UNIT:
-                List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
-                if(orange_units.size() == 1) {    //if only a module is present
-                    spaceship.setAlienOrange(false);
-                }
+                case ORANGE_HOUSING_UNIT:
+                    List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
+                    if (orange_units.size() == 1) {    //if only a module is present
+                        spaceship.setAlienOrange(false);
+                    }
 
-                updateOrangeAlienAllow();
+                    updateOrangeAlienAllow();
 
-                break;
+                    break;
 
-            case PURPLE_HOUSING_UNIT:
-                List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
-                if(purple_units.size() == 1) {    //if only a module is present
-                    spaceship.setAlienPurple(false);
-                }
+                case PURPLE_HOUSING_UNIT:
+                    List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
+                    if (purple_units.size() == 1) {    //if only a module is present
+                        spaceship.setAlienPurple(false);
+                    }
 
-                updatePurpleAlienAllow();
+                    updatePurpleAlienAllow();
 
-                break;
+                    break;
 
-            case CENTRAL_UNIT:
-                hu = (HousingUnit) destroyedComponent;
-                spaceship.addCrewCount(-hu.getCrewCount());
-                break;
+                case CENTRAL_UNIT:
+                    hu = (HousingUnit) destroyedComponent;
+                    spaceship.addCrewCount(-hu.getCrewCount());
+                    break;
 
-            case STRUCTURAL_UNIT:
-                break;
+                case STRUCTURAL_UNIT:
+                    break;
 
-            case BATTERY_STORAGE:
-                BatteryStorage bs = (BatteryStorage) destroyedComponent;
-                spaceship.addBatteriesCount(-bs.getItemsCount());
-                break;
+                case BATTERY_STORAGE:
+                    BatteryStorage bs = (BatteryStorage) destroyedComponent;
+                    spaceship.addBatteriesCount(-bs.getItemsCount());
+                    break;
 
-            case RED_BOX_STORAGE:
-                BoxStorage bsc = (BoxStorage) destroyedComponent;
-                Box[] boxes = bsc.getBoxStorage();
+                case RED_BOX_STORAGE:
+                    BoxStorage bsc = (BoxStorage) destroyedComponent;
+                    Box[] boxes = bsc.getBoxStorage();
 
-                for (Box box : boxes) {
-                    if(box != null)
-                        spaceship.addBoxCount(-1, box);
-                }
-                break;
+                    for (Box box : boxes) {
+                        if (box != null)
+                            spaceship.addBoxCount(-1, box);
+                    }
+                    break;
 
-            case BOX_STORAGE:
-                bsc = (BoxStorage) destroyedComponent;
-                boxes = bsc.getBoxStorage();
+                case BOX_STORAGE:
+                    bsc = (BoxStorage) destroyedComponent;
+                    boxes = bsc.getBoxStorage();
 
-                for (Box box : boxes) {
-                    if(box != null)
-                        spaceship.addBoxCount(-1, box);
-                }
-                break;
+                    for (Box box : boxes) {
+                        if (box != null)
+                            spaceship.addBoxCount(-1, box);
+                    }
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
+
+            System.gc();   // call for garbage collector
         }
-
-        System.gc();   // call for garbage collector
-        return true;
     }
 
 

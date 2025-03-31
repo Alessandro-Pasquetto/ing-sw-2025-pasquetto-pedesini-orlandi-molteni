@@ -227,7 +227,7 @@ public class BuildingController {
     }
 
     /**
-     * Handle the player decision to book a component
+     * Handles the player decision to book a component
      *
      * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
@@ -308,4 +308,32 @@ public class BuildingController {
                 GameController.sendMessage(e.getMessage(), swSender, vvSender);
         }
     }
+
+    /**
+     * handles the destruction of a component
+     * @author Lorenzo
+     * @param gameCommunicationHandler is the class that manage the current game
+     * @param player owner of the spaceship
+     * @param yComponent coordinate
+     * @param xComponent coordinate
+     * @param swSender sender for socket
+     * @param vvSender registry for RMI
+     */
+    public static void destroyComponent(GameCommunicationHandler gameCommunicationHandler, Player player,int yComponent, int xComponent, SocketWriter swSender ,VirtualClient vvSender) {
+
+            try{
+                BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+                String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+                buildingBoard.destroyComponent(yComponent,xComponent);
+
+                GameController.sendMessage("ComponentDestroyed", swSender, vvSender);  //forse da aggiungere un messaggio con parametri
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), swSender, vvSender);
+
+            } catch (IllegalStateException e) {
+                if (e.getMessage().equals("EmptyComponentCell"))
+                    GameController.sendMessage("EmptyComponentCell", swSender, vvSender);
+
+            }
+    }
+
 }

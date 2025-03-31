@@ -21,4 +21,5 @@ public interface VirtualServer extends Remote {
     void bookComponent(VirtualClient virtualClient,int idGame, String name, int idx) throws RemoteException;
     void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, String name, int deckIdx) throws RemoteException;
     void putDownEventCardDeck(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
+    void destroyComponent(VirtualClient virtualClient,int idGame, String game,int yComponent, int xComponent) throws RemoteException;
 }

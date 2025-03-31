@@ -166,7 +166,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Allows client to call for discardComponent with RMI in server proxy
-     *
      * @author Lorenzo
      * @param virtualClient is the interface we want to address to
      * @param idGame were we want to discard
@@ -190,7 +189,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Allows client to call for bookedComponent with RMI in server proxy
-     *
      * @author lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to discard
@@ -242,4 +240,32 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, null, virtualClient);
     }
+
+
+    /**
+     * Allows client to call for destroyComponent with RMI in server proxy
+     * @author Lorenzo
+     * @param virtualClient is the interface we want to address
+     * @param idGame were we want to remove
+     * @param name the player that want to remove
+     * @param yComponent coordinate of the component
+     * @param xComponent coordinate of the component
+     * @throws RemoteException if a player with name in idGame was not found
+     */
+    @Override
+    public void destroyComponent(VirtualClient virtualClient,int idGame,String name,int yComponent, int xComponent) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameCommunicationHandler.getGame().getPlayerByName(name);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        BuildingController.destroyComponent(gameCommunicationHandler,player,yComponent,xComponent,null,virtualClient);
+
+    }
+
 }

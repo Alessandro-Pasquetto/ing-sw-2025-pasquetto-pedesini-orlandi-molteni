@@ -129,11 +129,6 @@ class BuildingBoardTest {
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
 
 
-
-
-
-
-
     }
 
     @Test
@@ -446,8 +441,7 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-        assertTrue(buildingBoard.destroyComponent(2,2));
-
+        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2,2));
 
         // removing battery storage //
         buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
@@ -483,7 +477,7 @@ class BuildingBoardTest {
 
         buildingBoard.initSpaceshipParams();
 
-        assertTrue(buildingBoard.destroyComponent(2,2));
+        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2,2));
 
 
         //  Connectors count update test    //
@@ -499,8 +493,7 @@ class BuildingBoardTest {
         assertEquals(4,spaceship.getExposedConnectorsCount());
 
         // destroy null component //
-        assertFalse(buildingBoard.destroyComponent(4,3));
-
+        assertThrows(IllegalStateException.class, () -> buildingBoard.destroyComponent(4,3));
 
     }
 
