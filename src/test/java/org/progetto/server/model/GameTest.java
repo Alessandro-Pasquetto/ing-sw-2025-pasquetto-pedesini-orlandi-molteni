@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.Epidemic;
+import org.progetto.server.model.events.EventCard;
 import org.progetto.server.model.events.Sabotage;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -245,22 +246,52 @@ class GameTest {
 
     @Test
     void pickUpEventCardDeck(){
-        Player mario = new Player("mario", 1, 2);
+        Player player = new Player("mario", 1, 2);
+        Player player2 = new Player("anna", 3, 2);
         Game game = new Game(0, 3, 2);
 
-        game.addPlayer(mario);
+        game.addPlayer(player);
+        game.addPlayer(player2);
 
-        assertNotNull(game.pickUpEventCardDeck(mario,0));
+        game.pickUpEventCardDeck(player,0);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            game.pickUpEventCardDeck(player, 6);
+        });
+        assertEquals("IllegalIndexEventCardDeck", exception.getMessage());
+
+        IllegalStateException exception1 = assertThrows(IllegalStateException.class, () -> {
+            game.pickUpEventCardDeck(player, -4);
+        });
+        assertEquals("IllegalIndexEventCardDeck", exception1.getMessage());
+
+        IllegalStateException exception2 = assertThrows(IllegalStateException.class, () -> {
+            game.pickUpEventCardDeck(player2, 0);
+        });
+        assertEquals("EventCardDeckIsAlreadyTaken", exception2.getMessage());
     }
 
     @Test
     void putDownEventCardDeck(){
-        Player mario = new Player("mario", 1, 2);
+        Player player = new Player("mario", 1, 2);
+        Player player2 = new Player("anna", 3, 2);
         Game game = new Game(0, 3, 2);
+        game.addPlayer(player);
+        game.addPlayer(player2);
 
-        game.addPlayer(mario);
+        ArrayList<EventCard> eventDeck = game.pickUpEventCardDeck(player, 0);
 
-        game.pickUpEventCardDeck(mario,0);
+        assertNotNull(eventDeck);
+
+        // Success: player has a deck assigned
+        int index = game.putDownEventCardDeck(player);
+        assertEquals(0, index);
+
+        // Deck not taken
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            game.putDownEventCardDeck(player2);
+        });
+        assertEquals("NoEventCardDeckTaken", exception.getMessage());
 
         //TODO: sistemarlo
     }

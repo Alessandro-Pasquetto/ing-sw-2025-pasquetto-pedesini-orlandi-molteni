@@ -302,8 +302,8 @@ public class BuildingController {
             gameCommunicationHandler.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), swSender, vvSender);
 
         }catch (IllegalStateException e){
-            if(e.getMessage().equals("NoCardTakenByPlayer"))
-                GameController.sendMessage("NoCardTakenByPlayer", swSender, vvSender);
+            if(e.getMessage().equals("NoEventCardDeckTaken"))
+                GameController.sendMessage("NoEventCardDeckTaken", swSender, vvSender);
             else
                 GameController.sendMessage(e.getMessage(), swSender, vvSender);
         }

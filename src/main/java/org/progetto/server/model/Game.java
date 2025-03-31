@@ -435,7 +435,7 @@ public class Game {
             }
         }
 
-        throw new IllegalStateException("NoCardTakenByPlayer");
+        throw new IllegalStateException("NoEventCardDeckTaken");
     }
 
     /**
