@@ -1,8 +1,7 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.TimerMessage;
-
-import java.util.function.Consumer;
+import org.progetto.server.connection.games.GameCommunicationHandler;
 
 /**
  * Timer controller class
@@ -13,7 +12,7 @@ public class TimerController {
     // ATTRIBUTES
     // =======================
 
-    Consumer<Object> broadcastMessageFunction;
+    GameCommunicationHandler gameCommunicationHandler;
     private final int defaultTimer;
     private int timer;
     private int timerFlipsAllowed;
@@ -22,8 +21,8 @@ public class TimerController {
     // CONSTRUCTORS
     // =======================
 
-    public TimerController(Consumer<Object> broadcastMessageFunction, int defaultTimer, int timerFlipsAllowed) {
-        this.broadcastMessageFunction = broadcastMessageFunction;
+    public TimerController(GameCommunicationHandler gameCommunicationHandler, int defaultTimer, int timerFlipsAllowed) {
+        this.gameCommunicationHandler = gameCommunicationHandler;
         this.defaultTimer = defaultTimer;
         this.timer = defaultTimer;
         this.timerFlipsAllowed = timerFlipsAllowed;
@@ -42,7 +41,7 @@ public class TimerController {
     // =======================
 
     public synchronized void resetTimer() throws IllegalStateException {
-        if (timer != 0 || timerFlipsAllowed == 0) {
+        if (timer > 0 || timerFlipsAllowed == 0) {
             throw new IllegalStateException("ImpossibleToResetTimer");
         }
 
@@ -58,20 +57,32 @@ public class TimerController {
     public void startTimer() {
 
         new Thread(() -> {
-            while (timer > 0) {
+            while (true) {
+                int currentTimer;
+
+                synchronized (this) {
+                    if (timer <= 0)
+                        break;
+
+                    timer--;
+                    currentTimer = timer;
+                }
+
+                System.out.println("Timer: " + currentTimer);
+                gameCommunicationHandler.broadcastGameMessage(new TimerMessage(currentTimer));
+
                 try {
                     Thread.sleep(1000);
-                    timer--;
-                    System.out.println("Timer: " + timer);
-                    broadcastMessageFunction.accept(new TimerMessage(timer));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    break;
                 }
             }
 
-            if (timer == 0 && timerFlipsAllowed == 0) {
-                broadcastMessageFunction.accept("Timer expired!");
+            if (timerFlipsAllowed == 0) {
+                gameCommunicationHandler.broadcastGameMessage("Timer expired!");
                 System.out.println("Timer expired");
+                BuildingController.checkShipValidity(gameCommunicationHandler);
             }
         }).start();
     }

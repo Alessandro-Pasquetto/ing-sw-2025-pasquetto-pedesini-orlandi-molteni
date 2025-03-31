@@ -60,6 +60,6 @@ public class ClientHandler {
         this.player = player;
 
         SocketServer.removeSocketWriter(socketWriter);
-        gameCommunicationHandler.addSocketWriter(socketWriter);
+        gameCommunicationHandler.addSocketWriter(player, socketWriter);
     }
 }

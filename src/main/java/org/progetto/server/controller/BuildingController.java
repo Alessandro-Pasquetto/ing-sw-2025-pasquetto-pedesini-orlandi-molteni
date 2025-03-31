@@ -5,10 +5,12 @@ import org.progetto.messages.toClient.*;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.EventCard;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
@@ -383,6 +385,30 @@ public class BuildingController {
         }catch (IllegalStateException e){
             if(e.getMessage().equals("ImpossibleToResetTimer"))
                 GameController.sendMessage("ImpossibleToResetTimer", swSender, vvSender);
+        }
+    }
+
+    public static void checkShipValidity(GameCommunicationHandler gameCommunicationHandler) {
+        Game game = gameCommunicationHandler.getGame();
+
+        for (Player player : game.getPlayers()) {
+
+            if(!player.getSpaceship().getBuildingBoard().checkShipValidity()){
+                game.addReadyPlayers(false);
+
+                SocketWriter sw = gameCommunicationHandler.getSocketWriterByPlayer(player);
+
+                if(sw != null){
+                    sw.sendMessage("NotValidSpaceShip");
+                }else{
+                    VirtualClient vc = gameCommunicationHandler.getVirtualClientByPlayer(player);
+                    try {
+                        vc.sendMessage("NotValidSpaceShip");
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 }

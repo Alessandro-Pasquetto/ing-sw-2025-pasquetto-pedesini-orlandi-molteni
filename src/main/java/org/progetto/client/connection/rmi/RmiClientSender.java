@@ -60,7 +60,7 @@ public class RmiClientSender{
 
     public static void pickHiddenComponent(){
         try {
-            server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+            server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -68,7 +68,7 @@ public class RmiClientSender{
 
     public static void pickVisibleComponent(){
         try {
-            server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), -1); // non so dove pescare l'idx :C
+            server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), -1); // non so dove pescare l'idx :C
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -76,7 +76,7 @@ public class RmiClientSender{
 
     public static void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
         try {
-            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -84,7 +84,7 @@ public class RmiClientSender{
 
     public static void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx){
         try {
-            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx);
+            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class RmiClientSender{
 
     public static void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx){
         try {
-            server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx);
+            server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -105,7 +105,7 @@ public class RmiClientSender{
      */
     public static void discardComponent(){
         try {
-            server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+            server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -119,7 +119,7 @@ public class RmiClientSender{
      */
     public static void bookComponent(int idx){
         try {
-            server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), idx);
+            server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -127,7 +127,7 @@ public class RmiClientSender{
 
     public static void pickUpEventCardDeck(int deckIdx) {
         try {
-            server.pickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(), deckIdx);
+            server.pickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), deckIdx);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -135,7 +135,7 @@ public class RmiClientSender{
 
     public static void putDownEventCardDeck() {
         try {
-            server.putDownEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+            server.putDownEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -150,7 +150,7 @@ public class RmiClientSender{
      */
     public static void destroyComponent(int yComponent, int xComponent){
         try {
-            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer(),yComponent,xComponent);
+            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(),yComponent,xComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -158,7 +158,7 @@ public class RmiClientSender{
 
     public static void readyPlayer() {
         try {
-            server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+            server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

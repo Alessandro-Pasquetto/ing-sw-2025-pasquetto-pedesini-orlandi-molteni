@@ -4,8 +4,13 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.Player;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * All game communication data to handle multiple clients (Socket/RMI)
@@ -16,8 +21,9 @@ public class GameCommunicationHandler {
     // ATTRIBUTES
     // =======================
 
-    private final ArrayList<SocketWriter> socketWriters = new ArrayList<>();
-    private final ArrayList<VirtualClient> rmiClients = new ArrayList<>();
+    private final HashMap<Player, SocketWriter> playerSocketWriters = new HashMap<>();
+    private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
+
     private final Game game;
     private final TimerController timer;
 
@@ -27,7 +33,7 @@ public class GameCommunicationHandler {
 
     public GameCommunicationHandler(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
-        this.timer = new TimerController(this::broadcastGameMessage,10,2);
+        this.timer = new TimerController(this, 10, 2);
         GameCommunicationHandlerMaps.addWaitingGameManager(idGame, this);
     }
 
@@ -38,8 +44,8 @@ public class GameCommunicationHandler {
     public ArrayList<SocketWriter> getSocketWritersCopy() {
         ArrayList<SocketWriter> socketWritersCopy;
 
-        synchronized (socketWriters) {
-            socketWritersCopy = new ArrayList<>(socketWriters);
+        synchronized (playerSocketWriters) {
+            socketWritersCopy = new ArrayList<>(playerSocketWriters.values());
         }
 
         return socketWritersCopy;
@@ -48,8 +54,8 @@ public class GameCommunicationHandler {
     public ArrayList<VirtualClient> getRmiClientsCopy() {
         ArrayList<VirtualClient> rmiClientsCopy;
 
-        synchronized (rmiClients) {
-            rmiClientsCopy = new ArrayList<>(rmiClients);
+        synchronized (playerRmiClients) {
+            rmiClientsCopy = new ArrayList<>(playerRmiClients.values());
         }
 
         return rmiClientsCopy;
@@ -67,31 +73,48 @@ public class GameCommunicationHandler {
         return timer.getTimerInt() == 0;
     }
 
+    public SocketWriter getSocketWriterByPlayer(Player player) {
+        return playerSocketWriters.get(player);
+    }
+
+    public VirtualClient getVirtualClientByPlayer(Player player) {
+        return playerRmiClients.get(player);
+    }
+
+    public Player getPlayerByVirtualClient(VirtualClient virtualClient) throws IllegalStateException {
+
+        for (Map.Entry<Player, VirtualClient> entry : playerRmiClients.entrySet()) {
+            if(entry.getValue().equals(virtualClient))
+                return entry.getKey();
+        }
+        throw new IllegalStateException("PlayerNotFound");
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
 
-    public void addSocketWriter(SocketWriter socketWriter){
-        synchronized (socketWriters){
-            socketWriters.add(socketWriter);
+    public void addSocketWriter(Player player, SocketWriter socketWriter){
+        synchronized (playerSocketWriters){
+            playerSocketWriters.put(player, socketWriter);
         }
     }
 
-    public void removeSocketWriter(SocketWriter socketWriter){
-        synchronized (socketWriters ){
-            socketWriters.remove(socketWriter);
+    public void removeSocketWriter(Player player){
+        synchronized (playerSocketWriters){
+            playerSocketWriters.remove(player);
         }
     }
 
-    public void addRmiClient(VirtualClient rmiClient){
-        synchronized (rmiClients){
-            rmiClients.add(rmiClient);
+    public void addRmiClient(Player player, VirtualClient rmiClient){
+        synchronized (playerRmiClients){
+            playerRmiClients.put(player, rmiClient);
         }
     }
 
-    public void removeRmiClient(VirtualClient rmiClient){
-        synchronized (rmiClients){
-            rmiClients.remove(rmiClient);
+    public void removeRmiClient(Player player){
+        synchronized (playerRmiClients){
+            playerRmiClients.remove(player);
         }
     }
 
