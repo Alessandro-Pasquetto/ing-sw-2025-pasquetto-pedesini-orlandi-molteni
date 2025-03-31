@@ -135,6 +135,8 @@ public class BuildingBoard {
         handComponent.setY_coordinate(y);
         handComponent.setX_coordinate(x);
         handComponent.setRotation(r);
+        handComponent.setPlaced(true);
+
 
         spaceshipMatrix[y][x] = handComponent;
 
@@ -256,7 +258,11 @@ public class BuildingBoard {
      * @author Lorenzo
      */
     private void updateOrangeAlienAllow(){
+        List<Component> central_unit = typeSearch(ComponentType.CENTRAL_UNIT);
         List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+
+        housing_components.addAll(central_unit);
+
         List<Component> orange_components = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
         boolean allow = false;
         for(Component housing_component : housing_components) {
@@ -284,7 +290,11 @@ public class BuildingBoard {
      * @author Lorenzo
      */
     private void updatePurpleAlienAllow(){
+        List<Component> central_unit = typeSearch(ComponentType.CENTRAL_UNIT);
         List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+
+        housing_components.addAll(central_unit);
+
         List<Component> purple_components = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
         boolean allow = false;
         for(Component housing_component : housing_components) {
@@ -755,4 +765,18 @@ public class BuildingBoard {
             }
         }
     }
+
+    public void printBoard(){
+
+        System.out.println();
+
+        for (int i = 0; i < boardMask.length; i++) {
+            System.out.println();
+            for (int j = 0; j < boardMask[i].length; j++) {
+                System.out.print(boardMask[i][j] + " ");
+            }
+        }
+    }
+
+
 }

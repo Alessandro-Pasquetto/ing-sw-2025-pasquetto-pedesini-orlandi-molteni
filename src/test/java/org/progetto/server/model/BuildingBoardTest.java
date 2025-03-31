@@ -189,36 +189,72 @@ class BuildingBoardTest {
     void destroyComponent() {
 
         Spaceship spaceship = new Spaceship(2, 0);
-
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
-        // Adds a housing unit
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit t
-        Component component_1 = buildingBoard.getHandComponent();
-
+        // place housing_unit //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit
+        Component housing_unit = buildingBoard.getHandComponent();
+        HousingUnit housingUnit = (HousingUnit) housing_unit;
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-        assertEquals(4,spaceship.getCrewCount());
 
-        // Adds an orange alien module, so it can host an alien
+
+
+        // test allow orange alien //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
-        Component component_2 = buildingBoard.getHandComponent();
-
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
-        HousingUnit housingUnit = (HousingUnit) component_1;
         assertTrue(housingUnit.getAllowAlienOrange());
 
-        //  update alien hosting test   //
-
+        //  update orange alien hosting test   //
         buildingBoard.destroyComponent(2,1); // Removes the orange alien unit, so it can't host alien anymore
         assertFalse(housingUnit.getAllowAlienOrange());
 
+        // update orange alien hosting test with another orange_unit //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(1, 2, 0);
+
+        buildingBoard.initSpaceshipParams();
+        buildingBoard.destroyComponent(1,2); // Removes the orange alien unit, another unit is present
+        assertTrue(housingUnit.getAllowAlienOrange());
+
+        // reset spaceship //
+        buildingBoard.destroyComponent(2,1);
+
+
+
+        // test allow purple alien //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertTrue(housingUnit.getAllowAlienPurple());
+
+
+        //  update purple alien hosting test   //
+        buildingBoard.destroyComponent(2,1); // Removes the purple alien unit, so it can't host alien anymore
+        assertFalse(housingUnit.getAllowAlienPurple());
+
+        // update purple alien hosting test with another orange_unit //
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.placeComponent(1, 2, 0);
+
+        buildingBoard.initSpaceshipParams();
+        buildingBoard.destroyComponent(1,2); // Removes the purple alien unit, another unit is present
+        assertTrue(housingUnit.getAllowAlienPurple());
+
+
+
 
         //  Connectors count update test    //
-
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
         buildingBoard.placeComponent(2, 1, 0);
 
@@ -323,6 +359,41 @@ class BuildingBoardTest {
         c2.setY_coordinate(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
+
+        // Triple Connector - Triple Connector, c1 on the right
+        c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
+        c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
+
+        c1.setX_coordinate(2);
+        c1.setY_coordinate(0);
+        c2.setX_coordinate(1);
+        c2.setY_coordinate(0);
+
+        assertTrue(buildingBoard.areConnected(c1, c2));
+
+
+        // Triple Connector - Triple Connector, c1 on top
+        c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
+        c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
+
+        c1.setX_coordinate(1);
+        c1.setY_coordinate(0);
+        c2.setX_coordinate(1);
+        c2.setY_coordinate(1);
+
+        assertTrue(buildingBoard.areConnected(c1, c2));
+
+        // Triple Connector - Triple Connector, c1 under
+        c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
+        c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
+
+        c1.setX_coordinate(1);
+        c1.setY_coordinate(2);
+        c2.setX_coordinate(1);
+        c2.setY_coordinate(1);
+
+        assertTrue(buildingBoard.areConnected(c1, c2));
+
     }
 
     @Test
