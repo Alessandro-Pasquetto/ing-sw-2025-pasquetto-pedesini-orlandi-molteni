@@ -333,19 +333,18 @@ public class BuildingController {
      */
     public static void destroyComponent(GameCommunicationHandler gameCommunicationHandler, Player player,int yComponent, int xComponent, SocketWriter swSender ,VirtualClient vvSender) {
 
-            try{
-                BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-                String imgSrc = buildingBoard.getHandComponent().getImgSrc();
-                buildingBoard.destroyComponent(yComponent,xComponent);
+        try{
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+            String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+            buildingBoard.destroyComponent(yComponent,xComponent);
 
-                GameController.sendMessage("ComponentDestroyed", swSender, vvSender);  //forse da aggiungere un messaggio con parametri
-                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), swSender, vvSender);
+            GameController.sendMessage("ComponentDestroyed", swSender, vvSender);  //forse da aggiungere un messaggio con parametri
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), swSender, vvSender);
 
-            } catch (IllegalStateException e) {
-                if (e.getMessage().equals("EmptyComponentCell"))
-                    GameController.sendMessage("EmptyComponentCell", swSender, vvSender);
-
-            }
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("EmptyComponentCell"))
+                GameController.sendMessage("EmptyComponentCell", swSender, vvSender);
+        }
     }
 
     /**
@@ -374,6 +373,16 @@ public class BuildingController {
                 GameController.sendMessage("PlayerIsAlreadyReady", swSender, vvSender);
             else
                 GameController.sendMessage(e.getMessage(), swSender, vvSender);
+        }
+    }
+
+
+    public static void resetTimer(GameCommunicationHandler gameCommunicationHandler, SocketWriter swSender, VirtualClient vvSender){
+        try {
+            gameCommunicationHandler.getTimerController().resetTimer();
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("ImpossibleToResetTimer"))
+                GameController.sendMessage("ImpossibleToResetTimer", swSender, vvSender);
         }
     }
 }

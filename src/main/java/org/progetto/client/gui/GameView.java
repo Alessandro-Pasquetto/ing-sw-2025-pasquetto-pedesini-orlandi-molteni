@@ -237,4 +237,11 @@ public class GameView {
             }
         }
     }
+
+    public void resetTimer() {
+        if(HandlerMessage.getIsSocket())
+            SocketClient.resetTimer();
+        else
+            RmiClientSender.resetTimer();
+    }
 }

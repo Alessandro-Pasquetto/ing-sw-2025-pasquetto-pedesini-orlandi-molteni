@@ -117,6 +117,10 @@ public class SocketClient {
         SocketWriter.sendMessage("Ready");
     }
 
+    public static void resetTimer(){
+        SocketWriter.sendMessage("ResetTimer");
+    }
+
     static void close() throws IOException {
         SocketListener.stopListener();
         SocketWriter.stopWriter();

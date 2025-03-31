@@ -41,15 +41,14 @@ public class TimerController {
     // SETTERS
     // =======================
 
-    public synchronized boolean resetTimer() {
+    public synchronized void resetTimer() throws IllegalStateException {
         if (timer != 0 || timerFlipsAllowed == 0) {
-            return false;
+            throw new IllegalStateException("ImpossibleToResetTimer");
         }
 
         timer = defaultTimer;
         timerFlipsAllowed--;
         startTimer();
-        return true;
     }
 
     // =======================
@@ -70,11 +69,9 @@ public class TimerController {
                 }
             }
 
-            if (timer == 0) {
-                if(timerFlipsAllowed == 0) {
-                    broadcastMessageFunction.accept("Timer expired!");
-                    System.out.println("Timer expired");
-                }
+            if (timer == 0 && timerFlipsAllowed == 0) {
+                broadcastMessageFunction.accept("Timer expired!");
+                System.out.println("Timer expired");
             }
         }).start();
     }

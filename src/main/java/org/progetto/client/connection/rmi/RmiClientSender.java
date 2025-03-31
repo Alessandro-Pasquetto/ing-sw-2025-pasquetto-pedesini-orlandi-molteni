@@ -163,4 +163,12 @@ public class RmiClientSender{
             throw new RuntimeException(e);
         }
     }
+
+    public static void resetTimer() {
+        try {
+            server.resetTimer(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -167,6 +167,10 @@ public class SocketListener extends Thread {
                             BuildingController.playerReady(gameCommunicationHandler, player, socketWriter,null);
                             break;
 
+                        case "ResetTimer":
+                            BuildingController.resetTimer(gameCommunicationHandler, socketWriter, null);
+                            break;
+
                         default:
                             break;
                     }

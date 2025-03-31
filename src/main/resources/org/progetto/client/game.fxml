@@ -41,6 +41,8 @@
 
     <Button layoutX="14.0" layoutY="568.0" onAction="#discardComponent" prefHeight="42.0" prefWidth="149.0" text="discardComponent" />
 
+    <Button layoutX="466.0" layoutY="34.0" onAction="#resetTimer" prefHeight="42.0" prefWidth="149.0" text="resetTimer" />
+
     <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" style="-fx-font-size: 24;" text="00:00" />
 
 </AnchorPane>

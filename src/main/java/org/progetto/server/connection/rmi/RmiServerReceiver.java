@@ -8,6 +8,7 @@ import org.progetto.server.controller.GameController;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.games.GameCommunicationHandlerMaps;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.TimerController;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
@@ -280,5 +281,12 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         BuildingController.playerReady(gameCommunicationHandler, player, null, virtualClient);
+    }
+
+    @Override
+    public void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+
+        BuildingController.resetTimer(gameCommunicationHandler, null, virtualClient);
     }
 }

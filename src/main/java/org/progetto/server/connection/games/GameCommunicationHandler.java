@@ -27,7 +27,7 @@ public class GameCommunicationHandler {
 
     public GameCommunicationHandler(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
-        this.timer = new TimerController(this::broadcastGameMessage,80,0);
+        this.timer = new TimerController(this::broadcastGameMessage,10,2);
         GameCommunicationHandlerMaps.addWaitingGameManager(idGame, this);
     }
 
@@ -57,6 +57,10 @@ public class GameCommunicationHandler {
 
     public Game getGame() {
         return game;
+    }
+
+    public TimerController getTimerController() {
+        return timer;
     }
 
     public boolean timerExpired() {
