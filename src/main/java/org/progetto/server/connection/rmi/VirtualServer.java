@@ -24,4 +24,5 @@ public interface VirtualServer extends Remote {
     void destroyComponent(VirtualClient virtualClient, int idGame, String name, int yComponent, int xComponent) throws RemoteException;
     void playerReady(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
+    void rollDice(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
 }

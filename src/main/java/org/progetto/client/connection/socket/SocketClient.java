@@ -121,6 +121,10 @@ public class SocketClient {
         SocketWriter.sendMessage("ResetTimer");
     }
 
+    static void rollDice() {
+        SocketWriter.sendMessage("RollDice");
+    }
+
     static void close() throws IOException {
         SocketListener.stopListener();
         SocketWriter.stopWriter();

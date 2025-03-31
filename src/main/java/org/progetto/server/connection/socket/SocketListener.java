@@ -182,7 +182,16 @@ public class SocketListener extends Thread {
                 break;
 
             case EVENT:
+                if (messageObj instanceof String messageString) {
+                    switch (messageString){
+                        case "RollDice":
+                            EventController.rollDice(gameCommunicationHandler, player, socketWriter,null);
+                            break;
 
+                        default:
+                            break;
+                    }
+                }
                 break;
 
             case ENDGAME:

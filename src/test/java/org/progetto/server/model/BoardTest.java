@@ -219,4 +219,35 @@ class BoardTest {
         assertEquals(p3, board.getActiveTravelers().get(2));
         assertEquals(p4, board.getActiveTravelers().get(3));
     }
+
+    @Test
+    void getReadyTravelers() {
+        Player player = new Player("gino", 0, 2);
+        Board board = new Board(2);
+
+        board.addReadyTraveler(player);
+
+        assertEquals(player, board.getReadyTravelers().getFirst());
+    }
+
+    @Test
+    void addReadyTraveler() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("alessandro", 1, 1);
+        Player p3 = new Player("giulia", 2, 1);
+        Player p4 = new Player("arnoldo", 3, 1);
+
+        Board board = new Board(1);
+
+        // Adding first ready player
+        board.addReadyTraveler(p1);
+        assertEquals(p1, board.getReadyTravelers().get(0));
+
+        // Adding second ready player
+        board.addReadyTraveler(p2);
+        assertEquals(p2, board.getReadyTravelers().get(1));
+
+        // Tries to add again first player
+        assertThrows(IllegalStateException.class, () -> board.addReadyTraveler(p1));
+    }
 }

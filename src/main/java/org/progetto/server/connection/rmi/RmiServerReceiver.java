@@ -4,6 +4,7 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.server.controller.BuildingController;
+import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 import org.progetto.server.connection.games.GameCommunicationHandlerMaps;
@@ -242,7 +243,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.putDownEventCardDeck(gameCommunicationHandler, player, null, virtualClient);
     }
 
-
     /**
      * Allows client to call for destroyComponent with RMI in server proxy
      * @author Lorenzo
@@ -288,5 +288,20 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
 
         BuildingController.resetTimer(gameCommunicationHandler, null, virtualClient);
+    }
+
+    @Override
+    public void rollDice(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameCommunicationHandler.getGame().getPlayerByName(name);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        EventController.rollDice(gameCommunicationHandler, player, null, virtualClient);
     }
 }

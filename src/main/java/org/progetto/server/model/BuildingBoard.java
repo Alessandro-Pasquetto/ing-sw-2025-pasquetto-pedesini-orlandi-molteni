@@ -137,10 +137,9 @@ public class BuildingBoard {
         handComponent.setRotation(r);
         handComponent.setPlaced(true);
 
-
         spaceshipMatrix[y][x] = handComponent;
 
-        boardMask[y][x] = -1;   //signal the presence of a component
+        boardMask[y][x] = -1;   // signals the presence of a component
         handComponent = null;
         return true;
     }
