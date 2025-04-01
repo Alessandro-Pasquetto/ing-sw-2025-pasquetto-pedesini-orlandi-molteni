@@ -14,9 +14,9 @@ public class AnotherPlayerPickedBookedComponentMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
-    public AnotherPlayerPickedBookedComponentMessage(int idx, String name, String imgSrc) {
-        this.idx = idx;
+    public AnotherPlayerPickedBookedComponentMessage(String name, int idx, String imgSrc) {
         this.name = name;
+        this.idx = idx;
         this.imgSrc = imgSrc;
     }
 

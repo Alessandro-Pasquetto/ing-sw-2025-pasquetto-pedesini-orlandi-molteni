@@ -98,6 +98,14 @@ public class RmiClientSender{
         }
     }
 
+    public static void placeHandComponentAndPickBookedComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx){
+        try {
+            server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Allows RMI on client to call for the respective method on RMI server
      *
@@ -113,6 +121,7 @@ public class RmiClientSender{
 
     /**
      * Allows RMI on client to call for the respective method on RMI server
+     *
      * @author Lorenzo
      * @param idx is the index were the component will be placed
      */
@@ -126,6 +135,7 @@ public class RmiClientSender{
 
     /**
      * Allows RMI on client to call for the respective method on RMI server
+     *
      * @author Lorenzo
      * @param idx is the index were the component will be picked
      */
@@ -155,6 +165,7 @@ public class RmiClientSender{
 
     /**
      * Allows client to call for the destroyComponent method on RMI server
+     *
      * @author Lorenzo
      * @param yComponent
      * @param xComponent
@@ -185,6 +196,7 @@ public class RmiClientSender{
 
     /**
      * Allows client to call for the pickEventCard method on RMI server
+     *
      * @author Lorenzo
      */
     public static void pickEventCard() {

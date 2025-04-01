@@ -112,11 +112,6 @@ public class SocketListener extends Thread {
                     BuildingController.placeHandComponentAndPickHiddenComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter);
                 }
 
-                else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
-                    int componentIdx = pickVisibleComponent.getComponentIdx();
-                    BuildingController.pickVisibleComponent(gameCommunicationHandler, player, componentIdx, socketWriter);
-                }
-
                 else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
                     int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
@@ -131,6 +126,19 @@ public class SocketListener extends Thread {
                     int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
                     int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
                     BuildingController.placeHandComponentAndPickVisibleComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
+                }
+
+                else if (messageObj instanceof PlaceHandComponentAndPickBookedComponentMessage placeHandComponentAndPickBookedComponentMessage) {
+                    int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
+                    int xPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getX();
+                    int rPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getRotation();
+                    int idx = placeHandComponentAndPickBookedComponentMessage.getIdx();
+                    BuildingController.placeHandComponentAndPickBookedComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, idx, socketWriter);
+                }
+
+                else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
+                    int componentIdx = pickVisibleComponent.getComponentIdx();
+                    BuildingController.pickVisibleComponent(gameCommunicationHandler, player, componentIdx, socketWriter);
                 }
 
                 else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {

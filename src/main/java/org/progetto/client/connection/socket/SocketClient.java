@@ -100,6 +100,10 @@ public class SocketClient {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickUpEventCardDeckMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
     }
 
+    public static void placeHandComponentAndPickBookedComponent(int xHandComponent, int yHandComponent, int rHandComponent, int idx) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndPickBookedComponentMessage(xHandComponent, yHandComponent, rHandComponent, idx));
+    }
+
     public static void discardComponent(){
         SocketWriter.sendMessage("DiscardComponent");
     }

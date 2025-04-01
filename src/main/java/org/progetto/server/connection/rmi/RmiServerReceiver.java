@@ -165,6 +165,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, virtualClient);
     }
 
+    @Override
+    public void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameCommunicationHandler.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        BuildingController.placeHandComponentAndPickBookedComponent(gameCommunicationHandler, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, idx, virtualClient);
+    }
+
     /**
      * Allows client to call for discardComponent with RMI in server proxy
      * @author Lorenzo
@@ -323,7 +338,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         EventController.pickEventCard(gameCommunicationHandler, virtualClient);
 
     }
-
 
     @Override
     public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException {

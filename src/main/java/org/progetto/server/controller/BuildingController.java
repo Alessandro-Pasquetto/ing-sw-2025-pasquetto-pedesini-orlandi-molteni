@@ -196,6 +196,49 @@ public class BuildingController {
     }
 
     /**
+     * Handles player decision to pick a booked component, and place current hand component
+     *
+     * @author Gabriele
+     * @param gameCommunicationHandler
+     * @param player
+     * @param yPlaceComponent
+     * @param xPlaceComponent
+     * @param rPlaceComponent
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void placeHandComponentAndPickBookedComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
+
+        if(gameCommunicationHandler.timerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+        if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            try{
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
+
+                gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
+                String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
+                sender.sendMessage(new PickedComponentMessage(pickedComponentImg));
+                gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg),sender);
+
+            } catch (IllegalStateException e) {
+                if(e.getMessage().equals("FullHandComponent"))
+                    sender.sendMessage("FullHandComponent");
+                else if (e.getMessage().equals("IllegalIndex"))
+                    sender.sendMessage("IllegalIndex");
+                else if (e.getMessage().equals("EmptyBookedCell"))
+                    sender.sendMessage("EmptyBookedCell");
+            }
+        }else
+            sender.sendMessage("ImpossiblePlaceComponent");
+    }
+
+    /**
      * Handles the player decision to discard its hand component
      *
      * @author Lorenzo
@@ -223,7 +266,7 @@ public class BuildingController {
     }
 
     /**
-     * Handles the player decision to book a component
+     * Handles player decision to book a component
      *
      * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
@@ -255,6 +298,8 @@ public class BuildingController {
     }
 
     /**
+     * Handles player decision to pick a booked component
+     *
      * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
      * @param player that want to pick a booked component
@@ -271,18 +316,18 @@ public class BuildingController {
         try{
             gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(idx, player.getName(),imgSrc),sender);
+            sender.sendMessage(new PickedComponentMessage(imgSrc));
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc),sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
                 sender.sendMessage("FullHandComponent");
             else if (e.getMessage().equals("IllegalIndex"))
                 sender.sendMessage("IllegalIndex");
-            else if (e.getMessage().equals("BookedCellOccupied"))
-                sender.sendMessage("BookedCellOccupied");
+            else if (e.getMessage().equals("EmptyBookedCell"))
+                sender.sendMessage("EmptyBookedCell");
 
         }
-
     }
 
     /**
