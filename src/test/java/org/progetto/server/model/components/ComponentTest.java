@@ -67,18 +67,18 @@ class ComponentTest {
     void getX_coordinate() {
         Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
 
-        component.setX_coordinate(2);
+        component.setX(2);
 
-        assertEquals(2, component.getX_coordinate());
+        assertEquals(2, component.getX());
     }
 
     @Test
     void getY_coordinate() {
         Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
 
-        component.setY_coordinate(3);
+        component.setY(3);
 
-        assertEquals(3, component.getY_coordinate());
+        assertEquals(3, component.getY());
     }
 
     @Test
@@ -136,18 +136,18 @@ class ComponentTest {
     void setX_coordinate() {
         Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
 
-        component.setX_coordinate(5);
+        component.setX(5);
 
-        assertEquals(5, component.getX_coordinate());
+        assertEquals(5, component.getX());
     }
 
     @Test
     void setY_coordinate() {
         Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
 
-        component.setY_coordinate(7);
+        component.setY(7);
 
-        assertEquals(7, component.getY_coordinate());
+        assertEquals(7, component.getY());
     }
 
     @Test

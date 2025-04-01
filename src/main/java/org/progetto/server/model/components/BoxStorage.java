@@ -67,6 +67,7 @@ public class BoxStorage extends Component {
      */
     public boolean removeBox(Spaceship spaceship, int idx) {
         if (boxStorage[idx] != null) {
+            spaceship.addBoxCount(-1, boxStorage[idx]);
             boxStorage[idx] = null;
             this.boxCount -= 1;
             System.gc();

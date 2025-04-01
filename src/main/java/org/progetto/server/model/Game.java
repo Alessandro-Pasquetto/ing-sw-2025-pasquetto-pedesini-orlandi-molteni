@@ -163,7 +163,6 @@ public class Game {
             Type listType = new TypeToken<ArrayList<EventCard>>() {}.getType();
 
             if(level == 1) {
-
                 ArrayList<EventCard> demoDeck;
                 FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCardsL.json");
                 demoDeck = gson.fromJson(reader, listType);
@@ -174,7 +173,6 @@ public class Game {
                 hiddenEventDeck = demoDeck;
 
                 return null;
-
             }
 
             if(level == 2) {
@@ -219,7 +217,7 @@ public class Game {
     }
 
     /**
-     * Loading all components saved on json file in to the componentDeck
+     * Loads all components saved in json file in to the componentDeck
      *
      * @author Lorenzo
      * @return component deck (list of components)
@@ -249,7 +247,6 @@ public class Game {
     // todo: saveGame
     /**
      * Does it save the data of players who disconnect?
-     *
      */
     public void saveGame(){}
 
@@ -259,7 +256,7 @@ public class Game {
      * @author Alessandro
      * @return list of the winner players
      */
-    public ArrayList<Player> endGame() {
+    public ArrayList<Player> winnerPlayers() {
 
         ArrayList<Player> winners = new ArrayList<>();
 
@@ -439,12 +436,12 @@ public class Game {
     }
 
     /**
-     * Compose the hidden deck after the building phase
+     * Composes the hidden deck after the building phase
+     *
      * @author Lorenzo
      * @return the hiddenDeck composed if all the visible decks where available
      */
     public ArrayList<EventCard> composeHiddenEventDeck() {
-
         ArrayList<EventCard> Deck = new ArrayList<>(hiddenEventDeck);
 
         for(int i = 0; i < 3; i++) {

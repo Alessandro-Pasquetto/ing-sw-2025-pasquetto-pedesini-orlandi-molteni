@@ -212,7 +212,7 @@ class GameTest {
     }
 
     @Test
-    void endGame() {
+    void winnerPlayers() {
         Player mario = new Player("mario",1,2);
         Player alice = new Player("alice",1,2);
         Player bob = new Player("bob",1,2);
@@ -225,7 +225,7 @@ class GameTest {
         mario.addCredits(2);
         alice.addCredits(2);
 
-        ArrayList<Player> winners = game.endGame();
+        ArrayList<Player> winners = game.winnerPlayers();
 
         assertTrue(winners.contains(mario));
         assertTrue(winners.contains(alice));

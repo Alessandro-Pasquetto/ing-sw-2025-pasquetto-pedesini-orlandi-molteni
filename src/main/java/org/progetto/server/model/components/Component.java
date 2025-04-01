@@ -9,8 +9,8 @@ public class Component {
     protected final ComponentType type;
     private final int[] connections;   //{0,1,2,3} = {n°up,n°right,n°down,n°left}
     private int rotation;        //{0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
-    private int x_coordinate;    //x coordinate in matrix
-    private int y_coordinate;    //y coordinate in matrix
+    private int xCoordinate;    //x coordinate in matrix
+    private int yCoordinate;    //y coordinate in matrix
     private boolean hidden;      //false if it was discarded
     private boolean placed;      //true if it's in the spaceship matrix
     private final String imgSrc;
@@ -56,12 +56,12 @@ public class Component {
         return imgSrc;
     }
 
-    public int getX_coordinate() {
-        return x_coordinate;
+    public int getX() {
+        return xCoordinate;
     }
 
-    public int getY_coordinate() {
-        return y_coordinate;
+    public int getY() {
+        return yCoordinate;
     }
 
     // =======================
@@ -82,12 +82,12 @@ public class Component {
         this.placed = placed;
     }
 
-    public void setX_coordinate(int x_coordinate) {
-        this.x_coordinate = x_coordinate;
+    public void setX(int xCoordinate) {
+        this.xCoordinate = xCoordinate;
     }
 
-    public void setY_coordinate(int y_coordinate) {
-        this.y_coordinate = y_coordinate;
+    public void setY(int yCoordinate) {
+        this.yCoordinate = yCoordinate;
     }
 
     // =======================

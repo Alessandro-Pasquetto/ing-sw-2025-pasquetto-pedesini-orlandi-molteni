@@ -127,13 +127,10 @@ class BuildingBoardTest {
         //Test cell occupied
         board.setHandComponent(component);
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
-
-
     }
 
     @Test
     void pickBookedComponent(){
-
         BuildingBoard board = new BuildingBoard(1, 0, new Spaceship(1, 0));
         Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
 
@@ -158,7 +155,6 @@ class BuildingBoardTest {
         board.pickBookedComponent(0);
         assertSame(component,board.getHandComponent());
         assertNull(board.getBooked()[0]);
-
     }
 
 
@@ -231,7 +227,6 @@ class BuildingBoardTest {
 
     @Test
     void destroyComponent() {
-
         Spaceship spaceship = new Spaceship(2, 0);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
@@ -242,8 +237,6 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-
-
 
         // test allow orange alien //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
@@ -494,7 +487,6 @@ class BuildingBoardTest {
 
         // destroy null component //
         assertThrows(IllegalStateException.class, () -> buildingBoard.destroyComponent(4,3));
-
     }
 
     @Test
@@ -507,10 +499,10 @@ class BuildingBoardTest {
         Component c1 = new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath");
         Component c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 3}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertFalse(buildingBoard.areConnected(c1, c2));
 
@@ -518,10 +510,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 1, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 1}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -529,10 +521,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 2, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 1}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertFalse(buildingBoard.areConnected(c1, c2));
 
@@ -540,10 +532,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 0}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertFalse(buildingBoard.areConnected(c1, c2));
 
@@ -551,10 +543,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 2, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 2}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -562,10 +554,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 3, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 3}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -573,10 +565,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 3, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 2}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -584,10 +576,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{2, 3, 1, 1}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{2, 1, 1, 1}, "imgPath");
 
-        c1.setX_coordinate(0);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(0);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -595,10 +587,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
 
-        c1.setX_coordinate(2);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(0);
+        c1.setX(2);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(0);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -607,10 +599,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
 
-        c1.setX_coordinate(1);
-        c1.setY_coordinate(0);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(1);
+        c1.setX(1);
+        c1.setY(0);
+        c2.setX(1);
+        c2.setY(1);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 
@@ -618,10 +610,10 @@ class BuildingBoardTest {
         c1 = new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath");
         c2 = new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath");
 
-        c1.setX_coordinate(1);
-        c1.setY_coordinate(2);
-        c2.setX_coordinate(1);
-        c2.setY_coordinate(1);
+        c1.setX(1);
+        c1.setY(2);
+        c2.setX(1);
+        c2.setY(1);
 
         assertTrue(buildingBoard.areConnected(c1, c2));
 

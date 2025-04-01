@@ -185,7 +185,6 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[0] > 0) {  // if he has at least a red box
             if (box == Box.RED) {
-                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
@@ -193,7 +192,6 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[1] > 0) {  // if he has at least a yellow box
             if (box == Box.YELLOW) {
-                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
@@ -201,7 +199,6 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[2] > 0) {  // if he has at least a green box
             if (box == Box.GREEN) {
-                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;
@@ -209,7 +206,6 @@ public class Battlezone extends EventCard{
 
         if (playerBoxes[3] > 0) {  // if he has at least a blue box
             if (box == Box.BLUE) {
-                spaceship.addBoxCount(-1, box);
                 component.removeBox(spaceship, boxIdx);
                 return true;
             } else return false;

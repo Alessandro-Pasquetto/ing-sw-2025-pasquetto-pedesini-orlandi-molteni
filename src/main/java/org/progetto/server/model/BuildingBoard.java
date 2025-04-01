@@ -15,9 +15,9 @@ public class BuildingBoard {
     // =======================
 
     private Spaceship spaceship;
-    private Component[][] spaceshipMatrix;  //composition of components
-    private int[][] boardMask;              //mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
-    private final Component[] booked;    //list for booked components storage
+    private Component[][] spaceshipMatrix;  // composition of components
+    private int[][] boardMask;              // mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
+    private final Component[] booked;       // list for booked components storage
     private Component handComponent;
     private final String imgSrc;
 
@@ -132,8 +132,8 @@ public class BuildingBoard {
 
         spaceship.addComponentsShipCount(1);
 
-        handComponent.setY_coordinate(y);
-        handComponent.setX_coordinate(x);
+        handComponent.setY(y);
+        handComponent.setX(x);
         handComponent.setRotation(r);
         handComponent.setPlaced(true);
 
@@ -193,7 +193,7 @@ public class BuildingBoard {
         int[] c1_connections = c1.getConnections();
         int[] c2_connections = c2.getConnections();
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() + 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the right
+        if (c1.getX() == c2.getX() + 1 && c1.getY() == c2.getY()) {  //c1 on the right
             if (c1_connections[3] != 0 && c2_connections[1] != 0) {
                 if (c1_connections[3] == c2_connections[1] || c1_connections[3] == 3 || c2_connections[1] == 3) {
                     return true;
@@ -201,7 +201,7 @@ public class BuildingBoard {
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() - 1 && c1.getY_coordinate() == c2.getY_coordinate()) {  //c1 on the left
+        if (c1.getX() == c2.getX() - 1 && c1.getY() == c2.getY()) {  //c1 on the left
             if (c1_connections[1] != 0 && c2_connections[3] != 0) {
                 if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
                     return true;
@@ -209,7 +209,7 @@ public class BuildingBoard {
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() - 1) {  //c1 above c2
+        if (c1.getX() == c2.getX() && c1.getY() == c2.getY() - 1) {  //c1 above c2
             if (c1_connections[2] != 0 && c2_connections[0] != 0) {
                 if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
                     return true;
@@ -217,7 +217,7 @@ public class BuildingBoard {
             }
         }
 
-        if (c1.getX_coordinate() == c2.getX_coordinate() && c1.getY_coordinate() == c2.getY_coordinate() + 1) {  //c1 under c2
+        if (c1.getX() == c2.getX() && c1.getY() == c2.getY() + 1) {  //c1 under c2
             if (c1_connections[0] != 0 && c2_connections[2] != 0) {
                 if (c1_connections[0] == c2_connections[2] || c1_connections[0] == 3 || c2_connections[2] == 3) {
                     return true;
@@ -237,18 +237,18 @@ public class BuildingBoard {
      */
     private List<Component> typeSearch(ComponentType type) {
 
-        ArrayList<Component> found_list = new ArrayList<>();
+        ArrayList<Component> foundList = new ArrayList<>();
 
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
 
                 if(spaceshipMatrix[y][x] != null) {
                     if (spaceshipMatrix[y][x].getType() == type)
-                        found_list.add(spaceshipMatrix[y][x]);
+                        foundList.add(spaceshipMatrix[y][x]);
                 }
             }
         }
-        return found_list;
+        return foundList;
     }
 
     /**
@@ -257,17 +257,17 @@ public class BuildingBoard {
      * @author Lorenzo
      */
     private void updateOrangeAlienAllow(){
-        List<Component> central_unit = typeSearch(ComponentType.CENTRAL_UNIT);
-        List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> centralUnit = typeSearch(ComponentType.CENTRAL_UNIT);
+        List<Component> housingComponents = typeSearch(ComponentType.HOUSING_UNIT);
 
-        housing_components.addAll(central_unit);
+        housingComponents.addAll(centralUnit);
 
         List<Component> orange_components = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
         boolean allow = false;
-        for(Component housing_component : housing_components) {
-            HousingUnit housingUnit = (HousingUnit) housing_component;
-            for(Component orange_component : orange_components) {
-                HousingUnit orangeUnit = (HousingUnit) orange_component;
+        for(Component housingComponent : housingComponents) {
+            HousingUnit housingUnit = (HousingUnit) housingComponent;
+            for(Component orangeComponent : orange_components) {
+                HousingUnit orangeUnit = (HousingUnit) orangeComponent;
 
                 if(areConnected(orangeUnit, housingUnit)) {
                     allow = true;
@@ -289,17 +289,17 @@ public class BuildingBoard {
      * @author Lorenzo
      */
     private void updatePurpleAlienAllow(){
-        List<Component> central_unit = typeSearch(ComponentType.CENTRAL_UNIT);
-        List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
+        List<Component> centralUnit = typeSearch(ComponentType.CENTRAL_UNIT);
+        List<Component> housingComponents = typeSearch(ComponentType.HOUSING_UNIT);
 
-        housing_components.addAll(central_unit);
+        housingComponents.addAll(centralUnit);
 
         List<Component> purple_components = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
         boolean allow = false;
-        for(Component housing_component : housing_components) {
-            HousingUnit housingUnit = (HousingUnit) housing_component;
-            for(Component purple_component : purple_components) {
-                HousingUnit purpleUnit = (HousingUnit) purple_component;
+        for(Component housingComponent : housingComponents) {
+            HousingUnit housingUnit = (HousingUnit) housingComponent;
+            for(Component purpleComponent : purple_components) {
+                HousingUnit purpleUnit = (HousingUnit) purpleComponent;
 
                 if(areConnected(purpleUnit, housingUnit)) {
                     allow = true;
@@ -374,7 +374,6 @@ public class BuildingBoard {
      * @author Lorenzo
      * @param y is the y coordinate of the component to remove
      * @param x is the x coordinate of the component to remove
-     * @return true if the component can be removed
      */
     public void destroyComponent(int y, int x) throws IllegalStateException {
         if(boardMask[y][x] != -1)
@@ -443,7 +442,7 @@ public class BuildingBoard {
 
                 case ORANGE_HOUSING_UNIT:
                     List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
-                    if (orange_units.size() == 1) {    //if only a module is present
+                    if (orange_units.size() == 1) {    // if only a module is present
                         spaceship.setAlienOrange(false);
                     }
 
@@ -453,7 +452,7 @@ public class BuildingBoard {
 
                 case PURPLE_HOUSING_UNIT:
                     List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
-                    if (purple_units.size() == 1) {    //if only a module is present
+                    if (purple_units.size() == 1) {    // if only a module is present
                         spaceship.setAlienPurple(false);
                     }
 
@@ -504,6 +503,9 @@ public class BuildingBoard {
 
 
     /**
+     * Checks if a cannon is valid
+     *
+     * @author Alessandro
      * @param x the x coordinate of the component to checked
      * @param y the y coordinate of the component to checked
      * @param cannon the cannon component to checked
@@ -634,10 +636,10 @@ public class BuildingBoard {
     //this method is also able to identify if a spaceship has been divided, in this case the controller let the player decide witch stump keep by clicking
     // on a component of that stump
 
-
     /**
-     * Check and return if the spaceship is valid and count and update the exposedConnectorsCount value of the spaceship
+     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship
      *
+     * @author Alessandro
      * @return true if the spaceship is valid, false otherwise
      */
     public boolean checkShipValidity() throws IllegalStateException{
@@ -669,10 +671,11 @@ public class BuildingBoard {
     }
 
     /**
-     * Initialize spaceship attributes after checking the ship validity
+     * Initializes spaceship attributes after checking the ship validity
+     *
+     * @author Lorenzo
      */
-    public void initSpaceshipParams()
-    {
+    public void initSpaceshipParams() {
         for(int y = 0; y < spaceshipMatrix.length; y++){
             for(int x = 0; x < spaceshipMatrix[y].length; x++){
                 if(spaceshipMatrix[y][x] != null){

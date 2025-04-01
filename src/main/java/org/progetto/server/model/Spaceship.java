@@ -213,8 +213,7 @@ public class Spaceship {
      * @param box the box to add
      */
     public void addBoxCount(int countToAdd, Box box) {
-        switch (box)
-        {
+        switch (box) {
             case RED:
                 boxCounts[0] += countToAdd;
                 break;
