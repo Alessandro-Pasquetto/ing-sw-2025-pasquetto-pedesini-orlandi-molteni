@@ -398,7 +398,13 @@ public class BuildingController {
         }
     }
 
-
+    /**
+     * Resets timer
+     *
+     * @author Alessandro
+     * @param gameCommunicationHandler
+     * @param sender
+     */
     public static void resetTimer(GameCommunicationHandler gameCommunicationHandler, Sender sender) throws RemoteException{
         try {
             gameCommunicationHandler.getTimerController().resetTimer();
@@ -408,6 +414,12 @@ public class BuildingController {
         }
     }
 
+    /**
+     * Checks the validity of the spaceship for each player
+     *
+     * @author Alessandro
+     * @param gameCommunicationHandler
+     */
     public static void checkShipValidity(GameCommunicationHandler gameCommunicationHandler) {
         Game game = gameCommunicationHandler.getGame();
 

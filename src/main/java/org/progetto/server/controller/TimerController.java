@@ -3,6 +3,8 @@ package org.progetto.server.controller;
 import org.progetto.messages.toClient.TimerMessage;
 import org.progetto.server.connection.games.GameCommunicationHandler;
 
+import java.rmi.RemoteException;
+
 /**
  * Timer controller class
  */
@@ -32,8 +34,8 @@ public class TimerController {
     // GETTERS
     // =======================
 
-    public synchronized int getTimerInt(){
-        return timer;
+    public synchronized boolean isTimerExpired() {
+        return !(timer > 0 || timerFlipsAllowed > 0);
     }
 
     // =======================

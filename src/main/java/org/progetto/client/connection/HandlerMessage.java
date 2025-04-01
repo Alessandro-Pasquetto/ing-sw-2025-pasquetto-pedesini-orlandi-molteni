@@ -74,7 +74,9 @@ public class HandlerMessage {
                     break;
                 case "NotAllowedToPlaceComponent":
                     break;
-                case "Timer expired":
+                case "TimerExpired":
+                    System.out.println("TimerExpired");
+                    GameData.setTimerExpired(true);
                     break;
                 default:
                     System.out.println(messageString);

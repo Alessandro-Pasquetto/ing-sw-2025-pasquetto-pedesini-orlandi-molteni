@@ -12,6 +12,7 @@ public class GameData {
     // Client data that I want to store
     private static int idGame;
     private static String namePlayer;
+    private static boolean timerExpired;
 
     // Temporary data of the handComponent in view
     private static int rHandComponent = 0;
@@ -28,6 +29,10 @@ public class GameData {
 
     public static String getNamePlayer(){
         return namePlayer;
+    }
+
+    public static boolean getTimerExpired(){
+        return timerExpired;
     }
 
     public static int getrHandComponent(){
@@ -52,6 +57,10 @@ public class GameData {
 
     public static void setNamePlayer(String namePlayer){
         GameData.namePlayer = namePlayer;
+    }
+
+    public static void setTimerExpired(boolean timerExpired){
+        GameData.timerExpired = timerExpired;
     }
 
     public static void setxHandComponent(int xHandComponent){

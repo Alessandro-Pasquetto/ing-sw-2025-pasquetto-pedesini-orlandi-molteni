@@ -71,7 +71,7 @@ public class GameCommunicationHandler {
     }
 
     public boolean timerExpired() {
-        return timer.getTimerInt() == 0;
+        return timer.isTimerExpired();
     }
 
     public SocketWriter getSocketWriterByPlayer(Player player) {

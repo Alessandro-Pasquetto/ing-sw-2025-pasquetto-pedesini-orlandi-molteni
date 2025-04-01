@@ -75,6 +75,12 @@ public class GameView {
     }
 
     public void pickHiddenComponent() {
+
+        if(GameData.getTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
         if (handComponent == null) {
             if (HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
@@ -82,26 +88,20 @@ public class GameView {
                 RmiClientSender.pickHiddenComponent();
         }
         else if (GameData.getxHandComponent() != -1){
-            if (GameData.getyHandComponent() != -1){
-                if (HandlerMessage.getIsSocket())
-                    SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
-                else
-                    RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
-            }
-            else {
-                System.out.println("Save in bookedList and pick hidden component");
-                /*
-                if(HandlerMessage.getIsSocket())
-                    SocketClient.
-                else
-                    RmiClientSender.
-
-                 */
-            }
+            if (HandlerMessage.getIsSocket())
+                SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+            else
+                RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
         }
     }
 
     public void pickVisibleComponent() {
+
+        if(GameData.getTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
         if(handComponent == null)
             if(HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
@@ -120,6 +120,12 @@ public class GameView {
      * @author Lorenzo
      */
     public void discardComponent() {
+
+        if(GameData.getTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
         if(handComponent != null){
             if(HandlerMessage.getIsSocket()) {
                 SocketClient.discardComponent();
@@ -145,6 +151,12 @@ public class GameView {
     }
 
     public void showEventCardDeck(ActionEvent event) {
+
+        if(GameData.getTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
         int idxDeck = 0;
         Button clickedButton = (Button) event.getSource();
 
@@ -203,6 +215,12 @@ public class GameView {
     }
 
     public void rotateComponent() {
+
+        if(GameData.getTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
         handComponent.setRotate(handComponent.getRotate() + 90);
         GameData.rotateComponent();
     }
