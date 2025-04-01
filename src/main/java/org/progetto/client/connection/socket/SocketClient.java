@@ -115,6 +115,12 @@ public class SocketClient {
     public static void destroyComponent(int yComponent, int xComponent){
         SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
     }
+    public static void bookComponent(int idx){
+        SocketWriter.sendMessage(new BookComponentMessage(idx));
+    }
+    public static void pickBookedComponent(int idx){
+        SocketWriter.sendMessage(new PickBookedComponentMessage(idx));
+    }
 
     public static void pickEventCard() throws RemoteException {
         SocketWriter.sendMessage("PickEventCard");

@@ -161,7 +161,6 @@ public class BuildingController {
 
     /**
      * Handles player decision to pick-up a specific eventCard deck, and place current hand component
-     *
      * @author Gabriele
      * @param gameCommunicationHandler
      * @param player
@@ -253,6 +252,37 @@ public class BuildingController {
             else if (e.getMessage().equals("BookedCellOccupied"))
                 sender.sendMessage("BookedCellOccupied");
         }
+    }
+
+    /**
+     * @author Lorenzo
+     * @param gameCommunicationHandler is the class that manage the current game
+     * @param player that want to pick a booked component
+     * @param idx of the component to pick
+     * @param sender
+     */
+    public static void pickBookedComponent(GameCommunicationHandler gameCommunicationHandler, Player player, int idx, Sender sender) throws RemoteException {
+
+        if(gameCommunicationHandler.timerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        try{
+            gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
+            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
+            gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(idx, player.getName(),imgSrc),sender);
+
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("FullHandComponent"))
+                sender.sendMessage("FullHandComponent");
+            else if (e.getMessage().equals("IllegalIndex"))
+                sender.sendMessage("IllegalIndex");
+            else if (e.getMessage().equals("BookedCellOccupied"))
+                sender.sendMessage("BookedCellOccupied");
+
+        }
+
     }
 
     /**

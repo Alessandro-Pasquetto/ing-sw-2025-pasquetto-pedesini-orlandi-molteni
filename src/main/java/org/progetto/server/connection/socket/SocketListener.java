@@ -142,8 +142,11 @@ public class SocketListener extends Thread {
                     int idx = bookComponentMessage.getBookIdx();
                     BuildingController.bookComponent(gameCommunicationHandler, player, idx, socketWriter);
 
-                }
-                else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {        //handle incoming destroy message
+                } else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
+                    int idx = bookedComponentMessage.getIdx();
+                    BuildingController.pickBookedComponent(gameCommunicationHandler, player, idx, socketWriter);
+
+                } else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {        //handle incoming destroy message
                     int y = destroyComponentMessage.getY();
                     int x = destroyComponentMessage.getX();
                     BuildingController.destroyComponent(gameCommunicationHandler, player, y, x, socketWriter);

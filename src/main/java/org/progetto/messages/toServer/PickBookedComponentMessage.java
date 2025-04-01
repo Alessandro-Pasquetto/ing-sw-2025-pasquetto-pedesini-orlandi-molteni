@@ -2,29 +2,25 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class BookComponentMessage implements Serializable {
+public class PickBookedComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
-
-    int bookIdx;
+    int idx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-
-    public BookComponentMessage(int bookIdx) {
-        this.bookIdx = bookIdx;
+    public PickBookedComponentMessage(int idx) {
+        this.idx = idx;
     }
 
     // =======================
     // GETTERS
     // =======================
-
-    public int getBookIdx() {
-        return bookIdx;
+    public int getIdx() {
+        return idx;
     }
-
 
 }

@@ -113,13 +113,25 @@ public class RmiClientSender{
 
     /**
      * Allows RMI on client to call for the respective method on RMI server
-     *
      * @author Lorenzo
-     * @param idx
+     * @param idx is the index were the component will be placed
      */
     public static void bookComponent(int idx){
         try {
             server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Allows RMI on client to call for the respective method on RMI server
+     * @author Lorenzo
+     * @param idx is the index were the component will be picked
+     */
+    public static void pickBookedComponent(int idx){
+        try {
+            server.pickBookedComponent(RmiClientReceiver.getInstance(),GameData.getIdGame(),idx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }

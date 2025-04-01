@@ -19,6 +19,7 @@ public interface VirtualServer extends Remote {
     void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException;
     void discardComponent(VirtualClient virtualClient,int idGame) throws RemoteException;
     void bookComponent(VirtualClient virtualClient,int idGame, int idx) throws RemoteException;
+    void pickBookedComponent(VirtualClient virtualClient,int idGame, int idx) throws RemoteException;
     void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, int deckIdx) throws RemoteException;
     void putDownEventCardDeck(VirtualClient virtualClient, int idGame) throws RemoteException;
     void destroyComponent(VirtualClient virtualClient, int idGame, int yComponent, int xComponent) throws RemoteException;

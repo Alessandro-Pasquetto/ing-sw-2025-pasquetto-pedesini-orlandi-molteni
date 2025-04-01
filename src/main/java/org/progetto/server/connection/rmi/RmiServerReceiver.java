@@ -210,6 +210,29 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.bookComponent(gameCommunicationHandler, player, idx, virtualClient);
     }
 
+    /**
+     * Allows client to call for pickBookedComponent with RMI in server proxy
+     * @author lorenzo
+     * @param virtualClient is the interface we want to address
+     * @param idGame were we want to pick
+     * @param idx in the array where we want to pick the component
+     * @throws RemoteException if a player with name in idGame was not found
+     */
+    @Override
+    public void pickBookedComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException {
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameCommunicationHandler.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                virtualClient.sendMessage("PlayerNameNotFound");
+            return;
+        }
+
+        BuildingController.pickBookedComponent(gameCommunicationHandler, player, idx, virtualClient);
+    }
+
     @Override
     public void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, int deckIdx) throws RemoteException {
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
