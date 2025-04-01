@@ -22,6 +22,15 @@ public class EventController {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Handles the request to roll dice
+     *
+     * @author Gabriele
+     * @param gameCommunicationHandler
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
     public static void rollDice(GameCommunicationHandler gameCommunicationHandler, Player player, Sender sender) throws RemoteException {
 
         try{
@@ -34,8 +43,9 @@ public class EventController {
     }
 
     /**
-     * handles decision to pick an eventCard
-     * @Author Lorenzo
+     * Handles decision to pick an eventCard
+     *
+     * @author Lorenzo
      * @param gameCommunicationHandler is the class that manage the current game
      * @param sender
      * @throws RemoteException if the eventCard can't be picked
@@ -46,6 +56,10 @@ public class EventController {
             EventCard card = gameCommunicationHandler.getGame().pickEventCard();
             LobbyController.broadcastLobbyMessage(new PickedEventCardMessage(card.getImgSrc()));
 
+            gameCommunicationHandler.createEventController();
+
+
+
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("EmptyHiddenEventCardDeck"))
                 sender.sendMessage("EmptyHiddenEventCardDeck");
@@ -53,8 +67,4 @@ public class EventController {
         }
 
     }
-
-
-
-
 }

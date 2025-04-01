@@ -3,9 +3,13 @@ package org.progetto.server.connection.games;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.socket.SocketWriter;
+import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.TimerController;
+import org.progetto.server.controller.events.EpidemicController;
+import org.progetto.server.controller.events.StardustController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.events.EventCard;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class GameCommunicationHandler {
     private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
 
     private final Game game;
+    private EventController eventController;
     private final TimerController timer;
 
     // =======================
@@ -34,6 +39,7 @@ public class GameCommunicationHandler {
 
     public GameCommunicationHandler(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
+        this.eventController = null;
         this.timer = new TimerController(this, 10, 2);
         GameCommunicationHandlerMaps.addWaitingGameManager(idGame, this);
     }
@@ -66,6 +72,10 @@ public class GameCommunicationHandler {
         return game;
     }
 
+    public EventController getEventController() {
+        return eventController;
+    }
+
     public TimerController getTimerController() {
         return timer;
     }
@@ -94,6 +104,25 @@ public class GameCommunicationHandler {
     // =======================
     // OTHER METHODS
     // =======================
+
+    public void createEventController() {
+        EventCard eventCard = game.getActiveEventCard();
+
+        switch (eventCard.getType()) {
+
+            case EPIDEMIC:
+                eventController = new EpidemicController(this);
+                break;
+
+            case STARDUST:
+                eventController = new StardustController(this);
+                break;
+
+            default:
+                eventController = null;
+                break;
+        }
+    }
 
     public void addSocketWriter(Player player, SocketWriter socketWriter){
         synchronized (playerSocketWriters){
