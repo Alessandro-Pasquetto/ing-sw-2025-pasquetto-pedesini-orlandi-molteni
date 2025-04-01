@@ -4,10 +4,13 @@ import org.progetto.client.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.messages.toServer.*;
+import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.games.GameCommunicationHandler;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 /**
  * Handles the invocation of methods on the server
@@ -111,6 +114,10 @@ public class SocketClient {
 
     public static void destroyComponent(int yComponent, int xComponent){
         SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
+    }
+
+    public static void pickEventCard() throws RemoteException {
+        SocketWriter.sendMessage("PickEventCard");
     }
 
     static void playerReady() {

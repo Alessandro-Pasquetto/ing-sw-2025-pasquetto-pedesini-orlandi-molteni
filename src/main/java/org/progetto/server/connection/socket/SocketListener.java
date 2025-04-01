@@ -180,6 +180,21 @@ public class SocketListener extends Thread {
 
             case TRAVEL:
 
+                if(messageObj instanceof String messageString) {
+
+                    switch (messageString){
+                        case "PickEventCard":
+                            EventController.pickEventCard(gameCommunicationHandler,socketWriter);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                }
+
+
+
                 break;
 
             case EVENT:

@@ -25,4 +25,5 @@ public interface VirtualServer extends Remote {
     void playerReady(VirtualClient virtualClient, int idGame) throws RemoteException;
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
     void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
+    void pickEventCard(VirtualClient virtualClient, int idGame) throws RemoteException;
 }

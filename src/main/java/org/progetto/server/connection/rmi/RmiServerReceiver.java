@@ -286,6 +286,22 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.resetTimer(gameCommunicationHandler, virtualClient);
     }
 
+    /**
+     * Allows client to call for pickEventCard with RMI in server proxy
+     * @author Lorenzo
+     * @param virtualClient is the interface we want to address
+     * @param idGame is the game instances were the card will be picked
+     * @throws RemoteException if an exception is called in the inner methods
+     */
+    @Override
+    public void pickEventCard(VirtualClient virtualClient, int idGame) throws RemoteException {
+
+        GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);
+        EventController.pickEventCard(gameCommunicationHandler, virtualClient);
+
+    }
+
+
     @Override
     public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameCommunicationHandler gameCommunicationHandler = GameCommunicationHandlerMaps.getGameManager(idGame);

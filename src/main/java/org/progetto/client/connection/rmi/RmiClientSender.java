@@ -143,7 +143,6 @@ public class RmiClientSender{
 
     /**
      * Allows client to call for the destroyComponent method on RMI server
-     *
      * @author Lorenzo
      * @param yComponent
      * @param xComponent
@@ -167,6 +166,18 @@ public class RmiClientSender{
     public static void resetTimer() {
         try {
             server.resetTimer(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Allows client to call for the pickEventCard method on RMI server
+     * @author Lorenzo
+     */
+    public static void pickEventCard() {
+        try {
+            server.pickEventCard(RmiClientReceiver.getInstance(),GameData.getIdGame());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
