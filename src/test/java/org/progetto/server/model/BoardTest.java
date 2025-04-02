@@ -214,10 +214,10 @@ class BoardTest {
 
         board.updateTurnOrder();
 
-        assertEquals(p1, board.getActiveTravelers().get(0));
-        assertEquals(p2, board.getActiveTravelers().get(1));
-        assertEquals(p3, board.getActiveTravelers().get(2));
-        assertEquals(p4, board.getActiveTravelers().get(3));
+        assertEquals(p1, board.getActivePlayers().get(0));
+        assertEquals(p2, board.getActivePlayers().get(1));
+        assertEquals(p3, board.getActivePlayers().get(2));
+        assertEquals(p4, board.getActivePlayers().get(3));
     }
 
     @Test
@@ -227,7 +227,7 @@ class BoardTest {
 
         board.addReadyTraveler(player);
 
-        assertEquals(player, board.getReadyTravelers().getFirst());
+        assertEquals(player, board.getReadyPlayers().getFirst());
     }
 
     @Test
@@ -241,11 +241,11 @@ class BoardTest {
 
         // Adding first ready player
         board.addReadyTraveler(p1);
-        assertEquals(p1, board.getReadyTravelers().get(0));
+        assertEquals(p1, board.getReadyPlayers().get(0));
 
         // Adding second ready player
         board.addReadyTraveler(p2);
-        assertEquals(p2, board.getReadyTravelers().get(1));
+        assertEquals(p2, board.getReadyPlayers().get(1));
 
         // Tries to add again first player
         assertThrows(IllegalStateException.class, () -> board.addReadyTraveler(p1));

@@ -44,7 +44,6 @@ public class Game {
     // CONSTRUCTORS
     // =======================
 
-    // todo: set visibleEventCardDecks
     public Game(int idGame, int maxNumPlayers, int level) {
         this.id = idGame;
         this.maxNumPlayers = maxNumPlayers;
@@ -243,12 +242,6 @@ public class Game {
             return null;
         }
     }
-
-    // todo: saveGame
-    /**
-     * Does it save the data of players who disconnect?
-     */
-    public void saveGame(){}
 
     /**
      * Returns the list of players who have more than 0 credits (winners)

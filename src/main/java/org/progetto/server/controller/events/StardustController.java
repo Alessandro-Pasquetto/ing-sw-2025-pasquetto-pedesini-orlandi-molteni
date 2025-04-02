@@ -1,10 +1,9 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.server.connection.games.GameCommunicationHandler;
+import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.events.Epidemic;
 import org.progetto.server.model.events.Stardust;
 
 import java.util.ArrayList;
@@ -16,14 +15,14 @@ public class StardustController extends EventController {
     // ATTRIBUTES
     // =======================
 
-    GameCommunicationHandler gameCommunicationHandler;
+    private GameManager gameManager;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public StardustController(GameCommunicationHandler gameCommunicationHandler) {
-        this.gameCommunicationHandler = gameCommunicationHandler;
+    public StardustController(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     // =======================
@@ -31,17 +30,24 @@ public class StardustController extends EventController {
     // =======================
 
     /**
+     * Starts event card effect
+     */
+    public void start() {
+        eventEffect();
+    }
+
+    /**
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
      */
-    public void eventEffect() {
-        ArrayList<Player> reversedPlayers = new ArrayList<>(gameCommunicationHandler.getGame().getBoard().getActiveTravelers());
+    private void eventEffect() {
+        ArrayList<Player> reversedPlayers = new ArrayList<>(gameManager.getGame().getBoard().getActivePlayers());
         Collections.reverse(reversedPlayers);
-        Board board = gameCommunicationHandler.getGame().getBoard();
+        Board board = gameManager.getGame().getBoard();
 
         for (Player player : reversedPlayers) {
-            Stardust stardust = (Stardust) gameCommunicationHandler.getGame().getActiveEventCard();
+            Stardust stardust = (Stardust) gameManager.getGame().getActiveEventCard();
             stardust.penalty(board, player);
         }
 

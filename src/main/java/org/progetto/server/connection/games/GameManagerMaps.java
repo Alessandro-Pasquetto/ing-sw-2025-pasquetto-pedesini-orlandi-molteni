@@ -7,26 +7,26 @@ import java.util.HashMap;
  * - waitingGamesManager: map of non started games
  * - allGamesManager: map of already started games
  */
-public class GameCommunicationHandlerMaps {
+public class GameManagerMaps {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private static final HashMap<Integer, GameCommunicationHandler> waitingGamesManager = new HashMap<>();
-    private static final HashMap<Integer, GameCommunicationHandler> allGamesManager = new HashMap<>();
+    private static final HashMap<Integer, GameManager> waitingGamesManager = new HashMap<>();
+    private static final HashMap<Integer, GameManager> allGamesManager = new HashMap<>();
 
     // =======================
     // GETTERS
     // =======================
 
-    public static GameCommunicationHandler getWaitingGameManager(int idGame) {
+    public static GameManager getWaitingGameManager(int idGame) {
         synchronized (waitingGamesManager) {
             return waitingGamesManager.get(idGame);
         }
     }
 
-    public static GameCommunicationHandler getGameManager(int idGame) {
+    public static GameManager getGameManager(int idGame) {
         synchronized (allGamesManager) {
             return allGamesManager.get(idGame);
         }
@@ -42,12 +42,12 @@ public class GameCommunicationHandlerMaps {
     // OTHER METHODS
     // =======================
 
-    public static void addWaitingGameManager(int idGame, GameCommunicationHandler gameCommunicationHandler) {
+    public static void addWaitingGameManager(int idGame, GameManager gameManager) {
         synchronized (waitingGamesManager) {
-            waitingGamesManager.put(idGame, gameCommunicationHandler);
+            waitingGamesManager.put(idGame, gameManager);
         }
         synchronized (allGamesManager) {
-            allGamesManager.put(idGame, gameCommunicationHandler);
+            allGamesManager.put(idGame, gameManager);
         }
     }
 

@@ -10,8 +10,8 @@ public class Board {
     // =======================
 
     private final Player[] track;
-    private final ArrayList<Player> activeTravelers;
-    private final ArrayList<Player> readyTravelers;   // order: first player ready -> last one
+    private final ArrayList<Player> activePlayers;  // order: leader -> last
+    private final ArrayList<Player> readyPlayers;   // order: first player ready -> last one
     private final String imgSrc;
 
     // =======================
@@ -20,8 +20,8 @@ public class Board {
 
     public Board(int levelBoard) {
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
-        this.activeTravelers = new ArrayList<>();
-        this.readyTravelers = new ArrayList<>();
+        this.activePlayers = new ArrayList<>();
+        this.readyPlayers = new ArrayList<>();
         this.imgSrc = "board" + levelBoard + ".png";
     }
 
@@ -33,12 +33,12 @@ public class Board {
         return track;
     }
 
-    public ArrayList<Player> getActiveTravelers() {
-        return activeTravelers;
+    public ArrayList<Player> getActivePlayers() {
+        return activePlayers;
     }
 
-    public ArrayList<Player> getReadyTravelers() {
-        return readyTravelers;
+    public ArrayList<Player> getReadyPlayers() {
+        return readyPlayers;
     }
 
     public String getImgSrc() {
@@ -70,11 +70,11 @@ public class Board {
      * @param player reference to ready player
      */
     public synchronized void addReadyTraveler(Player player) {
-        if (readyTravelers.contains(player)){
+        if (readyPlayers.contains(player)){
             throw new IllegalStateException("PlayerIsAlreadyReady");
         }
 
-        readyTravelers.add(player);
+        readyPlayers.add(player);
     }
 
     /**
@@ -84,10 +84,10 @@ public class Board {
      * @param player is the new traveler
      */
     public synchronized void addTraveler(Player player, int levelBoard) {
-        activeTravelers.add(player);
+        activePlayers.add(player);
 
         int pos = 0;
-        switch (activeTravelers.size()){
+        switch (activePlayers.size()){
             case 1:
                 if(levelBoard == 1)
                     pos = 4;
@@ -168,7 +168,7 @@ public class Board {
      * @author Alessandro
      */
     public void updateTurnOrder() {
-        activeTravelers.sort(Comparator.comparingInt(Player::getPosition).reversed());
+        activePlayers.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
 
     /**
@@ -180,7 +180,7 @@ public class Board {
     public void leaveTravel(Player player) {
         int playerPosition = player.getPosition();
         track[modulus(playerPosition, track.length)] = null;
-        activeTravelers.remove(player);
+        activePlayers.remove(player);
         player.setHasLeft(true);
     }
 }

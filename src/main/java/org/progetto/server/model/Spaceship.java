@@ -17,7 +17,7 @@ public class Spaceship {
     private boolean alienOrange;
     private float normalShootingPower;
     private int doubleCannonCount;
-    private float normalEnginePower;
+    private int normalEnginePower;
     private int doubleEngineCount;
     private final int[] shieldCounts;  // {up, right, down, left}
     private final int[] boxCounts;     // {red, yellow, green, blue}
@@ -93,7 +93,7 @@ public class Spaceship {
         return doubleEngineCount;
     }
 
-    public float getNormalEnginePower(){
+    public int getNormalEnginePower(){
         return normalEnginePower;
     }
 
@@ -153,7 +153,7 @@ public class Spaceship {
         doubleCannonCount += countToAdd;
     }
 
-    public void addNormalEnginePower(float powerToAdd) {
+    public void addNormalEnginePower(int powerToAdd) {
         normalEnginePower += powerToAdd;
     }
 

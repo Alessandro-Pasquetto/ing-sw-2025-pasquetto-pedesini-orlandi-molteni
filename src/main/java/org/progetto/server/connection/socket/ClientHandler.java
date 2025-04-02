@@ -1,6 +1,6 @@
 package org.progetto.server.connection.socket;
 
-import org.progetto.server.connection.games.GameCommunicationHandler;
+import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Player;
 import java.io.*;
 
@@ -13,7 +13,7 @@ public class ClientHandler {
     // ATTRIBUTES
     // =======================
 
-    private GameCommunicationHandler gameCommunicationHandler;
+    private GameManager gameManager;
     private Player player;
     private final SocketListener socketListener;
     private final SocketWriter socketWriter;
@@ -23,7 +23,7 @@ public class ClientHandler {
     // =======================
 
     public ClientHandler(ObjectOutputStream out, ObjectInputStream in) {
-        gameCommunicationHandler = null;
+        gameManager = null;
         player = null;
         socketWriter = new SocketWriter(this, out);
         socketListener = new SocketListener(this, in);
@@ -38,8 +38,8 @@ public class ClientHandler {
     // GETTERS
     // =======================
 
-    public GameCommunicationHandler getGameManager() {
-        return gameCommunicationHandler;
+    public GameManager getGameManager() {
+        return gameManager;
     }
 
     public SocketWriter getSocketWriter() {
@@ -55,11 +55,11 @@ public class ClientHandler {
     // =======================
 
     // Save gameManager and player to clientHandler and add socketWriter to the game
-    public void initPlayerConnection(GameCommunicationHandler gameCommunicationHandler, Player player) {
-        this.gameCommunicationHandler = gameCommunicationHandler;
+    public void initPlayerConnection(GameManager gameManager, Player player) {
+        this.gameManager = gameManager;
         this.player = player;
 
         SocketServer.removeSocketWriter(socketWriter);
-        gameCommunicationHandler.addSocketWriter(player, socketWriter);
+        gameManager.addSocketWriter(player, socketWriter);
     }
 }

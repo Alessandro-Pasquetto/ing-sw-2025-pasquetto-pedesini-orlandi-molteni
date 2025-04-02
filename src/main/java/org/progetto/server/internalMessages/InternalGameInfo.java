@@ -1,6 +1,6 @@
 package org.progetto.server.internalMessages;
 
-import org.progetto.server.connection.games.GameCommunicationHandler;
+import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Player;
 
 /**
@@ -14,15 +14,15 @@ public class InternalGameInfo {
     // ATTRIBUTES
     // =======================
 
-    private GameCommunicationHandler gameCommunicationHandler;
+    private GameManager gameManager;
     private Player player;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public InternalGameInfo(GameCommunicationHandler gameCommunicationHandler, Player player) {
-        this.gameCommunicationHandler = gameCommunicationHandler;
+    public InternalGameInfo(GameManager gameManager, Player player) {
+        this.gameManager = gameManager;
         this.player = player;
     }
 
@@ -30,8 +30,8 @@ public class InternalGameInfo {
     // GETTERS
     // =======================
 
-    public GameCommunicationHandler getGameManager() {
-        return gameCommunicationHandler;
+    public GameManager getGameManager() {
+        return gameManager;
     }
 
     public Player getPlayer() {

@@ -1,8 +1,7 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.server.connection.games.GameCommunicationHandler;
+import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventController;
-import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Epidemic;
 
@@ -14,14 +13,14 @@ public class EpidemicController extends EventController {
     // ATTRIBUTES
     // =======================
 
-    GameCommunicationHandler gameCommunicationHandler;
+    private GameManager gameManager;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public EpidemicController(GameCommunicationHandler gameCommunicationHandler) {
-        this.gameCommunicationHandler = gameCommunicationHandler;
+    public EpidemicController(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     // =======================
@@ -29,15 +28,22 @@ public class EpidemicController extends EventController {
     // =======================
 
     /**
+     * Starts event card effect
+     */
+    public void start() {
+        eventEffect();
+    }
+
+    /**
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
      */
-    public void eventEffect() {
-        ArrayList<Player> players = gameCommunicationHandler.getGame().getBoard().getActiveTravelers();
+    private void eventEffect() {
+        ArrayList<Player> players = gameManager.getGame().getBoard().getActivePlayers();
 
         for (Player player : players) {
-            Epidemic epidemic = (Epidemic) gameCommunicationHandler.getGame().getActiveEventCard();
+            Epidemic epidemic = (Epidemic) gameManager.getGame().getActiveEventCard();
             epidemic.epidemicResult(player);
         }
     }

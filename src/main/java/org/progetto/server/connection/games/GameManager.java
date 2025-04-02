@@ -6,6 +6,7 @@ import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.EpidemicController;
+import org.progetto.server.controller.events.OpenSpaceController;
 import org.progetto.server.controller.events.StardustController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -15,12 +16,11 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * All game communication data to handle multiple clients (Socket/RMI)
  */
-public class GameCommunicationHandler {
+public class GameManager {
 
     // =======================
     // ATTRIBUTES
@@ -33,15 +33,17 @@ public class GameCommunicationHandler {
     private EventController eventController;
     private final TimerController timer;
 
+    private int diceResult;
+
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public GameCommunicationHandler(int idGame, int numPlayers, int level) {
+    public GameManager(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
         this.timer = new TimerController(this, 10, 2);
-        GameCommunicationHandlerMaps.addWaitingGameManager(idGame, this);
+        GameManagerMaps.addWaitingGameManager(idGame, this);
     }
 
     // =======================
@@ -101,28 +103,13 @@ public class GameCommunicationHandler {
         throw new IllegalStateException("PlayerNotFound");
     }
 
+    public int getDiceResult() {
+        return diceResult;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
-
-    public void createEventController() {
-        EventCard eventCard = game.getActiveEventCard();
-
-        switch (eventCard.getType()) {
-
-            case EPIDEMIC:
-                eventController = new EpidemicController(this);
-                break;
-
-            case STARDUST:
-                eventController = new StardustController(this);
-                break;
-
-            default:
-                eventController = null;
-                break;
-        }
-    }
 
     public void addSocketWriter(Player player, SocketWriter socketWriter){
         synchronized (playerSocketWriters){
@@ -186,7 +173,34 @@ public class GameCommunicationHandler {
         }
     }
 
+    public void createEventController() {
+        EventCard eventCard = game.getActiveEventCard();
+
+        switch (eventCard.getType()) {
+
+            case EPIDEMIC:
+                eventController = new EpidemicController(this);
+                break;
+
+            case STARDUST:
+                eventController = new StardustController(this);
+                break;
+
+            case OPENSPACE:
+                eventController = new OpenSpaceController(this);
+                break;
+
+            default:
+                eventController = null;
+                break;
+        }
+    }
+
     public void startTimer() {
         timer.startTimer();
+    }
+
+    public void setDiceResult(int diceResult) {
+        this.diceResult = diceResult;
     }
 }

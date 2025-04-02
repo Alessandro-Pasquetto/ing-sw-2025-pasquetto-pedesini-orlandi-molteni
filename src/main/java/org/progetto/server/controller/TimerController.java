@@ -1,9 +1,7 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.TimerMessage;
-import org.progetto.server.connection.games.GameCommunicationHandler;
-
-import java.rmi.RemoteException;
+import org.progetto.server.connection.games.GameManager;
 
 /**
  * Timer controller class
@@ -14,7 +12,7 @@ public class TimerController {
     // ATTRIBUTES
     // =======================
 
-    GameCommunicationHandler gameCommunicationHandler;
+    GameManager gameManager;
     private final int defaultTimer;
     private int timer;
     private int timerFlipsAllowed;
@@ -23,8 +21,8 @@ public class TimerController {
     // CONSTRUCTORS
     // =======================
 
-    public TimerController(GameCommunicationHandler gameCommunicationHandler, int defaultTimer, int timerFlipsAllowed) {
-        this.gameCommunicationHandler = gameCommunicationHandler;
+    public TimerController(GameManager gameManager, int defaultTimer, int timerFlipsAllowed) {
+        this.gameManager = gameManager;
         this.defaultTimer = defaultTimer;
         this.timer = defaultTimer;
         this.timerFlipsAllowed = timerFlipsAllowed;
@@ -71,7 +69,7 @@ public class TimerController {
                 }
 
                 System.out.println("Timer: " + currentTimer);
-                gameCommunicationHandler.broadcastGameMessage(new TimerMessage(currentTimer));
+                gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
 
                 try {
                     Thread.sleep(1000);
@@ -82,9 +80,9 @@ public class TimerController {
             }
 
             if (timerFlipsAllowed == 0) {
-                gameCommunicationHandler.broadcastGameMessage("Timer expired!");
+                gameManager.broadcastGameMessage("Timer expired!");
                 System.out.println("Timer expired");
-                BuildingController.checkShipValidity(gameCommunicationHandler);
+                BuildingController.checkShipValidity(gameManager);
             }
         }).start();
     }

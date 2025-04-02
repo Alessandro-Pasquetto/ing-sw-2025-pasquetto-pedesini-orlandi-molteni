@@ -33,6 +33,4 @@ public class AnotherPlayerPickedBookedComponentMessage implements Serializable {
     public int getIdx() {
         return idx;
     }
-
-
 }

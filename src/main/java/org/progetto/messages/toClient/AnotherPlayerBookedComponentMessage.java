@@ -1,6 +1,8 @@
 package org.progetto.messages.toClient;
 
-public class AnotherPlayerBookedComponentMessage {
+import java.io.Serializable;
+
+public class AnotherPlayerBookedComponentMessage implements Serializable {
 
     private String namePlayer;
     private int bookedIndex;
