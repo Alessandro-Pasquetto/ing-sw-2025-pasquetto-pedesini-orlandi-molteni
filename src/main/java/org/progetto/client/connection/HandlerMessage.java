@@ -1,6 +1,8 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.GameData;
+import org.progetto.client.gui.DragAndDrop;
+import org.progetto.client.model.BuildingData;
+import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import java.io.IOException;
@@ -69,19 +71,28 @@ public class HandlerMessage {
                         System.out.println("Error loading the page");
                     }
                     break;
+
                 case "NotAvailableName":
                     System.out.println("Username not available");
                     break;
+
                 case "NotAllowedToPlaceComponent":
                     break;
+
+                case "PickedBookedComponent":
+                    BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
+                    break;
+
                 case "TimerExpired":
                     System.out.println("TimerExpired");
-                    GameData.setTimerExpired(true);
+                    BuildingData.setTimerExpired(true);
                     break;
+
                 default:
-                    System.out.println(messageString);
+                    //System.out.println(messageString);
                     break;
             }
+            System.out.println(messageString);
         }
     }
 }

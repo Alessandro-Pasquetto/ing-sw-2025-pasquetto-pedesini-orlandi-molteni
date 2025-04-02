@@ -21,12 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GameController {
 
     // =======================
-    // ATTRIBUTES
-    // =======================
-
-    private static final AtomicInteger currentIdGame = new AtomicInteger(0);
-
-    // =======================
     // OTHER METHODS
     // =======================
 

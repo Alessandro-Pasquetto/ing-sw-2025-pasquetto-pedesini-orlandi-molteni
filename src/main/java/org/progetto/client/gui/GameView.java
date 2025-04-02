@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import org.progetto.client.GameData;
+import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.client.connection.rmi.RmiClientSender;
@@ -19,7 +19,7 @@ import org.progetto.client.connection.socket.SocketClient;
 public class GameView {
 
     @FXML
-    private VBox volatileComponent;
+    private VBox handComponentBox;
 
     @FXML
     private GridPane spaceshipMatrix;
@@ -28,8 +28,6 @@ public class GameView {
 
     @FXML
     private Label timerLabel;
-
-    private ImageView handComponent = null;
 
     // Initialize the grid when the view is loaded
     public void initialize() {
@@ -76,42 +74,42 @@ public class GameView {
 
     public void pickHiddenComponent() {
 
-        if(GameData.getTimerExpired()){
+        if(BuildingData.getTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
-        if (handComponent == null) {
+        if (BuildingData.getHandComponent() == null) {
             if (HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
             else
                 RmiClientSender.pickHiddenComponent();
         }
-        else if (GameData.getxHandComponent() != -1){
+        else if (BuildingData.getxHandComponent() != -1){
             if (HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+                SocketClient.placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
             else
-                RmiClientSender.placeHandComponentAndPickHiddenComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent());
+                RmiClientSender.placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
         }
     }
 
     public void pickVisibleComponent() {
 
-        if(GameData.getTimerExpired()){
+        if(BuildingData.getTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
-        if(handComponent == null)
+        if (BuildingData.getHandComponent() == null)
             if(HandlerMessage.getIsSocket())
                 SocketClient.pickHiddenComponent();
             else
                 RmiClientSender.pickHiddenComponent();
-        else if(GameData.getxHandComponent() != -1)
+        else if(BuildingData.getxHandComponent() != -1)
             if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), -1);
+                SocketClient.placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
             else
-                RmiClientSender.placeHandComponentAndPickVisibleComponent(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), -1);
+                RmiClientSender.placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
     }
 
     /**
@@ -121,38 +119,36 @@ public class GameView {
      */
     public void discardComponent() {
 
-        if(GameData.getTimerExpired()){
+        if(BuildingData.getTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
-        if(handComponent != null){
-            if(HandlerMessage.getIsSocket()) {
+        if(BuildingData.getHandComponent() != null){
+            if(HandlerMessage.getIsSocket())
                 SocketClient.discardComponent();
-            }
-            else {
+            else
                 RmiClientSender.discardComponent();
-            }
 
             removeHandComponent();
         }
     }
 
     private void removeHandComponent() {
-        Node parent = handComponent.getParent();
+        Node parent = BuildingData.getHandComponent().getParent();
 
         if (parent instanceof VBox)
-            volatileComponent.getChildren().remove(handComponent);
+            handComponentBox.getChildren().remove(BuildingData.getHandComponent());
 
         else if (parent instanceof Pane pane)
-            pane.getChildren().remove(handComponent);
+            pane.getChildren().remove(BuildingData.getHandComponent());
 
-        handComponent = null;
+        BuildingData.resetHandComponent();
     }
 
     public void showEventCardDeck(ActionEvent event) {
 
-        if(GameData.getTimerExpired()){
+        if(BuildingData.getTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
@@ -168,38 +164,31 @@ public class GameView {
             default -> -1;
         };
 
-        if(handComponent == null)
+        if(BuildingData.getHandComponent() == null)
             if(HandlerMessage.getIsSocket())
                 SocketClient.pickUpEventCardDeck(idxDeck);
             else
                 RmiClientSender.pickUpEventCardDeck(idxDeck);
-        else
+
+        else if(BuildingData.getxHandComponent() != -1)
             if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
+                SocketClient.placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
             else
-                RmiClientSender.placeHandComponentAndPickUpEventCardDeck(GameData.getxHandComponent(), GameData.getyHandComponent(), GameData.getrHandComponent(), idxDeck);
+                RmiClientSender.placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
     }
 
     // Generate a draggable component with an image
     public void generateComponent(String imgComponent) {
-        GameData.resetHandComponent();
 
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgComponent)));
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(100);
         imageView.setFitHeight(100);
 
-        System.out.println("x: " + GameData.getxHandComponent() + " y: " + GameData.getyHandComponent());
-
-        if (handComponent != null) {
-            DragAndDrop.disableDragAndDrop(handComponent);
-        }
-
-        DragAndDrop.makeDraggable(imageView);
-        handComponent = imageView;
+        BuildingData.setNewHandComponent(imageView);
 
         Platform.runLater(() -> {
-            volatileComponent.getChildren().add(imageView);
+            handComponentBox.getChildren().add(BuildingData.getHandComponent());
         });
     }
 
@@ -216,13 +205,13 @@ public class GameView {
 
     public void rotateComponent() {
 
-        if(GameData.getTimerExpired()){
+        if(BuildingData.getTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
-        handComponent.setRotate(handComponent.getRotate() + 90);
-        GameData.rotateComponent();
+        if(BuildingData.getHandComponent() != null)
+            BuildingData.rotateComponent();
     }
 
     public void insertCentralUnitComponent(String imgSrcCentralUnit, int levelShip) {

@@ -14,7 +14,7 @@
     <stylesheets>
         <URL value="@style/game_style.css" />
     </stylesheets>
-    <VBox fx:id="volatileComponent" alignment="CENTER" layoutX="190.0" layoutY="160.0" prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;"> </VBox>
+    <VBox fx:id="handComponentBox" alignment="CENTER" layoutX="190.0" layoutY="160.0" prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;"> </VBox>
 
     <GridPane fx:id="spaceshipMatrix" gridLinesVisible="true" layoutX="290.0" layoutY="160.0"> </GridPane>
 

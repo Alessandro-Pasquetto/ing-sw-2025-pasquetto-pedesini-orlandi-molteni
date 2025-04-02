@@ -32,4 +32,6 @@ module org.progetto{
     opens org.progetto.server.connection to com.google.gson, javafx.fxml;
     exports org.progetto.server.connection.games;
     opens org.progetto.server.connection.games to com.google.gson, javafx.fxml;
+    exports org.progetto.client.model;
+    opens org.progetto.client.model to com.google.gson, javafx.fxml;
 }

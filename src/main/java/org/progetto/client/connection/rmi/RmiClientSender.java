@@ -1,6 +1,6 @@
 package org.progetto.client.connection.rmi;
 
-import org.progetto.client.GameData;
+import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.server.connection.rmi.VirtualServer;

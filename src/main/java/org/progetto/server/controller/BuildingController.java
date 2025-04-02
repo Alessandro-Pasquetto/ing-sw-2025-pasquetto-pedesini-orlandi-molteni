@@ -1,10 +1,8 @@
 package org.progetto.server.controller;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameCommunicationHandler;
-import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -223,7 +221,8 @@ public class BuildingController {
 
                 gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
                 String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-                sender.sendMessage(new PickedComponentMessage(pickedComponentImg));
+                //sender.sendMessage(new PickedComponentMessage(pickedComponentImg));
+                sender.sendMessage("PickedBookedComponent");
                 gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg),sender);
 
             } catch (IllegalStateException e) {
@@ -316,7 +315,8 @@ public class BuildingController {
         try{
             gameCommunicationHandler.getGame().getPlayers().get(gameCommunicationHandler.getGame().getPlayers().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-            sender.sendMessage(new PickedComponentMessage(imgSrc));
+            //sender.sendMessage(new PickedComponentMessage(imgSrc));
+            sender.sendMessage("PickedBookedComponent");
             gameCommunicationHandler.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc),sender);
 
         } catch (IllegalStateException e) {
