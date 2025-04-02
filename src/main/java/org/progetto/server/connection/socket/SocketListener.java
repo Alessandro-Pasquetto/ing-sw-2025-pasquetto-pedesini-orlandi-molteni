@@ -201,10 +201,7 @@ public class SocketListener extends Thread {
                         default:
                             break;
                     }
-
                 }
-
-
 
                 break;
 

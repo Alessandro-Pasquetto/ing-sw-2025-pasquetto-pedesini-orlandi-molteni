@@ -1,24 +1,26 @@
 package org.progetto.client.connection.rmi;
 
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.connection.HandlerMessage;
 import org.progetto.server.connection.rmi.VirtualServer;
 
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 
-public class RmiClientSender{
+public class RmiClientSender implements Sender {
 
-    private static VirtualServer server = null;
+    private VirtualServer server = null;
+
+    public RmiClientSender() {}
 
     /**
      * Method to connect to the RMI server
      */
-    public static void connect(String serverIp, int serverPort) {
+    @Override
+    public void connect(String serverIp, int serverPort) {
         try {
-            HandlerMessage.setIsSocket(false);
-
             server = (VirtualServer) Naming.lookup("//" + serverIp + ":" + serverPort + "/VirtualServer");
 
             server.connect(RmiClientReceiver.getInstance());
@@ -33,7 +35,8 @@ public class RmiClientSender{
 
     // The following methods call functions implemented in the RmiServerReceiver
 
-    public static void createGame() {
+    @Override
+    public void createGame() {
         System.out.println("You have created a new game");
         try{
             server.createGame(RmiClientReceiver.getInstance(), GameData.getNamePlayer(), 1, 4);
@@ -42,7 +45,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void tryJoinToGame(int idGame) {
+    @Override
+    public void tryJoinToGame(int idGame) {
         try {
             server.joinGame(RmiClientReceiver.getInstance(), idGame, GameData.getNamePlayer());
         } catch (RemoteException e) {
@@ -50,7 +54,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void startGame() {
+    @Override
+    public void startGame() {
         try {
             server.startGame(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
@@ -58,7 +63,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void pickHiddenComponent(){
+    @Override
+    public void pickHiddenComponent(){
         try {
             server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
@@ -66,7 +72,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void pickVisibleComponent(){
+    @Override
+    public void pickVisibleComponent(){
         try {
             server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), -1); // non so dove pescare l'idx :C
         }catch (RemoteException e){
@@ -74,7 +81,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
+    @Override
+    public void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
         try {
             server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
@@ -82,15 +90,17 @@ public class RmiClientSender{
         }
     }
 
-    public static void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx){
+    @Override
+    public void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxVisibleComponent){
         try {
-            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx);
+            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idxVisibleComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
     }
 
-    public static void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx){
+    @Override
+    public void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx){
         try {
             server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx);
         } catch (RemoteException e) {
@@ -98,9 +108,10 @@ public class RmiClientSender{
         }
     }
 
-    public static void placeHandComponentAndPickBookedComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx){
+    @Override
+    public void placeHandComponentAndPickBookedComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxBookedComponent){
         try {
-            server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idx);
+            server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idxBookedComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -111,7 +122,8 @@ public class RmiClientSender{
      *
      * @author Lorenzo
      */
-    public static void discardComponent(){
+    @Override
+    public void discardComponent(){
         try {
             server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
@@ -125,7 +137,8 @@ public class RmiClientSender{
      * @author Lorenzo
      * @param idx is the index were the component will be placed
      */
-    public static void bookComponent(int idx){
+    @Override
+    public void bookComponent(int idx){
         try {
             server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
@@ -139,7 +152,8 @@ public class RmiClientSender{
      * @author Lorenzo
      * @param idx is the index were the component will be picked
      */
-    public static void pickBookedComponent(int idx){
+    @Override
+    public void pickBookedComponent(int idx){
         try {
             server.pickBookedComponent(RmiClientReceiver.getInstance(),GameData.getIdGame(),idx);
         }catch (RemoteException e){
@@ -147,7 +161,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void pickUpEventCardDeck(int deckIdx) {
+    @Override
+    public void pickUpEventCardDeck(int deckIdx) {
         try {
             server.pickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), deckIdx);
         } catch (RemoteException e) {
@@ -155,7 +170,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void putDownEventCardDeck() {
+    @Override
+    public void putDownEventCardDeck() {
         try {
             server.putDownEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
@@ -170,7 +186,8 @@ public class RmiClientSender{
      * @param yComponent
      * @param xComponent
      */
-    public static void destroyComponent(int yComponent, int xComponent){
+    @Override
+    public void destroyComponent(int yComponent, int xComponent){
         try {
             server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(),yComponent,xComponent);
         } catch (RemoteException e) {
@@ -178,7 +195,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void readyPlayer() {
+    @Override
+    public void readyPlayer() {
         try {
             server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
@@ -186,7 +204,8 @@ public class RmiClientSender{
         }
     }
 
-    public static void resetTimer() {
+    @Override
+    public void resetTimer() {
         try {
             server.resetTimer(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
@@ -199,7 +218,8 @@ public class RmiClientSender{
      *
      * @author Lorenzo
      */
-    public static void pickEventCard() {
+    @Override
+    public void pickEventCard() {
         try {
             server.pickEventCard(RmiClientReceiver.getInstance(),GameData.getIdGame());
         } catch (RemoteException e) {
@@ -207,10 +227,22 @@ public class RmiClientSender{
         }
     }
 
-    public static void rollDice() {
+    @Override
+    public void rollDice() {
         try {
             server.rollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void close() {
+        server = null;
+        System.out.println("You have disconnected!");
+        try {
+            PageController.switchScene("connection.fxml", "Page1");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

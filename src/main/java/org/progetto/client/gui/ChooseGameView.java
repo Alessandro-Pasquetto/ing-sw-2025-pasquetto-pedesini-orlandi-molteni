@@ -24,12 +24,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
-            if(HandlerMessage.getIsSocket()) {
-                SocketClient.createNewGame();
-            }
-            else {
-                RmiClientSender.createGame();
-            }
+            GameData.getSender().createGame();
         }
     }
 
@@ -38,10 +33,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
-            if(HandlerMessage.getIsSocket())
-                SocketClient.tryJoinToGame(idGame);
-            else
-                RmiClientSender.tryJoinToGame(idGame);
+            GameData.getSender().tryJoinToGame(idGame);
         }
     }
 

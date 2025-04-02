@@ -5,15 +5,32 @@ import javafx.stage.Stage;
 import org.progetto.client.gui.PageController;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class MainClient extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Scanner scanner = new Scanner(System.in);
 
-        PageController.setStage(stage);
+        System.out.println("Select TUI/GUI:");
 
-        PageController.start();
+        while(true){
+            String command = scanner.nextLine().toUpperCase();
+
+            if(command.equals("TUI")){
+                TuiCommandFilter.setProtocol();
+                TuiCommandFilter.listenCommand();
+                break;
+
+            }else if(command.equals("GUI")){
+                PageController.setStage(stage);
+                PageController.start();
+                break;
+
+            }else
+                System.out.println("Command not found");
+        }
     }
 
     public static void main(String[] args) {

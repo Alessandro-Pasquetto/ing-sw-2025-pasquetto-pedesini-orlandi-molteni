@@ -57,8 +57,11 @@ public class TimerController {
     public void startTimer() {
 
         new Thread(() -> {
+            int currentTimer = timer;
             while (true) {
-                int currentTimer;
+
+                System.out.println("Timer: " + currentTimer);
+                gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
 
                 synchronized (this) {
                     if (timer <= 0)
@@ -67,9 +70,6 @@ public class TimerController {
                     timer--;
                     currentTimer = timer;
                 }
-
-                System.out.println("Timer: " + currentTimer);
-                gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
 
                 try {
                     Thread.sleep(1000);

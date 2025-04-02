@@ -1,5 +1,6 @@
 package org.progetto.client.connection.socket;
 
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.connection.HandlerMessage;
@@ -13,13 +14,17 @@ import java.rmi.RemoteException;
 /**
  * Handles the invocation of methods on the server
  */
-public class SocketClient {
+public class SocketClient implements Sender {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private static Socket socket;
+    private Socket socket;
+
+    public SocketClient() {
+        socket = null;
+    }
 
     // =======================
     // OTHER METHODS
@@ -28,9 +33,9 @@ public class SocketClient {
     /**
      * Method to connect to the socket server
      */
-    public static void connect(String serverIp, int port) {
+    @Override
+    public void connect(String serverIp, int port) {
         try{
-            HandlerMessage.setIsSocket(true);
 
             if (!isSocketServerReachable(serverIp, port)) {
                 System.out.println("Error: The port " + port + " is not available for socket connection");
@@ -53,7 +58,8 @@ public class SocketClient {
     /**
      * Check if the port is open for a socket communication
      */
-    public static boolean isSocketServerReachable(String serverIp, int port) {
+
+    public boolean isSocketServerReachable(String serverIp, int port) {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(serverIp, port), 200);
             socket.setSoTimeout(200);
@@ -66,86 +72,118 @@ public class SocketClient {
         }
     }
 
-    public static void createNewGame() {
+    @Override
+    public void createGame() {
         SocketWriter.sendMessage(new CreateGameMessage(1, 4, GameData.getNamePlayer()));
     }
 
-    public static void tryJoinToGame(int idGame){
+    @Override
+    public void tryJoinToGame(int idGame){
         SocketWriter.sendMessage(new JoinGameMessage(idGame, GameData.getNamePlayer()));
     }
 
-    public static void startGame(){
+    @Override
+    public void startGame(){
         SocketWriter.sendMessage("StartGame");
     }
 
-    public static void pickHiddenComponent(){
+    @Override
+    public void pickHiddenComponent(){
         SocketWriter.sendMessage("PickHiddenComponent");
     }
 
-    public static void pickVisibleComponent(){
+    @Override
+    public void pickVisibleComponent(){
         SocketWriter.sendMessage("PickVisibleComponent");
     }
 
-    public static void placeHandComponentAndPickHiddenComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+    @Override
+    public void placeHandComponentAndPickHiddenComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickHiddenComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
-    public static void placeHandComponentAndPickVisibleComponent(int xHandComponent, int yHandComponent, int rHandComponent, int componentIdx) {
+    @Override
+    public void placeHandComponentAndPickVisibleComponent(int xHandComponent, int yHandComponent, int rHandComponent, int componentIdx) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickVisibleComponentMessage(xHandComponent, yHandComponent, rHandComponent, componentIdx));
     }
 
-    public static void placeHandComponentAndPickUpEventCardDeck(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
+    @Override
+    public void placeHandComponentAndPickUpEventCardDeck(int xHandComponent, int yHandComponent, int rHandComponent, int idxDeck) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickUpEventCardDeckMessage(xHandComponent, yHandComponent, rHandComponent, idxDeck));
     }
 
-    public static void placeHandComponentAndPickBookedComponent(int xHandComponent, int yHandComponent, int rHandComponent, int idx) {
+    @Override
+    public void placeHandComponentAndPickBookedComponent(int xHandComponent, int yHandComponent, int rHandComponent, int idx) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickBookedComponentMessage(xHandComponent, yHandComponent, rHandComponent, idx));
     }
 
-    public static void discardComponent(){
+    @Override
+    public void discardComponent(){
         SocketWriter.sendMessage("DiscardComponent");
     }
 
-    public static void pickUpEventCardDeck(int idxDeck){
+    @Override
+    public void pickUpEventCardDeck(int idxDeck){
         SocketWriter.sendMessage(new PickUpEventCardDeckMessage(idxDeck));
     }
 
-    public static void putDownEventCardDeck(){
+    @Override
+    public void putDownEventCardDeck(){
         SocketWriter.sendMessage("PutDownEventCardDeck");
     }
 
-    public static void destroyComponent(int yComponent, int xComponent){
+    @Override
+    public void destroyComponent(int yComponent, int xComponent){
         SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
     }
-    public static void bookComponent(int idx){
+
+    @Override
+    public void readyPlayer() {
+
+    }
+
+    @Override
+    public void bookComponent(int idx){
         SocketWriter.sendMessage(new BookComponentMessage(idx));
     }
-    public static void pickBookedComponent(int idx){
+
+    @Override
+    public void pickBookedComponent(int idx){
         SocketWriter.sendMessage(new PickBookedComponentMessage(idx));
     }
 
-    public static void pickEventCard() throws RemoteException {
+    @Override
+    public void pickEventCard() {
         SocketWriter.sendMessage("PickEventCard");
     }
 
-    static void playerReady() {
+    void playerReady() {
         SocketWriter.sendMessage("Ready");
     }
 
-    public static void resetTimer(){
+    @Override
+    public void resetTimer(){
         SocketWriter.sendMessage("ResetTimer");
     }
 
-    static void rollDice() {
+    @Override
+    public void rollDice() {
         SocketWriter.sendMessage("RollDice");
     }
 
-    static void close() throws IOException {
+    @Override
+    public void close() {
         SocketListener.stopListener();
         SocketWriter.stopWriter();
-        socket.close();
-        System.out.println("You have disconnected!");
+        try {
+            socket.close();
 
-        PageController.switchScene("connection.fxml", "Page1");
+            System.out.println("You have disconnected!");
+
+            PageController.switchScene("connection.fxml", "Page1");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

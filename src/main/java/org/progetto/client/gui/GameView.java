@@ -14,6 +14,7 @@ import org.progetto.client.MainClient;
 import org.progetto.client.connection.HandlerMessage;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.client.model.GameData;
 
 
 public class GameView {
@@ -66,10 +67,7 @@ public class GameView {
 
     // Method to start the game
     public void startGame() {
-        if(HandlerMessage.getIsSocket())
-            SocketClient.startGame();
-        else
-            RmiClientSender.startGame();
+        GameData.getSender().startGame();
     }
 
     public void pickHiddenComponent() {
@@ -80,16 +78,11 @@ public class GameView {
         }
 
         if (BuildingData.getHandComponent() == null) {
-            if (HandlerMessage.getIsSocket())
-                SocketClient.pickHiddenComponent();
-            else
-                RmiClientSender.pickHiddenComponent();
+            GameData.getSender().pickHiddenComponent();
         }
         else if (BuildingData.getxHandComponent() != -1){
-            if (HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
-            else
-                RmiClientSender.placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
+
+            GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
         }
     }
 
@@ -101,15 +94,10 @@ public class GameView {
         }
 
         if (BuildingData.getHandComponent() == null)
-            if(HandlerMessage.getIsSocket())
-                SocketClient.pickHiddenComponent();
-            else
-                RmiClientSender.pickHiddenComponent();
+            GameData.getSender().pickHiddenComponent();
+
         else if(BuildingData.getxHandComponent() != -1)
-            if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
-            else
-                RmiClientSender.placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
+            GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
     }
 
     /**
@@ -125,10 +113,7 @@ public class GameView {
         }
 
         if(BuildingData.getHandComponent() != null){
-            if(HandlerMessage.getIsSocket())
-                SocketClient.discardComponent();
-            else
-                RmiClientSender.discardComponent();
+            GameData.getSender().discardComponent();
 
             removeHandComponent();
         }
@@ -165,16 +150,10 @@ public class GameView {
         };
 
         if(BuildingData.getHandComponent() == null)
-            if(HandlerMessage.getIsSocket())
-                SocketClient.pickUpEventCardDeck(idxDeck);
-            else
-                RmiClientSender.pickUpEventCardDeck(idxDeck);
+            GameData.getSender().pickUpEventCardDeck(idxDeck);
 
         else if(BuildingData.getxHandComponent() != -1)
-            if(HandlerMessage.getIsSocket())
-                SocketClient.placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
-            else
-                RmiClientSender.placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
+            GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
     }
 
     // Generate a draggable component with an image
@@ -246,9 +225,6 @@ public class GameView {
     }
 
     public void resetTimer() {
-        if(HandlerMessage.getIsSocket())
-            SocketClient.resetTimer();
-        else
-            RmiClientSender.resetTimer();
+        GameData.getSender().resetTimer();
     }
 }

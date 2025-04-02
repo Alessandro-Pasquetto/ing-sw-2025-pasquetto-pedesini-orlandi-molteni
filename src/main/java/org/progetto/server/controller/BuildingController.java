@@ -126,10 +126,10 @@ public class BuildingController {
      * @param yPlaceComponent
      * @param xPlaceComponent
      * @param rPlaceComponent
-     * @param componentIdx
+     * @param idxVisibleComponent
      * @param sender
      */
-    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
 
         if(gameManager.timerExpired()){
             sender.sendMessage("TimerExpired");
@@ -142,7 +142,7 @@ public class BuildingController {
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
-                gameManager.getGame().pickVisibleComponent(componentIdx, player);
+                gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
                 sender.sendMessage(new PickedComponentMessage(pickedComponent.getImgSrc()));
 

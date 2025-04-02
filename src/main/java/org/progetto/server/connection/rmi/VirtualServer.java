@@ -15,7 +15,7 @@ public interface VirtualServer extends Remote {
     void pickHiddenComponent(VirtualClient virtualClient, int idGame) throws RemoteException;
     void pickVisibleComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException;
     void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException;
-    void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException;
+    void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxVisibleComponent) throws RemoteException;
     void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException;
     void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx) throws RemoteException;
     void discardComponent(VirtualClient virtualClient,int idGame) throws RemoteException;

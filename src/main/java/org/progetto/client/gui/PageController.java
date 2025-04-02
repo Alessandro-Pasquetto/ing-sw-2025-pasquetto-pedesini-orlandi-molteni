@@ -21,7 +21,7 @@ public class PageController {
     // =======================
 
     private static Stage stage;
-    private static ConnetionView connetionView;
+    private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
     private static CreateGameView createGameView;
     private static GameView gameView;
@@ -34,8 +34,8 @@ public class PageController {
         return stage;
     }
 
-    public static ConnetionView getConnetionView() {
-        return connetionView;
+    public static ConnectionView getConnetionView() {
+        return connectionView;
     }
 
     public static ChooseGameView getChooseGameView() {
@@ -58,8 +58,8 @@ public class PageController {
         PageController.stage = stage;
     }
 
-    public static void setConnetionView(ConnetionView connetionView) {
-        PageController.connetionView = connetionView;
+    public static void setConnectionView(ConnectionView connectionView) {
+        PageController.connectionView = connectionView;
     }
 
     public static void setChooseGameView(ChooseGameView chooseGameView) {
@@ -96,7 +96,7 @@ public class PageController {
             // Save the controller
             switch (fxmlFile){
                 case "connection.fxml":
-                    connetionView = fxmlLoader.getController();
+                    connectionView = fxmlLoader.getController();
                     break;
                 case "chooseGame.fxml":
                     chooseGameView = fxmlLoader.getController();

@@ -6,8 +6,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
+import org.progetto.client.model.GameData;
 
-public class ConnetionView {
+public class ConnectionView {
 
     @FXML
     private TextField serverIpTextField;
@@ -44,11 +45,12 @@ public class ConnetionView {
         try {
             int serverPort = Integer.parseInt(serverPortString);
 
-            if (socketOption.isSelected()) {
-                SocketClient.connect(serverIp, serverPort);
-            } else if (rmiOption.isSelected()) {
-                RmiClientSender.connect(serverIp, serverPort);
-            }
+            if (socketOption.isSelected())
+                GameData.setSender(new SocketClient());
+            else if (rmiOption.isSelected())
+                GameData.setSender(new RmiClientSender());
+
+            GameData.getSender().connect(serverIp, serverPort);
 
         }catch (NumberFormatException e) {
             System.out.println("Errore: Porta non valida.");

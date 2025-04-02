@@ -1,7 +1,6 @@
 package org.progetto.client.model;
 
-import javafx.scene.image.ImageView;
-import org.progetto.client.gui.DragAndDrop;
+import org.progetto.client.connection.Sender;
 
 /**
  * Client data useful to track game evolution
@@ -13,12 +12,17 @@ public class GameData {
     // =======================
 
     // Client data that I want to store
+    private static Sender sender;
     private static int idGame;
     private static String namePlayer;
 
     // =======================
     // GETTERS
     // =======================
+
+    public static Sender getSender() {
+        return sender;
+    }
 
     public static int getIdGame() {
         return idGame;
@@ -31,6 +35,10 @@ public class GameData {
     // =======================
     // SETTERS
     // =======================
+
+    public static void setSender(Sender sender) {
+        GameData.sender = sender;
+    }
 
     public static void setIdGame(int idGame) {
         GameData.idGame = idGame;

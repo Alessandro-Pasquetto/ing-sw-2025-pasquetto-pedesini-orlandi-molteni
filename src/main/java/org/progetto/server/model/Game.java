@@ -327,10 +327,10 @@ public class Game {
      * Takes a component from the discarded/visible ones and assigns it to handComponent
      *
      * @author Alessandro
-     * @param indexComponent Is the index of the visible component picked
+     * @param idxVisibleComponent Is the index of the visible component picked
      * @param player Is the player who is picking
      */
-    public void pickVisibleComponent(int indexComponent, Player player) throws IllegalStateException{
+    public void pickVisibleComponent(int idxVisibleComponent, Player player) throws IllegalStateException{
         Component pickedComponent = null;
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -339,9 +339,9 @@ public class Game {
             throw new IllegalStateException("FullHandComponent");
 
         synchronized (visibleComponentDeck) {
-            if(indexComponent >= visibleComponentDeck.size())
+            if(idxVisibleComponent >= visibleComponentDeck.size())
                 throw new IllegalStateException("IllegalIndexComponent");
-            pickedComponent = visibleComponentDeck.remove(indexComponent);
+            pickedComponent = visibleComponentDeck.remove(idxVisibleComponent);
         }
 
         buildingBoard.setHandComponent(pickedComponent);

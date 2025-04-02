@@ -9,9 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
-import org.progetto.client.connection.HandlerMessage;
-import org.progetto.client.connection.rmi.RmiClientSender;
-import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.client.model.GameData;
 
 public class DragAndDrop {
 
@@ -138,16 +136,12 @@ public class DragAndDrop {
 
         // If the drop was inside a cell
         if (droppedInCell) {
-            System.out.println("x: " + BuildingData.getxHandComponent() + " y: " + BuildingData.getyHandComponent());
 
             // If the drop was inside a booking cell
             if(BuildingData.getyHandComponent() == -1){
                 imageView.setRotate(imageView.getRotate() - 90 * BuildingData.getrHandComponent());
 
-                if(HandlerMessage.getIsSocket())
-                    SocketClient.bookComponent(BuildingData.getxHandComponent());
-                else
-                    RmiClientSender.bookComponent(BuildingData.getxHandComponent());
+                GameData.getSender().bookComponent(BuildingData.getxHandComponent());
 
                 // Set his pressFunction
                 imageView.setOnMousePressed(event2 -> {
@@ -167,16 +161,10 @@ public class DragAndDrop {
                                 Integer colIndex = GridPane.getColumnIndex(cell);
 
                                 if(BuildingData.getHandComponent() == null){
-                                    if(HandlerMessage.getIsSocket())
-                                        SocketClient.pickBookedComponent(colIndex);
-                                    else
-                                        RmiClientSender.pickBookedComponent(colIndex);;
+                                    GameData.getSender().pickBookedComponent(colIndex);
 
                                 }else if(BuildingData.getxHandComponent() != -1) {
-                                    if(HandlerMessage.getIsSocket())
-                                        SocketClient.placeHandComponentAndPickBookedComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), colIndex);
-                                    else
-                                        RmiClientSender.placeHandComponentAndPickBookedComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), colIndex);
+                                    GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), colIndex);
                                 }
 
                                 break;

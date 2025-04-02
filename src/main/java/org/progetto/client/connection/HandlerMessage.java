@@ -13,16 +13,6 @@ import java.util.ArrayList;
  */
 public class HandlerMessage {
 
-    private static boolean isSocket = false;
-
-    public static boolean getIsSocket() {
-        return isSocket;
-    }
-
-    public static void setIsSocket(boolean isSocket) {
-        HandlerMessage.isSocket = isSocket;
-    }
-
     /**
      * Method that handles the messages coming from the server
      *
@@ -89,10 +79,9 @@ public class HandlerMessage {
                     break;
 
                 default:
-                    //System.out.println(messageString);
+                    System.out.println(messageString);
                     break;
             }
-            System.out.println(messageString);
         }
     }
 }
