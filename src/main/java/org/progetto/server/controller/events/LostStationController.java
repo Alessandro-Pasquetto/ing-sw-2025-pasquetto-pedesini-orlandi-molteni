@@ -62,7 +62,7 @@ public class LostStationController {
      * @author Lorenzo
      * @throws RemoteException
      */
-    private void askForLand() throws RemoteException {
+    private void askForLand() throws RemoteException,IllegalStateException {
 
         if(Objects.equals(phase, "ASK_FOR_LAND")) {
 
@@ -89,7 +89,7 @@ public class LostStationController {
                 }
 
             }catch (ArrayIndexOutOfBoundsException e) {
-                throw new RemoteException("AllPlayersChecked");
+                throw new IllegalStateException("AllPlayersChecked");
             }
         }
     }
@@ -137,25 +137,37 @@ public class LostStationController {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException {
+    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException,IllegalStateException {
 
-        if(Objects.equals(phase, "CHOOSE_BOX")) {
+        if (Objects.equals(phase, "CHOOSE_BOX")) {
 
             box_chosen = true;
 
-            Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
-            BoxStorage storage = (BoxStorage) matrix[y][x];
 
-            lostStation.chooseRewardBox(player.getSpaceship(),storage,idx,box);
+            try {
+                Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                BoxStorage storage = (BoxStorage) matrix[y][x];
 
-            rewardBoxes.remove(box);
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-            sender.sendMessage("BoxChosen");
 
-            if(!rewardBoxes.isEmpty()) {
-                phase = "CHOOSE_BOX";
+                lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
+
+                if (!rewardBoxes.remove(box)) {
+                    sender.sendMessage("ChosenBoxNotAvailable");
+
+                } else {
+                    sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                    sender.sendMessage("BoxChosen");
+                }
+
+            } catch (ClassCastException e) {
+                throw new IllegalStateException("ComponentIsNotAStorage");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new IllegalStateException("ComponentIsNotInMatrix");
             }
 
+            if (!rewardBoxes.isEmpty()) {    //andrà gestita meglio la sequenza delle fasi
+                phase = "CHOOSE_BOX";
+            }
         }
     }
 
@@ -164,7 +176,7 @@ public class LostStationController {
      *
      * @author Lorenzo
      */
-    public void eventEffect() throws RemoteException {
+    public void eventEffect() throws RemoteException {   //evento esterno, come gesitsco la sequenza di fasi?
 
         if(box_chosen) {
 
