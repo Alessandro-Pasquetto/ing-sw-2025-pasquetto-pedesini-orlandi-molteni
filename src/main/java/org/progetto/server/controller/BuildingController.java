@@ -406,7 +406,7 @@ public class BuildingController {
             String imgSrc = buildingBoard.getHandComponent().getImgSrc();
             buildingBoard.destroyComponent(yComponent,xComponent);
 
-            sender.sendMessage("ComponentDestroyed");  //forse da aggiungere un messaggio con parametri
+            sender.sendMessage("ComponentDestroyed");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponent(player,yComponent,xComponent), sender);
 
         } catch (IllegalStateException e) {
