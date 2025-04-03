@@ -16,7 +16,7 @@ import org.progetto.server.model.events.Slavers;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class LostShipController {
+public class LostShipController extends EventControllerAbstract  {
 
     // =======================
     // ATTRIBUTES
@@ -50,6 +50,7 @@ public class LostShipController {
      * @author Stefano
      * @throws RemoteException
      */
+    @Override
     public void start() throws RemoteException {
         phase = "ASK_TO_LAND";
         askToLand();
