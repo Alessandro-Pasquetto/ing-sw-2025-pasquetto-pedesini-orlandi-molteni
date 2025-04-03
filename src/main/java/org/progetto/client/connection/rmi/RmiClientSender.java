@@ -213,20 +213,6 @@ public class RmiClientSender implements Sender {
         }
     }
 
-    /**
-     * Allows client to call for the pickEventCard method on RMI server
-     *
-     * @author Lorenzo
-     */
-    @Override
-    public void pickEventCard() {
-        try {
-            server.pickEventCard(RmiClientReceiver.getInstance(),GameData.getIdGame());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public void rollDice() {
         try {

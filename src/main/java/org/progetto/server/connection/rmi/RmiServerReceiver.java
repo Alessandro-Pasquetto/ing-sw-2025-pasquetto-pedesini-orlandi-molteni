@@ -23,7 +23,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer{
 
     // =======================
-    // ATTRIBUTES
+    // CONSTRUCTORS
     // =======================
 
     protected RmiServerReceiver() throws RemoteException {
@@ -324,20 +324,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.resetTimer(gameManager, virtualClient);
     }
 
-    /**
-     * Allows client to call for pickEventCard with RMI in server proxy
-     * @author Lorenzo
-     * @param virtualClient is the interface we want to address
-     * @param idGame is the game instances were the card will be picked
-     * @throws RemoteException if an exception is called in the inner methods
-     */
-    @Override
-    public void pickEventCard(VirtualClient virtualClient, int idGame) throws RemoteException {
-
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        EventController.pickEventCard(gameManager, virtualClient);
-    }
-
     @Override
     public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
@@ -350,6 +336,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        EventController.rollDice(gameManager, player, virtualClient);
+        gameManager.getEventController().rollDice(player, virtualClient);
     }
 }

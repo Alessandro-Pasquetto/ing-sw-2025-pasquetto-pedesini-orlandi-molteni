@@ -26,9 +26,10 @@ public class Stardust extends EventCard {
      * @param board Game board
      * @param player Current player
      */
-    public void penalty(Board board, Player player) {
+    public int penalty(Board board, Player player) {
         int exposedConnectorsCount = player.getSpaceship().getExposedConnectorsCount();
         board.movePlayerByDistance(player, Math.negateExact(exposedConnectorsCount));
+        return exposedConnectorsCount;
     }
 
     // TODO: The controller call penalty() for each player.

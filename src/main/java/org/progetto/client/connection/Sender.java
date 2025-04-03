@@ -39,8 +39,6 @@ public interface Sender {
 
     void resetTimer();
 
-    void pickEventCard();
-
     void rollDice();
 
     void close();

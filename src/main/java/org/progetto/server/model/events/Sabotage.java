@@ -68,11 +68,13 @@ public class Sabotage extends EventCard {
     public boolean penalty(int y, int x, Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
-        if (spaceshipMatrix[y][x] != null) {
-            player.getSpaceship().getBuildingBoard().destroyComponent(y, x);
-            return true;
+        if (y >= 0 && y < spaceshipMatrix.length && x >= 0 && x < spaceshipMatrix[0].length) {
+            if (spaceshipMatrix[y][x] != null) {
+                player.getSpaceship().getBuildingBoard().destroyComponent(y, x);
+                return true;
+            }
         }
-        else return false;
+        return false;
     }
 
     // TODO: The controller calls lessPopulatedSpaceship() and it return the player with the less crew.

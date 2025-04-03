@@ -130,8 +130,8 @@ class SpaceshipTest {
 
         assertEquals(0, spaceship.getNormalEnginePower());
 
-        spaceship.addNormalEnginePower(3.5f);
-        assertEquals(3.5f, spaceship.getNormalEnginePower());
+        spaceship.addNormalEnginePower(4);
+        assertEquals(4, spaceship.getNormalEnginePower());
     }
 
     @Test
@@ -356,12 +356,12 @@ class SpaceshipTest {
         assertEquals(2, spaceship.getNormalEnginePower());
 
         //adds one point five engine power to NormalEnginePower in level 1 ship
-        spaceship.addNormalEnginePower(1.5f);
-        assertEquals(3.5, spaceship.getNormalEnginePower());
+        spaceship.addNormalEnginePower(2);
+        assertEquals(4, spaceship.getNormalEnginePower());
 
         //removes two engine power to NormalEnginePower in level 1 ship
         spaceship.addNormalEnginePower(-2);
-        assertEquals(1.5, spaceship.getNormalEnginePower());
+        assertEquals(2, spaceship.getNormalEnginePower());
 
         Spaceship spaceship2 = new Spaceship(2,3);
 
@@ -370,11 +370,11 @@ class SpaceshipTest {
         assertEquals(2, spaceship2.getNormalEnginePower());
 
         //adds three point five engine power to NormalEnginePower in level 2 ship
-        spaceship2.addNormalEnginePower(3.5f);
-        assertEquals(5.5, spaceship2.getNormalEnginePower());
+        spaceship2.addNormalEnginePower(3);
+        assertEquals(5, spaceship2.getNormalEnginePower());
 
         //removes three point five engine power to NormalEnginePower in level 2 ship
-        spaceship2.addNormalEnginePower(-3.5f);
+        spaceship2.addNormalEnginePower(-3);
         assertEquals(2, spaceship2.getNormalEnginePower());
     }
 

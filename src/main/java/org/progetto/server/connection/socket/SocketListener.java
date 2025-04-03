@@ -190,13 +190,8 @@ public class SocketListener extends Thread {
                 break;
 
             case TRAVEL:
-
                 if(messageObj instanceof String messageString) {
-
                     switch (messageString){
-                        case "PickEventCard":
-                            EventController.pickEventCard(gameManager,socketWriter);
-                            break;
 
                         default:
                             break;
@@ -209,7 +204,7 @@ public class SocketListener extends Thread {
                 if (messageObj instanceof String messageString) {
                     switch (messageString){
                         case "RollDice":
-                            EventController.rollDice(gameManager, player, socketWriter);
+                            gameManager.getEventController().rollDice(player, socketWriter);
                             break;
 
                         default:

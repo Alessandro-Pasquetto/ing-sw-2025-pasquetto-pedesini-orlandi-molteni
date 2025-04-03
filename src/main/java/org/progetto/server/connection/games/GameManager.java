@@ -6,6 +6,7 @@ import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.EpidemicController;
+import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.controller.events.OpenSpaceController;
 import org.progetto.server.controller.events.StardustController;
 import org.progetto.server.model.Game;
@@ -30,10 +31,8 @@ public class GameManager {
     private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
 
     private final Game game;
-    private EventController eventController;
+    private EventControllerAbstract eventController;
     private final TimerController timer;
-
-    private int diceResult;
 
     // =======================
     // CONSTRUCTORS
@@ -74,7 +73,7 @@ public class GameManager {
         return game;
     }
 
-    public EventController getEventController() {
+    public EventControllerAbstract getEventController() {
         return eventController;
     }
 
@@ -101,10 +100,6 @@ public class GameManager {
                 return entry.getKey();
         }
         throw new IllegalStateException("PlayerNotFound");
-    }
-
-    public int getDiceResult() {
-        return diceResult;
     }
 
     // =======================
@@ -198,9 +193,5 @@ public class GameManager {
 
     public void startTimer() {
         timer.startTimer();
-    }
-
-    public void setDiceResult(int diceResult) {
-        this.diceResult = diceResult;
     }
 }

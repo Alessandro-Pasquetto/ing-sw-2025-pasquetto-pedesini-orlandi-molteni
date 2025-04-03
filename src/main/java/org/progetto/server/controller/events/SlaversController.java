@@ -5,7 +5,6 @@ import org.progetto.messages.toClient.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
@@ -17,7 +16,7 @@ import org.progetto.server.model.events.Slavers;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class SlaversController {
+public class SlaversController extends EventControllerAbstract {
 
     // =======================
     // ATTRIBUTES
@@ -28,9 +27,8 @@ public class SlaversController {
     private int currPlayer;
     private ArrayList<Player> activePlayers;
     private float playerFirePower;
-    private int requestedNumber;
+    private int requestedBatteries;
     private int requestedCrew;
-
 
     // =======================
     // CONSTRUCTORS
@@ -42,7 +40,7 @@ public class SlaversController {
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();;
         this.playerFirePower = 0;
-        this.requestedNumber = 0;
+        this.requestedBatteries = 0;
         this.requestedCrew = 0;
     }
 
@@ -56,6 +54,7 @@ public class SlaversController {
      * @author Stefano
      * @throws RemoteException
      */
+    @Override
     public void start() throws RemoteException {
         phase = "ASK_CANNONS";
         askHowManyCannonsToUse();
@@ -72,12 +71,27 @@ public class SlaversController {
 
             Player player = activePlayers.get(currPlayer);
 
-            Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
-            if (slavers.battleResult(player, player.getSpaceship().getNormalShootingPower()) == 1){
-                phase = "EVENT_EFFECT";
-                eventEffect();
+            // Retrieves sender reference
+            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
+            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
+
+            Sender sender = null;
+
+            if (socketWriter != null) {
+                sender = socketWriter;
+            } else if (virtualClient != null) {
+                sender = virtualClient;
             }
 
+            Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
+
+            // Checks if players is able to win without double cannons
+            if (slavers.battleResult(player, player.getSpaceship().getNormalShootingPower()) == 1) {
+                phase = "REWARD_DECISION";
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDays(slavers.getRewardCredits(), slavers.getPenaltyDays()));
+            }
+
+            // Calculates max number of double cannons usable
             int doubleFireCount = player.getSpaceship().getDoubleCannonCount();
             int batteriesCount = player.getSpaceship().getBatteriesCount();
             int maxUsable;
@@ -93,19 +107,9 @@ public class SlaversController {
                 playerFirePower = player.getSpaceship().getNormalShootingPower();
 
                 phase = "BATTLE_RESULT";
+                battleResult(player, sender);
 
             } else {
-                SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-                VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-                Sender sender = null;
-
-                if (socketWriter != null) {
-                    sender = socketWriter;
-                } else if (virtualClient != null) {
-                    sender = virtualClient;
-                }
-
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
 
                 phase = "CANNON_NUMBER";
@@ -135,7 +139,7 @@ public class SlaversController {
                     phase = "BATTLE_RESULT";
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
-                    requestedNumber = num;
+                    requestedBatteries = num;
                     playerFirePower = player.getSpaceship().getNormalShootingPower() + 2 * num;
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
@@ -179,14 +183,14 @@ public class SlaversController {
 
                     // Checks if a battery has been discarded
                     if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedNumber--;
+                        requestedBatteries--;
                         sender.sendMessage("BatteryDiscarded");
 
-                        if (requestedNumber == 0) {
+                        if (requestedBatteries == 0) {
                             phase = "BATTLE_RESULT";
 
                         } else {
-                            sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
                         }
 
                     } else {
@@ -224,11 +228,13 @@ public class SlaversController {
                 Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
+                        phase = "REWARD_DECISION";
                         sender.sendMessage(new AcceptRewardCreditsAndPenaltyDays(slavers.getRewardCredits(), slavers.getPenaltyDays()));
-                        phase = "GET_RESPONSE";
+                        break;
 
                     case -1:
                         phase = "PENALTY_EFFECT";
+                        break;
 
                     case 0:
                         // Next player
@@ -236,7 +242,11 @@ public class SlaversController {
                             currPlayer++;
                             phase = "ASK_CANNONS";
                             askHowManyCannonsToUse();
+                        } else {
+                            phase = "END";
+                            end();
                         }
+                        break;
                 }
 
             } else {
@@ -249,14 +259,14 @@ public class SlaversController {
     }
 
     /**
-     * if the player is defeated he suffers the penalty
+     * If the player is defeated he suffers the penalty
      *
      * @author Stefano
      * @param player
      * @param sender
      * @throws RemoteException
      */
-    public void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (phase.equals("PENALTY_EFFECT")) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -277,7 +287,7 @@ public class SlaversController {
     }
 
     /**
-     * Receives the coordinates of HousingUnit component from which remove a battery
+     * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
      * @param player
@@ -309,6 +319,9 @@ public class SlaversController {
                                 currPlayer++;
                                 phase = "ASK_CANNONS";
                                 askHowManyCannonsToUse();
+                            } else {
+                                phase = "END";
+                                end();
                             }
 
                         } else {
@@ -341,16 +354,25 @@ public class SlaversController {
      * @param sender
      * @throws RemoteException
      */
-    public void getResponse(Player player, String response, Sender sender) throws RemoteException {
-        String upperCaseResponse = response.toUpperCase();
-        switch (upperCaseResponse) {
-            case "YES":
-                phase = "EVENT_EFFECT";
-                eventEffect();
-            case "NO":
-                phase = "END";
-                endEvent();
-            default: sender.sendMessage("IncorrectResponse");
+    public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
+        if (phase.equals("REWARD_DECISION")) {
+            String upperCaseResponse = response.toUpperCase();
+
+            switch (upperCaseResponse) {
+                case "YES":
+                    phase = "EVENT_EFFECT";
+                    eventEffect();
+                    break;
+
+                case "NO":
+                    phase = "END";
+                    end();
+                    break;
+
+                default:
+                    sender.sendMessage("IncorrectResponse");
+                    break;
+            }
         }
     }
 
@@ -368,6 +390,7 @@ public class SlaversController {
             // Event effect applied for single player
             slavers.rewardPenalty(gameManager.getGame().getBoard(), player);
 
+            // Retrieves sender reference
             SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
             VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
@@ -379,12 +402,13 @@ public class SlaversController {
                 sender = virtualClient;
             }
 
-            sender.sendMessage(new PlayerMovedBackwardsMessage(slavers.getPenaltyDays()));
+            sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardsMessage(player.getName(), slavers.getPenaltyDays()));
+            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
             LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
 
             phase = "END";
+            end();
         }
     }
 
@@ -394,7 +418,7 @@ public class SlaversController {
      * @author Stefano
      * @throws RemoteException
      */
-    private void endEvent() throws RemoteException {
+    private void end() throws RemoteException {
         if (phase.equals("END")) {
             LobbyController.broadcastLobbyMessage("This event card is finished");
         }

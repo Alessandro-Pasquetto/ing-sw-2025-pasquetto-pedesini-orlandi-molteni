@@ -2,27 +2,27 @@ package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class PlayerMovedBackwardsMessage implements Serializable {
+public class LessPopulatedPlayerMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private int stepsCount;
+    private String playerName;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PlayerMovedBackwardsMessage(int stepsCount) {
-        this.stepsCount = stepsCount;
+    public LessPopulatedPlayerMessage(String playerName) {
+        this.playerName = playerName;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public int getStepsCount() {
-        return stepsCount;
+    public String getPlayerName() {
+        return playerName;
     }
 }

@@ -16,7 +16,7 @@ import org.progetto.server.model.events.OpenSpace;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class OpenSpaceController extends EventController {
+public class OpenSpaceController extends EventControllerAbstract {
 
     // =======================
     // ATTRIBUTES
@@ -48,10 +48,15 @@ public class OpenSpaceController extends EventController {
 
     /**
      * Starts event card effect
+     *
+     * @author Gabriele
      */
+    @Override
     public void start() throws RemoteException {
-        phase = "ASK_ENGINES";
-        askHowManyEnginesToUse();
+        if (phase.equals("START")) {
+            phase = "ASK_ENGINES";
+            askHowManyEnginesToUse();
+        }
     }
 
     /**
@@ -148,7 +153,6 @@ public class OpenSpaceController extends EventController {
      * @param yBatteryStorage
      * @param sender
      * @throws RemoteException
-     * @author Gabriele
      */
     public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (phase.equals("DISCARDED_BATTERIES")) {
@@ -206,6 +210,7 @@ public class OpenSpaceController extends EventController {
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
+            // Sends update message
             SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
             VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
@@ -218,14 +223,29 @@ public class OpenSpaceController extends EventController {
             }
 
             sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower));
+            LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
             // Next player
             if (currPlayer < activePlayers.size()) {
                 currPlayer++;
                 phase = "ASK_ENGINES";
                 askHowManyEnginesToUse();
+            } else {
+                phase = "END";
+                end();
             }
+        }
+    }
+
+    /**
+     * Send a message of end card to all players
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void end() throws RemoteException {
+        if (phase.equals("END")) {
+            LobbyController.broadcastLobbyMessage("This event card is finished");
         }
     }
 }
