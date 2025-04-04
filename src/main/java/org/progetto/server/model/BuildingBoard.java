@@ -25,15 +25,15 @@ public class BuildingBoard {
     // CONSTRUCTORS
     // =======================
 
-    public BuildingBoard(int levelShip, int color, Spaceship spaceship) {
+    public BuildingBoard(Spaceship spaceship, int color) {
         this.spaceship = spaceship;
-        this.boardMask = loadBoardMask(levelShip);
+        this.boardMask = loadBoardMask();
         this.spaceshipMatrix = createSpaceshipMatrix();
         this.booked = new Component[2];
         this.handComponent = null;
-        this.imgSrc = loadImgShip(levelShip);
+        this.imgSrc = loadImgShip();
 
-        placeCentralUnit(levelShip, getImgSrcCentralUnitFromColor(color));
+        placeCentralUnit(getImgSrcCentralUnitFromColor(color));
     }
 
     // =======================
@@ -93,15 +93,21 @@ public class BuildingBoard {
         };
     }
 
+    public Component getCentralUnit() {
+        if(spaceship.getLevelShip() == 1)
+            return spaceshipMatrix[2][3];
+        else
+            return spaceshipMatrix[2][2];
+    }
+
     /**
      * Adds the centralUnit to the spaceship
      *
      * @author Alessandro
-     * @param levelShip the ship's level
      * @param imgPathCentralUnit the imgPath of the central unit component with the player's color
      */
-    private void placeCentralUnit(int levelShip, String imgPathCentralUnit) {
-        switch (levelShip) {
+    private void placeCentralUnit(String imgPathCentralUnit) {
+        switch (spaceship.getLevelShip()) {
             case 1:
                 spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
                 break;
@@ -311,25 +317,22 @@ public class BuildingBoard {
             housingUnit.setAllowAlienPurple(allow);
             if(!housingUnit.getAllowAlienPurple())
                 housingUnit.setAlienPurple(false);
-
         }
-
     }
 
     /**
      * Loading mask for the building board
      *
      * @author Lorenzo
-     * @param levelShip is the game level chosen
      * @return the loaded matrix configuration for the board
      */
-    private int[][] loadBoardMask(int levelShip)
+    private int[][] loadBoardMask()
     {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
             MaskMatrix data = objectMapper.readValue(new File("src/main/resources/org.progetto.server/Masks.json"), MaskMatrix.class);
 
-            switch (levelShip)
+            switch (spaceship.getLevelShip())
             {
                 case 1:
                     boardMask = data.getBaseMatrix();
@@ -347,8 +350,8 @@ public class BuildingBoard {
         return boardMask;
     }
 
-    private String loadImgShip(int levelShip){
-        return "spaceship" + levelShip + ".jpg";
+    private String loadImgShip(){
+        return "spaceship" + spaceship.getLevelShip() + ".jpg";
     }
 
     /**
@@ -362,11 +365,9 @@ public class BuildingBoard {
         return new Component[boardMask.length][boardMask[0].length];
     }
 
-    //controller will call destroy component for each event were a component needs to be removed, the actions sequence is the following
+    // controller will call destroy component for each event were a component needs to be removed, the actions sequence is the following
     // 1. remove the component from the spaceship matrix, update mask matrix
-    // 2. update spaceship attributes
-    // 3. update housing-unit alien hosting if an alien-unit has been removed
-    // 4. check ship validity and update exposed connectors, controller will call automatically this one
+    // 2. update spaceship counters
 
     /**
      * Remove a component from the spaceship, update values
@@ -426,38 +427,17 @@ public class BuildingBoard {
                             spaceship.addDownLeftShieldCount(-1);
                             break;
                     }
-
                     break;
 
                 case HOUSING_UNIT:
                     HousingUnit hu = (HousingUnit) destroyedComponent;
-                    if (hu.hasOrangeAlien())
+                    if (hu.getHasOrangeAlien())
                         spaceship.setAlienOrange(false);
 
-                    if (hu.hasPurpleAlien())
+                    if (hu.getHasPurpleAlien())
                         spaceship.setAlienPurple(false);
 
                     spaceship.addCrewCount(-hu.getCrewCount());
-                    break;
-
-                case ORANGE_HOUSING_UNIT:
-                    List<Component> orange_units = typeSearch(ComponentType.ORANGE_HOUSING_UNIT);
-                    if (orange_units.size() == 1) {    // if only a module is present
-                        spaceship.setAlienOrange(false);
-                    }
-
-                    updateOrangeAlienAllow();
-
-                    break;
-
-                case PURPLE_HOUSING_UNIT:
-                    List<Component> purple_units = typeSearch(ComponentType.PURPLE_HOUSING_UNIT);
-                    if (purple_units.size() == 1) {    // if only a module is present
-                        spaceship.setAlienPurple(false);
-                    }
-
-                    updatePurpleAlienAllow();
-
                     break;
 
                 case CENTRAL_UNIT:
@@ -634,7 +614,7 @@ public class BuildingBoard {
     // on a component of that stump
 
     /**
-     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship
+     * Checks if the spaceship is valid, also counts and updates the exposedConnectorsCount value of the spaceship. At the end, if the ship is valid, it fixes the alien presence
      *
      * @author Alessandro
      * @return true if the spaceship is valid, false otherwise
@@ -664,104 +644,204 @@ public class BuildingBoard {
 
         spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
 
+        if(result)  fixAlienPresence();
+
         return result;
+    }
+
+    /**
+     * Fixes the alien presence in the housing unit if it cannot contain them
+     *
+     * @author Alessandro
+     */
+    private void fixAlienPresence(){
+
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+
+                Component component = spaceshipMatrix[y][x];
+
+                if(component.getType() == ComponentType.HOUSING_UNIT){
+
+                    HousingUnit hu = (HousingUnit) component;
+
+                    if(!checkAllowPurpleAlien(hu)){
+                        if(hu.getHasPurpleAlien()){
+                            hu.setAlienPurple(false);
+                            spaceship.setAlienPurple(false);
+                        }
+                    }
+
+                    if(!checkAllowOrangeAlien(hu)){
+                        if(hu.getHasOrangeAlien()){
+                            hu.setAlienOrange(false);
+                            spaceship.setAlienOrange(false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if in the housingUnit is allowed to put an purpleAlien
+     *
+     * @author Alessandro
+     * @param hu the housingUnit under examination
+     * @return if it is allowed
+     */
+    private boolean checkAllowPurpleAlien(HousingUnit hu){
+
+        int y = hu.getY();
+        int x = hu.getX();
+
+        // up
+        if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.PURPLE_HOUSING_UNIT){
+            hu.setAllowAlienPurple(true);
+            return true;
+        }
+
+        // right
+        if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && spaceshipMatrix[y][x + 1].getType() == ComponentType.PURPLE_HOUSING_UNIT){
+            hu.setAllowAlienPurple(true);
+            return true;
+        }
+        // bottom
+        if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && spaceshipMatrix[y + 1][x].getType() == ComponentType.PURPLE_HOUSING_UNIT){
+            hu.setAllowAlienPurple(true);
+            return true;
+        }
+
+        // left
+        if (x > 0 && boardMask[y][x - 1] == -1 && spaceshipMatrix[y][x - 1].getType() == ComponentType.PURPLE_HOUSING_UNIT){
+            hu.setAllowAlienPurple(true);
+            return true;
+        }
+
+        hu.setAllowAlienPurple(false);
+        return false;
+    }
+
+    /**
+     * Checks if in the housingUnit is allowed to put an orangeAlien
+     *
+     * @author Alessandro
+     * @param hu the housingUnit under examination
+     * @return if it is allowed
+     */
+    private boolean checkAllowOrangeAlien(HousingUnit hu){
+
+        int y = hu.getY();
+        int x = hu.getX();
+
+        // up
+        if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
+            hu.setAllowAlienOrange(true);
+            return true;
+        }
+
+        // right
+        if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && spaceshipMatrix[y][x + 1].getType() == ComponentType.ORANGE_HOUSING_UNIT){
+            hu.setAllowAlienOrange(true);
+            return true;
+        }
+        // bottom
+        if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && spaceshipMatrix[y + 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
+            hu.setAllowAlienOrange(true);
+            return true;
+        }
+
+        // left
+        if (x > 0 && boardMask[y][x - 1] == -1 && spaceshipMatrix[y][x - 1].getType() == ComponentType.ORANGE_HOUSING_UNIT){
+            hu.setAllowAlienOrange(true);
+            return true;
+        }
+
+        hu.setAllowAlienOrange(false);
+        return false;
     }
 
     /**
      * Initializes spaceship attributes after checking the ship validity
      *
-     * @author Lorenzo
+     * @author Alessandro, Lorenzo
      */
     public void initSpaceshipParams() {
+
+        boolean requiresPlayerAction = false;
+
         for(int y = 0; y < spaceshipMatrix.length; y++){
             for(int x = 0; x < spaceshipMatrix[y].length; x++){
-                if(spaceshipMatrix[y][x] != null){
 
-                    switch(spaceshipMatrix[y][x].getType()){
+                Component component = spaceshipMatrix[y][x];
 
-                        case CANNON:
-                            if (spaceshipMatrix[y][x].getRotation() == 0)
-                                spaceship.addNormalShootingPower(+1);
-                            else
-                                spaceship.addNormalShootingPower((float) +0.5);
-                            break;
+                if(component == null)
+                    continue;
 
-                        case DOUBLE_CANNON:
-                            spaceship.addDoubleCannonCount(+1);
-                            break;
+                switch(component.getType()){
 
-                        case ENGINE:
-                            spaceship.addNormalEnginePower(+1);
-                            break;
+                    case CANNON:
+                        if (component.getRotation() == 0)
+                            spaceship.addNormalShootingPower(+1);
+                        else
+                            spaceship.addNormalShootingPower((float) +0.5);
+                        break;
 
-                        case DOUBLE_ENGINE:
-                            spaceship.addDoubleEngineCount(+1);
-                            break;
+                    case DOUBLE_CANNON:
+                        spaceship.addDoubleCannonCount(+1);
+                        break;
 
-                        case SHIELD:
-                            switch (spaceshipMatrix[y][x].getRotation()) {
+                    case ENGINE:
+                        spaceship.addNormalEnginePower(+1);
+                        break;
 
-                                case 0: // left-up
-                                    spaceship.addLeftUpShieldCount(1);
-                                    break;
+                    case DOUBLE_ENGINE:
+                        spaceship.addDoubleEngineCount(+1);
+                        break;
 
-                                case 1: // up-right
-                                    spaceship.addUpRightShieldCount(1);
-                                    break;
+                    case SHIELD:
+                        switch (component.getRotation()) {
 
-                                case 2: // right-down
-                                    spaceship.addRightDownShieldCount(1);
-                                    break;
+                            case 0: // left-up
+                                spaceship.addLeftUpShieldCount(1);
+                                break;
 
-                                case 3: // down-left
-                                    spaceship.addDownLeftShieldCount(1);
-                                    break;
-                            }
-                            break;
+                            case 1: // up-right
+                                spaceship.addUpRightShieldCount(1);
+                                break;
 
-                        case HOUSING_UNIT:
-                            HousingUnit hu = (HousingUnit) spaceshipMatrix[y][x];
-                            if(!hu.getAllowAlienPurple() && !hu.getAllowAlienOrange()) {
-                                hu.incrementCrewCount(spaceship,2);
-                            }
-                            break;
+                            case 2: // right-down
+                                spaceship.addRightDownShieldCount(1);
+                                break;
 
-                        case ORANGE_HOUSING_UNIT:
-                            HousingUnit orange_unit = (HousingUnit) spaceshipMatrix[y][x];
-                            List<Component> housing_components = typeSearch(ComponentType.HOUSING_UNIT);
-                            HousingUnit housingUnit;
-                            for(Component housing_component :  housing_components){
-                                if(areConnected(orange_unit, housing_component)){
-                                    housingUnit = (HousingUnit) housing_component;
-                                    housingUnit.setAllowAlienOrange(true);
-                                }
-                            }
-                            break;
+                            case 3: // down-left
+                                spaceship.addDownLeftShieldCount(1);
+                                break;
+                        }
+                        break;
 
-                        case PURPLE_HOUSING_UNIT:
-                            HousingUnit purple_unit = (HousingUnit) spaceshipMatrix[y][x];
-                            housing_components = typeSearch(ComponentType.HOUSING_UNIT);
-                            for(Component housing_component :  housing_components) {
-                                if (areConnected(purple_unit, housing_component)) {
-                                    housingUnit = (HousingUnit) housing_component;
-                                    housingUnit.setAllowAlienPurple(true);
-                                }
-                            }
-                            break;
+                    case HOUSING_UNIT:
+                        HousingUnit hu = (HousingUnit) component;
 
-                        case CENTRAL_UNIT:
-                            hu = (HousingUnit) spaceshipMatrix[y][x];
+                        if(checkAllowPurpleAlien(hu) || checkAllowOrangeAlien(hu))
+                            requiresPlayerAction = true;
+                        else
                             hu.incrementCrewCount(spaceship,2);
-                            break;
 
-                        case BATTERY_STORAGE:
-                            BatteryStorage bs = (BatteryStorage) spaceshipMatrix[y][x];
-                            bs.incrementItemsCount(spaceship,bs.getCapacity());
-                            break;
+                        break;
 
-                        default:
-                            break;
-                    }
+                    case CENTRAL_UNIT:
+                        hu = (HousingUnit) component;
+                        hu.incrementCrewCount(spaceship,2);
+                        break;
+
+                    case BATTERY_STORAGE:
+                        BatteryStorage bs = (BatteryStorage) component;
+                        bs.incrementItemsCount(spaceship,bs.getCapacity());
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }

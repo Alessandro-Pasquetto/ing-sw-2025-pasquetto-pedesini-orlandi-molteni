@@ -3,13 +3,10 @@ package org.progetto.client.connection.socket;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.connection.HandlerMessage;
 import org.progetto.messages.toServer.*;
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.rmi.RemoteException;
 
 /**
  * Handles the invocation of methods on the server
@@ -58,7 +55,6 @@ public class SocketClient implements Sender {
     /**
      * Check if the port is open for a socket communication
      */
-
     public boolean isSocketServerReachable(String serverIp, int port) {
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(serverIp, port), 200);
@@ -138,11 +134,6 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void readyPlayer() {
-
-    }
-
-    @Override
     public void bookComponent(int idx){
         SocketWriter.sendMessage(new BookComponentMessage(idx));
     }
@@ -152,7 +143,8 @@ public class SocketClient implements Sender {
         SocketWriter.sendMessage(new PickBookedComponentMessage(idx));
     }
 
-    void playerReady() {
+    @Override
+    public void readyPlayer() {
         SocketWriter.sendMessage("Ready");
     }
 

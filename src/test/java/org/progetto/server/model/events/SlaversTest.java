@@ -3,12 +3,9 @@ package org.progetto.server.model.events;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
-
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,12 +56,12 @@ class SlaversTest {
         //removes an orange alien
         orange.setAlienOrange(true);
         assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(),orange));
-        assertFalse(crew.hasOrangeAlien());
+        assertFalse(crew.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
         assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(),purple));
-        assertFalse(crew.hasPurpleAlien());
+        assertFalse(crew.getHasPurpleAlien());
     }
 
     @Test

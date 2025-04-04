@@ -1,13 +1,13 @@
 package org.progetto.server.model;
 
-import org.progetto.server.model.components.Box;
+import org.progetto.server.model.components.*;
 
 public class Spaceship {
   
     // =======================
     // ATTRIBUTES
     // =======================
-
+    private int levelShip;
     private int shipComponentsCount;
     private int destroyedCount;
     private int crewCount;
@@ -29,6 +29,7 @@ public class Spaceship {
 
     // Initialize spaceship with initial values of attributes
     public Spaceship(int levelShip, int color) {
+        this.levelShip = levelShip;
         shipComponentsCount = 1;
         destroyedCount = 0;
         crewCount = 0;
@@ -42,12 +43,14 @@ public class Spaceship {
         normalEnginePower = 0;
         shieldCounts = new int[] {0, 0, 0, 0};
         boxCounts = new int[] {0, 0, 0, 0};
-        buildingBoard = new BuildingBoard(levelShip, color,this);
+        buildingBoard = new BuildingBoard(this, color);
     }
 
     // =======================
     // GETTERS
     // =======================
+
+    public int getLevelShip() {return levelShip;}
 
     public int getShipComponentsCount() {
         return shipComponentsCount;
@@ -117,11 +120,15 @@ public class Spaceship {
         exposedConnectorsCount = count;
     }
 
-    public void setAlienPurple(boolean alienPresence) {
+    public void setAlienPurple(boolean alienPresence) throws IllegalStateException {
+        if(alienPurple)
+            throw new IllegalStateException("HasAlreadyPurpleAlien");
         alienPurple = alienPresence;
     }
 
     public void setAlienOrange(boolean alienPresence) {
+        if(alienOrange)
+            throw new IllegalStateException("HasAlreadyOrangeAlien");
         alienOrange = alienPresence;
     }
 

@@ -30,23 +30,23 @@ class HousingUnitTest {
     }
 
     @Test
-    void hasOrangeAlien() {
+    void getHasOrangeAlien() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        assertFalse(housingUnit.hasOrangeAlien());
+        assertFalse(housingUnit.getHasOrangeAlien());
 
         housingUnit.setAlienOrange(true);
-        assertTrue(housingUnit.hasOrangeAlien());
+        assertTrue(housingUnit.getHasOrangeAlien());
     }
 
     @Test
-    void hasPurpleAlien() {
+    void getHasPurpleAlien() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        assertFalse(housingUnit.hasPurpleAlien());
+        assertFalse(housingUnit.getHasPurpleAlien());
 
         housingUnit.setAlienPurple(true);
-        assertTrue(housingUnit.hasPurpleAlien());
+        assertTrue(housingUnit.getHasPurpleAlien());
     }
 
     @Test
@@ -82,9 +82,9 @@ class HousingUnitTest {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 2);
 
         housingUnit.setAlienOrange(true);
-        assertTrue(housingUnit.hasOrangeAlien());
+        assertTrue(housingUnit.getHasOrangeAlien());
         housingUnit.setAlienOrange(false);
-        assertFalse(housingUnit.hasOrangeAlien());
+        assertFalse(housingUnit.getHasOrangeAlien());
     }
 
     @Test
@@ -92,9 +92,9 @@ class HousingUnitTest {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
         housingUnit.setAlienPurple(true);
-        assertTrue(housingUnit.hasPurpleAlien());
+        assertTrue(housingUnit.getHasPurpleAlien());
         housingUnit.setAlienPurple(false);
-        assertFalse(housingUnit.hasPurpleAlien());
+        assertFalse(housingUnit.getHasPurpleAlien());
     }
 
     @Test

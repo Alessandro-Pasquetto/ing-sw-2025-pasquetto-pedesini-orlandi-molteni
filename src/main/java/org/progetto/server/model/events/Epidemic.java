@@ -58,7 +58,7 @@ public class Epidemic extends EventCard {
             }
 
             // check if itemsCount in the components is greater than zero
-            if (currComponent.getCrewCount() == 0 && !currComponent.hasOrangeAlien() && !currComponent.hasPurpleAlien()) {
+            if (currComponent.getCrewCount() == 0 && !currComponent.getHasOrangeAlien() && !currComponent.getHasPurpleAlien()) {
                 return;
             }
 
@@ -106,10 +106,10 @@ public class Epidemic extends EventCard {
 
                     // deletes for each infected component found one crew mate/alien
                     for (HousingUnit component : infectedComponents) {
-                        if (component.hasOrangeAlien()) {
+                        if (component.getHasOrangeAlien()) {
                             player.getSpaceship().setAlienOrange(false);
                             component.setAlienOrange(false);
-                        } else if (component.hasPurpleAlien()) {
+                        } else if (component.getHasPurpleAlien()) {
                             player.getSpaceship().setAlienPurple(false);
                             component.setAlienPurple(false);
                         } else if (component.getCrewCount() > 0) {

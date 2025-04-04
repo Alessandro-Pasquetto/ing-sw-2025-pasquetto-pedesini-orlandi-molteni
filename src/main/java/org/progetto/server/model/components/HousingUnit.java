@@ -41,11 +41,11 @@ public class HousingUnit extends Component{
         return crewCount;
     }
 
-    public boolean hasOrangeAlien() {
+    public boolean getHasOrangeAlien() {
         return hasAlienOrange;
     }
 
-    public boolean hasPurpleAlien() {
+    public boolean getHasPurpleAlien() {
         return hasAlienPurple;
     }
 

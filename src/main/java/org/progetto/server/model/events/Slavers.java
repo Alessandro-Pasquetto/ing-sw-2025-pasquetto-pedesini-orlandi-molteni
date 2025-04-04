@@ -63,10 +63,10 @@ public class Slavers extends EventCard {
      * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
     public boolean chooseDiscardedCrew(Spaceship spaceship,HousingUnit component) {
-        if (component.hasOrangeAlien()) {  // if it contains an orange alien
+        if (component.getHasOrangeAlien()) {  // if it contains an orange alien
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
-        } else if (component.hasPurpleAlien()) {  // if it contains a purple alien
+        } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member

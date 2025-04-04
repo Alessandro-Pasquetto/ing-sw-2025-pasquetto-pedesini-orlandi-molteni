@@ -210,7 +210,7 @@ public class Board {
      */
     public ArrayList<Player> checkLappedPlayers() {
         ArrayList<Player> lappedPlayers = new ArrayList<>();
-        Player leader = activePlayers.get(0);
+        Player leader = activePlayers.getFirst();
 
         for (Player player : activePlayers) {
             if (leader.getPosition() >= player.getPosition() + track.length) {
@@ -220,6 +220,25 @@ public class Board {
         }
 
         return !lappedPlayers.isEmpty() ? lappedPlayers : null;
+    }
+
+    /**
+     * Checks if there is any player with no crew
+     *
+     * @author Alessandro
+     * @return list of players with no crew
+     */
+    public ArrayList<Player> checkNoCrewPlayers() {
+        ArrayList<Player> noCrewPlayers = new ArrayList<>();
+
+        for (Player player : activePlayers) {
+            if (player.getSpaceship().getCrewCount() == 0) {
+                noCrewPlayers.add(player);
+                leaveTravel(player);
+            }
+        }
+
+        return !noCrewPlayers.isEmpty() ? noCrewPlayers : null;
     }
 
     /**
