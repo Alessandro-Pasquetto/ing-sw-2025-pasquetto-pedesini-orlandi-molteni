@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient.LostShip;
+package org.progetto.messages.toClient.EventCommon;
 
 import org.progetto.server.model.components.Box;
 

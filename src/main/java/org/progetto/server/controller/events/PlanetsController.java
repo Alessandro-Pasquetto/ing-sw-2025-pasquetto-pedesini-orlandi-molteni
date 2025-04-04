@@ -2,9 +2,10 @@ package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.AnotherPlayerMovedAheadMessage;
-import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
+import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -13,13 +14,13 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.events.LostStation;
+import org.progetto.server.model.events.Planets;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class LostStationController extends EventControllerAbstract {
+public class PlanetsController extends EventControllerAbstract {
 
     // =======================
     // ATTRIBUTES
@@ -27,24 +28,30 @@ public class LostStationController extends EventControllerAbstract {
     private GameManager gameManager;
     private String phase;
     private int currPlayer;
+    private int landedPlayers;
+    private int leavedPlayers;
     private ArrayList<Player> activePlayers;
-    private LostStation lostStation;
+    private Planets planets;
 
-    boolean box_chosen = false;
     private ArrayList<Box> rewardBoxes;
 
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public LostStationController(GameManager gameManager) {
+
+    public PlanetsController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = "START";
         this.currPlayer = 0;
+        this.landedPlayers = 0;
+        this.leavedPlayers = 0;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
-        this.lostStation = (LostStation) gameManager.getGame().getActiveEventCard();
+        this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
+
     }
+
 
     // =======================
     // OTHER METHODS
@@ -56,8 +63,8 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * ask each player if they want to land on the lost ship, only if the precondition
-     * are satisfied
+     * ask each player if they want to land on one of the given planets.
+     * list of planets are sent only to the active player.
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -67,25 +74,26 @@ public class LostStationController extends EventControllerAbstract {
         if(Objects.equals(phase, "ASK_FOR_LAND")) {
 
             try {
+
                 Player player = activePlayers.get(currPlayer);
 
-                if (player.getSpaceship().getCrewCount() >= lostStation.getRequiredCrew()) {
+                SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
+                VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
-                    SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-                    VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
+                Sender sender = null;
 
-                    Sender sender = null;
-
-                    if (socketWriter != null) {
-                        sender = socketWriter;
-                    } else if (virtualClient != null) {
-                        sender = virtualClient;
-                    }
-
-                    sender.sendMessage("LandRequest");
-
-                    phase = "LAND";
+                if (socketWriter != null) {
+                    sender = socketWriter;
+                } else if (virtualClient != null) {
+                    sender = virtualClient;
                 }
+
+
+                sender.sendMessage("LandRequest");
+                sender.sendMessage(new AvailablePlanetsMessage( planets.getPlanetsTaken()));
+
+                phase = "LAND";
+
 
             }catch (ArrayIndexOutOfBoundsException e) {
                 throw new IllegalStateException("AllPlayersChecked");
@@ -95,37 +103,55 @@ public class LostStationController extends EventControllerAbstract {
 
 
     /**
-     * receive the player decision to land on the lost ship.
+     * receive the player decision to land on the planet.
      * send the available boxes to that player.
      *
      * @author Lorenzo
      * @param player
+     * @param land true if the player wants to land
+     * @param planetIdx is the index of the planet chosen
      * @param sender
-     * @param land
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player,boolean land,Sender sender) throws RemoteException{
+    public void receiveDecisionToLand(Player player,boolean land, int planetIdx,Sender sender) throws RemoteException,IllegalStateException {
 
         if (Objects.equals(phase, "LAND")) {
-
             if(land) {
-                phase = "CHOOSE_BOX";
-                rewardBoxes = lostStation.getRewardBoxes();
+              try {
+                  if(planets.getPlanetsTaken()[planetIdx]) {
+                      sender.sendMessage("planetsTaken");
+                      phase = "ASK_FOR_LAND";
+                  }
+                  else {
 
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player));
-                sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                sender.sendMessage("LandedCompeted");
+                      planets.choosePlanet(player, planetIdx);
+                      landedPlayers++;
+                      LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player,planetIdx));
+                      sender.sendMessage("LandedCompeted");
+
+                      rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
+                      sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                      sender.sendMessage("AvailableBoxes");
+
+                      phase = "CHOOSE_BOX";
+
+                  }
+
+              }catch(ArrayIndexOutOfBoundsException e){
+                  throw new IllegalStateException("PlanetIndexOutOfBound");
+              }
+
             }
             else {
                 phase = "ASK_FOR_LAND";
                 currPlayer ++;
-                askForLand();
             }
         }
     }
 
+
     /**
-     * receive the box that the player choose, and it's placement in the component.
+     * for each player receive the box that the player choose, and it's placement in the component.
      * update the player's view with the new list of available boxes
      *
      * @author Lorenzo
@@ -141,14 +167,12 @@ public class LostStationController extends EventControllerAbstract {
 
         if (Objects.equals(phase, "CHOOSE_BOX")) {
 
-            box_chosen = true;
-
             try {
+
                 Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 BoxStorage storage = (BoxStorage) matrix[y][x];
 
-
-                lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
+                planets.chooseRewardBox(player.getSpaceship(), storage, idx, box);
 
                 if (!rewardBoxes.remove(box)) {
                     sender.sendMessage("ChosenBoxNotAvailable");
@@ -164,59 +188,65 @@ public class LostStationController extends EventControllerAbstract {
                 throw new IllegalStateException("ComponentIsNotInMatrix");
             }
 
-            if (!rewardBoxes.isEmpty()) {    //tutte le box devono essere scelte o scartate
+            if (!rewardBoxes.isEmpty()) {
                 phase = "CHOOSE_BOX";
             }
             else{
-                phase = "EFFECT";
-                eventEffect();
+                phase = "LEAVE_PLANET";
+                leavePlanet(activePlayers.get(currPlayer),sender);
             }
         }
     }
 
     /**
-     * handles the penalty at the end of the rewardBox
+     * function called after all the boxes of a planet are chosen or if the
+     * player wants to leave
+     *
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     * @throws IllegalStateException
+     */
+    private void leavePlanet(Player player,Sender sender) throws RemoteException,IllegalStateException {
+        if (Objects.equals(phase, "LEAVE_PLANET")) {
+            leavedPlayers++;//next player
+
+            if(leavedPlayers == landedPlayers) {
+                phase = "EFFECT";
+                eventEffect();
+            }
+            else{
+                currPlayer++;
+                phase = "ASK_FOR_LAND";
+            }
+        }
+    }
+
+
+    /**
+     * calculate the penalty foreach landed player
      *
      * @author Lorenzo
      */
     private void eventEffect() throws RemoteException {
         if(Objects.equals(phase, "EFFECT")) {
-            if (box_chosen) {
 
-                Player player = activePlayers.get(currPlayer);
-
-                lostStation.penalty(gameManager.getGame().getBoard(), player);
+            planets.penalty(gameManager.getGame().getBoard());
+            for(Player player : planets.getLandedPlayers()){
 
                 SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
                 VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
                 Sender sender = null;
-
                 if (socketWriter != null) {
                     sender = socketWriter;
                 } else if (virtualClient != null) {
                     sender = virtualClient;
                 }
 
-                sender.sendMessage(new PlayerMovedAheadMessage(lostStation.getPenaltyDays()));
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedAheadMessage(player.getName(), lostStation.getPenaltyDays()));
-
-                //todo aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
-
+                sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
+                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedAheadMessage(player.getName(), planets.getPenaltyDays()));
             }
         }
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
 }

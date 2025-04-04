@@ -1,7 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
