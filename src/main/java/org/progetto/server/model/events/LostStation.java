@@ -72,7 +72,6 @@ public class LostStation extends EventCard {
      * @param player Current player
      */
     public void penalty(Board board, Player player) {
-
         board.movePlayerByDistance(player, this.penaltyDays);
     }
 

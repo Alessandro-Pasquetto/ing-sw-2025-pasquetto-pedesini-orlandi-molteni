@@ -119,7 +119,7 @@ public class Board {
      * @param player the moving player
      * @param distance distance traveled by the player
      */
-    public synchronized void movePlayerByDistance(Player player, int distance) {
+    public synchronized void movePlayerByDistance(Player player, int distance) throws IllegalStateException {
         int sign;
         int playerPosition = player.getPosition();
 
@@ -137,11 +137,14 @@ public class Board {
 
             Player trackCell = track[modulus(playerPosition, track.length)];
 
-            if(trackCell == null)
+            if(trackCell == null) {
                 distance--;
-            else{
-                if(trackCell.getPosition() <= playerPosition - track.length)
+            } else {
+                // TODO: rivedere la logica di lapping
+                if(trackCell.getPosition() <= playerPosition - track.length) {
                     leaveTravel(trackCell);
+                    throw new IllegalStateException("PlayerLapped");
+                }
             }
         }
 

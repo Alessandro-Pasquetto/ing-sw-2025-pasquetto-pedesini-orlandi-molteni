@@ -46,7 +46,7 @@ public class StardustController extends EventControllerAbstract {
     @Override
     public void start() throws RemoteException {
         if (phase.equals("START")) {
-            phase = "EVENT_EFFECT";
+            phase = "EFFECT";
             eventEffect();
         }
     }
@@ -57,7 +57,7 @@ public class StardustController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             ArrayList<Player> reversedPlayers = new ArrayList<>(gameManager.getGame().getBoard().getActivePlayers());
             Collections.reverse(reversedPlayers);
             Board board = gameManager.getGame().getBoard();

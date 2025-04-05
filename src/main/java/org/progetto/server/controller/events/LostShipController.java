@@ -3,6 +3,7 @@ package org.progetto.server.controller.events;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -73,8 +74,29 @@ public class LostShipController extends EventControllerAbstract  {
                 sender = virtualClient;
             }
 
-            sender.sendMessage(new AcceptRewardCreditsAndPenalties(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
-            phase = "REWARD_DECISION";
+            // Calculates max crew number available to discard
+            int orangeAlienCount = player.getSpaceship().getAlienOrange() ? 1 : 0;
+            int purpleAlienCount = player.getSpaceship().getAlienPurple() ? 1 : 0;
+            int crewCount = player.getSpaceship().getCrewCount();
+            int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
+
+            if (maxCrewCount > lostShip.getPenaltyCrew()) {
+                sender.sendMessage(new AcceptRewardCreditsAndPenalties(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                phase = "REWARD_DECISION";
+            } else {
+                sender.sendMessage("NotEnoughCrew");
+
+                // Next player
+                if (currPlayer < activePlayers.size()) {
+                    currPlayer++;
+                    phase = "ASK_TO_LAND";
+                    askToLand();
+                } else {
+                    phase = "END";
+                    end();
+                }
+            }
+
         }
     }
 
@@ -100,7 +122,7 @@ public class LostShipController extends EventControllerAbstract  {
                     // Next player
                     if (currPlayer < activePlayers.size()) {
                         currPlayer++;
-                        phase = "ASK_USE";
+                        phase = "ASK_TO_LAND";
                         askToLand();
                     } else {
                         phase = "END";
@@ -171,7 +193,7 @@ public class LostShipController extends EventControllerAbstract  {
                         sender.sendMessage("CrewMemberDiscarded");
 
                         if (requestedCrew == 0) {
-                            phase = "EVENT_EFFECT";
+                            phase = "EFFECT";
                             eventEffect();
 
                         } else {
@@ -202,13 +224,11 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             Player player = activePlayers.get(currPlayer);
             Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
 
-            // Event effect applied for single player
-            slavers.rewardPenalty(gameManager.getGame().getBoard(), player);
-
+            // Gets sender reference related to current player
             SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
             VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
@@ -220,10 +240,23 @@ public class LostShipController extends EventControllerAbstract  {
                 sender = virtualClient;
             }
 
-            sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
-            sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+            // Event effect applied for single player
+            try {
+                slavers.rewardPenalty(gameManager.getGame().getBoard(), player);
+
+                sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
+                sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
+                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
+                LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+
+            } catch (IllegalStateException e) {
+                // TODO: rivedere
+                if (e.getMessage().equals("PlayerLapped")) {
+                    sender.sendMessage("GotLapped");
+                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.getGame().getBoard().leaveTravel(player);
+                }
+            }
 
             phase = "END";
             end();

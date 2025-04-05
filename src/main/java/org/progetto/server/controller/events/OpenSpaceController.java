@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -69,6 +70,19 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             Player player = activePlayers.get(currPlayer);
 
+            // Gets the sender reference to send a message to player
+            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
+            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
+
+            Sender sender = null;
+
+            if (socketWriter != null) {
+                sender = socketWriter;
+            } else if (virtualClient != null) {
+                sender = virtualClient;
+            }
+
+            // Calculates max number of double cannon usable
             int doubleEngineCount = player.getSpaceship().getDoubleEngineCount();
             int batteriesCount = player.getSpaceship().getBatteriesCount();
             int maxUsable;
@@ -83,20 +97,17 @@ public class OpenSpaceController extends EventControllerAbstract {
             if (maxUsable == 0) {
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
-                phase = "EVENT_EFFECT";
-                eventEffect();
+                if (playerEnginePower > 0) {
+                    phase = "EFFECT";
+                    eventEffect();
+
+                } else {
+                    sender.sendMessage("ZeroEnginePower");
+                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.getGame().getBoard().leaveTravel(player);
+                }
 
             } else {
-                SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-                VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-                Sender sender = null;
-
-                if (socketWriter != null) {
-                    sender = socketWriter;
-                } else if (virtualClient != null) {
-                    sender = virtualClient;
-                }
 
                 sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
 
@@ -120,7 +131,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                 if (num == 0) {
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
-                    phase = "EVENT_EFFECT";
+                    phase = "EFFECT";
                     eventEffect();
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -172,7 +183,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (requestedNumber == 0) {
-                            phase = "EVENT_EFFECT";
+                            phase = "EFFECT";
                             eventEffect();
 
                         } else {
@@ -203,7 +214,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             Player player = activePlayers.get(currPlayer);
             OpenSpace openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
 

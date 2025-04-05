@@ -3,6 +3,7 @@ package org.progetto.server.controller.events;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -138,6 +139,7 @@ public class SlaversController extends EventControllerAbstract {
                     playerFirePower = player.getSpaceship().getNormalShootingPower();
 
                     phase = "BATTLE_RESULT";
+                    battleResult(player, sender);
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
@@ -189,6 +191,7 @@ public class SlaversController extends EventControllerAbstract {
 
                         if (requestedBatteries == 0) {
                             phase = "BATTLE_RESULT";
+                            battleResult(player, sender);
 
                         } else {
                             sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
@@ -227,6 +230,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 // Calls the battleResult function
                 Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
+
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
                         phase = "REWARD_DECISION";
@@ -235,6 +239,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     case -1:
                         phase = "PENALTY_EFFECT";
+                        penaltyEffect(player, sender);
                         break;
 
                     case 0:
@@ -270,13 +275,38 @@ public class SlaversController extends EventControllerAbstract {
     private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (phase.equals("PENALTY_EFFECT")) {
 
-            // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
 
                 Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
                 requestedCrew = slavers.getPenaltyCrew();
-                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                phase = "DISCARDED_CREW";
+
+                // Calculates max crew number available to discard
+                int orangeAlienCount = player.getSpaceship().getAlienOrange() ? 1 : 0;
+                int purpleAlienCount = player.getSpaceship().getAlienPurple() ? 1 : 0;
+                int crewCount = player.getSpaceship().getCrewCount();
+                int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
+
+                if (maxCrewCount > slavers.getPenaltyCrew()) {
+                    sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                    phase = "DISCARDED_CREW";
+
+                } else {
+                    sender.sendMessage("NotEnoughCrew");
+                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.getGame().getBoard().leaveTravel(player);
+
+                    // Next player
+                    if (currPlayer < activePlayers.size()) {
+                        currPlayer++;
+                        phase = "ASK_CANNONS";
+                        askHowManyCannonsToUse();
+
+                    } else {
+                        phase = "END";
+                        end();
+                    }
+                }
+
 
             } else {
                 sender.sendMessage("NotYourTurn");
@@ -315,6 +345,7 @@ public class SlaversController extends EventControllerAbstract {
                         sender.sendMessage("CrewMemberDiscarded");
 
                         if (requestedCrew == 0) {
+
                             // Next player
                             if (currPlayer < activePlayers.size()) {
                                 currPlayer++;
@@ -361,7 +392,7 @@ public class SlaversController extends EventControllerAbstract {
 
             switch (upperCaseResponse) {
                 case "YES":
-                    phase = "EVENT_EFFECT";
+                    phase = "EFFECT";
                     eventEffect();
                     break;
 
@@ -384,7 +415,7 @@ public class SlaversController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             Player player = activePlayers.get(currPlayer);
             Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
 

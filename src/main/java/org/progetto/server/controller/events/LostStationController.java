@@ -1,10 +1,11 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.AnotherPlayerMovedAheadMessage;
+import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -24,19 +25,21 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private GameManager gameManager;
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
     private LostStation lostStation;
 
-    boolean box_chosen = false;
+    boolean boxChosen = false;
     private ArrayList<Box> rewardBoxes;
 
 
     // =======================
     // CONSTRUCTORS
     // =======================
+
     public LostStationController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = "START";
@@ -49,6 +52,7 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
     // OTHER METHODS
     // =======================
+
     @Override
     public void start() throws RemoteException {
         phase = "ASK_FOR_LAND";
@@ -56,8 +60,7 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * ask each player if they want to land on the lost ship, only if the precondition
-     * are satisfied
+     * Ask each player if they want to land on the lost ship, only if the preconditions are satisfied.
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -95,8 +98,8 @@ public class LostStationController extends EventControllerAbstract {
 
 
     /**
-     * receive the player decision to land on the lost ship.
-     * send the available boxes to that player.
+     * Receive the player decision to land on the lost ship.
+     * Send the available boxes to that player.
      *
      * @author Lorenzo
      * @param player
@@ -125,8 +128,8 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * receive the box that the player choose, and it's placement in the component.
-     * update the player's view with the new list of available boxes
+     * Receive the box that the player choose, and it's placement in the component.
+     * Update the player's view with the new list of available boxes.
      *
      * @author Lorenzo
      * @param player that choose the box
@@ -137,16 +140,15 @@ public class LostStationController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException,IllegalStateException {
+    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException, IllegalStateException {
 
         if (Objects.equals(phase, "CHOOSE_BOX")) {
 
-            box_chosen = true;
+            boxChosen = true;
 
             try {
                 Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 BoxStorage storage = (BoxStorage) matrix[y][x];
-
 
                 lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
 
@@ -175,18 +177,17 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * handles the penalty at the end of the rewardBox
+     * Handles the penalty at the end of the rewardBox
      *
      * @author Lorenzo
      */
     private void eventEffect() throws RemoteException {
         if(Objects.equals(phase, "EFFECT")) {
-            if (box_chosen) {
 
+            if (boxChosen) {
                 Player player = activePlayers.get(currPlayer);
 
-                lostStation.penalty(gameManager.getGame().getBoard(), player);
-
+                // Gets sender reference related to current player
                 SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
                 VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
 
@@ -198,25 +199,38 @@ public class LostStationController extends EventControllerAbstract {
                     sender = virtualClient;
                 }
 
-                sender.sendMessage(new PlayerMovedAheadMessage(lostStation.getPenaltyDays()));
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedAheadMessage(player.getName(), lostStation.getPenaltyDays()));
+                try {
+                    lostStation.penalty(gameManager.getGame().getBoard(), player);
 
-                //todo aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
+                    sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
+                    LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
 
+                } catch (IllegalStateException e) {
+                    // TODO: rivedere
+                    if (e.getMessage().equals("PlayerLapped")) {
+                        sender.sendMessage("GotLapped");
+                        LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                        gameManager.getGame().getBoard().leaveTravel(player);
+                    }
+                }
+
+                phase = "END";
+                end();
             }
         }
 
-
+        //todo: aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
     }
 
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Send a message of end card to all players
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void end() throws RemoteException {
+        if (phase.equals("END")) {
+            LobbyController.broadcastLobbyMessage("This event card is finished");
+        }
+    }
 }

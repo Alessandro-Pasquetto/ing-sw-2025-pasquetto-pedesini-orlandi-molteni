@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.AnotherPlayerMovedAheadMessage;
+import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
@@ -49,13 +50,12 @@ public class PlanetsController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
-
     }
-
 
     // =======================
     // OTHER METHODS
     // =======================
+
     @Override
     public void start() throws RemoteException {
         phase = "ASK_FOR_LAND";
@@ -63,8 +63,8 @@ public class PlanetsController extends EventControllerAbstract {
     }
 
     /**
-     * ask each player if they want to land on one of the given planets.
-     * list of planets are sent only to the active player.
+     * Ask each player if they want to land on one of the given planets.
+     * List of planets are sent only to the active player.
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -101,10 +101,9 @@ public class PlanetsController extends EventControllerAbstract {
         }
     }
 
-
     /**
-     * receive the player decision to land on the planet.
-     * send the available boxes to that player.
+     * Receive the player decision to land on the planet.
+     * Send the available boxes to that player.
      *
      * @author Lorenzo
      * @param player
@@ -149,10 +148,9 @@ public class PlanetsController extends EventControllerAbstract {
         }
     }
 
-
     /**
-     * for each player receive the box that the player choose, and it's placement in the component.
-     * update the player's view with the new list of available boxes
+     * For each player receive the box that the player choose, and it's placement in the component.
+     * Ppdate the player's view with the new list of available boxes.
      *
      * @author Lorenzo
      * @param player that choose the box
@@ -199,9 +197,9 @@ public class PlanetsController extends EventControllerAbstract {
     }
 
     /**
-     * function called after all the boxes of a planet are chosen or if the
-     * player wants to leave
+     * Function called after all the boxes of a planet are chosen or if the player wants to leave.
      *
+     * @author Lorenzo
      * @param player
      * @param sender
      * @throws RemoteException
@@ -222,9 +220,8 @@ public class PlanetsController extends EventControllerAbstract {
         }
     }
 
-
     /**
-     * calculate the penalty foreach landed player
+     * Calculate the penalty for each landed player.
      *
      * @author Lorenzo
      */
@@ -245,8 +242,23 @@ public class PlanetsController extends EventControllerAbstract {
                 }
 
                 sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedAheadMessage(player.getName(), planets.getPenaltyDays()));
+                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
+
+                phase = "END";
+                end();
             }
+        }
+    }
+
+    /**
+     * Send a message of end card to all players
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void end() throws RemoteException {
+        if (phase.equals("END")) {
+            LobbyController.broadcastLobbyMessage("This event card is finished");
         }
     }
 }

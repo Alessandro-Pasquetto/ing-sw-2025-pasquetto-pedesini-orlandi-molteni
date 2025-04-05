@@ -39,7 +39,7 @@ public class EpidemicController extends EventControllerAbstract {
     @Override
     public void start() throws RemoteException {
         if (phase.equals("START")) {
-            phase = "EVENT_EFFECT";
+            phase = "EFFECT";
             eventEffect();
         }
     }
@@ -50,7 +50,7 @@ public class EpidemicController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             ArrayList<Player> players = gameManager.getGame().getBoard().getActivePlayers();
 
             for (Player player : players) {

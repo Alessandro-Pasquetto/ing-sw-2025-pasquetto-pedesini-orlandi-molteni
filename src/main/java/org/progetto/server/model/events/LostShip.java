@@ -76,7 +76,7 @@ public class LostShip extends EventCard{
      * @param board Game board
      * @param player Current player
      */
-    public void rewardPenalty(Board board, Player player) {
+    public void rewardPenalty(Board board, Player player) throws IllegalStateException {
         player.addCredits(this.rewardCredits);
         board.movePlayerByDistance(player, this.penaltyDays);
     }

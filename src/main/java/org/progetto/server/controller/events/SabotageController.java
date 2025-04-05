@@ -139,7 +139,7 @@ public class SabotageController extends EventControllerAbstract{
                     sender.sendMessage(new DiceResultMessage(xDiceResult));
                     LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), xDiceResult), sender);
 
-                    phase = "EVENT_EFFECT";
+                    phase = "EFFECT";
                     eventEffect(sender);
                 }
 
@@ -160,7 +160,7 @@ public class SabotageController extends EventControllerAbstract{
      * @throws RemoteException
      */
     private void eventEffect(Sender sender) throws RemoteException {
-        if (phase.equals("EVENT_EFFECT")) {
+        if (phase.equals("EFFECT")) {
             Sabotage sabotage = (Sabotage) gameManager.getGame().getActiveEventCard();
 
             // Event effect applied for single player
