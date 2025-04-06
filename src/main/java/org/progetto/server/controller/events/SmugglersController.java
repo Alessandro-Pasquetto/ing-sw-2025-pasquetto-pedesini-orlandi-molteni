@@ -11,43 +11,40 @@ import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
-import org.progetto.server.model.events.Slavers;
+import org.progetto.server.model.components.*;
+import org.progetto.server.model.events.Smugglers;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class SlaversController extends EventControllerAbstract {
+public class SmugglersController extends EventControllerAbstract {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
     private GameManager gameManager;
-    private Slavers slavers;
+    private Smugglers smugglers;
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
-    private int requestedCrew;
+    private int requestedBoxes;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public SlaversController(GameManager gameManager) {
+    public SmugglersController(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.slavers = (Slavers) gameManager.getGame().getActiveEventCard();
+        this.smugglers = (Smugglers) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
-        this.requestedCrew = 0;
+        this.requestedBoxes = 0;
     }
 
     // =======================
@@ -91,9 +88,9 @@ public class SlaversController extends EventControllerAbstract {
             }
 
             // Checks if players is able to win without double cannons
-            if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
+            if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                 phase = "REWARD_DECISION";
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
+                sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
             }
 
             // Calculates max number of double cannons usable
@@ -115,7 +112,7 @@ public class SlaversController extends EventControllerAbstract {
                 battleResult(player, sender);
 
             } else {
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
 
                 phase = "CANNON_NUMBER";
             }
@@ -190,7 +187,7 @@ public class SlaversController extends EventControllerAbstract {
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
 
                     // Checks if a battery has been discarded
-                    if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                         requestedBatteries--;
                         sender.sendMessage("BatteryDiscarded");
 
@@ -234,10 +231,10 @@ public class SlaversController extends EventControllerAbstract {
             if (player.equals(activePlayers.get(currPlayer))) {
 
                 // Calls the battleResult function
-                switch (slavers.battleResult(player, playerFirePower)){
+                switch (smugglers.battleResult(player, playerFirePower)){
                     case 1:
                         phase = "REWARD_DECISION";
-                        sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
+                        sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
                         break;
 
                     case -1:
@@ -280,20 +277,19 @@ public class SlaversController extends EventControllerAbstract {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
-                requestedCrew = slavers.getPenaltyCrew();
+                requestedBoxes = smugglers.getPenaltyBoxes();
 
-                // Calculates max crew number available to discard
-                int orangeAlienCount = player.getSpaceship().getAlienOrange() ? 1 : 0;
-                int purpleAlienCount = player.getSpaceship().getAlienPurple() ? 1 : 0;
-                int crewCount = player.getSpaceship().getCrewCount();
-                int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
+                // Calculates max boxes number available to discard
+                //TODO: da fare
+                int maxBoxCount = 3;
 
-                if (maxCrewCount > slavers.getPenaltyCrew()) {
-                    sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                    phase = "DISCARDED_CREW";
+
+                if (maxBoxCount > smugglers.getPenaltyBoxes()) {
+                    sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                    phase = "DISCARDED_BOXES";
 
                 } else {
-                    sender.sendMessage("NotEnoughCrew");
+                    sender.sendMessage("NotEnoughBoxes");
                     LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
                     gameManager.getGame().getBoard().leaveTravel(player);
 
@@ -320,32 +316,32 @@ public class SlaversController extends EventControllerAbstract {
     }
 
     /**
-     * Receives the coordinates of HousingUnit component from which remove a crew member
+     * Receives the coordinates of BoxStorage component from which remove a crew member
      *
      * @author Stefano
      * @param player
-     * @param xHousingUnit
-     * @param yHousingUnit
+     * @param xBoxStorage
+     * @param yBoxStorage
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_CREW")) {
+    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+        if (phase.equals("DISCARDED_BOXES")) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
-                Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
+                Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
-                if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
+                if (boxStorage != null && boxStorage.getType().equals(ComponentType.BOX_STORAGE)) {
 
                     // Checks if a crew member has been discarded
-                    if (slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
-                        requestedCrew--;
-                        sender.sendMessage("CrewMemberDiscarded");
+                    if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
+                        requestedBoxes--;
+                        sender.sendMessage("BoxDiscarded");
 
-                        if (requestedCrew == 0) {
+                        if (requestedBoxes == 0) {
 
                             // Next player
                             if (currPlayer < activePlayers.size()) {
@@ -358,7 +354,7 @@ public class SlaversController extends EventControllerAbstract {
                             }
 
                         } else {
-                            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
                         }
 
                     } else {
@@ -396,8 +392,8 @@ public class SlaversController extends EventControllerAbstract {
 
                 switch (upperCaseResponse) {
                     case "YES":
-                        phase = "EFFECT";
-                        eventEffect();
+                        phase = "REWARD_BOXES";
+                        //rewardBoxes();
                         break;
 
                     case "NO":
@@ -419,19 +415,37 @@ public class SlaversController extends EventControllerAbstract {
         }
     }
 
+
+    public void rewardBoxes(Player player, Sender sender) throws RemoteException {
+        if (phase.equals("REWARD_BOXES")) {
+
+            if (player.equals(activePlayers.get(currPlayer))) {
+
+                //TODO: create this phase for rewardBoxes
+
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
+    }
+
+
     /**
      * If the player accepted, he receives the reward and loses the penalty days
      *
      * @author Stefano
      * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+    private void penaltyDays() throws RemoteException {
+        if (phase.equals("PENALTY_DAYS")) {
             Player player = activePlayers.get(currPlayer);
             Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
-            slavers.rewardPenalty(gameManager.getGame().getBoard(), player);
+            smugglers.penalty(gameManager.getGame().getBoard(), player);
 
             // Retrieves sender reference
             SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
@@ -445,10 +459,8 @@ public class SlaversController extends EventControllerAbstract {
                 sender = virtualClient;
             }
 
-            sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
-            sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+            sender.sendMessage(new PlayerMovedBackwardMessage(smugglers.getPenaltyDays()));
+            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()));
 
             // Updates turn order
             board.updateTurnOrder();

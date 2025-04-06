@@ -1,24 +1,26 @@
 package org.progetto.messages.toClient;
 
-import java.io.Serializable;
 
-public class AcceptRewardCreditsAndPenalties implements Serializable {
+import org.progetto.server.model.components.Box;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class AcceptRewardBoxesAndPenaltyDaysMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    int rewardCredits;
-    int penaltyCrew;
+    ArrayList<Box> rewardBoxes;
     int penaltyDays;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AcceptRewardCreditsAndPenalties(int rewardCredits, int penaltyCrew, int penaltyDays) {
-        this.rewardCredits = rewardCredits;
-        this.penaltyCrew = penaltyCrew;
+    public AcceptRewardBoxesAndPenaltyDaysMessage(ArrayList<Box> rewardBoxes, int penaltyDays) {
+        this.rewardBoxes = rewardBoxes;
         this.penaltyDays = penaltyDays;
     }
 
@@ -26,10 +28,9 @@ public class AcceptRewardCreditsAndPenalties implements Serializable {
     // GETTERS
     // =======================
 
-    public int getRewardCredits() {
-        return rewardCredits;
+    public ArrayList<Box> getRewardBoxes() {
+        return rewardBoxes;
     }
-    public int getPenaltyCrew() {return penaltyCrew; }
     public int getPenaltyDays() {
         return penaltyDays;
     }

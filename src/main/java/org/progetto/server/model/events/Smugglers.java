@@ -160,7 +160,7 @@ public class Smugglers extends EventCard {
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int battleResult(Player player, int firePower) {
+    public int battleResult(Player player, float firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {

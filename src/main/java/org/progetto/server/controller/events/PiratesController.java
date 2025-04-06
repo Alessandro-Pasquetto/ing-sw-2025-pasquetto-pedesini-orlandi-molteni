@@ -106,7 +106,7 @@ public class PiratesController extends EventControllerAbstract {
             // Checks if players is able to win without double cannons
             if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                 phase = "REWARD_DECISION";
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDays(pirates.getRewardCredits(), pirates.getPenaltyDays()));
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
             }
 
             // Calculates max number of double cannons usable
@@ -250,7 +250,7 @@ public class PiratesController extends EventControllerAbstract {
                 switch (pirates.battleResult(player, playerFirePower)){
                     case 1:
                         phase = "REWARD_DECISION";
-                        sender.sendMessage(new AcceptRewardCreditsAndPenaltyDays(pirates.getRewardCredits(), pirates.getPenaltyDays()));
+                        sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                         break;
 
                     case -1:

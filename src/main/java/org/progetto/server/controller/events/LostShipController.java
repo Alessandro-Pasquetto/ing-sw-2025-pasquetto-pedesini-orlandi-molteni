@@ -82,7 +82,7 @@ public class LostShipController extends EventControllerAbstract  {
             int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
 
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                sender.sendMessage(new AcceptRewardCreditsAndPenalties(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
                 phase = "REWARD_DECISION";
             } else {
                 sender.sendMessage("NotEnoughCrew");
