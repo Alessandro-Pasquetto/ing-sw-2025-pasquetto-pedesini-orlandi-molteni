@@ -32,12 +32,12 @@ The final version includes:
 |------------------|-----------|
 | Basic rules      | ✅        |
 | Complete rules   | ⚠️        |
-| Socket          | ⛔        |
-| RMI            | ⛔        |
-| TUI            | ⛔        |
-| GUI            | ⛔        |
+| Socket          | ⚠️        |
+| RMI            | ⚠️        |
+| TUI            | ⚠️        |
+| GUI            | ⚠️        |
 | Demo travel    | ⛔        |
-| Multiple games | ⛔        |
+| Multiple games | ⚠️        |
 | Resilience     | ⛔        |
 | Persistence    | ⛔        |
 

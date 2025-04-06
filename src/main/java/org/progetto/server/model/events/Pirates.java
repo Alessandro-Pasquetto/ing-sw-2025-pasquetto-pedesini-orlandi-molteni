@@ -97,7 +97,7 @@ public class Pirates extends EventCard {
      * @param position Dices result
      * @return true if a component is destroyed, false otherwise
      */
-    public boolean penaltyShot(Game game, Player player, Projectile shot, int position) {
+    public Component penaltyShot(Game game, Player player, Projectile shot, int position) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
         int row, column;
 
@@ -106,12 +106,13 @@ public class Pirates extends EventCard {
                 row = 0;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
-                    return false;
+                    return null;
                 }
                 for (int i = row; i < spaceshipMatrix.length; i++) {
                     if (spaceshipMatrix[i][column] != null) {
+                        Component destroyedComponent = spaceshipMatrix[i][column];
                         player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return true;
+                        return destroyedComponent;
                     }
                 }
                 break;
@@ -119,12 +120,13 @@ public class Pirates extends EventCard {
                 row = position - 5; // normalization for spaceshipMatrix
                 column = spaceshipMatrix[0].length - 1;
                 if (row < 0 || row >= spaceshipMatrix.length) {
-                    return false;
+                    return null;
                 }
                 for (int j = column; j >= 0; j--) {
                     if (spaceshipMatrix[row][j] != null) {
+                        Component destroyedComponent = spaceshipMatrix[row][j];
                         player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return true;
+                        return destroyedComponent;
                     }
                 }
                 break;
@@ -132,12 +134,13 @@ public class Pirates extends EventCard {
                 row = spaceshipMatrix.length - 1;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
                 if (column < 0 || column >= spaceshipMatrix[0].length) {
-                    return false;
+                    return null;
                 }
                 for (int i = row; i >= 0; i--) {
                     if (spaceshipMatrix[i][column] != null) {
+                        Component destroyedComponent = spaceshipMatrix[i][column];
                         player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return true;
+                        return destroyedComponent;
                     }
                 }
                 break;
@@ -145,17 +148,18 @@ public class Pirates extends EventCard {
                 row = position - 5; // normalization for spaceshipMatrix
                 column = 0;
                 if (row < 0 || row >= spaceshipMatrix.length) {
-                    return false;
+                    return null;
                 }
                 for (int j = column; j < spaceshipMatrix[0].length; j++) {
                     if (spaceshipMatrix[row][j] != null) {
+                        Component destroyedComponent = spaceshipMatrix[row][j];
                         player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return true;
+                        return destroyedComponent;
                     }
                 }
                 break;
         }
-        return false;
+        return null;
     }
 
     /**
@@ -180,7 +184,7 @@ public class Pirates extends EventCard {
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int battleResult(Player player, int firePower) {
+    public int battleResult(Player player, float firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {

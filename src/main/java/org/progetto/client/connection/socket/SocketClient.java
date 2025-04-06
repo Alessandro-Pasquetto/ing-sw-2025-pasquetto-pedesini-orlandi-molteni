@@ -152,11 +152,6 @@ public class SocketClient implements Sender {
         SocketWriter.sendMessage(new PickBookedComponentMessage(idx));
     }
 
-    @Override
-    public void pickEventCard() {
-        SocketWriter.sendMessage("PickEventCard");
-    }
-
     void playerReady() {
         SocketWriter.sendMessage("Ready");
     }

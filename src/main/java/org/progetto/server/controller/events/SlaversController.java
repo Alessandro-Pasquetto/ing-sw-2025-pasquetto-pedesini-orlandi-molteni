@@ -10,6 +10,7 @@ import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -144,7 +145,10 @@ public class SlaversController extends EventControllerAbstract {
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
-                    playerFirePower = player.getSpaceship().getNormalShootingPower() + 2 * num;
+
+                    Spaceship spaceship = player.getSpaceship();
+                    playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount();
+                    // TODO: add this logic to spaceship
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
@@ -384,23 +388,33 @@ public class SlaversController extends EventControllerAbstract {
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals("REWARD_DECISION")) {
-            String upperCaseResponse = response.toUpperCase();
 
-            switch (upperCaseResponse) {
-                case "YES":
-                    phase = "EFFECT";
-                    eventEffect();
-                    break;
+            if (player.equals(activePlayers.get(currPlayer))) {
 
-                case "NO":
-                    phase = "END";
-                    end();
-                    break;
+                String upperCaseResponse = response.toUpperCase();
 
-                default:
-                    sender.sendMessage("IncorrectResponse");
-                    break;
+                switch (upperCaseResponse) {
+                    case "YES":
+                        phase = "EFFECT";
+                        eventEffect();
+                        break;
+
+                    case "NO":
+                        phase = "END";
+                        end();
+                        break;
+
+                    default:
+                        sender.sendMessage("IncorrectResponse");
+                        break;
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
             }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 

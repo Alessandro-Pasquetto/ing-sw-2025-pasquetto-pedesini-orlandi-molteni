@@ -496,11 +496,8 @@ public class BuildingBoard {
                 default:
                     break;
             }
-
-            System.gc();   // call for garbage collector
         }
     }
-
 
     /**
      * Checks if a cannon is valid
