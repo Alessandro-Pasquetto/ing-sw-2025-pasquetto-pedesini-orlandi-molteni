@@ -7,7 +7,7 @@ public class Spaceship {
     // =======================
     // ATTRIBUTES
     // =======================
-    private int levelShip;
+    private final int levelShip;
     private int shipComponentsCount;
     private int destroyedCount;
     private int crewCount;
@@ -16,7 +16,8 @@ public class Spaceship {
     private boolean alienPurple;
     private boolean alienOrange;
     private float normalShootingPower;
-    private int doubleCannonCount;
+    private int halfDoubleCannonCount;
+    private int fullDoubleCannonCount;
     private int normalEnginePower;
     private int doubleEngineCount;
     private final int[] shieldCounts;  // {up, right, down, left}
@@ -38,7 +39,8 @@ public class Spaceship {
         alienPurple = false;
         alienOrange = false;
         normalShootingPower = 0;
-        doubleCannonCount = 0;
+        halfDoubleCannonCount = 0;
+        fullDoubleCannonCount = 0;
         doubleEngineCount = 0;
         normalEnginePower = 0;
         shieldCounts = new int[] {0, 0, 0, 0};
@@ -88,8 +90,12 @@ public class Spaceship {
         return normalShootingPower;
     }
 
-    public int getDoubleCannonCount() {
-        return doubleCannonCount;
+    public int getHalfDoubleCannonCount() {
+        return halfDoubleCannonCount;
+    }
+
+    public int getFullDoubleCannonCount() {
+        return fullDoubleCannonCount;
     }
 
     public int getDoubleEngineCount(){
@@ -156,9 +162,11 @@ public class Spaceship {
         normalShootingPower += powerToAdd;
     }
 
-    public void addDoubleCannonCount(int countToAdd) {
-        doubleCannonCount += countToAdd;
+    public void addHalfDoubleCannonCount(int countToAdd) {
+        halfDoubleCannonCount += countToAdd;
     }
+
+    public void addFullDoubleCannonCount(int countToAdd) {fullDoubleCannonCount += countToAdd;}
 
     public void addNormalEnginePower(int powerToAdd) {
         normalEnginePower += powerToAdd;

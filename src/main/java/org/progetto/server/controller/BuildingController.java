@@ -470,7 +470,7 @@ public class BuildingController {
 
         for (Player player : game.getPlayers()) {
 
-            if(!player.getSpaceship().getBuildingBoard().checkShipValidity()){
+            if(!player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
                 game.addReadyPlayers(false);
 
                 Sender sender = gameManager.getSocketWriterByPlayer(player);

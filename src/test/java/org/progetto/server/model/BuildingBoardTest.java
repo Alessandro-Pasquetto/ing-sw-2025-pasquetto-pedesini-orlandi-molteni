@@ -478,11 +478,11 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
 
 
-        buildingBoard.checkShipValidity();                                //update connectors count
+        buildingBoard.checkStartShipValidity();                                //update connectors count
         assertEquals(6,spaceship.getExposedConnectorsCount());
 
         buildingBoard.destroyComponent(2,2);                        //remove component and check new connectors count
-        buildingBoard.checkShipValidity();
+        buildingBoard.checkStartShipValidity();
         assertEquals(4,spaceship.getExposedConnectorsCount());
 
         // destroy null component //
@@ -620,7 +620,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void checkShipValidity() {
+    void checkStartShipValidity() {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -676,7 +676,7 @@ class BuildingBoardTest {
 //
 //        System.out.println(buildingBoard.checkShipValidity());
 
-        assertFalse(buildingBoard.checkShipValidity());
+        assertFalse(buildingBoard.checkStartShipValidity());
 
         // Case cannon (up) not valid
         Spaceship spaceship1 = new Spaceship(2, 1);
@@ -688,7 +688,7 @@ class BuildingBoardTest {
         buildingBoard1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard1.placeComponent(1, 4, 0);
 
-        assertFalse(buildingBoard1.checkShipValidity());
+        assertFalse(buildingBoard1.checkStartShipValidity());
 
         // Case cannon (right) not valid
         Spaceship spaceship2 = new Spaceship(2, 1);
@@ -700,7 +700,7 @@ class BuildingBoardTest {
         buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard2.placeComponent(2, 5, 1);
 
-        assertFalse(buildingBoard2.checkShipValidity());
+        assertFalse(buildingBoard2.checkStartShipValidity());
 
         // Case cannon (down) not valid
         Spaceship spaceship3 = new Spaceship(2, 1);
@@ -712,7 +712,7 @@ class BuildingBoardTest {
         buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard3.placeComponent(3, 4, 2);
 
-        assertFalse(buildingBoard3.checkShipValidity());
+        assertFalse(buildingBoard3.checkStartShipValidity());
 
         // Case cannon (left) not valid
         Spaceship spaceship4 = new Spaceship(2, 1);
@@ -724,7 +724,7 @@ class BuildingBoardTest {
         buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard4.placeComponent(2, 1, 3);
 
-        assertFalse(buildingBoard4.checkShipValidity());
+        assertFalse(buildingBoard4.checkStartShipValidity());
     }
 
     @Test
@@ -782,7 +782,7 @@ class BuildingBoardTest {
         System.out.println();
          */
 
-        assertTrue(buildingBoard.checkShipValidity());
+        assertTrue(buildingBoard.checkStartShipValidity());
 
         buildingBoard.initSpaceshipParams();
         assertEquals(1.5, spaceship.getNormalShootingPower());

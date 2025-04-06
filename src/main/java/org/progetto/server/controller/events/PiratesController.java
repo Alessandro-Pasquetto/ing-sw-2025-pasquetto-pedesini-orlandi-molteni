@@ -89,6 +89,7 @@ public class PiratesController extends EventControllerAbstract {
         if (phase.equals("ASK_CANNONS")) {
 
             Player player = activePlayers.get(currPlayer);
+            Spaceship spaceship = player.getSpaceship();
 
             // Retrieves sender reference
             SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
@@ -103,14 +104,14 @@ public class PiratesController extends EventControllerAbstract {
             }
 
             // Checks if players is able to win without double cannons
-            if (pirates.battleResult(player, player.getSpaceship().getNormalShootingPower()) == 1) {
+            if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                 phase = "REWARD_DECISION";
                 sender.sendMessage(new AcceptRewardCreditsAndPenaltyDays(pirates.getRewardCredits(), pirates.getPenaltyDays()));
             }
 
             // Calculates max number of double cannons usable
-            int doubleFireCount = player.getSpaceship().getDoubleCannonCount();
-            int batteriesCount = player.getSpaceship().getBatteriesCount();
+            int doubleFireCount = spaceship.getHalfDoubleCannonCount() + spaceship.getFullDoubleCannonCount();
+            int batteriesCount = spaceship.getBatteriesCount();
             int maxUsable;
 
             if (doubleFireCount < batteriesCount) {
@@ -121,7 +122,7 @@ public class PiratesController extends EventControllerAbstract {
 
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0) {
-                playerFirePower = player.getSpaceship().getNormalShootingPower();
+                playerFirePower = spaceship.getNormalShootingPower();
 
                 phase = "BATTLE_RESULT";
                 battleResult(player, sender);

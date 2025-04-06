@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -38,7 +37,7 @@ class StardustTest {
         buildingBoard1.placeComponent(2, 2, 0);
 
         // Checks spaceship validity
-        buildingBoard1.checkShipValidity();
+        buildingBoard1.checkStartShipValidity();
 
         Stardust stardust = new Stardust(CardType.STARDUST,2, "imgSrc");
 
@@ -104,9 +103,9 @@ class StardustTest {
         buildingBoard4.placeComponent(3, 3, 0);
 
         // Checks spaceship validity
-        buildingBoard2.checkShipValidity();
-        buildingBoard3.checkShipValidity();
-        buildingBoard4.checkShipValidity();
+        buildingBoard2.checkStartShipValidity();
+        buildingBoard3.checkStartShipValidity();
+        buildingBoard4.checkStartShipValidity();
 
         // Calls penalty method
         stardust.penalty(board, player2);
