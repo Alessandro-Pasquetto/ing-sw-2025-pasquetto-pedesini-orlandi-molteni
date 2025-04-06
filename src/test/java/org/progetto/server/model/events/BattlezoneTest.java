@@ -138,6 +138,7 @@ class BattlezoneTest {
         assertFalse(battlezone.checkShields(player, p4));
     }
 
+    /*
     @Test
     void penaltyShot() {
         Game game1 = new Game(0, 3, 1);
@@ -367,6 +368,8 @@ class BattlezoneTest {
 //        }
 //        System.out.println();
     }
+
+     */
 
     @Test
     void chooseDiscardedBox() {

@@ -105,13 +105,23 @@ class SpaceshipTest {
     }
 
     @Test
-    void getDoubleCannonCount() {
+    void getFullDoubleCannonCount() {
         Spaceship spaceship = new Spaceship(1, 0);
 
-        assertEquals(0, spaceship.getDoubleCannonCount());
+        assertEquals(0, spaceship.getFullDoubleCannonCount());
 
-        spaceship.addDoubleCannonCount(1);
-        assertEquals(1, spaceship.getDoubleCannonCount());
+        spaceship.addFullDoubleCannonCount(1);
+        assertEquals(1, spaceship.getFullDoubleCannonCount());
+    }
+
+    @Test
+    void getHalfDoubleCannonCount() {
+        Spaceship spaceship = new Spaceship(1, 0);
+
+        assertEquals(0, spaceship.getHalfDoubleCannonCount());
+
+        spaceship.addHalfDoubleCannonCount(1);
+        assertEquals(1, spaceship.getHalfDoubleCannonCount());
     }
 
     @Test
@@ -325,26 +335,49 @@ class SpaceshipTest {
     }
 
     @Test
-    void addDoubleCannonCount() {
+    void addFullDoubleCannonCount() {
         Spaceship spaceship = new Spaceship(1,1);
 
         //adds one double cannon to DoubleCannonCount in level 1 ship
-        spaceship.addDoubleCannonCount(1);
-        assertEquals(1, spaceship.getDoubleCannonCount());
+        spaceship.addFullDoubleCannonCount(1);
+        assertEquals(1, spaceship.getFullDoubleCannonCount());
 
         //adds one double cannon to DoubleCannonCount in level 1 ship
-        spaceship.addDoubleCannonCount(1);
-        assertEquals(2, spaceship.getDoubleCannonCount());
+        spaceship.addFullDoubleCannonCount(1);
+        assertEquals(2, spaceship.getFullDoubleCannonCount());
 
         Spaceship spaceship2 = new Spaceship(2,2);
 
         //adds one double cannon to DoubleCannonCount in level 2 ship
-        spaceship2.addDoubleCannonCount(1);
-        assertEquals(1, spaceship2.getDoubleCannonCount());
+        spaceship2.addFullDoubleCannonCount(1);
+        assertEquals(1, spaceship2.getFullDoubleCannonCount());
 
         //adds one double cannon to DoubleCannonCount in level 2 ship
-        spaceship2.addDoubleCannonCount(1);
-        assertEquals(2, spaceship2.getDoubleCannonCount());
+        spaceship2.addFullDoubleCannonCount(1);
+        assertEquals(2, spaceship2.getFullDoubleCannonCount());
+    }
+
+    @Test
+    void addHalfDoubleCannonCount() {
+        Spaceship spaceship = new Spaceship(1,1);
+
+        //adds one double cannon to DoubleCannonCount in level 1 ship
+        spaceship.addHalfDoubleCannonCount(1);
+        assertEquals(1, spaceship.getHalfDoubleCannonCount());
+
+        //adds one double cannon to DoubleCannonCount in level 1 ship
+        spaceship.addHalfDoubleCannonCount(1);
+        assertEquals(2, spaceship.getHalfDoubleCannonCount());
+
+        Spaceship spaceship2 = new Spaceship(2,2);
+
+        //adds one double cannon to DoubleCannonCount in level 2 ship
+        spaceship2.addHalfDoubleCannonCount(1);
+        assertEquals(1, spaceship2.getHalfDoubleCannonCount());
+
+        //adds one double cannon to DoubleCannonCount in level 2 ship
+        spaceship2.addHalfDoubleCannonCount(1);
+        assertEquals(2, spaceship2.getHalfDoubleCannonCount());
     }
 
     @Test

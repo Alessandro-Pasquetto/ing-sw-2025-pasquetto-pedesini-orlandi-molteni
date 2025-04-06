@@ -94,10 +94,11 @@ public class BuildingBoard {
     }
 
     public Component getCentralUnit() {
-        if(spaceship.getLevelShip() == 1)
-            return spaceshipMatrix[2][3];
-        else
-            return spaceshipMatrix[2][2];
+        return switch (spaceship.getLevelShip()) {
+            case 1 -> spaceshipMatrix[2][2];
+            case 2 -> spaceshipMatrix[2][3];
+            default -> null;
+        };
     }
 
     /**
@@ -110,9 +111,13 @@ public class BuildingBoard {
         switch (spaceship.getLevelShip()) {
             case 1:
                 spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
+                spaceshipMatrix[2][2].setY(2);
+                spaceshipMatrix[2][2].setX(2);
                 break;
             case 2:
                 spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
+                spaceshipMatrix[2][3].setY(2);
+                spaceshipMatrix[2][3].setX(3);
                 break;
         }
         // There is no need to increment the componentCount in the spaceship because it is set by default to 1
@@ -739,6 +744,9 @@ public class BuildingBoard {
 
                 Component component = spaceshipMatrix[y][x];
 
+                if(component == null)
+                    continue;
+
                 if(component.getType() == ComponentType.HOUSING_UNIT){
 
                     HousingUnit hu = (HousingUnit) component;
@@ -824,6 +832,7 @@ public class BuildingBoard {
             hu.setAllowAlienOrange(true);
             return true;
         }
+
         // bottom
         if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && spaceshipMatrix[y + 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
             hu.setAllowAlienOrange(true);

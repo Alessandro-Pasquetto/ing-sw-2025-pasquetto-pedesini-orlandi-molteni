@@ -96,7 +96,7 @@ public class Battlezone extends EventCard{
      * @param player Current player
      * @param shot Current shot
      * @param position Dices result
-     * @return true if a component is destroyed, false otherwise
+     * @return the destroyed component, null otherwise
      */
     public Component penaltyShot(Game game, Player player, Projectile shot, int position) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
