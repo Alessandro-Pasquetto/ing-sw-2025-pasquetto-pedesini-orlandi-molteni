@@ -152,7 +152,7 @@ public class PlanetsController extends EventControllerAbstract {
 
     /**
      * For each player receive the box that the player choose, and it's placement in the component.
-     * Ppdate the player's view with the new list of available boxes.
+     * update the player's view with the new list of available boxes.
      *
      * @author Lorenzo
      * @param player that choose the box
