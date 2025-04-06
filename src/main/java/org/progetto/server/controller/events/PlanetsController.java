@@ -4,6 +4,7 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
@@ -11,6 +12,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -27,13 +29,12 @@ public class PlanetsController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
     private GameManager gameManager;
+    private Planets planets;
     private String phase;
     private int currPlayer;
     private int landedPlayers;
     private int leavedPlayers;
     private ArrayList<Player> activePlayers;
-    private Planets planets;
-
     private ArrayList<Box> rewardBoxes;
 
 
@@ -71,7 +72,7 @@ public class PlanetsController extends EventControllerAbstract {
      */
     private void askForLand() throws RemoteException,IllegalStateException {
 
-        if(Objects.equals(phase, "ASK_FOR_LAND")) {
+        if(phase.equals("ASK_FOR_LAND")) {
 
             try {
 
@@ -114,8 +115,9 @@ public class PlanetsController extends EventControllerAbstract {
      */
     public void receiveDecisionToLand(Player player,boolean land, int planetIdx,Sender sender) throws RemoteException,IllegalStateException {
 
-        if (Objects.equals(phase, "LAND")) {
-            if(land) {
+        if (phase.equals("LAND")) {
+
+            if (land) {
               try {
                   if(planets.getPlanetsTaken()[planetIdx]) {
                       sender.sendMessage("planetsTaken");
@@ -163,7 +165,7 @@ public class PlanetsController extends EventControllerAbstract {
      */
     public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException,IllegalStateException {
 
-        if (Objects.equals(phase, "CHOOSE_BOX")) {
+        if (phase.equals("CHOOSE_BOX")) {
 
             try {
 
@@ -206,8 +208,8 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws IllegalStateException
      */
     private void leavePlanet(Player player,Sender sender) throws RemoteException,IllegalStateException {
-        if (Objects.equals(phase, "LEAVE_PLANET")) {
-            leavedPlayers++;//next player
+        if (phase.equals("LEAVE_PLANET")) {
+            leavedPlayers++;  // next player
 
             if(leavedPlayers == landedPlayers) {
                 phase = "EFFECT";
@@ -226,10 +228,12 @@ public class PlanetsController extends EventControllerAbstract {
      * @author Lorenzo
      */
     private void eventEffect() throws RemoteException {
-        if(Objects.equals(phase, "EFFECT")) {
+        if (phase.equals("EFFECT")) {
 
+            Board board = gameManager.getGame().getBoard();
             planets.penalty(gameManager.getGame().getBoard());
-            for(Player player : planets.getLandedPlayers()){
+
+            for (Player player : planets.getLandedPlayers()){
 
                 SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
                 VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
@@ -243,10 +247,37 @@ public class PlanetsController extends EventControllerAbstract {
 
                 sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
                 LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
-
-                phase = "END";
-                end();
             }
+
+            // Updates turn order
+            board.updateTurnOrder();
+
+            // Checks for lapped player
+            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
+
+            if (lappedPlayers != null) {
+                for (Player lappedPlayer : lappedPlayers) {
+
+                    // Gets lapped player sender reference
+                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
+                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
+
+                    Sender senderLapped = null;
+
+                    if (socketWriterLapped != null) {
+                        senderLapped = socketWriterLapped;
+                    } else if (virtualClientLapped != null) {
+                        senderLapped = virtualClientLapped;
+                    }
+
+                    senderLapped.sendMessage("YouGotLapped");
+                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    board.leaveTravel(lappedPlayer);
+                }
+            }
+
+            phase = "END";
+            end();
         }
     }
 

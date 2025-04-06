@@ -8,6 +8,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
@@ -25,6 +26,7 @@ public class SlaversController extends EventControllerAbstract {
     // =======================
 
     private GameManager gameManager;
+    private Slavers slavers;
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
@@ -38,6 +40,7 @@ public class SlaversController extends EventControllerAbstract {
 
     public SlaversController(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.slavers = (Slavers) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();;
@@ -84,8 +87,6 @@ public class SlaversController extends EventControllerAbstract {
             } else if (virtualClient != null) {
                 sender = virtualClient;
             }
-
-            Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
 
             // Checks if players is able to win without double cannons
             if (slavers.battleResult(player, player.getSpaceship().getNormalShootingPower()) == 1) {
@@ -182,7 +183,6 @@ public class SlaversController extends EventControllerAbstract {
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-                    Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
 
                     // Checks if a battery has been discarded
                     if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
@@ -229,8 +229,6 @@ public class SlaversController extends EventControllerAbstract {
             if (player.equals(activePlayers.get(currPlayer))) {
 
                 // Calls the battleResult function
-                Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
-
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
                         phase = "REWARD_DECISION";
@@ -277,7 +275,6 @@ public class SlaversController extends EventControllerAbstract {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
-                Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
                 requestedCrew = slavers.getPenaltyCrew();
 
                 // Calculates max crew number available to discard
@@ -337,7 +334,6 @@ public class SlaversController extends EventControllerAbstract {
                 Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
                 if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
-                    Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
 
                     // Checks if a crew member has been discarded
                     if (slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
@@ -417,7 +413,7 @@ public class SlaversController extends EventControllerAbstract {
     private void eventEffect() throws RemoteException {
         if (phase.equals("EFFECT")) {
             Player player = activePlayers.get(currPlayer);
-            Slavers slavers = (Slavers) gameManager.getGame().getActiveEventCard();
+            Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
             slavers.rewardPenalty(gameManager.getGame().getBoard(), player);
@@ -438,6 +434,33 @@ public class SlaversController extends EventControllerAbstract {
             sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
             LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
             LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+
+            // Updates turn order
+            board.updateTurnOrder();
+
+            // Checks for lapped player
+            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
+
+            if (lappedPlayers != null) {
+                for (Player lappedPlayer : lappedPlayers) {
+
+                    // Gets lapped player sender reference
+                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
+                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
+
+                    Sender senderLapped = null;
+
+                    if (socketWriterLapped != null) {
+                        senderLapped = socketWriterLapped;
+                    } else if (virtualClientLapped != null) {
+                        senderLapped = virtualClientLapped;
+                    }
+
+                    senderLapped.sendMessage("YouGotLapped");
+                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    board.leaveTravel(lappedPlayer);
+                }
+            }
 
             phase = "END";
             end();

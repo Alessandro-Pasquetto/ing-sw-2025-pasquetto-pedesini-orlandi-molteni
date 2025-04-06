@@ -19,6 +19,7 @@ public class SabotageController extends EventControllerAbstract{
     // =======================
 
     private GameManager gameManager;
+    private Sabotage sabotage;
     private String phase;
     private Player penalizedPlayer;
     private ArrayList<Player> activePlayers;
@@ -32,6 +33,7 @@ public class SabotageController extends EventControllerAbstract{
 
     public SabotageController(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.sabotage = (Sabotage) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.penalizedPlayer = null;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
@@ -67,7 +69,6 @@ public class SabotageController extends EventControllerAbstract{
     private void lessPopulatedSpaceship() throws RemoteException {
         if (phase.equals("LESS_POPULATED")) {
 
-            Sabotage sabotage = (Sabotage) gameManager.getGame().getActiveEventCard();
             penalizedPlayer = sabotage.lessPopulatedSpaceship(activePlayers);
 
             LobbyController.broadcastLobbyMessage(new LessPopulatedPlayerMessage(penalizedPlayer.getName()));
@@ -161,7 +162,6 @@ public class SabotageController extends EventControllerAbstract{
      */
     private void eventEffect(Sender sender) throws RemoteException {
         if (phase.equals("EFFECT")) {
-            Sabotage sabotage = (Sabotage) gameManager.getGame().getActiveEventCard();
 
             // Event effect applied for single player
             if (sabotage.penalty(yDiceResult, xDiceResult, penalizedPlayer)) {

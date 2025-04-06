@@ -10,6 +10,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -27,11 +28,10 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
 
     private GameManager gameManager;
+    private LostStation lostStation;
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
-    private LostStation lostStation;
-
     boolean boxChosen = false;
     private ArrayList<Box> rewardBoxes;
 
@@ -186,6 +186,7 @@ public class LostStationController extends EventControllerAbstract {
 
             if (boxChosen) {
                 Player player = activePlayers.get(currPlayer);
+                Board board = gameManager.getGame().getBoard();
 
                 // Gets sender reference related to current player
                 SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
@@ -199,18 +200,35 @@ public class LostStationController extends EventControllerAbstract {
                     sender = virtualClient;
                 }
 
-                try {
-                    lostStation.penalty(gameManager.getGame().getBoard(), player);
+                lostStation.penalty(gameManager.getGame().getBoard(), player);
 
-                    sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
-                    LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
+                sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
+                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
 
-                } catch (IllegalStateException e) {
-                    // TODO: rivedere
-                    if (e.getMessage().equals("PlayerLapped")) {
-                        sender.sendMessage("GotLapped");
-                        LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
-                        gameManager.getGame().getBoard().leaveTravel(player);
+                // Updates turn order
+                board.updateTurnOrder();
+
+                // Checks for lapped player
+                ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
+
+                if (lappedPlayers != null) {
+                    for (Player lappedPlayer : lappedPlayers) {
+
+                        // Gets lapped player sender reference
+                        SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
+                        VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
+
+                        Sender senderLapped = null;
+
+                        if (socketWriterLapped != null) {
+                            senderLapped = socketWriterLapped;
+                        } else if (virtualClientLapped != null) {
+                            senderLapped = virtualClientLapped;
+                        }
+
+                        senderLapped.sendMessage("YouGotLapped");
+                        LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                        board.leaveTravel(lappedPlayer);
                     }
                 }
 

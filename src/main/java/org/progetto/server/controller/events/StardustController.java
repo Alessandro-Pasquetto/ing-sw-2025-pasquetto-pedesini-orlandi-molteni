@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -22,6 +23,7 @@ public class StardustController extends EventControllerAbstract {
     // =======================
 
     private GameManager gameManager;
+    private Stardust stardust;
     private String phase;
 
     // =======================
@@ -30,6 +32,7 @@ public class StardustController extends EventControllerAbstract {
 
     public StardustController(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.stardust = (Stardust) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
     }
 
@@ -63,7 +66,6 @@ public class StardustController extends EventControllerAbstract {
             Board board = gameManager.getGame().getBoard();
 
             for (Player player : reversedPlayers) {
-                Stardust stardust = (Stardust) gameManager.getGame().getActiveEventCard();
                 int exposedConnectorsCount = stardust.penalty(board, player);
 
                 // Sends update message
@@ -82,7 +84,32 @@ public class StardustController extends EventControllerAbstract {
                 LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
             }
 
+            // Updates turn order
             board.updateTurnOrder();
+
+            // Checks for lapped player
+            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
+
+            if (lappedPlayers != null) {
+                for (Player lappedPlayer : lappedPlayers) {
+
+                    // Gets lapped player sender reference
+                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
+                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
+
+                    Sender senderLapped = null;
+
+                    if (socketWriterLapped != null) {
+                        senderLapped = socketWriterLapped;
+                    } else if (virtualClientLapped != null) {
+                        senderLapped = virtualClientLapped;
+                    }
+
+                    senderLapped.sendMessage("YouGotLapped");
+                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    board.leaveTravel(lappedPlayer);
+                }
+            }
 
             phase = "END";
             end();

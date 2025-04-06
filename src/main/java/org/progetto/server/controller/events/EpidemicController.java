@@ -16,6 +16,7 @@ public class EpidemicController extends EventControllerAbstract {
     // =======================
 
     private GameManager gameManager;
+    private Epidemic epidemic;
     private String phase;
 
     // =======================
@@ -24,6 +25,7 @@ public class EpidemicController extends EventControllerAbstract {
 
     public EpidemicController(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.epidemic = (Epidemic) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
     }
 
@@ -54,7 +56,6 @@ public class EpidemicController extends EventControllerAbstract {
             ArrayList<Player> players = gameManager.getGame().getBoard().getActivePlayers();
 
             for (Player player : players) {
-                Epidemic epidemic = (Epidemic) gameManager.getGame().getActiveEventCard();
                 epidemic.epidemicResult(player);
             }
 

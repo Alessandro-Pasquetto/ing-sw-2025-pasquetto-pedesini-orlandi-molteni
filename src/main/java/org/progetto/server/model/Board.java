@@ -1,5 +1,7 @@
 package org.progetto.server.model;
 
+import org.progetto.server.model.components.HousingUnit;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -113,7 +115,7 @@ public class Board {
     }
 
     /**
-     * Moves the player forward on the board
+     * Moves the player forward/backwards on the board
      *
      * @author Alessandro
      * @param player the moving player
@@ -123,34 +125,60 @@ public class Board {
         int sign;
         int playerPosition = player.getPosition();
 
-        track[modulus(playerPosition, track.length)] = null;  // removes player from starting cell
+        track[modulus(playerPosition, track.length)] = null;  // removes the current player from starting cell
 
-        if(distance < 0)
+        if (distance < 0)
             sign = -1;
         else
             sign = 1;
 
         distance = Math.abs(distance);
 
-        while(distance != 0) {
+        while (distance != 0) {
             playerPosition += sign;
+            int wrappedPosition = modulus(playerPosition, track.length);
+            Player trackCell = track[wrappedPosition];
 
-            Player trackCell = track[modulus(playerPosition, track.length)];
-
-            if(trackCell == null) {
+            if (trackCell == null) {
                 distance--;
-            } else {
-                // TODO: rivedere la logica di lapping
-                if(trackCell.getPosition() <= playerPosition - track.length) {
-                    leaveTravel(trackCell);
-                    throw new IllegalStateException("PlayerLapped");
-                }
             }
         }
 
         track[modulus(playerPosition, track.length)] = player;
         player.setPosition(playerPosition);
     }
+
+//  public synchronized void movePlayerByDistance(Player player, int distance) throws IllegalStateException {
+//        int sign;
+//        int playerPosition = player.getPosition();
+//
+//        track[modulus(playerPosition, track.length)] = null;  // removes player from starting cell
+//
+//        if(distance < 0)
+//            sign = -1;
+//        else
+//            sign = 1;
+//
+//        distance = Math.abs(distance);
+//
+//        while(distance != 0) {
+//            playerPosition += sign;
+//
+//            Player trackCell = track[modulus(playerPosition, track.length)];
+//
+//            if(trackCell == null) {
+//                distance--;
+//            } else {
+//                if(trackCell.getPosition() <= playerPosition - track.length) {
+//                    leaveTravel(trackCell);
+//                    throw new IllegalStateException("PlayerLapped");
+//                }
+//            }
+//        }
+//
+//        track[modulus(playerPosition, track.length)] = player;
+//        player.setPosition(playerPosition);
+//    }
 
     /**
      * Calculate the modulus
@@ -172,6 +200,26 @@ public class Board {
      */
     public void updateTurnOrder() {
         activePlayers.sort(Comparator.comparingInt(Player::getPosition).reversed());
+    }
+
+    /**
+     * Checks if there is any lapped player
+     *
+     * @author Gabriele
+     * @return list of lapped players
+     */
+    public ArrayList<Player> checkLappedPlayers() {
+        ArrayList<Player> lappedPlayers = new ArrayList<>();
+        Player leader = activePlayers.get(0);
+
+        for (Player player : activePlayers) {
+            if (leader.getPosition() >= player.getPosition() + track.length) {
+                lappedPlayers.add(player);
+                leaveTravel(player);
+            }
+        }
+
+        return !lappedPlayers.isEmpty() ? lappedPlayers : null;
     }
 
     /**
