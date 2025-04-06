@@ -139,22 +139,22 @@ class PiratesTest {
         Projectile s4 = new Projectile(ProjectileSize.SMALL, 3);
 
         // up
-        assertFalse(pirates.penaltyShot(game1, p1, s1, 2));
-        assertFalse(pirates.penaltyShot(game1, p1, s1, 4));
-        assertFalse(pirates.penaltyShot(game1, p1, s1, 5));
-        assertTrue(pirates.penaltyShot(game1, p1, s1, 6));
-        assertTrue(pirates.penaltyShot(game1, p1, s1, 8));
-        assertFalse(pirates.penaltyShot(game1, p1, s1, 9));
-        assertFalse(pirates.penaltyShot(game1, p1, s1, 10));
+        assertNull(pirates.penaltyShot(game1, p1, s1, 2));
+        assertNull(pirates.penaltyShot(game1, p1, s1, 4));
+        assertNull(pirates.penaltyShot(game1, p1, s1, 5));
+        assertNotNull(pirates.penaltyShot(game1, p1, s1, 6));
+        assertNotNull(pirates.penaltyShot(game1, p1, s1, 8));
+        assertNull(pirates.penaltyShot(game1, p1, s1, 9));
+        assertNull(pirates.penaltyShot(game1, p1, s1, 10));
 
         // bottom
-        assertFalse(pirates.penaltyShot(game1, p1, s3, 2));
-        assertFalse(pirates.penaltyShot(game1, p1, s3, 4));
-        assertFalse(pirates.penaltyShot(game1, p1, s3, 5));
-        assertTrue(pirates.penaltyShot(game1, p1, s3, 6));
-        assertTrue(pirates.penaltyShot(game1, p1, s3, 8));
-        assertFalse(pirates.penaltyShot(game1, p1, s3, 9));
-        assertFalse(pirates.penaltyShot(game1, p1, s3, 10));
+        assertNull(pirates.penaltyShot(game1, p1, s3, 2));
+        assertNull(pirates.penaltyShot(game1, p1, s3, 4));
+        assertNull(pirates.penaltyShot(game1, p1, s3, 5));
+        assertNotNull(pirates.penaltyShot(game1, p1, s3, 6));
+        assertNotNull(pirates.penaltyShot(game1, p1, s3, 8));
+        assertNull(pirates.penaltyShot(game1, p1, s3, 9));
+        assertNull(pirates.penaltyShot(game1, p1, s3, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");
@@ -172,20 +172,20 @@ class PiratesTest {
 //        System.out.println();
 
         // right
-        assertFalse(pirates.penaltyShot(game1, p1, s2, 3));
-        assertFalse(pirates.penaltyShot(game1, p1, s2, 5));
-        assertTrue(pirates.penaltyShot(game1, p1, s2, 6));
-        assertTrue(pirates.penaltyShot(game1, p1, s2, 8));
-        assertFalse(pirates.penaltyShot(game1, p1, s2, 9));
-        assertFalse(pirates.penaltyShot(game1, p1, s2, 10));
+        assertNull(pirates.penaltyShot(game1, p1, s2, 3));
+        assertNull(pirates.penaltyShot(game1, p1, s2, 5));
+        assertNotNull(pirates.penaltyShot(game1, p1, s2, 6));
+        assertNotNull(pirates.penaltyShot(game1, p1, s2, 8));
+        assertNull(pirates.penaltyShot(game1, p1, s2, 9));
+        assertNull(pirates.penaltyShot(game1, p1, s2, 10));
 
         //left
-        assertFalse(pirates.penaltyShot(game1, p1, s4, 3));
-        assertFalse(pirates.penaltyShot(game1, p1, s4, 5));
-        assertTrue(pirates.penaltyShot(game1, p1, s4, 7));
-        assertFalse(pirates.penaltyShot(game1, p1, s4, 8));
-        assertFalse(pirates.penaltyShot(game1, p1, s4, 9));
-        assertFalse(pirates.penaltyShot(game1, p1, s4, 10));
+        assertNull(pirates.penaltyShot(game1, p1, s4, 3));
+        assertNull(pirates.penaltyShot(game1, p1, s4, 5));
+        assertNotNull(pirates.penaltyShot(game1, p1, s4, 7));
+        assertNull(pirates.penaltyShot(game1, p1, s4, 8));
+        assertNull(pirates.penaltyShot(game1, p1, s4, 9));
+        assertNull(pirates.penaltyShot(game1, p1, s4, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");

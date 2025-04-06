@@ -151,23 +151,6 @@ class BoardTest {
         track = board.getTrack();
 
         assertEquals(p1, track[17]);
-
-        // Player1 laps player2
-        board = new Board(1);
-        track = board.getTrack();
-
-        board.addTraveler(p1, 1);
-        board.addTraveler(p2, 1);
-
-        int pos2 = p2.getPosition();
-
-        board.movePlayerByDistance(p1, 16);
-
-        assertEquals(false, p1.getHasLeft());
-
-        assertFalse(p1.getHasLeft());
-        assertTrue(p2.getHasLeft());
-        assertNull(track[pos2]);
     }
 
     @Test

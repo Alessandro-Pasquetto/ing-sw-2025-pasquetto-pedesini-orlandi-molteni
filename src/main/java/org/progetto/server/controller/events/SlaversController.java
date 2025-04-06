@@ -147,7 +147,7 @@ public class SlaversController extends EventControllerAbstract {
                     requestedBatteries = num;
 
                     Spaceship spaceship = player.getSpaceship();
-                    playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount();
+                    // playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount();
                     // TODO: add this logic to spaceship
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
