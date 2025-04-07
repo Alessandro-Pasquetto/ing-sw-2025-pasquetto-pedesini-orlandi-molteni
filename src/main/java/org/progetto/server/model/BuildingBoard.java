@@ -682,11 +682,11 @@ public class BuildingBoard {
      * In any case, fix the alien presence.
      *
      * @author Alessandro
-     * @return true if the spaceship needs playerAction, false otherwise
+     * @return doesNotRequirePlayerAction: false if the spaceship needs playerAction, true otherwise
      */
     public boolean checkShipValidity() throws IllegalStateException{
 
-        boolean requiresPlayerAction = false;
+        boolean doesNotRequirePlayerAction = true;
 
         boolean[][] visited = new boolean[boardMask.length][boardMask[0].length];
 
@@ -724,12 +724,12 @@ public class BuildingBoard {
             if(centralUnit != null)
                 deleteDisconnectedComponents(visited);
             else
-                requiresPlayerAction = true;
+                doesNotRequirePlayerAction = false;
         }
 
         fixAlienPresence();
 
-        return requiresPlayerAction;
+        return doesNotRequirePlayerAction;
     }
 
     /**
@@ -755,6 +755,7 @@ public class BuildingBoard {
                         if(hu.getHasPurpleAlien()){
                             hu.setAlienPurple(false);
                             spaceship.setAlienPurple(false);
+                            spaceship.addCrewCount(-1);
                         }
                     }
 
@@ -762,6 +763,7 @@ public class BuildingBoard {
                         if(hu.getHasOrangeAlien()){
                             hu.setAlienOrange(false);
                             spaceship.setAlienOrange(false);
+                            spaceship.addCrewCount(-1);
                         }
                     }
                 }
@@ -849,15 +851,19 @@ public class BuildingBoard {
         return false;
     }
 
+    // todo:
+    // It might then need to return, in addition to the boolean, the list of coordinates and numCrew,
+    // or it can be passed an empty list through the constructor and fill it in
+    // I think the first idea is better
     /**
      * Initializes spaceship attributes after checking the ship validity
      *
      * @author Alessandro, Lorenzo
-     * @return requiresPlayerAction
+     * @return doesNotRequirePlayerAction
      */
     public boolean initSpaceshipParams() {
 
-        boolean requiresPlayerAction = false;
+        boolean doesNotRequirePlayerAction = true;
 
         for(int y = 0; y < spaceshipMatrix.length; y++){
             for(int x = 0; x < spaceshipMatrix[y].length; x++){
@@ -916,7 +922,7 @@ public class BuildingBoard {
                         HousingUnit hu = (HousingUnit) component;
 
                         if(checkAllowPurpleAlien(hu) || checkAllowOrangeAlien(hu))
-                            requiresPlayerAction = true;
+                            doesNotRequirePlayerAction = false;
                         else
                             hu.incrementCrewCount(spaceship,2);
 
@@ -937,6 +943,6 @@ public class BuildingBoard {
                 }
             }
         }
-        return requiresPlayerAction;
+        return doesNotRequirePlayerAction;
     }
 }
