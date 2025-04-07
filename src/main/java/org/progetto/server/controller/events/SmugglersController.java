@@ -276,29 +276,19 @@ public class SmugglersController extends EventControllerAbstract {
 
                 requestedBoxes = smugglers.getPenaltyBoxes();
 
-                // Calculates max boxes number available to discard
-                // TODO: da fare
-                int maxBoxCount = 3;
+                int maxBoxCount = player.getSpaceship().getBoxCounts()[0]
+                        + player.getSpaceship().getBoxCounts()[1]
+                        + player.getSpaceship().getBoxCounts()[2]
+                        + player.getSpaceship().getBoxCounts()[3];
 
-                if (maxBoxCount > smugglers.getPenaltyBoxes()) {
+                if (maxBoxCount >= 1) {
                     sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
                     phase = "DISCARDED_BOXES";
 
                 } else {
                     sender.sendMessage("NotEnoughBoxes");
-                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
-                    gameManager.getGame().getBoard().leaveTravel(player);
-
-                    // Next player
-                    if (currPlayer < activePlayers.size()) {
-                        currPlayer++;
-                        phase = "ASK_CANNONS";
-                        askHowManyCannonsToUse();
-
-                    } else {
-                        phase = "END";
-                        end();
-                    }
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                    phase = "DISCARDED_BATTERIES_2";
                 }
 
             } else {
@@ -338,6 +328,9 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (requestedBoxes == 0) {
 
+                            LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                            gameManager.getGame().getBoard().leaveTravel(player);
+
                             // Next player
                             if (currPlayer < activePlayers.size()) {
                                 currPlayer++;
@@ -350,6 +343,68 @@ public class SmugglersController extends EventControllerAbstract {
 
                         } else {
                             sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                        }
+
+                    } else {
+                        sender.sendMessage("NotEnoughBoxes");
+                    }
+
+                } else {
+                    sender.sendMessage("InvalidCoordinates");
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
+    }
+
+    /**
+     * Receives the coordinates of BatteryStorage component from which remove a battery
+     *
+     * @author Stefano
+     * @param player
+     * @param xBatteryStorage
+     * @param yBatteryStorage
+     * @param sender
+     * @throws RemoteException
+     */
+    public void receiveDiscardedBattery2(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+        if (phase.equals("DISCARDED_BATTERIES_2")) {
+
+            // Checks if the player that calls the methods is also the current one in the controller
+            if (player.equals(activePlayers.get(currPlayer))) {
+
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+
+                    // Checks if a battery has been discarded
+                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                        requestedBoxes--;
+                        sender.sendMessage("BatteryDiscarded");
+
+                        if (requestedBoxes == 0) {
+                            LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                            gameManager.getGame().getBoard().leaveTravel(player);
+
+                            // Next player
+                            if (currPlayer < activePlayers.size()) {
+                                currPlayer++;
+                                phase = "ASK_CANNONS";
+                                askHowManyCannonsToUse();
+
+                            } else {
+                                phase = "END";
+                                end();
+                            }
+
+                        } else {
+                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
                         }
 
                     } else {
