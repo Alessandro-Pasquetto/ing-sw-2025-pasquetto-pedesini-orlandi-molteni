@@ -158,7 +158,7 @@ public class SabotageController extends EventControllerAbstract{
 
                 // If something got destroyed, sends update message
                 // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                SpaceshipController.destroyComponent(gameManager, penalizedPlayer, yDiceResult, xDiceResult, sender);
+                SpaceshipController.destroyComponentAndCheckValidity(gameManager, penalizedPlayer, yDiceResult, xDiceResult, sender);
 
                 // Checks if he lost
                 int totalCrew = penalizedPlayer.getSpaceship().getTotalCrewCount();

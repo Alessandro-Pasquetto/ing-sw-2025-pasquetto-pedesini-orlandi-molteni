@@ -434,7 +434,6 @@ public class BuildingController {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-            String imgSrc = buildingBoard.getHandComponent().getImgSrc();
             buildingBoard.destroyComponent(yComponent,xComponent);
 
             sender.sendMessage(new DestroyedComponentMessage(yComponent,xComponent));

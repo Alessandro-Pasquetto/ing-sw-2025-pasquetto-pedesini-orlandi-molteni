@@ -608,7 +608,7 @@ public class PiratesController extends EventControllerAbstract {
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {
                     // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                    SpaceshipController.destroyComponent(gameManager, shieldNotProtectedPlayer, destroyedComponent.getY(), destroyedComponent.getX(), sender);
+                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, shieldNotProtectedPlayer, destroyedComponent.getY(), destroyedComponent.getX(), sender);
 
                 } else {
                     gameManager.broadcastGameMessage("NothingGotDestroyed");

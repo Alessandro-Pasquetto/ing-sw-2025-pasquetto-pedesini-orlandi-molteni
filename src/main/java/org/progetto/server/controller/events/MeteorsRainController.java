@@ -215,7 +215,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                         sender.sendMessage("NoShieldAvailable");
 
                         // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                        SpaceshipController.destroyComponent(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
+                        SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
@@ -272,7 +272,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                         sender.sendMessage("NoCannonAvailable");
 
                         // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                        SpaceshipController.destroyComponent(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
+                        SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
@@ -448,7 +448,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
                 // Destroys affected component
                 // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                SpaceshipController.destroyComponent(gameManager, notProtectedPlayer, affectedComponent.getY(), affectedComponent.getX(), sender);
+                SpaceshipController.destroyComponentAndCheckValidity(gameManager, notProtectedPlayer, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                 sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(notProtectedPlayer.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);

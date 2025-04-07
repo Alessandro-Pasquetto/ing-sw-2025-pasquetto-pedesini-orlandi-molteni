@@ -5,6 +5,7 @@ import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
+import org.progetto.server.model.Player;
 
 import java.rmi.RemoteException;
 
@@ -96,6 +97,20 @@ public class GameThread extends Thread {
     // =======================
     // OTHER METHODS
     // =======================
+
+
+    /**
+     * Pauses the game thread until the player is ready
+     *
+     * @author Alessandro
+     */
+    private void waitPlayerReady(Player player) throws InterruptedException {
+        synchronized (gameThreadLock) {
+            while (!player.getIsReady())
+                gameThreadLock.wait();
+        }
+    }
+
 
     /**
      * Pauses the game thread until all players are ready to continue

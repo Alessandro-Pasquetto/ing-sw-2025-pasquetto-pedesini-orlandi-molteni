@@ -128,11 +128,10 @@ public class SpaceshipController {
      * @param sender
      * @throws RemoteException
      */
-    public static void destroyComponent(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
+    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-            String imgSrc = buildingBoard.getHandComponent().getImgSrc();
             buildingBoard.destroyComponent(yComponent,xComponent);
 
             sender.sendMessage(new DestroyedComponentMessage(yComponent, xComponent));
@@ -178,7 +177,7 @@ public class SpaceshipController {
                     if (matrix[i][j] != null && newSpaceship.contains(matrix[i][j])) {
                        player.getSpaceship().getBuildingBoard().destroyComponent(i,j);
 
-                       destroyComponent(gameManager, player, yComponent, xComponent, sender);  // Notifies the destruction
+                       destroyComponentAndCheckValidity(gameManager, player, yComponent, xComponent, sender);  // Notifies the destruction
                     }
                 }
             }

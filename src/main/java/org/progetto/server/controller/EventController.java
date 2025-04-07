@@ -2,7 +2,6 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.events.EventCard;
 
 import java.rmi.RemoteException;
