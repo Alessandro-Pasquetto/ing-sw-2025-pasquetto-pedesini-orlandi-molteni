@@ -36,4 +36,5 @@ module org.progetto{
     opens org.progetto.client.model to com.google.gson, javafx.fxml;
     exports org.progetto.messages.toClient.LostShip;
     exports org.progetto.messages.toClient.EventCommon;
+    exports org.progetto.messages.toClient.Building;
 }

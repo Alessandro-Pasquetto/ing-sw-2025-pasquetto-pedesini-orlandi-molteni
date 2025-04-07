@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Building.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -434,7 +434,7 @@ public class BuildingController {
             String imgSrc = buildingBoard.getHandComponent().getImgSrc();
             buildingBoard.destroyComponent(yComponent,xComponent);
 
-            sender.sendMessage("ComponentDestroyed");  // forse da aggiungere un messaggio con parametri
+            sender.sendMessage(new DestroyedComponentMessage(yComponent,xComponent));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), yComponent, xComponent), sender);
 
         } catch (IllegalStateException e) {

@@ -1,6 +1,4 @@
-package org.progetto.messages.toClient;
-
-import org.progetto.server.model.events.EventCard;
+package org.progetto.messages.toClient.Building;
 
 import java.io.Serializable;
 

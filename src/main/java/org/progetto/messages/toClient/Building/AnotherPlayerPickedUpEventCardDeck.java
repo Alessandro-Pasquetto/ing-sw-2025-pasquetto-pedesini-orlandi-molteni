@@ -1,21 +1,23 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Building;
 
 import java.io.Serializable;
 
-public class AnotherPlayerIsReadyMessage implements Serializable {
+public class AnotherPlayerPickedUpEventCardDeck implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
     private String namePlayer;
+    private int deckIdx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerIsReadyMessage(String namePlayer) {
+    public AnotherPlayerPickedUpEventCardDeck(String namePlayer, int deckIdx) {
         this.namePlayer = namePlayer;
+        this.deckIdx = deckIdx;
     }
 
     // =======================
@@ -24,5 +26,9 @@ public class AnotherPlayerIsReadyMessage implements Serializable {
 
     public String getNamePlayer() {
         return namePlayer;
+    }
+
+    public int getDeckIdx() {
+        return deckIdx;
     }
 }

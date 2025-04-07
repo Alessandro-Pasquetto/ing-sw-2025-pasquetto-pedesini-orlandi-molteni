@@ -1,6 +1,6 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.toClient.TimerMessage;
+import org.progetto.messages.toClient.Building.TimerMessage;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.GamePhase;
 

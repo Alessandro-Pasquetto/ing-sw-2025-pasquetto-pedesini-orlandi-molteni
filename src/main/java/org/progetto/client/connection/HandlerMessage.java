@@ -1,9 +1,14 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
+import org.progetto.messages.toClient.Building.PickedComponentMessage;
+import org.progetto.messages.toClient.Building.TimerMessage;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

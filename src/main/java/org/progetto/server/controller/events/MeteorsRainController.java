@@ -2,6 +2,8 @@ package org.progetto.server.controller.events;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
+import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;

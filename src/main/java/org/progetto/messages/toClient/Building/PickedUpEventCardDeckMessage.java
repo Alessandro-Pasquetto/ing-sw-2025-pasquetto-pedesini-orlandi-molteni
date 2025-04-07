@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Building;
 
 import org.progetto.server.model.events.EventCard;
 

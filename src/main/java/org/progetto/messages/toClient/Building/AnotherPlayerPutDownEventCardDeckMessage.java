@@ -1,8 +1,8 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Building;
 
 import java.io.Serializable;
 
-public class AnotherPlayerPickedUpEventCardDeck implements Serializable {
+public class AnotherPlayerPutDownEventCardDeckMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -15,7 +15,7 @@ public class AnotherPlayerPickedUpEventCardDeck implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerPickedUpEventCardDeck(String namePlayer, int deckIdx) {
+    public AnotherPlayerPutDownEventCardDeckMessage(String namePlayer, int deckIdx) {
         this.namePlayer = namePlayer;
         this.deckIdx = deckIdx;
     }

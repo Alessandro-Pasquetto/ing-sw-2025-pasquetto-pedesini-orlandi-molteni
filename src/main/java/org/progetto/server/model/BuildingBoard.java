@@ -711,7 +711,7 @@ public class BuildingBoard {
                 }
             }
 
-            if(xComponent == -1) throw new IllegalStateException("Empty spaceship");
+            if(xComponent == -1) throw new IllegalStateException("EmptySpaceship");
         }
 
         dfsValidity(xComponent, yComponent, visited, numComponentsChecked, exposedConnectorsCount);
@@ -945,4 +945,68 @@ public class BuildingBoard {
         }
         return doesNotRequirePlayerAction;
     }
+
+    /**
+     * return the list of components that compose the spaceship starting from a component given
+     * its coordinates
+     *
+     * @author Lorenzo
+     * @param selectedY coordinate of selected component
+     * @param selectedX coordinate of selected component
+     * @return a list of all the components
+     */
+    public List<Component> getNewSpaceship(int selectedY, int selectedX){
+        int rows = spaceshipMatrix.length;
+        int cols = spaceshipMatrix[0].length;
+
+        boolean[][] visited = new boolean[rows][cols];
+        List<Component> connected = new ArrayList<>();
+        dfs(spaceshipMatrix, selectedY, selectedX, visited, connected);
+
+        return connected;
+    }
+
+    /**
+     * dfs that checks for connections
+     *
+     * @author Lorenzo
+     * @param matrix working matrix
+     * @param y coordinate
+     * @param x coordinate
+     * @param visited list
+     * @param result is the founded component list so far
+     */
+    private void dfs(Component[][] matrix, int y, int x, boolean[][] visited, List<Component> result) {
+        if (y < 0 || x < 0 || y >= matrix.length || x >= matrix[0].length) return;
+        if (matrix[y][x] == null || visited[y][x]) return;
+
+        visited[y][x] = true;
+        result.add(matrix[y][x]);
+
+        int[][] directions = {
+                {-1, 0}, // up
+                {0, 1},  // RIGHT
+                {1, 0},  // DOWN
+                {0, -1}  // LEFT
+        };
+
+        for (int d = 0; d < 4; d++) {
+            int newY = y + directions[d][0];
+            int newX = x + directions[d][1];
+            int opposite = (d + 2) % 4;
+
+            if (newY >= 0 && newX >= 0 && newY < matrix.length && newX < matrix[0].length) {
+                Component neighbor = matrix[newY][newX];
+                if (neighbor != null && !visited[newY][newX]) {
+                    if (areConnected(spaceshipMatrix[y][x],neighbor)) {
+                        dfs(matrix, newY, newX, visited, result);
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
 }
