@@ -93,6 +93,21 @@ public class GameManager {
         return playerRmiClients.get(player);
     }
 
+    public Sender getSenderByPlayer(Player player) {
+        SocketWriter socketWriter = this.getSocketWriterByPlayer(player);
+        VirtualClient virtualClient = this.getVirtualClientByPlayer(player);
+
+        Sender sender = null;
+
+        if (socketWriter != null) {
+            sender = socketWriter;
+        } else if (virtualClient != null) {
+            sender = virtualClient;
+        }
+
+        return sender;
+    }
+
     public Player getPlayerByVirtualClient(VirtualClient virtualClient) throws IllegalStateException {
 
         for (Map.Entry<Player, VirtualClient> entry : playerRmiClients.entrySet()) {

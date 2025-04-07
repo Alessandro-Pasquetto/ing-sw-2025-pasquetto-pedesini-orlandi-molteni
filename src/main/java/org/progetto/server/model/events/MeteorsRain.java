@@ -20,7 +20,7 @@ public class MeteorsRain extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public MeteorsRain(CardType type,int level,String imgSrc, ArrayList<Projectile> meteors) {
+    public MeteorsRain(CardType type, int level, String imgSrc, ArrayList<Projectile> meteors) {
         super(type, level,imgSrc);
         this.meteors = meteors;
     }
