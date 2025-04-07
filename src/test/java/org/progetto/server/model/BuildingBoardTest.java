@@ -239,7 +239,7 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
 
         // test allow orange alien //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();

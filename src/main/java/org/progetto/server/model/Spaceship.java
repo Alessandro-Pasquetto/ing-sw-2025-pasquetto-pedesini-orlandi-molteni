@@ -133,13 +133,13 @@ public class Spaceship {
     }
 
     public void setAlienPurple(boolean alienPresence) throws IllegalStateException {
-        if(alienPurple)
+        if(alienPurple && alienPresence)
             throw new IllegalStateException("HasAlreadyPurpleAlien");
         alienPurple = alienPresence;
     }
 
     public void setAlienOrange(boolean alienPresence) {
-        if(alienOrange)
+        if(alienOrange && alienPresence)
             throw new IllegalStateException("HasAlreadyOrangeAlien");
         alienOrange = alienPresence;
     }
