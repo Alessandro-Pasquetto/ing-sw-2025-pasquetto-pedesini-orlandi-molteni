@@ -67,9 +67,9 @@ public class LostStationController extends EventControllerAbstract {
      */
     private void askForLand() throws RemoteException,IllegalStateException {
 
-        if(Objects.equals(phase, "ASK_FOR_LAND")) {
+        if(phase.equals("ASK_FOR_LAND")) {
 
-            try {
+            if (currPlayer < activePlayers.size()) {
                 Player player = activePlayers.get(currPlayer);
 
                 if (player.getSpaceship().getCrewCount() >= lostStation.getRequiredCrew()) {
@@ -90,8 +90,9 @@ public class LostStationController extends EventControllerAbstract {
                     phase = "LAND";
                 }
 
-            }catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalStateException("AllPlayersChecked");
+            } else {
+                phase = "END";
+                end();
             }
         }
     }
@@ -107,23 +108,31 @@ public class LostStationController extends EventControllerAbstract {
      * @param land
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player,boolean land,Sender sender) throws RemoteException{
+    public void receiveDecisionToLand(Player player, boolean land, Sender sender) throws RemoteException {
+        if (phase.equals("LAND")) {
 
-        if (Objects.equals(phase, "LAND")) {
+            if (player.equals(activePlayers.get(currPlayer))) {
 
-            if(land) {
-                phase = "CHOOSE_BOX";
-                rewardBoxes = lostStation.getRewardBoxes();
+                if (land) {
+                    phase = "CHOOSE_BOX";
+                    rewardBoxes = lostStation.getRewardBoxes();
 
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player));
-                sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                sender.sendMessage("LandedCompeted");
+                    LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player));
+                    sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                    sender.sendMessage("LandingCompleted");
+
+                } else {
+                    phase = "ASK_FOR_LAND";
+                    currPlayer++;
+                    askForLand();
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
             }
-            else {
-                phase = "ASK_FOR_LAND";
-                currPlayer ++;
-                askForLand();
-            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -140,39 +149,48 @@ public class LostStationController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
+        if (phase.equals("CHOOSE_BOX")) {
 
-        if (Objects.equals(phase, "CHOOSE_BOX")) {
+            if (player.equals(activePlayers.get(currPlayer))) {
 
-            boxChosen = true;
+                boxChosen = true;
 
-            try {
-                Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
-                BoxStorage storage = (BoxStorage) matrix[y][x];
+                try {
+                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                    BoxStorage storage = (BoxStorage) matrix[y][x];
 
-                lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
+                    lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
 
-                if (!rewardBoxes.remove(box)) {
-                    sender.sendMessage("ChosenBoxNotAvailable");
+                    if (!rewardBoxes.remove(box)) {
+                        sender.sendMessage("ChosenBoxNotAvailable");
 
-                } else {
-                    sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                    sender.sendMessage("BoxChosen");
+                    } else {
+                        sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                        sender.sendMessage("BoxChosen");
+                    }
+
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("ComponentIsNotAStorage");
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new IllegalStateException("ComponentIsNotInMatrix");
                 }
 
-            } catch (ClassCastException e) {
-                throw new IllegalStateException("ComponentIsNotAStorage");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalStateException("ComponentIsNotInMatrix");
+                // All the boxes should be chosen or discarded
+                if (!rewardBoxes.isEmpty()) {
+                    phase = "CHOOSE_BOX";
+                } else {
+                    phase = "EFFECT";
+                    eventEffect();
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
             }
 
-            if (!rewardBoxes.isEmpty()) {    //tutte le box devono essere scelte o scartate
-                phase = "CHOOSE_BOX";
-            }
-            else{
-                phase = "EFFECT";
-                eventEffect();
-            }
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -182,7 +200,7 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      */
     private void eventEffect() throws RemoteException {
-        if(Objects.equals(phase, "EFFECT")) {
+        if(phase.equals("EFFECT")) {
 
             if (boxChosen) {
                 Player player = activePlayers.get(currPlayer);
@@ -237,7 +255,7 @@ public class LostStationController extends EventControllerAbstract {
             }
         }
 
-        //todo: aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
+        //TODO: aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
     }
 
     /**

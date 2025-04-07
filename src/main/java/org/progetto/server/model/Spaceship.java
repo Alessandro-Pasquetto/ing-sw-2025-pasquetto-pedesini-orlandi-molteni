@@ -16,8 +16,8 @@ public class Spaceship {
     private boolean alienPurple;
     private boolean alienOrange;
     private float normalShootingPower;
-    private int halfDoubleCannonCount;
-    private int fullDoubleCannonCount;
+    private int halfDoubleCannonCount;  // double cannons with half shooting power
+    private int fullDoubleCannonCount;  // double cannons with full shooting power
     private int normalEnginePower;
     private int doubleEngineCount;
     private final int[] shieldCounts;  // {up, right, down, left}
@@ -116,6 +116,12 @@ public class Spaceship {
 
     public BuildingBoard getBuildingBoard() {
         return buildingBoard;
+    }
+
+    public int getTotalCrewCount() {
+        int orangeAlienCount = alienOrange ? 1 : 0;
+        int purpleAlienCount = alienPurple ? 1 : 0;
+        return orangeAlienCount + purpleAlienCount + crewCount;
     }
 
     // =======================
@@ -245,6 +251,31 @@ public class Spaceship {
                 boxCounts[3] += countToAdd;
                 break;
         }
+    }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
+
+    /**
+     * Calculates maximum number of double engines usable
+     *
+     * @author Gabriele
+     * @return maximum number of double engines usable
+     */
+    public int maxNumberOfDoubleEnginesUsable() {
+        return Math.min(doubleEngineCount, batteriesCount);
+    }
+
+    /**
+     * Calculates maximum number of double cannons usable
+     *
+     * @author Gabriele
+     * @return maximum number of double cannons usable
+     */
+    public int maxNumberOfDoubleCannonsUsable() {
+        int doubleCannonCount = halfDoubleCannonCount + fullDoubleCannonCount;
+        return Math.min(doubleCannonCount, batteriesCount);
     }
 }
 

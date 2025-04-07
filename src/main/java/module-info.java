@@ -21,7 +21,7 @@ module org.progetto{
     exports org.progetto.server.controller;
     exports org.progetto.server.model.components;
     exports org.progetto.server.model.events;
-    exports org.progetto.server.model.loadClasses to com.fasterxml.jackson.databind;
+    exports org.progetto.server.model.loading to com.fasterxml.jackson.databind;
     exports org.progetto.server.connection.socket;
     exports org.progetto.server.connection.rmi;
     exports org.progetto.messages.toClient;

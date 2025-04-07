@@ -1,4 +1,4 @@
-package org.progetto.server.model.loadClasses;
+package org.progetto.server.model.loading;
 
 import com.google.gson.*;
 import org.progetto.server.model.components.*;

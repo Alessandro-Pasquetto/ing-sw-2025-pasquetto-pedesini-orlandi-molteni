@@ -97,15 +97,7 @@ public class SlaversController extends EventControllerAbstract {
             }
 
             // Calculates max number of double cannons usable
-            int doubleFireCount = spaceship.getHalfDoubleCannonCount() + spaceship.getFullDoubleCannonCount();
-            int batteriesCount = spaceship.getBatteriesCount();
-            int maxUsable;
-
-            if (doubleFireCount < batteriesCount) {
-                maxUsable = doubleFireCount;
-            } else {
-                maxUsable = batteriesCount;
-            }
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0) {
@@ -137,6 +129,8 @@ public class SlaversController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
 
+                Spaceship spaceship = player.getSpaceship();
+
                 // Player doesn't want to use double cannons
                 if (num == 0) {
                     playerFirePower = player.getSpaceship().getNormalShootingPower();
@@ -144,12 +138,15 @@ public class SlaversController extends EventControllerAbstract {
                     phase = "BATTLE_RESULT";
                     battleResult(player, sender);
 
-                } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
+                } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
 
-                    Spaceship spaceship = player.getSpaceship();
-                    // playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount();
-                    // TODO: add this logic to spaceship
+                    // Updates player's firepower based on his decision
+                    if (num <= spaceship.getFullDoubleCannonCount()) {
+                        playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
+                    } else {
+                        playerFirePower = spaceship.getFullDoubleCannonCount() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
+                    }
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
@@ -283,10 +280,7 @@ public class SlaversController extends EventControllerAbstract {
                 requestedCrew = slavers.getPenaltyCrew();
 
                 // Calculates max crew number available to discard
-                int orangeAlienCount = player.getSpaceship().getAlienOrange() ? 1 : 0;
-                int purpleAlienCount = player.getSpaceship().getAlienPurple() ? 1 : 0;
-                int crewCount = player.getSpaceship().getCrewCount();
-                int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
+                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
                 if (maxCrewCount > slavers.getPenaltyCrew()) {
                     sender.sendMessage(new CrewToDiscardMessage(requestedCrew));

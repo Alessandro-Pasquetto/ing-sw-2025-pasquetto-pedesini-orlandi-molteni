@@ -82,16 +82,8 @@ public class OpenSpaceController extends EventControllerAbstract {
                 sender = virtualClient;
             }
 
-            // Calculates max number of double cannon usable
-            int doubleEngineCount = player.getSpaceship().getDoubleEngineCount();
-            int batteriesCount = player.getSpaceship().getBatteriesCount();
-            int maxUsable;
-
-            if (doubleEngineCount < batteriesCount) {
-                maxUsable = doubleEngineCount;
-            } else {
-                maxUsable = batteriesCount;
-            }
+            // Calculates max number of double engine usable
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0) {
@@ -241,6 +233,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                 currPlayer++;
                 phase = "ASK_ENGINES";
                 askHowManyEnginesToUse();
+
             } else {
                 phase = "END";
                 end();

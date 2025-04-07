@@ -110,15 +110,7 @@ public class PiratesController extends EventControllerAbstract {
             }
 
             // Calculates max number of double cannons usable
-            int doubleFireCount = spaceship.getHalfDoubleCannonCount() + spaceship.getFullDoubleCannonCount();
-            int batteriesCount = spaceship.getBatteriesCount();
-            int maxUsable;
-
-            if (doubleFireCount < batteriesCount) {
-                maxUsable = doubleFireCount;
-            } else {
-                maxUsable = batteriesCount;
-            }
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0) {
@@ -150,6 +142,8 @@ public class PiratesController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
 
+                Spaceship spaceship = player.getSpaceship();
+
                 // Player doesn't want to use double cannons
                 if (num == 0) {
                     playerFirePower = player.getSpaceship().getNormalShootingPower();
@@ -157,12 +151,15 @@ public class PiratesController extends EventControllerAbstract {
                     phase = "BATTLE_RESULT";
                     battleResult(player, sender);
 
-                } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
+                } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
 
-                    Spaceship spaceship = player.getSpaceship();
-                    // playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount();
-                    // TODO: add this logic to spaceship
+                    // Updates player's firepower based on his decision
+                    if (num <= spaceship.getFullDoubleCannonCount()) {
+                        playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
+                    } else {
+                        playerFirePower = spaceship.getFullDoubleCannonCount() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
+                    }
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
@@ -696,10 +693,7 @@ public class PiratesController extends EventControllerAbstract {
             for (Player shieldNotProtectedPlayer : shieldProtectedPlayers) {
 
                 // Total amount of crew members
-                int orangeAlienCount = shieldNotProtectedPlayer.getSpaceship().getAlienOrange() ? 1 : 0;
-                int purpleAlienCount = shieldNotProtectedPlayer.getSpaceship().getAlienPurple() ? 1 : 0;
-                int crewCount = shieldNotProtectedPlayer.getSpaceship().getCrewCount();
-                int totalCrew = orangeAlienCount + purpleAlienCount + crewCount;
+                int totalCrew = shieldNotProtectedPlayer.getSpaceship().getTotalCrewCount();
 
                 if (totalCrew == 0) {
                     LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(shieldNotProtectedPlayer.getName()));

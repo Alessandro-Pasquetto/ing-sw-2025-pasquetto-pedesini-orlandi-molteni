@@ -2,7 +2,7 @@ package org.progetto.server.model;
 
 import java.util.*;
 import org.progetto.server.model.components.*;
-import org.progetto.server.model.loadClasses.MaskMatrix;
+import org.progetto.server.model.loading.MaskMatrix;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;

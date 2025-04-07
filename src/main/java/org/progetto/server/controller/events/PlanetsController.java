@@ -72,10 +72,9 @@ public class PlanetsController extends EventControllerAbstract {
      */
     private void askForLand() throws RemoteException,IllegalStateException {
 
-        if(phase.equals("ASK_FOR_LAND")) {
+        if (phase.equals("ASK_FOR_LAND")) {
 
-            try {
-
+            if (currPlayer < activePlayers.size()) {
                 Player player = activePlayers.get(currPlayer);
 
                 SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
@@ -89,15 +88,14 @@ public class PlanetsController extends EventControllerAbstract {
                     sender = virtualClient;
                 }
 
-
                 sender.sendMessage("LandRequest");
                 sender.sendMessage(new AvailablePlanetsMessage( planets.getPlanetsTaken()));
 
                 phase = "LAND";
 
-
-            }catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalStateException("AllPlayersChecked");
+            } else {
+                phase = "END";
+                end();
             }
         }
     }
@@ -113,46 +111,54 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player,boolean land, int planetIdx,Sender sender) throws RemoteException,IllegalStateException {
+    public void receiveDecisionToLand(Player player, boolean land, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
 
         if (phase.equals("LAND")) {
 
-            if (land) {
-              try {
-                  if(planets.getPlanetsTaken()[planetIdx]) {
-                      sender.sendMessage("planetsTaken");
-                      phase = "ASK_FOR_LAND";
-                  }
-                  else {
+            if (player.equals(activePlayers.get(currPlayer))) {
 
-                      planets.choosePlanet(player, planetIdx);
-                      landedPlayers++;
-                      LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player,planetIdx));
-                      sender.sendMessage("LandedCompeted");
+                if (land) {
 
-                      rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
-                      sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                      sender.sendMessage("AvailableBoxes");
+                    try {
+                        if (planets.getPlanetsTaken()[planetIdx]) {
+                            sender.sendMessage("PlanetTaken");
+                            phase = "ASK_FOR_LAND";
 
-                      phase = "CHOOSE_BOX";
+                        } else {
+                            planets.choosePlanet(player, planetIdx);
+                            landedPlayers++;
+                            LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player, planetIdx));
+                            sender.sendMessage("LandingCompleted");
 
-                  }
+                            rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
+                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                            sender.sendMessage("AvailableBoxes");
 
-              }catch(ArrayIndexOutOfBoundsException e){
-                  throw new IllegalStateException("PlanetIndexOutOfBound");
-              }
+                            phase = "CHOOSE_BOX";
+                        }
 
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        throw new IllegalStateException("PlanetIndexOutOfBound");
+                    }
+
+                } else {
+                    phase = "ASK_FOR_LAND";
+                    currPlayer++;
+                    askForLand();
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
             }
-            else {
-                phase = "ASK_FOR_LAND";
-                currPlayer ++;
-            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 
     /**
      * For each player receive the box that the player choose, and it's placement in the component.
-     * update the player's view with the new list of available boxes.
+     * Update the player's view with the new list of available boxes.
      *
      * @author Lorenzo
      * @param player that choose the box
@@ -163,12 +169,11 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x,int idx, Sender sender) throws RemoteException,IllegalStateException {
+    public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
 
         if (phase.equals("CHOOSE_BOX")) {
 
             try {
-
                 Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 BoxStorage storage = (BoxStorage) matrix[y][x];
 
@@ -184,16 +189,17 @@ public class PlanetsController extends EventControllerAbstract {
 
             } catch (ClassCastException e) {
                 throw new IllegalStateException("ComponentIsNotAStorage");
+
             } catch (ArrayIndexOutOfBoundsException e) {
                 throw new IllegalStateException("ComponentIsNotInMatrix");
             }
 
             if (!rewardBoxes.isEmpty()) {
                 phase = "CHOOSE_BOX";
-            }
-            else{
+
+            } else {
                 phase = "LEAVE_PLANET";
-                leavePlanet(activePlayers.get(currPlayer),sender);
+                leavePlanet(activePlayers.get(currPlayer), sender);
             }
         }
     }

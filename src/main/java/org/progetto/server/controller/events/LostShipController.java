@@ -76,10 +76,7 @@ public class LostShipController extends EventControllerAbstract  {
             }
 
             // Calculates max crew number available to discard
-            int orangeAlienCount = player.getSpaceship().getAlienOrange() ? 1 : 0;
-            int purpleAlienCount = player.getSpaceship().getAlienPurple() ? 1 : 0;
-            int crewCount = player.getSpaceship().getCrewCount();
-            int maxCrewCount = orangeAlienCount + purpleAlienCount + crewCount;
+            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
                 sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));

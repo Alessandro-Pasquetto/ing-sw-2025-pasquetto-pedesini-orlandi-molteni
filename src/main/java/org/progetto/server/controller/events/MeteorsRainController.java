@@ -24,6 +24,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private GameManager gameManager;
     private MeteorsRain meteorsRain;
     private String phase;
@@ -38,6 +39,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     // =======================
     // CONSTRUCTORS
     // =======================
+
     public MeteorsRainController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.meteorsRain = (MeteorsRain) gameManager.getGame().getActiveEventCard();
@@ -48,7 +50,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.shieldProtectedPlayers = new ArrayList<>();
         this.shieldNotProtectedPlayers = new ArrayList<>();
         this.discardedBatteryForShield = new ArrayList<>();
-
     }
 
     // =======================
@@ -68,7 +69,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     /**
-     * send broadcast the incoming meteor information
+     * Send broadcast the incoming meteor information
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -104,9 +105,6 @@ public class MeteorsRainController extends EventControllerAbstract {
             }
         }
     }
-
-
-
 
     /**
      * Asks the leader to trow the dices
@@ -170,7 +168,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
-
     /**
      * Asks players if they want to use a shield to protect the ship
      *
@@ -215,10 +212,10 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
-
     /**
-     * @author Lorenzo
+     * TODO: AGGIUNGERE COMMENTO!!!
      *
+     * @author Lorenzo
      * @param player is the one that send the decision about using shields
      * @param response is the given decision
      * @param sender
@@ -350,10 +347,10 @@ public class MeteorsRainController extends EventControllerAbstract {
             for (Player shieldNotProtectedPlayer : shieldNotProtectedPlayers) {
                 Component hitComponent = meteorsRain.checkImpactComponent(game, shieldNotProtectedPlayer, shot, diceResult);
 
-                // check if a small meteor hit an exposed connector
+                // Check if a small meteor hit an exposed connector
                 if((shot.getSize().equals(ProjectileSize.SMALL)) && (hitComponent.getConnections()[diceResult] > 0)){
 
-                    //todo complete destruction of a component and handle spaceship params update
+                    // TODO: complete destruction of a component and handle spaceship params update
 
                 }
 
@@ -378,7 +375,6 @@ public class MeteorsRainController extends EventControllerAbstract {
                     LobbyController.broadcastLobbyMessage("NothingGotDestroyed");
                 }
             }
-
 
             // Resets elaboration attributes
             shieldProtectedPlayers.clear();

@@ -1,4 +1,4 @@
-package org.progetto.server.model.loadClasses;
+package org.progetto.server.model.loading;
 
 /**
  * @implNote class for mapping Matrix readings from src/main/resources/org.progetto.server/Masks.json
