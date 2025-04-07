@@ -177,12 +177,10 @@ public class PlanetsController extends EventControllerAbstract {
                 Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 BoxStorage storage = (BoxStorage) matrix[y][x];
 
-                planets.chooseRewardBox(player.getSpaceship(), storage, idx, box);
-
                 if (!rewardBoxes.remove(box)) {
                     sender.sendMessage("ChosenBoxNotAvailable");
 
-                } else {
+                } else if(planets.chooseRewardBox(player.getSpaceship(), storage, idx, box)){
                     sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                     sender.sendMessage("BoxChosen");
                 }

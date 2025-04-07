@@ -165,7 +165,7 @@ public class LostStationController extends EventControllerAbstract {
                     if (!rewardBoxes.remove(box)) {
                         sender.sendMessage("ChosenBoxNotAvailable");
 
-                    } else {
+                    } else if(lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box)){
                         sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                         sender.sendMessage("BoxChosen");
                     }
