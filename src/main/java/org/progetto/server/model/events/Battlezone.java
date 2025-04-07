@@ -38,6 +38,36 @@ public class Battlezone extends EventCard{
     // =======================
 
     /**
+     * Finds the player with the fewer amount of crew members
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param players Game's players array
+     * @return the player with the fewer amount of crew members
+     */
+    public Player lessPopulatedSpaceship(ArrayList<Player> players) {
+        int minCrewCount = Integer.MAX_VALUE;
+        Player minPlayer = null;
+
+        for (Player player : players) {
+            // Calculates the current player crew count
+            int currCrewCount = player.getSpaceship().getTotalCrewCount();
+
+            if (currCrewCount < minCrewCount) {
+                minCrewCount = currCrewCount;
+                minPlayer = player;
+            }
+            else if (currCrewCount == minCrewCount) {
+                // In case of tie, picks farthest player on the route
+                if (player.getPosition() > minPlayer.getPosition()) {
+                    minPlayer = player;
+                }
+            }
+        }
+        return minPlayer;
+    }
+
+    /**
      * The player moves back by a number of days equal to penaltyDays
      *
      * @author Gabriele
@@ -240,7 +270,7 @@ public class Battlezone extends EventCard{
     //  2) Applies the penalty for that player.
     //  3) Go on with the next couple.
     //  There are three types of conditions:
-    //  - CrewRequirement
+    //  - CrewRequirement: finds player with fewer number of crew members calling lessPopulatedSpaceship().
     //  - FirePowerRequirement: starting from the leader and further ahead in the route order the controller gives to the player the possibility to use double cannons through the use of batteries.
     //  - EnginePowerRequirement: starting from the leader and further ahead in the route order the controller gives to the player the possibility to use double engines through the use of batteries.
     //  There are four types of penalties:

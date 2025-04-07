@@ -34,19 +34,14 @@ public class Sabotage extends EventCard {
 
         for (Player player : players) {
             // Calculates the current player crew count
-            int currCrewCount = player.getSpaceship().getCrewCount();
-            if (player.getSpaceship().getAlienOrange()) {
-                currCrewCount++;
-            }
-            if (player.getSpaceship().getAlienPurple()) {
-                currCrewCount++;
-            }
+            int currCrewCount = player.getSpaceship().getTotalCrewCount();
 
             if (currCrewCount < minCrewCount) {
                 minCrewCount = currCrewCount;
                 minPlayer = player;
             }
             else if (currCrewCount == minCrewCount) {
+                // In case of tie, picks farthest player on the route
                 if (player.getPosition() > minPlayer.getPosition()) {
                     minPlayer = player;
                 }
