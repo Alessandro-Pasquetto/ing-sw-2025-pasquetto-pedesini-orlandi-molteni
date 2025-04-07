@@ -63,8 +63,8 @@ public class GameView {
     }
 
     // Method to start the game
-    public void startGame() {
-        GameData.getSender().startGame();
+    public void ready() {
+        GameData.getSender().readyPlayer();
     }
 
     public void pickHiddenComponent() {

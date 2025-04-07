@@ -319,7 +319,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (requestedBoxes == 0) {
 
-                            LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
                             gameManager.getGame().getBoard().leaveTravel(player);
 
                             // Next player
@@ -380,7 +380,7 @@ public class SmugglersController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (requestedBoxes == 0) {
-                            LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
                             gameManager.getGame().getBoard().leaveTravel(player);
 
                             // Next player
@@ -491,7 +491,7 @@ public class SmugglersController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedBackwardMessage(smugglers.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()));
+            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()));
 
             // Updates turn order
             board.updateTurnOrder();
@@ -506,7 +506,7 @@ public class SmugglersController extends EventControllerAbstract {
                     Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -524,7 +524,7 @@ public class SmugglersController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

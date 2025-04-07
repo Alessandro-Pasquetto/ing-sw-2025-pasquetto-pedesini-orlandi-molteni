@@ -118,7 +118,7 @@ public class PlanetsController extends EventControllerAbstract {
                         } else {
                             planets.choosePlanet(player, planetIdx);
                             landedPlayers++;
-                            LobbyController.broadcastLobbyMessage(new AnotherPlayerLandedMessage(player, planetIdx));
+                            gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));
                             sender.sendMessage("LandingCompleted");
 
                             rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
@@ -232,7 +232,7 @@ public class PlanetsController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
-                LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
+                gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
             }
 
             // Updates turn order
@@ -248,7 +248,7 @@ public class PlanetsController extends EventControllerAbstract {
                     Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -266,7 +266,7 @@ public class PlanetsController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

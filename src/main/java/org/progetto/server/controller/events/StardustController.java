@@ -72,7 +72,7 @@ public class StardustController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));
-                LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
             }
 
             // Updates turn order
@@ -88,7 +88,7 @@ public class StardustController extends EventControllerAbstract {
                     Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -106,7 +106,7 @@ public class StardustController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

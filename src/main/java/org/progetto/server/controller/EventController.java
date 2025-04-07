@@ -27,15 +27,16 @@ public class EventController {
 
         try{
             EventCard card = gameManager.getGame().pickEventCard();
-            LobbyController.broadcastLobbyMessage(new PickedEventCardMessage(card.getImgSrc()));
 
-            gameManager.getGame().setPhase(GamePhase.EVENT);
+            System.out.println(card.getType().toString());
+            gameManager.broadcastGameMessage(new PickedEventCardMessage(card.getImgSrc()));
+
             gameManager.createEventController();
             gameManager.getEventController().start();
 
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("EmptyHiddenEventCardDeck"))
-                LobbyController.broadcastLobbyMessage("EmptyHiddenEventCardDeck");
+                gameManager.broadcastGameMessage("EmptyHiddenEventCardDeck");
         }
     }
 }

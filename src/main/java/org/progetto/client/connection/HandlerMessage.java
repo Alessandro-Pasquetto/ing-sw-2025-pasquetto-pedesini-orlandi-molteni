@@ -7,6 +7,7 @@ import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
+import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
 
 import java.io.IOException;
@@ -52,6 +53,9 @@ public class HandlerMessage {
         } else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             PageController.updateTimer(timer);
+
+        } else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
+            System.out.println("Current card: "+ pickedEventCardMessage.getImgSrc());
 
         } else if (messageObj instanceof String messageString) {
 

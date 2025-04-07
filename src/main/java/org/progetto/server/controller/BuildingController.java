@@ -31,7 +31,7 @@ public class BuildingController {
      */
     public static void pickHiddenComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -60,7 +60,7 @@ public class BuildingController {
      */
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, Sender sender) throws RemoteException{
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -101,6 +101,9 @@ public class BuildingController {
 
         }else
             sender.sendMessage("NotAllowedToPlaceComponent");
+
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -116,7 +119,7 @@ public class BuildingController {
      */
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -156,7 +159,7 @@ public class BuildingController {
      */
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -197,7 +200,7 @@ public class BuildingController {
      */
     public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -235,7 +238,7 @@ public class BuildingController {
      */
     public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -276,7 +279,7 @@ public class BuildingController {
      */
     public static void discardComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -304,7 +307,7 @@ public class BuildingController {
      */
     public static void bookComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -336,7 +339,7 @@ public class BuildingController {
      */
     public static void pickBookedComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -369,7 +372,7 @@ public class BuildingController {
      */
     public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -399,7 +402,7 @@ public class BuildingController {
      */
     public static void putDownEventCardDeck(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
@@ -451,17 +454,19 @@ public class BuildingController {
      * @param player
      * @param sender
      */
-    public static void playerReady(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+    public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
-        if(gameManager.timerExpired()){
+        if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
         }
 
         try{
+            player.setIsReady(true, gameManager.getGame());
             gameManager.getGame().getBoard().addReadyTraveler(player);
             sender.sendMessage("YouAreReady");
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
+            gameManager.getGameThread().notifyThread();
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerIsAlreadyReady"))
@@ -489,17 +494,18 @@ public class BuildingController {
 
     /**
      * Checks the validity of the spaceship for each player
+     * todo: rimuovere dai ready travelers?
      *
      * @author Alessandro
      * @param gameManager
      */
-    public static void checkShipValidity(GameManager gameManager) {
+    public static void checkAllShipValidity(GameManager gameManager) {
         Game game = gameManager.getGame();
 
         for (Player player : game.getPlayers()) {
 
             if(!player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
-                game.addReadyPlayers(false);
+                player.setIsReady(false, game);
 
                 Sender sender = gameManager.getSocketWriterByPlayer(player);
 

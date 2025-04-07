@@ -9,8 +9,6 @@ public interface Sender {
 
     void tryJoinToGame(int idGame);
 
-    void startGame();
-
     void pickHiddenComponent();
 
     void pickVisibleComponent();

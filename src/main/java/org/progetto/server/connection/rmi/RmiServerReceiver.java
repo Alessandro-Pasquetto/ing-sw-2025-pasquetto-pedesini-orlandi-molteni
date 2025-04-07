@@ -4,16 +4,13 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.server.controller.BuildingController;
-import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.internalMessages.InternalGameInfo;
-import org.progetto.server.model.Board;
-import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.Game;
-import org.progetto.server.model.Player;
+import org.progetto.server.model.*;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -83,11 +80,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         virtualClient.sendMessage("AllowedToJoinGame");
         virtualClient.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
-    }
-
-    @Override
-    public void startGame(VirtualClient virtualClient, int idGame) throws RemoteException {
-        GameController.startGame(GameManagerMaps.getGameManager(idGame), virtualClient);
     }
 
     @Override
@@ -329,7 +321,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.playerReady(gameManager, player, virtualClient);
+        if(gameManager.getGame().getPhase() == GamePhase.BUILDING)
+            BuildingController.readyBuilding(gameManager, player, virtualClient);
+        else
+            GameController.ready(gameManager, player, virtualClient);
     }
 
     @Override

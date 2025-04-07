@@ -56,6 +56,10 @@ public class Player {
         return hasLeft;
     }
 
+    public boolean getIsReady() {
+        return isReady;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -69,9 +73,11 @@ public class Player {
     }
 
     public void setIsReady(boolean isReady, Game game) {
-        this.isReady = isReady;
 
-        game.addReadyPlayers(isReady);
+        if(this.isReady != isReady){
+            this.isReady = isReady;
+            game.addReadyPlayers(isReady);
+        }
     }
 
     // =======================

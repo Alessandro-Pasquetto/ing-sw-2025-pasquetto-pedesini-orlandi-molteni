@@ -358,7 +358,12 @@ public class Game {
         synchronized (hiddenEventDeck) {
             if(hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
-            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+
+            int randomPos = 0;
+            do{//todo da rimuovere xD
+                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            }
+            while(hiddenEventDeck.get(randomPos).getType() != CardType.PLANETS);
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
@@ -461,5 +466,18 @@ public class Game {
             numReadyPlayers.getAndIncrement();
         else
             numReadyPlayers.getAndDecrement();
+    }
+
+    /**
+     * Resets numReadyPlayer value
+     *
+     * @author Alessandro
+     */
+    public void resetReadyPlayers(){
+        synchronized (players){
+            for (Player p : players) {
+                p.setIsReady(false, this);
+            }
+        }
     }
 }

@@ -223,8 +223,8 @@ public class LostShipController extends EventControllerAbstract  {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()));
+            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()));
+            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()));
 
             // Updates turn order
             board.updateTurnOrder();
@@ -239,7 +239,7 @@ public class LostShipController extends EventControllerAbstract  {
                     Sender senderLapped = gameManager.getSenderByPlayer(player);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -257,7 +257,7 @@ public class LostShipController extends EventControllerAbstract  {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

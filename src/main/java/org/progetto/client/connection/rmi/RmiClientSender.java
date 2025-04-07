@@ -55,15 +55,6 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void startGame() {
-        try {
-            server.startGame(RmiClientReceiver.getInstance(), GameData.getIdGame());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void pickHiddenComponent(){
         try {
             server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());

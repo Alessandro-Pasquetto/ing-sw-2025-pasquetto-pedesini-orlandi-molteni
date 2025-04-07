@@ -86,7 +86,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 } else {
                     sender.sendMessage("ZeroEnginePower");
-                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
                     gameManager.getGame().getBoard().leaveTravel(player);
                 }
 
@@ -208,7 +208,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
-            LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
             // Next player
             if (currPlayer < activePlayers.size()) {
@@ -231,7 +231,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

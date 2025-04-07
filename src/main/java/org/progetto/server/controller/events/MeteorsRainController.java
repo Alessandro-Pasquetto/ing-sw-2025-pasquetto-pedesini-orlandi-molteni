@@ -159,7 +159,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                 diceResult = player.rollDice();
 
                 sender.sendMessage(new DiceResultMessage(diceResult));
-                LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDiceResultMessage(activePlayers.getFirst().getName(), diceResult), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(activePlayers.getFirst().getName(), diceResult), sender);
 
                 if (meteors.getFirst().getSize().equals(ProjectileSize.SMALL)) {
                     phase = "HANDLE_SMALL_METEOR";
@@ -217,7 +217,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                         // TODO: handle component destruction
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
-                        LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
                     }
                 }
             }
@@ -273,7 +273,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                         // TODO: handle component destruction
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
-                        LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
                     }
                 }
             }
@@ -448,7 +448,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(notProtectedPlayer);
 
                 sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
-                LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDestroyedComponentMessage(notProtectedPlayer.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(notProtectedPlayer.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
             }
 
             // Resets elaboration attributes
@@ -474,7 +474,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

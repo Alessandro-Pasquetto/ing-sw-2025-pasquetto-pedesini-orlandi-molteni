@@ -32,7 +32,7 @@
         <Pane style="-fx-border-color: black; -fx-background-color: black;" GridPane.columnIndex="1" />
     </GridPane>
 
-    <Button layoutX="166.0" layoutY="84.0" onAction="#startGame" prefHeight="42.0" prefWidth="149.0" text="startGame" />
+    <Button layoutX="166.0" layoutY="84.0" onAction="#ready" prefHeight="42.0" prefWidth="149.0" text="Ready" />
     <Button layoutX="14.0" layoutY="198.0" onAction="#pickHiddenComponent" prefHeight="42.0" prefWidth="149.0" text="pickComponent" />
     <Button layoutX="775.0" layoutY="88.0" onAction="#rotateComponent" prefHeight="42.0" prefWidth="149.0" text="rotate" />
 

@@ -70,17 +70,12 @@ public class SocketClient implements Sender {
 
     @Override
     public void createGame() {
-        SocketWriter.sendMessage(new CreateGameMessage(1, 4, GameData.getNamePlayer()));
+        SocketWriter.sendMessage(new CreateGameMessage(1, 2, GameData.getNamePlayer()));
     }
 
     @Override
     public void tryJoinToGame(int idGame){
         SocketWriter.sendMessage(new JoinGameMessage(idGame, GameData.getNamePlayer()));
-    }
-
-    @Override
-    public void startGame(){
-        SocketWriter.sendMessage("StartGame");
     }
 
     @Override

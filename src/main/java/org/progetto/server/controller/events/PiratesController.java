@@ -338,8 +338,8 @@ public class PiratesController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(pirates.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(pirates.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()));
+            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()));
+            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()));
 
             // Updates turn order
             board.updateTurnOrder();
@@ -354,7 +354,7 @@ public class PiratesController extends EventControllerAbstract {
                     Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -434,7 +434,7 @@ public class PiratesController extends EventControllerAbstract {
                 diceResult = player.rollDice();
 
                 sender.sendMessage(new DiceResultMessage(diceResult));
-                LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
 
                 if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
                     phase = "ASK_SHIELDS";
@@ -612,10 +612,10 @@ public class PiratesController extends EventControllerAbstract {
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {
                     sender.sendMessage(new DestroyedComponentMessage(destroyedComponent.getY(), destroyedComponent.getX()));
-                    LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDestroyedComponentMessage(shieldNotProtectedPlayer.getName(), destroyedComponent.getY(), destroyedComponent.getX()), sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(shieldNotProtectedPlayer.getName(), destroyedComponent.getY(), destroyedComponent.getX()), sender);
 
                 } else {
-                    LobbyController.broadcastLobbyMessage("NothingGotDestroyed");
+                    gameManager.broadcastGameMessage("NothingGotDestroyed");
                 }
             }
 
@@ -626,7 +626,7 @@ public class PiratesController extends EventControllerAbstract {
                 int totalCrew = shieldNotProtectedPlayer.getSpaceship().getTotalCrewCount();
 
                 if (totalCrew == 0) {
-                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(shieldNotProtectedPlayer.getName()));
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(shieldNotProtectedPlayer.getName()));
                     gameManager.getGame().getBoard().leaveTravel(shieldNotProtectedPlayer);
 
                     // Remove him from defeated players still to handle
@@ -656,7 +656,7 @@ public class PiratesController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

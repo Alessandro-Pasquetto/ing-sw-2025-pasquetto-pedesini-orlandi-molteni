@@ -103,8 +103,8 @@ public class SocketListener extends Thread {
             case INIT:
                 if (messageObj instanceof String messageString){
                     switch (messageString) {
-                        case "StartGame":
-                            GameController.startGame(gameManager, socketWriter);
+                        case "Ready":
+                            GameController.ready(gameManager, player, socketWriter);
                             break;
                         default:
                             System.out.println(messageString + " not allowed");
@@ -193,7 +193,8 @@ public class SocketListener extends Thread {
                             break;
 
                         case "Ready":
-                            BuildingController.playerReady(gameManager, player, socketWriter);
+                            BuildingController.readyBuilding(gameManager, player, socketWriter);
+
                             break;
 
                         case "ResetTimer":

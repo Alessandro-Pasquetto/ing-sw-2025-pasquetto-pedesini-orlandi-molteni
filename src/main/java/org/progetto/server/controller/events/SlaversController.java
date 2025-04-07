@@ -279,7 +279,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 } else {
                     sender.sendMessage("NotEnoughCrew");
-                    LobbyController.broadcastLobbyMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
                     gameManager.getGame().getBoard().leaveTravel(player);
 
                     // Next player
@@ -423,8 +423,8 @@ public class SlaversController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
-            LobbyController.broadcastLobbyMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
+            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
 
             // Updates turn order
             board.updateTurnOrder();
@@ -439,7 +439,7 @@ public class SlaversController extends EventControllerAbstract {
                     Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
-                    LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
+                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
                     board.leaveTravel(lappedPlayer);
                 }
             }
@@ -457,7 +457,7 @@ public class SlaversController extends EventControllerAbstract {
      */
     private void end() throws RemoteException {
         if (phase.equals("END")) {
-            LobbyController.broadcastLobbyMessage("This event card is finished");
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

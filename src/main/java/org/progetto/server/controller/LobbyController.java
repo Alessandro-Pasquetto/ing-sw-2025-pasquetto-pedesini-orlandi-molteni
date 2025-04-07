@@ -41,7 +41,6 @@ public class LobbyController {
             RmiServer.broadcastLobbyMessageToOthers(sender, messageObj);
             SocketServer.broadcastLobbyMessage(messageObj);
         }
-
     }
 
     // Create game objects and player, add player to the game

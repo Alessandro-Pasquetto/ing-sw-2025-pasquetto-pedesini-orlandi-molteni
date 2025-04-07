@@ -3,12 +3,8 @@ package org.progetto.server.connection.games;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.TimerController;
-import org.progetto.server.controller.events.EpidemicController;
-import org.progetto.server.controller.events.EventControllerAbstract;
-import org.progetto.server.controller.events.OpenSpaceController;
-import org.progetto.server.controller.events.StardustController;
+import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
@@ -30,6 +26,7 @@ public class GameManager {
     private final HashMap<Player, SocketWriter> playerSocketWriters = new HashMap<>();
     private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
 
+    GameThread gameThread;
     private final Game game;
     private EventControllerAbstract eventController;
     private final TimerController timer;
@@ -43,6 +40,9 @@ public class GameManager {
         this.eventController = null;
         this.timer = new TimerController(this, 10, 2);
         GameManagerMaps.addWaitingGameManager(idGame, this);
+
+        gameThread = new GameThread(this);
+        gameThread.start();
     }
 
     // =======================
@@ -77,11 +77,15 @@ public class GameManager {
         return eventController;
     }
 
+    public GameThread getGameThread() {
+        return gameThread;
+    }
+
     public TimerController getTimerController() {
         return timer;
     }
 
-    public boolean timerExpired() {
+    public boolean getTimerExpired() {
         return timer.isTimerExpired();
     }
 
@@ -198,6 +202,10 @@ public class GameManager {
 
             case OPENSPACE:
                 eventController = new OpenSpaceController(this);
+                break;
+
+            case PLANETS:
+                eventController = new PlanetsController(this);
                 break;
 
             default:

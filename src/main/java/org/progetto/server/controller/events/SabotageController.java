@@ -73,7 +73,7 @@ public class SabotageController extends EventControllerAbstract{
 
             penalizedPlayer = sabotage.lessPopulatedSpaceship(activePlayers);
 
-            LobbyController.broadcastLobbyMessage(new LessPopulatedPlayerMessage(penalizedPlayer.getName()));
+            gameManager.broadcastGameMessage(new LessPopulatedPlayerMessage(penalizedPlayer.getName()));
 
             phase = "ASK_ROLL_DICE";
             askToRollDice();
@@ -121,7 +121,7 @@ public class SabotageController extends EventControllerAbstract{
                     yDiceResult = player.rollDice();
 
                     sender.sendMessage(new DiceResultMessage(yDiceResult));
-                    LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), yDiceResult), sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), yDiceResult), sender);
 
                     phase = "ASK_ROLL_DICE";
                     askToRollDice();
@@ -131,7 +131,7 @@ public class SabotageController extends EventControllerAbstract{
                     xDiceResult = player.rollDice();
 
                     sender.sendMessage(new DiceResultMessage(xDiceResult));
-                    LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), xDiceResult), sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), xDiceResult), sender);
 
                     phase = "EFFECT";
                     eventEffect(sender);
@@ -161,13 +161,13 @@ public class SabotageController extends EventControllerAbstract{
 
                 // If something got destroyed, sends update message
                 sender.sendMessage(new DestroyedComponentMessage(yDiceResult, xDiceResult));
-                LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerDestroyedComponentMessage(penalizedPlayer.getName(), yDiceResult, xDiceResult), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(penalizedPlayer.getName(), yDiceResult, xDiceResult), sender);
 
                 phase = "END";
 
             } else {
 
-                LobbyController.broadcastLobbyMessage("NothingDestroyed");
+                gameManager.broadcastGameMessage("NothingDestroyed");
 
                 triesCount++;
 

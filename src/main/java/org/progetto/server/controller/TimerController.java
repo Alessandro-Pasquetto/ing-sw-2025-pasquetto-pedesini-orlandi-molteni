@@ -13,7 +13,7 @@ public class TimerController {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
     private final int defaultTimer;
     private int timer;
     private int timerFlipsAllowed;
@@ -62,7 +62,7 @@ public class TimerController {
             isTimerRunning = true;
 
             int currentTimer = timer;
-            while (true) {
+            while (isTimerRunning) {
 
                 System.out.println("Timer: " + currentTimer);
                 gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
@@ -84,12 +84,14 @@ public class TimerController {
             }
 
             if (timerFlipsAllowed == 0) {
-                gameManager.broadcastGameMessage("TimerExpired");
-                System.out.println("TimerExpired");
-                BuildingController.checkShipValidity(gameManager);
+                gameManager.getGameThread().notifyThread();
             }
 
             isTimerRunning = false;
         }).start();
+    }
+
+    public synchronized void stopTimer() {
+        isTimerRunning = false;
     }
 }
