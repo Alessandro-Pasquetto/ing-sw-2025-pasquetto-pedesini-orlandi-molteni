@@ -76,16 +76,7 @@ public class SmugglersController extends EventControllerAbstract {
             Spaceship spaceship = player.getSpaceship();
 
             // Retrieves sender reference
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Checks if players is able to win without double cannons
             if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
@@ -497,16 +488,7 @@ public class SmugglersController extends EventControllerAbstract {
             smugglers.penalty(gameManager.getGame().getBoard(), player);
 
             // Retrieves sender reference
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedBackwardMessage(smugglers.getPenaltyDays()));
             LobbyController.broadcastLobbyMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()));
@@ -521,16 +503,7 @@ public class SmugglersController extends EventControllerAbstract {
                 for (Player lappedPlayer : lappedPlayers) {
 
                     // Gets lapped player sender reference
-                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
-                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
-
-                    Sender senderLapped = null;
-
-                    if (socketWriterLapped != null) {
-                        senderLapped = socketWriterLapped;
-                    } else if (virtualClientLapped != null) {
-                        senderLapped = virtualClientLapped;
-                    }
+                    Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
                     LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);

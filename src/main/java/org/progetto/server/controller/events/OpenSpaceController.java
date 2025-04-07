@@ -71,16 +71,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             Player player = activePlayers.get(currPlayer);
 
             // Gets the sender reference to send a message to player
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Calculates max number of double engine usable
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
@@ -214,16 +205,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
             // Sends update message
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
             LobbyController.broadcastLobbyMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);

@@ -94,16 +94,7 @@ public class PiratesController extends EventControllerAbstract {
             Spaceship spaceship = player.getSpaceship();
 
             // Retrieves sender reference
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Checks if players is able to win without double cannons
             if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
@@ -343,16 +334,7 @@ public class PiratesController extends EventControllerAbstract {
             pirates.rewardPenalty(gameManager.getGame().getBoard(), player);
 
             // Retrieves sender reference
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedBackwardMessage(pirates.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(pirates.getRewardCredits()));
@@ -369,16 +351,7 @@ public class PiratesController extends EventControllerAbstract {
                 for (Player lappedPlayer : lappedPlayers) {
 
                     // Gets lapped player sender reference
-                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
-                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
-
-                    Sender senderLapped = null;
-
-                    if (socketWriterLapped != null) {
-                        senderLapped = socketWriterLapped;
-                    } else if (virtualClientLapped != null) {
-                        senderLapped = virtualClientLapped;
-                    }
+                    Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
 
                     senderLapped.sendMessage("YouGotLapped");
                     LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
@@ -404,16 +377,7 @@ public class PiratesController extends EventControllerAbstract {
 
                 // Sends to each defeated player information about incoming shot
                 for (Player defeatedPlayer : defeatedPlayers) {
-                    SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(defeatedPlayer);
-                    VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(defeatedPlayer);
-
-                    Sender sender = null;
-
-                    if (socketWriter != null) {
-                        sender = socketWriter;
-                    } else if (virtualClient != null) {
-                        sender = virtualClient;
-                    }
+                    Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
                     sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
                 }
@@ -439,16 +403,7 @@ public class PiratesController extends EventControllerAbstract {
         if (phase.equals("ASK_ROLL_DICE")) {
 
             // Asks first defeated player to roll dice
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(defeatedPlayers.getFirst());
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(defeatedPlayers.getFirst());
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(defeatedPlayers.getFirst());
 
             if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
                 sender.sendMessage("ThrowDiceToFindColumn");
@@ -513,16 +468,7 @@ public class PiratesController extends EventControllerAbstract {
                 boolean hasShield = pirates.checkShields(defeatedPlayer, penaltyShots.getFirst());
 
                 // Asks current defeated player if he wants to use a shield
-                SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(defeatedPlayer);
-                VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(defeatedPlayer);
-
-                Sender sender = null;
-
-                if (socketWriter != null) {
-                    sender = socketWriter;
-                } else if (virtualClient != null) {
-                    sender = virtualClient;
-                }
+                Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
                 if (hasShield && defeatedPlayer.getSpaceship().getBatteriesCount() > 0) {
                     sender.sendMessage("AskToUseShield");
@@ -573,16 +519,7 @@ public class PiratesController extends EventControllerAbstract {
 
                         // Asks for a battery to each protected player
                         for (Player protectedPlayer : shieldProtectedPlayers) {
-                            SocketWriter socketWriterProtected = gameManager.getSocketWriterByPlayer(protectedPlayer);
-                            VirtualClient virtualClientProtected = gameManager.getVirtualClientByPlayer(protectedPlayer);
-
-                            Sender senderProtected = null;
-
-                            if (socketWriterProtected != null) {
-                                senderProtected = socketWriterProtected;
-                            } else if (virtualClientProtected != null) {
-                                senderProtected = virtualClientProtected;
-                            }
+                            Sender senderProtected = gameManager.getSenderByPlayer(protectedPlayer);
 
                             senderProtected.sendMessage(new BatteriesToDiscardMessage(1));
                         }
@@ -670,16 +607,7 @@ public class PiratesController extends EventControllerAbstract {
                 Component destroyedComponent = pirates.penaltyShot(game, shieldNotProtectedPlayer, shot, diceResult);
 
                 // Gets current player sender reference
-                SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(shieldNotProtectedPlayer);
-                VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(shieldNotProtectedPlayer);
-
-                Sender sender = null;
-
-                if (socketWriter != null) {
-                    sender = socketWriter;
-                } else if (virtualClient != null) {
-                    sender = virtualClient;
-                }
+                Sender sender = gameManager.getSenderByPlayer(shieldNotProtectedPlayer);
 
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {

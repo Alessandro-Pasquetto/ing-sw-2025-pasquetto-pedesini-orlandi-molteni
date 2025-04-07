@@ -64,16 +64,7 @@ public class LostShipController extends EventControllerAbstract  {
         if(phase.equals("ASK_TO_LAND")) {
             Player player = activePlayers.get(currPlayer);
 
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Calculates max crew number available to discard
             int maxCrewCount = player.getSpaceship().getTotalCrewCount();
@@ -225,16 +216,7 @@ public class LostShipController extends EventControllerAbstract  {
             Board board = gameManager.getGame().getBoard();
 
             // Gets sender reference related to current player
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Event effect applied for single player
             lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
@@ -254,16 +236,7 @@ public class LostShipController extends EventControllerAbstract  {
                 for (Player lappedPlayer : lappedPlayers) {
 
                     // Gets lapped player sender reference
-                    SocketWriter socketWriterLapped = gameManager.getSocketWriterByPlayer(lappedPlayer);
-                    VirtualClient virtualClientLapped = gameManager.getVirtualClientByPlayer(lappedPlayer);
-
-                    Sender senderLapped = null;
-
-                    if (socketWriterLapped != null) {
-                        senderLapped = socketWriterLapped;
-                    } else if (virtualClientLapped != null) {
-                        senderLapped = virtualClientLapped;
-                    }
+                    Sender senderLapped = gameManager.getSenderByPlayer(player);
 
                     senderLapped.sendMessage("YouGotLapped");
                     LobbyController.broadcastLobbyMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);

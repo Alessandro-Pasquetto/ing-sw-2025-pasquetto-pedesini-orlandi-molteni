@@ -89,16 +89,7 @@ public class SabotageController extends EventControllerAbstract{
     private void askToRollDice() throws RemoteException {
         if (phase.equals("ASK_ROLL_DICE")) {
 
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(penalizedPlayer);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(penalizedPlayer);
-
-            Sender sender = null;
-
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+            Sender sender = gameManager.getSenderByPlayer(penalizedPlayer);
 
             if (yDiceResult == 0) {
                 sender.sendMessage("ThrowDiceToFindRow");
