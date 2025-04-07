@@ -1,6 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -47,7 +46,7 @@ public class HandlerMessage {
 
         } else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
-            PageController.getGameView().updateTimer(timer);
+            PageController.updateTimer(timer);
 
         } else if (messageObj instanceof String messageString) {
 
@@ -66,7 +65,13 @@ public class HandlerMessage {
                     System.out.println("Username not available");
                     break;
 
+                case "AllowedToPlaceComponent":
+                    BuildingData.resetHandComponent();
+                    break;
+
                 case "NotAllowedToPlaceComponent":
+                    if(BuildingData.getIsTimerExpired())
+                        PageController.removeHandComponent();
                     break;
 
                 case "PickedBookedComponent":
@@ -75,7 +80,9 @@ public class HandlerMessage {
 
                 case "TimerExpired":
                     System.out.println("TimerExpired");
-                    BuildingData.setTimerExpired(true);
+                    PageController.disableDraggableBookedComponents();
+                    PageController.placeLastComponent();
+                    BuildingData.setIsTimerExpired(true);
                     break;
 
                 default:

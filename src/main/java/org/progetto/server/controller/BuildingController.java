@@ -80,6 +80,30 @@ public class BuildingController {
     }
 
     /**
+     * Place last component
+     *
+     * @author Alessandro
+     * @param gameManager
+     * @param player
+     * @param yPlaceComponent
+     * @param xPlaceComponent
+     * @param rPlaceComponent
+     * @param sender
+     */
+    public static void placeLastComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        String imgSrc = buildingBoard.getHandComponent().getImgSrc();
+        if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
+
+        }else
+            sender.sendMessage("NotAllowedToPlaceComponent");
+    }
+
+    /**
      * Handles player decision to pick hidden component, and place current hand component
      *
      * @author Alessandro
@@ -90,7 +114,7 @@ public class BuildingController {
      * @param rPlaceComponent
      * @param sender
      */
-    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if(gameManager.timerExpired()){
             sender.sendMessage("TimerExpired");
@@ -101,6 +125,7 @@ public class BuildingController {
 
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
@@ -114,7 +139,7 @@ public class BuildingController {
                     sender.sendMessage("EmptyComponentDeck");
             }
         }else
-            sender.sendMessage("ImpossiblePlaceComponent");
+            sender.sendMessage("NotAllowedToPlaceComponent");
     }
 
     /**
@@ -129,7 +154,7 @@ public class BuildingController {
      * @param idxVisibleComponent
      * @param sender
      */
-    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
 
         if(gameManager.timerExpired()){
             sender.sendMessage("TimerExpired");
@@ -140,6 +165,7 @@ public class BuildingController {
 
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
@@ -154,11 +180,12 @@ public class BuildingController {
                     sender.sendMessage("IllegalIndexComponent");
             }
         }else
-            sender.sendMessage("ImpossiblePlaceComponent");
+            sender.sendMessage("NotAllowedToPlaceComponent");
     }
 
     /**
      * Handles player decision to pick-up a specific eventCard deck, and place current hand component
+     *
      * @author Gabriele
      * @param gameManager
      * @param player
@@ -168,7 +195,7 @@ public class BuildingController {
      * @param deckIdx
      * @param sender
      */
-    public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
 
         if(gameManager.timerExpired()){
             sender.sendMessage("TimerExpired");
@@ -179,6 +206,7 @@ public class BuildingController {
 
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
                 ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
@@ -190,7 +218,7 @@ public class BuildingController {
                     sender.sendMessage("EventCardDeckIsAlreadyTaken");
             }
         }else
-            sender.sendMessage("ImpossiblePlaceComponent");
+            sender.sendMessage("NotAllowedToPlaceComponent");
     }
 
     /**
@@ -205,7 +233,7 @@ public class BuildingController {
      * @param sender
      * @throws RemoteException
      */
-    public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
 
         if(gameManager.timerExpired()){
             sender.sendMessage("TimerExpired");
@@ -216,6 +244,7 @@ public class BuildingController {
 
         String imgSrc = buildingBoard.getHandComponent().getImgSrc();
         if(buildingBoard.placeComponent(yPlaceComponent, xPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), xPlaceComponent, yPlaceComponent, rPlaceComponent, imgSrc), sender);
 
@@ -234,7 +263,7 @@ public class BuildingController {
                     sender.sendMessage("EmptyBookedCell");
             }
         }else
-            sender.sendMessage("ImpossiblePlaceComponent");
+            sender.sendMessage("NotAllowedToPlaceComponent");
     }
 
     /**
@@ -326,7 +355,6 @@ public class BuildingController {
                 sender.sendMessage("IllegalIndex");
             else if (e.getMessage().equals("EmptyBookedCell"))
                 sender.sendMessage("EmptyBookedCell");
-
         }
     }
 

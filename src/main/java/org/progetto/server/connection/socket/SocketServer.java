@@ -27,14 +27,15 @@ public class SocketServer extends Thread {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("SocketServer listening on port 8080...");
 
-            while (true) {
+            while(true) {
 
                 try{
                     Socket clientSocket = serverSocket.accept();
 
                     new ClientHandler(new ObjectOutputStream(clientSocket.getOutputStream()), new ObjectInputStream(clientSocket.getInputStream()));
                 }catch (Exception e){
-                    System.out.println("Error socket server: " + e.getMessage());
+                    // todo: sistemare errore quando client fa la connessione di prova per vedere se è davvero un socektServer, il clientHandler della connessione di prova è già automaticamente distrutto
+                    System.out.println("Error socket server: " + e.toString());
                 }
             }
         } catch (IOException e) {

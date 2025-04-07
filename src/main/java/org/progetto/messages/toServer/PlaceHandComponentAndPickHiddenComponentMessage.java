@@ -8,9 +8,9 @@ public class PlaceHandComponentAndPickHiddenComponentMessage implements Serializ
     // ATTRIBUTES
     // =======================
 
-    int x;
-    int y;
-    int rotation;
+    private int x;
+    private int y;
+    private int rotation;
 
     // =======================
     // CONSTRUCTORS

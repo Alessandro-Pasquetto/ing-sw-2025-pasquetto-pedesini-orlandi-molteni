@@ -8,8 +8,8 @@ public class DestroyComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int y;
-    int x;
+    private int y;
+    private int x;
 
     // =======================
     // CONSTRUCTORS

@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.TimerMessage;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.model.GamePhase;
 
 /**
  * Timer controller class
@@ -12,10 +13,11 @@ public class TimerController {
     // ATTRIBUTES
     // =======================
 
-    GameManager gameManager;
+    private GameManager gameManager;
     private final int defaultTimer;
     private int timer;
     private int timerFlipsAllowed;
+    private boolean isTimerRunning = false;
 
     // =======================
     // CONSTRUCTORS
@@ -33,7 +35,7 @@ public class TimerController {
     // =======================
 
     public synchronized boolean isTimerExpired() {
-        return !(timer > 0 || timerFlipsAllowed > 0);
+        return !(isTimerRunning || timerFlipsAllowed > 0);
     }
 
     // =======================
@@ -41,7 +43,7 @@ public class TimerController {
     // =======================
 
     public synchronized void resetTimer() throws IllegalStateException {
-        if (timer > 0 || timerFlipsAllowed == 0) {
+        if (gameManager.getGame().getPhase() != GamePhase.BUILDING || isTimerRunning || timerFlipsAllowed == 0) {
             throw new IllegalStateException("ImpossibleToResetTimer");
         }
 
@@ -54,9 +56,11 @@ public class TimerController {
     // OTHER METHODS
     // =======================
 
-    public void startTimer() {
+    public synchronized void startTimer() {
 
         new Thread(() -> {
+            isTimerRunning = true;
+
             int currentTimer = timer;
             while (true) {
 
@@ -80,10 +84,12 @@ public class TimerController {
             }
 
             if (timerFlipsAllowed == 0) {
-                gameManager.broadcastGameMessage("Timer expired!");
-                System.out.println("Timer expired");
+                gameManager.broadcastGameMessage("TimerExpired");
+                System.out.println("TimerExpired");
                 BuildingController.checkShipValidity(gameManager);
             }
+
+            isTimerRunning = false;
         }).start();
     }
 }

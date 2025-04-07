@@ -8,10 +8,10 @@ public class PlaceHandComponentAndPickVisibleComponentMessage implements Seriali
     // ATTRIBUTES
     // =======================
 
-    int x;
-    int y;
-    int rotation;
-    int componentIdx;
+    private int x;
+    private int y;
+    private int rotation;
+    private int componentIdx;
 
     // =======================
     // CONSTRUCTORS

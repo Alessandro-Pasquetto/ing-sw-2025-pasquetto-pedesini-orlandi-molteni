@@ -82,6 +82,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void placeLastComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) {
+        try {
+            server.placeLastComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
         try {
             server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);

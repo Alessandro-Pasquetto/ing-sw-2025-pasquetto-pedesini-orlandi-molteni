@@ -8,7 +8,7 @@ public class BookComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int bookIdx;
+    private int bookIdx;
 
     // =======================
     // CONSTRUCTORS

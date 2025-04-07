@@ -2,26 +2,20 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class PlaceHandComponentAndPickUpEventCardDeckMessage implements Serializable {
-
-    // =======================
-    // ATTRIBUTES
-    // =======================
+public class PlaceLastComponent implements Serializable {
 
     private int x;
     private int y;
     private int rotation;
-    private int idxDeck;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PlaceHandComponentAndPickUpEventCardDeckMessage(int x, int y, int rotation, int idxDeck) {
+    public PlaceLastComponent(int x, int y, int rotation) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;
-        this.idxDeck = idxDeck;
     }
 
     // =======================
@@ -38,9 +32,5 @@ public class PlaceHandComponentAndPickUpEventCardDeckMessage implements Serializ
 
     public int getRotation() {
         return rotation;
-    }
-
-    public int getIdxDeck() {
-        return idxDeck;
     }
 }

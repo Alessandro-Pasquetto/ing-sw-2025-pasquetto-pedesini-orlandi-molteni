@@ -101,39 +101,56 @@ public class SocketListener extends Thread {
 
         switch (game.getPhase()) {
             case INIT:
-                GameController.startGame(gameManager, socketWriter);
+                if (messageObj instanceof String messageString){
+                    switch (messageString) {
+                        case "StartGame":
+                            GameController.startGame(gameManager, socketWriter);
+                            break;
+                        default:
+                            System.out.println(messageString + " not allowed");
+                            break;
+                    }
+                }
                 break;
 
             case BUILDING:
-                if (messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
-                    int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
+
+                if (messageObj instanceof PlaceLastComponent placeLastComponentMessage) {
+                    int xPlaceComponent = placeLastComponentMessage.getX();
+                    int yPlaceComponent = placeLastComponentMessage.getY();
+                    int rPlaceComponent = placeLastComponentMessage.getRotation();
+                    BuildingController.placeLastComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+                }
+
+                else if (messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
                     int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
+                    int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
                     int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
-                    BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, socketWriter);
+                    BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
                 }
 
                 else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
-                    int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
+                    int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
                     int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
                     int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
-                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, socketWriter);
+                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, componentIdx, socketWriter);
                 }
 
                 else if (messageObj instanceof PlaceHandComponentAndPickUpEventCardDeckMessage placeHandComponentAndPickUpEventCardDeckMessage) {
-                    int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getX();
+                    int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
                     int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
                     int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
-                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
+                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
                 }
 
                 else if (messageObj instanceof PlaceHandComponentAndPickBookedComponentMessage placeHandComponentAndPickBookedComponentMessage) {
-                    int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
                     int xPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getX();
+                    int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
                     int rPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getRotation();
                     int idx = placeHandComponentAndPickBookedComponentMessage.getIdx();
-                    BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, idx, socketWriter);
+                    BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, socketWriter);
                 }
 
                 else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
@@ -184,6 +201,7 @@ public class SocketListener extends Thread {
                             break;
 
                         default:
+                            System.out.println(messageString + " not allowed");
                             break;
                     }
                 }

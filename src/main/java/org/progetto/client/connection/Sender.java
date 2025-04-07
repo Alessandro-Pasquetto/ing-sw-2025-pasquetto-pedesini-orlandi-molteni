@@ -15,13 +15,15 @@ public interface Sender {
 
     void pickVisibleComponent();
 
-    void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent);
+    void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 
-    void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx);
+    void placeHandComponentAndPickHiddenComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 
-    void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx);
+    void placeHandComponentAndPickVisibleComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int componentIdx);
 
-    void placeHandComponentAndPickBookedComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx);
+    void placeHandComponentAndPickUpEventCardDeck(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx);
+
+    void placeHandComponentAndPickBookedComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx);
 
     void discardComponent();
 

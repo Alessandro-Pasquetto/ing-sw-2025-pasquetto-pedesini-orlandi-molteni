@@ -8,7 +8,7 @@ public class PickVisibleComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int componentIdx;
+    private int componentIdx;
 
     // =======================
     // CONSTRUCTORS

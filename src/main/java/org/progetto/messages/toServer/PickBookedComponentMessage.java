@@ -7,7 +7,7 @@ public class PickBookedComponentMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    int idx;
+    private int idx;
 
     // =======================
     // CONSTRUCTORS

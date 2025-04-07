@@ -34,7 +34,7 @@ public class PageController {
         return stage;
     }
 
-    public static ConnectionView getConnetionView() {
+    public static ConnectionView getConnectionView() {
         return connectionView;
     }
 
@@ -134,6 +134,30 @@ public class PageController {
             gameView.insertCentralUnitComponent(imgSrcCentralUnit, 1);
             //gameView.loadBoardImg(imgSrcBoard);
             //gameView.loadShipImg(imgSrcSpaceship);
+        });
+    }
+
+    public static void updateTimer(int timer) {
+        Platform.runLater(() -> {
+            gameView.updateTimer(timer);
+        });
+    }
+
+    public static void removeHandComponent(){
+        Platform.runLater(() -> {
+            gameView.removeHandComponent();
+        });
+    }
+
+    public static void placeLastComponent(){
+        Platform.runLater(() -> {
+            gameView.placeLastComponent();
+        });
+    }
+
+    public static void disableDraggableBookedComponents(){
+        Platform.runLater(() -> {
+            gameView.disableDraggableBookedComponents();
         });
     }
 }

@@ -14,7 +14,7 @@ public class BuildingData {
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
-    private static boolean timerExpired;
+    private static boolean isTimerExpired;
 
     // =======================
     // GETTERS
@@ -40,8 +40,8 @@ public class BuildingData {
         return yHandComponent;
     }
 
-    public static boolean getTimerExpired(){
-        return timerExpired;
+    public static boolean getIsTimerExpired(){
+        return isTimerExpired;
     }
 
     // =======================
@@ -49,10 +49,6 @@ public class BuildingData {
     // =======================
 
     public static void setNewHandComponent(ImageView handComponent) {
-
-        if (BuildingData.getHandComponent() != null)
-            DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
-
         resetHandComponent();
 
         BuildingData.handComponent = handComponent;
@@ -71,8 +67,8 @@ public class BuildingData {
         BuildingData.yHandComponent = yHandComponent;
     }
 
-    public static void setTimerExpired(boolean timerExpired){
-        BuildingData.timerExpired = timerExpired;
+    public static void setIsTimerExpired(boolean isTimerExpired){
+        BuildingData.isTimerExpired = isTimerExpired;
     }
 
     // =======================
@@ -89,6 +85,9 @@ public class BuildingData {
     }
 
     public static void resetHandComponent(){
+        if (BuildingData.getHandComponent() != null && (BuildingData.getyHandComponent() != -1 || BuildingData.getIsTimerExpired()))
+            DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
+
         handComponent = null;
         xHandComponent = -1; // If it has not been placed in the matrix yet
         yHandComponent = 0;

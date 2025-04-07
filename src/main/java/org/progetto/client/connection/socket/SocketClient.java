@@ -94,6 +94,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void placeLastComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceLastComponent(xHandComponent, yHandComponent, rHandComponent));
+    }
+
+    @Override
     public void placeHandComponentAndPickHiddenComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
         SocketWriter.sendMessage(new PlaceHandComponentAndPickHiddenComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }

@@ -11,9 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
-import org.progetto.client.connection.HandlerMessage;
-import org.progetto.client.connection.rmi.RmiClientSender;
-import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.model.GameData;
 
 
@@ -72,7 +69,7 @@ public class GameView {
 
     public void pickHiddenComponent() {
 
-        if(BuildingData.getTimerExpired()){
+        if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
@@ -88,7 +85,7 @@ public class GameView {
 
     public void pickVisibleComponent() {
 
-        if(BuildingData.getTimerExpired()){
+        if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
@@ -100,6 +97,32 @@ public class GameView {
             GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
     }
 
+    public void placeLastComponent(){
+
+        if(BuildingData.getHandComponent() == null)
+            return;
+
+        if(BuildingData.getxHandComponent() == -1){
+            removeHandComponent();
+            return;
+        }
+
+        GameData.getSender().placeLastComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
+    }
+
+    public void disableDraggableBookedComponents() {
+        for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
+            if (node instanceof Pane cell) {
+                if (!cell.getChildren().isEmpty()) {
+                    Node child = cell.getChildren().get(0);
+                    if (child instanceof ImageView imageView) {
+                        DragAndDrop.disableDragAndDrop(imageView);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Handle discard communication between view and controller
      *
@@ -107,19 +130,18 @@ public class GameView {
      */
     public void discardComponent() {
 
-        if(BuildingData.getTimerExpired()){
+        if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
         if(BuildingData.getHandComponent() != null){
             GameData.getSender().discardComponent();
-
             removeHandComponent();
         }
     }
 
-    private void removeHandComponent() {
+    public void removeHandComponent() {
         Node parent = BuildingData.getHandComponent().getParent();
 
         if (parent instanceof VBox)
@@ -133,7 +155,7 @@ public class GameView {
 
     public void showEventCardDeck(ActionEvent event) {
 
-        if(BuildingData.getTimerExpired()){
+        if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
@@ -177,14 +199,12 @@ public class GameView {
 
         String timeText = String.format("%02d:%02d", minutes, seconds);
 
-        Platform.runLater(() -> {
-            timerLabel.setText(timeText);
-        });
+        timerLabel.setText(timeText);
     }
 
     public void rotateComponent() {
 
-        if(BuildingData.getTimerExpired()){
+        if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }

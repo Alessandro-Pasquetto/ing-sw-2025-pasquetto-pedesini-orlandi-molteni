@@ -6,7 +6,7 @@ public class ShowEventCardDeckMessage {
     // ATTRIBUTES
     // =======================
 
-    int idxDeck;
+    private int idxDeck;
 
     // =======================
     // CONSTRUCTORS

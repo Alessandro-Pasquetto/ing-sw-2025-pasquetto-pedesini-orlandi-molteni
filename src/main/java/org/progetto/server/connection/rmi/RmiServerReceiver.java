@@ -121,7 +121,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) throws RemoteException{
+    public void placeLastComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
@@ -132,11 +132,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, virtualClient);
+        BuildingController.placeLastComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, virtualClient);
     }
 
     @Override
-    public void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException{
+    public void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
@@ -147,11 +147,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, componentIdx, virtualClient);
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, virtualClient);
     }
 
     @Override
-    public void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException {
+    public void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
@@ -162,11 +162,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx, virtualClient);
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, componentIdx, virtualClient);
     }
 
     @Override
-    public void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idx) throws RemoteException {
+    public void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
@@ -177,7 +177,22 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, yPlaceComponent, xPlaceComponent, rPlaceComponent, idx, virtualClient);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, virtualClient);
+    }
+
+    @Override
+    public void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, virtualClient);
     }
 
     /**
