@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * This controller handles:
  * 1. broadcast updates of spaceship attributes
- * 3. destroy components and validity
+ * 2. destroy components and validity
  */
 public class SpaceshipController {
 
@@ -68,46 +68,79 @@ public class SpaceshipController {
     public static void moveBox(GameManager gameManager, Player player, int startY, int startX, int startIdx, int endY, int endX, int endIdx, Sender sender) throws RemoteException {
 
         if (startX == endX && startY == endY && startIdx == endIdx) {
-            sender.sendMessage("CantStayStill");
+            sender.sendMessage("BoxAlreadyThere");
+
         } else {
 
             try {
-                // Move box removing from start and adding to end
                 BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[startY][startX];
                 BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[endY][endX];
 
                 Box box = startComponent.getBoxStorage()[startIdx];
 
+                // Checks if the box to move is a red one
                 if (box.getValue() == 4) {
                     if (endComponent.getType().equals(ComponentType.RED_BOX_STORAGE)) {
 
-                        if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
-                            if (endComponent.addBox(player.getSpaceship(), box, endIdx))
+                        if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
+                            if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
                                 sender.sendMessage("RedBoxMoved");
-                            else sender.sendMessage("RedBoxNotAdded");
+                            }
 
-                        } else sender.sendMessage("RedBoxNotMoved");
+                        } else {
+                            sender.sendMessage("RedBoxNotMoved");
+                        }
 
                     } else {
                         sender.sendMessage("CantStoreInANonRedStorage");
                     }
+
                 } else {
 
-                    if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
-                        if (endComponent.addBox(player.getSpaceship(), box, endIdx))
+                    if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
+                        if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
                             sender.sendMessage("BoxMoved");
-                        else sender.sendMessage("BoxNotAdded");
+                        }
 
-                    } else sender.sendMessage("RedBoxNotMoved");
+                    } else {
+                        sender.sendMessage("BoxNotMoved");
+                    }
                 }
 
                 // Spaceship Updates
-                updateSpaceship(gameManager,player,startComponent,sender);
-                updateSpaceship(gameManager,player,endComponent,sender);
+                updateSpaceship(gameManager, player, startComponent, sender);
+                updateSpaceship(gameManager, player, endComponent, sender);
 
             } catch (ClassCastException e) {
                 sender.sendMessage("NotAStorageComponent");
+
+            } catch (ArrayIndexOutOfBoundsException e) {
+                sender.sendMessage("InvalidCoordinates");
             }
+        }
+    }
+
+    public static void removeBox(GameManager gameManager, Player player, int storageY, int storageX, int idx, Sender sender) throws RemoteException {
+
+        try {
+            BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[storageY][storageX];
+
+            // Removes selected box
+            if (component.removeBox(player.getSpaceship(), idx)) {
+                sender.sendMessage("BoxRemoved");
+
+            } else {
+                sender.sendMessage("BoxNotRemoved");
+            }
+
+            // Spaceship Updates
+            updateSpaceship(gameManager, player, component, sender);
+
+        } catch (ClassCastException e) {
+            sender.sendMessage("NotAStorageComponent");
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            sender.sendMessage("InvalidCoordinates");
         }
     }
 

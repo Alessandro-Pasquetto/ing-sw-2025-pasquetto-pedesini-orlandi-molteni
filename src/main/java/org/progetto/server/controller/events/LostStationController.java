@@ -56,7 +56,7 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * Ask each player if they want to land on the lost ship, only if the preconditions are satisfied.
+     * Ask each player if they want to land on the lost ship, only if the preconditions are satisfied
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -68,13 +68,14 @@ public class LostStationController extends EventControllerAbstract {
             if (currPlayer < activePlayers.size()) {
                 Player player = activePlayers.get(currPlayer);
 
+                Sender sender = gameManager.getSenderByPlayer(player);
+
                 if (player.getSpaceship().getCrewCount() >= lostStation.getRequiredCrew()) {
-
-                    Sender sender = gameManager.getSenderByPlayer(player);
-
                     sender.sendMessage("LandRequest");
-
                     phase = "LAND";
+
+                } else {
+                    sender.sendMessage("NotEnoughCrew");
                 }
 
             } else {
@@ -84,34 +85,40 @@ public class LostStationController extends EventControllerAbstract {
         }
     }
 
-
     /**
-     * Receive the player decision to land on the lost ship.
-     * Send the available boxes to that player.
+     * Receive the player decision to land on the lost ship
+     * Send the available boxes to that player
      *
-     * @author Lorenzo
+     * @author Gabriele
      * @param player
      * @param sender
-     * @param land
+     * @param decision
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player, boolean land, Sender sender) throws RemoteException {
+    public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException {
         if (phase.equals("LAND")) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
-                if (land) {
-                    phase = "CHOOSE_BOX";
-                    rewardBoxes = lostStation.getRewardBoxes();
+                String upperCaseDecision = decision.toUpperCase();
 
-                    gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player));
-                    sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                    sender.sendMessage("LandingCompleted");
+                switch(upperCaseDecision) {
+                    case "YES":
+                        phase = "CHOOSE_BOX";
+                        rewardBoxes = lostStation.getRewardBoxes();
 
-                } else {
-                    phase = "ASK_FOR_LAND";
-                    currPlayer++;
-                    askForLand();
+                        gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player));
+                        sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                        sender.sendMessage("LandingCompleted");
+
+                    case "NO":
+                        phase = "ASK_FOR_LAND";
+                        currPlayer++;
+                        askForLand();
+
+                    default:
+                        sender.sendMessage("IncorrectResponse");
+                        break;
                 }
 
             } else {
@@ -124,8 +131,8 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * Receive the box that the player choose, and it's placement in the component.
-     * Update the player's view with the new list of available boxes.
+     * Receive the box that the player choose, and it's placement in the component
+     * Update the player's view with the new list of available boxes
      *
      * @author Lorenzo
      * @param player that choose the box
@@ -139,22 +146,29 @@ public class LostStationController extends EventControllerAbstract {
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals("CHOOSE_BOX")) {
 
+            // Checks that current player is trying to get reward the reward box
             if (player.equals(activePlayers.get(currPlayer))) {
-
-                boxChosen = true;
 
                 try {
                     Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                     BoxStorage storage = (BoxStorage) matrix[y][x];
 
-                    lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box);
+                    // Checks box chosen is contained in rewards list
+                    if (rewardBoxes.contains(box)) {
 
-                    if (!rewardBoxes.remove(box)) {
+                        // Checks that reward box is placed correctly in given storage
+                        if (lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box)) {
+                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                            sender.sendMessage("BoxChosen");
+
+                            rewardBoxes.remove(box);
+
+                        } else {
+                            sender.sendMessage("BoxNotChosen");
+                        }
+
+                    } else {
                         sender.sendMessage("ChosenBoxNotAvailable");
-
-                    } else if(lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box)){
-                        sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                        sender.sendMessage("BoxChosen");
                     }
 
                 } catch (ClassCastException e) {
@@ -164,12 +178,9 @@ public class LostStationController extends EventControllerAbstract {
                     throw new IllegalStateException("ComponentIsNotInMatrix");
                 }
 
-                // All the boxes should be chosen or discarded
-                if (!rewardBoxes.isEmpty()) {
-                    phase = "CHOOSE_BOX";
-                } else {
-                    phase = "EFFECT";
-                    eventEffect();
+                // All the boxes are chosen
+                if (rewardBoxes.isEmpty()) {
+                    leaveStation(player, sender);
                 }
 
             } else {
@@ -182,19 +193,16 @@ public class LostStationController extends EventControllerAbstract {
     }
 
     /**
-     * Handles the penalty at the end of the rewardBox
+     * Handles the penalty after player left station
      *
      * @author Lorenzo
      */
-    private void eventEffect() throws RemoteException {
-        if(phase.equals("EFFECT")) {
+    public void leaveStation(Player player, Sender sender) throws RemoteException {
+        if (phase.equals("CHOSE_BOX")) {
 
-            if (boxChosen) {
-                Player player = activePlayers.get(currPlayer);
+            // Checks that current player is trying to leave
+            if (player.equals(activePlayers.get(currPlayer))) {
                 Board board = gameManager.getGame().getBoard();
-
-                // Gets sender reference related to current player
-                Sender sender = gameManager.getSenderByPlayer(player);
 
                 lostStation.penalty(gameManager.getGame().getBoard(), player);
 
@@ -221,10 +229,14 @@ public class LostStationController extends EventControllerAbstract {
 
                 phase = "END";
                 end();
-            }
-        }
 
-        //TODO: aggiungere una classe che si occupa di aggionare in broadcast i parametri della nave
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
     }
 
     /**

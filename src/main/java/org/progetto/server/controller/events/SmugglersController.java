@@ -2,7 +2,9 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;
@@ -28,6 +30,7 @@ public class SmugglersController extends EventControllerAbstract {
     private float playerFirePower;
     private int requestedBatteries;
     private int requestedBoxes;
+    private ArrayList<Box> rewardBoxes;
 
     // =======================
     // CONSTRUCTORS
@@ -42,6 +45,7 @@ public class SmugglersController extends EventControllerAbstract {
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.requestedBoxes = 0;
+        this.rewardBoxes = new ArrayList<>(smugglers.getRewardBoxes());
     }
 
     // =======================
@@ -223,6 +227,8 @@ public class SmugglersController extends EventControllerAbstract {
                         break;
 
                     case -1:
+                        requestedBoxes = smugglers.getPenaltyBoxes();
+
                         phase = "PENALTY_EFFECT";
                         penaltyEffect(player, sender);
                         break;
@@ -260,31 +266,38 @@ public class SmugglersController extends EventControllerAbstract {
     private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (phase.equals("PENALTY_EFFECT")) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            // Box currently owned
+            int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
 
-                requestedBoxes = smugglers.getPenaltyBoxes();
-
-                int maxBoxCount = player.getSpaceship().getBoxCounts()[0]
-                        + player.getSpaceship().getBoxCounts()[1]
-                        + player.getSpaceship().getBoxCounts()[2]
-                        + player.getSpaceship().getBoxCounts()[3];
-
-                if (maxBoxCount >= 1) {
-                    sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                    phase = "DISCARDED_BOXES";
-
-                } else {
-                    sender.sendMessage("NotEnoughBoxes");
-                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                    phase = "DISCARDED_BATTERIES_2";
-                }
+            // Checks if he has at least a box to discard
+            if (maxBoxCount >= 1) {
+                sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                phase = "DISCARDED_BOXES";
 
             } else {
-                sender.sendMessage("NotYourTurn");
-            }
 
-        } else {
-            sender.sendMessage("IncorrectPhase");
+                // Checks if he has at least a battery to discard
+                if (player.getSpaceship().getBatteriesCount() > 0) {
+                    sender.sendMessage("NotEnoughBoxes");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                    phase = "DISCARDED_BATTERIES_FOR_BOXES";
+
+                } else {
+                    sender.sendMessage("NotEnoughBatteries");
+
+                    // Next player
+                    if (currPlayer < activePlayers.size()) {
+                        currPlayer++;
+                        phase = "ASK_CANNONS";
+                        askHowManyCannonsToUse();
+
+                    } else {
+                        phase = "END";
+                        end();
+                    }
+                }
+
+            }
         }
     }
 
@@ -315,7 +328,6 @@ public class SmugglersController extends EventControllerAbstract {
                         sender.sendMessage("BoxDiscarded");
 
                         if (requestedBoxes == 0) {
-
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
                             // Next player
@@ -323,13 +335,16 @@ public class SmugglersController extends EventControllerAbstract {
                                 currPlayer++;
                                 phase = "ASK_CANNONS";
                                 askHowManyCannonsToUse();
+
                             } else {
                                 phase = "END";
                                 end();
                             }
 
                         } else {
-                            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                            // Ask for new box/battery to discard
+                            phase = "PENALTY_EFFECT";
+                            penaltyEffect(player, sender);
                         }
 
                     } else {
@@ -359,8 +374,8 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery2(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES_2")) {
+    public void receiveDiscardedBatteriesForBoxes(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+        if (phase.equals("DISCARDED_BATTERIES_FOR_BOX")) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -390,7 +405,9 @@ public class SmugglersController extends EventControllerAbstract {
                             }
 
                         } else {
-                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                            // Ask for new battery to discard
+                            phase = "PENALTY_EFFECT";
+                            penaltyEffect(player, sender);
                         }
 
                     } else {
@@ -428,8 +445,8 @@ public class SmugglersController extends EventControllerAbstract {
 
                 switch (upperCaseResponse) {
                     case "YES":
-                        phase = "REWARD_BOXES";
-                        //rewardBoxes();
+                        phase = "CHOOSE_BOX";
+                        sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                         break;
 
                     case "NO":
@@ -451,12 +468,53 @@ public class SmugglersController extends EventControllerAbstract {
         }
     }
 
-    public void rewardBoxes(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("REWARD_BOXES")) {
+    /**
+     * Receive the box that the player choose, and it's placement in the component
+     * Update the player's view with the new list of available boxes
+     *
+     * @author Gabriele
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
+    public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException {
+        if (phase.equals("CHOOSE_BOX")) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
-                // TODO: create this phase for rewardBoxes
+                try {
+                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                    BoxStorage storage = (BoxStorage) matrix[y][x];
+
+                    // Checks box chosen is contained in rewards list
+                    if (rewardBoxes.contains(box)) {
+
+                        // Checks that reward box is placed correctly in given storage
+                        if (smugglers.chooseRewardBox(player.getSpaceship(), storage, idx, box)) {
+                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                            sender.sendMessage("BoxChosen");
+
+                            rewardBoxes.remove(box);
+
+                        } else {
+                            sender.sendMessage("BoxNotChosen");
+                        }
+
+                    } else {
+                        sender.sendMessage("ChosenBoxNotAvailable");
+                    }
+
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("ComponentIsNotAStorage");
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new IllegalStateException("ComponentIsNotInMatrix");
+                }
+
+                // All the boxes are chosen
+                if (rewardBoxes.isEmpty()) {
+                    leaveReward(activePlayers.get(currPlayer), sender);
+                }
 
             } else {
                 sender.sendMessage("NotYourTurn");
@@ -467,6 +525,26 @@ public class SmugglersController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Function called if the player wants to leave the remaining reward
+     *
+     * @author Gabriele
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     * @throws IllegalStateException
+     */
+    private void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
+        if (phase.equals("CHOOSE_BOX")) {
+
+            // Checks that current player is trying to get reward the reward box
+            if (player.equals(activePlayers.get(currPlayer))) {
+
+                // Calls penalty function
+                penaltyDays();
+            }
+        }
+    }
 
     /**
      * If the player accepted, he receives the reward and loses the penalty days
@@ -476,6 +554,7 @@ public class SmugglersController extends EventControllerAbstract {
      */
     private void penaltyDays() throws RemoteException {
         if (phase.equals("PENALTY_DAYS")) {
+
             Player player = activePlayers.get(currPlayer);
             Board board = gameManager.getGame().getBoard();
 

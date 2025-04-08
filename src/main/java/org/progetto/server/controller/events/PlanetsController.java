@@ -27,8 +27,6 @@ public class PlanetsController extends EventControllerAbstract {
     private Planets planets;
     private String phase;
     private int currPlayer;
-    private int landedPlayers;
-    private int leavedPlayers;
     private ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
 
@@ -41,8 +39,6 @@ public class PlanetsController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.phase = "START";
         this.currPlayer = 0;
-        this.landedPlayers = 0;
-        this.leavedPlayers = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
@@ -59,8 +55,8 @@ public class PlanetsController extends EventControllerAbstract {
     }
 
     /**
-     * Ask each player if they want to land on one of the given planets.
-     * List of planets are sent only to the active player.
+     * Ask each player if they want to land on one of the given planets
+     * List of planets are sent only to the active player
      *
      * @author Lorenzo
      * @throws RemoteException
@@ -75,7 +71,7 @@ public class PlanetsController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 sender.sendMessage("LandRequest");
-                sender.sendMessage(new AvailablePlanetsMessage( planets.getPlanetsTaken()));
+                sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
 
                 phase = "LAND";
 
@@ -87,50 +83,54 @@ public class PlanetsController extends EventControllerAbstract {
     }
 
     /**
-     * Receive the player decision to land on the planet.
-     * Send the available boxes to that player.
+     * Receive the player decision to land on the planet
+     * Send the available boxes to that player
      *
-     * @author Lorenzo
+     * @author Gabriele
      * @param player
-     * @param land true if the player wants to land
+     * @param decision
      * @param planetIdx is the index of the planet chosen
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player, boolean land, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
-
+    public void receiveDecisionToLand(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals("LAND")) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
-                if (land) {
+                String upperCaseDecision = decision.toUpperCase();
 
-                    try {
-                        if (planets.getPlanetsTaken()[planetIdx]) {
-                            sender.sendMessage("PlanetTaken");
-                            phase = "ASK_FOR_LAND";
+                switch(upperCaseDecision) {
+                    case "YES":
+                        try {
+                            if (planets.getPlanetsTaken()[planetIdx]) {
+                                sender.sendMessage("PlanetAlreadyTaken");
+                                phase = "ASK_FOR_LAND";
 
-                        } else {
-                            planets.choosePlanet(player, planetIdx);
-                            landedPlayers++;
-                            gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));
-                            sender.sendMessage("LandingCompleted");
+                            } else {
+                                planets.choosePlanet(player, planetIdx);
+                                gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));
+                                sender.sendMessage("LandingCompleted");
 
-                            rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
-                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                            sender.sendMessage("AvailableBoxes");
+                                rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
+                                sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                                sender.sendMessage("AvailableBoxes");
 
-                            phase = "CHOOSE_BOX";
+                                phase = "CHOOSE_BOX";
+                            }
+
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            throw new IllegalStateException("PlanetIndexOutOfBound");
                         }
 
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        throw new IllegalStateException("PlanetIndexOutOfBound");
-                    }
+                    case "NO":
+                        phase = "ASK_FOR_LAND";
+                        currPlayer++;
+                        askForLand();
 
-                } else {
-                    phase = "ASK_FOR_LAND";
-                    currPlayer++;
-                    askForLand();
+                    default:
+                        sender.sendMessage("IncorrectResponse");
+                        break;
                 }
 
             } else {
@@ -143,10 +143,10 @@ public class PlanetsController extends EventControllerAbstract {
     }
 
     /**
-     * For each player receive the box that the player choose, and it's placement in the component.
-     * Update the player's view with the new list of available boxes.
+     * For each player receive the box that the player choose, and it's placement in the component
+     * Update the player's view with the new list of available boxes
      *
-     * @author Lorenzo
+     * @author Gabriele
      * @param player that choose the box
      * @param box chosen
      * @param y coordinate of the component were the box will be placed
@@ -156,64 +156,86 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
-
         if (phase.equals("CHOOSE_BOX")) {
 
-            try {
-                Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
-                BoxStorage storage = (BoxStorage) matrix[y][x];
+            // Checks that current player is trying to get reward the reward box
+            if (player.equals(activePlayers.get(currPlayer))) {
 
-                if (!rewardBoxes.remove(box)) {
-                    sender.sendMessage("ChosenBoxNotAvailable");
+                try {
+                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                    BoxStorage storage = (BoxStorage) matrix[y][x];
 
-                } else if(planets.chooseRewardBox(player.getSpaceship(), storage, idx, box)){
-                    sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                    sender.sendMessage("BoxChosen");
+                    // Checks box chosen is contained in rewards list
+                    if (rewardBoxes.contains(box)) {
+
+                        // Checks that reward box is placed correctly in given storage
+                        if (planets.chooseRewardBox(player.getSpaceship(), storage, idx, box)) {
+                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                            sender.sendMessage("BoxChosen");
+
+                            rewardBoxes.remove(box);
+
+                        } else {
+                            sender.sendMessage("BoxNotChosen");
+                        }
+
+                    } else {
+                        sender.sendMessage("ChosenBoxNotAvailable");
+                    }
+
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("ComponentIsNotAStorage");
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    throw new IllegalStateException("ComponentIsNotInMatrix");
                 }
 
-            } catch (ClassCastException e) {
-                throw new IllegalStateException("ComponentIsNotAStorage");
-
-            } catch (ArrayIndexOutOfBoundsException e) {
-                throw new IllegalStateException("ComponentIsNotInMatrix");
-            }
-
-            if (!rewardBoxes.isEmpty()) {
-                phase = "CHOOSE_BOX";
+                // All the boxes are chosen
+                if (rewardBoxes.isEmpty()) {
+                    leavePlanet(activePlayers.get(currPlayer), sender);
+                }
 
             } else {
-                phase = "LEAVE_PLANET";
-                leavePlanet(activePlayers.get(currPlayer), sender);
+                sender.sendMessage("NotYourTurn");
             }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 
     /**
-     * Function called after all the boxes of a planet are chosen or if the player wants to leave.
+     * Function called if the player wants to leave
      *
-     * @author Lorenzo
+     * @author Gabriele
      * @param player
      * @param sender
      * @throws RemoteException
      * @throws IllegalStateException
      */
-    private void leavePlanet(Player player,Sender sender) throws RemoteException,IllegalStateException {
-        if (phase.equals("LEAVE_PLANET")) {
-            leavedPlayers++;  // next player
+    private void leavePlanet(Player player, Sender sender) throws RemoteException,IllegalStateException {
+        if (phase.equals("CHOOSE_BOX")) {
 
-            if(leavedPlayers == landedPlayers) {
-                phase = "EFFECT";
-                eventEffect();
-            }
-            else{
+            // Checks that current player is trying to get reward the reward box
+            if (player.equals(activePlayers.get(currPlayer))) {
+
+                // Next player
                 currPlayer++;
-                phase = "ASK_FOR_LAND";
+
+                if (currPlayer < activePlayers.size()) {
+                    phase = "ASK_FOR_LAND";
+                    askForLand();
+
+                } else {
+                    phase = "EFFECT";
+                    eventEffect();
+                }
             }
         }
     }
 
     /**
-     * Calculate the penalty for each landed player.
+     * Calculate the penalty for each landed player
      *
      * @author Lorenzo
      */
@@ -221,7 +243,6 @@ public class PlanetsController extends EventControllerAbstract {
         if (phase.equals("EFFECT")) {
 
             Board board = gameManager.getGame().getBoard();
-            planets.penalty(gameManager.getGame().getBoard());
 
             for (Player player : planets.getLandedPlayers()){
                 Sender sender = gameManager.getSenderByPlayer(player);
@@ -229,6 +250,9 @@ public class PlanetsController extends EventControllerAbstract {
                 sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
                 gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
             }
+
+            // Penalty applied
+            planets.penalty(gameManager.getGame().getBoard());
 
             // Updates turn order
             board.updateTurnOrder();
