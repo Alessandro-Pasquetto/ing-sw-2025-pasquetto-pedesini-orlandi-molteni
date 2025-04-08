@@ -1,8 +1,6 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.controller.EventController;
-import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Epidemic;
 
@@ -53,7 +51,7 @@ public class EpidemicController extends EventControllerAbstract {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals("EFFECT")) {
-            ArrayList<Player> players = gameManager.getGame().getBoard().getActivePlayers();
+            ArrayList<Player> players = gameManager.getGame().getBoard().getCopyActivePlayers();
 
             for (Player player : players) {
                 epidemic.epidemicResult(player);

@@ -50,7 +50,7 @@ public class PiratesController extends EventControllerAbstract {
         this.pirates = (Pirates) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.currPlayer = 0;
-        this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.defeatedPlayers = new ArrayList<>();

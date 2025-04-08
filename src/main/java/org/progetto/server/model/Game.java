@@ -363,7 +363,7 @@ public class Game {
             do{//todo da rimuovere xD
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
             }
-            while(hiddenEventDeck.get(randomPos).getType() != CardType.PLANETS);
+            while(hiddenEventDeck.get(randomPos).getType() != CardType.OPENSPACE);
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 

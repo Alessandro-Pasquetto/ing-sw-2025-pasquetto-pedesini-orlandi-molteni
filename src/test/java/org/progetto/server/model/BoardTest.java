@@ -197,10 +197,10 @@ class BoardTest {
 
         board.updateTurnOrder();
 
-        assertEquals(p1, board.getActivePlayers().get(0));
-        assertEquals(p2, board.getActivePlayers().get(1));
-        assertEquals(p3, board.getActivePlayers().get(2));
-        assertEquals(p4, board.getActivePlayers().get(3));
+        assertEquals(p1, board.getCopyActivePlayers().get(0));
+        assertEquals(p2, board.getCopyActivePlayers().get(1));
+        assertEquals(p3, board.getCopyActivePlayers().get(2));
+        assertEquals(p4, board.getCopyActivePlayers().get(3));
     }
 
     @Test

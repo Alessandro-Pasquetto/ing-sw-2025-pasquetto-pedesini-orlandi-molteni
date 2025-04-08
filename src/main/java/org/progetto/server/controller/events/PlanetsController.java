@@ -1,7 +1,5 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
@@ -10,8 +8,6 @@ import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
@@ -21,7 +17,6 @@ import org.progetto.server.model.events.Planets;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class PlanetsController extends EventControllerAbstract {
 
@@ -48,7 +43,7 @@ public class PlanetsController extends EventControllerAbstract {
         this.currPlayer = 0;
         this.landedPlayers = 0;
         this.leavedPlayers = 0;
-        this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
     }

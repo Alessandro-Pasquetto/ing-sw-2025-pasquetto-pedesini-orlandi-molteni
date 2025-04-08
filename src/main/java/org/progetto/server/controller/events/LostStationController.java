@@ -1,6 +1,5 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
@@ -8,8 +7,6 @@ import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
@@ -19,7 +16,6 @@ import org.progetto.server.model.events.LostStation;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LostStationController extends EventControllerAbstract {
 
@@ -44,7 +40,7 @@ public class LostStationController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.phase = "START";
         this.currPlayer = 0;
-        this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.lostStation = (LostStation) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
     }

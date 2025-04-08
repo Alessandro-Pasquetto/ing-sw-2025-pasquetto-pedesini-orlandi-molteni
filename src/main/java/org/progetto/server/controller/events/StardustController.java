@@ -1,13 +1,10 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Stardust;
@@ -61,7 +58,7 @@ public class StardustController extends EventControllerAbstract {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals("EFFECT")) {
-            ArrayList<Player> reversedPlayers = new ArrayList<>(gameManager.getGame().getBoard().getActivePlayers());
+            ArrayList<Player> reversedPlayers = new ArrayList<>(gameManager.getGame().getBoard().getCopyActivePlayers());
             Collections.reverse(reversedPlayers);
             Board board = gameManager.getGame().getBoard();
 

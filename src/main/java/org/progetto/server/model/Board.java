@@ -1,7 +1,5 @@
 package org.progetto.server.model;
 
-import org.progetto.server.model.components.HousingUnit;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -35,8 +33,13 @@ public class Board {
         return track;
     }
 
-    public ArrayList<Player> getActivePlayers() {
-        return activePlayers;
+    public ArrayList<Player> getCopyActivePlayers() {
+        ArrayList<Player> copyActivePlayers;
+
+        synchronized (activePlayers) {
+            copyActivePlayers = new ArrayList<>(activePlayers);
+        }
+        return copyActivePlayers;
     }
 
     public ArrayList<Player> getReadyPlayers() {

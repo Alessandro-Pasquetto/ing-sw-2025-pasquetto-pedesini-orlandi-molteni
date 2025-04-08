@@ -104,7 +104,9 @@ public class GameThread extends Thread {
      *
      * @author Alessandro
      */
-    private void waitPlayerReady(Player player) throws InterruptedException {
+    public void waitPlayerReady(Player player) throws InterruptedException {
+        player.setIsReady(false, gameManager.getGame());
+
         synchronized (gameThreadLock) {
             while (!player.getIsReady())
                 gameThreadLock.wait();
@@ -117,16 +119,17 @@ public class GameThread extends Thread {
      *
      * @author Alessandro
      */
-    private void waitPlayersReady(Game game) throws InterruptedException {
+    public void waitPlayersReady(Game game) throws InterruptedException {
+        gameManager.getGame().resetReadyPlayers();
+
         synchronized (gameThreadLock) {
             while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
                 gameThreadLock.wait();
         }
-        gameManager.getGame().resetReadyPlayers();
     }
 
     // todo?: resetTravelersReady
-    private void waitTravelersReady(Game game) throws InterruptedException {
+    public void waitTravelersReady(Game game) throws InterruptedException {
         /*
         synchronized (gameThreadLock) {
             while (game.getNumReadyPlayers() != game.getMaxNumPlayers())

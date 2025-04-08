@@ -1,13 +1,10 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
@@ -41,7 +38,7 @@ public class SmugglersController extends EventControllerAbstract {
         this.smugglers = (Smugglers) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.currPlayer = 0;
-        this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();;
+        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.requestedBoxes = 0;

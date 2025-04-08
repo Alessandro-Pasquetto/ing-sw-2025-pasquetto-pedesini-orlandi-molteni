@@ -33,7 +33,7 @@ public class EventController {
             gameManager.createEventController();
             gameManager.getEventController().start();
 
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | InterruptedException e) {
             if (e.getMessage().equals("EmptyHiddenEventCardDeck"))
                 gameManager.broadcastGameMessage("EmptyHiddenEventCardDeck");
         }

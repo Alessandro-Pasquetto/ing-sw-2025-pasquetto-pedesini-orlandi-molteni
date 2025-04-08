@@ -48,7 +48,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.battlezone = (Battlezone) gameManager.getGame().getActiveEventCard();
         this.phase = "START";
         this.currPlayer = 0;
-        this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.tempEnginePower = new HashMap<>();
         this.tempFirePower = new HashMap<>();
         this.penaltyPlayer = null;

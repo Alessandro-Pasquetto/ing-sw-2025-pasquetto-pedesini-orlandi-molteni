@@ -11,7 +11,7 @@ abstract public class EventControllerAbstract {
     // OTHER METHODS
     // =======================
 
-    abstract public void start() throws RemoteException;
+    abstract public void start() throws RemoteException, InterruptedException;
 
     public void rollDice(Player player, Sender sender) throws RemoteException {
         System.out.println("UnableToRollDice");
