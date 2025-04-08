@@ -497,13 +497,16 @@ public class BuildingController {
      *
      * @author Alessandro
      * @param gameManager
+     * @return areAllValid
      */
-    public static void checkAllShipValidity(GameManager gameManager) {
+    public static boolean checkAllShipValidity(GameManager gameManager) {
         Game game = gameManager.getGame();
+        boolean areAllValid = true;
 
         for (Player player : game.getPlayers()) {
 
             if(!player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
+                areAllValid = false;
                 player.setIsReady(false, game);
 
                 Sender sender = gameManager.getSocketWriterByPlayer(player);
@@ -518,5 +521,7 @@ public class BuildingController {
                 }
             }
         }
+
+        return areAllValid;
     }
 }

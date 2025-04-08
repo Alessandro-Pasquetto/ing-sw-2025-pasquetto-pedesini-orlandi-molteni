@@ -57,9 +57,9 @@ public class TimerController {
     // =======================
 
     public synchronized void startTimer() {
+        isTimerRunning = true;
 
         new Thread(() -> {
-            isTimerRunning = true;
 
             int currentTimer = timer;
             while (isTimerRunning) {

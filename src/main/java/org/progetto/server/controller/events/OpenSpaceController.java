@@ -48,8 +48,10 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
-        if (phase.equals("START"))
+        if (phase.equals("START")){
+            phase = "ASK_ENGINES";
             askHowManyEnginesToUse();
+        }
     }
 
     /**
@@ -59,6 +61,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
         if (phase.equals("ASK_ENGINES")) {
+            System.out.println("Asking engines");
 
             for (Player player : activePlayers) {
 
@@ -85,16 +88,13 @@ public class OpenSpaceController extends EventControllerAbstract {
                     }
 
                 } else {
-
+                    System.out.println("Waiting for HowManyDoubleEngines");
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = "ENGINE_NUMBER";
                     gameManager.getGameThread().waitPlayerReady(player);
 
                     phase = "EFFECT";
                     eventEffect();
-
-                    gameManager.getGame().getBoard().updateTurnOrder();
-                    gameManager.broadcastGameMessage("This event card is finished");
                 }
             }
         }
@@ -122,9 +122,10 @@ public class OpenSpaceController extends EventControllerAbstract {
                     requestedNumber = num;
                     playerEnginePower = player.getSpaceship().getNormalEnginePower() + 2 * num;
 
+                    System.out.println("Waiting for BatteriesToDiscard");
+                    phase = "DISCARDED_BATTERIES";
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
-                    phase = "DISCARDED_BATTERIES";
 
                 } else {
                     sender.sendMessage("IncorrectNumber");

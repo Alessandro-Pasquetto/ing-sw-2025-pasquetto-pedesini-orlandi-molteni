@@ -100,6 +100,12 @@ public class Game {
         }
     }
 
+    public int getEventDeckSize() {
+        synchronized (hiddenEventDeck) {
+            return hiddenEventDeck.size();
+        }
+    }
+
     public int getMaxNumPlayers() {
         return maxNumPlayers;
     }
@@ -362,6 +368,7 @@ public class Game {
             int randomPos = 0;
             do{//todo da rimuovere xD
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
+                System.out.println("Sto cercando");
             }
             while(hiddenEventDeck.get(randomPos).getType() != CardType.OPENSPACE);
             pickedEventCard = hiddenEventDeck.remove(randomPos);

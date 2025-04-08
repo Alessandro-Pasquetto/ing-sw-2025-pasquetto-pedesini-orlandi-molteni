@@ -19,9 +19,6 @@ public class GameController {
     public static void startBuilding(GameManager gameManager) throws RemoteException {
 
         gameManager.broadcastGameMessage("StartBuilding");
-
-        gameManager.getGame().setPhase(GamePhase.BUILDING);
-
         gameManager.startTimer();
     }
 

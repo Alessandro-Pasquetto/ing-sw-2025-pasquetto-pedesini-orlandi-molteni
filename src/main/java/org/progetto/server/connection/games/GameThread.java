@@ -49,43 +49,69 @@ public class GameThread extends Thread {
 
                         waitPlayersReady(game);
 
-                        GameController.startBuilding(gameManager);
+                        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
                         break;
 
                     case BUILDING:
                         System.out.println("Building...");
+                        GameController.startBuilding(gameManager);
 
+                        gameManager.getGame().resetReadyPlayers();
                         synchronized (gameThreadLock) {
                             while (game.getNumReadyPlayers() != game.getMaxNumPlayers() && !gameManager.getTimerExpired())
                                 gameThreadLock.wait();
                         }
 
+                        if(gameManager.getTimerExpired()){
+                            gameManager.broadcastGameMessage("TimerExpired");
+                            System.out.println("TimerExpired");
+                        }
                         gameManager.getTimerController().stopTimer();
-                        gameManager.broadcastGameMessage("TimerExpired");
-                        System.out.println("TimerExpired");
 
+                        // todo la riga sotto è da eliminare quando si farà che il ready in building fa anche il placeLastComponent
+                        gameManager.broadcastGameMessage("TimerExpired");
                         // Waiting for placing the last component
                         waitPlayersReady(game);
 
-                        BuildingController.checkAllShipValidity(gameManager);
-
-                        System.out.println("Adjusting spaceships...");
-                        // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions)
-                        waitPlayersReady(game);
+                        if(!BuildingController.checkAllShipValidity(gameManager)){
+                            System.out.println("Adjusting spaceships...");
+                            // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions)
+                            waitPlayersReady(game);
+                        }
 
                         //todo preparing players in track?
 
-
-
+                        System.out.println("End building phase...");
                         game.setPhase(GamePhase.EVENT);
                         break;
 
                     case EVENT:
-                        System.out.println("Event...");
+                        if(gameManager.getGame().getEventDeckSize() == 0){
+                            game.setPhase(GamePhase.ENDGAME);
+                            break;
+                        }
 
+                        System.out.println("New event...");
+
+                        /*
+                        //todo richiedere al player di pescare una carta
+                        waitFirstNotify();
+
+                         */
+
+                        // todo da rimuovere, sarà chiamato da un player
                         EventController.pickEventCard(gameManager);
 
-                        waitPlayersReady(game);
+                        gameManager.createEventController();
+                        gameManager.getEventController().start();
+
+                        gameManager.getGame().getBoard().updateTurnOrder();
+                        gameManager.broadcastGameMessage("This event card is finished");
+                        break;
+
+                    case ENDGAME:
+                        System.out.println("Endgame...");
                         break;
                 }
             }
@@ -98,6 +124,11 @@ public class GameThread extends Thread {
     // OTHER METHODS
     // =======================
 
+    public void waitFirstNotify() throws InterruptedException {
+        synchronized (gameThreadLock) {
+            gameThreadLock.wait();
+        }
+    }
 
     /**
      * Pauses the game thread until the player is ready

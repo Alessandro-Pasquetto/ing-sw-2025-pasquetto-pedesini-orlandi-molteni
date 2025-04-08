@@ -22,20 +22,13 @@ public class EventController {
      * @param gameManager is the class that manage the current game
      * @throws RemoteException if the eventCard can't be picked
      */
-    public static void pickEventCard(GameManager gameManager) throws RemoteException {
+    public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
 
-        try {
-            EventCard card = gameManager.getGame().pickEventCard();
+        EventCard card = gameManager.getGame().pickEventCard();
 
-            System.out.println(card.getType().toString());
-            gameManager.broadcastGameMessage(new PickedEventCardMessage(card.getImgSrc()));
+        System.out.println(card.getType().toString());
+        gameManager.broadcastGameMessage(new PickedEventCardMessage(card.getImgSrc()));
 
-            gameManager.createEventController();
-            gameManager.getEventController().start();
-
-        } catch (IllegalStateException | InterruptedException e) {
-            if (e.getMessage().equals("EmptyHiddenEventCardDeck"))
-                gameManager.broadcastGameMessage("EmptyHiddenEventCardDeck");
-        }
+        gameManager.getGameThread().notifyThread();
     }
 }
