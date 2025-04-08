@@ -31,21 +31,21 @@ public class Spaceship {
     // Initialize spaceship with initial values of attributes
     public Spaceship(int levelShip, int color) {
         this.levelShip = levelShip;
-        shipComponentsCount = 1;
-        destroyedCount = 0;
-        crewCount = 0;
-        batteriesCount = 0;
-        exposedConnectorsCount = 0;
-        alienPurple = false;
-        alienOrange = false;
-        normalShootingPower = 0;
-        halfDoubleCannonCount = 0;
-        fullDoubleCannonCount = 0;
-        doubleEngineCount = 0;
-        normalEnginePower = 0;
-        shieldCounts = new int[] {0, 0, 0, 0};
-        boxCounts = new int[] {0, 0, 0, 0};
-        buildingBoard = new BuildingBoard(this, color);
+        this.shipComponentsCount = 1;
+        this.destroyedCount = 0;
+        this.crewCount = 0;
+        this.batteriesCount = 0;
+        this.exposedConnectorsCount = 0;
+        this.alienPurple = false;
+        this.alienOrange = false;
+        this.normalShootingPower = 0;
+        this.halfDoubleCannonCount = 0;
+        this.fullDoubleCannonCount = 0;
+        this.doubleEngineCount = 0;
+        this.normalEnginePower = 0;
+        this.shieldCounts = new int[] {0, 0, 0, 0};
+        this.boxCounts = new int[] {0, 0, 0, 0};
+        this.buildingBoard = new BuildingBoard(this, color);
     }
 
     // =======================

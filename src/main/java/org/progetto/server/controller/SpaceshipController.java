@@ -50,9 +50,8 @@ public class SpaceshipController {
         }
     }
 
-
     /**
-     * handles the player decision to move a box between boxStorages
+     * Handles the player decision to move a box between boxStorages
      *
      * @author Lorenzo
      * @param gameManager of the current game
@@ -66,15 +65,14 @@ public class SpaceshipController {
      * @param sender
      * @throws RemoteException
      */
-    public static void moveBox(GameManager gameManager, Player player, int startY, int startX,int startIdx, int endY,int endX,int endIdx, Sender sender) throws RemoteException {
+    public static void moveBox(GameManager gameManager, Player player, int startY, int startX, int startIdx, int endY, int endX, int endIdx, Sender sender) throws RemoteException {
 
-        if(startX == endX && startY == endY && startIdx == endIdx) {
+        if (startX == endX && startY == endY && startIdx == endIdx) {
             sender.sendMessage("CantStayStill");
-        }else {
+        } else {
 
             try {
-
-                //move box removing from start and adding to end
+                // Move box removing from start and adding to end
                 BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[startY][startX];
                 BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[endY][endX];
 
@@ -90,7 +88,6 @@ public class SpaceshipController {
 
                         } else sender.sendMessage("RedBoxNotMoved");
 
-
                     } else {
                         sender.sendMessage("CantStoreInANonRedStorage");
                     }
@@ -104,18 +101,15 @@ public class SpaceshipController {
                     } else sender.sendMessage("RedBoxNotMoved");
                 }
 
-
-                //Spaceship Updates
+                // Spaceship Updates
                 updateSpaceship(gameManager,player,startComponent,sender);
                 updateSpaceship(gameManager,player,endComponent,sender);
-
 
             } catch (ClassCastException e) {
                 sender.sendMessage("NotAStorageComponent");
             }
         }
     }
-
 
     /**
      * Called after a component is destroyed by an event, handles broadcast destruction message
