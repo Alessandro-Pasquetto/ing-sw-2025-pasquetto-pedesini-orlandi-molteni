@@ -20,6 +20,8 @@ import org.progetto.server.model.events.ConditionType;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BattlezoneController extends EventControllerAbstract {
 
@@ -32,7 +34,9 @@ public class BattlezoneController extends EventControllerAbstract {
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
-    private Player penaltyPlayer;;
+    private Map<Player, Integer> tempEnginePower;
+    private Map<Player, Float> tempFirePower;
+    private Player penaltyPlayer;
     private int requestedBatteries;
     private int requestedCrew;
 
@@ -46,6 +50,8 @@ public class BattlezoneController extends EventControllerAbstract {
         this.phase = "START";
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getActivePlayers();
+        this.tempEnginePower = new HashMap<>();
+        this.tempFirePower = new HashMap<>();
         this.penaltyPlayer = null;
         this.requestedBatteries = 0;
         this.requestedCrew = 0;
@@ -66,33 +72,35 @@ public class BattlezoneController extends EventControllerAbstract {
 
         switch (battlezone.getCouples().getFirst().getType()){
 
-            case CREWREQUIREMENT:
+            case ConditionType.CREWREQUIREMENT:
                 phase = "CREW_COUNT";
                 break;
 
-            case FIREPOWERREQUIREMENT:
+            case ConditionType.FIREPOWERREQUIREMENT:
                 phase = "ASK_ENGINES";
                 askHowManyEnginesToUse();
                 break;
 
-            case ENGINEPOWERREQUIREMENT:
+            case ConditionType.ENGINEPOWERREQUIREMENT:
                 phase = "ASK_CANNONS";
                 askHowManyCannonsToUse();
                 break;
         }
     }
 
-    private void crewCount() throws RemoteException {
+    /**
+     * Finds player with fewer crew
+     *
+     * @author Gabriele
+     * @throws RemoteException
+     */
+    private void choseFewerCrew() throws RemoteException {
         if (phase.equals("CREW_COUNT")) {
-            int crewCount = 100;
 
-            for (Player player : activePlayers) {
-                if (player.getSpaceship().getCrewCount() < crewCount) {
-                    crewCount = player.getSpaceship().getCrewCount();
-                    penaltyPlayer = player;
-                }
-                phase = "PENALTY";
-            }
+            // Finds player with fewer crew
+            penaltyPlayer = battlezone.lessPopulatedSpaceship(activePlayers);
+
+            phase = "PENALTY";
         }
     }
 
@@ -104,35 +112,34 @@ public class BattlezoneController extends EventControllerAbstract {
     private void askHowManyEnginesToUse() throws RemoteException {
         if (phase.equals("ASK_ENGINES")) {
 
-            Player player = activePlayers.get(currPlayer);
+            // Checks if every player took a decision about how many engines to use
+            if (currPlayer < activePlayers.size()) {
 
-            // Gets the sender reference to send a message to player
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
+                Player player = activePlayers.get(currPlayer);
 
-            Sender sender = null;
+                // Gets the sender reference to send a message to player
+                Sender sender = gameManager.getSenderByPlayer(player);
 
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+                // Calculates max number of double engine usable
+                int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
-            // Calculates max number of double engine usable
-            int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
+                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                if (maxUsable == 0) {
+                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
-            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-            if (maxUsable == 0) {
-                player.getSpaceship().setTempEnginePower(player.getSpaceship().getNormalEnginePower());
+                    // Next player
+                    currPlayer++;
+                    phase = "ASK_ENGINES";
+                    askHowManyEnginesToUse();
 
-                phase = "CHOOSE_WEAKEST_ENGINES";
-                chooseWeakestEngines();
+                } else {
+                    sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+                    phase = "ENGINE_NUMBER";
+                }
 
             } else {
-
-                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
-
-                phase = "ENGINE_NUMBER";
+                phase = "CHOOSE_WEAKEST_ENGINES";
+                chooseWeakestEngines();
             }
         }
     }
@@ -150,14 +157,16 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 // Player doesn't want to use double engines
                 if (num == 0) {
-                    player.getSpaceship().setTempEnginePower(player.getSpaceship().getNormalEnginePower());
+                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
-                    phase = "CHOOSE_WEAKEST_ENGINES";
-                    chooseWeakestEngines();
+                    // Next player
+                    currPlayer++;
+                    phase = "ASK_ENGINES";
+                    askHowManyEnginesToUse();
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
-                    player.getSpaceship().setTempEnginePower(player.getSpaceship().getNormalEnginePower() + 2 * num);
+                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower() + 2 * num);
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
@@ -185,35 +194,34 @@ public class BattlezoneController extends EventControllerAbstract {
     private void askHowManyCannonsToUse() throws RemoteException {
         if (phase.equals("ASK_CANNONS")) {
 
-            Player player = activePlayers.get(currPlayer);
-            Spaceship spaceship = player.getSpaceship();
+            // Checks if every player took a decision about how many engines to use
+            if (currPlayer < activePlayers.size()) {
+                Player player = activePlayers.get(currPlayer);
+                Spaceship spaceship = player.getSpaceship();
 
-            // Retrieves sender reference
-            SocketWriter socketWriter = gameManager.getSocketWriterByPlayer(player);
-            VirtualClient virtualClient = gameManager.getVirtualClientByPlayer(player);
+                // Retrieves sender reference
+                Sender sender = gameManager.getSenderByPlayer(player);
 
-            Sender sender = null;
+                // Calculates max number of double cannons usable
+                int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
-            if (socketWriter != null) {
-                sender = socketWriter;
-            } else if (virtualClient != null) {
-                sender = virtualClient;
-            }
+                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                if (maxUsable == 0) {
+                    tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
-            // Calculates max number of double cannons usable
-            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+                    // Next player
+                    currPlayer++;
+                    phase = "ASK_CANNONS";
+                    askHowManyCannonsToUse();
 
-            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-            if (maxUsable == 0) {
-                player.getSpaceship().setTempShootingPower(player.getSpaceship().getNormalShootingPower());
-
-                phase = "CHOOSE_WEAKEST_CANNONS";
-                chooseWeakestCannons();
+                } else {
+                    sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
+                    phase = "CANNON_NUMBER";
+                }
 
             } else {
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
-
-                phase = "CANNON_NUMBER";
+                phase = "CHOOSE_WEAKEST_CANNONS";
+                chooseWeakestCannons();
             }
         }
     }
@@ -237,19 +245,21 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 // Player doesn't want to use double cannons
                 if (num == 0) {
-                    player.getSpaceship().setTempShootingPower(player.getSpaceship().getNormalShootingPower());
+                    tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
-                    phase = "CHOOSE_WEAKEST_CANNONS";
-                    chooseWeakestCannons();
+                    // Next player
+                    currPlayer++;
+                    phase = "ASK_CANNONS";
+                    askHowManyCannonsToUse();
 
                 } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
                     requestedBatteries = num;
 
                     // Updates player's firepower based on his decision
                     if (num <= spaceship.getFullDoubleCannonCount()) {
-                        player.getSpaceship().setTempShootingPower(spaceship.getNormalShootingPower() + 2 * num);
+                        tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * num);
                     } else {
-                        player.getSpaceship().setTempShootingPower(spaceship.getFullDoubleCannonCount() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount()));
+                        tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount()));
                     }
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
@@ -296,14 +306,18 @@ public class BattlezoneController extends EventControllerAbstract {
 
                         if (requestedBatteries == 0) {
 
+                            // Next player
+                            currPlayer++;
+
                             if (battlezone.getCouples().getFirst().getType() == ConditionType.ENGINEPOWERREQUIREMENT){
-                                phase = "CHOOSE_WEAKEST_ENGINES";
-                                chooseWeakestEngines();
+                                phase = "ASK_ENGINES";
+                                askHowManyEnginesToUse();
 
                             } else if (battlezone.getCouples().getFirst().getType() == ConditionType.FIREPOWERREQUIREMENT) {
-                                phase = "CHOOSE_WEAKEST_CANNONS";
-                                chooseWeakestCannons();
+                                phase = "ASK_CANNONS";
+                                askHowManyCannonsToUse();
                             }
+
                         } else {
                             sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
                         }
@@ -325,37 +339,71 @@ public class BattlezoneController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Finds player with less engine power
+     *
+     * @author Gabriele
+     */
     private void chooseWeakestEngines() {
         if (phase.equals("CHOOSE_WEAKEST_ENGINES")) {
-            int enginePower = 100;
+            int minEnginePower = Integer.MAX_VALUE;
 
             for (Player player : activePlayers) {
-                if (player.getSpaceship().getTempEnginePower() < enginePower) {
-                    enginePower = player.getSpaceship().getTempEnginePower();
+                // Calculates the current player engine power
+                int currEnginePower = tempEnginePower.get(player);
+
+                if (currEnginePower < minEnginePower) {
+                    minEnginePower = currEnginePower;
                     penaltyPlayer = player;
                 }
-                phase = "PENALTY";
+                else if (currEnginePower == minEnginePower) {
+                    // In case of tie, picks farthest player on the route
+                    if (player.getPosition() > penaltyPlayer.getPosition()) {
+                        penaltyPlayer = player;
+                    }
+                }
             }
+
+            phase = "PENALTY";
+            penalty();
         }
     }
 
+    /**
+     * Finds player with less firepower
+     *
+     * @author Gabriele
+     */
     private void chooseWeakestCannons() {
         if (phase.equals("CHOOSE_WEAKEST_CANNONS")) {
-            float shootingPower = 100;
+            float minFirePower = Float.MAX_VALUE;
 
             for (Player player : activePlayers) {
-                if (player.getSpaceship().getTempShootingPower() < shootingPower) {
-                    shootingPower = player.getSpaceship().getTempShootingPower();
+                // Calculates the current player firepower
+                float currFirePower = tempFirePower.get(player);
+
+                if (currFirePower < minFirePower) {
+                    minFirePower = currFirePower;
                     penaltyPlayer = player;
                 }
-                phase = "PENALTY";
+                else if (currFirePower == minFirePower) {
+                    // In case of tie, picks farthest player on the route
+                    if (player.getPosition() > penaltyPlayer.getPosition()) {
+                        penaltyPlayer = player;
+                    }
+                }
             }
+
+            phase = "PENALTY";
+            penalty();
         }
     }
 
-    public void penalty(Player player, Sender sender) throws RemoteException {
+    public void penalty() {
         if (phase.equals("CANNON_NUMBER")) {
-            player = penaltyPlayer;
+
         }
+
+        // TODO: remember to reset controller temp values like currPlayer, tempFirePower, tempEnginePower...
     }
 }

@@ -147,7 +147,7 @@ public class PiratesController extends EventControllerAbstract {
                     if (num <= spaceship.getFullDoubleCannonCount()) {
                         playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
                     } else {
-                        playerFirePower = spaceship.getFullDoubleCannonCount() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
+                        playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
                     }
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));

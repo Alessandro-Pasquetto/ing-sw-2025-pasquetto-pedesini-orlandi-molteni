@@ -20,8 +20,6 @@ public class Spaceship {
     private int fullDoubleCannonCount;  // double cannons with full shooting power
     private int normalEnginePower;
     private int doubleEngineCount;
-    private float tempShootingPower;
-    private int tempEnginePower;
     private final int[] shieldCounts;  // {up, right, down, left}
     private final int[] boxCounts;     // {red, yellow, green, blue}
     private final BuildingBoard buildingBoard;
@@ -45,8 +43,6 @@ public class Spaceship {
         fullDoubleCannonCount = 0;
         doubleEngineCount = 0;
         normalEnginePower = 0;
-        tempShootingPower = 0;
-        tempEnginePower = 0;
         shieldCounts = new int[] {0, 0, 0, 0};
         boxCounts = new int[] {0, 0, 0, 0};
         buildingBoard = new BuildingBoard(this, color);
@@ -110,10 +106,6 @@ public class Spaceship {
         return normalEnginePower;
     }
 
-    public float getTempShootingPower() { return tempShootingPower; }
-
-    public int getTempEnginePower() { return tempEnginePower; }
-
     public int getIdxShieldCount(int index){
         return shieldCounts[index];
     }
@@ -150,14 +142,6 @@ public class Spaceship {
         if(alienOrange && alienPresence)
             throw new IllegalStateException("HasAlreadyOrangeAlien");
         alienOrange = alienPresence;
-    }
-
-    public void setTempShootingPower(float tempShootingPower) {
-        this.tempShootingPower = tempShootingPower;
-    }
-
-    public void setTempEnginePower(int tempEnginePower) {
-        this.tempEnginePower = tempEnginePower;
     }
 
     // =======================
