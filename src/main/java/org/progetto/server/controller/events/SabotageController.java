@@ -1,13 +1,10 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
-import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
-import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Sabotage;
 
@@ -157,11 +154,19 @@ public class SabotageController extends EventControllerAbstract{
         if (phase.equals("EFFECT")) {
 
             // Event effect applied for single player
-            if (sabotage.penalty(yDiceResult, xDiceResult, penalizedPlayer)) {
+            if (sabotage.penalty(yDiceResult, xDiceResult, penalizedPlayer) != null) {
 
                 // If something got destroyed, sends update message
-                sender.sendMessage(new DestroyedComponentMessage(yDiceResult, xDiceResult));
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(penalizedPlayer.getName(), yDiceResult, xDiceResult), sender);
+                // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                SpaceshipController.destroyComponent(gameManager, penalizedPlayer, yDiceResult, xDiceResult, sender);
+
+                // Checks if he lost
+                int totalCrew = penalizedPlayer.getSpaceship().getTotalCrewCount();
+
+                if (totalCrew == 0) {
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(penalizedPlayer.getName()));
+                    gameManager.getGame().getBoard().leaveTravel(penalizedPlayer);
+                }
 
                 phase = "END";
 

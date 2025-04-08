@@ -40,45 +40,49 @@ public class Epidemic extends EventCard {
         HousingUnit currComponent;
 
         if (!firstIteration) {
-            // boundary checks and if the cell is not Component, already visited, or it's the first iteration of the recursion
+            // Checks boundary and if the cell is not Component, already visited, or it's the first iteration of the recursion
             if (i < 0 || j < 0 || i >= spaceshipMatrix.length || j >= spaceshipMatrix[0].length || spaceshipMatrix[i][j] == null || visitedCells[i][j]) {
                 return;
             }
 
-            // checks if the component isn't a housing unit
+            // Checks if the component isn't a housing unit
             if (!spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {
                 return;
             }
 
             currComponent = (HousingUnit) spaceshipMatrix[i][j];
 
-            // checks if prevComponent and currComponent are connected
+            // Checks if prevComponent and currComponent are connected
             if (!buildingBoard.areConnected(prevComponent, currComponent)) {
                 return;
             }
 
-            // check if itemsCount in the components is greater than zero
+            // Checks if itemsCount in the components is greater than zero
             if (currComponent.getCrewCount() == 0 && !currComponent.getHasOrangeAlien() && !currComponent.getHasPurpleAlien()) {
                 return;
             }
 
-            // adds the curr component to the infectedComponents list
+            // Adds the curr component to the infectedComponents list
             infectedComponents.add(prevComponent);
             infectedComponents.add(currComponent);
         } else {
             currComponent = (HousingUnit) spaceshipMatrix[i][j];
         }
 
-        // mark the current cell as visited
+        // Marks the current cell as visited
         visitedCells[i][j] = true;
 
-        // explore all 4 adjacent cells (up, down, left, right)
-        int[] rowDir = {-1, 1, 0, 0};
-        int[] colDir = {0, 0, -1, 1};
+        // Explore all 4 adjacent cells (up, down, left, right)
+        int[][] directions = {
+            {-1, 0}, // up
+            {1, 0},  // down
+            {0, -1}, // left
+            {0, 1}   // right
+        };
 
         for (int d = 0; d < 4; d++) {
-            int newRow = i + rowDir[d];
-            int newCol = j + colDir[d];
+            int newRow = i + directions[d][0];
+            int newCol = j + directions[d][1];
             dfsInfectedComponents(newRow, newCol, false, currComponent, buildingBoard, visitedCells, infectedComponents);
         }
     }

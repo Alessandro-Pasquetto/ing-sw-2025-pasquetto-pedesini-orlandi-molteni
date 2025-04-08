@@ -96,7 +96,7 @@ public class Battlezone extends EventCard{
         } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienOrange(false);
             component.setAlienPurple(false);
-        } else{  // if it has more than one crew member
+        } else {  // if it has more than one crew member
             return component.decrementCrewCount(spaceship,1);
         }
         return true;
@@ -118,7 +118,7 @@ public class Battlezone extends EventCard{
     }
 
     /**
-     * If the shot find a component in its trajectory, the function destroys it.
+     * If the shot find a component in its trajectory, the function returns it
      *
      * @author Gabriele
      * @author Stefano
@@ -126,7 +126,7 @@ public class Battlezone extends EventCard{
      * @param player Current player
      * @param shot Current shot
      * @param position Dices result
-     * @return the destroyed component, null otherwise
+     * @return the component to destroy, null otherwise
      */
     public Component penaltyShot(Game game, Player player, Projectile shot, int position) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
@@ -141,9 +141,7 @@ public class Battlezone extends EventCard{
                 }
                 for (int i = row; i < spaceshipMatrix.length; i++) {
                     if (spaceshipMatrix[i][column] != null) {
-                        Component destroyedComponent = spaceshipMatrix[i][column];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return destroyedComponent;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
@@ -155,9 +153,7 @@ public class Battlezone extends EventCard{
                 }
                 for (int j = column; j >= 0; j--) {
                     if (spaceshipMatrix[row][j] != null) {
-                        Component destroyedComponent = spaceshipMatrix[row][j];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return destroyedComponent;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;
@@ -169,9 +165,7 @@ public class Battlezone extends EventCard{
                 }
                 for (int i = row; i >= 0; i--) {
                     if (spaceshipMatrix[i][column] != null) {
-                        Component destroyedComponent = spaceshipMatrix[i][column];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return destroyedComponent;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
@@ -183,9 +177,7 @@ public class Battlezone extends EventCard{
                 }
                 for (int j = column; j < spaceshipMatrix[0].length; j++) {
                     if (spaceshipMatrix[row][j] != null) {
-                        Component destroyedComponent = spaceshipMatrix[row][j];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return destroyedComponent;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;

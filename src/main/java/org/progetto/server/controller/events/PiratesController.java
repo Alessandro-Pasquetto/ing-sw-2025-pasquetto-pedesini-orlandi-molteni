@@ -1,16 +1,12 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
-import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
-import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -611,8 +607,8 @@ public class PiratesController extends EventControllerAbstract {
 
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {
-                    sender.sendMessage(new DestroyedComponentMessage(destroyedComponent.getY(), destroyedComponent.getX()));
-                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(shieldNotProtectedPlayer.getName(), destroyedComponent.getY(), destroyedComponent.getX()), sender);
+                    // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                    SpaceshipController.destroyComponent(gameManager, shieldNotProtectedPlayer, destroyedComponent.getY(), destroyedComponent.getX(), sender);
 
                 } else {
                     gameManager.broadcastGameMessage("NothingGotDestroyed");

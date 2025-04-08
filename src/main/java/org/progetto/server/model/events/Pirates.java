@@ -87,7 +87,7 @@ public class Pirates extends EventCard {
     }
 
     /**
-     * If the shot find a component in its trajectory, the function destroys it.
+     * If the shot find a component in its trajectory, the function returns it
      *
      * @author Gabriele
      * @author Stefano
@@ -95,7 +95,7 @@ public class Pirates extends EventCard {
      * @param player Current player
      * @param shot Current shot
      * @param position Dices result
-     * @return true if a component is destroyed, false otherwise
+     * @return the component to destroy, null otherwise
      */
     public Component penaltyShot(Game game, Player player, Projectile shot, int position) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
@@ -110,12 +110,11 @@ public class Pirates extends EventCard {
                 }
                 for (int i = row; i < spaceshipMatrix.length; i++) {
                     if (spaceshipMatrix[i][column] != null) {
-                        Component destroyedComponent = spaceshipMatrix[i][column];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return destroyedComponent;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
+
             case 1:  // shot come from right
                 row = position - 5; // normalization for spaceshipMatrix
                 column = spaceshipMatrix[0].length - 1;
@@ -124,12 +123,11 @@ public class Pirates extends EventCard {
                 }
                 for (int j = column; j >= 0; j--) {
                     if (spaceshipMatrix[row][j] != null) {
-                        Component destroyedComponent = spaceshipMatrix[row][j];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return destroyedComponent;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;
+
             case 2:  // shot come from down
                 row = spaceshipMatrix.length - 1;
                 column = position - 6 + game.getLevel(); // normalization for spaceshipMatrix
@@ -138,12 +136,11 @@ public class Pirates extends EventCard {
                 }
                 for (int i = row; i >= 0; i--) {
                     if (spaceshipMatrix[i][column] != null) {
-                        Component destroyedComponent = spaceshipMatrix[i][column];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(i, column);
-                        return destroyedComponent;
+                        return spaceshipMatrix[i][column];
                     }
                 }
                 break;
+
             case 3:  // shot come from left
                 row = position - 5; // normalization for spaceshipMatrix
                 column = 0;
@@ -152,9 +149,7 @@ public class Pirates extends EventCard {
                 }
                 for (int j = column; j < spaceshipMatrix[0].length; j++) {
                     if (spaceshipMatrix[row][j] != null) {
-                        Component destroyedComponent = spaceshipMatrix[row][j];
-                        player.getSpaceship().getBuildingBoard().destroyComponent(row, j);
-                        return destroyedComponent;
+                        return spaceshipMatrix[row][j];
                     }
                 }
                 break;

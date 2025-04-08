@@ -51,25 +51,24 @@ public class Sabotage extends EventCard {
     }
 
     /**
-     * Destroys the component positioned in the selected cell of spaceship
+     * Returns reference to hit component
      *
      * @author Gabriele
      * @author Stefano
      * @param y Y coordinate of the cell
      * @param x X coordinate of the cell
      * @param player Current player
-     * @return false if the cell is empty, true otherwise
+     * @return the component to destroy, null otherwise
      */
-    public boolean penalty(int y, int x, Player player) {
+    public Component penalty(int y, int x, Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
         if (y >= 0 && y < spaceshipMatrix.length && x >= 0 && x < spaceshipMatrix[0].length) {
             if (spaceshipMatrix[y][x] != null) {
-                player.getSpaceship().getBuildingBoard().destroyComponent(y, x);
-                return true;
+                return spaceshipMatrix[y][x];
             }
         }
-        return false;
+        return null;
     }
 
     // TODO: The controller calls lessPopulatedSpaceship() and it return the player with the less crew.

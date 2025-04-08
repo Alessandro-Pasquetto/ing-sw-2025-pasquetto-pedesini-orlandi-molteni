@@ -1,7 +1,6 @@
 package org.progetto.server.controller;
 
 
-import com.fasterxml.jackson.core.io.JsonEOFException;
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.UpdatedSpaceship;
@@ -9,28 +8,26 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-//this controller handles:
-//1. broadcast updates of spaceship attributes
-//3. destroy components and validity
-public class SpaceshipController {
 
+/**
+ * This controller handles:
+ * 1. broadcast updates of spaceship attributes
+ * 3. destroy components and validity
+ */
+public class SpaceshipController {
 
     // =======================
     // OTHER METHODS
     // =======================
 
     /**
-     * called after every modification of a component attributes, updates the view of that
-     * player and send a broadcast to other players
+     * Called after every modification of a component attributes, updates the view of that player and send a broadcast to other players
      *
      * @author Lorenzo
      * @param gameManager of the current game
@@ -40,21 +37,19 @@ public class SpaceshipController {
      */
     public static void updateSpaceship(GameManager gameManager, Player player, Component componentToUpdate, Sender sender) throws RemoteException {
 
-        if((componentToUpdate instanceof BatteryStorage) || (componentToUpdate instanceof BoxStorage) || (componentToUpdate instanceof HousingUnit)) {
+        if ((componentToUpdate instanceof BatteryStorage) || (componentToUpdate instanceof BoxStorage) || (componentToUpdate instanceof HousingUnit)) {
 
             gameManager.broadcastGameMessage(new UpdatedSpaceship(player, componentToUpdate));
             sender.sendMessage("SpaceshipUpdated");
-        }else{
+        } else {
             sender.sendMessage("NotUnUpdatableComponent");
         }
     }
 
-    public static void moveBox(){}   //todo
-
+    public static void moveBox(){}   // TODO
 
     /**
-     * called after a component is destroyed by an event
-     * handles broadcast destruction message
+     * Called after a component is destroyed by an event, handles broadcast destruction message
      *
      * @author Lorenzo
      * @param gameManager of the current game
@@ -64,7 +59,7 @@ public class SpaceshipController {
      * @param sender
      * @throws RemoteException
      */
-    public static void destroyedComponent(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
+    public static void destroyComponent(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -74,26 +69,24 @@ public class SpaceshipController {
             sender.sendMessage(new DestroyedComponentMessage(yComponent, xComponent));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), yComponent, xComponent), sender);
 
-            //controllo shipValidity
-            if(!player.getSpaceship().getBuildingBoard().checkShipValidity()){
+            // Checks ship validity
+            if (!player.getSpaceship().getBuildingBoard().checkShipValidity()){
                 sender.sendMessage("SpaceshipValid");
-            }else{
-                sender.sendMessage("SpaceshipNotValid");      //gestito da view, player invia coordinate
+            } else {
+                sender.sendMessage("SpaceshipNotValid");  // Handled by view, player sends coordinates to fix ship
             }
 
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("EmptyComponentCell"))
                 sender.sendMessage("EmptyComponentCell");
 
-            if(e.getMessage().equals("EmptySpaceship"))
+            if (e.getMessage().equals("EmptySpaceship"))
                 sender.sendMessage("EmptySpaceship");
         }
     }
 
-
     /**
-     * player clicks on a component, we receive its coordinates, then dfs for finding
-     * the other connected components
+     * Player selects a component, we receive its coordinates, then dfs to find the other connected components
      *
      * @author Lorenzo
      * @param gameManager of the current game
@@ -101,13 +94,12 @@ public class SpaceshipController {
      * @param sender
      * @throws RemoteException
      */
-    public static void fixSpaceship(GameManager gameManager,Player player,int yComponent, int xComponent,Sender sender) throws RemoteException {
+    public static void fixSpaceship(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
 
         Component selectedComponent = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[yComponent][xComponent];
-        if(selectedComponent != null){
+        if (selectedComponent != null){
 
-
-            //rimuovo componenti non appartenenti alla nuova spaceship
+            // Removes components that do not belong to the new spaceship
             Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
             Set<Component> newSpaceship = new HashSet<>(player.getSpaceship().getBuildingBoard().getNewSpaceship(yComponent, xComponent));
@@ -117,19 +109,16 @@ public class SpaceshipController {
                     if (matrix[i][j] != null && newSpaceship.contains(matrix[i][j])) {
                        player.getSpaceship().getBuildingBoard().destroyComponent(i,j);
 
-                       destroyedComponent(gameManager,player,yComponent,xComponent,sender);  //avviso della rimozione
+                       destroyComponent(gameManager, player, yComponent, xComponent, sender);  // Notifies the destruction
                     }
                 }
             }
 
-            // la nuova nave dovrebbe già essere pronta all'utilizzo
+            // New ship should be ready to use
 
-
-        }else{
+        } else {
             sender.sendMessage("InvalidSelection");
         }
 
     }
-
-
 }

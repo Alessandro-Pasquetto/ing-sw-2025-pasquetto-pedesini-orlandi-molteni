@@ -25,7 +25,7 @@ public class EventController {
      */
     public static void pickEventCard(GameManager gameManager) throws RemoteException {
 
-        try{
+        try {
             EventCard card = gameManager.getGame().pickEventCard();
 
             System.out.println(card.getType().toString());
@@ -34,8 +34,8 @@ public class EventController {
             gameManager.createEventController();
             gameManager.getEventController().start();
 
-        }catch (IllegalStateException e) {
-            if(e.getMessage().equals("EmptyHiddenEventCardDeck"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("EmptyHiddenEventCardDeck"))
                 gameManager.broadcastGameMessage("EmptyHiddenEventCardDeck");
         }
     }

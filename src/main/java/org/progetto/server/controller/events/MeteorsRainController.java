@@ -8,7 +8,7 @@ import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
@@ -214,7 +214,8 @@ public class MeteorsRainController extends EventControllerAbstract {
                     } else {
                         sender.sendMessage("NoShieldAvailable");
 
-                        // TODO: handle component destruction
+                        // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                        SpaceshipController.destroyComponent(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
@@ -270,7 +271,8 @@ public class MeteorsRainController extends EventControllerAbstract {
                     } else {
                         sender.sendMessage("NoCannonAvailable");
 
-                        // TODO: handle component destruction
+                        // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                        SpaceshipController.destroyComponent(gameManager, player, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                         sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);
@@ -441,11 +443,12 @@ public class MeteorsRainController extends EventControllerAbstract {
             for (Player notProtectedPlayer : notProtectedPlayers) {
                 Component affectedComponent = meteorsRain.checkImpactComponent(game, notProtectedPlayer, meteor, diceResult);
 
-                // Destroys affected component
-                // TODO: handle component destruction
-
                 // Gets current player sender reference
                 Sender sender = gameManager.getSenderByPlayer(notProtectedPlayer);
+
+                // Destroys affected component
+                // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                SpaceshipController.destroyComponent(gameManager, notProtectedPlayer, affectedComponent.getY(), affectedComponent.getX(), sender);
 
                 sender.sendMessage(new DestroyedComponentMessage(affectedComponent.getY(), affectedComponent.getX()));
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(notProtectedPlayer.getName(), affectedComponent.getY(), affectedComponent.getX()), sender);

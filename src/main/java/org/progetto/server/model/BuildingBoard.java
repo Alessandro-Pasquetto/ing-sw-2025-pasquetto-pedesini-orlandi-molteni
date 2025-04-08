@@ -851,15 +851,12 @@ public class BuildingBoard {
         return false;
     }
 
-    // todo:
-    // It might then need to return, in addition to the boolean, the list of coordinates and numCrew,
-    // or it can be passed an empty list through the constructor and fill it in
-    // I think the first idea is better
+    // TODO: It might then need to return, in addition to the boolean, the list of coordinates and numCrew, or it can be passed an empty list through the constructor and fill it in. I think the first idea is better
     /**
      * Initializes spaceship attributes after checking the ship validity
      *
      * @author Alessandro, Lorenzo
-     * @return doesNotRequirePlayerAction
+     * @return true if player action isn't needed; false otherwise
      */
     public boolean initSpaceshipParams() {
 
@@ -947,8 +944,7 @@ public class BuildingBoard {
     }
 
     /**
-     * return the list of components that compose the spaceship starting from a component given
-     * its coordinates
+     * Return the list of components that compose the spaceship starting from a component given its coordinates
      *
      * @author Lorenzo
      * @param selectedY coordinate of selected component
@@ -961,22 +957,22 @@ public class BuildingBoard {
 
         boolean[][] visited = new boolean[rows][cols];
         List<Component> connected = new ArrayList<>();
-        dfs(spaceshipMatrix, selectedY, selectedX, visited, connected);
+        dfsCheckConnections(spaceshipMatrix, selectedY, selectedX, visited, connected);
 
         return connected;
     }
 
     /**
-     * dfs that checks for connections
+     * DFS that checks for connections
      *
      * @author Lorenzo
      * @param matrix working matrix
      * @param y coordinate
      * @param x coordinate
      * @param visited list
-     * @param result is the founded component list so far
+     * @param result is the found component list so far
      */
-    private void dfs(Component[][] matrix, int y, int x, boolean[][] visited, List<Component> result) {
+    private void dfsCheckConnections(Component[][] matrix, int y, int x, boolean[][] visited, List<Component> result) {
         if (y < 0 || x < 0 || y >= matrix.length || x >= matrix[0].length) return;
         if (matrix[y][x] == null || visited[y][x]) return;
 
@@ -985,28 +981,23 @@ public class BuildingBoard {
 
         int[][] directions = {
                 {-1, 0}, // up
-                {0, 1},  // RIGHT
-                {1, 0},  // DOWN
-                {0, -1}  // LEFT
+                {0, 1},  // right
+                {1, 0},  // down
+                {0, -1}  // left
         };
 
         for (int d = 0; d < 4; d++) {
             int newY = y + directions[d][0];
             int newX = x + directions[d][1];
-            int opposite = (d + 2) % 4;
 
             if (newY >= 0 && newX >= 0 && newY < matrix.length && newX < matrix[0].length) {
                 Component neighbor = matrix[newY][newX];
                 if (neighbor != null && !visited[newY][newX]) {
                     if (areConnected(spaceshipMatrix[y][x],neighbor)) {
-                        dfs(matrix, newY, newX, visited, result);
+                        dfsCheckConnections(matrix, newY, newX, visited, result);
                     }
                 }
             }
         }
     }
-
-
-
-
 }
