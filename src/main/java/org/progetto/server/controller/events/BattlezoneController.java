@@ -3,19 +3,19 @@ package org.progetto.server.controller.events;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
-import org.progetto.server.model.events.Battlezone;
-import org.progetto.server.model.events.ConditionPenalty;
-import org.progetto.server.model.events.ConditionType;
-import org.progetto.server.model.events.PenaltyType;
+import org.progetto.server.model.events.*;
 
 import java.lang.reflect.Array;
 import java.rmi.RemoteException;
@@ -35,12 +35,14 @@ public class BattlezoneController extends EventControllerAbstract {
     private int currPlayer;
     private ArrayList<Player> activePlayers;
     private ArrayList<ConditionPenalty> couples;
+    private ArrayList<Projectile> penaltyShots;
     private Map<Player, Integer> tempEnginePower;
     private Map<Player, Float> tempFirePower;
     private Player penaltyPlayer;
     private int requestedBatteries;
     private int requestedCrew;
     private int requestedBoxes;
+    private int diceResult;
 
     // =======================
     // CONSTRUCTORS
@@ -52,6 +54,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.phase = "START";
         this.currPlayer = 0;
         this.couples = new ArrayList<>(couples);
+        this.penaltyShots = new ArrayList<>();
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.tempEnginePower = new HashMap<>();
         this.tempFirePower = new HashMap<>();
@@ -59,6 +62,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.requestedBatteries = 0;
         this.requestedCrew = 0;
         this.requestedBoxes = 0;
+        this.diceResult = 0;
     }
 
     // =======================
@@ -456,7 +460,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 case PenaltyType.PENALTYSHOTS:
                     phase = "PENALTY_SHOTS";
-                    penaltyShots();
+                    penaltyShot();
                     break;
 
                 case PenaltyType.PENALTYBOXES:
@@ -675,7 +679,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery2(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBatteriesForBoxes(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (phase.equals("DISCARDED_BATTERIES_FOR_BOXES")) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -720,9 +724,233 @@ public class BattlezoneController extends EventControllerAbstract {
         }
     }
 
-    private void penaltyShots() throws RemoteException {
+    private void penaltyShot() throws RemoteException {
         if (phase.equals("PENALTY_SHOTS")) {
+            // Gets penalty player sender reference
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
+            penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
+            sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
+
+            phase = "ASK_ROLL_DICE";
+            askToRollDice();
+        }
+    }
+
+    /**
+     * Asks first penalized player to roll dice
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void askToRollDice() throws RemoteException {
+        if (phase.equals("ASK_ROLL_DICE")) {
+
+            if (!couples.isEmpty()) {
+                // Asks penalty player to roll dice
+                Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+
+                if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
+                    sender.sendMessage("ThrowDiceToFindColumn");
+
+                } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
+                    sender.sendMessage("ThrowDiceToFindRow");
+                }
+
+                phase = "ROLL_DICE";
+            } else {
+                phase = "END";
+                end();
+            }
+        }
+    }
+
+    /**
+     * Rolls dice and collects the result
+     *
+     * @author Stefano
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
+    @Override
+    public void rollDice(Player player, Sender sender) throws RemoteException {
+        if (phase.equals("ROLL_DICE")) {
+
+            // Checks if the player that calls the methods is also the first defeated player
+            if (player.equals(penaltyPlayer)) {
+
+                diceResult = player.rollDice();
+
+                sender.sendMessage(new DiceResultMessage(diceResult));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
+
+                if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
+                    phase = "ASK_SHIELDS";
+                    askToUseShields();
+
+                } else {
+                    phase = "HANDLE_SHOT";
+                    handleShot();
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
+    }
+
+    /**
+     * Asks penalty players if they want to use shields to protect
+     *
+     * @author Stefano
+     */
+    private void askToUseShields() throws RemoteException {
+        if (phase.equals("ASK_SHIELDS")) {
+
+            // Checks if penalty player has a shield that covers that direction
+            boolean hasShield = battlezone.checkShields(penaltyPlayer, penaltyShots.getFirst());
+
+            // Asks penalty player if he wants to use a shield
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+
+            if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
+                sender.sendMessage("AskToUseShield");
+                phase = "SHIELD_DECISION";
+
+            } else {
+                sender.sendMessage("NoShieldAvailable");
+                phase = "HANDLE_SHOT";
+                handleShot();
+            }
+        }
+    }
+
+    /**
+     *
+     * @Stefano
+     * @param player
+     * @param response
+     * @param sender
+     * @throws RemoteException
+     */
+    public void receiveShieldDecision(Player player, String response, Sender sender) throws RemoteException {
+        if (phase.equals("SHIELD_DECISION")) {
+
+            if (player.equals(penaltyPlayer)) {
+                String upperCaseResponse = response.toUpperCase();
+
+                switch (upperCaseResponse) {
+                    case "YES":
+                        phase = "SHIELD_BATTERY";
+                        break;
+
+                    case "NO":
+                        phase = "HANDLE_SHOT";
+                        handleShot();
+                        break;
+
+                    default:
+                        sender.sendMessage("IncorrectResponse");
+                        break;
+                }
+            }
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
+    }
+
+    /**
+     * Receives the coordinates of BatteryStorage component from which remove a battery to activate shield
+     *
+     * @author Stefano
+     * @param player
+     * @param xBatteryStorage
+     * @param yBatteryStorage
+     * @param sender
+     * @throws RemoteException
+     */
+    public void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+        if (phase.equals("SHIELD_BATTERY")) {
+
+            // Checks if the player that calls the methods has to discard a battery to activate a shield
+            if (player.equals(penaltyPlayer)) {
+
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+
+                    // Checks if a battery has been discarded
+                    if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+
+                        sender.sendMessage("BatteryDiscarded");
+
+                        phase = "HANDLE_SHOT";
+                        handleShot();
+
+                    } else {
+                        sender.sendMessage("NotEnoughBatteries");
+                    }
+
+                } else {
+                    sender.sendMessage("InvalidCoordinates");
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
+        }
+    }
+
+    /**
+     * Handles current shot
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void handleShot() throws RemoteException {
+        if (phase.equals("HANDLE_SHOT")) {
+
+            Game game = gameManager.getGame();
+            Projectile shot = penaltyShots.getFirst();
+
+            Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, shot, diceResult);
+
+            // Gets penalty player sender reference
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+
+            // Sends two types of messages based on the shot's result
+            if (destroyedComponent != null) {
+                // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
+                SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getY(), destroyedComponent.getX(), sender);
+
+            } else {
+                gameManager.broadcastGameMessage("NothingGotDestroyed");
+            }
+
+
+            // Checks if penalty player lost
+            // Total amount of crew members
+            int totalCrew = penaltyPlayer.getSpaceship().getTotalCrewCount();
+
+            if (totalCrew == 0) {
+                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(penaltyPlayer.getName()));
+                gameManager.getGame().getBoard().leaveTravel(penaltyPlayer);
+            }
+
+            // Removes just handled shot
+            penaltyShots.removeFirst();
+
+            // Next shot
+            phase = "PENALTY_SHOTS";
+            penaltyShot();
         }
     }
 
