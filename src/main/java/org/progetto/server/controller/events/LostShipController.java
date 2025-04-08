@@ -154,7 +154,7 @@ public class LostShipController extends EventControllerAbstract  {
     }
 
     /**
-     * Receives the coordinates of HousingUnit component from which remove a battery
+     * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
      * @param player

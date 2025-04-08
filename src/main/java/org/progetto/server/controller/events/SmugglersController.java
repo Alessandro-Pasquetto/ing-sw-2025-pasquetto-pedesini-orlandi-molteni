@@ -312,7 +312,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                 if (boxStorage != null && boxStorage.getType().equals(ComponentType.BOX_STORAGE)) {
 
-                    // Checks if a crew member has been discarded
+                    // Checks if a box has been discarded
                     if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
                         requestedBoxes--;
                         sender.sendMessage("BoxDiscarded");
@@ -320,7 +320,6 @@ public class SmugglersController extends EventControllerAbstract {
                         if (requestedBoxes == 0) {
 
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                            gameManager.getGame().getBoard().leaveTravel(player);
 
                             // Next player
                             if (currPlayer < activePlayers.size()) {
@@ -381,7 +380,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                            gameManager.getGame().getBoard().leaveTravel(player);
 
                             // Next player
                             if (currPlayer < activePlayers.size()) {
