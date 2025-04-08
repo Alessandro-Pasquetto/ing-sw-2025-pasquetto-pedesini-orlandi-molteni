@@ -459,6 +459,9 @@ public class BattlezoneController extends EventControllerAbstract {
                     break;
 
                 case PenaltyType.PENALTYSHOTS:
+                    // Penalty shots
+                    penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
+
                     phase = "PENALTY_SHOTS";
                     penaltyShot();
                     break;
@@ -726,14 +729,23 @@ public class BattlezoneController extends EventControllerAbstract {
 
     private void penaltyShot() throws RemoteException {
         if (phase.equals("PENALTY_SHOTS")) {
-            // Gets penalty player sender reference
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
-            sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
+            // Checks if penalty shots are empty
+            if (!penaltyShots.isEmpty()) {
+                // Gets penalty player sender reference
+                Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            phase = "ASK_ROLL_DICE";
-            askToRollDice();
+                sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
+
+                phase = "ASK_ROLL_DICE";
+                askToRollDice();
+
+            } else {
+                // Next Couple
+                couples.removeFirst();
+                phase = "CONDITION";
+                condition();
+            }
         }
     }
 
@@ -746,22 +758,18 @@ public class BattlezoneController extends EventControllerAbstract {
     private void askToRollDice() throws RemoteException {
         if (phase.equals("ASK_ROLL_DICE")) {
 
-            if (!couples.isEmpty()) {
-                // Asks penalty player to roll dice
-                Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+            // Asks penalty player to roll dice
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-                if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
-                    sender.sendMessage("ThrowDiceToFindColumn");
+            if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
+                sender.sendMessage("ThrowDiceToFindColumn");
 
-                } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
-                    sender.sendMessage("ThrowDiceToFindRow");
-                }
-
-                phase = "ROLL_DICE";
-            } else {
-                phase = "END";
-                end();
+            } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
+                sender.sendMessage("ThrowDiceToFindRow");
             }
+
+            phase = "ROLL_DICE";
+
         }
     }
 
@@ -935,9 +943,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 gameManager.broadcastGameMessage("NothingGotDestroyed");
             }
 
-
             // Checks if penalty player lost
-            // Total amount of crew members
             int totalCrew = penaltyPlayer.getSpaceship().getTotalCrewCount();
 
             if (totalCrew == 0) {
