@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 
+import com.fasterxml.jackson.core.io.JsonEOFException;
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.UpdatedSpaceship;
@@ -8,10 +9,13 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -41,12 +45,77 @@ public class SpaceshipController {
 
             gameManager.broadcastGameMessage(new UpdatedSpaceship(player, componentToUpdate));
             sender.sendMessage("SpaceshipUpdated");
-        } else {
-            sender.sendMessage("NotUnUpdatableComponent");
+        }else{
+            sender.sendMessage("NotAnUpdatableComponent");
         }
     }
 
-    public static void moveBox(){}   // TODO
+
+    /**
+     * handles the player decision to move a box between boxStorages
+     *
+     * @author Lorenzo
+     * @param gameManager of the current game
+     * @param player is the player that needs to move a box
+     * @param startY coordinate of starting component
+     * @param startX coordinate of starting component
+     * @param startIdx box index of starting component
+     * @param endY coordinate of final component
+     * @param endX coordinate of final component
+     * @param endIdx box index of final component
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void moveBox(GameManager gameManager, Player player, int startY, int startX,int startIdx, int endY,int endX,int endIdx, Sender sender) throws RemoteException {
+
+        if(startX == endX && startY == endY && startIdx == endIdx) {
+            sender.sendMessage("CantStayStill");
+        }else {
+
+            try {
+
+                //move box removing from start and adding to end
+                BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[startY][startX];
+                BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[endY][endX];
+
+                Box box = startComponent.getBoxStorage()[startIdx];
+
+                if (box.getValue() == 4) {
+                    if (endComponent.getType().equals(ComponentType.RED_BOX_STORAGE)) {
+
+                        if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
+                            if (endComponent.addBox(player.getSpaceship(), box, endIdx))
+                                sender.sendMessage("RedBoxMoved");
+                            else sender.sendMessage("RedBoxNotAdded");
+
+                        } else sender.sendMessage("RedBoxNotMoved");
+
+
+                    } else {
+                        sender.sendMessage("CantStoreInANonRedStorage");
+                    }
+                } else {
+
+                    if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
+                        if (endComponent.addBox(player.getSpaceship(), box, endIdx))
+                            sender.sendMessage("BoxMoved");
+                        else sender.sendMessage("BoxNotAdded");
+
+                    } else sender.sendMessage("RedBoxNotMoved");
+                }
+
+
+                //Spaceship Updates
+                updateSpaceship(gameManager,player,startComponent,sender);
+                updateSpaceship(gameManager,player,endComponent,sender);
+
+
+            } catch (ClassCastException e) {
+                sender.sendMessage("NotAStorageComponent");
+            }
+        }
+    }
+
 
     /**
      * Called after a component is destroyed by an event, handles broadcast destruction message

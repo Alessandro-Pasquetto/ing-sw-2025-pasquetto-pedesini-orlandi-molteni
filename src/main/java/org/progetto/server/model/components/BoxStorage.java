@@ -66,13 +66,17 @@ public class BoxStorage extends Component {
      * @return true if the box is deleted, otherwise false
      */
     public boolean removeBox(Spaceship spaceship, int idx) {
-        if (boxStorage[idx] != null) {
-            spaceship.addBoxCount(-1, boxStorage[idx]);
-            boxStorage[idx] = null;
-            this.boxCount -= 1;
-            System.gc();
-            return true;
-        } else {
+        if(idx >= 0 && idx < boxStorage.length) {
+            if (boxStorage[idx] != null) {
+                spaceship.addBoxCount(-1, boxStorage[idx]);
+                boxStorage[idx] = null;
+                this.boxCount -= 1;
+                System.gc();
+                return true;
+            } else {
+                return false;
+            }
+        }else{
             return false;
         }
     }
