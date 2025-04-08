@@ -167,6 +167,18 @@ public class GameManager {
         }
     }
 
+    public void broadcastGameToNotReadyPlayersMessage(Object messageObj) {
+        ArrayList<Player> playersCopy = game.getPlayersCopy();
+
+        for (Player p : playersCopy) {
+            try{
+                getSenderByPlayer(p).sendMessage(messageObj);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
         ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
 

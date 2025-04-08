@@ -114,6 +114,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void placeHandComponentAndReady(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceHandComponentAndReadyMessage(xHandComponent, yHandComponent, rHandComponent));
+    }
+
+    @Override
     public void discardComponent(){
         SocketWriter.sendMessage("DiscardComponent");
     }

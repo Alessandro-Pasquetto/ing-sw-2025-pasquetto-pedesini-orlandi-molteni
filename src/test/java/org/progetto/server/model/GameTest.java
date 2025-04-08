@@ -49,28 +49,28 @@ class GameTest {
     }
 
     @Test
-    void getPlayers() {
+    void getPlayersCopy() {
         Game game = new Game(1, 4, 2);
 
         // Test initial empty player list
-        assertTrue(game.getPlayers().isEmpty());
+        assertTrue(game.getPlayersCopy().isEmpty());
 
         // Add a player and test
         Player player = new Player("gino", 0, 2);
         game.addPlayer(player);
 
-        ArrayList<Player> players = game.getPlayers();
+        ArrayList<Player> players = game.getPlayersCopy();
         assertEquals(1, players.size());
         assertEquals("gino", players.get(0).getName());
 
         // Verify that getPlayers returns a new ArrayList (defensive copy)
-        ArrayList<Player> players1 = game.getPlayers();
-        ArrayList<Player> players2 = game.getPlayers();
+        ArrayList<Player> players1 = game.getPlayersCopy();
+        ArrayList<Player> players2 = game.getPlayersCopy();
         assertNotSame(players1, players2);
     }
 
     @Test
-    void getPlayersSize() {
+    void getPlayersCopySize() {
         Game game = new Game(1, 4, 2);
 
         // Test initial size
@@ -241,8 +241,8 @@ class GameTest {
         game.addPlayer(mario);
         game.addPlayer(alice);
 
-        assertTrue(game.getPlayers().contains(mario));
-        assertTrue(game.getPlayers().contains(alice));
+        assertTrue(game.getPlayersCopy().contains(mario));
+        assertTrue(game.getPlayersCopy().contains(alice));
 
     }
 

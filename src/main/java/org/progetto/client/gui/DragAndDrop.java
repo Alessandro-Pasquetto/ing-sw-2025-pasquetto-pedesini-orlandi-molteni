@@ -138,10 +138,10 @@ public class DragAndDrop {
         if (droppedInCell) {
 
             // If the drop was inside a booking cell
-            if(BuildingData.getyHandComponent() == -1){
-                imageView.setRotate(imageView.getRotate() - 90 * BuildingData.getrHandComponent());
+            if(BuildingData.getYHandComponent() == -1){
+                imageView.setRotate(imageView.getRotate() - 90 * BuildingData.getRHandComponent());
 
-                GameData.getSender().bookComponent(BuildingData.getxHandComponent());
+                GameData.getSender().bookComponent(BuildingData.getXHandComponent());
 
                 // Set his pressFunction
                 imageView.setOnMousePressed(event2 -> {
@@ -163,8 +163,8 @@ public class DragAndDrop {
                                 if(BuildingData.getHandComponent() == null){
                                     GameData.getSender().pickBookedComponent(colIndex);
 
-                                }else if(BuildingData.getxHandComponent() != -1) {
-                                    GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), colIndex);
+                                }else if(BuildingData.getXHandComponent() != -1) {
+                                    GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), colIndex);
                                 }
 
                                 break;

@@ -127,12 +127,12 @@ public class BuildingBoard {
      * Places the handComponent in the specified coordinates, with specified rotation
      *
      * @author Lorenzo
-     * @param y coordinate for placing component
      * @param x coordinate for placing component
+     * @param y coordinate for placing component
      * @param r rotation value of placing component
      * @return true if component has been placed correctly, otherwise false
      */
-    public boolean placeComponent(int y, int x, int r) {
+    public boolean placeComponent(int x, int y, int r) {
         if(boardMask[y][x] != 1)
             return false;
 

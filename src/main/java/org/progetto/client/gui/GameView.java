@@ -77,9 +77,9 @@ public class GameView {
         if (BuildingData.getHandComponent() == null) {
             GameData.getSender().pickHiddenComponent();
         }
-        else if (BuildingData.getxHandComponent() != -1){
+        else if (BuildingData.getXHandComponent() != -1){
 
-            GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
+            GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
         }
     }
 
@@ -93,8 +93,18 @@ public class GameView {
         if (BuildingData.getHandComponent() == null)
             GameData.getSender().pickHiddenComponent();
 
-        else if(BuildingData.getxHandComponent() != -1)
-            GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), -1);
+        else if(BuildingData.getXHandComponent() != -1)
+            GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), -1);
+    }
+
+    public void placeHandComponentAndReady(){
+        if(BuildingData.getHandComponent() == null){
+            GameData.getSender().readyPlayer();
+            return;
+        }
+
+        if(BuildingData.getXHandComponent() != -1)
+            GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 
     public void placeLastComponent(){
@@ -102,12 +112,12 @@ public class GameView {
         if(BuildingData.getHandComponent() == null)
             return;
 
-        if(BuildingData.getxHandComponent() == -1){
+        if(BuildingData.getXHandComponent() == -1){
             removeHandComponent();
             return;
         }
 
-        GameData.getSender().placeLastComponent(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent());
+        GameData.getSender().placeLastComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 
     public void disableDraggableBookedComponents() {
@@ -174,8 +184,8 @@ public class GameView {
         if(BuildingData.getHandComponent() == null)
             GameData.getSender().pickUpEventCardDeck(idxDeck);
 
-        else if(BuildingData.getxHandComponent() != -1)
-            GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getxHandComponent(), BuildingData.getyHandComponent(), BuildingData.getrHandComponent(), idxDeck);
+        else if(BuildingData.getXHandComponent() != -1)
+            GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
     }
 
     // Generate a draggable component with an image

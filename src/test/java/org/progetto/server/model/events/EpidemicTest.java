@@ -30,20 +30,20 @@ class EpidemicTest {
 
         // Added components
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 0}, "imgPath", 2));
-        buildingBoard.placeComponent(1, 2, 0);
+        buildingBoard.placeComponent(2, 1, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[1][2];
         temp.incrementCrewCount(player.getSpaceship(),1);
 
         buildingBoard.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(2, 3, 0);
+        buildingBoard.placeComponent(3, 2, 0);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 3}, "imgPath", 2));
-        buildingBoard.placeComponent(2, 4, 0);
+        buildingBoard.placeComponent(4, 2, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[2][4];
         temp.incrementCrewCount(player.getSpaceship(), 2);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath", 2));
-        buildingBoard.placeComponent(3, 4, 0);
+        buildingBoard.placeComponent(4, 3, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[3][4];
         temp.incrementCrewCount(player.getSpaceship(),1);
 
@@ -53,28 +53,28 @@ class EpidemicTest {
         temp.incrementCrewCount(player.getSpaceship(),1);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 3, 0, 3}, "imgPath", 2));
-        buildingBoard.placeComponent(2, 1, 0);
+        buildingBoard.placeComponent(1, 2, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[2][1];
         temp.incrementCrewCount(player.getSpaceship(),2);
 
         buildingBoard.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{0, 3, 3, 0}, "imgPath"));
-        buildingBoard.placeComponent(2, 0, 0);
+        buildingBoard.placeComponent(0, 2, 0);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 0}, "imgPath", 2));
-        buildingBoard.placeComponent(3, 0, 0);
+        buildingBoard.placeComponent(0, 3, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[3][0];
         temp.setAlienPurple(true);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath", 2));
-        buildingBoard.placeComponent(4, 0, 0);
+        buildingBoard.placeComponent(0, 4, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[4][0];
         temp.incrementCrewCount(player.getSpaceship(),2);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 3}, "imgPath", 2));
-        buildingBoard.placeComponent(3, 1, 0);
+        buildingBoard.placeComponent(1, 3, 0);
 
         buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath"));
-        buildingBoard.placeComponent(4, 1, 0);
+        buildingBoard.placeComponent(1, 4, 0);
 
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrix()[3][1];
         temp.setAlienOrange(true);

@@ -64,7 +64,7 @@ public class GameThread extends Thread {
                         }
 
                         if(gameManager.getTimerExpired()){
-                            gameManager.broadcastGameMessage("TimerExpired");
+                            gameManager.broadcastGameToNotReadyPlayersMessage("TimerExpired");
                             System.out.println("TimerExpired");
                         }
                         gameManager.getTimerController().stopTimer();
@@ -92,12 +92,12 @@ public class GameThread extends Thread {
                             break;
                         }
 
+                        System.out.println();
                         System.out.println("New event...");
 
                         /*
                         //todo richiedere al player di pescare una carta
                         waitFirstNotify();
-
                          */
 
                         // todo da rimuovere, sarà chiamato da un player
@@ -107,6 +107,7 @@ public class GameThread extends Thread {
                         gameManager.getEventController().start();
 
                         gameManager.getGame().getBoard().updateTurnOrder();
+                        gameManager.getGame().setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
                         break;
 

@@ -10,7 +10,6 @@ import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -187,8 +186,24 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, virtualClient);
     }
 
+    @Override
+    public void placeHandComponentAndReady(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.placeHandComponentAndReady(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, virtualClient);
+    }
+
     /**
      * Allows client to call for discardComponent with RMI in server proxy
+     *
      * @author Lorenzo
      * @param virtualClient is the interface we want to address to
      * @param idGame were we want to discard
@@ -211,6 +226,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Allows client to call for bookedComponent with RMI in server proxy
+     *
      * @author lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to discard
@@ -234,6 +250,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Allows client to call for pickBookedComponent with RMI in server proxy
+     *
      * @author lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to pick
@@ -287,6 +304,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Allows client to call for destroyComponent with RMI in server proxy
+     *
      * @author Lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to remove
@@ -321,7 +339,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        if(gameManager.getGame().getPhase() == GamePhase.BUILDING)
+        if(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))
             BuildingController.readyBuilding(gameManager, player, virtualClient);
         else
             GameController.ready(gameManager, player, virtualClient);

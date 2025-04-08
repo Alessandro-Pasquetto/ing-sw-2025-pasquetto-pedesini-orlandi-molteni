@@ -39,19 +39,19 @@ class MeteorsRainTest {
         BuildingBoard bb = player.getSpaceship().getBuildingBoard();
 
         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb.placeComponent(1, 2, 0));
+        assertTrue(bb.placeComponent(2, 1, 0));
 
         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
         assertTrue(bb.placeComponent(1, 1, 1));
 
         bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        assertTrue(bb.placeComponent(2, 3, 1));
-
-        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
         assertTrue(bb.placeComponent(3, 2, 1));
 
+        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
+        assertTrue(bb.placeComponent(2, 3, 1));
+
         bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb.placeComponent(2, 1, 2));
+        assertTrue(bb.placeComponent(1, 2, 2));
 
         bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         assertTrue(bb.placeComponent(3, 3, 0));

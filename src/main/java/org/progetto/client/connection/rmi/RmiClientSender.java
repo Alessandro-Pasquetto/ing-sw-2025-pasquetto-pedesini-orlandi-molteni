@@ -1,8 +1,10 @@
 package org.progetto.client.connection.rmi;
 
 import org.progetto.client.connection.Sender;
+import org.progetto.client.connection.socket.SocketWriter;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.messages.toServer.PlaceHandComponentAndReadyMessage;
 import org.progetto.server.connection.rmi.VirtualServer;
 
 import java.io.IOException;
@@ -109,9 +111,18 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void placeHandComponentAndPickBookedComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxBookedComponent){
+    public void placeHandComponentAndPickBookedComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxBookedComponent){
         try {
             server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idxBookedComponent);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void placeHandComponentAndReady(int xHandComponent, int yHandComponent, int rHandComponent) {
+        try {
+            server.placeHandComponentAndReady(RmiClientReceiver.getInstance(), GameData.getIdGame(), xHandComponent, yHandComponent, rHandComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

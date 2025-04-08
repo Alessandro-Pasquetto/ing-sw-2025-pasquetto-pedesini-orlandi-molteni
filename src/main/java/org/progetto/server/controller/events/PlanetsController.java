@@ -50,8 +50,10 @@ public class PlanetsController extends EventControllerAbstract {
 
     @Override
     public void start() throws RemoteException {
-        phase = "ASK_FOR_LAND";
-        askForLand();
+        if(phase.equals("START")){
+            phase = "ASK_FOR_LAND";
+            askForLand();
+        }
     }
 
     /**

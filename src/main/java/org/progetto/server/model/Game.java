@@ -88,7 +88,7 @@ public class Game {
         throw new IllegalStateException("PlayerNameNotFound");
     }
 
-    public ArrayList<Player> getPlayers() {
+    public ArrayList<Player> getPlayersCopy() {
         synchronized (players) {
             return new ArrayList<>(players);
         }
@@ -368,9 +368,8 @@ public class Game {
             int randomPos = 0;
             do{//todo da rimuovere xD
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-                System.out.println("Sto cercando");
             }
-            while(hiddenEventDeck.get(randomPos).getType() != CardType.OPENSPACE);
+            while(hiddenEventDeck.get(randomPos).getType() != CardType.PLANETS);
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 

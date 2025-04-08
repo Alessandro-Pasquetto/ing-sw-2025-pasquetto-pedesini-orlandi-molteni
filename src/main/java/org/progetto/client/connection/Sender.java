@@ -1,7 +1,5 @@
 package org.progetto.client.connection;
 
-import java.io.IOException;
-
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
@@ -22,6 +20,8 @@ public interface Sender {
     void placeHandComponentAndPickUpEventCardDeck(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx);
 
     void placeHandComponentAndPickBookedComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx);
+
+    void placeHandComponentAndReady(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 
     void discardComponent();
 

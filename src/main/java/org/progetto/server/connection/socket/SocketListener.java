@@ -153,6 +153,13 @@ public class SocketListener extends Thread {
                     BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, socketWriter);
                 }
 
+                else if (messageObj instanceof PlaceHandComponentAndReadyMessage placeHandComponentAndReadyMessageMessage) {
+                    int xPlaceComponent = placeHandComponentAndReadyMessageMessage.getX();
+                    int yPlaceComponent = placeHandComponentAndReadyMessageMessage.getY();
+                    int rPlaceComponent = placeHandComponentAndReadyMessageMessage.getRotation();
+                    BuildingController.placeHandComponentAndReady(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+                }
+
                 else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
                     int componentIdx = pickVisibleComponent.getComponentIdx();
                     BuildingController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter);
@@ -175,7 +182,6 @@ public class SocketListener extends Thread {
                     int y = destroyComponentMessage.getY();
                     int x = destroyComponentMessage.getX();
                     BuildingController.destroyComponent(gameManager, player, y, x, socketWriter);
-
                 }
 
                 else if (messageObj instanceof String messageString) {
@@ -192,13 +198,12 @@ public class SocketListener extends Thread {
                             BuildingController.putDownEventCardDeck(gameManager, player, socketWriter);
                             break;
 
-                        case "Ready":
-                            BuildingController.readyBuilding(gameManager, player, socketWriter);
-
-                            break;
-
                         case "ResetTimer":
                             BuildingController.resetTimer(gameManager, socketWriter);
+                            break;
+
+                        case "Ready":
+                            BuildingController.readyBuilding(gameManager, player, socketWriter);
                             break;
 
                         default:

@@ -28,16 +28,16 @@ public class BuildingData {
         return tempBookedComponent;
     }
 
-    public static int getrHandComponent(){
-        return rHandComponent;
-    }
-
-    public static int getxHandComponent(){
+    public static int getXHandComponent(){
         return xHandComponent;
     }
 
-    public static int getyHandComponent(){
+    public static int getYHandComponent(){
         return yHandComponent;
+    }
+
+    public static int getRHandComponent(){
+        return rHandComponent;
     }
 
     public static boolean getIsTimerExpired(){
@@ -85,20 +85,12 @@ public class BuildingData {
     }
 
     public static void resetHandComponent(){
-        if (BuildingData.getHandComponent() != null && (BuildingData.getyHandComponent() != -1 || BuildingData.getIsTimerExpired()))
+        if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired()))
             DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
 
         handComponent = null;
         xHandComponent = -1; // If it has not been placed in the matrix yet
         yHandComponent = 0;
         rHandComponent = 0;
-    }
-
-    public static boolean isTempPlaced(){
-        return handComponent != null && xHandComponent != -1;
-    }
-
-    public static boolean isBookedPlaced(){
-        return handComponent != null && yHandComponent == -1;
     }
 }

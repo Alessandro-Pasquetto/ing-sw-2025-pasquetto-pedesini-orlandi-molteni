@@ -28,10 +28,10 @@ class StardustTest {
         board.movePlayerByDistance(player1, 5);
 
         buildingBoard1.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
-        buildingBoard1.placeComponent(1, 3, 0);
+        buildingBoard1.placeComponent(3, 1, 0);
 
         buildingBoard1.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
-        buildingBoard1.placeComponent(2, 4, 0);
+        buildingBoard1.placeComponent(4, 2, 0);
 
         buildingBoard1.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
         buildingBoard1.placeComponent(2, 2, 0);
@@ -73,28 +73,28 @@ class StardustTest {
 
         // Added components
         buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-        buildingBoard2.placeComponent(1, 3, 0);
+        buildingBoard2.placeComponent(3, 1, 0);
 
         buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 2, 0, 3}, "imgPath"));
-        buildingBoard2.placeComponent(2, 4, 0);
+        buildingBoard2.placeComponent(4, 2, 0);
 
         buildingBoard2.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 1}, "imgPath"));
         buildingBoard2.placeComponent(2, 2, 0);
 
         buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 3, 3}, "imgPath"));
-        buildingBoard3.placeComponent(1, 3, 0);
+        buildingBoard3.placeComponent(3, 1, 0);
 
         buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 3}, "imgPath"));
-        buildingBoard3.placeComponent(2, 4, 0);
+        buildingBoard3.placeComponent(4, 2, 0);
 
         buildingBoard3.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 0, 0}, "imgPath"));
         buildingBoard3.placeComponent(2, 2, 0);
 
         buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 3, 0}, "imgPath"));
-        buildingBoard4.placeComponent(1, 3, 0);
+        buildingBoard4.placeComponent(3, 1, 0);
 
         buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 3}, "imgPath"));
-        buildingBoard4.placeComponent(2, 4, 0);
+        buildingBoard4.placeComponent(4, 2, 0);
 
         buildingBoard4.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 0, 0}, "imgPath"));
         buildingBoard4.placeComponent(2, 2, 0);
