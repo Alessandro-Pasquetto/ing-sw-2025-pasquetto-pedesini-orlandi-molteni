@@ -94,8 +94,9 @@ public class Epidemic extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param player Current player
+     * @return amount of crew members removed
      */
-    public void epidemicResult(Player player) {
+    public int epidemicResult(Player player) {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
 
         boolean[][] visitedCells = new boolean[spaceshipMatrix.length][spaceshipMatrix[0].length];
@@ -103,12 +104,12 @@ public class Epidemic extends EventCard {
         for (int i = 0; i < spaceshipMatrix.length; i++) {
             for (int j = 0; j < spaceshipMatrix[i].length; j++) {
 
-                if (spaceshipMatrix[i][j] != null && spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {  // if current component is an housing unit
+                if (spaceshipMatrix[i][j] != null && spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {  // if current component is a housing unit
                     Set<HousingUnit> infectedComponents = new HashSet<>();
 
                     dfsInfectedComponents(i, j, true, null, player.getSpaceship().getBuildingBoard(), visitedCells, infectedComponents);
 
-                    // deletes for each infected component found one crew mate/alien
+                    // Deletes for each infected component found one crew mate/alien
                     for (HousingUnit component : infectedComponents) {
                         if (component.getHasOrangeAlien()) {
                             player.getSpaceship().setAlienOrange(false);
@@ -120,6 +121,8 @@ public class Epidemic extends EventCard {
                             component.decrementCrewCount(player.getSpaceship(),1);
                         }
                     }
+
+                    return infectedComponents.size();
                 }
 
             }

@@ -20,7 +20,7 @@ public class OpenSpaceController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private final GameManager gameManager;
+    OpenSpace openSpace;
     private final ArrayList<Player> activePlayers;
     private int playerEnginePower;
     private int requestedNumber;
@@ -31,8 +31,8 @@ public class OpenSpaceController extends EventControllerAbstract {
 
     public OpenSpaceController(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = -1;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
@@ -62,6 +62,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_ENGINES)) {
+
             System.out.println("Asking engines");
 
             for (Player player : activePlayers) {
@@ -92,6 +93,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                     System.out.println("Waiting for HowManyDoubleEngines");
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = EventPhase.ENGINE_NUMBER;
+
                     gameManager.getGameThread().waitPlayerReady(player);
 
                     phase = EventPhase.EFFECT;
@@ -129,7 +131,6 @@ public class OpenSpaceController extends EventControllerAbstract {
                     System.out.println("Waiting for BatteriesToDiscard");
                     phase = EventPhase.DISCARDED_BATTERIES;
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
-
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
@@ -205,7 +206,6 @@ public class OpenSpaceController extends EventControllerAbstract {
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
             Player player = gameManager.getGame().getActivePlayer();
-            OpenSpace openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
 
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);

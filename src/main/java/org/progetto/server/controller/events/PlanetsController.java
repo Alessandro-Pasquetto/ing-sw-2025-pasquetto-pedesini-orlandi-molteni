@@ -36,7 +36,6 @@ public class PlanetsController extends EventControllerAbstract {
     public PlanetsController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = EventPhase.START;
-        this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
@@ -47,7 +46,7 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
 
     @Override
-    public void start() throws RemoteException {
+    public void start() throws RemoteException, InterruptedException {
         if(phase.equals(EventPhase.START)){
             phase = EventPhase.ASK_TO_LAND;
             askForLand();
@@ -61,24 +60,39 @@ public class PlanetsController extends EventControllerAbstract {
      * @author Lorenzo
      * @throws RemoteException
      */
-    private void askForLand() throws RemoteException,IllegalStateException {
-
+    private void askForLand() throws RemoteException, IllegalStateException, InterruptedException {
         if (phase.equals(EventPhase.ASK_TO_LAND)) {
 
-            if (currPlayer < activePlayers.size()) {
-                Player player = activePlayers.get(currPlayer);
+            for (Player player : activePlayers) {
+
+                gameManager.getGame().setActivePlayer(player);
 
                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                sender.sendMessage("LandRequest");
-                sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
+                // Checks if there is at least a free planet
+                if (planets.getLandedPlayers().size() < planets.getRewardsForPlanets().size()) {
+                    sender.sendMessage("LandRequest");
+                    sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
+                    phase = EventPhase.LAND;
 
-                phase = EventPhase.LAND;
+                    gameManager.getGameThread().waitPlayerReady(player);
+
+                } else {
+                    sender.sendMessage("AllPlanetsAlreadyTaken");
+                    break;
+                }
+            }
+
+            // Checks that at least a player landed
+            if (!planets.getLandedPlayers().isEmpty()) {
+                phase = EventPhase.EFFECT;
+                eventEffect();
 
             } else {
                 phase = EventPhase.END;
                 end();
             }
+
         }
     }
 
@@ -93,10 +107,10 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveDecisionToLand(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException, InterruptedException {
         if (phase.equals(EventPhase.LAND)) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 String upperCaseDecision = decision.toUpperCase();
 
@@ -105,10 +119,10 @@ public class PlanetsController extends EventControllerAbstract {
                         try {
                             if (planets.getPlanetsTaken()[planetIdx]) {
                                 sender.sendMessage("PlanetAlreadyTaken");
-                                phase = EventPhase.ASK_TO_LAND;
 
                             } else {
                                 planets.choosePlanet(player, planetIdx);
+
                                 gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));
                                 sender.sendMessage("LandingCompleted");
 
@@ -120,13 +134,14 @@ public class PlanetsController extends EventControllerAbstract {
                             }
 
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            throw new IllegalStateException("PlanetIndexOutOfBound");
+                            sender.sendMessage("PlanetIndexOutOfBound");
                         }
 
                     case "NO":
                         phase = EventPhase.ASK_TO_LAND;
-                        currPlayer++;
-                        askForLand();
+
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
 
                     default:
                         sender.sendMessage("IncorrectResponse");
@@ -159,7 +174,7 @@ public class PlanetsController extends EventControllerAbstract {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 try {
                     Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
@@ -216,20 +231,13 @@ public class PlanetsController extends EventControllerAbstract {
     private void leavePlanet(Player player, Sender sender) throws RemoteException,IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
-            // Checks that current player is trying to get reward the reward box
-            if (player.equals(activePlayers.get(currPlayer))) {
+            // Checks that current player is trying to leave planet
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                // Next player
-                currPlayer++;
+                phase = EventPhase.ASK_TO_LAND;
 
-                if (currPlayer < activePlayers.size()) {
-                    phase = EventPhase.ASK_TO_LAND;
-                    askForLand();
-
-                } else {
-                    phase = EventPhase.EFFECT;
-                    eventEffect();
-                }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
             }
         }
     }

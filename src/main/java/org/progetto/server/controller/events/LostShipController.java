@@ -34,7 +34,6 @@ public class LostShipController extends EventControllerAbstract  {
         this.gameManager = gameManager;
         this.lostShip = (LostShip) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.requestedCrew = 0;
     }
@@ -50,37 +49,36 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start() throws RemoteException, InterruptedException {
         phase = EventPhase.ASK_TO_LAND;
         askToLand();
     }
 
-    private void askToLand() throws RemoteException {
+    private void askToLand() throws RemoteException, InterruptedException {
         if(phase.equals(EventPhase.ASK_TO_LAND)) {
-            Player player = activePlayers.get(currPlayer);
 
-            Sender sender = gameManager.getSenderByPlayer(player);
+            for (Player player : activePlayers) {
 
-            // Calculates max crew number available to discard
-            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+                gameManager.getGame().setActivePlayer(player);
 
-            if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
-                phase = EventPhase.REWARD_DECISION;
-            } else {
-                sender.sendMessage("NotEnoughCrew");
+                Sender sender = gameManager.getSenderByPlayer(player);
 
-                // Next player
-                if (currPlayer < activePlayers.size()) {
-                    currPlayer++;
-                    phase = EventPhase.ASK_TO_LAND;
-                    askToLand();
+                // Calculates max crew number available to discard
+                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+
+                if (maxCrewCount > lostShip.getPenaltyCrew()) {
+                    sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                    phase = EventPhase.REWARD_DECISION;
+
+                    gameManager.getGameThread().waitPlayerReady(player);
+
                 } else {
-                    phase = EventPhase.END;
-                    end();
+                    sender.sendMessage("NotEnoughCrew");
                 }
             }
 
+            phase = EventPhase.END;
+            end();
         }
     }
 
@@ -95,29 +93,33 @@ public class LostShipController extends EventControllerAbstract  {
      */
     public void getRewardDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.REWARD_DECISION)) {
-            String upperCaseResponse = response.toUpperCase();
 
-            switch (upperCaseResponse) {
-                case "YES":
-                    phase = EventPhase.PENALTY_EFFECT;
-                    break;
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
+                String upperCaseResponse = response.toUpperCase();
 
-                case "NO":
-                    // Next player
-                    if (currPlayer < activePlayers.size()) {
-                        currPlayer++;
+                switch (upperCaseResponse) {
+                    case "YES":
+                        phase = EventPhase.PENALTY_EFFECT;
+                        break;
+
+                    case "NO":
                         phase = EventPhase.ASK_TO_LAND;
-                        askToLand();
-                    } else {
-                        phase = EventPhase.END;
-                        end();
-                    }
-                    break;
 
-                default:
-                    sender.sendMessage("IncorrectResponse");
-                    break;
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
+                        break;
+
+                    default:
+                        sender.sendMessage("IncorrectResponse");
+                        break;
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
             }
+
+        } else {
+            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -133,7 +135,7 @@ public class LostShipController extends EventControllerAbstract  {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
                 
                 requestedCrew = lostShip.getPenaltyCrew();
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
@@ -162,7 +164,7 @@ public class LostShipController extends EventControllerAbstract  {
         if (phase.equals(EventPhase.DISCARDED_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
@@ -207,7 +209,7 @@ public class LostShipController extends EventControllerAbstract  {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
-            Player player = activePlayers.get(currPlayer);
+            Player player = gameManager.getGame().getActivePlayer();
             Board board = gameManager.getGame().getBoard();
 
             // Gets sender reference related to current player

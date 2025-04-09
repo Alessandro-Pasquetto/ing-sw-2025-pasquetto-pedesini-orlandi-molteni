@@ -30,7 +30,6 @@ public class StardustController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.stardust = (Stardust) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = -1;
     }
 
     // =======================
@@ -62,10 +61,13 @@ public class StardustController extends EventControllerAbstract {
             Collections.reverse(reversedPlayers);
             Board board = gameManager.getGame().getBoard();
 
+            System.out.println("Evaluating stardust consequences");
+
             for (Player player : reversedPlayers) {
+
+                // Calculates exposed connector count
                 int exposedConnectorsCount = stardust.penalty(board, player);
 
-                // Sends update message
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));

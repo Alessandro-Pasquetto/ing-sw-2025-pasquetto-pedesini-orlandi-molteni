@@ -1,5 +1,8 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
+import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
@@ -23,7 +26,6 @@ public class EpidemicController extends EventControllerAbstract {
     public EpidemicController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.epidemic = (Epidemic) gameManager.getGame().getActiveEventCard();
-        this.currPlayer = -1;
         this.phase = EventPhase.START;
     }
 
@@ -53,8 +55,17 @@ public class EpidemicController extends EventControllerAbstract {
         if (phase.equals(EventPhase.EFFECT)) {
             ArrayList<Player> players = gameManager.getGame().getBoard().getCopyActivePlayers();
 
+            System.out.println("Evaluating epidemic consequences");
+
             for (Player player : players) {
-                epidemic.epidemicResult(player);
+
+                // Calculates amount of crew infected, so removed
+                int infectedCount = epidemic.epidemicResult(player);
+
+                Sender sender = gameManager.getSenderByPlayer(player);
+
+                sender.sendMessage(new CrewInfectedAmountMessage(infectedCount));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
             }
 
             phase = EventPhase.END;

@@ -174,7 +174,6 @@ public class GameThread extends Thread {
 
     /**
      * Notifies the game thread
-     *
      */
     public void notifyThread(){
         synchronized (gameThreadLock){
@@ -184,7 +183,6 @@ public class GameThread extends Thread {
 
     /**
      * Stops the game thread
-     *
      */
     public void stopThread() {
         isRunning = false;
