@@ -179,9 +179,9 @@ public class SocketListener extends Thread {
                     BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
 
                 } else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {        //handle incoming destroy message
-                    int y = destroyComponentMessage.getY();
                     int x = destroyComponentMessage.getX();
-                    BuildingController.destroyComponent(gameManager, player, y, x, socketWriter);
+                    int y = destroyComponentMessage.getY();
+                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
                 }
 
                 else if (messageObj instanceof String messageString) {

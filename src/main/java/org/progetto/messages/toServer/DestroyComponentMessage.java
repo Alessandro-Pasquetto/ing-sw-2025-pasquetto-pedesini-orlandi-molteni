@@ -8,27 +8,27 @@ public class DestroyComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int y;
-    private int x;
+    private final int x;
+    private final int y;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public DestroyComponentMessage(int y, int x) {
-        this.y = y;
+    public DestroyComponentMessage(int x, int y) {
         this.x = x;
+        this.y = y;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public int getY() {
-        return y;
-    }
     public int getX() {
         return x;
+    }
+    public int getY() {
+        return y;
     }
 
 }

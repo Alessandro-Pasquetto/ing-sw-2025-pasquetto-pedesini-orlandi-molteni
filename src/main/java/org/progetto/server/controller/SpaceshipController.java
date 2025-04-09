@@ -1,7 +1,6 @@
 package org.progetto.server.controller;
 
 
-import com.fasterxml.jackson.core.io.JsonEOFException;
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.UpdatedSpaceship;
@@ -9,14 +8,9 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -179,9 +173,9 @@ public class SpaceshipController {
     }
 
     /**
-     * Called after a component is destroyed by an event, handles broadcast destruction message
+     * Called after a component is destroyed by an event if it's possible auto adjustSpaceship otherwise send message to player to choose a spaceship part to keep
      *
-     * @author Lorenzo
+     * @author Lorenzo, Alessandro
      * @param gameManager of the current game
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
@@ -189,21 +183,18 @@ public class SpaceshipController {
      * @param sender
      * @throws RemoteException
      */
-    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
+    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-            buildingBoard.destroyComponent(yComponent,xComponent);
+            buildingBoard.destroyComponent(xComponent, yComponent);
 
-            sender.sendMessage(new DestroyedComponentMessage(yComponent, xComponent));
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), yComponent, xComponent), sender);
+            sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             // Checks ship validity
-            if (!player.getSpaceship().getBuildingBoard().checkShipValidity()){
-                sender.sendMessage("SpaceshipValid");
-            } else {
-                sender.sendMessage("SpaceshipNotValid");  // Handled by view, player sends coordinates to fix ship
-            }
+            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix())
+                sender.sendMessage("SpaceshipNotValidSelectPart");
 
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("EmptyComponentCell"))
@@ -217,37 +208,15 @@ public class SpaceshipController {
     /**
      * Player selects a component, we receive its coordinates, then dfs to find the other connected components
      *
-     * @author Lorenzo
+     * @author Alessandro
      * @param gameManager of the current game
      * @param player that needs to fix the spaceship
      * @param sender
      * @throws RemoteException
      */
-    public static void fixSpaceship(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
+    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
-        Component selectedComponent = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[yComponent][xComponent];
-        if (selectedComponent != null){
-
-            // Removes components that do not belong to the new spaceship
-            Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
-
-            Set<Component> newSpaceship = new HashSet<>(player.getSpaceship().getBuildingBoard().getNewSpaceship(yComponent, xComponent));
-
-            for (int i = 0; i < matrix.length; i++) {
-                for (int j = 0; j < matrix[0].length; j++) {
-                    if (matrix[i][j] != null && newSpaceship.contains(matrix[i][j])) {
-                       player.getSpaceship().getBuildingBoard().destroyComponent(i,j);
-
-                       destroyComponentAndCheckValidity(gameManager, player, yComponent, xComponent, sender);  // Notifies the destruction
-                    }
-                }
-            }
-
-            // New ship should be ready to use
-
-        } else {
-            sender.sendMessage("InvalidSelection");
-        }
-
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        buildingBoard.keepSpaceshipPart(xComponent, yComponent);
     }
 }

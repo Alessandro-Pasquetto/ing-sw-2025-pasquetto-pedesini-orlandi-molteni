@@ -18,7 +18,7 @@ public class AnotherPlayerDiscardComponentMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerDiscardComponentMessage(String namePlayer,String imgSrcDiscardedComponent) {
+    public AnotherPlayerDiscardComponentMessage(String namePlayer, String imgSrcDiscardedComponent) {
         this.namePlayer = namePlayer;
         this.imgSrcDiscardedComponent = imgSrcDiscardedComponent;
     }

@@ -14,7 +14,7 @@ public class AnotherPlayerBookedComponentMessage implements Serializable {
 
     public AnotherPlayerBookedComponentMessage(String namePlayer,String imgSrcBookedComponent, int bookedIndex) {
         this.namePlayer = namePlayer;
-        this.imgSrcBookedComponent = this.imgSrcBookedComponent;
+        this.imgSrcBookedComponent = imgSrcBookedComponent;
         this.bookedIndex = bookedIndex;
     }
 

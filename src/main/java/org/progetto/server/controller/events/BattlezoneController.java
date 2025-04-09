@@ -931,7 +931,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Sends two types of messages based on the shot's result
             if (destroyedComponent != null) {
                 // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
-                SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getY(), destroyedComponent.getX(), sender);
+                SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
             } else {
                 gameManager.broadcastGameMessage("NothingGotDestroyed");

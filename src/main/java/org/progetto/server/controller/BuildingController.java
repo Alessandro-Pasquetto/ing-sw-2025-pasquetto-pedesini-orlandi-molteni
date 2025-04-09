@@ -549,36 +549,6 @@ public class BuildingController {
     }
 
     /**
-     * Handles the destruction of a component
-     *
-     * @author Lorenzo
-     * @param gameManager is the class that manage the current game
-     * @param player owner of the spaceship
-     * @param yComponent coordinate
-     * @param xComponent coordinate
-     * @param sender
-     */
-    public static void destroyComponent(GameManager gameManager, Player player, int yComponent, int xComponent, Sender sender) throws RemoteException {
-
-        if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
-            return;
-        }
-
-        try{
-            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-            buildingBoard.destroyComponent(yComponent,xComponent);
-
-            sender.sendMessage(new DestroyedComponentMessage(yComponent,xComponent));
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), yComponent, xComponent), sender);
-
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals("EmptyComponentCell"))
-                sender.sendMessage("EmptyComponentCell");
-        }
-    }
-
-    /**
      * Resets timer
      *
      * @author Alessandro

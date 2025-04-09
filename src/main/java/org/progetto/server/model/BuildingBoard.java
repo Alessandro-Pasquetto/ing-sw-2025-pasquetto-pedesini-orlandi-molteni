@@ -318,7 +318,7 @@ public class BuildingBoard {
      * @param y is the y coordinate of the component to remove
      * @param x is the x coordinate of the component to remove
      */
-    public void destroyComponent(int y, int x) throws IllegalStateException {
+    public void destroyComponent(int x, int y) throws IllegalStateException {
         if(boardMask[y][x] != -1)
            throw new IllegalStateException("EmptyComponentCell");
 
@@ -459,7 +459,7 @@ public class BuildingBoard {
     }
 
     /**
-     * DFS that checks the validity of the ship
+     * DFS that checks the validity of the ship, cannot contain not adjacent components
      *
      * @author Alessandro
      * @param x the x coordinate of the component to checked
@@ -671,7 +671,7 @@ public class BuildingBoard {
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
                 if(spaceshipMatrix[y][x] != null && !visited[y][x])
-                    destroyComponent(y, x);
+                    destroyComponent(x, y);
             }
         }
     }
@@ -684,7 +684,7 @@ public class BuildingBoard {
      * @author Alessandro
      * @return doesNotRequirePlayerAction: false if the spaceship needs playerAction, true otherwise
      */
-    public boolean checkShipValidity() throws IllegalStateException{
+    public boolean checkShipValidityAndTryToFix() throws IllegalStateException{
 
         boolean doesNotRequirePlayerAction = true;
 
@@ -704,8 +704,8 @@ public class BuildingBoard {
             for(int y = 0; y < spaceshipMatrix.length && xComponent == -1; y++) {
                 for(int x = 0; x < spaceshipMatrix[y].length; x++) {
                     if(spaceshipMatrix[y][x] != null){
-                        yComponent = y;
                         xComponent = x;
+                        yComponent = y;
                         break;
                     }
                 }
@@ -780,8 +780,8 @@ public class BuildingBoard {
      */
     private boolean checkAllowPurpleAlien(HousingUnit hu){
 
-        int y = hu.getY();
         int x = hu.getX();
+        int y = hu.getY();
 
         // up
         if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.PURPLE_HOUSING_UNIT){
@@ -820,8 +820,8 @@ public class BuildingBoard {
      */
     private boolean checkAllowOrangeAlien(HousingUnit hu){
 
-        int y = hu.getY();
         int x = hu.getX();
+        int y = hu.getY();
 
         // up
         if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
@@ -944,60 +944,92 @@ public class BuildingBoard {
     }
 
     /**
-     * Return the list of components that compose the spaceship starting from a component given its coordinates
+     * DFS that explores spaceship part from a xy coordinates of a component
      *
-     * @author Lorenzo
-     * @param selectedY coordinate of selected component
-     * @param selectedX coordinate of selected component
-     * @return a list of all the components
+     * @author Alessandro
+     * @param x the x coordinate of the component to checked
+     * @param y the y coordinate of the component to checked
+     * @param visited the already visited component list
+     * @param exposedConnectorsCount the num of the exposed connectors in the spaceship
      */
-    public List<Component> getNewSpaceship(int selectedY, int selectedX){
-        int rows = spaceshipMatrix.length;
-        int cols = spaceshipMatrix[0].length;
+    private void dfsKeepSpaceshipPart(int x, int y, boolean[][] visited, AtomicInteger exposedConnectorsCount){
 
-        boolean[][] visited = new boolean[rows][cols];
-        List<Component> connected = new ArrayList<>();
-        dfsCheckConnections(spaceshipMatrix, selectedY, selectedX, visited, connected);
+        if(visited[y][x])
+            return;
 
-        return connected;
+        visited[y][x] = true;
+
+        Component currentComponent = spaceshipMatrix[y][x];
+
+        // up
+        if (y > 0 && boardMask[y - 1][x] == -1 && !visited[y - 1][x]){
+            Component upComponent = spaceshipMatrix[y - 1][x];
+            int upConnection = currentComponent.getConnections()[0];
+            int relativeConnection = upComponent.getConnections()[2];
+            if ((upConnection != 0 && relativeConnection != 0) && (upConnection == 3 || relativeConnection == 3 || upConnection == relativeConnection))
+                dfsKeepSpaceshipPart(x, y - 1, visited, exposedConnectorsCount);
+
+        } else if (y == 0 || boardMask[y - 1][x] != -1) {
+            if(currentComponent.getConnections()[0] != 0)
+                exposedConnectorsCount.getAndIncrement();
+        }
+
+        // right
+        if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && !visited[y][x + 1]){
+            Component rightComponent = spaceshipMatrix[y][x + 1];
+            int rightConnection = currentComponent.getConnections()[1];
+            int relativeConnection = rightComponent.getConnections()[3];
+            if ((rightConnection != 0 && relativeConnection != 0) && (rightConnection == 3 || relativeConnection == 3 || rightConnection == relativeConnection))
+                dfsKeepSpaceshipPart(x + 1, y, visited, exposedConnectorsCount);
+
+        } else if (x + 1 == spaceshipMatrix[0].length || boardMask[y][x + 1] != -1) {
+            if(currentComponent.getConnections()[1] != 0)
+                exposedConnectorsCount.getAndIncrement();
+        }
+
+        // bottom
+        if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && !visited[y + 1][x]){
+            Component bottomComponent = spaceshipMatrix[y + 1][x];
+            int bottomConnection = currentComponent.getConnections()[2];
+            int relativeConnection = bottomComponent.getConnections()[0];
+            if ((bottomConnection != 0 && relativeConnection != 0) && (bottomConnection == 3 || relativeConnection == 3 || bottomConnection == relativeConnection))
+                dfsKeepSpaceshipPart(x, y + 1, visited, exposedConnectorsCount);
+
+        } else if (y + 1 == spaceshipMatrix.length || boardMask[y + 1][x] != -1) {
+            if(currentComponent.getConnections()[2] != 0)
+                exposedConnectorsCount.getAndIncrement();
+        }
+
+        // left
+        if (x > 0 && boardMask[y][x - 1] == -1 && !visited[y][x - 1]){
+            Component leftComponent = spaceshipMatrix[y][x - 1];
+            int leftConnection = currentComponent.getConnections()[3];
+            int relativeConnection = leftComponent.getConnections()[1];
+            if ((leftConnection != 0 && relativeConnection != 0) && (leftConnection == 3 || relativeConnection == 3 || leftConnection == relativeConnection))
+                dfsKeepSpaceshipPart(x - 1, y, visited, exposedConnectorsCount);
+
+        } else if (x == 0 || boardMask[y][x - 1] != -1) {
+            if(currentComponent.getConnections()[3] != 0)
+                exposedConnectorsCount.getAndIncrement();
+        }
     }
 
     /**
-     * DFS that checks for connections
+     * Keep a spaceship part and update exposed components
      *
-     * @author Lorenzo
-     * @param matrix working matrix
-     * @param y coordinate
-     * @param x coordinate
-     * @param visited list
-     * @param result is the found component list so far
+     * @author Alessandro
+     * @param xComponent coordinate
+     * @param yComponent coordinate
      */
-    private void dfsCheckConnections(Component[][] matrix, int y, int x, boolean[][] visited, List<Component> result) {
-        if (y < 0 || x < 0 || y >= matrix.length || x >= matrix[0].length) return;
-        if (matrix[y][x] == null || visited[y][x]) return;
+    public void keepSpaceshipPart(int xComponent, int yComponent){
 
-        visited[y][x] = true;
-        result.add(matrix[y][x]);
+        boolean[][] visited = new boolean[boardMask.length][boardMask[0].length];
 
-        int[][] directions = {
-                {-1, 0}, // up
-                {0, 1},  // right
-                {1, 0},  // down
-                {0, -1}  // left
-        };
+        AtomicInteger exposedConnectorsCount = new AtomicInteger(0);
 
-        for (int d = 0; d < 4; d++) {
-            int newY = y + directions[d][0];
-            int newX = x + directions[d][1];
+        dfsKeepSpaceshipPart(xComponent, yComponent, visited, exposedConnectorsCount);
 
-            if (newY >= 0 && newX >= 0 && newY < matrix.length && newX < matrix[0].length) {
-                Component neighbor = matrix[newY][newX];
-                if (neighbor != null && !visited[newY][newX]) {
-                    if (areConnected(spaceshipMatrix[y][x],neighbor)) {
-                        dfsCheckConnections(matrix, newY, newX, visited, result);
-                    }
-                }
-            }
-        }
+        spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
+        deleteDisconnectedComponents(visited);
     }
 }

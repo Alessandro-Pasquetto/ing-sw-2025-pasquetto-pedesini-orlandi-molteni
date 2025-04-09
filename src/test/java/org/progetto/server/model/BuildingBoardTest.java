@@ -246,8 +246,8 @@ class BuildingBoardTest {
         assertTrue(housingUnit.getAllowAlienOrange());
 
         //  update orange alien hosting test   //
-        buildingBoard.destroyComponent(2,1); // Removes the orange alien unit, so it can't host alien anymore
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2); // Removes the orange alien unit, so it can't host alien anymore
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
         assertFalse(housingUnit.getAllowAlienOrange());
 
         // update orange alien hosting test with another orange_unit //
@@ -258,13 +258,13 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
-        buildingBoard.destroyComponent(1,2);
-        assertTrue(buildingBoard.checkShipValidity());// Removes the orange alien unit, another unit is present
+        buildingBoard.destroyComponent(2, 1);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the orange alien unit, another unit is present
         assertTrue(housingUnit.getAllowAlienOrange());
 
         // reset spaceship //
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
 
         // test allow purple alien //
@@ -275,8 +275,8 @@ class BuildingBoardTest {
         assertTrue(housingUnit.getAllowAlienPurple());
 
         //  update purple alien hosting test   //
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());// Removes the purple alien unit, so it can't host alien anymore
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the purple alien unit, so it can't host alien anymore
         assertFalse(housingUnit.getAllowAlienPurple());
 
         // update purple alien hosting test with another orange_unit //
@@ -287,13 +287,13 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
-        buildingBoard.destroyComponent(1,2);
-        assertTrue(buildingBoard.checkShipValidity());// Removes the purple alien unit, another unit is present
+        buildingBoard.destroyComponent(2, 1);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the purple alien unit, another unit is present
         assertTrue(housingUnit.getAllowAlienPurple());
 
         // reset spaceship //
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
 
         // Removing frontal cannon //
@@ -303,8 +303,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(1,spaceship.getNormalShootingPower());
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getNormalShootingPower());
 
@@ -315,8 +315,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(0.5,spaceship.getNormalShootingPower());
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getNormalShootingPower());
 
@@ -328,8 +328,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(1, spaceship.getFullDoubleCannonCount());
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getFullDoubleCannonCount());
 
@@ -341,8 +341,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(1,spaceship.getNormalEnginePower());
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getNormalEnginePower());
 
@@ -353,8 +353,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(1,spaceship.getDoubleEngineCount());
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getDoubleEngineCount());
 
@@ -367,8 +367,8 @@ class BuildingBoardTest {
         assertEquals(1,spaceship.getIdxShieldCount(0));
         assertEquals(1,spaceship.getIdxShieldCount(3));
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getIdxShieldCount(0));
         assertEquals(0,spaceship.getIdxShieldCount(3));
@@ -382,8 +382,8 @@ class BuildingBoardTest {
         assertEquals(1,spaceship.getIdxShieldCount(0));
         assertEquals(1,spaceship.getIdxShieldCount(1));
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getIdxShieldCount(0));
         assertEquals(0,spaceship.getIdxShieldCount(1));
@@ -397,8 +397,8 @@ class BuildingBoardTest {
         assertEquals(1,spaceship.getIdxShieldCount(1));
         assertEquals(1,spaceship.getIdxShieldCount(2));
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getIdxShieldCount(1));
         assertEquals(0,spaceship.getIdxShieldCount(2));
@@ -412,16 +412,16 @@ class BuildingBoardTest {
         assertEquals(1,spaceship.getIdxShieldCount(2));
         assertEquals(1,spaceship.getIdxShieldCount(3));
 
-        buildingBoard.destroyComponent(2,1);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getIdxShieldCount(2));
         assertEquals(0,spaceship.getIdxShieldCount(3));
 
        // removing housing unit with alien orange //
         housingUnit.setAlienOrange(true);
-        buildingBoard.destroyComponent(2,2);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(2, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
         assertFalse(spaceship.getAlienOrange());
 
         // removing housing unit with alien purple //
@@ -430,8 +430,8 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
         housingUnit = (HousingUnit) housing_unit;
         housingUnit.setAlienPurple(true);
-        buildingBoard.destroyComponent(2,2);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(2, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
         assertFalse(spaceship.getAlienPurple());
 
 
@@ -442,8 +442,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(4,spaceship.getCrewCount());
 
-        buildingBoard.destroyComponent(2,2);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(2, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(2,spaceship.getCrewCount());
 
@@ -452,8 +452,8 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2,2));
-        assertTrue(buildingBoard.checkShipValidity());
+        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2, 2));
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         // removing battery storage //
         buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
@@ -462,8 +462,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         assertEquals(2,spaceship.getBatteriesCount());
 
-        buildingBoard.destroyComponent(2,2);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(2, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0,spaceship.getBatteriesCount());
 
@@ -477,8 +477,8 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
 
         assertArrayEquals(new int[]{0,1,0,0},spaceship.getBoxCounts());
-        buildingBoard.destroyComponent(2,2);
-        assertTrue(buildingBoard.checkShipValidity());
+        buildingBoard.destroyComponent(2, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
         assertArrayEquals(new int[]{0,0,0,0},spaceship.getBoxCounts());
 
         // removing redBox storage //
@@ -491,8 +491,8 @@ class BuildingBoardTest {
 
         buildingBoard.initSpaceshipParams();
 
-        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2,2));
-        assertTrue(buildingBoard.checkShipValidity());
+        assertDoesNotThrow(() -> buildingBoard.destroyComponent(2, 2));
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
 
         //  Connectors count update test    //
@@ -503,13 +503,13 @@ class BuildingBoardTest {
         buildingBoard.checkStartShipValidity();                                //update connectors count
         assertEquals(6,spaceship.getExposedConnectorsCount());
 
-        buildingBoard.destroyComponent(2,2);                        //remove component and check new connectors count
+        buildingBoard.destroyComponent(2, 2);                        //remove component and check new connectors count
         buildingBoard.checkStartShipValidity();
         assertEquals(4,spaceship.getExposedConnectorsCount());
 
         // destroy null component //
-        assertThrows(IllegalStateException.class, () -> buildingBoard.destroyComponent(4,3));
-        assertTrue(buildingBoard.checkShipValidity());
+        assertThrows(IllegalStateException.class, () -> buildingBoard.destroyComponent(3, 4));
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
     }
 
     @Test
@@ -820,7 +820,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void checkShipValidity(){
+    void checkShipValidityAndTryToFix(){
 
         // TEST DISCONNECTED COMPONENTS
 
@@ -862,9 +862,9 @@ class BuildingBoardTest {
 
         assertEquals(4, spaceship.getCrewCount());
 
-        buildingBoard.destroyComponent(1, 3);
+        buildingBoard.destroyComponent( 21, 13);
 
-        assertTrue(buildingBoard.checkShipValidity());
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(2, spaceship.getCrewCount());
 
@@ -934,7 +934,7 @@ class BuildingBoardTest {
 
         buildingBoard2.destroyComponent(1, 4);
 
-        assertTrue(buildingBoard2.checkShipValidity());
+        assertTrue(buildingBoard2.checkShipValidityAndTryToFix());
 
         assertEquals(2, spaceship2.getCrewCount());
 

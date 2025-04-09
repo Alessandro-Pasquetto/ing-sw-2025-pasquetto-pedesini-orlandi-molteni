@@ -8,18 +8,18 @@ public class AnotherPlayerDestroyedComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int yComponent;
-    private int xComponent;
+    private final String namePlayer;
+    private final int xComponent;
+    private final int yComponent;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerDestroyedComponentMessage(String namePlayer, int yComponent, int xComponent) {
+    public AnotherPlayerDestroyedComponentMessage(String namePlayer, int xComponent, int yComponent) {
         this.namePlayer = namePlayer;
-        this.yComponent = yComponent;
         this.xComponent = xComponent;
+        this.yComponent = yComponent;
     }
 
     // =======================

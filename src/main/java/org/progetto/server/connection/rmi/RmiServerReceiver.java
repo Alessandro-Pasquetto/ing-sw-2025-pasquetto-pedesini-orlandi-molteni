@@ -8,6 +8,7 @@ import org.progetto.server.controller.GameController;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
 import java.rmi.RemoteException;
@@ -324,7 +325,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.destroyComponent(gameManager, player, yComponent, xComponent, virtualClient);
+        SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, xComponent, yComponent, virtualClient);
     }
 
     @Override
