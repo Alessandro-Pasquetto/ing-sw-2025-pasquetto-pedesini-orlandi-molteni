@@ -7,6 +7,7 @@ import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
@@ -22,10 +23,7 @@ public class SmugglersController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Smugglers smugglers;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
@@ -39,27 +37,13 @@ public class SmugglersController extends EventControllerAbstract {
     public SmugglersController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.smugglers = (Smugglers) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.requestedBoxes = 0;
         this.rewardBoxes = new ArrayList<>(smugglers.getRewardBoxes());
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
     }
 
     // =======================
@@ -74,8 +58,10 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        phase = "ASK_CANNONS";
-        askHowManyCannonsToUse();
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.ASK_CANNONS;
+            askHowManyCannonsToUse();
+        }
     }
 
     /**
@@ -85,7 +71,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askHowManyCannonsToUse() throws RemoteException {
-        if (phase.equals("ASK_CANNONS")) {
+        if (phase.equals(EventPhase.ASK_CANNONS)) {
 
             Player player = activePlayers.get(currPlayer);
             Spaceship spaceship = player.getSpaceship();
@@ -95,7 +81,7 @@ public class SmugglersController extends EventControllerAbstract {
 
             // Checks if players is able to win without double cannons
             if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
-                phase = "REWARD_DECISION";
+                phase = EventPhase.REWARD_DECISION;
                 sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
             }
 
@@ -106,13 +92,13 @@ public class SmugglersController extends EventControllerAbstract {
             if (maxUsable == 0) {
                 playerFirePower = spaceship.getNormalShootingPower();
 
-                phase = "BATTLE_RESULT";
+                phase = EventPhase.BATTLE_RESULT;
                 battleResult(player, sender);
 
             } else {
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
 
-                phase = "CANNON_NUMBER";
+                phase = EventPhase.CANNON_NUMBER;
             }
         }
     }
@@ -127,7 +113,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals("CANNON_NUMBER")) {
+        if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -138,7 +124,7 @@ public class SmugglersController extends EventControllerAbstract {
                 if (num == 0) {
                     playerFirePower = player.getSpaceship().getNormalShootingPower();
 
-                    phase = "BATTLE_RESULT";
+                    phase = EventPhase.BATTLE_RESULT;
                     battleResult(player, sender);
 
                 } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
@@ -153,7 +139,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
-                    phase = "DISCARDED_BATTERIES";
+                    phase = EventPhase.DISCARDED_BATTERIES;
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
@@ -179,7 +165,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -195,7 +181,7 @@ public class SmugglersController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (requestedBatteries == 0) {
-                            phase = "BATTLE_RESULT";
+                            phase = EventPhase.BATTLE_RESULT;
                             battleResult(player, sender);
 
                         } else {
@@ -236,14 +222,14 @@ public class SmugglersController extends EventControllerAbstract {
                 // Calls the battleResult function
                 switch (smugglers.battleResult(player, playerFirePower)){
                     case 1:
-                        phase = "REWARD_DECISION";
+                        phase = EventPhase.REWARD_DECISION;
                         sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
                         break;
 
                     case -1:
                         requestedBoxes = smugglers.getPenaltyBoxes();
 
-                        phase = "PENALTY_EFFECT";
+                        phase = EventPhase.PENALTY_EFFECT;
                         penaltyEffect(player, sender);
                         break;
 
@@ -251,10 +237,10 @@ public class SmugglersController extends EventControllerAbstract {
                         // Next player
                         if (currPlayer < activePlayers.size()) {
                             currPlayer++;
-                            phase = "ASK_CANNONS";
+                            phase = EventPhase.ASK_CANNONS;
                             askHowManyCannonsToUse();
                         } else {
-                            phase = "END";
+                            phase = EventPhase.END;
                             end();
                         }
                         break;
@@ -278,7 +264,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void penaltyEffect(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("PENALTY_EFFECT")) {
+        if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Box currently owned
             int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
@@ -286,7 +272,7 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if he has at least a box to discard
             if (maxBoxCount >= 1) {
                 sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                phase = "DISCARDED_BOXES";
+                phase = EventPhase.DISCARDED_BOXES;
 
             } else {
 
@@ -294,7 +280,7 @@ public class SmugglersController extends EventControllerAbstract {
                 if (player.getSpaceship().getBatteriesCount() > 0) {
                     sender.sendMessage("NotEnoughBoxes");
                     sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                    phase = "DISCARDED_BATTERIES_FOR_BOXES";
+                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
                 } else {
                     sender.sendMessage("NotEnoughBatteries");
@@ -302,11 +288,11 @@ public class SmugglersController extends EventControllerAbstract {
                     // Next player
                     if (currPlayer < activePlayers.size()) {
                         currPlayer++;
-                        phase = "ASK_CANNONS";
+                        phase = EventPhase.ASK_CANNONS;
                         askHowManyCannonsToUse();
 
                     } else {
-                        phase = "END";
+                        phase = EventPhase.END;
                         end();
                     }
                 }
@@ -326,7 +312,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BOXES")) {
+        if (phase.equals(EventPhase.DISCARDED_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -347,17 +333,17 @@ public class SmugglersController extends EventControllerAbstract {
                             // Next player
                             if (currPlayer < activePlayers.size()) {
                                 currPlayer++;
-                                phase = "ASK_CANNONS";
+                                phase = EventPhase.ASK_CANNONS;
                                 askHowManyCannonsToUse();
 
                             } else {
-                                phase = "END";
+                                phase = EventPhase.END;
                                 end();
                             }
 
                         } else {
                             // Ask for new box/battery to discard
-                            phase = "PENALTY_EFFECT";
+                            phase = EventPhase.PENALTY_EFFECT;
                             penaltyEffect(player, sender);
                         }
 
@@ -389,7 +375,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBatteriesForBoxes(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES_FOR_BOX")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -410,17 +396,17 @@ public class SmugglersController extends EventControllerAbstract {
                             // Next player
                             if (currPlayer < activePlayers.size()) {
                                 currPlayer++;
-                                phase = "ASK_CANNONS";
+                                phase = EventPhase.ASK_CANNONS;
                                 askHowManyCannonsToUse();
 
                             } else {
-                                phase = "END";
+                                phase = EventPhase.END;
                                 end();
                             }
 
                         } else {
                             // Ask for new battery to discard
-                            phase = "PENALTY_EFFECT";
+                            phase = EventPhase.PENALTY_EFFECT;
                             penaltyEffect(player, sender);
                         }
 
@@ -451,7 +437,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("REWARD_DECISION")) {
+        if (phase.equals(EventPhase.REWARD_DECISION)) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
@@ -459,12 +445,12 @@ public class SmugglersController extends EventControllerAbstract {
 
                 switch (upperCaseResponse) {
                     case "YES":
-                        phase = "CHOOSE_BOX";
+                        phase = EventPhase.CHOOSE_BOX;
                         sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                         break;
 
                     case "NO":
-                        phase = "END";
+                        phase = EventPhase.END;
                         end();
                         break;
 
@@ -492,7 +478,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException {
-        if (phase.equals("CHOOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
@@ -549,7 +535,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws IllegalStateException
      */
     private void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
-        if (phase.equals("CHOOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -567,7 +553,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void penaltyDays() throws RemoteException {
-        if (phase.equals("PENALTY_DAYS")) {
+        if (phase.equals(EventPhase.PENALTY_DAYS)) {
 
             Player player = activePlayers.get(currPlayer);
             Board board = gameManager.getGame().getBoard();
@@ -599,7 +585,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
             }
 
-            phase = "END";
+            phase = EventPhase.END;
             end();
         }
     }
@@ -611,7 +597,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

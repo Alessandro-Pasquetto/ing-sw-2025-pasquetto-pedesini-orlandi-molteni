@@ -1,6 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Epidemic;
 
@@ -13,9 +14,7 @@ public class EpidemicController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Epidemic epidemic;
-    private String phase;
 
     // =======================
     // CONSTRUCTORS
@@ -24,16 +23,8 @@ public class EpidemicController extends EventControllerAbstract {
     public EpidemicController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.epidemic = (Epidemic) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
+        this.currPlayer = -1;
+        this.phase = EventPhase.START;
     }
 
     // =======================
@@ -47,8 +38,8 @@ public class EpidemicController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        if (phase.equals("START")) {
-            phase = "EFFECT";
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.EFFECT;
             eventEffect();
         }
     }
@@ -59,14 +50,14 @@ public class EpidemicController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
             ArrayList<Player> players = gameManager.getGame().getBoard().getCopyActivePlayers();
 
             for (Player player : players) {
                 epidemic.epidemicResult(player);
             }
 
-            phase = "END";
+            phase = EventPhase.END;
             end();
         }
     }
@@ -78,7 +69,7 @@ public class EpidemicController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

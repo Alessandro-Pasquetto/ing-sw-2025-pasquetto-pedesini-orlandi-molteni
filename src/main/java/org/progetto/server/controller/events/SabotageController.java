@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Sabotage;
@@ -17,9 +18,7 @@ public class SabotageController extends EventControllerAbstract{
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Sabotage sabotage;
-    private String phase;
     private Player penalizedPlayer;
     private ArrayList<Player> activePlayers;
     private int yDiceResult;
@@ -33,21 +32,13 @@ public class SabotageController extends EventControllerAbstract{
     public SabotageController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.sabotage = (Sabotage) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
+        this.phase = EventPhase.START;
+        this.currPlayer = -1;
         this.penalizedPlayer = null;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.yDiceResult = 0;
         this.xDiceResult = 0;
         this.triesCount = 0;
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
     }
 
     // =======================
@@ -62,8 +53,8 @@ public class SabotageController extends EventControllerAbstract{
      */
     @Override
     public void start() throws RemoteException {
-        if (phase.equals("START")) {
-            phase = "LESS_POPULATED";
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.LESS_POPULATED;
             lessPopulatedSpaceship();
         }
     }
@@ -75,13 +66,13 @@ public class SabotageController extends EventControllerAbstract{
      * @throws RemoteException
      */
     private void lessPopulatedSpaceship() throws RemoteException {
-        if (phase.equals("LESS_POPULATED")) {
+        if (phase.equals(EventPhase.LESS_POPULATED)) {
 
             penalizedPlayer = sabotage.lessPopulatedSpaceship(activePlayers);
 
             gameManager.broadcastGameMessage(new LessPopulatedPlayerMessage(penalizedPlayer.getName()));
 
-            phase = "ASK_ROLL_DICE";
+            phase = EventPhase.ASK_ROLL_DICE;
             askToRollDice();
         }
     }
@@ -93,7 +84,7 @@ public class SabotageController extends EventControllerAbstract{
      * @throws RemoteException
      */
     private void askToRollDice() throws RemoteException {
-        if (phase.equals("ASK_ROLL_DICE")) {
+        if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
 
             Sender sender = gameManager.getSenderByPlayer(penalizedPlayer);
 
@@ -103,7 +94,7 @@ public class SabotageController extends EventControllerAbstract{
                 sender.sendMessage("ThrowDiceToFindColumn");
             }
 
-            phase = "ROLL_DICE";
+            phase = EventPhase.ROLL_DICE;
         }
     }
 
@@ -117,7 +108,7 @@ public class SabotageController extends EventControllerAbstract{
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("ROLL_DICE")) {
+        if (phase.equals(EventPhase.ROLL_DICE)) {
 
             // Checks if the player that calls the methods is also the penalty one in the controller
             if (player.equals(penalizedPlayer)) {
@@ -129,7 +120,7 @@ public class SabotageController extends EventControllerAbstract{
                     sender.sendMessage(new DiceResultMessage(yDiceResult));
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), yDiceResult), sender);
 
-                    phase = "ASK_ROLL_DICE";
+                    phase = EventPhase.ASK_ROLL_DICE;
                     askToRollDice();
 
                 // Second dice throw (finds column)
@@ -139,7 +130,7 @@ public class SabotageController extends EventControllerAbstract{
                     sender.sendMessage(new DiceResultMessage(xDiceResult));
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), xDiceResult), sender);
 
-                    phase = "EFFECT";
+                    phase = EventPhase.EFFECT;
                     eventEffect(sender);
                 }
 
@@ -160,7 +151,7 @@ public class SabotageController extends EventControllerAbstract{
      * @throws RemoteException
      */
     private void eventEffect(Sender sender) throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
 
             // Event effect applied for single player
             if (sabotage.penalty(yDiceResult, xDiceResult, penalizedPlayer) != null) {
@@ -177,7 +168,7 @@ public class SabotageController extends EventControllerAbstract{
                     gameManager.getGame().getBoard().leaveTravel(penalizedPlayer);
                 }
 
-                phase = "END";
+                phase = EventPhase.END;
 
             } else {
 
@@ -190,11 +181,11 @@ public class SabotageController extends EventControllerAbstract{
                     yDiceResult = 0;
                     xDiceResult = 0;
 
-                    phase = "ASK_ROLL_DICE";
+                    phase = EventPhase.ASK_ROLL_DICE;
                     askToRollDice();
 
                 } else {
-                    phase = "END";
+                    phase = EventPhase.END;
                     end(sender);
                 }
 
@@ -210,7 +201,7 @@ public class SabotageController extends EventControllerAbstract{
      * @throws RemoteException
      */
     private void end(Sender sender) throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             sender.sendMessage("Congratulations You Survived");
         }
     }

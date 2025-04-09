@@ -1,6 +1,8 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
 
 import java.rmi.RemoteException;
@@ -8,10 +10,20 @@ import java.rmi.RemoteException;
 abstract public class EventControllerAbstract {
 
     // =======================
+    // ATTRIBUTES
+    // =======================
+
+    protected GameManager gameManager;
+    protected EventPhase phase;
+    protected int currPlayer;
+
+    // =======================
     // GETTERS
     // =======================
 
-    abstract public String getPhase() throws RemoteException;
+    public EventPhase getPhase() throws RemoteException {
+        return phase;
+    }
 
     public Player getCurrPlayer() throws RemoteException {
         return null;

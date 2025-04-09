@@ -908,20 +908,20 @@ class BuildingBoardTest {
         buildingBoard2.placeComponent(1, 3, 0);
 
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
 
         assertFalse(buildingBoard2.initSpaceshipParams());
 
@@ -940,19 +940,19 @@ class BuildingBoardTest {
 
         assertFalse(hu.getHasPurpleAlien());
 
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
-            System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
     }
 }

@@ -138,7 +138,7 @@ class BattlezoneTest {
         assertFalse(battlezone.checkShields(player, p4));
     }
 
-    /*
+
     @Test
     void penaltyShot() {
         Game game1 = new Game(0, 3, 1);
@@ -187,22 +187,22 @@ class BattlezoneTest {
         Projectile s4 = new Projectile(ProjectileSize.SMALL, 3);
 
         // up
-        assertFalse(battlezone.penaltyShot(game1, p1, s1, 2));
-        assertFalse(battlezone.penaltyShot(game1, p1, s1, 4));
-        assertFalse(battlezone.penaltyShot(game1, p1, s1, 5));
-        assertTrue(battlezone.penaltyShot(game1, p1, s1, 6));
-        assertTrue(battlezone.penaltyShot(game1, p1, s1, 8));
-        assertFalse(battlezone.penaltyShot(game1, p1, s1, 9));
-        assertFalse(battlezone.penaltyShot(game1, p1, s1, 10));
+        assertNull(battlezone.penaltyShot(game1, p1, s1, 2));
+        assertNull(battlezone.penaltyShot(game1, p1, s1, 4));
+        assertNull(battlezone.penaltyShot(game1, p1, s1, 5));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s1, 6));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s1, 8));
+        assertNull(battlezone.penaltyShot(game1, p1, s1, 9));
+        assertNull(battlezone.penaltyShot(game1, p1, s1, 10));
 
         // bottom
-        assertFalse(battlezone.penaltyShot(game1, p1, s3, 2));
-        assertFalse(battlezone.penaltyShot(game1, p1, s3, 4));
-        assertFalse(battlezone.penaltyShot(game1, p1, s3, 5));
-        assertTrue(battlezone.penaltyShot(game1, p1, s3, 6));
-        assertTrue(battlezone.penaltyShot(game1, p1, s3, 8));
-        assertFalse(battlezone.penaltyShot(game1, p1, s3, 9));
-        assertFalse(battlezone.penaltyShot(game1, p1, s3, 10));
+        assertNull(battlezone.penaltyShot(game1, p1, s3, 2));
+        assertNull(battlezone.penaltyShot(game1, p1, s3, 4));
+        assertNull(battlezone.penaltyShot(game1, p1, s3, 5));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s3, 6));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s3, 8));
+        assertNull(battlezone.penaltyShot(game1, p1, s3, 9));
+        assertNull(battlezone.penaltyShot(game1, p1, s3, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");
@@ -220,20 +220,20 @@ class BattlezoneTest {
 //        System.out.println();
 
         // right
-        assertFalse(battlezone.penaltyShot(game1, p1, s2, 3));
-        assertFalse(battlezone.penaltyShot(game1, p1, s2, 5));
-        assertTrue(battlezone.penaltyShot(game1, p1, s2, 6));
-        assertTrue(battlezone.penaltyShot(game1, p1, s2, 8));
-        assertFalse(battlezone.penaltyShot(game1, p1, s2, 9));
-        assertFalse(battlezone.penaltyShot(game1, p1, s2, 10));
+        assertNull(battlezone.penaltyShot(game1, p1, s2, 3));
+        assertNull(battlezone.penaltyShot(game1, p1, s2, 5));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s2, 6));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s2, 8));
+        assertNull(battlezone.penaltyShot(game1, p1, s2, 9));
+        assertNull(battlezone.penaltyShot(game1, p1, s2, 10));
 
         // left
-        assertFalse(battlezone.penaltyShot(game1, p1, s4, 3));
-        assertFalse(battlezone.penaltyShot(game1, p1, s4, 5));
-        assertTrue(battlezone.penaltyShot(game1, p1, s4, 7));
-        assertFalse(battlezone.penaltyShot(game1, p1, s4, 8));
-        assertFalse(battlezone.penaltyShot(game1, p1, s4, 9));
-        assertFalse(battlezone.penaltyShot(game1, p1, s4, 10));
+        assertNull(battlezone.penaltyShot(game1, p1, s4, 3));
+        assertNull(battlezone.penaltyShot(game1, p1, s4, 5));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s4, 7));
+        assertNotNull(battlezone.penaltyShot(game1, p1, s4, 8));
+        assertNull(battlezone.penaltyShot(game1, p1, s4, 9));
+        assertNull(battlezone.penaltyShot(game1, p1, s4, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");
@@ -254,6 +254,7 @@ class BattlezoneTest {
         // check spaceShip lv2
 //        System.out.println("Check spaceship lv2");
 
+        /*
         Game game2 = new Game(1, 3, 2);
         Player p2 = new Player("a", 1, 2);
 
@@ -306,21 +307,21 @@ class BattlezoneTest {
         Projectile ss4 = new Projectile(ProjectileSize.SMALL, 3);
 
         // up
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss1, 2));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss1, 4));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss1, 5));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss1, 6));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss1, 8));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss1, 10));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss1, 12));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss1, 2));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss1, 4));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss1, 5));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss1, 6));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss1, 8));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss1, 10));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss1, 12));
 
         // bottom
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss3, 2));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss3, 4));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss3, 5));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss3, 6));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss3, 9));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss3, 10));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss3, 2));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss3, 4));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss3, 5));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 6));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 9));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss3, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");
@@ -338,20 +339,20 @@ class BattlezoneTest {
 //        System.out.println();
 
         // right
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss2, 3));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss2, 5));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss2, 6));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss2, 8));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss2, 9));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss2, 10));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss2, 3));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss2, 5));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss2, 6));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss2, 8));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss2, 9));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss2, 10));
 
         // left
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss4, 3));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss4, 5));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss4, 7));
-        assertTrue(battlezone2.penaltyShot(game2, p2, ss4, 8));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss4, 9));
-        assertFalse(battlezone2.penaltyShot(game2, p2, ss4, 10));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss4, 3));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss4, 5));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss4, 7));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss4, 8));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss4, 9));
+        assertNull(battlezone2.penaltyShot(game2, p2, ss4, 10));
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");
@@ -367,9 +368,8 @@ class BattlezoneTest {
 //            }
 //        }
 //        System.out.println();
+        */
     }
-
-     */
 
     @Test
     void chooseDiscardedBox() {

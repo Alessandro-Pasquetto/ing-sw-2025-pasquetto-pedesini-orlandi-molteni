@@ -220,6 +220,38 @@ public class GameManager {
                 eventController = new PlanetsController(this);
                 break;
 
+            case BATTLEZONE:
+                eventController = new BattlezoneController(this);
+                break;
+
+            case LOSTSHIP:
+                eventController = new LostShipController(this);
+                break;
+
+            case LOSTSTATION:
+                eventController = new LostStationController(this);
+                break;
+
+            case METEORSRAIN:
+                eventController = new MeteorsRainController(this);
+                break;
+
+            case PIRATES:
+                eventController = new PiratesController(this);
+                break;
+
+            case SMUGGLERS:
+                eventController = new SmugglersController(this);
+                break;
+
+            case SLAVERS:
+                eventController = new SlaversController(this);
+                break;
+
+            case SABOTAGE:
+                eventController = new SabotageController(this);
+                break;
+
             default:
                 eventController = null;
                 break;

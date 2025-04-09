@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Stardust;
@@ -19,9 +20,7 @@ public class StardustController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Stardust stardust;
-    private String phase;
 
     // =======================
     // CONSTRUCTORS
@@ -30,16 +29,8 @@ public class StardustController extends EventControllerAbstract {
     public StardustController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.stardust = (Stardust) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
+        this.phase = EventPhase.START;
+        this.currPlayer = -1;
     }
 
     // =======================
@@ -54,8 +45,8 @@ public class StardustController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        if (phase.equals("START")) {
-            phase = "EFFECT";
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.EFFECT;
             eventEffect();
         }
     }
@@ -66,7 +57,7 @@ public class StardustController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
             ArrayList<Player> reversedPlayers = new ArrayList<>(gameManager.getGame().getBoard().getCopyActivePlayers());
             Collections.reverse(reversedPlayers);
             Board board = gameManager.getGame().getBoard();
@@ -99,7 +90,7 @@ public class StardustController extends EventControllerAbstract {
                 }
             }
 
-            phase = "END";
+            phase = EventPhase.END;
             end();
         }
     }
@@ -111,7 +102,7 @@ public class StardustController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

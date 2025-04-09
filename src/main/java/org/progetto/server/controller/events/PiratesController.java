@@ -6,6 +6,7 @@ import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
@@ -27,10 +28,7 @@ public class PiratesController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Pirates pirates;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
@@ -48,7 +46,7 @@ public class PiratesController extends EventControllerAbstract {
     public PiratesController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.pirates = (Pirates) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.playerFirePower = 0;
@@ -59,20 +57,6 @@ public class PiratesController extends EventControllerAbstract {
         this.shieldProtectedPlayers = new ArrayList<>();
         this.shieldNotProtectedPlayers = new ArrayList<>();
         this.discardedBatteryForShield = new ArrayList<>();
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
     }
 
     // =======================
@@ -87,8 +71,10 @@ public class PiratesController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        phase = "ASK_CANNONS";
-        askHowManyCannonsToUse();
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.ASK_CANNONS;
+            askHowManyCannonsToUse();
+        }
     }
 
     /**
@@ -98,7 +84,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askHowManyCannonsToUse() throws RemoteException {
-        if (phase.equals("ASK_CANNONS")) {
+        if (phase.equals(EventPhase.ASK_CANNONS)) {
 
             Player player = activePlayers.get(currPlayer);
             Spaceship spaceship = player.getSpaceship();
@@ -108,7 +94,7 @@ public class PiratesController extends EventControllerAbstract {
 
             // Checks if players is able to win without double cannons
             if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
-                phase = "REWARD_DECISION";
+                phase = EventPhase.REWARD_DECISION;
                 sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
             }
 
@@ -119,13 +105,13 @@ public class PiratesController extends EventControllerAbstract {
             if (maxUsable == 0) {
                 playerFirePower = spaceship.getNormalShootingPower();
 
-                phase = "BATTLE_RESULT";
+                phase = EventPhase.BATTLE_RESULT;
                 battleResult(player, sender);
 
             } else {
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
 
-                phase = "CANNON_NUMBER";
+                phase = EventPhase.CANNON_NUMBER;
             }
         }
     }
@@ -140,7 +126,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals("CANNON_NUMBER")) {
+        if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -151,7 +137,7 @@ public class PiratesController extends EventControllerAbstract {
                 if (num == 0) {
                     playerFirePower = player.getSpaceship().getNormalShootingPower();
 
-                    phase = "BATTLE_RESULT";
+                    phase = EventPhase.BATTLE_RESULT;
                     battleResult(player, sender);
 
                 } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
@@ -166,7 +152,7 @@ public class PiratesController extends EventControllerAbstract {
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
-                    phase = "DISCARDED_BATTERIES";
+                    phase = EventPhase.DISCARDED_BATTERIES;
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
@@ -192,7 +178,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -208,7 +194,7 @@ public class PiratesController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (requestedBatteries == 0) {
-                            phase = "BATTLE_RESULT";
+                            phase = EventPhase.BATTLE_RESULT;
                             battleResult(player, sender);
 
                         } else {
@@ -241,7 +227,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void battleResult(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("BATTLE_RESULT")) {
+        if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -249,7 +235,7 @@ public class PiratesController extends EventControllerAbstract {
                 // Calls the battleResult function
                 switch (pirates.battleResult(player, playerFirePower)){
                     case 1:
-                        phase = "REWARD_DECISION";
+                        phase = EventPhase.REWARD_DECISION;
                         sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                         break;
 
@@ -259,10 +245,10 @@ public class PiratesController extends EventControllerAbstract {
                         // Next player
                         if (currPlayer < activePlayers.size()) {
                             currPlayer++;
-                            phase = "ASK_CANNONS";
+                            phase = EventPhase.ASK_CANNONS;
                             askHowManyCannonsToUse();
                         } else {
-                            phase = "HANDLE_DEFEATED_PLAYERS";
+                            phase = EventPhase.HANDLE_DEFEATED_PLAYERS;
                             handleDefeatedPlayers();
                         }
                         break;
@@ -271,10 +257,10 @@ public class PiratesController extends EventControllerAbstract {
                         // Next player
                         if (currPlayer < activePlayers.size()) {
                             currPlayer++;
-                            phase = "ASK_CANNONS";
+                            phase = EventPhase.ASK_CANNONS;
                             askHowManyCannonsToUse();
                         } else {
-                            phase = "HANDLE_DEFEATED_PLAYERS";
+                            phase = EventPhase.HANDLE_DEFEATED_PLAYERS;
                             handleDefeatedPlayers();
                         }
                         break;
@@ -299,19 +285,19 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("REWARD_DECISION")) {
+        if (phase.equals(EventPhase.REWARD_DECISION)) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
                 String upperCaseResponse = response.toUpperCase();
 
                 switch (upperCaseResponse) {
                     case "YES":
-                        phase = "EFFECT";
+                        phase = EventPhase.EFFECT;
                         eventEffect();
                         break;
 
                     case "NO":
-                        phase = "END";
+                        phase = EventPhase.END;
                         end();
                         break;
 
@@ -336,7 +322,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
             Player player = activePlayers.get(currPlayer);
             Board board = gameManager.getGame().getBoard();
 
@@ -369,7 +355,7 @@ public class PiratesController extends EventControllerAbstract {
                 }
             }
 
-            phase = "HANDLE_DEFEATED_PLAYERS";
+            phase = EventPhase.HANDLE_DEFEATED_PLAYERS;
             handleDefeatedPlayers();
         }
     }
@@ -381,7 +367,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void handleDefeatedPlayers() throws RemoteException {
-        if (phase.equals("HANDLE_DEFEATED_PLAYERS")) {
+        if (phase.equals(EventPhase.HANDLE_DEFEATED_PLAYERS)) {
 
             if (!defeatedPlayers.isEmpty() && !penaltyShots.isEmpty()) {
 
@@ -392,12 +378,12 @@ public class PiratesController extends EventControllerAbstract {
                     sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
                 }
 
-                phase = "ASK_ROLL_DICE";
+                phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
             } else {
 
-                phase = "END";
+                phase = EventPhase.END;
                 end();
             }
         }
@@ -410,7 +396,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askToRollDice() throws RemoteException {
-        if (phase.equals("ASK_ROLL_DICE")) {
+        if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
 
             // Asks first defeated player to roll dice
             Sender sender = gameManager.getSenderByPlayer(defeatedPlayers.getFirst());
@@ -422,7 +408,7 @@ public class PiratesController extends EventControllerAbstract {
                 sender.sendMessage("ThrowDiceToFindRow");
             }
 
-            phase = "ROLL_DICE";
+            phase = EventPhase.ROLL_DICE;
         }
     }
 
@@ -436,7 +422,7 @@ public class PiratesController extends EventControllerAbstract {
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("ROLL_DICE")) {
+        if (phase.equals(EventPhase.ROLL_DICE)) {
 
             // Checks if the player that calls the methods is also the first defeated player
             if (player.equals(defeatedPlayers.getFirst())) {
@@ -447,11 +433,11 @@ public class PiratesController extends EventControllerAbstract {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
 
                 if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
-                    phase = "ASK_SHIELDS";
+                    phase = EventPhase.ASK_SHIELDS;
                     askToUseShields();
 
                 } else {
-                    phase = "HANDLE_SHOT";
+                    phase = EventPhase.HANDLE_SHOT;
                     handleShot();
                 }
 
@@ -470,7 +456,7 @@ public class PiratesController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void askToUseShields() throws RemoteException {
-        if (phase.equals("ASK_SHIELDS")) {
+        if (phase.equals(EventPhase.ASK_SHIELDS)) {
 
             for (Player defeatedPlayer : defeatedPlayers) {
 
@@ -490,17 +476,17 @@ public class PiratesController extends EventControllerAbstract {
             }
 
             if (shieldNotProtectedPlayers.size() == defeatedPlayers.size()) {
-                phase = "HANDLE_SHOT";
+                phase = EventPhase.HANDLE_SHOT;
                 handleShot();
 
             } else {
-                phase = "SHIELD_DECISION";
+                phase = EventPhase.SHIELD_DECISION;
             }
         }
     }
 
     public synchronized void receiveShieldDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("SHIELD_DECISION")) {
+        if (phase.equals(EventPhase.SHIELD_DECISION)) {
 
             // Checks if it is not part of non-protected player, and it is not already contained in protected one list
             if (!shieldNotProtectedPlayers.contains(player) && !shieldProtectedPlayers.contains(player)) {
@@ -534,10 +520,10 @@ public class PiratesController extends EventControllerAbstract {
                             senderProtected.sendMessage(new BatteriesToDiscardMessage(1));
                         }
 
-                        phase = "SHIELD_BATTERY";
+                        phase = EventPhase.SHIELD_BATTERY;
 
                     } else {
-                        phase = "HANDLE_SHOT";
+                        phase = EventPhase.HANDLE_SHOT;
                         handleShot();
                     }
                 }
@@ -562,7 +548,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public synchronized void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("SHIELD_BATTERY")) {
+        if (phase.equals(EventPhase.SHIELD_BATTERY)) {
 
             // Checks if the player that calls the methods has to discard a battery to activate a shield
             if (discardedBatteryForShield.contains(player)) {
@@ -579,7 +565,7 @@ public class PiratesController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (discardedBatteryForShield.isEmpty()) {
-                            phase = "HANDLE_SHOT";
+                            phase = EventPhase.HANDLE_SHOT;
                             handleShot();
                         }
 
@@ -607,7 +593,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void handleShot() throws RemoteException {
-        if (phase.equals("HANDLE_SHOT")) {
+        if (phase.equals(EventPhase.HANDLE_SHOT)) {
 
             Game game = gameManager.getGame();
             Projectile shot = penaltyShots.getFirst();
@@ -653,7 +639,7 @@ public class PiratesController extends EventControllerAbstract {
             penaltyShots.removeFirst();
 
             // Next shot
-            phase = "HANDLE_DEFEATED_PLAYERS";
+            phase = EventPhase.HANDLE_DEFEATED_PLAYERS;
             handleDefeatedPlayers();
         }
     }
@@ -665,7 +651,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMess
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
@@ -21,10 +22,7 @@ public class LostShipController extends EventControllerAbstract  {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private LostShip lostShip;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
     private int requestedCrew;
 
@@ -35,24 +33,10 @@ public class LostShipController extends EventControllerAbstract  {
     public LostShipController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.lostShip = (LostShip) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.requestedCrew = 0;
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
     }
 
     // =======================
@@ -67,12 +51,12 @@ public class LostShipController extends EventControllerAbstract  {
      */
     @Override
     public void start() throws RemoteException {
-        phase = "ASK_TO_LAND";
+        phase = EventPhase.ASK_TO_LAND;
         askToLand();
     }
 
     private void askToLand() throws RemoteException {
-        if(phase.equals("ASK_TO_LAND")) {
+        if(phase.equals(EventPhase.ASK_TO_LAND)) {
             Player player = activePlayers.get(currPlayer);
 
             Sender sender = gameManager.getSenderByPlayer(player);
@@ -82,17 +66,17 @@ public class LostShipController extends EventControllerAbstract  {
 
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
                 sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
-                phase = "REWARD_DECISION";
+                phase = EventPhase.REWARD_DECISION;
             } else {
                 sender.sendMessage("NotEnoughCrew");
 
                 // Next player
                 if (currPlayer < activePlayers.size()) {
                     currPlayer++;
-                    phase = "ASK_TO_LAND";
+                    phase = EventPhase.ASK_TO_LAND;
                     askToLand();
                 } else {
-                    phase = "END";
+                    phase = EventPhase.END;
                     end();
                 }
             }
@@ -110,22 +94,22 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     public void getRewardDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("REWARD_DECISION")) {
+        if (phase.equals(EventPhase.REWARD_DECISION)) {
             String upperCaseResponse = response.toUpperCase();
 
             switch (upperCaseResponse) {
                 case "YES":
-                    phase = "PENALTY_EFFECT";
+                    phase = EventPhase.PENALTY_EFFECT;
                     break;
 
                 case "NO":
                     // Next player
                     if (currPlayer < activePlayers.size()) {
                         currPlayer++;
-                        phase = "ASK_TO_LAND";
+                        phase = EventPhase.ASK_TO_LAND;
                         askToLand();
                     } else {
-                        phase = "END";
+                        phase = EventPhase.END;
                         end();
                     }
                     break;
@@ -138,7 +122,7 @@ public class LostShipController extends EventControllerAbstract  {
     }
 
     /**
-     * if the player accept, he suffers the penalty
+     * If the player accept, he suffers the penalty
      *
      * @author Stefano
      * @param player
@@ -146,14 +130,14 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     public void penaltyEffect(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("PENALTY_EFFECT")) {
+        if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
                 
                 requestedCrew = lostShip.getPenaltyCrew();
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                phase = "DISCARDED_CREW";
+                phase = EventPhase.DISCARDED_CREW;
 
             } else {
                 sender.sendMessage("NotYourTurn");
@@ -175,7 +159,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_CREW")) {
+        if (phase.equals(EventPhase.DISCARDED_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -191,7 +175,7 @@ public class LostShipController extends EventControllerAbstract  {
                         sender.sendMessage("CrewMemberDiscarded");
 
                         if (requestedCrew == 0) {
-                            phase = "EFFECT";
+                            phase = EventPhase.EFFECT;
                             eventEffect();
 
                         } else {
@@ -222,7 +206,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
             Player player = activePlayers.get(currPlayer);
             Board board = gameManager.getGame().getBoard();
 
@@ -255,7 +239,7 @@ public class LostShipController extends EventControllerAbstract  {
                 }
             }
 
-            phase = "END";
+            phase = EventPhase.END;
             end();
         }
     }
@@ -267,7 +251,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

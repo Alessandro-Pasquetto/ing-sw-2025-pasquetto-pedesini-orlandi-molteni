@@ -1,14 +1,12 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.socket.SocketWriter;
-import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
@@ -17,7 +15,6 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
 
-import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,10 +26,7 @@ public class BattlezoneController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
     private Battlezone battlezone;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
     private ArrayList<ConditionPenalty> couples;
     private ArrayList<Projectile> penaltyShots;
@@ -51,7 +45,7 @@ public class BattlezoneController extends EventControllerAbstract {
     public BattlezoneController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.battlezone = (Battlezone) gameManager.getGame().getActiveEventCard();
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.couples = new ArrayList<>(couples);
         this.penaltyShots = new ArrayList<>();
@@ -66,20 +60,6 @@ public class BattlezoneController extends EventControllerAbstract {
     }
 
     // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
-    }
-
-    // =======================
     // OTHER METHODS
     // =======================
 
@@ -91,8 +71,8 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        if (phase.equals("START")) {
-            phase = "CONDITION";
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.CONDITION;
             condition();
         }
     }
@@ -104,7 +84,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void condition() throws RemoteException {
-        if (phase.equals("CONDITION")) {
+        if (phase.equals(EventPhase.CONDITION)) {
 
             // Checks if all the couples were evaluated
             if (!couples.isEmpty()) {
@@ -112,23 +92,23 @@ public class BattlezoneController extends EventControllerAbstract {
                 switch (couples.getFirst().getCondition()){
 
                     case ConditionType.CREWREQUIREMENT:
-                        phase = "CREW_COUNT";
+                        phase = EventPhase.CREW_COUNT;
                         choseFewerCrew();
                         break;
 
                     case ConditionType.FIREPOWERREQUIREMENT:
-                        phase = "ASK_ENGINES";
+                        phase = EventPhase.ASK_ENGINES;
                         askHowManyEnginesToUse();
                         break;
 
                     case ConditionType.ENGINEPOWERREQUIREMENT:
-                        phase = "ASK_CANNONS";
+                        phase = EventPhase.ASK_CANNONS;
                         askHowManyCannonsToUse();
                         break;
                 }
 
             } else {
-                phase = "END";
+                phase = EventPhase.END;
                 end();
             }
         }
@@ -141,12 +121,12 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void choseFewerCrew() throws RemoteException {
-        if (phase.equals("CREW_COUNT")) {
+        if (phase.equals(EventPhase.CREW_COUNT)) {
 
             // Finds player with fewer crew
             penaltyPlayer = battlezone.lessPopulatedSpaceship(activePlayers);
 
-            phase = "PENALTY";
+            phase = EventPhase.PENALTY;
         }
     }
 
@@ -156,7 +136,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Stefano
      */
     private void askHowManyEnginesToUse() throws RemoteException {
-        if (phase.equals("ASK_ENGINES")) {
+        if (phase.equals(EventPhase.ASK_ENGINES)) {
 
             // Checks if every player took a decision about how many engines to use
             if (currPlayer < activePlayers.size()) {
@@ -175,16 +155,16 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     // Next player
                     currPlayer++;
-                    phase = "ASK_ENGINES";
+                    phase = EventPhase.ASK_ENGINES;
                     askHowManyEnginesToUse();
 
                 } else {
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
-                    phase = "ENGINE_NUMBER";
+                    phase = EventPhase.ENGINE_NUMBER;
                 }
 
             } else {
-                phase = "CHOOSE_WEAKEST_ENGINES";
+                phase = EventPhase.CHOOSE_WEAKEST_ENGINES;
                 chooseWeakestEngines();
             }
         }
@@ -196,7 +176,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Stefano
      */
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals("ENGINE_NUMBER")) {
+        if (phase.equals(EventPhase.ENGINE_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -207,7 +187,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     // Next player
                     currPlayer++;
-                    phase = "ASK_ENGINES";
+                    phase = EventPhase.ASK_ENGINES;
                     askHowManyEnginesToUse();
 
                 } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -216,7 +196,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
-                    phase = "DISCARDED_BATTERIES";
+                    phase = EventPhase.DISCARDED_BATTERIES;
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
@@ -238,7 +218,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askHowManyCannonsToUse() throws RemoteException {
-        if (phase.equals("ASK_CANNONS")) {
+        if (phase.equals(EventPhase.ASK_CANNONS)) {
 
             // Checks if every player took a decision about how many engines to use
             if (currPlayer < activePlayers.size()) {
@@ -257,16 +237,16 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     // Next player
                     currPlayer++;
-                    phase = "ASK_CANNONS";
+                    phase = EventPhase.ASK_CANNONS;
                     askHowManyCannonsToUse();
 
                 } else {
                     sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
-                    phase = "CANNON_NUMBER";
+                    phase = EventPhase.CANNON_NUMBER;
                 }
 
             } else {
-                phase = "CHOOSE_WEAKEST_CANNONS";
+                phase = EventPhase.CHOOSE_WEAKEST_CANNONS;
                 chooseWeakestCannons();
             }
         }
@@ -282,7 +262,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals("CANNON_NUMBER")) {
+        if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -295,7 +275,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     // Next player
                     currPlayer++;
-                    phase = "ASK_CANNONS";
+                    phase = EventPhase.ASK_CANNONS;
                     askHowManyCannonsToUse();
 
                 } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -309,7 +289,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     }
 
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
-                    phase = "DISCARDED_BATTERIES";
+                    phase = EventPhase.DISCARDED_BATTERIES;
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
@@ -335,7 +315,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -356,11 +336,11 @@ public class BattlezoneController extends EventControllerAbstract {
                             currPlayer++;
 
                             if (couples.getFirst().getCondition() == ConditionType.ENGINEPOWERREQUIREMENT) {
-                                phase = "ASK_ENGINES";
+                                phase = EventPhase.ASK_ENGINES;
                                 askHowManyEnginesToUse();
 
                             } else if (couples.getFirst().getCondition() == ConditionType.FIREPOWERREQUIREMENT) {
-                                phase = "ASK_CANNONS";
+                                phase = EventPhase.ASK_CANNONS;
                                 askHowManyCannonsToUse();
                             }
 
@@ -391,7 +371,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void chooseWeakestEngines() throws RemoteException {
-        if (phase.equals("CHOOSE_WEAKEST_ENGINES")) {
+        if (phase.equals(EventPhase.CHOOSE_WEAKEST_ENGINES)) {
             int minEnginePower = Integer.MAX_VALUE;
 
             for (Player player : activePlayers) {
@@ -410,7 +390,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 }
             }
 
-            phase = "PENALTY";
+            phase = EventPhase.PENALTY;
             penalty();
         }
     }
@@ -421,7 +401,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void chooseWeakestCannons() throws RemoteException {
-        if (phase.equals("CHOOSE_WEAKEST_CANNONS")) {
+        if (phase.equals(EventPhase.CHOOSE_WEAKEST_CANNONS)) {
             float minFirePower = Float.MAX_VALUE;
 
             for (Player player : activePlayers) {
@@ -440,7 +420,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 }
             }
 
-            phase = "PENALTY";
+            phase = EventPhase.PENALTY;
             penalty();
         }
     }
@@ -452,7 +432,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void penalty() throws RemoteException {
-        if (phase.equals("PENALTY")) {
+        if (phase.equals(EventPhase.PENALTY)) {
 
             // Gets penalty player sender reference
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
@@ -460,7 +440,7 @@ public class BattlezoneController extends EventControllerAbstract {
             switch (couples.getFirst().getPenalty().getType()){
 
                 case PenaltyType.PENALTYDAYS:
-                    phase = "PENALTY_DAYS";
+                    phase = EventPhase.PENALTY_DAYS;
                     penaltyDays();
                     break;
 
@@ -469,14 +449,14 @@ public class BattlezoneController extends EventControllerAbstract {
                     requestedCrew = couples.getFirst().getPenalty().getNeededAmount();
                     sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
 
-                    phase = "PENALTY_CREW";
+                    phase = EventPhase.PENALTY_CREW;
                     break;
 
                 case PenaltyType.PENALTYSHOTS:
                     // Penalty shots
                     penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
 
-                    phase = "PENALTY_SHOTS";
+                    phase = EventPhase.PENALTY_SHOTS;
                     penaltyShot();
                     break;
 
@@ -484,7 +464,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     // Number of requested boxes
                     requestedBoxes =  couples.getFirst().getPenalty().getNeededAmount();
 
-                    phase = "PENALTY_BOXES";
+                    phase = EventPhase.PENALTY_BOXES;
                     penaltyBoxes();
                     break;
             }
@@ -503,7 +483,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void penaltyDays() throws RemoteException {
-        if (phase.equals("PENALTY_DAYS")) {
+        if (phase.equals(EventPhase.PENALTY_DAYS)) {
             Board board = gameManager.getGame().getBoard();
 
             // Gets sender reference related to current player
@@ -535,7 +515,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             // Next Couple
             couples.removeFirst();
-            phase = "CONDITION";
+            phase = EventPhase.CONDITION;
             condition();
         }
     }
@@ -551,7 +531,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals("PENALTY_CREW")) {
+        if (phase.equals(EventPhase.PENALTY_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
@@ -570,7 +550,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                             // Next Couple
                             couples.removeFirst();
-                            phase = "CONDITION";
+                            phase = EventPhase.CONDITION;
                             condition();
 
                         } else {
@@ -595,7 +575,7 @@ public class BattlezoneController extends EventControllerAbstract {
     }
 
     private void penaltyBoxes() throws RemoteException {
-        if (phase.equals("PENALTY_BOXES")) {
+        if (phase.equals(EventPhase.PENALTY_BOXES)) {
 
             Player player = penaltyPlayer;
 
@@ -608,7 +588,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if he has at least a box to discard
             if (maxBoxCount >= 1) {
                 sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                phase = "DISCARDED_BOXES";
+                phase = EventPhase.DISCARDED_BOXES;
 
             } else {
 
@@ -616,14 +596,14 @@ public class BattlezoneController extends EventControllerAbstract {
                 if (player.getSpaceship().getBatteriesCount() > 0) {
                     sender.sendMessage("NotEnoughBoxes");
                     sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                    phase = "DISCARDED_BATTERIES_FOR_BOXES";
+                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
                 } else {
                     sender.sendMessage("NotEnoughBatteries");
 
                     // Next Couple
                     couples.removeFirst();
-                    phase = "CONDITION";
+                    phase = EventPhase.CONDITION;
                     condition();
                 }
 
@@ -642,7 +622,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BOXES")) {
+        if (phase.equals(EventPhase.DISCARDED_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
@@ -661,11 +641,11 @@ public class BattlezoneController extends EventControllerAbstract {
 
                             // Next Couple
                             couples.removeFirst();
-                            phase = "CONDITION";
+                            phase = EventPhase.CONDITION;
                             condition();
 
                         } else {
-                            phase = "PENALTY_BOXES";
+                            phase = EventPhase.PENALTY_BOXES;
                             penaltyBoxes();
                         }
 
@@ -697,7 +677,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBatteriesForBoxes(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES_FOR_BOXES")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
@@ -716,11 +696,11 @@ public class BattlezoneController extends EventControllerAbstract {
 
                             // Next Couple
                             couples.removeFirst();
-                            phase = "CONDITION";
+                            phase = EventPhase.CONDITION;
                             condition();
 
                         } else {
-                            phase = "PENALTY_BOXES";
+                            phase = EventPhase.PENALTY_BOXES;
                             penaltyBoxes();
                         }
 
@@ -742,7 +722,7 @@ public class BattlezoneController extends EventControllerAbstract {
     }
 
     private void penaltyShot() throws RemoteException {
-        if (phase.equals("PENALTY_SHOTS")) {
+        if (phase.equals(EventPhase.PENALTY_SHOTS)) {
 
             // Checks if penalty shots are empty
             if (!penaltyShots.isEmpty()) {
@@ -751,13 +731,13 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
 
-                phase = "ASK_ROLL_DICE";
+                phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
             } else {
                 // Next Couple
                 couples.removeFirst();
-                phase = "CONDITION";
+                phase = EventPhase.CONDITION;
                 condition();
             }
         }
@@ -770,7 +750,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askToRollDice() throws RemoteException {
-        if (phase.equals("ASK_ROLL_DICE")) {
+        if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
 
             // Asks penalty player to roll dice
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
@@ -782,7 +762,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage("ThrowDiceToFindRow");
             }
 
-            phase = "ROLL_DICE";
+            phase = EventPhase.ROLL_DICE;
 
         }
     }
@@ -797,7 +777,7 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("ROLL_DICE")) {
+        if (phase.equals(EventPhase.ROLL_DICE)) {
 
             // Checks if the player that calls the methods is also the first defeated player
             if (player.equals(penaltyPlayer)) {
@@ -808,11 +788,11 @@ public class BattlezoneController extends EventControllerAbstract {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
 
                 if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
-                    phase = "ASK_SHIELDS";
+                    phase = EventPhase.ASK_SHIELDS;
                     askToUseShields();
 
                 } else {
-                    phase = "HANDLE_SHOT";
+                    phase = EventPhase.HANDLE_SHOT;
                     handleShot();
                 }
 
@@ -831,7 +811,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Stefano
      */
     private void askToUseShields() throws RemoteException {
-        if (phase.equals("ASK_SHIELDS")) {
+        if (phase.equals(EventPhase.ASK_SHIELDS)) {
 
             // Checks if penalty player has a shield that covers that direction
             boolean hasShield = battlezone.checkShields(penaltyPlayer, penaltyShots.getFirst());
@@ -841,11 +821,11 @@ public class BattlezoneController extends EventControllerAbstract {
 
             if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
                 sender.sendMessage("AskToUseShield");
-                phase = "SHIELD_DECISION";
+                phase = EventPhase.SHIELD_DECISION;
 
             } else {
                 sender.sendMessage("NoShieldAvailable");
-                phase = "HANDLE_SHOT";
+                phase = EventPhase.HANDLE_SHOT;
                 handleShot();
             }
         }
@@ -860,18 +840,18 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveShieldDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("SHIELD_DECISION")) {
+        if (phase.equals(EventPhase.SHIELD_DECISION)) {
 
             if (player.equals(penaltyPlayer)) {
                 String upperCaseResponse = response.toUpperCase();
 
                 switch (upperCaseResponse) {
                     case "YES":
-                        phase = "SHIELD_BATTERY";
+                        phase = EventPhase.SHIELD_BATTERY;
                         break;
 
                     case "NO":
-                        phase = "HANDLE_SHOT";
+                        phase = EventPhase.HANDLE_SHOT;
                         handleShot();
                         break;
 
@@ -896,7 +876,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("SHIELD_BATTERY")) {
+        if (phase.equals(EventPhase.SHIELD_BATTERY)) {
 
             // Checks if the player that calls the methods has to discard a battery to activate a shield
             if (player.equals(penaltyPlayer)) {
@@ -911,7 +891,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                         sender.sendMessage("BatteryDiscarded");
 
-                        phase = "HANDLE_SHOT";
+                        phase = EventPhase.HANDLE_SHOT;
                         handleShot();
 
                     } else {
@@ -938,7 +918,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void handleShot() throws RemoteException {
-        if (phase.equals("HANDLE_SHOT")) {
+        if (phase.equals(EventPhase.HANDLE_SHOT)) {
 
             Game game = gameManager.getGame();
             Projectile shot = penaltyShots.getFirst();
@@ -969,7 +949,7 @@ public class BattlezoneController extends EventControllerAbstract {
             penaltyShots.removeFirst();
 
             // Next shot
-            phase = "PENALTY_SHOTS";
+            phase = EventPhase.PENALTY_SHOTS;
             penaltyShot();
         }
     }
@@ -981,7 +961,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

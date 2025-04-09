@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
@@ -20,7 +21,6 @@ public class OpenSpaceController extends EventControllerAbstract {
     // =======================
 
     private final GameManager gameManager;
-    private String phase;
     private final ArrayList<Player> activePlayers;
     private int playerEnginePower;
     private int requestedNumber;
@@ -31,19 +31,11 @@ public class OpenSpaceController extends EventControllerAbstract {
 
     public OpenSpaceController(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.phase = "START";
+        this.phase = EventPhase.START;
+        this.currPlayer = -1;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
     }
 
     // =======================
@@ -57,8 +49,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
-        if (phase.equals("START")){
-            phase = "ASK_ENGINES";
+        if (phase.equals(EventPhase.START)){
+            phase = EventPhase.ASK_ENGINES;
             askHowManyEnginesToUse();
         }
     }
@@ -69,7 +61,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
-        if (phase.equals("ASK_ENGINES")) {
+        if (phase.equals(EventPhase.ASK_ENGINES)) {
             System.out.println("Asking engines");
 
             for (Player player : activePlayers) {
@@ -87,7 +79,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
                     if (playerEnginePower > 0) {
-                        phase = "EFFECT";
+                        phase = EventPhase.EFFECT;
                         eventEffect();
 
                     } else {
@@ -99,13 +91,16 @@ public class OpenSpaceController extends EventControllerAbstract {
                 } else {
                     System.out.println("Waiting for HowManyDoubleEngines");
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
-                    phase = "ENGINE_NUMBER";
+                    phase = EventPhase.ENGINE_NUMBER;
                     gameManager.getGameThread().waitPlayerReady(player);
 
-                    phase = "EFFECT";
+                    phase = EventPhase.EFFECT;
                     eventEffect();
                 }
             }
+
+            phase = EventPhase.END;
+            end();
         }
     }
 
@@ -115,7 +110,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @author Gabriele
      */
     public void receiveHowManyDoubleEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals("ENGINE_NUMBER")) {
+        if (phase.equals(EventPhase.ENGINE_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -132,7 +127,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                     playerEnginePower = player.getSpaceship().getNormalEnginePower() + 2 * num;
 
                     System.out.println("Waiting for BatteriesToDiscard");
-                    phase = "DISCARDED_BATTERIES";
+                    phase = EventPhase.DISCARDED_BATTERIES;
                     sender.sendMessage(new BatteriesToDiscardMessage(num));
 
 
@@ -160,7 +155,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals("DISCARDED_BATTERIES")) {
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -208,7 +203,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
             Player player = gameManager.getGame().getActivePlayer();
             OpenSpace openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
 
@@ -220,6 +215,18 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
+        }
+    }
+
+    /**
+     * Send a message of end card to all players
+     *
+     * @author Stefano
+     * @throws RemoteException
+     */
+    private void end() throws RemoteException {
+        if (phase.equals(EventPhase.END)) {
+            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

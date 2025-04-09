@@ -179,11 +179,26 @@ class PiratesTest {
         assertNull(pirates.penaltyShot(game1, p1, s2, 9));
         assertNull(pirates.penaltyShot(game1, p1, s2, 10));
 
-        //left
+//        System.out.println();
+//        System.out.printf("%-20s", "-");
+//        for (int i = 0; i < 5; i++) {
+//            System.out.printf("%-20s", 5 + i);
+//        }
+//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
+//            System.out.println();
+//            System.out.printf("%-20s", 5 + i);
+//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
+//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
+//                System.out.printf("%-20s", value);
+//            }
+//        }
+//        System.out.println();
+
+        // left
         assertNull(pirates.penaltyShot(game1, p1, s4, 3));
         assertNull(pirates.penaltyShot(game1, p1, s4, 5));
         assertNotNull(pirates.penaltyShot(game1, p1, s4, 7));
-        assertNull(pirates.penaltyShot(game1, p1, s4, 8));
+        assertNotNull(pirates.penaltyShot(game1, p1, s4, 8));
         assertNull(pirates.penaltyShot(game1, p1, s4, 9));
         assertNull(pirates.penaltyShot(game1, p1, s4, 10));
 

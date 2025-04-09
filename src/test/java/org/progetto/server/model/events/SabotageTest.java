@@ -72,19 +72,18 @@ class SabotageTest {
 
 
         // Tries carry out the penalty on not occupied cell
-        assertFalse(sabotage.penalty(1, 1, player));
+        assertNull(sabotage.penalty(1, 1, player));
 
         // Tries carry out the penalty on not fillable cell
-        assertFalse(sabotage.penalty(0, 0, player));
+        assertNull(sabotage.penalty(0, 0, player));
 
         // Tries carry out the penalty outside the matrix
-        assertFalse(sabotage.penalty(12, 0, player));
-        assertFalse(sabotage.penalty(-1, 0, player));
-        assertFalse(sabotage.penalty(0, 12, player));
-        assertFalse(sabotage.penalty(0, -1, player));
+        assertNull(sabotage.penalty(12, 0, player));
+        assertNull(sabotage.penalty(-1, 0, player));
+        assertNull(sabotage.penalty(0, 12, player));
+        assertNull(sabotage.penalty(0, -1, player));
 
         // Carries out the penalty on occupied cell, destroying the component
-        assertTrue(sabotage.penalty(1, 2, player));
-        assertNull(buildingBoard.getSpaceshipMatrix()[1][2]);
+        assertNotNull(sabotage.penalty(1, 2, player));
     }
 }

@@ -8,6 +8,7 @@ import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
@@ -23,11 +24,8 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
-
-    private GameManager gameManager;
+    
     private Planets planets;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
 
@@ -37,25 +35,11 @@ public class PlanetsController extends EventControllerAbstract {
 
     public PlanetsController(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
     }
 
     // =======================
@@ -64,8 +48,8 @@ public class PlanetsController extends EventControllerAbstract {
 
     @Override
     public void start() throws RemoteException {
-        if(phase.equals("START")){
-            phase = "ASK_FOR_LAND";
+        if(phase.equals(EventPhase.START)){
+            phase = EventPhase.ASK_TO_LAND;
             askForLand();
         }
     }
@@ -79,7 +63,7 @@ public class PlanetsController extends EventControllerAbstract {
      */
     private void askForLand() throws RemoteException,IllegalStateException {
 
-        if (phase.equals("ASK_FOR_LAND")) {
+        if (phase.equals(EventPhase.ASK_TO_LAND)) {
 
             if (currPlayer < activePlayers.size()) {
                 Player player = activePlayers.get(currPlayer);
@@ -89,10 +73,10 @@ public class PlanetsController extends EventControllerAbstract {
                 sender.sendMessage("LandRequest");
                 sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
 
-                phase = "LAND";
+                phase = EventPhase.LAND;
 
             } else {
-                phase = "END";
+                phase = EventPhase.END;
                 end();
             }
         }
@@ -110,7 +94,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDecisionToLand(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
-        if (phase.equals("LAND")) {
+        if (phase.equals(EventPhase.LAND)) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
@@ -121,7 +105,7 @@ public class PlanetsController extends EventControllerAbstract {
                         try {
                             if (planets.getPlanetsTaken()[planetIdx]) {
                                 sender.sendMessage("PlanetAlreadyTaken");
-                                phase = "ASK_FOR_LAND";
+                                phase = EventPhase.ASK_TO_LAND;
 
                             } else {
                                 planets.choosePlanet(player, planetIdx);
@@ -132,7 +116,7 @@ public class PlanetsController extends EventControllerAbstract {
                                 sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                                 sender.sendMessage("AvailableBoxes");
 
-                                phase = "CHOOSE_BOX";
+                                phase = EventPhase.CHOOSE_BOX;
                             }
 
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -140,7 +124,7 @@ public class PlanetsController extends EventControllerAbstract {
                         }
 
                     case "NO":
-                        phase = "ASK_FOR_LAND";
+                        phase = EventPhase.ASK_TO_LAND;
                         currPlayer++;
                         askForLand();
 
@@ -172,7 +156,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
-        if (phase.equals("CHOOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -230,7 +214,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws IllegalStateException
      */
     private void leavePlanet(Player player, Sender sender) throws RemoteException,IllegalStateException {
-        if (phase.equals("CHOOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -239,11 +223,11 @@ public class PlanetsController extends EventControllerAbstract {
                 currPlayer++;
 
                 if (currPlayer < activePlayers.size()) {
-                    phase = "ASK_FOR_LAND";
+                    phase = EventPhase.ASK_TO_LAND;
                     askForLand();
 
                 } else {
-                    phase = "EFFECT";
+                    phase = EventPhase.EFFECT;
                     eventEffect();
                 }
             }
@@ -256,7 +240,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @author Lorenzo
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals("EFFECT")) {
+        if (phase.equals(EventPhase.EFFECT)) {
 
             Board board = gameManager.getGame().getBoard();
 
@@ -288,7 +272,7 @@ public class PlanetsController extends EventControllerAbstract {
                 }
             }
 
-            phase = "END";
+            phase = EventPhase.END;
             end();
         }
     }
@@ -300,7 +284,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

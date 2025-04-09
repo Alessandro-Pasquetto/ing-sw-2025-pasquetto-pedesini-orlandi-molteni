@@ -7,6 +7,7 @@ import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
@@ -22,41 +23,22 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
-
-    private GameManager gameManager;
+    
     private LostStation lostStation;
-    private String phase;
-    private int currPlayer;
     private ArrayList<Player> activePlayers;
-    boolean boxChosen = false;
     private ArrayList<Box> rewardBoxes;
-
-
+    
     // =======================
     // CONSTRUCTORS
     // =======================
 
     public LostStationController(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.phase = "START";
+        this.phase = EventPhase.START;
         this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.lostStation = (LostStation) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    @Override
-    public String getPhase() throws RemoteException {
-        return phase;
-    }
-
-    @Override
-    public Player getCurrPlayer() throws RemoteException {
-        return activePlayers.get(currPlayer);
     }
 
     // =======================
@@ -65,8 +47,10 @@ public class LostStationController extends EventControllerAbstract {
 
     @Override
     public void start() throws RemoteException {
-        phase = "ASK_FOR_LAND";
-        askForLand();
+        if (phase.equals(EventPhase.START)) {
+            phase = EventPhase.ASK_TO_LAND;
+            askForLand();
+        }
     }
 
     /**
@@ -77,7 +61,7 @@ public class LostStationController extends EventControllerAbstract {
      */
     private void askForLand() throws RemoteException,IllegalStateException {
 
-        if(phase.equals("ASK_FOR_LAND")) {
+        if(phase.equals(EventPhase.ASK_TO_LAND)) {
 
             if (currPlayer < activePlayers.size()) {
                 Player player = activePlayers.get(currPlayer);
@@ -86,14 +70,14 @@ public class LostStationController extends EventControllerAbstract {
 
                 if (player.getSpaceship().getCrewCount() >= lostStation.getRequiredCrew()) {
                     sender.sendMessage("LandRequest");
-                    phase = "LAND";
+                    phase = EventPhase.LAND;
 
                 } else {
                     sender.sendMessage("NotEnoughCrew");
                 }
 
             } else {
-                phase = "END";
+                phase = EventPhase.END;
                 end();
             }
         }
@@ -110,7 +94,7 @@ public class LostStationController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException {
-        if (phase.equals("LAND")) {
+        if (phase.equals(EventPhase.LAND)) {
 
             if (player.equals(activePlayers.get(currPlayer))) {
 
@@ -118,7 +102,7 @@ public class LostStationController extends EventControllerAbstract {
 
                 switch(upperCaseDecision) {
                     case "YES":
-                        phase = "CHOOSE_BOX";
+                        phase = EventPhase.CHOOSE_BOX;
                         rewardBoxes = lostStation.getRewardBoxes();
 
                         gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player));
@@ -126,7 +110,7 @@ public class LostStationController extends EventControllerAbstract {
                         sender.sendMessage("LandingCompleted");
 
                     case "NO":
-                        phase = "ASK_FOR_LAND";
+                        phase = EventPhase.ASK_TO_LAND;
                         currPlayer++;
                         askForLand();
 
@@ -158,7 +142,7 @@ public class LostStationController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
-        if (phase.equals("CHOOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -212,7 +196,7 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      */
     public void leaveStation(Player player, Sender sender) throws RemoteException {
-        if (phase.equals("CHOSE_BOX")) {
+        if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to leave
             if (player.equals(activePlayers.get(currPlayer))) {
@@ -241,7 +225,7 @@ public class LostStationController extends EventControllerAbstract {
                     }
                 }
 
-                phase = "END";
+                phase = EventPhase.END;
                 end();
 
             } else {
@@ -260,7 +244,7 @@ public class LostStationController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void end() throws RemoteException {
-        if (phase.equals("END")) {
+        if (phase.equals(EventPhase.END)) {
             gameManager.broadcastGameMessage("This event card is finished");
         }
     }

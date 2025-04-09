@@ -67,11 +67,11 @@ public class SpaceshipController {
      */
     public static void moveBox(GameManager gameManager, Player player, int startY, int startX, int startIdx, int endY, int endX, int endIdx, Sender sender) throws RemoteException {
 
-        String phase = gameManager.getEventController().getPhase();
+        EventPhase phase = gameManager.getEventController().getPhase();
         Player currPlayer = gameManager.getEventController().getCurrPlayer();
 
         // Checks if current player in event card during "CHOOSE_BOX" phase is calling this method
-        if (currPlayer.equals(player) && phase.equals("CHOOSE_BOX")) {
+        if (currPlayer.equals(player) && phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks if start position and end position are the same
             if (startX == endX && startY == endY && startIdx == endIdx) {
@@ -146,11 +146,11 @@ public class SpaceshipController {
      */
     public static void removeBox(GameManager gameManager, Player player, int storageY, int storageX, int idx, Sender sender) throws RemoteException {
 
-        String phase = gameManager.getEventController().getPhase();
+        EventPhase phase = gameManager.getEventController().getPhase();
         Player currPlayer = gameManager.getEventController().getCurrPlayer();
 
         // Checks if current player in event card during "CHOOSE_BOX" phase is calling this method
-        if (currPlayer.equals(player) && phase.equals("CHOOSE_BOX")) {
+        if (currPlayer.equals(player) && phase.equals(EventPhase.CHOOSE_BOX)) {
 
             try {
                 BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[storageY][storageX];
