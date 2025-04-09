@@ -66,6 +66,20 @@ public class BattlezoneController extends EventControllerAbstract {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    @Override
+    public Player getCurrPlayer() throws RemoteException {
+        return activePlayers.get(currPlayer);
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 
@@ -636,7 +650,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
-                if (boxStorage != null && boxStorage.getType().equals(ComponentType.BOX_STORAGE)) {
+                if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
 
                     // Checks if a box has been discarded
                     if (battlezone.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {

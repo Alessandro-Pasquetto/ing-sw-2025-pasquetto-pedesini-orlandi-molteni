@@ -8,6 +8,16 @@ import java.rmi.RemoteException;
 abstract public class EventControllerAbstract {
 
     // =======================
+    // GETTERS
+    // =======================
+
+    abstract public String getPhase() throws RemoteException;
+
+    public Player getCurrPlayer() throws RemoteException {
+        return null;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 

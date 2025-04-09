@@ -38,6 +38,15 @@ public class OpenSpaceController extends EventControllerAbstract {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 

@@ -48,6 +48,20 @@ public class SlaversController extends EventControllerAbstract {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    @Override
+    public Player getCurrPlayer() throws RemoteException {
+        return activePlayers.get(currPlayer);
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 

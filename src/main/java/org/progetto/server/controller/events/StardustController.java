@@ -34,6 +34,15 @@ public class StardustController extends EventControllerAbstract {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 

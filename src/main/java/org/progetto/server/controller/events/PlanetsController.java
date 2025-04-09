@@ -23,13 +23,13 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private GameManager gameManager;
     private Planets planets;
     private String phase;
     private int currPlayer;
     private ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
-
 
     // =======================
     // CONSTRUCTORS
@@ -42,6 +42,20 @@ public class PlanetsController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
+    }
+
+    // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    @Override
+    public Player getCurrPlayer() throws RemoteException {
+        return activePlayers.get(currPlayer);
     }
 
     // =======================

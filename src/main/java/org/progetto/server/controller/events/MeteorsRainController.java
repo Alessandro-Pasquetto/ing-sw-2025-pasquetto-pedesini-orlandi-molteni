@@ -56,6 +56,15 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     // =======================
+    // GETTERS
+    // =======================
+
+    @Override
+    public String getPhase() throws RemoteException {
+        return phase;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 
