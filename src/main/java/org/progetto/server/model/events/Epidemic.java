@@ -101,10 +101,12 @@ public class Epidemic extends EventCard {
 
         boolean[][] visitedCells = new boolean[spaceshipMatrix.length][spaceshipMatrix[0].length];
 
+        int infectedCrew = 0;
+
         for (int i = 0; i < spaceshipMatrix.length; i++) {
             for (int j = 0; j < spaceshipMatrix[i].length; j++) {
 
-                if (spaceshipMatrix[i][j] != null && spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {  // if current component is a housing unit
+                if (spaceshipMatrix[i][j] != null && spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {  // If current component is a housing unit
                     Set<HousingUnit> infectedComponents = new HashSet<>();
 
                     dfsInfectedComponents(i, j, true, null, player.getSpaceship().getBuildingBoard(), visitedCells, infectedComponents);
@@ -122,11 +124,13 @@ public class Epidemic extends EventCard {
                         }
                     }
 
-                    return infectedComponents.size();
+                    infectedCrew += infectedComponents.size();
                 }
 
             }
         }
+
+        return infectedCrew;
     }
 
     // TODO: The controller calls for each player at the same time epidemicResult().

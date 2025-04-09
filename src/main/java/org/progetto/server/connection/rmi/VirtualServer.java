@@ -8,24 +8,44 @@ import java.rmi.RemoteException;
  * Interface to make model's methods visible from RMI client
  */
 public interface VirtualServer extends Remote {
+
     void connect(VirtualClient virtualClient) throws RemoteException;
+
     void createGame(VirtualClient virtualClient, String name, int gameLevel, int numPlayers) throws RemoteException;
+
     void joinGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
+
     void pickHiddenComponent(VirtualClient virtualClient, int idGame) throws RemoteException;
+
     void pickVisibleComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException;
+
     void placeLastComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
+
     void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
+
     void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent) throws RemoteException;
+
     void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException;
+
     void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx) throws RemoteException;
+
     void placeHandComponentAndReady(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
+
     void discardComponent(VirtualClient virtualClient,int idGame) throws RemoteException;
+
     void bookComponent(VirtualClient virtualClient,int idGame, int idx) throws RemoteException;
+
     void pickBookedComponent(VirtualClient virtualClient,int idGame, int idx) throws RemoteException;
+
     void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, int deckIdx) throws RemoteException;
+
     void putDownEventCardDeck(VirtualClient virtualClient, int idGame) throws RemoteException;
+
     void destroyComponent(VirtualClient virtualClient, int idGame, int yComponent, int xComponent) throws RemoteException;
+
     void playerReady(VirtualClient virtualClient, int idGame) throws RemoteException;
+
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
+
     void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
 }
