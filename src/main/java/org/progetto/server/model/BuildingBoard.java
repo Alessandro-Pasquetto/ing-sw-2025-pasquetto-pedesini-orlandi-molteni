@@ -1021,7 +1021,10 @@ public class BuildingBoard {
      * @param xComponent coordinate
      * @param yComponent coordinate
      */
-    public void keepSpaceshipPart(int xComponent, int yComponent){
+    public void keepSpaceshipPart(int xComponent, int yComponent) throws IllegalStateException{
+
+        if(xComponent < 0 || xComponent >= boardMask[0].length || yComponent < 0 || yComponent >= boardMask.length)
+            throw new IllegalStateException("NotValidCoordinates");
 
         boolean[][] visited = new boolean[boardMask.length][boardMask[0].length];
 

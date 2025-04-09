@@ -2,13 +2,34 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.components.*;
+
+import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BuildingBoardTest {
 
     @BeforeEach
     void setUp() {
+    }
+
+    private void printBoard(BuildingBoard buildingBoard){
+        System.out.println();
+        System.out.printf("%-20s", "-");
+        for (int i = 0; i < 5; i++) {
+            System.out.printf("%-20s", 5 + i);
+        }
+        for (int i = 0; i < buildingBoard.getSpaceshipMatrix().length; i++) {
+            System.out.println();
+            System.out.printf("%-20s", 5 + i);
+            for (int j = 0; j < buildingBoard.getSpaceshipMatrix()[0].length; j++) {
+                String value = (buildingBoard.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrix()[i][j].getRotation();
+                System.out.printf("%-20s", value);
+            }
+        }
+        System.out.println();
     }
 
     @Test
@@ -678,26 +699,7 @@ class BuildingBoardTest {
 
         int[][] mask = buildingBoard.getBoardMask();
 
-//        for (int i = 0; i < mask.length; i++) {
-//            System.out.println();
-//            for (int j = 0; j < mask[i].length; j++) {
-//                System.out.printf("%-5s", mask[i][j] + " ");
-//            }
-//        }
-//        System.out.println();
-
-//        for (int i = 0; i < spaceshipMatrix.length; i++) {
-//            System.out.println();
-//            for (int j = 0; j < spaceshipMatrix[0].length; j++) {
-//                String value = (spaceshipMatrix[i][j] == null) ? "NULL" : spaceshipMatrix[i][j].getType().toString() + "-" + spaceshipMatrix[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-//
-//        System.out.println(buildingBoard.checkShipValidity());
+        //printBoard(buildingBoard);
 
         assertFalse(buildingBoard.checkStartShipValidity());
 
@@ -751,10 +753,6 @@ class BuildingBoardTest {
     }
 
     @Test
-    void printBoard() {
-    }
-
-    @Test
     void initSpaceshipParams(){
         Spaceship spaceship = new Spaceship(2,1);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -788,22 +786,7 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(1, 3, 0);
 
-        /*
-        System.out.println();
-        System.out.printf("%-20s", "-");
-        for (int i = 0; i < 5; i++) {
-            System.out.printf("%-20s", 5 + i);
-        }
-        for (int i = 0; i < buildingBoard.getSpaceshipMatrix().length; i++) {
-               System.out.println();
-            System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard.getSpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrix()[i][j].getRotation();
-                System.out.printf("%-20s", value);
-            }
-        }
-        System.out.println();
-         */
+        //printBoard(buildingBoard);
 
         assertTrue(buildingBoard.checkStartShipValidity());
 
@@ -862,7 +845,7 @@ class BuildingBoardTest {
 
         assertEquals(4, spaceship.getCrewCount());
 
-        buildingBoard.destroyComponent( 21, 13);
+        buildingBoard.destroyComponent( 3, 1);
 
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
@@ -908,20 +891,7 @@ class BuildingBoardTest {
         buildingBoard2.placeComponent(1, 3, 0);
 
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.printf("%-20s", 5 + i);
-//        }
-//        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
+        //printBoard(buildingBoard2);
 
         assertFalse(buildingBoard2.initSpaceshipParams());
 
@@ -932,7 +902,7 @@ class BuildingBoardTest {
 
         assertTrue(hu.getHasPurpleAlien());
 
-        buildingBoard2.destroyComponent(1, 4);
+        buildingBoard2.destroyComponent(4, 1);
 
         assertTrue(buildingBoard2.checkShipValidityAndTryToFix());
 
@@ -940,19 +910,80 @@ class BuildingBoardTest {
 
         assertFalse(hu.getHasPurpleAlien());
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.printf("%-20s", 5 + i);
-//        }
-//        for (int i = 0; i < buildingBoard2.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < buildingBoard2.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (buildingBoard2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard2.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
+        //printBoard(buildingBoard2);
+    }
+
+
+    @Test
+    void keepSpaceshipPart() throws RemoteException {
+
+
+        // TEST DISCONNECTED COMPONENTS
+
+        Player player = new Player("a", 1, 2);
+
+        Spaceship spaceship = player.getSpaceship();
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        // Cannon
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 1, 0);
+
+        // HousingUnit
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 3, 3, 3}, "imgPath", 2));
+        buildingBoard.placeComponent(4, 1, 1);
+
+        // Engine
+        buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        buildingBoard.placeComponent(3, 3, 0);
+
+        // DoubleEngine
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        buildingBoard.placeComponent(4, 3, 0);
+
+        // Shields (x2)
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(5, 3, 1);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 3);
+
+        // BatteryStorage
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+        buildingBoard.placeComponent(2, 3, 0);
+
+        // DoubleCannon
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(1, 3, 0);
+
+        assertTrue(buildingBoard.initSpaceshipParams());
+
+        assertEquals(4, spaceship.getCrewCount());
+
+        //printBoard(buildingBoard);
+
+
+        // Destroy
+        buildingBoard.destroyComponent(3, 2);
+
+        assertFalse(buildingBoard.checkShipValidityAndTryToFix());
+
+        SpaceshipController.chooseSpaceshipPartToKeep(null, player, 2, 3, null);
+
+        //printBoard(buildingBoard);
+
+
+        // Destroy
+        buildingBoard.destroyComponent(3, 3);
+
+        assertFalse(buildingBoard.checkShipValidityAndTryToFix());
+
+        //printBoard(buildingBoard);
+
+        SpaceshipController.chooseSpaceshipPartToKeep(null, player, 4, 3, null);
+
+        //printBoard(buildingBoard);
+
+        assertEquals(3, spaceship.getExposedConnectorsCount());
     }
 }

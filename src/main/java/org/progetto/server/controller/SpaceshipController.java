@@ -217,6 +217,15 @@ public class SpaceshipController {
     public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-        buildingBoard.keepSpaceshipPart(xComponent, yComponent);
+
+        try{
+            buildingBoard.keepSpaceshipPart(xComponent, yComponent);
+
+            //todo notificare spaceship
+            //gameManager.broadcastGameMessageToOthers();
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotValidCoordinates"))
+                sender.sendMessage("NotValidCoordinates");
+        }
     }
 }
