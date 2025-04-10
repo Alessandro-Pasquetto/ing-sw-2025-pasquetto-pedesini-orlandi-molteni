@@ -1,11 +1,10 @@
 package org.progetto.client.connection.rmi;
 
 import org.progetto.client.connection.Sender;
-import org.progetto.client.connection.socket.SocketWriter;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.messages.toServer.PlaceHandComponentAndReadyMessage;
 import org.progetto.server.connection.rmi.VirtualServer;
+import org.progetto.server.model.components.Box;
 
 import java.io.IOException;
 import java.rmi.Naming;
@@ -200,7 +199,7 @@ public class RmiClientSender implements Sender {
     @Override
     public void destroyComponent(int yComponent, int xComponent){
         try {
-            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(),yComponent,xComponent);
+            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yComponent,xComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -240,6 +239,114 @@ public class RmiClientSender implements Sender {
         try {
             PageController.switchScene("connection.fxml", "Page1");
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseHowManyDoubleCannons(int howManyWantToUse) {
+        try {
+            server.responseHowManyDoubleCannons(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseHowManyDoubleEngines(int howManyWantToUse) {
+        try {
+            server.responseHowManyDoubleEngines(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage) {
+        try {
+            server.responseBatteryToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBatteryStorage, yBatteryStorage);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseCrewToDiscard(int xHousingUnit, int yHousingUnit) {
+        try {
+            server.responseCrewToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xHousingUnit, yHousingUnit);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx) {
+        try {
+            server.responseBoxToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBoxStorage, yBoxStorage, idx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseChooseToUseShield(String response) {
+        try {
+            server.responseChooseToUseShield(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseAcceptRewardCreditsAndPenalties(String response) {
+        try {
+            server.responseAcceptRewardCreditsAndPenalties(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseLandRequest(String response) {
+        try {
+            server.responseLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseAcceptRewardCreditsAndPenaltyDays(String response) {
+        try {
+            server.responseAcceptRewardCreditsAndPenaltyDays(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponsePlanetLandRequest(String response, int idx) {
+        try {
+            server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response, idx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseRewardBox(Box box, int xBoxStorage, int yBoxStorage, int idx) {
+        try {
+            server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), box, xBoxStorage, yBoxStorage, idx);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void ResponseUseDoubleCannonRequest(String response, int idx) {
+        try {
+            server.responseUseDoubleCannonRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response, idx);
+        } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,5 +1,10 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.model.components.Box;
+
+import java.rmi.RemoteException;
+
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
@@ -42,4 +47,28 @@ public interface Sender {
     void rollDice();
 
     void close();
+
+    void ResponseHowManyDoubleCannons(int howManyWantToUse);
+
+    void ResponseHowManyDoubleEngines(int howManyWantToUse);
+
+    void ResponseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage);
+
+    void ResponseCrewToDiscard(int xHousingUnit, int yHousingUnit);
+
+    void ResponseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx);
+
+    void ResponseChooseToUseShield(String response);
+
+    void ResponseAcceptRewardCreditsAndPenalties(String response);
+
+    void ResponseLandRequest(String response);
+
+    void ResponseAcceptRewardCreditsAndPenaltyDays(String response);
+
+    void ResponsePlanetLandRequest(String response, int idx);
+
+    void ResponseRewardBox(Box box, int xBoxStorage, int yBoxStorage, int idx);
+
+    void ResponseUseDoubleCannonRequest(String response, int idx);
 }

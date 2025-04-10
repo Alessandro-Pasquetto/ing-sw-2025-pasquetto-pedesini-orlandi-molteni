@@ -1,6 +1,8 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.model.components.Box;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -48,4 +50,28 @@ public interface VirtualServer extends Remote {
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
+
+    void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
+
+    void responseHowManyDoubleEngines(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
+
+    void responseBatteryToDiscard(VirtualClient virtualClient, int idGame, int xBatteryStorage, int yBatteryStorage) throws RemoteException;
+
+    void responseCrewToDiscard(VirtualClient virtualClient, int idGame, int xHousingUnit, int yHousingUnit) throws RemoteException;
+
+    void responseBoxToDiscard(VirtualClient virtualClient, int idGame, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException;
+
+    void responseChooseToUseShield(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
+
+    void responseAcceptRewardCreditsAndPenalties(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
+
+    void responseLandRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
+
+    void responseAcceptRewardCreditsAndPenaltyDays(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
+
+    void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, String response, int idx) throws RemoteException;
+
+    void responseRewardBox(VirtualClient virtualClient, int idGame, Box box, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException;
+
+    void responseUseDoubleCannonRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
 }
