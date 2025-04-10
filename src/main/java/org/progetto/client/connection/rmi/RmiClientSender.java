@@ -258,7 +258,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseHowManyDoubleCannons(int howManyWantToUse) {
+    public void responseHowManyDoubleCannons(int howManyWantToUse) {
         try {
             server.responseHowManyDoubleCannons(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
         } catch (RemoteException e) {
@@ -267,7 +267,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseHowManyDoubleEngines(int howManyWantToUse) {
+    public void responseHowManyDoubleEngines(int howManyWantToUse) {
         try {
             server.responseHowManyDoubleEngines(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
         } catch (RemoteException e) {
@@ -276,7 +276,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage) {
+    public void responseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage) {
         try {
             server.responseBatteryToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBatteryStorage, yBatteryStorage);
         } catch (RemoteException e) {
@@ -285,7 +285,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseCrewToDiscard(int xHousingUnit, int yHousingUnit) {
+    public void responseCrewToDiscard(int xHousingUnit, int yHousingUnit) {
         try {
             server.responseCrewToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xHousingUnit, yHousingUnit);
         } catch (RemoteException e) {
@@ -294,7 +294,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx) {
+    public void responseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx) {
         try {
             server.responseBoxToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBoxStorage, yBoxStorage, idx);
         } catch (RemoteException e) {
@@ -303,7 +303,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseChooseToUseShield(String response) {
+    public void responseChooseToUseShield(String response) {
         try {
             server.responseChooseToUseShield(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
@@ -312,7 +312,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseAcceptRewardCreditsAndPenalties(String response) {
+    public void responseAcceptRewardCreditsAndPenalties(String response) {
         try {
             server.responseAcceptRewardCreditsAndPenalties(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
@@ -321,7 +321,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseLandRequest(String response) {
+    public void responseLandRequest(String response) {
         try {
             server.responseLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
@@ -330,7 +330,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseAcceptRewardCreditsAndPenaltyDays(String response) {
+    public void responseAcceptRewardCreditsAndPenaltyDays(String response) {
         try {
             server.responseAcceptRewardCreditsAndPenaltyDays(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
@@ -339,7 +339,7 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponsePlanetLandRequest(String response, int idx) {
+    public void responsePlanetLandRequest(String response, int idx) {
         try {
             server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response, idx);
         } catch (RemoteException e) {
@@ -348,18 +348,18 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void ResponseRewardBox(Box box, int xBoxStorage, int yBoxStorage, int idx) {
+    public void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx) {
         try {
-            server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), box, xBoxStorage, yBoxStorage, idx);
+            server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), idxBox, xBoxStorage, yBoxStorage, idx);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void ResponseUseDoubleCannonRequest(String response, int idx) {
+    public void responseUseDoubleCannonRequest(String response) {
         try {
-            server.responseUseDoubleCannonRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response, idx);
+            server.responseUseDoubleCannonRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

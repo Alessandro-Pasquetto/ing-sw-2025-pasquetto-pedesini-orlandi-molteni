@@ -10,7 +10,7 @@ public class ResponseRewardBoxMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Box box;
+    private int idxBox;
     private int xBoxStorage;
     private int yBoxStorage;
     private int idx;
@@ -19,8 +19,8 @@ public class ResponseRewardBoxMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public ResponseRewardBoxMessage(Box box, int xBoxStorage, int yBoxStorage, int idx) {
-        this.box = box;
+    public ResponseRewardBoxMessage(int idxBox, int xBoxStorage, int yBoxStorage, int idx) {
+        this.idxBox = idxBox;
         this.xBoxStorage = xBoxStorage;
         this.yBoxStorage = yBoxStorage;
         this.idx = idx;
@@ -30,7 +30,7 @@ public class ResponseRewardBoxMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public Box getBox() { return box; }
+    public int getIdxBox() { return idxBox; }
 
     public int getXBoxStorage() { return xBoxStorage; }
 

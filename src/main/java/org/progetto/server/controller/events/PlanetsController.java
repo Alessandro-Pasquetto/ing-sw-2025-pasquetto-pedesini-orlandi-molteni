@@ -158,14 +158,14 @@ public class PlanetsController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player that choose the box
-     * @param box chosen
+     * @param idxBox chosen
      * @param y coordinate of the component were the box will be placed
      * @param x coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveRewardBox(Player player, int idxBox, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
@@ -174,6 +174,7 @@ public class PlanetsController extends EventControllerAbstract {
                 try {
                     Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                     BoxStorage storage = (BoxStorage) matrix[y][x];
+                    Box box = rewardBoxes.get(idxBox);
 
                     // Checks box chosen is contained in rewards list
                     if (rewardBoxes.contains(box)) {

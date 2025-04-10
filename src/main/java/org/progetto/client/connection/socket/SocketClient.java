@@ -1,14 +1,17 @@
 package org.progetto.client.connection.socket;
 
 import org.progetto.client.connection.Sender;
+import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toServer.*;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.Box;
 
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.rmi.RemoteException;
 
 /**
  * Handles the invocation of methods on the server
@@ -138,8 +141,8 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void destroyComponent(int yComponent, int xComponent){
-        SocketWriter.sendMessage(new DestroyComponentMessage(yComponent,xComponent));
+    public void destroyComponent(int yComponent, int xComponent) {
+        SocketWriter.sendMessage(new DestroyComponentMessage(yComponent, xComponent));
     }
 
     @Override
@@ -186,5 +189,65 @@ public class SocketClient implements Sender {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void responseHowManyDoubleCannons(int howManyWantToUse) {
+        SocketWriter.sendMessage(new ResponseHowManyDoubleCannonsMessage(howManyWantToUse));
+    }
+
+    @Override
+    public void responseHowManyDoubleEngines(int howManyWantToUse) {
+        SocketWriter.sendMessage(new ResponseHowManyDoubleEnginesMessage(howManyWantToUse));
+    }
+
+    @Override
+    public void responseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage) {
+        SocketWriter.sendMessage(new ResponseBatteryToDiscardMessage(xBatteryStorage, yBatteryStorage));
+    }
+
+    @Override
+    public void responseCrewToDiscard(int xHousingUnit, int yHousingUnit) {
+        SocketWriter.sendMessage(new ResponseCrewToDiscardMessage(xHousingUnit, yHousingUnit));
+    }
+
+    @Override
+    public void responseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx) {
+        SocketWriter.sendMessage(new ResponseBoxToDiscardMessage(xBoxStorage, yBoxStorage, idx));
+    }
+
+    @Override
+    public void responseChooseToUseShield(String response) {
+        SocketWriter.sendMessage(new ResponseChooseToUseShieldMessage(response));
+    }
+
+    @Override
+    public void responseAcceptRewardCreditsAndPenalties(String response) {
+        SocketWriter.sendMessage(new ResponseAcceptRewardCreditsAndPenaltiesMessage(response));
+    }
+
+    @Override
+    public void responseLandRequest(String response) {
+        SocketWriter.sendMessage(new ResponseLandRequestMessage(response));
+    }
+
+    @Override
+    public void responseAcceptRewardCreditsAndPenaltyDays(String response) {
+        SocketWriter.sendMessage(new ResponseAcceptRewardCreditsAndPenaltyDaysMessage(response));
+    }
+
+    @Override
+    public void responsePlanetLandRequest(String response, int idx) {
+        SocketWriter.sendMessage(new ResponsePlanetLandRequestMessage(response, idx));
+    }
+
+    @Override
+    public void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx) {
+        SocketWriter.sendMessage(new ResponseRewardBoxMessage(idxBox, xBoxStorage, yBoxStorage, idx));
+    }
+
+    @Override
+    public void responseUseDoubleCannonRequest(String response) {
+        SocketWriter.sendMessage(new ResponseUseDoubleCannonRequestMessage(response));
     }
 }

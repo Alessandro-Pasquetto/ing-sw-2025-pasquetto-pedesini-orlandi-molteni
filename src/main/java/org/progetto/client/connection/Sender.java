@@ -52,27 +52,27 @@ public interface Sender {
 
     void close();
 
-    void ResponseHowManyDoubleCannons(int howManyWantToUse);
+    void responseHowManyDoubleCannons(int howManyWantToUse);
 
-    void ResponseHowManyDoubleEngines(int howManyWantToUse);
+    void responseHowManyDoubleEngines(int howManyWantToUse);
 
-    void ResponseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage);
+    void responseBatteryToDiscard(int xBatteryStorage, int yBatteryStorage);
 
-    void ResponseCrewToDiscard(int xHousingUnit, int yHousingUnit);
+    void responseCrewToDiscard(int xHousingUnit, int yHousingUnit);
 
-    void ResponseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx);
+    void responseBoxToDiscard(int xBoxStorage, int yBoxStorage, int idx);
 
-    void ResponseChooseToUseShield(String response);
+    void responseChooseToUseShield(String response);
 
-    void ResponseAcceptRewardCreditsAndPenalties(String response);
+    void responseAcceptRewardCreditsAndPenalties(String response);
 
-    void ResponseLandRequest(String response);
+    void responseLandRequest(String response);
 
-    void ResponseAcceptRewardCreditsAndPenaltyDays(String response);
+    void responseAcceptRewardCreditsAndPenaltyDays(String response);
 
-    void ResponsePlanetLandRequest(String response, int idx);
+    void responsePlanetLandRequest(String response, int idx);
 
-    void ResponseRewardBox(Box box, int xBoxStorage, int yBoxStorage, int idx);
+    void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
 
-    void ResponseUseDoubleCannonRequest(String response, int idx);
+    void responseUseDoubleCannonRequest(String response);
 }

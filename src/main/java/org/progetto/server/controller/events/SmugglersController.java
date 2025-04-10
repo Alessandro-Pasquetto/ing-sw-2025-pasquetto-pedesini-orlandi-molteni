@@ -460,7 +460,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException {
+    public void receiveRewardBox(Player player, int idxBox, int y, int x, int idx, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -468,6 +468,7 @@ public class SmugglersController extends EventControllerAbstract {
                 try {
                     Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                     BoxStorage storage = (BoxStorage) matrix[y][x];
+                    Box box = rewardBoxes.get(idxBox);
 
                     // Checks box chosen is contained in rewards list
                     if (rewardBoxes.contains(box)) {
