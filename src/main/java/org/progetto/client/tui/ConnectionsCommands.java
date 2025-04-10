@@ -26,7 +26,6 @@ public class ConnectionsCommands {
         GameData.getSender().connect(ip, port);
     }
 
-
     /**
      * Enable to create a game, usage : CreateGame playerName
      *
@@ -50,7 +49,4 @@ public class ConnectionsCommands {
         GameData.setNamePlayer(commandParts[2]);
         GameData.getSender().tryJoinToGame(Integer.parseInt(commandParts[1]));
     }
-
-
-
 }

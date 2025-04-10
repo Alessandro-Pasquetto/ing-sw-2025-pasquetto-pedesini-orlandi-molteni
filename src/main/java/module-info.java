@@ -39,4 +39,6 @@ module org.progetto{
     exports org.progetto.messages.toClient.Building;
     exports org.progetto.client.tui;
     opens org.progetto.client.tui to com.google.gson, javafx.fxml;
+    exports org.progetto.server;
+    opens org.progetto.server to com.google.gson, javafx.fxml;
 }

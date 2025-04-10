@@ -3,13 +3,10 @@ package org.progetto.client.tui;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.model.GameData;
-import org.progetto.server.controller.SpaceshipController;
 
 import java.util.Scanner;
 
 public class TuiCommandFilter {
-
-
 
     // =======================
     // OTHER METHODS
@@ -49,7 +46,6 @@ public class TuiCommandFilter {
            handleCommand(command);
        }
 
-
        GameData.getSender().close();
    }
 
@@ -60,7 +56,6 @@ public class TuiCommandFilter {
             System.out.println("Invalid command format");
             return false;
         }
-
    }
 
    public static String requestNotEmptyData(String request){
@@ -218,7 +213,6 @@ public class TuiCommandFilter {
                    return;
                GameCommands.showSpaceship(commandParts);
                break;
-
 
            default:
                System.out.println("Command not found");

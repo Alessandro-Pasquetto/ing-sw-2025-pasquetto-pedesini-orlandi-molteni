@@ -14,6 +14,7 @@ public class GameCommands {
     // =======================
     // PRINTING
     // =======================
+
     public static void printShipStatus(Spaceship ship) {
 
         Component[][] spaceshipMatrix = ship.getBuildingBoard().getSpaceshipMatrix();
@@ -77,7 +78,6 @@ public class GameCommands {
             default -> "?";
         };
     }
-
 
 
     // =======================

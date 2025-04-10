@@ -32,7 +32,7 @@ public class SpaceshipController {
      * @param player owner of the spaceship requested
      * @throws RemoteException
      */
-    public static void showSpaceship(GameManager gameManager,String player, Sender sender) throws RemoteException {
+    public static void showSpaceship(GameManager gameManager, String player, Sender sender) throws RemoteException {
 
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
@@ -40,7 +40,6 @@ public class SpaceshipController {
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))
                 sender.sendMessage("PlayerNameNotFound");
-
         }
     }
 

@@ -1,17 +1,12 @@
 package org.progetto.client.connection.socket;
 
 import org.progetto.client.connection.Sender;
-import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toServer.*;
-import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Box;
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.rmi.RemoteException;
 
 /**
  * Handles the invocation of methods on the server

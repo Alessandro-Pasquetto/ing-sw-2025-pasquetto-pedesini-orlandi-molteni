@@ -1,4 +1,4 @@
-package org.progetto.server.connection;
+package org.progetto.server;
 
 import org.progetto.server.connection.rmi.RmiServer;
 import org.progetto.server.connection.socket.SocketServer;

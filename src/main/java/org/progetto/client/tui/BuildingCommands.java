@@ -384,7 +384,6 @@ public class BuildingCommands {
         sender.rollDice();
     }
 
-
     /**
      * Enables to close the connection with the server
      * usage : Close

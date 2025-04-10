@@ -39,7 +39,7 @@ public class SocketListener extends Thread {
                 else
                     handlerGameMessages(messageObj);
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -93,7 +93,7 @@ public class SocketListener extends Thread {
         }
     }
 
-    private void handlerGameMessages(Object messageObj) throws RemoteException {
+    private void handlerGameMessages(Object messageObj) throws RemoteException, InterruptedException {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
         GameManager gameManager = clientHandler.getGameManager();
         Game game = gameManager.getGame();
@@ -173,17 +173,20 @@ public class SocketListener extends Thread {
                 else if (messageObj instanceof BookComponentMessage bookComponentMessage) {
                     int idx = bookComponentMessage.getBookIdx();
                     BuildingController.bookComponent(gameManager, player, idx, socketWriter);
+                }
 
-                } else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
+                else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
                     int idx = bookedComponentMessage.getIdx();
                     BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
+                }
 
-                } else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {
+                else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {
                     int x = destroyComponentMessage.getX();
                     int y = destroyComponentMessage.getY();
                     SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
+                }
 
-                }else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
                     SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
                 }

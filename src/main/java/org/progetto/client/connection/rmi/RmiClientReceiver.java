@@ -3,7 +3,6 @@ package org.progetto.client.connection.rmi;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 

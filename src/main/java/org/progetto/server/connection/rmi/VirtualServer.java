@@ -47,7 +47,8 @@ public interface VirtualServer extends Remote {
 
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
 
-    void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
+    void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException, InterruptedException;
+
     void showSpaceship(VirtualClient virtualClient,int idGame, String owner) throws RemoteException;
 
     void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
@@ -70,7 +71,7 @@ public interface VirtualServer extends Remote {
 
     void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, String response, int idx) throws RemoteException;
 
-    void responseRewardBox(VirtualClient virtualClient, int idGame, int box, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException;
+    void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException;
 
     void responseUseDoubleCannonRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
 }

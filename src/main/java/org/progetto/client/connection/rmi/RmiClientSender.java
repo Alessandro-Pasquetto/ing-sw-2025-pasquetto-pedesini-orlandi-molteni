@@ -228,7 +228,7 @@ public class RmiClientSender implements Sender {
     public void rollDice() {
         try {
             server.rollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
-        } catch (RemoteException e) {
+        } catch (RemoteException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
