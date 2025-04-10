@@ -3,14 +3,15 @@ package org.progetto.client.connection;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.BuildingCommands;
+import org.progetto.client.tui.EventCommands;
 import org.progetto.client.tui.GameCommands;
+import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
-import org.progetto.messages.toClient.GameInfoMessage;
-import org.progetto.messages.toClient.GameListMessage;
-import org.progetto.messages.toClient.NotifyNewGameMessage;
+import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
+import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Spaceship.RequestedSpaceshipMessage;
 import java.util.ArrayList;
 
@@ -65,6 +66,43 @@ public class TuiHandlerMessage {
             GameCommands.printShipStatus(requestedSpaceshipMessage.getSpaceship());
         }
 
+        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
+            EventCommands.responseHowManyDoubleCannons(
+                    howManyDoubleCannonsMessage.getFirePowerRequired(),
+                    howManyDoubleCannonsMessage.getMaxUsable()
+                    );
+        }
+
+        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
+            EventCommands.responseHowManyDoubleEngines(howManyDoubleEnginesMessage.getMaxUsable());
+        }
+
+        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
+            EventCommands.responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
+        }
+
+        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
+            EventCommands.responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
+        }
+
+        else if(messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
+            EventCommands.responseBoxToDiscard(boxToDiscardMessage.getBoxToDiscard());
+        }
+
+        else if(messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
+            EventCommands.responseAcceptRewardCreditsAndPenalties(
+                    acceptRewardCreditsAndPenaltiesMessage.getRewardCredits(),
+                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays(),
+                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew()
+            );
+        }
+
+        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
+            EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());
+        }
+
+
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
@@ -96,6 +134,43 @@ public class TuiHandlerMessage {
 
                 case "PlayerNameNotFound":
                     System.out.println("Unable to find player");
+                    break;
+
+                case "AskToUseShield":
+                    EventCommands.responseChooseToUseShield();
+                    break;
+
+                case "AskToUseDoubleCannon":
+                    EventCommands.responseUseDoubleCannonRequest();
+                    break;
+
+                case "LandRequest":
+                    EventCommands.responseLandRequest();
+                    break;
+
+                case "NotYourTurn":
+                    System.out.println("Not your turn!");
+                    break;
+
+                case "IncorrectPhase":
+                    System.out.println("Can't call,incorrect phase!");
+                    break;
+
+                case "NotEnoughBatteries":
+                    System.out.println("Not enough batteries!");
+                    break;
+
+                case "InvalidCoordinates":
+                    System.out.println("Invalid coordinates!");
+                    break;
+
+                case "BatteryDiscarded":
+                    System.out.println("Battery discarded");
+                    break;
+
+                case "YouAreSafe":
+                    System.out.println("You are safe");
+                    break;
 
                 default:
                     System.out.println(messageString);

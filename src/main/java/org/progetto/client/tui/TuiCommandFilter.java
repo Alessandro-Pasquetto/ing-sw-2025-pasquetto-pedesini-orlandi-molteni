@@ -189,7 +189,6 @@ public class TuiCommandFilter {
                BuildingCommands.readyPlayer(commandParts);
                break;
 
-
            case "TimerReset":
                if (!isValidCommand(commandParts.length, 1))
                    return;
