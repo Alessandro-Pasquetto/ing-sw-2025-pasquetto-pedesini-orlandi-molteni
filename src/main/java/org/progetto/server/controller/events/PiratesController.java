@@ -498,6 +498,16 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Receives player's decision about the usage of a shield
+     *
+     * @author Gabriele
+     * @param player
+     * @param response
+     * @param sender
+     * @throws RemoteException
+     * @throws InterruptedException
+     */
     public synchronized void receiveShieldDecision(Player player, String response, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SHIELD_DECISION)) {
 
