@@ -1,8 +1,6 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.server.model.components.Box;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -50,6 +48,7 @@ public interface VirtualServer extends Remote {
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
+    void showSpaceship(VirtualClient virtualClient,int idGame, String owner) throws RemoteException;
 
     void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
 

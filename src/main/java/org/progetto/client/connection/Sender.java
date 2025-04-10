@@ -5,6 +5,8 @@ import org.progetto.server.model.components.Box;
 
 import java.rmi.RemoteException;
 
+import org.progetto.server.model.Player;
+
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
@@ -14,7 +16,7 @@ public interface Sender {
 
     void pickHiddenComponent();
 
-    void pickVisibleComponent();
+    void pickVisibleComponent(int idx);
 
     void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 
@@ -45,6 +47,8 @@ public interface Sender {
     void resetTimer();
 
     void rollDice();
+
+    void showSpaceship(String owner);
 
     void close();
 

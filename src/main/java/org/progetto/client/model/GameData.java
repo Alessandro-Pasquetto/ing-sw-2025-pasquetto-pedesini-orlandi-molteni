@@ -15,6 +15,7 @@ public class GameData {
     private static Sender sender;
     private static int idGame;
     private static String namePlayer;
+    private static String UIType;
 
     // =======================
     // GETTERS
@@ -32,6 +33,10 @@ public class GameData {
         return namePlayer;
     }
 
+    public static String getUIType(){
+        return UIType;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -46,5 +51,9 @@ public class GameData {
 
     public static void setNamePlayer(String namePlayer){
         GameData.namePlayer = namePlayer;
+    }
+
+    public static void setUIType(String UIType){
+        GameData.UIType = UIType;
     }
 }

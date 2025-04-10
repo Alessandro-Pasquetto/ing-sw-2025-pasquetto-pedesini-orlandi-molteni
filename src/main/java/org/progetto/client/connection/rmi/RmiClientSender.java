@@ -4,6 +4,7 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.server.connection.rmi.VirtualServer;
+import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 
 import java.io.IOException;
@@ -27,7 +28,8 @@ public class RmiClientSender implements Sender {
             server.connect(RmiClientReceiver.getInstance());
 
             System.out.println("Connected to the RMIServer");
-            PageController.switchScene("chooseGame.fxml", "ChooseGame");
+            if(GameData.getUIType().equals("GUI"))
+                PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
         } catch (Exception e) {
             System.out.println("Error connecting to the RMI server");
@@ -38,7 +40,6 @@ public class RmiClientSender implements Sender {
 
     @Override
     public void createGame() {
-        System.out.println("You have created a new game");
         try{
             server.createGame(RmiClientReceiver.getInstance(), GameData.getNamePlayer(), 1, 4);
         } catch (RemoteException e) {
@@ -65,9 +66,9 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void pickVisibleComponent(){
+    public void pickVisibleComponent(int idx){
         try {
-            server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), -1); // non so dove pescare l'idx :C
+            server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -199,7 +200,7 @@ public class RmiClientSender implements Sender {
     @Override
     public void destroyComponent(int yComponent, int xComponent){
         try {
-            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yComponent,xComponent);
+            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(),yComponent,xComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -233,11 +234,24 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void showSpaceship(String owner){
+        try{
+            server.showSpaceship(RmiClientReceiver.getInstance(),GameData.getIdGame(),owner);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    @Override
     public void close() {
         server = null;
         System.out.println("You have disconnected!");
+
         try {
-            PageController.switchScene("connection.fxml", "Page1");
+            if(GameData.getUIType().equals("GUI"))
+                PageController.switchScene("connection.fxml", "Page1");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

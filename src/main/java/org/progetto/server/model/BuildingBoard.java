@@ -1,5 +1,6 @@
 package org.progetto.server.model;
 
+import java.io.Serializable;
 import java.util.*;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.loading.MaskMatrix;
@@ -8,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class BuildingBoard {
+public class BuildingBoard implements Serializable {
 
     // =======================
     // ATTRIBUTES

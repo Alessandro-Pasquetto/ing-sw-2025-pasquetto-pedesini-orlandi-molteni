@@ -4,11 +4,13 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.BuildingCommands;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.server.controller.BuildingController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,10 +18,10 @@ import java.util.ArrayList;
 /**
  * Handles messages coming from server
  */
-public class HandlerMessage {
+public class GuiHandlerMessage {
 
     /**
-     * Method that handles the messages coming from the server
+     * Method that handles the messages coming from the server updating the GUI
      *
      * @param messageObj the message that has arrived
      */

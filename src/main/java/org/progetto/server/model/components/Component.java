@@ -1,6 +1,8 @@
 package org.progetto.server.model.components;
 
-public class Component {
+import java.io.Serializable;
+
+public class Component implements Serializable {
 
     // =======================
     // ATTRIBUTES

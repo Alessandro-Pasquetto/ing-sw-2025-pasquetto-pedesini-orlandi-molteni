@@ -1,6 +1,8 @@
 package org.progetto.server.model;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
 
     // =======================
     // ATTRIBUTES

@@ -367,4 +367,12 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         gameManager.getEventController().rollDice(player, virtualClient);
     }
+
+    @Override
+    public void showSpaceship(VirtualClient virtualClient,int idGame, String owner) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        SpaceshipController.showSpaceship(gameManager, owner, virtualClient);
+
+    }
+
 }

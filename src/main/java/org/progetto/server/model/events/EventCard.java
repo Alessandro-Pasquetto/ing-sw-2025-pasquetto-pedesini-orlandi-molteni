@@ -1,7 +1,8 @@
 package org.progetto.server.model.events;
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class EventCard {
+public abstract class EventCard implements Serializable {
 
     // =======================
     // ATTRIBUTES

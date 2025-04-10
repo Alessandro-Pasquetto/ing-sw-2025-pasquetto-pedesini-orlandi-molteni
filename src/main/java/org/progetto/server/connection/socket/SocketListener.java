@@ -170,7 +170,7 @@ public class SocketListener extends Thread {
                     BuildingController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter);
                 }
 
-                else if (messageObj instanceof BookComponentMessage bookComponentMessage) {      //handle incoming book message
+                else if (messageObj instanceof BookComponentMessage bookComponentMessage) {
                     int idx = bookComponentMessage.getBookIdx();
                     BuildingController.bookComponent(gameManager, player, idx, socketWriter);
 
@@ -178,10 +178,14 @@ public class SocketListener extends Thread {
                     int idx = bookedComponentMessage.getIdx();
                     BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
 
-                } else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {        //handle incoming destroy message
+                } else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {
                     int x = destroyComponentMessage.getX();
                     int y = destroyComponentMessage.getY();
                     SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
+
+                }else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
                 }
 
                 else if (messageObj instanceof String messageString) {

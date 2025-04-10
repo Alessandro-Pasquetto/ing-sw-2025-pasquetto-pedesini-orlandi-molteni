@@ -4,6 +4,8 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toServer.*;
+import org.progetto.server.model.Player;
+
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -42,10 +44,12 @@ public class SocketClient implements Sender {
             socket = new Socket(serverIp, port);
 
             System.out.println("Connected to the socketServer!");
-            PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
             new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
             new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
+
+            if(GameData.getUIType().equals("GUI"))
+                PageController.switchScene("chooseGame.fxml", "ChooseGame");
 
         }catch(IOException e){
             System.out.println("Error connecting to the socket server");
@@ -84,8 +88,8 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void pickVisibleComponent(){
-        SocketWriter.sendMessage("PickVisibleComponent");
+    public void pickVisibleComponent(int idx){
+        SocketWriter.sendMessage(new PickVisibleComponentMessage(idx));
     }
 
     @Override
@@ -164,15 +168,20 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void showSpaceship(String owner){
+        SocketWriter.sendMessage(new RequestSpaceshipMessage(owner));
+    }
+
+
+    @Override
     public void close() {
         SocketListener.stopListener();
         SocketWriter.stopWriter();
         try {
             socket.close();
-
             System.out.println("You have disconnected!");
-
-            PageController.switchScene("connection.fxml", "Page1");
+            if(GameData.getUIType().equals("GUI"))
+                PageController.switchScene("connection.fxml", "Page1");
 
         } catch (IOException e) {
             throw new RuntimeException(e);

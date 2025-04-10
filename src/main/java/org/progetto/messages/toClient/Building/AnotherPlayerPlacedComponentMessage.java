@@ -1,5 +1,8 @@
 package org.progetto.messages.toClient.Building;
 
+import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+
 import java.io.Serializable;
 
 public class AnotherPlayerPlacedComponentMessage implements Serializable {
@@ -9,21 +12,15 @@ public class AnotherPlayerPlacedComponentMessage implements Serializable {
     // =======================
 
     private String namePlayer;
-    private int xPlacedComponent;
-    private int yPlacedComponent;
-    private int rPlacedComponent;
-    private String imgSrcPlacedComponent;
+    private Component component;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerPlacedComponentMessage(String namePlayer, int xPlacedComponent, int yPlacedComponent, int rPlacedComponent, String imgSrcPlacedComponent) {
+    public AnotherPlayerPlacedComponentMessage(String namePlayer,Component component) {
         this.namePlayer = namePlayer;
-        this.xPlacedComponent = xPlacedComponent;
-        this.yPlacedComponent = yPlacedComponent;
-        this.rPlacedComponent = rPlacedComponent;
-        this.imgSrcPlacedComponent = imgSrcPlacedComponent;
+        this.component = component;
     }
 
 
@@ -35,19 +32,10 @@ public class AnotherPlayerPlacedComponentMessage implements Serializable {
         return namePlayer;
     }
 
-    public int getxPlacedComponent() {
-        return xPlacedComponent;
+    public Component getComponent() {
+        return component;
     }
-
-    public int getyPlacedComponent() {
-        return yPlacedComponent;
-    }
-
-    public int getrPlacedComponent() {
-        return rPlacedComponent;
-    }
-
     public String getImgSrcPlacedComponent() {
-        return imgSrcPlacedComponent;
+        return component.getImgSrc();
     }
 }

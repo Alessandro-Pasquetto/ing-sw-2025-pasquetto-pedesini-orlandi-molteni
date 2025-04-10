@@ -2,7 +2,9 @@ package org.progetto.server.model;
 
 import org.progetto.server.model.components.*;
 
-public class Spaceship {
+import java.io.Serializable;
+
+public class Spaceship implements Serializable {
   
     // =======================
     // ATTRIBUTES

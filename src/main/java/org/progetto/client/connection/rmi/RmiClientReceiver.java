@@ -1,6 +1,9 @@
 package org.progetto.client.connection.rmi;
 
-import org.progetto.client.connection.HandlerMessage;
+import org.progetto.client.connection.GuiHandlerMessage;
+import org.progetto.client.connection.TuiHandlerMessage;
+import org.progetto.client.model.GameData;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -24,6 +27,9 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
      */
     @Override
     public void sendMessage(Object objMessage) throws RemoteException {
-        HandlerMessage.handleMessage(objMessage);
+        if(GameData.getUIType().equals("GUI"))
+            GuiHandlerMessage.handleMessage(objMessage);
+        else if (GameData.getUIType().equals("TUI"))
+            TuiHandlerMessage.handleMessage(objMessage);
     }
 }

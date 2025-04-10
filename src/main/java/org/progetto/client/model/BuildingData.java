@@ -52,7 +52,8 @@ public class BuildingData {
         resetHandComponent();
 
         BuildingData.handComponent = handComponent;
-        DragAndDrop.enableDragAndDrop(BuildingData.handComponent);
+        if(GameData.getUIType().equals("GUI"))
+            DragAndDrop.enableDragAndDrop(BuildingData.handComponent);
     }
 
     public static void setTempBookedComponent(ImageView tempBookedComponent) {
@@ -85,8 +86,10 @@ public class BuildingData {
     }
 
     public static void resetHandComponent(){
-        if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired()))
-            DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
+        if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired())){
+            if(GameData.getUIType().equals("GUI"))
+                DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
+        }
 
         handComponent = null;
         xHandComponent = -1; // If it has not been placed in the matrix yet

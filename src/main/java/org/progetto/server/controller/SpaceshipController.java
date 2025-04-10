@@ -1,9 +1,9 @@
 package org.progetto.server.controller;
 
-
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
-import org.progetto.messages.toClient.Spaceship.UpdatedSpaceship;
+import org.progetto.messages.toClient.Spaceship.RequestedSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdatedSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -25,6 +25,28 @@ public class SpaceshipController {
     // =======================
 
     /**
+     * send the owner's spaceship to the player that request it
+     *
+     * @author Lorenzo
+     * @param gameManager of the current game
+     * @param player owner of the spaceship requested
+     * @throws RemoteException
+     */
+    public static void showSpaceship(GameManager gameManager,String player, Sender sender) throws RemoteException {
+
+        try {
+            Player owner = gameManager.getGame().getPlayerByName(player);
+            sender.sendMessage(new RequestedSpaceshipMessage(owner.getSpaceship(), owner.getName()));
+        }catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                sender.sendMessage("PlayerNameNotFound");
+
+        }
+    }
+
+
+
+    /**
      * Called after every modification of a component attributes, updates the view of that player and send a broadcast to other players
      *
      * @author Lorenzo
@@ -32,12 +54,13 @@ public class SpaceshipController {
      * @param player owner of the modified spaceship
      * @param componentToUpdate is the modified component
      * @param sender
+     * @throws RemoteException
      */
     public static void updateSpaceship(GameManager gameManager, Player player, Component componentToUpdate, Sender sender) throws RemoteException {
 
         if ((componentToUpdate instanceof BatteryStorage) || (componentToUpdate instanceof BoxStorage) || (componentToUpdate instanceof HousingUnit)) {
 
-            gameManager.broadcastGameMessage(new UpdatedSpaceship(player, componentToUpdate));
+            gameManager.broadcastGameMessage(new UpdatedSpaceshipMessage(player, componentToUpdate));
             sender.sendMessage("SpaceshipUpdated");
         }else{
             sender.sendMessage("NotAnUpdatableComponent");
