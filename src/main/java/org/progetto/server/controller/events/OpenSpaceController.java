@@ -100,9 +100,6 @@ public class OpenSpaceController extends EventControllerAbstract {
                     eventEffect();
                 }
             }
-
-            phase = EventPhase.END;
-            end();
         }
     }
 
@@ -215,18 +212,6 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
-        }
-    }
-
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

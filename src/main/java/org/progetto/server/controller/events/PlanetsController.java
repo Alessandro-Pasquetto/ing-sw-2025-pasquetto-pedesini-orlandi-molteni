@@ -87,12 +87,7 @@ public class PlanetsController extends EventControllerAbstract {
             if (!planets.getLandedPlayers().isEmpty()) {
                 phase = EventPhase.EFFECT;
                 eventEffect();
-
-            } else {
-                phase = EventPhase.END;
-                end();
             }
-
         }
     }
 
@@ -279,21 +274,6 @@ public class PlanetsController extends EventControllerAbstract {
                     board.leaveTravel(lappedPlayer);
                 }
             }
-
-            phase = EventPhase.END;
-            end();
-        }
-    }
-
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

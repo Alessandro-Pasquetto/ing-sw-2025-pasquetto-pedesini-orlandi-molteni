@@ -26,6 +26,7 @@ public class SlaversController extends EventControllerAbstract {
 
     private Slavers slavers;
     private ArrayList<Player> activePlayers;
+    private boolean defeated;
     private float playerFirePower;
     private int requestedBatteries;
     private int requestedCrew;
@@ -38,8 +39,8 @@ public class SlaversController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.slavers = (Slavers) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();;
+        this.defeated = false;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.requestedCrew = 0;
@@ -56,7 +57,7 @@ public class SlaversController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.START)) {
             phase = EventPhase.ASK_CANNONS;
             askHowManyCannonsToUse();
@@ -69,35 +70,48 @@ public class SlaversController extends EventControllerAbstract {
      * @author Stefano
      * @throws RemoteException
      */
-    private void askHowManyCannonsToUse() throws RemoteException {
+    private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
 
-            Player player = activePlayers.get(currPlayer);
-            Spaceship spaceship = player.getSpaceship();
+            for (Player player : activePlayers) {
 
-            // Retrieves sender reference
-            Sender sender = gameManager.getSenderByPlayer(player);
+                gameManager.getGame().setActivePlayer(player);
 
-            // Checks if players is able to win without double cannons
-            if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
-                phase = EventPhase.REWARD_DECISION;
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
-            }
+                Spaceship spaceship = player.getSpaceship();
 
-            // Calculates max number of double cannons usable
-            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+                // Retrieves sender reference
+                Sender sender = gameManager.getSenderByPlayer(player);
 
-            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-            if (maxUsable == 0) {
-                playerFirePower = spaceship.getNormalShootingPower();
+                // Checks if players is able to win without double cannons
+                if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
+                    phase = EventPhase.REWARD_DECISION;
+                    sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
 
-                phase = EventPhase.BATTLE_RESULT;
-                battleResult(player, sender);
+                } else {
 
-            } else {
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+                    // Calculates max number of double cannons usable
+                    int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
-                phase = EventPhase.CANNON_NUMBER;
+                    // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                    if (maxUsable == 0) {
+                        playerFirePower = spaceship.getNormalShootingPower();
+
+                        phase = EventPhase.BATTLE_RESULT;
+                        battleResult(player, sender);
+
+                    } else {
+                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+
+                        phase = EventPhase.CANNON_NUMBER;
+                    }
+                }
+
+                gameManager.getGameThread().waitPlayerReady(player);
+
+                // Checks if card got defeated
+                if (defeated) {
+                    break;
+                }
             }
         }
     }
@@ -111,11 +125,11 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Spaceship spaceship = player.getSpaceship();
 
@@ -163,11 +177,11 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
@@ -212,17 +226,18 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException {
+    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 // Calls the battleResult function
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
                         phase = EventPhase.REWARD_DECISION;
                         sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
+                        defeated = true;
                         break;
 
                     case -1:
@@ -231,15 +246,8 @@ public class SlaversController extends EventControllerAbstract {
                         break;
 
                     case 0:
-                        // Next player
-                        if (currPlayer < activePlayers.size()) {
-                            currPlayer++;
-                            phase = EventPhase.ASK_CANNONS;
-                            askHowManyCannonsToUse();
-                        } else {
-                            phase = EventPhase.END;
-                            end();
-                        }
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
                         break;
                 }
 
@@ -260,10 +268,10 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 requestedCrew = slavers.getPenaltyCrew();
 
@@ -279,16 +287,8 @@ public class SlaversController extends EventControllerAbstract {
                     gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
                     gameManager.getGame().getBoard().leaveTravel(player);
 
-                    // Next player
-                    if (currPlayer < activePlayers.size()) {
-                        currPlayer++;
-                        phase = EventPhase.ASK_CANNONS;
-                        askHowManyCannonsToUse();
-
-                    } else {
-                        phase = EventPhase.END;
-                        end();
-                    }
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
                 }
 
 
@@ -311,11 +311,11 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
+    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
@@ -329,15 +329,8 @@ public class SlaversController extends EventControllerAbstract {
 
                         if (requestedCrew == 0) {
 
-                            // Next player
-                            if (currPlayer < activePlayers.size()) {
-                                currPlayer++;
-                                phase = EventPhase.ASK_CANNONS;
-                                askHowManyCannonsToUse();
-                            } else {
-                                phase = EventPhase.END;
-                                end();
-                            }
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
 
                         } else {
                             sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
@@ -372,7 +365,7 @@ public class SlaversController extends EventControllerAbstract {
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals("REWARD_DECISION")) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 String upperCaseResponse = response.toUpperCase();
 
@@ -383,8 +376,8 @@ public class SlaversController extends EventControllerAbstract {
                         break;
 
                     case "NO":
-                        phase = EventPhase.END;
-                        end();
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
                         break;
 
                     default:
@@ -409,7 +402,8 @@ public class SlaversController extends EventControllerAbstract {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
-            Player player = activePlayers.get(currPlayer);
+
+            Player player = gameManager.getGame().getActivePlayer();
             Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
@@ -441,20 +435,8 @@ public class SlaversController extends EventControllerAbstract {
                 }
             }
 
-            phase = EventPhase.END;
-            end();
-        }
-    }
-
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
         }
     }
 }

@@ -145,7 +145,6 @@ public class GameThread extends Thread {
         }
     }
 
-
     /**
      * Pauses the game thread until all players are ready to continue
      *

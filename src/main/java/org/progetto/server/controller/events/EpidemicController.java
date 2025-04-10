@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -68,20 +69,17 @@ public class EpidemicController extends EventControllerAbstract {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
             }
 
-            phase = EventPhase.END;
-            end();
-        }
-    }
+            // Checks for defeated players
+            for (Player player : gameManager.getGame().getBoard().getCopyActivePlayers()) {
 
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
+                if (player.getSpaceship().getTotalCrewCount() == 0) {
+                    Sender sender = gameManager.getSenderByPlayer(player);
+
+                    sender.sendMessage("NotEnoughCrew");
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
+                    gameManager.getGame().getBoard().leaveTravel(player);
+                }
+            }
         }
     }
 }

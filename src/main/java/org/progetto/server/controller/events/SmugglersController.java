@@ -25,6 +25,7 @@ public class SmugglersController extends EventControllerAbstract {
 
     private Smugglers smugglers;
     private ArrayList<Player> activePlayers;
+    private boolean defeated;
     private float playerFirePower;
     private int requestedBatteries;
     private int requestedBoxes;
@@ -38,8 +39,8 @@ public class SmugglersController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.smugglers = (Smugglers) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = 0;
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();;
+        this.defeated = false;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
         this.requestedBoxes = 0;
@@ -57,7 +58,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.START)) {
             phase = EventPhase.ASK_CANNONS;
             askHowManyCannonsToUse();
@@ -70,35 +71,48 @@ public class SmugglersController extends EventControllerAbstract {
      * @author Stefano
      * @throws RemoteException
      */
-    private void askHowManyCannonsToUse() throws RemoteException {
+    private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
 
-            Player player = activePlayers.get(currPlayer);
-            Spaceship spaceship = player.getSpaceship();
+            for (Player player : activePlayers) {
 
-            // Retrieves sender reference
-            Sender sender = gameManager.getSenderByPlayer(player);
+                gameManager.getGame().setActivePlayer(player);
 
-            // Checks if players is able to win without double cannons
-            if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
-                phase = EventPhase.REWARD_DECISION;
-                sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
-            }
+                Spaceship spaceship = player.getSpaceship();
 
-            // Calculates max number of double cannons usable
-            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+                // Retrieves sender reference
+                Sender sender = gameManager.getSenderByPlayer(player);
 
-            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-            if (maxUsable == 0) {
-                playerFirePower = spaceship.getNormalShootingPower();
+                // Checks if players is able to win without double cannons
+                if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
+                    phase = EventPhase.REWARD_DECISION;
+                    sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
 
-                phase = EventPhase.BATTLE_RESULT;
-                battleResult(player, sender);
+                } else {
 
-            } else {
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
+                    // Calculates max number of double cannons usable
+                    int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
-                phase = EventPhase.CANNON_NUMBER;
+                    // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                    if (maxUsable == 0) {
+                        playerFirePower = spaceship.getNormalShootingPower();
+
+                        phase = EventPhase.BATTLE_RESULT;
+                        battleResult(player, sender);
+
+                    } else {
+                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
+
+                        phase = EventPhase.CANNON_NUMBER;
+                    }
+                }
+
+                gameManager.getGameThread().waitPlayerReady(player);
+
+                // Checks if card got defeated
+                if (defeated) {
+                    break;
+                }
             }
         }
     }
@@ -112,11 +126,11 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Spaceship spaceship = player.getSpaceship();
 
@@ -164,11 +178,11 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
@@ -213,11 +227,11 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException {
+    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals("BATTLE_RESULT")) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 // Calls the battleResult function
                 switch (smugglers.battleResult(player, playerFirePower)){
@@ -234,15 +248,8 @@ public class SmugglersController extends EventControllerAbstract {
                         break;
 
                     case 0:
-                        // Next player
-                        if (currPlayer < activePlayers.size()) {
-                            currPlayer++;
-                            phase = EventPhase.ASK_CANNONS;
-                            askHowManyCannonsToUse();
-                        } else {
-                            phase = EventPhase.END;
-                            end();
-                        }
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
                         break;
                 }
 
@@ -285,16 +292,8 @@ public class SmugglersController extends EventControllerAbstract {
                 } else {
                     sender.sendMessage("NotEnoughBatteries");
 
-                    // Next player
-                    if (currPlayer < activePlayers.size()) {
-                        currPlayer++;
-                        phase = EventPhase.ASK_CANNONS;
-                        askHowManyCannonsToUse();
-
-                    } else {
-                        phase = EventPhase.END;
-                        end();
-                    }
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
                 }
 
             }
@@ -315,7 +314,7 @@ public class SmugglersController extends EventControllerAbstract {
         if (phase.equals(EventPhase.DISCARDED_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
@@ -330,16 +329,8 @@ public class SmugglersController extends EventControllerAbstract {
                         if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
-                            // Next player
-                            if (currPlayer < activePlayers.size()) {
-                                currPlayer++;
-                                phase = EventPhase.ASK_CANNONS;
-                                askHowManyCannonsToUse();
-
-                            } else {
-                                phase = EventPhase.END;
-                                end();
-                            }
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
 
                         } else {
                             // Ask for new box/battery to discard
@@ -378,7 +369,7 @@ public class SmugglersController extends EventControllerAbstract {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
@@ -393,16 +384,8 @@ public class SmugglersController extends EventControllerAbstract {
                         if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
-                            // Next player
-                            if (currPlayer < activePlayers.size()) {
-                                currPlayer++;
-                                phase = EventPhase.ASK_CANNONS;
-                                askHowManyCannonsToUse();
-
-                            } else {
-                                phase = EventPhase.END;
-                                end();
-                            }
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
 
                         } else {
                             // Ask for new battery to discard
@@ -439,7 +422,7 @@ public class SmugglersController extends EventControllerAbstract {
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.REWARD_DECISION)) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 String upperCaseResponse = response.toUpperCase();
 
@@ -450,8 +433,8 @@ public class SmugglersController extends EventControllerAbstract {
                         break;
 
                     case "NO":
-                        phase = EventPhase.END;
-                        end();
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
                         break;
 
                     default:
@@ -480,7 +463,7 @@ public class SmugglersController extends EventControllerAbstract {
     public void receiveRewardBox(Player player, Box box, int y, int x, int idx, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 try {
                     Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
@@ -513,7 +496,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                 // All the boxes are chosen
                 if (rewardBoxes.isEmpty()) {
-                    leaveReward(activePlayers.get(currPlayer), sender);
+                    leaveReward(gameManager.getGame().getActivePlayer(), sender);
                 }
 
             } else {
@@ -538,7 +521,7 @@ public class SmugglersController extends EventControllerAbstract {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
-            if (player.equals(activePlayers.get(currPlayer))) {
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 // Calls penalty function
                 penaltyDays();
@@ -555,7 +538,7 @@ public class SmugglersController extends EventControllerAbstract {
     private void penaltyDays() throws RemoteException {
         if (phase.equals(EventPhase.PENALTY_DAYS)) {
 
-            Player player = activePlayers.get(currPlayer);
+            Player player = gameManager.getGame().getActivePlayer();
             Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
@@ -585,20 +568,8 @@ public class SmugglersController extends EventControllerAbstract {
                 }
             }
 
-            phase = EventPhase.END;
-            end();
-        }
-    }
-
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
         }
     }
 }

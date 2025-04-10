@@ -77,9 +77,6 @@ public class LostStationController extends EventControllerAbstract {
                     sender.sendMessage("NotEnoughCrew");
                 }
             }
-
-            phase = EventPhase.END;
-            end();
         }
     }
 
@@ -228,27 +225,12 @@ public class LostStationController extends EventControllerAbstract {
                     }
                 }
 
-                phase = EventPhase.END;
-                end();
-
             } else {
                 sender.sendMessage("NotYourTurn");
             }
 
         } else {
             sender.sendMessage("IncorrectPhase");
-        }
-    }
-
-    /**
-     * Send a message of end card to all players
-     *
-     * @author Stefano
-     * @throws RemoteException
-     */
-    private void end() throws RemoteException {
-        if (phase.equals(EventPhase.END)) {
-            gameManager.broadcastGameMessage("This event card is finished");
         }
     }
 }

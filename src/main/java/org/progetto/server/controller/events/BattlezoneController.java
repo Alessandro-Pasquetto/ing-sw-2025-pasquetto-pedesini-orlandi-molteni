@@ -46,7 +46,6 @@ public class BattlezoneController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.battlezone = (Battlezone) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.currPlayer = 0;
         this.couples = new ArrayList<>(couples);
         this.penaltyShots = new ArrayList<>();
         this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
@@ -127,6 +126,7 @@ public class BattlezoneController extends EventControllerAbstract {
             penaltyPlayer = battlezone.lessPopulatedSpaceship(activePlayers);
 
             phase = EventPhase.PENALTY;
+            penalty();
         }
     }
 
@@ -447,7 +447,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 case PenaltyType.PENALTYCREW:
                     // Request needed amount of crew
                     requestedCrew = couples.getFirst().getPenalty().getNeededAmount();
-                    sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                    penaltyCrew();
 
                     phase = EventPhase.PENALTY_CREW;
                     break;
@@ -521,6 +521,41 @@ public class BattlezoneController extends EventControllerAbstract {
     }
 
     /**
+     * Handles crew penalty
+     *
+     * @author Gabriele
+     * @throws RemoteException
+     */
+    private void penaltyCrew() throws RemoteException {
+        if (phase.equals(EventPhase.PENALTY_CREW)) {
+
+            Player player = penaltyPlayer;
+
+            // Gets penalty player sender reference
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+
+            // Calculates max crew number available to discard
+            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+
+            if (maxCrewCount > couples.getFirst().getPenalty().getNeededAmount()) {
+                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                phase = EventPhase.DISCARDED_CREW;
+
+            } else {
+                // Player is defeated
+                sender.sendMessage("NotEnoughCrew");
+                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
+                gameManager.getGame().getBoard().leaveTravel(player);
+
+                // Next Couple
+                couples.removeFirst();
+                phase = EventPhase.CONDITION;
+                condition();
+            }
+        }
+    }
+
+    /**
      * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
@@ -531,7 +566,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.PENALTY_CREW)) {
+        if (phase.equals(EventPhase.DISCARDED_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
@@ -558,7 +593,7 @@ public class BattlezoneController extends EventControllerAbstract {
                         }
 
                     } else {
-                        sender.sendMessage("NotEnoughBatteries");
+                        sender.sendMessage("NotEnoughCrew");
                     }
 
                 } else {
@@ -574,6 +609,12 @@ public class BattlezoneController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Handles box penalty
+     *
+     * @author Gabriele
+     * @throws RemoteException
+     */
     private void penaltyBoxes() throws RemoteException {
         if (phase.equals(EventPhase.PENALTY_BOXES)) {
 
