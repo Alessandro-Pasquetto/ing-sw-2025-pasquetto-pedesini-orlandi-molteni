@@ -229,8 +229,8 @@ class PiratesTest {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
         Board board = new Board(1);
-        board.addTraveler(player1, 1);
-        board.addTraveler(player2, 1);
+        board.addActivePlayer(player1, 1);
+        board.addActivePlayer(player2, 1);
         Player[] track;
         track = board.getTrack();
         Pirates pirates1 = new Pirates(CardType.PIRATES,2, "imgPath", 5, -3, 3, projectiles1);

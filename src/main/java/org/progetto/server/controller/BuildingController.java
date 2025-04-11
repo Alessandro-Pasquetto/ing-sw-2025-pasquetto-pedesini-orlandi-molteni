@@ -333,7 +333,7 @@ public class BuildingController {
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getHandComponent()), sender);
             player.setIsReady(true, gameManager.getGame());
-            gameManager.getGame().getBoard().addReadyTraveler(player);
+            gameManager.getGame().getBoard().addReadyToTravelPlayer(player);
             sender.sendMessage("YouAreReady");
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
             gameManager.getGameThread().notifyThread();
@@ -363,7 +363,7 @@ public class BuildingController {
         }
 
         player.setIsReady(true, gameManager.getGame());
-        gameManager.getGame().getBoard().addReadyTraveler(player);
+        gameManager.getGame().getBoard().addReadyToTravelPlayer(player);
         sender.sendMessage("YouAreReady");
         gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
         gameManager.getGameThread().notifyThread();

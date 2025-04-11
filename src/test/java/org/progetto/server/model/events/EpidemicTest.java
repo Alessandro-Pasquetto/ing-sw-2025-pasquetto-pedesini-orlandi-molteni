@@ -24,7 +24,7 @@ class EpidemicTest {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        board.addTraveler(player, 1);
+        board.addActivePlayer(player, 1);
 
         HousingUnit temp;
 

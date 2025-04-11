@@ -11,7 +11,7 @@ public class Board {
 
     private final Player[] track;
     private final ArrayList<Player> activePlayers;  // order: leader -> last
-    private final ArrayList<Player> readyPlayers;   // order: first player ready -> last one
+    private final ArrayList<Player> readyToTravelPlayers;   // order: first player ready -> last one
     private final String imgSrc;
 
     // =======================
@@ -21,7 +21,7 @@ public class Board {
     public Board(int levelBoard) {
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
         this.activePlayers = new ArrayList<>();
-        this.readyPlayers = new ArrayList<>();
+        this.readyToTravelPlayers = new ArrayList<>();
         this.imgSrc = "board" + levelBoard + ".png";
     }
 
@@ -42,8 +42,8 @@ public class Board {
         return copyActivePlayers;
     }
 
-    public ArrayList<Player> getReadyPlayers() {
-        return readyPlayers;
+    public ArrayList<Player> getReadyToTravelPlayers() {
+        return readyToTravelPlayers;
     }
 
     public String getImgSrc() {
@@ -74,12 +74,12 @@ public class Board {
      * @author Gabriele
      * @param player reference to ready player
      */
-    public synchronized void addReadyTraveler(Player player) {
-        if (readyPlayers.contains(player)){
+    public synchronized void addReadyToTravelPlayer(Player player) {
+        if (readyToTravelPlayers.contains(player)){
             throw new IllegalStateException("PlayerIsAlreadyReady");
         }
 
-        readyPlayers.add(player);
+        readyToTravelPlayers.add(player);
     }
 
     /**
@@ -88,7 +88,7 @@ public class Board {
      * @author Alessandro
      * @param player is the new traveler
      */
-    public synchronized void addTraveler(Player player, int levelBoard) {
+    public synchronized void addActivePlayer(Player player, int levelBoard) {
         activePlayers.add(player);
 
         int pos = 0;
@@ -99,15 +99,18 @@ public class Board {
                 else if(levelBoard == 2)
                     pos = 6;
                 break;
+
             case 2:
                 if(levelBoard == 1)
                     pos = 2;
                 else if(levelBoard == 2)
                     pos = 3;
                 break;
+
             case 3:
                 pos = 1;
                 break;
+
             case 4:
                 pos = 0;
                 break;
@@ -235,7 +238,7 @@ public class Board {
         ArrayList<Player> noCrewPlayers = new ArrayList<>();
 
         for (Player player : activePlayers) {
-            if (player.getSpaceship().getCrewCount() == 0) {
+            if (player.getSpaceship().getTotalCrewCount() == 0) {
                 noCrewPlayers.add(player);
                 leaveTravel(player);
             }
@@ -255,5 +258,21 @@ public class Board {
         track[modulus(playerPosition, track.length)] = null;
         activePlayers.remove(player);
         player.setHasLeft(true);
+    }
+
+
+    /**
+     * Checks if all active players are ready
+     *
+     * @author Gabriele
+     * @return true if are all ready; otherwise false
+     */
+    public boolean allActivePlayersReady() {
+        for (Player player : activePlayers) {
+            if (!player.getIsReady()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

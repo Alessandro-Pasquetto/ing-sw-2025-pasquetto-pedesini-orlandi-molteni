@@ -24,7 +24,7 @@ class StardustTest {
         BuildingBoard buildingBoard1 = player1.getSpaceship().getBuildingBoard();
 
         // Added components
-        board.addTraveler(player1, 2);
+        board.addActivePlayer(player1, 2);
         board.movePlayerByDistance(player1, 5);
 
         buildingBoard1.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
@@ -59,9 +59,9 @@ class StardustTest {
         Player player3 = new Player("anna", 1, 2);
         Player player4 = new Player("paola", 2, 2);
 
-        board.addTraveler(player2, 2);
-        board.addTraveler(player3, 2);
-        board.addTraveler(player4, 2);
+        board.addActivePlayer(player2, 2);
+        board.addActivePlayer(player3, 2);
+        board.addActivePlayer(player4, 2);
 
         BuildingBoard buildingBoard2 = player2.getSpaceship().getBuildingBoard();
         BuildingBoard buildingBoard3 = player3.getSpaceship().getBuildingBoard();

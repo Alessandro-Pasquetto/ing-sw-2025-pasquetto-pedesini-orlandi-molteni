@@ -3,6 +3,7 @@ package org.progetto.server.connection.games;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
@@ -142,6 +143,25 @@ public class GameThread extends Thread {
         synchronized (gameThreadLock) {
             while (!player.getIsReady())
                 gameThreadLock.wait();
+        }
+    }
+
+    /**
+     * Pauses the game thread until all active players are ready to continue
+     *
+     * @author Gabriele
+     */
+    public void waitActivePlayersReady(Game game) throws InterruptedException {
+        Board board = gameManager.getGame().getBoard();
+
+        for (Player player : board.getCopyActivePlayers()) {
+            player.setIsReady(false, gameManager.getGame());
+        }
+
+        synchronized (gameThreadLock) {
+            while (!board.allActivePlayersReady()) {
+                gameThreadLock.wait();
+            }
         }
     }
 

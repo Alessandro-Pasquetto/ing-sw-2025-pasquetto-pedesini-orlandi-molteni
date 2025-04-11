@@ -38,10 +38,10 @@ class BattlezoneTest {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        board.addTraveler(p1, 1);
-        board.addTraveler(p2, 1);
-        board.addTraveler(p3, 1);
-        board.addTraveler(p4, 1);
+        board.addActivePlayer(p1, 1);
+        board.addActivePlayer(p2, 1);
+        board.addActivePlayer(p3, 1);
+        board.addActivePlayer(p4, 1);
 
         board.movePlayerByDistance(p1, 13);
         board.movePlayerByDistance(p2, 11);
