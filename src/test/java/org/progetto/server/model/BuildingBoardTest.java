@@ -210,9 +210,10 @@ class BuildingBoardTest {
 
         // Placed in a correct place
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
-        c = buildingBoard.getHandComponent();
 
         result = buildingBoard.placeComponent(2, 1, 0);
+
+        c = buildingBoard.getHandComponent();
 
         assertEquals(c, spaceshipMatrix[1][2]);
         assertTrue(result);

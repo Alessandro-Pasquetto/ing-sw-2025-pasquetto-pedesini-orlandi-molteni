@@ -23,6 +23,44 @@ class BattlezoneTest {
     }
 
     @Test
+    void lessPopulatedSpaceship() {
+        Game game = new Game(0, 3, 1);
+        Board board = game.getBoard();
+
+        Player p1 = new Player("a", 0, 1);
+        Player p2 = new Player("b", 0, 1);
+        Player p3 = new Player("c", 0, 1);
+        Player p4 = new Player("d", 0, 1);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        board.addTravelersInTrack(1);
+
+        p1.getSpaceship().addCrewCount(7);
+        p2.getSpaceship().addCrewCount(5);
+        p3.getSpaceship().addCrewCount(3);
+        p4.getSpaceship().addCrewCount(3);
+
+        ArrayList<ConditionPenalty> conditionPenalties = new ArrayList<ConditionPenalty>() {{
+            add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, -3, null)));
+        }};
+
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", conditionPenalties);
+
+        assertEquals(p3, battlezone.lessPopulatedSpaceship(board.getCopyTravelers()));
+
+        assertEquals(ConditionType.CREWREQUIREMENT, battlezone.getCouples().getFirst().getCondition());
+    }
+
+    @Test
     void penaltyDays() {
 
         Game game = new Game(0, 3, 1);
@@ -158,21 +196,6 @@ class BattlezoneTest {
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         assertTrue(bb1.placeComponent(3, 3, 0));
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.printf("%-20s", 5 + i);
-//        }
-//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
-
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE,2 , "img", new ArrayList<>());
 
         Projectile s1 = new Projectile(ProjectileSize.BIG, 0);
@@ -198,21 +221,6 @@ class BattlezoneTest {
         assertNull(battlezone.penaltyShot(game1, p1, s3, 9));
         assertNull(battlezone.penaltyShot(game1, p1, s3, 10));
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.printf("%-20s", 5 + i);
-//        }
-//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
-
         // right
         assertNull(battlezone.penaltyShot(game1, p1, s2, 3));
         assertNull(battlezone.penaltyShot(game1, p1, s2, 5));
@@ -229,30 +237,11 @@ class BattlezoneTest {
         assertNull(battlezone.penaltyShot(game1, p1, s4, 9));
         assertNull(battlezone.penaltyShot(game1, p1, s4, 10));
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 5; i++) {
-//            System.out.printf("%-20s", 5 + i);
-//        }
-//        for (int i = 0; i < bb1.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb1.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb1.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb1.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb1.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
 
-
-        // check spaceShip lv2
-//        System.out.println("Check spaceship lv2");
-
-        /*
         Game game2 = new Game(1, 3, 2);
         Player p2 = new Player("a", 1, 2);
 
-
+        /*
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
         assertTrue(bb2.placeComponent(1, 3, 0));
@@ -278,21 +267,6 @@ class BattlezoneTest {
         bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         assertTrue(bb2.placeComponent(3, 5, 0));
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 7; i++) {
-//            System.out.printf("%-20s", 4 + i);
-//        }
-//        for (int i = 0; i < bb2.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb2.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb2.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
-
         Battlezone battlezone2 = new Battlezone(CardType.BATTLEZONE, 1, "img", new ArrayList<>());
 
         Projectile ss1 = new Projectile(ProjectileSize.BIG, 0);
@@ -317,21 +291,6 @@ class BattlezoneTest {
         assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 9));
         assertNull(battlezone2.penaltyShot(game2, p2, ss3, 10));
 
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 7; i++) {
-//            System.out.printf("%-20s", 4 + i);
-//        }
-//        for (int i = 0; i < bb2.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb2.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb2.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
-
         // right
         assertNull(battlezone2.penaltyShot(game2, p2, ss2, 3));
         assertNull(battlezone2.penaltyShot(game2, p2, ss2, 5));
@@ -347,21 +306,6 @@ class BattlezoneTest {
         assertNotNull(battlezone2.penaltyShot(game2, p2, ss4, 8));
         assertNull(battlezone2.penaltyShot(game2, p2, ss4, 9));
         assertNull(battlezone2.penaltyShot(game2, p2, ss4, 10));
-
-//        System.out.println();
-//        System.out.printf("%-20s", "-");
-//        for (int i = 0; i < 7; i++) {
-//            System.out.printf("%-20s", 4 + i);
-//        }
-//        for (int i = 0; i < bb2.getSpaceshipMatrix().length; i++) {
-//            System.out.println();
-//            System.out.printf("%-20s", 5 + i);
-//            for (int j = 0; j < bb2.getSpaceshipMatrix()[0].length; j++) {
-//                String value = (bb2.getSpaceshipMatrix()[i][j] == null) ? "NULL" : bb2.getSpaceshipMatrix()[i][j].getType().toString() + "-" + bb2.getSpaceshipMatrix()[i][j].getRotation();
-//                System.out.printf("%-20s", value);
-//            }
-//        }
-//        System.out.println();
         */
     }
 
