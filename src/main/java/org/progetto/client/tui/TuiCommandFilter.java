@@ -213,6 +213,10 @@ public class TuiCommandFilter {
                GameCommands.showSpaceship(commandParts);
                break;
 
+           case "Help":
+               GameCommands.printHelp();
+               break;
+
            default:
                System.out.println("Command not found");
                break;

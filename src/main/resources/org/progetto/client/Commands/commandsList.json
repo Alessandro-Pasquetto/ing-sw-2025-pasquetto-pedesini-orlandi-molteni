@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Connect",
+    "description": "Connect to the server.",
+    "usage": "Connect <ip> <port>"
+  },
+  {
+    "name": "CreateGame",
+    "description": "Create a new game session.",
+    "usage": "CreateGame <nickname>"
+  },
+  {
+    "name": "JoinGame",
+    "description": "Join an existing game session.",
+    "usage": "JoinGame <id> <nickname>"
+  },
+  {
+    "name": "PickHidden",
+    "description": "Pick a hidden component from the deck.",
+    "usage": "PickHidden"
+  },
+  {
+    "name": "PickVisible",
+    "description": "Pick a visible component by index.",
+    "usage": "PickVisible <index>"
+  },
+  {
+    "name": "PlaceLast",
+    "description": "Place the last drawn component on the board.",
+    "usage": "PlaceLast <x> <y> <rotation>"
+  },
+  {
+    "name": "PlaceAndPickHidden",
+    "description": "Place a component and pick a hidden one.",
+    "usage": "PlaceAndPickHidden <x> <y> <rotation>"
+  },
+  {
+    "name": "PlaceAndPickVisible",
+    "description": "Place a component and pick a visible one.",
+    "usage": "PlaceAndPickVisible <x> <y> <rotation> <index>"
+  },
+  {
+    "name": "PlaceAndPickEvent",
+    "description": "Place a component and draw an event deck.",
+    "usage": "PlaceAndPickEvent <x> <y> <rotation> <deckIndex>"
+  },
+  {
+    "name": "PlaceAndPickBooked",
+    "description": "Place a component and pick a booked one.",
+    "usage": "PlaceAndPickBooked <x> <y> <rotation> <index>"
+  },
+  {
+    "name": "PlaceAndReady",
+    "description": "Place a component and mark ready.",
+    "usage": "PlaceAndReady <x> <y> <rotation>"
+  },
+  {
+    "name": "Discard",
+    "description": "Discard the component in hand.",
+    "usage": "Discard"
+  },
+  {
+    "name": "Book",
+    "description": "Book a visible component.",
+    "usage": "Book <index>"
+  },
+  {
+    "name": "PickBooked",
+    "description": "Pick a previously booked component.",
+    "usage": "PickBooked <index>"
+  },
+  {
+    "name": "PickDeck",
+    "description": "Pick up an event card deck.",
+    "usage": "PickDeck <deckIndex>"
+  },
+  {
+    "name": "PutDownDeck",
+    "description": "Put down an event card deck.",
+    "usage": "PutDownDeck <deckIndex>"
+  },
+  {
+    "name": "Destroy",
+    "description": "Destroy a component at given coordinates.",
+    "usage": "Destroy <x> <y>"
+  },
+  {
+    "name": "Ready",
+    "description": "Declare you are ready.",
+    "usage": "Ready"
+  },
+  {
+    "name": "TimerReset",
+    "description": "Reset the building timer.",
+    "usage": "TimerReset"
+  },
+  {
+    "name": "Roll",
+    "description": "Roll the dice.",
+    "usage": "Roll"
+  },
+  {
+    "name": "Close",
+    "description": "Disconnect and exit the game.",
+    "usage": "Close"
+  },
+  {
+    "name": "ShowSpaceship",
+    "description": "Show the structure of a player's spaceship.",
+    "usage": "ShowSpaceship <nickname>"
+  }
+]

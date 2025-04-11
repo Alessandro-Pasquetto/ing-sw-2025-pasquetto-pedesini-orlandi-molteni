@@ -1,10 +1,18 @@
 package org.progetto.client.tui;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Contains commands relating to the game execution
@@ -94,6 +102,29 @@ public class GameCommands {
         Sender sender = GameData.getSender();
         sender.showSpaceship(commandParts[1]);
 
+    }
+
+
+    /**
+     * Help command, read a list of commands and display their usage
+     *
+     * @author Lorenzo
+     */
+    public static void printHelp() {
+        String path = "src/main/resources/org/progetto/client/Commands/commandsList.json";
+        Gson gson = new Gson();
+        try (Reader reader = new FileReader(path)) {
+            Type listType = new TypeToken<List<CommandEntity>>() {}.getType();
+            List<CommandEntity> commands = gson.fromJson(reader, listType);
+
+            System.out.println("\n📖 Available Commands:\n");
+            for (CommandEntity cmd : commands) {
+                System.out.printf("%-20s : %s%n", cmd.getName(), cmd.getDescription());
+                System.out.printf("Usage                : %s%n%n", cmd.getUsage());
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading command list: " + e.getMessage());
+        }
     }
 
 }
