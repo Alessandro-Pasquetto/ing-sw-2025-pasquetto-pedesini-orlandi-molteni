@@ -15,7 +15,6 @@ abstract public class EventControllerAbstract {
 
     protected GameManager gameManager;
     protected EventPhase phase;
-    protected int currPlayer;
 
     // =======================
     // GETTERS
@@ -23,10 +22,6 @@ abstract public class EventControllerAbstract {
 
     public EventPhase getPhase() throws RemoteException {
         return phase;
-    }
-
-    public Player getCurrPlayer() throws RemoteException {
-        return null;
     }
 
     // =======================
