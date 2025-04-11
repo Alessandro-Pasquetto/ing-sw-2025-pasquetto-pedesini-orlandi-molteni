@@ -127,8 +127,8 @@ class PlanetsTest {
         Player player2 = new Player("stuart", 1, 2);
 
         Board board = new Board(1);
-        board.addActivePlayer(player1, 1);
-        board.addActivePlayer(player2, 1);
+        board.addTraveler(player1);
+        board.addTraveler(player2);
 
         Player[] track;
         track = board.getTrack();
@@ -169,10 +169,12 @@ class PlanetsTest {
 
         Board board = new Board(1);
 
-        board.addActivePlayer(p1, 1);
-        board.addActivePlayer(p2, 1);
-        board.addActivePlayer(p3, 1);
-        board.addActivePlayer(p4, 1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        board.addTravelersInTrack(1);
 
         board.movePlayerByDistance(p1, 5);
         board.movePlayerByDistance(p2, 5);

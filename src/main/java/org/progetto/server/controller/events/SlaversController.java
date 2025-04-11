@@ -39,7 +39,7 @@ public class SlaversController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.slavers = (Slavers) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();;
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();;
         this.defeated = false;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;

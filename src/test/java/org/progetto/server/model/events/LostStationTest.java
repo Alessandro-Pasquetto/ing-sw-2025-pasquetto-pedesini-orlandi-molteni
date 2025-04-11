@@ -39,8 +39,8 @@ class LostStationTest {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
         Board board = new Board(1);
-        board.addActivePlayer(player1, 1);
-        board.addActivePlayer(player2, 1);
+        board.addTraveler(player1);
+        board.addTraveler(player2);
         Player[] track;
         track = board.getTrack();
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
@@ -82,10 +82,11 @@ class LostStationTest {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
         Board board = new Board(1);
-        board.addActivePlayer(player1, 1);
-        board.addActivePlayer(player2, 1);
-        Player[] track;
-        track = board.getTrack();
+        board.addTraveler(player1);
+        board.addTraveler(player2);
+
+        board.addTravelersInTrack(1);
+
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
         rewardBoxes1.add(Box.RED);
         rewardBoxes1.add(Box.GREEN);

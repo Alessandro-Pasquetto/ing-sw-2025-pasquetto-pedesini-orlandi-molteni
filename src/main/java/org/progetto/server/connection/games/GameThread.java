@@ -81,7 +81,8 @@ public class GameThread extends Thread {
                             waitPlayersReady(game);
                         }
 
-                        //todo preparing players in track?
+                        // preparing players in track
+                        game.getBoard().addTravelersInTrack(game.getLevel());
 
                         System.out.println("End building phase...");
                         game.setPhase(GamePhase.EVENT);
@@ -147,25 +148,6 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all active players are ready to continue
-     *
-     * @author Gabriele
-     */
-    public void waitActivePlayersReady(Game game) throws InterruptedException {
-        Board board = gameManager.getGame().getBoard();
-
-        for (Player player : board.getCopyActivePlayers()) {
-            player.setIsReady(false, gameManager.getGame());
-        }
-
-        synchronized (gameThreadLock) {
-            while (!board.allActivePlayersReady()) {
-                gameThreadLock.wait();
-            }
-        }
-    }
-
-    /**
      * Pauses the game thread until all players are ready to continue
      *
      * @author Alessandro
@@ -179,16 +161,18 @@ public class GameThread extends Thread {
         }
     }
 
-    // todo?: resetTravelersReady
+    /**
+     * Pauses the game thread until all travelers are ready to continue
+     *
+     * @author Alessandro
+     */
     public void waitTravelersReady(Game game) throws InterruptedException {
-        /*
+        gameManager.getGame().resetReadyPlayers();
+
         synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
+            while (game.getNumReadyPlayers() != game.getBoard().getNumTravelers())
                 gameThreadLock.wait();
         }
-        gameManager.getGame().getBoard().;
-
-         */
     }
 
     /**

@@ -63,10 +63,10 @@ class LostShipTest {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
         Board board = new Board(1);
-        board.addActivePlayer(player1, 1);
-        board.addActivePlayer(player2, 1);
-        Player[] track;
-        track = board.getTrack();
+        board.addTraveler(player1);
+        board.addTraveler(player2);
+        board.addTravelersInTrack(1);
+
         LostShip lostShip1 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, -3);
         LostShip lostShip2 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 2, -2);
 

@@ -75,36 +75,36 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void placeLastComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent) {
+    public void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) {
         try {
-            server.placeLastComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+            server.placeLastComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void placeHandComponentAndPickHiddenComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent){
+    public void placeHandComponentAndPickHiddenComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent){
         try {
-            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent);
+            server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void placeHandComponentAndPickVisibleComponent(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int idxVisibleComponent){
+    public void placeHandComponentAndPickVisibleComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent){
         try {
-            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idxVisibleComponent);
+            server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, idxVisibleComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void placeHandComponentAndPickUpEventCardDeck(int yPlaceComponent, int xPlaceComponent, int rPlaceComponent, int deckIdx){
+    public void placeHandComponentAndPickUpEventCardDeck(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx){
         try {
-            server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, deckIdx);
+            server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -113,7 +113,7 @@ public class RmiClientSender implements Sender {
     @Override
     public void placeHandComponentAndPickBookedComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxBookedComponent){
         try {
-            server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), yPlaceComponent, xPlaceComponent, rPlaceComponent, idxBookedComponent);
+            server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, idxBookedComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -194,13 +194,13 @@ public class RmiClientSender implements Sender {
      * Allows client to call for the destroyComponent method on RMI server
      *
      * @author Lorenzo
-     * @param yComponent
      * @param xComponent
+     * @param yComponent
      */
     @Override
-    public void destroyComponent(int yComponent, int xComponent){
+    public void destroyComponent(int xComponent, int yComponent){
         try {
-            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(),yComponent,xComponent);
+            server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xComponent, yComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -236,13 +236,12 @@ public class RmiClientSender implements Sender {
     @Override
     public void showSpaceship(String owner){
         try{
-            server.showSpaceship(RmiClientReceiver.getInstance(),GameData.getIdGame(),owner);
+            server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(),owner);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
 
     }
-
 
     @Override
     public void close() {

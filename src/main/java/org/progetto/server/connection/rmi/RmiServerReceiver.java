@@ -314,7 +314,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
      * @throws RemoteException if a player with name in idGame was not found
      */
     @Override
-    public void destroyComponent(VirtualClient virtualClient, int idGame, int yComponent, int xComponent) throws RemoteException {
+    public void destroyComponent(VirtualClient virtualClient, int idGame, int xComponent, int yComponent) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{

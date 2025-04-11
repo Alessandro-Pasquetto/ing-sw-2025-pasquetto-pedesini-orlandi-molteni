@@ -56,7 +56,7 @@ class SabotageTest {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         // Added components
-        board.addActivePlayer(player, 1);
+        board.addTraveler(player);
         board.movePlayerByDistance(player, 5);
 
         buildingBoard.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));

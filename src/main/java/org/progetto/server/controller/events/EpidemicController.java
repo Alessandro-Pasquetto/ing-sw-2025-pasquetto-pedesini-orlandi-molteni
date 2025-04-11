@@ -54,7 +54,7 @@ public class EpidemicController extends EventControllerAbstract {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
-            ArrayList<Player> players = gameManager.getGame().getBoard().getCopyActivePlayers();
+            ArrayList<Player> players = gameManager.getGame().getBoard().getCopyTravelers();
 
             System.out.println("Evaluating epidemic consequences");
 
@@ -70,7 +70,7 @@ public class EpidemicController extends EventControllerAbstract {
             }
 
             // Checks for defeated players
-            for (Player player : gameManager.getGame().getBoard().getCopyActivePlayers()) {
+            for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
 
                 if (player.getSpaceship().getTotalCrewCount() == 0) {
                     Sender sender = gameManager.getSenderByPlayer(player);

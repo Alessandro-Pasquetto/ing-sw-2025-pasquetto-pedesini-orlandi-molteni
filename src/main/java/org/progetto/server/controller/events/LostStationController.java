@@ -35,7 +35,7 @@ public class LostStationController extends EventControllerAbstract {
     public LostStationController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.lostStation = (LostStation) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
     }

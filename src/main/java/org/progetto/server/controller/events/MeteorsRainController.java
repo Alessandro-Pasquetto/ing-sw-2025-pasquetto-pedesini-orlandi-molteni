@@ -43,7 +43,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.meteorsRain = (MeteorsRain) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.meteors = new ArrayList<>(meteorsRain.getMeteors());
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();

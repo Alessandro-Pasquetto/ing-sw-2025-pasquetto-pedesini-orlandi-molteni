@@ -38,23 +38,17 @@ class BattlezoneTest {
         game.addPlayer(p3);
         game.addPlayer(p4);
 
-        board.addActivePlayer(p1, 1);
-        board.addActivePlayer(p2, 1);
-        board.addActivePlayer(p3, 1);
-        board.addActivePlayer(p4, 1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        board.addTravelersInTrack(1);
 
         board.movePlayerByDistance(p1, 13);
         board.movePlayerByDistance(p2, 11);
         board.movePlayerByDistance(p3, 10);
         board.movePlayerByDistance(p4, 8);
-
-//        for (int i = 0; i < board.getTrack().length; i++) {
-//            if(board.getTrack()[i] == null)
-//                System.out.printf("%-5s", "NULL");
-//            else
-//                System.out.printf("%-5s", board.getTrack()[i].getName());
-//        }
-//        System.out.println();
 
         ArrayList<ConditionPenalty> conditionPenalties = new ArrayList<ConditionPenalty>() {{
             add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, 3, new ArrayList<Projectile>())));

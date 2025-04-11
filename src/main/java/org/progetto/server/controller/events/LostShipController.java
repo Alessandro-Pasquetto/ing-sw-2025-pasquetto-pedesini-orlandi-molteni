@@ -34,7 +34,7 @@ public class LostShipController extends EventControllerAbstract  {
         this.gameManager = gameManager;
         this.lostShip = (LostShip) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.requestedCrew = 0;
     }
 

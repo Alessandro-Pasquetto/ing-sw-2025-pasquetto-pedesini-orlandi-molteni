@@ -10,8 +10,7 @@ public class Board {
     // =======================
 
     private final Player[] track;
-    private final ArrayList<Player> activePlayers;  // order: leader -> last
-    private final ArrayList<Player> readyToTravelPlayers;   // order: first player ready -> last one
+    private final ArrayList<Player> travelers;  // order: leader -> last
     private final String imgSrc;
 
     // =======================
@@ -20,8 +19,7 @@ public class Board {
 
     public Board(int levelBoard) {
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
-        this.activePlayers = new ArrayList<>();
-        this.readyToTravelPlayers = new ArrayList<>();
+        this.travelers = new ArrayList<>();
         this.imgSrc = "board" + levelBoard + ".png";
     }
 
@@ -33,17 +31,17 @@ public class Board {
         return track;
     }
 
-    public ArrayList<Player> getCopyActivePlayers() {
-        ArrayList<Player> copyActivePlayers;
+    public ArrayList<Player> getCopyTravelers() {
+        ArrayList<Player> copyTravelers;
 
-        synchronized (activePlayers) {
-            copyActivePlayers = new ArrayList<>(activePlayers);
+        synchronized (travelers) {
+            copyTravelers = new ArrayList<>(travelers);
         }
-        return copyActivePlayers;
+        return copyTravelers;
     }
 
-    public ArrayList<Player> getReadyToTravelPlayers() {
-        return readyToTravelPlayers;
+    public int getNumTravelers() {
+        return travelers.size();
     }
 
     public String getImgSrc() {
@@ -74,50 +72,73 @@ public class Board {
      * @author Gabriele
      * @param player reference to ready player
      */
-    public synchronized void addReadyToTravelPlayer(Player player) {
-        if (readyToTravelPlayers.contains(player)){
+    public synchronized void addTraveler(Player player) {
+        if (travelers.contains(player)){
             throw new IllegalStateException("PlayerIsAlreadyReady");
         }
 
-        readyToTravelPlayers.add(player);
+        travelers.add(player);
     }
 
     /**
-     * Adds a player to the list of players participating in the journey
+     * Adds ready players to the list of players participating in the journey
      *
      * @author Alessandro
-     * @param player is the new traveler
+     * Removes a player to the list of ready ones
+     *
+     * @author Alessandro
+     * @param player reference to ready player
      */
-    public synchronized void addActivePlayer(Player player, int levelBoard) {
-        activePlayers.add(player);
-
-        int pos = 0;
-        switch (activePlayers.size()){
-            case 1:
-                if(levelBoard == 1)
-                    pos = 4;
-                else if(levelBoard == 2)
-                    pos = 6;
-                break;
-
-            case 2:
-                if(levelBoard == 1)
-                    pos = 2;
-                else if(levelBoard == 2)
-                    pos = 3;
-                break;
-
-            case 3:
-                pos = 1;
-                break;
-
-            case 4:
-                pos = 0;
-                break;
+    public synchronized void removeTraveler(Player player) {
+        if (!travelers.contains(player)){
+            throw new IllegalStateException("PlayerIsNotReady");
         }
 
-        track[pos] = player;
-        player.setPosition(pos);
+        travelers.remove(player);
+    }
+
+    /**
+     * Adds ready players to the list of players participating in the journey
+     */
+    public synchronized void addTravelersInTrack(int levelBoard) {
+
+        switch (levelBoard) {
+            case 1:
+
+                track[4] = travelers.get(0);
+                travelers.get(0).setPosition(4);
+                if(travelers.size() == 1) break;
+
+                track[2] = travelers.get(1);
+                travelers.get(1).setPosition(2);
+                if(travelers.size() == 2) break;
+
+                track[1] = travelers.get(2);
+                travelers.get(2).setPosition(1);
+                if(travelers.size() == 3) break;
+
+                track[0] = travelers.get(3);
+                travelers.get(3).setPosition(0);
+
+                break;
+            case 2:
+                track[6] = travelers.get(0);
+                travelers.get(0).setPosition(6);
+                if(travelers.size() == 1) break;
+
+                track[3] = travelers.get(1);
+                travelers.get(1).setPosition(3);
+                if(travelers.size() == 2) break;
+
+                track[1] = travelers.get(2);
+                travelers.get(2).setPosition(1);
+                if(travelers.size() == 3) break;
+
+                track[0] = travelers.get(3);
+                travelers.get(3).setPosition(0);
+
+                break;
+        }
     }
 
     /**
@@ -205,7 +226,7 @@ public class Board {
      * @author Alessandro
      */
     public void updateTurnOrder() {
-        activePlayers.sort(Comparator.comparingInt(Player::getPosition).reversed());
+        travelers.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
 
     /**
@@ -216,9 +237,9 @@ public class Board {
      */
     public ArrayList<Player> checkLappedPlayers() {
         ArrayList<Player> lappedPlayers = new ArrayList<>();
-        Player leader = activePlayers.getFirst();
+        Player leader = travelers.getFirst();
 
-        for (Player player : activePlayers) {
+        for (Player player : travelers) {
             if (leader.getPosition() >= player.getPosition() + track.length) {
                 lappedPlayers.add(player);
                 leaveTravel(player);
@@ -237,7 +258,7 @@ public class Board {
     public ArrayList<Player> checkNoCrewPlayers() {
         ArrayList<Player> noCrewPlayers = new ArrayList<>();
 
-        for (Player player : activePlayers) {
+        for (Player player : travelers) {
             if (player.getSpaceship().getTotalCrewCount() == 0) {
                 noCrewPlayers.add(player);
                 leaveTravel(player);
@@ -256,23 +277,7 @@ public class Board {
     public void leaveTravel(Player player) {
         int playerPosition = player.getPosition();
         track[modulus(playerPosition, track.length)] = null;
-        activePlayers.remove(player);
+        travelers.remove(player);
         player.setHasLeft(true);
-    }
-
-
-    /**
-     * Checks if all active players are ready
-     *
-     * @author Gabriele
-     * @return true if are all ready; otherwise false
-     */
-    public boolean allActivePlayersReady() {
-        for (Player player : activePlayers) {
-            if (!player.getIsReady()) {
-                return false;
-            }
-        }
-        return true;
     }
 }

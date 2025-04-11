@@ -472,7 +472,7 @@ public class Game {
     }
 
     /**
-     * Resets numReadyPlayer value
+     * Set all players not ready
      *
      * @author Alessandro
      */

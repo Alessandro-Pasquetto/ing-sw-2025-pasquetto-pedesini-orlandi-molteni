@@ -49,10 +49,12 @@ class BoardTest {
 
         // Add travelers in level 1 spaceship
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
-        board.addActivePlayer(p2, 1);
-        board.addActivePlayer(p3, 1);
-        board.addActivePlayer(p4, 1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        board.addTravelersInTrack(1);
 
         track = board.getTrack();
 
@@ -63,11 +65,12 @@ class BoardTest {
 
         // Add travelers in level 1 spaceship
         board = new Board(2);
-        board.addActivePlayer(p1, 2);
-        board.addActivePlayer(p2, 2);
-        board.addActivePlayer(p3, 2);
-        board.addActivePlayer(p4, 2);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
 
+        board.addTravelersInTrack(2);
         track = board.getTrack();
 
         assertEquals(p1, track[6]);
@@ -98,7 +101,8 @@ class BoardTest {
 
         // Move player ahead
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p1);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p1, 3);
 
         track = board.getTrack();
@@ -107,7 +111,8 @@ class BoardTest {
 
         // Move player behind
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p1);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p1, -3);
 
         track = board.getTrack();
@@ -116,8 +121,9 @@ class BoardTest {
 
         // Move ahead encountering a player
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
-        board.addActivePlayer(p2, 1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p2, 2);
 
         track = board.getTrack();
@@ -126,8 +132,9 @@ class BoardTest {
 
         // Move behind encountering a player
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
-        board.addActivePlayer(p2, 1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p1, -2);
 
         track = board.getTrack();
@@ -136,7 +143,8 @@ class BoardTest {
 
         // Move ahead player returning in the starting point of the track
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p1);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p1, 14);
 
         track = board.getTrack();
@@ -145,7 +153,8 @@ class BoardTest {
 
         // Move behind player returning in the end point of the track
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p1);
+        board.addTravelersInTrack(1);
         board.movePlayerByDistance(p1, -5);
 
         track = board.getTrack();
@@ -162,7 +171,9 @@ class BoardTest {
 
         // Move player ahead
         board = new Board(1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p1);
+        board.addTravelersInTrack(1);
+
         board.movePlayerByDistance(p1, 3);
 
         track = board.getTrack();
@@ -185,10 +196,10 @@ class BoardTest {
 
         Board board = new Board(1);
 
-        board.addActivePlayer(p2, 1);
-        board.addActivePlayer(p3, 1);
-        board.addActivePlayer(p4, 1);
-        board.addActivePlayer(p1, 1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+        board.addTraveler(p1);
 
         p1.setPosition(4);
         p2.setPosition(3);
@@ -197,40 +208,9 @@ class BoardTest {
 
         board.updateTurnOrder();
 
-        assertEquals(p1, board.getCopyActivePlayers().get(0));
-        assertEquals(p2, board.getCopyActivePlayers().get(1));
-        assertEquals(p3, board.getCopyActivePlayers().get(2));
-        assertEquals(p4, board.getCopyActivePlayers().get(3));
-    }
-
-    @Test
-    void getReadyTravelers() {
-        Player player = new Player("gino", 0, 2);
-        Board board = new Board(2);
-
-        board.addReadyToTravelPlayer(player);
-
-        assertEquals(player, board.getReadyToTravelPlayers().getFirst());
-    }
-
-    @Test
-    void addReadyTraveler() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alessandro", 1, 1);
-        Player p3 = new Player("giulia", 2, 1);
-        Player p4 = new Player("arnoldo", 3, 1);
-
-        Board board = new Board(1);
-
-        // Adding first ready player
-        board.addReadyToTravelPlayer(p1);
-        assertEquals(p1, board.getReadyToTravelPlayers().get(0));
-
-        // Adding second ready player
-        board.addReadyToTravelPlayer(p2);
-        assertEquals(p2, board.getReadyToTravelPlayers().get(1));
-
-        // Tries to add again first player
-        assertThrows(IllegalStateException.class, () -> board.addReadyToTravelPlayer(p1));
+        assertEquals(p1, board.getCopyTravelers().get(0));
+        assertEquals(p2, board.getCopyTravelers().get(1));
+        assertEquals(p3, board.getCopyTravelers().get(2));
+        assertEquals(p4, board.getCopyTravelers().get(3));
     }
 }

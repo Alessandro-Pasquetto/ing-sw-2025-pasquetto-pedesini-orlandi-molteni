@@ -35,7 +35,7 @@ public class SabotageController extends EventControllerAbstract{
         this.phase = EventPhase.START;
         this.currPlayer = -1;
         this.penalizedPlayer = null;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.yDiceResult = 0;
         this.xDiceResult = 0;
         this.triesCount = 0;

@@ -20,11 +20,21 @@ class StardustTest {
     void penalty() {
         Board board = new Board(2);
         Player player1 = new Player("gino", 0, 2);
+        Player player2 = new Player("mario", 3, 2);
+        Player player3 = new Player("anna", 1, 2);
+        Player player4 = new Player("paola", 2, 2);
+
+        board.addTraveler(player1);
+        board.addTraveler(player2);
+        board.addTraveler(player3);
+        board.addTraveler(player4);
+
+        board.addTravelersInTrack(2);
 
         BuildingBoard buildingBoard1 = player1.getSpaceship().getBuildingBoard();
 
         // Added components
-        board.addActivePlayer(player1, 2);
+
         board.movePlayerByDistance(player1, 5);
 
         buildingBoard1.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 1, 2, 3}, "imgPath"));
@@ -55,13 +65,6 @@ class StardustTest {
 //        System.out.println(buildingBoard.checkShipValidity());
 //        System.out.println(player.getSpaceship().getExposedConnectorsCount());
 
-        Player player2 = new Player("mario", 3, 2);
-        Player player3 = new Player("anna", 1, 2);
-        Player player4 = new Player("paola", 2, 2);
-
-        board.addActivePlayer(player2, 2);
-        board.addActivePlayer(player3, 2);
-        board.addActivePlayer(player4, 2);
 
         BuildingBoard buildingBoard2 = player2.getSpaceship().getBuildingBoard();
         BuildingBoard buildingBoard3 = player3.getSpaceship().getBuildingBoard();

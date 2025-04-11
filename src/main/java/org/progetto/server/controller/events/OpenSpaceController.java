@@ -33,7 +33,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
     }

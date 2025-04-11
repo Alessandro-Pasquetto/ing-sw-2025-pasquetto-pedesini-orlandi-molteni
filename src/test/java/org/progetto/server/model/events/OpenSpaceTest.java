@@ -42,7 +42,8 @@ class OpenSpaceTest {
         Board board = new Board(1);
         Player player = new Player("gino", 0, 1);
 
-        board.addActivePlayer(player, 1);
+        board.addTraveler(player);
+        board.addTravelersInTrack(1);
 
         OpenSpace openspace = new OpenSpace(CardType.OPENSPACE,2 , "imgPath");
 

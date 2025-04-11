@@ -48,7 +48,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.phase = EventPhase.START;
         this.couples = new ArrayList<>(couples);
         this.penaltyShots = new ArrayList<>();
-        this.activePlayers = gameManager.getGame().getBoard().getCopyActivePlayers();
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.tempEnginePower = new HashMap<>();
         this.tempFirePower = new HashMap<>();
         this.penaltyPlayer = null;
