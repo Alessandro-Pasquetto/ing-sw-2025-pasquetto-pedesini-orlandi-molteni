@@ -1,16 +1,9 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.server.model.components.Box;
-
-import java.rmi.RemoteException;
-
-import org.progetto.server.model.Player;
-
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
-    void createGame();
+    void createGame(int levelGame, int numMaxPlayers);
 
     void tryJoinToGame(int idGame);
 

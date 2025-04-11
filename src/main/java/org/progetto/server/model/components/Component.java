@@ -13,8 +13,6 @@ public class Component implements Serializable {
     private int rotation;              // {0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
     private int xCoordinate;           // x coordinate in matrix
     private int yCoordinate;           // y coordinate in matrix
-    private boolean hidden;            // false if it was discarded
-    private boolean placed;            // true if it's in the spaceship matrix
     private final String imgSrc;
 
     // =======================
@@ -25,8 +23,6 @@ public class Component implements Serializable {
         this.type = type;
         this.connections = connections;
         this.rotation = 0;
-        this.hidden = false;
-        this.placed = false;
         this.imgSrc = imgSrc;
     }
 
@@ -44,14 +40,6 @@ public class Component implements Serializable {
 
     public int getRotation() {
         return rotation;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public boolean isPlaced() {
-        return placed;
     }
 
     public String getImgSrc() {
@@ -74,14 +62,6 @@ public class Component implements Serializable {
         for (int i = 0; i < rotation; i++) {
             rotate();
         }
-    }
-
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
-
-    public void setPlaced(boolean placed) {
-        this.placed = placed;
     }
 
     public void setX(int xCoordinate) {

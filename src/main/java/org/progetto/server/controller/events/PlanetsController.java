@@ -203,7 +203,7 @@ public class PlanetsController extends EventControllerAbstract {
 
                 // All the boxes are chosen
                 if (rewardBoxes.isEmpty()) {
-                    leavePlanet(gameManager.getGame().getActivePlayer(), sender);
+                    leavePlanet(player, sender);
                 }
 
             } else {

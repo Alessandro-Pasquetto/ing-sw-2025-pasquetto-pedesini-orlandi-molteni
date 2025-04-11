@@ -36,8 +36,7 @@ public class BuildingCommands {
         System.out.printf ("│ Type: %-20s │%n", type.name());
         System.out.println("├────────────────────────────┤");
         System.out.printf ("│ Position: (%2d, %2d)         │%n", component.getX(), component.getY());
-        System.out.printf ("│ Placed: %-19s │%n", component.isPlaced());
-        System.out.printf ("│ Hidden: %-19s │%n", component.isHidden());
+
         if((type == ComponentType.RED_BOX_STORAGE) || (type == ComponentType.BOX_STORAGE)) {
             BoxStorage storage = (BoxStorage) component;
             System.out.printf("│ Capacity : %-19d │%n", storage.getCapacity());

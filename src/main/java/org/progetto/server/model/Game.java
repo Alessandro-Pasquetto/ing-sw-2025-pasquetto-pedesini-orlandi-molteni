@@ -320,7 +320,6 @@ public class Game {
         if(discardedComponent == null)
             throw new IllegalStateException("EmptyHandComponent");
 
-        discardedComponent.setHidden(false);
         buildingBoard.setHandComponent(null);
 
         synchronized (visibleComponentDeck) {

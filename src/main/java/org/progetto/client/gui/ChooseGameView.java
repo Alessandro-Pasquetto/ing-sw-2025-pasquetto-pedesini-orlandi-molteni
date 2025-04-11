@@ -23,7 +23,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
-            GameData.getSender().createGame();
+            GameData.getSender().createGame(1, 2);// todo selection levelGame and numMaxPlayers in gui
         }
     }
 

@@ -7,7 +7,7 @@
   {
     "name": "CreateGame",
     "description": "Create a new game session.",
-    "usage": "CreateGame <nickname>"
+    "usage": "CreateGame <nickname> <level> <numPlayers>"
   },
   {
     "name": "JoinGame",

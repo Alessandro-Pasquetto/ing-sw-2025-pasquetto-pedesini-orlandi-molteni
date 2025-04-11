@@ -102,7 +102,7 @@ public class TuiCommandFilter {
                 break;
 
             case "CREATEGAME":
-                if (!isValidCommand(commandParts.length, 2)) {
+                if (!isValidCommand(commandParts.length, 4)) {
                     expectedFormat(commandType);
                     return;
                 }

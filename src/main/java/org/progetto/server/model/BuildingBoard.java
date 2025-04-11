@@ -152,7 +152,6 @@ public class BuildingBoard implements Serializable {
         handComponent.setY(y);
         handComponent.setX(x);
         handComponent.setRotation(r);
-        handComponent.setPlaced(true);
 
         spaceshipMatrix[y][x] = handComponent;
 

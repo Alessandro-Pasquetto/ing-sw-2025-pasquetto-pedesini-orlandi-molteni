@@ -71,7 +71,7 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void createGame() {
+    public void createGame(int levelGame, int numMaxPlayers) {
         SocketWriter.sendMessage(new CreateGameMessage(1, 2, GameData.getNamePlayer()));
     }
 

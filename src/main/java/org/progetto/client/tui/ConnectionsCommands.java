@@ -34,7 +34,7 @@ public class ConnectionsCommands {
     public static void createGame(String[] commandParts){
 
         GameData.setNamePlayer(commandParts[1]);
-        GameData.getSender().createGame();
+        GameData.getSender().createGame(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[3]));
     }
 
     /**

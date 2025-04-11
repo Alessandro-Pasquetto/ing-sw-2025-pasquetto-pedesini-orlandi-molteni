@@ -37,26 +37,6 @@ class ComponentTest {
     }
 
     @Test
-    void isHidden() {
-        Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
-
-        assertFalse(component.isHidden());
-
-        component.setHidden(true);
-        assertTrue(component.isHidden());
-    }
-
-    @Test
-    void isPlaced() {
-        Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
-
-        assertFalse(component.isPlaced());
-
-        component.setPlaced(true);
-        assertTrue(component.isPlaced());
-    }
-
-    @Test
     void getImgSrc() {
         Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
 
@@ -108,28 +88,6 @@ class ComponentTest {
 
         assertEquals(0, buildingBoard.getHandComponent().getRotation());
         assertArrayEquals(new int[]{0, 1, 2, 3}, buildingBoard.getHandComponent().getConnections());
-    }
-
-    @Test
-    void setHidden() {
-        Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
-
-        component.setHidden(true);
-        assertTrue(component.isHidden());
-
-        component.setHidden(false);
-        assertFalse(component.isHidden());
-    }
-
-    @Test
-    void setPlaced() {
-        Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
-
-        component.setPlaced(true);
-        assertTrue(component.isPlaced());
-
-        component.setPlaced(false);
-        assertFalse(component.isPlaced());
     }
 
     @Test

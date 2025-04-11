@@ -39,9 +39,9 @@ public class RmiClientSender implements Sender {
     // The following methods call functions implemented in the RmiServerReceiver
 
     @Override
-    public void createGame() {
+    public void createGame(int levelGame, int numMaxPlayers) {
         try{
-            server.createGame(RmiClientReceiver.getInstance(), GameData.getNamePlayer(), 1, 4);
+            server.createGame(RmiClientReceiver.getInstance(), GameData.getNamePlayer(), levelGame, numMaxPlayers);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
