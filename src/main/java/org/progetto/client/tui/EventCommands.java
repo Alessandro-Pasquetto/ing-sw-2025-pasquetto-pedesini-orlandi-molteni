@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 public class EventCommands {
 
-
     private static Scanner scanner = new Scanner(System.in);
 
     public static String listenResponse(){
@@ -19,9 +18,7 @@ public class EventCommands {
             String response = scanner.nextLine();
             if(!response.isEmpty())
                 return response;
-
         }
-
     }
 
     // =======================
@@ -33,17 +30,17 @@ public class EventCommands {
      *
      * @author Lorenzo
      * @param required is the firepower required
-     * @param Max is the total amount of usable double cannons
+     * @param max is the total amount of usable double cannons
      */
-    public static void responseHowManyDoubleCannons(int required, int Max) {
+    public static void responseHowManyDoubleCannons(int required, int max) {
         System.out.println("How many double cannons?");
-        System.out.println("Firepower required is " + required+ " and you have" + Max+" double cannons");
+        System.out.println("Firepower required is " + required + " and you have" + max + " double cannons");
 
         String response = listenResponse();
         Sender sender = GameData.getSender();
         try{
             int amount = Integer.parseInt(response);
-            if(amount > Max)
+            if (amount > max)
                 System.out.println("You have exceeded the maximum number of double cannons!");
             else
                 sender.responseHowManyDoubleCannons(amount);
@@ -57,17 +54,17 @@ public class EventCommands {
      * Handles player decision on how many double engines to use
      *
      * @author Lorenzo
-     * @param Max is the total amount of usable double engines
+     * @param max is the total amount of usable double engines
      */
-    public static void responseHowManyDoubleEngines(int Max) {
+    public static void responseHowManyDoubleEngines(int max) {
         System.out.println("How many double engines?");
-        System.out.println("You have" + Max+" double engines");
+        System.out.println("You have" + max+" double engines");
 
         String response = listenResponse();
         Sender sender = GameData.getSender();
         try{
             int amount = Integer.parseInt(response);
-            if(amount > Max)
+            if (amount > max)
                 System.out.println("You have exceeded the maximum number of double engines!");
             else
                 sender.responseHowManyDoubleEngines(amount);
@@ -77,7 +74,6 @@ public class EventCommands {
         }
     }
 
-
     /**
      * Let the player decide were to discard the batteries
      *
@@ -86,20 +82,20 @@ public class EventCommands {
      */
     public static void responseBatteryToDiscard(int required) {
         System.out.println("Select the battery storage from which to remove the battery");
-        System.out.println("You need to discard" +required+" batteries");
+        System.out.println("You need to discard" + required + " batteries");
 
         String x = null;
         String y = null;
 
-        for(int i = 0; i<required; i++){
-            System.out.print("X: ");
-            x = listenResponse();
-            System.out.print("Y: ");
-            y = listenResponse();
-            System.out.println("batteries discarded: "+i+1);
-        }
+        System.out.print("X: ");
+        x = listenResponse();
+        System.out.print("Y: ");
+        y = listenResponse();
+
+        // todo fixato!
         //non so se è giusto ma praticamente ricevo quante batterie da scartare e faccio scegliere un tot di componenti da cui scartare
         //non mi è chiaro però come avviene il controllo che il componente sia giusto e nel caso come viene gestito l'errore, spero sia stato implementato
+
         Sender sender = GameData.getSender();
         try{
             sender.responseBatteryToDiscard(Integer.parseInt(x),Integer.parseInt(y));
@@ -116,19 +112,16 @@ public class EventCommands {
      */
     public static void responseCrewToDiscard(int required) {
         System.out.println("Select the housing unit from which to remove the crew member");
-        System.out.println("You need to discard" +required+" crew members");
+        System.out.println("You need to discard" + required + " crew members");
 
         String x = null;
         String y = null;
 
-        for(int i = 0; i<required; i++){
-            System.out.print("X: ");
-            x = listenResponse();
-            System.out.print("Y: ");
-            y = listenResponse();
-            System.out.println("Crew discarded: "+i+1);
-        }
-        //idem come sopra
+        System.out.print("X: ");
+        x = listenResponse();
+        System.out.print("Y: ");
+        y = listenResponse();
+
         Sender sender = GameData.getSender();
         try{
             sender.responseCrewToDiscard(Integer.parseInt(x),Integer.parseInt(y));
@@ -145,23 +138,23 @@ public class EventCommands {
      */
     public static void responseBoxToDiscard(int required) {
         System.out.println("Select the box storage from which to remove the box");
-        System.out.println("You need to discard" +required+" boxes");
+        System.out.println("You need to discard" + required + " boxes");
 
         String x = null;
         String y = null;
         String idx = null;
 
-        for(int i = 0; i<required; i++){
-            System.out.print("X: ");
-            x = listenResponse();
-            System.out.print("Y: ");
-            y = listenResponse();
-            System.out.print("Storage idx: ");
-            idx = listenResponse();
-            System.out.println("Boxes discarded: "+i+1);
-        }
+        System.out.print("X: ");
+        x = listenResponse();
+        System.out.print("Y: ");
+        y = listenResponse();
+        System.out.print("Storage idx: ");
+        idx = listenResponse();
+
+        // todo fixato!
         //ancora idem, mi convince sempre meno, chi controlla che ho abbastanza casse da scartare
         //gestirei la comunicazione singolarmente e sequenzialmente
+        // (e' letteralmente quello che e' stato fatto g!!!!!)
         Sender sender = GameData.getSender();
         try{
             sender.responseBoxToDiscard(Integer.parseInt(x),Integer.parseInt(y),Integer.parseInt(idx));
@@ -196,9 +189,9 @@ public class EventCommands {
      * @param penaltyDays are the days of penalty
      * @param penaltyCrew are the crew to discard by penalty
      */
-    public static void responseAcceptRewardCreditsAndPenalties(int reward,int penaltyDays, int penaltyCrew) {
+    public static void responseAcceptRewardCreditsAndPenalties(int reward, int penaltyDays, int penaltyCrew) {
         System.out.println("You want to accept the reward and penalties?");
-        System.out.println("Reward: "+ reward+"Days of penalty: "+ penaltyDays+"Crew to discard: "+ penaltyCrew);
+        System.out.println("Reward: " + reward + " Days of penalty: " + penaltyDays + " Crew to discard: " + penaltyCrew);
 
         String response = listenResponse();
         if((response.toUpperCase().equals("YES"))||(response.toUpperCase().equals("NO"))){
@@ -207,7 +200,6 @@ public class EventCommands {
 
         }else
             System.out.println("You must choose between YES or NO");
-
     }
 
 
@@ -229,7 +221,6 @@ public class EventCommands {
 
         }else
             System.out.println("You must choose between YES or NO");
-
     }
 
     /**
@@ -239,9 +230,9 @@ public class EventCommands {
      */
     public static void responsePlanetLandRequest(boolean[] planetsTaken) {
         System.out.println("In witch planet do you want to land?");
-        for(int i = 0; i<planetsTaken.length; i++){
-            if(!planetsTaken[i]){
-                System.out.println("Planet "+i);
+        for (int i = 0; i < planetsTaken.length; i++){
+            if (!planetsTaken[i]){
+                System.out.println("Planet " + i);
             }
         }
 
@@ -250,13 +241,13 @@ public class EventCommands {
 
         try {
             int planet_idx = Integer.parseInt(idx);
-            if((planet_idx>=0)&&(planet_idx < planetsTaken.length)){
+            if ((planet_idx >= 0) && (planet_idx < planetsTaken.length)){
                 if(!planetsTaken[planet_idx]) {
                     Sender sender = GameData.getSender();
                     sender.responsePlanetLandRequest("YES", planet_idx);
-                }else
+                } else
                     System.out.println("Planet already taken");
-            }else
+            } else
                 System.out.println("Invalid planet index");
 
         }catch (NumberFormatException e){
@@ -265,13 +256,12 @@ public class EventCommands {
     }
 
 
-
-    //non sono sicuro che mandare un array di box si possa fare
-   //todo void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
+    // non sono sicuro che mandare un array di box si possa fare
+    // todo void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
 
 
     /**
-     * Handles player decision to use a double cannon
+     * Handles player decision to use a double cannon to protect in meteors rain
      *
      * @author Lorenzo
      */
@@ -279,21 +269,11 @@ public class EventCommands {
         System.out.println("Do you want to use a double cannon?");
 
         String response = listenResponse();
-        if((response.toUpperCase().equals("YES"))||(response.toUpperCase().equals("NO"))){
+        if((response.toUpperCase().equals("YES")) || (response.toUpperCase().equals("NO"))){
             Sender sender = GameData.getSender();
             sender.responseUseDoubleCannonRequest(response);
 
         }else
             System.out.println("You must choose between YES or NO");
-
     }
-
-
-
-
-
-
-
-
-
 }

@@ -7,7 +7,6 @@ import org.progetto.client.model.GameData;
  */
 public class ConnectionsCommands {
 
-
     // =======================
     // OTHER METHODS
     // =======================

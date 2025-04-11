@@ -80,7 +80,6 @@ public class TuiCommandFilter {
 
             //todo add an help command to read from a .json file
 
-
            case "Connect":
                if(!isValidCommand(commandParts.length, 3))
                    return;

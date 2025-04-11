@@ -101,8 +101,6 @@ public class TuiHandlerMessage {
             EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());
         }
 
-
-
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {

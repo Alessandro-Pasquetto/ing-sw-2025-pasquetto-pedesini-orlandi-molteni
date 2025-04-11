@@ -87,7 +87,6 @@ public class GameCommands {
         };
     }
 
-
     // =======================
     // COMMANDS
     // =======================
@@ -103,7 +102,6 @@ public class GameCommands {
         sender.showSpaceship(commandParts[1]);
 
     }
-
 
     /**
      * Help command, read a list of commands and display their usage
@@ -126,5 +124,4 @@ public class GameCommands {
             System.out.println("Error loading command list: " + e.getMessage());
         }
     }
-
 }

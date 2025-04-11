@@ -20,7 +20,6 @@ public class BuildingCommands {
 
 
 
-
     // =======================
     // PRINTING
     // =======================
@@ -53,12 +52,10 @@ public class BuildingCommands {
         System.out.println("└────────────────────────────┘");
     }
 
-
     public static void printEventCard(EventCard card) {
         System.out.println("┌────────────────────────────────────────────┐");
         System.out.printf ("│ Type       : %-30s │%n", card.getType(),  "|");
         System.out.printf ("│ Level      : %-30s │%n", card.getLevel(), "|");
-
 
         switch (card.getType()){
 
@@ -141,12 +138,8 @@ public class BuildingCommands {
             }
         }
 
-
         System.out.println();
     }
-
-
-
 
     // =======================
     // COMMANDS
@@ -162,7 +155,6 @@ public class BuildingCommands {
         Sender sender = GameData.getSender();
         sender.pickHiddenComponent();
     }
-
 
     /**
      * Enables to pick a visible component given its index, usage : PickVisible componentIdx
@@ -206,7 +198,6 @@ public class BuildingCommands {
         );
     }
 
-
     /**
      * Enables to place the hand component given its coordinates and rotation and pick a visible component given its index,
      * usage : PlaceAndPickVisible pos_x pos_y rot component_idx
@@ -223,7 +214,6 @@ public class BuildingCommands {
                 Integer.parseInt(commandParts[4])
         );
     }
-
 
     /**
      * Enables to place the hand component given its coordinates and rotation and pick an event deck given its index,
@@ -395,27 +385,4 @@ public class BuildingCommands {
         Sender sender = GameData.getSender();
         sender.close();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
