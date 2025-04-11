@@ -219,24 +219,6 @@ public class LostShipController extends EventControllerAbstract  {
             sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
             gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()));
             gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()));
-
-            // Updates turn order
-            board.updateTurnOrder();
-
-            // Checks for lapped player
-            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-            if (lappedPlayers != null) {
-                for (Player lappedPlayer : lappedPlayers) {
-
-                    // Gets lapped player sender reference
-                    Sender senderLapped = gameManager.getSenderByPlayer(player);
-
-                    senderLapped.sendMessage("YouGotLapped");
-                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                    board.leaveTravel(lappedPlayer);
-                }
-            }
         }
     }
 }

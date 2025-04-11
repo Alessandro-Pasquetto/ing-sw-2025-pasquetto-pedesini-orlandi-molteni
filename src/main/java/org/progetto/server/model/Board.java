@@ -94,6 +94,12 @@ public class Board {
         travelers.remove(player);
     }
 
+    /**
+     * Checks if all travelers are ready
+     *
+     * @author Alessandro
+     * @return true if travelers are all ready; otherwise false
+     */
     public synchronized boolean allTravelersReady() {
         for (Player traveler : travelers){
             if(!traveler.getIsReady())
@@ -183,38 +189,6 @@ public class Board {
         track[modulus(playerPosition, track.length)] = player;
         player.setPosition(playerPosition);
     }
-
-//  public synchronized void movePlayerByDistance(Player player, int distance) throws IllegalStateException {
-//        int sign;
-//        int playerPosition = player.getPosition();
-//
-//        track[modulus(playerPosition, track.length)] = null;  // removes player from starting cell
-//
-//        if(distance < 0)
-//            sign = -1;
-//        else
-//            sign = 1;
-//
-//        distance = Math.abs(distance);
-//
-//        while(distance != 0) {
-//            playerPosition += sign;
-//
-//            Player trackCell = track[modulus(playerPosition, track.length)];
-//
-//            if(trackCell == null) {
-//                distance--;
-//            } else {
-//                if(trackCell.getPosition() <= playerPosition - track.length) {
-//                    leaveTravel(trackCell);
-//                    throw new IllegalStateException("PlayerLapped");
-//                }
-//            }
-//        }
-//
-//        track[modulus(playerPosition, track.length)] = player;
-//        player.setPosition(playerPosition);
-//    }
 
     /**
      * Calculate the modulus

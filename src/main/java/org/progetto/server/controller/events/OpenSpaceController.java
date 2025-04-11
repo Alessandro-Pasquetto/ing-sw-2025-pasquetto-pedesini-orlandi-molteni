@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
@@ -79,26 +80,16 @@ public class OpenSpaceController extends EventControllerAbstract {
                 if (maxUsable == 0) {
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
-                    if (playerEnginePower > 0) {
-                        phase = EventPhase.EFFECT;
-                        eventEffect();
-
-                    } else {
-                        sender.sendMessage("ZeroEnginePower");
-                        gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                        gameManager.getGame().getBoard().leaveTravel(player);
-                    }
-
                 } else {
                     System.out.println("Waiting for HowManyDoubleEngines");
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = EventPhase.ENGINE_NUMBER;
 
                     gameManager.getGameThread().waitPlayerReady(player);
-
-                    phase = EventPhase.EFFECT;
-                    eventEffect();
                 }
+
+                phase = EventPhase.EFFECT;
+                eventEffect();
             }
         }
     }
@@ -170,6 +161,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                         sender.sendMessage("BatteryDiscarded");
 
                         if (requestedNumber == 0) {
+
                             player.setIsReady(true, gameManager.getGame());
                             gameManager.getGameThread().notifyThread();
 
@@ -202,16 +194,26 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
-            Player player = gameManager.getGame().getActivePlayer();
 
-            // Event effect applied for single player
-            openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
+            Player player = gameManager.getGame().getActivePlayer();
+            Board board = gameManager.getGame().getBoard();
 
             // Sends update message
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
+            // Checks if player has an engine power greater than zero
+            if (playerEnginePower > 0) {
+                // Event effect applied for single player
+                openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
+
+                sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
+
+            } else {
+                sender.sendMessage("NoEnginePower");
+                gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
+                board.leaveTravel(player);
+            }
         }
     }
 }

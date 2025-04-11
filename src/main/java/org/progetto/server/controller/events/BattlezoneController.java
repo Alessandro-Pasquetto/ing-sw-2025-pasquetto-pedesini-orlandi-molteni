@@ -449,7 +449,6 @@ public class BattlezoneController extends EventControllerAbstract {
         }
 
         // Reset controller temp values
-        currPlayer = 0;
         tempFirePower.clear();
         tempEnginePower.clear();
     }
@@ -476,21 +475,6 @@ public class BattlezoneController extends EventControllerAbstract {
 
             // Updates turn order
             board.updateTurnOrder();
-
-            // Checks for lapped player
-            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-            if (lappedPlayers != null) {
-                for (Player lappedPlayer : lappedPlayers) {
-
-                    // Gets lapped player sender reference
-                    Sender senderLapped = gameManager.getSenderByPlayer(penaltyPlayer);
-
-                    senderLapped.sendMessage("YouGotLapped");
-                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                    board.leaveTravel(lappedPlayer);
-                }
-            }
 
             // Next Couple
             couples.removeFirst();
@@ -521,12 +505,6 @@ public class BattlezoneController extends EventControllerAbstract {
                 phase = EventPhase.DISCARDED_CREW;
 
                 gameManager.getGameThread().waitPlayerReady(penaltyPlayer);
-
-            } else {
-                // Player is defeated
-                sender.sendMessage("NotEnoughCrew");
-                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                gameManager.getGame().getBoard().leaveTravel(player);
 
             }
 
@@ -785,6 +763,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             // Checks if penalty shots are empty
             for (Projectile shot : penaltyShots) {
+
                 // Gets penalty player sender reference
                 Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
@@ -1000,14 +979,6 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 penaltyPlayer.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
-            }
-
-            // Checks if penalty player lost
-            int totalCrew = penaltyPlayer.getSpaceship().getTotalCrewCount();
-
-            if (totalCrew == 0) {
-                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(penaltyPlayer.getName()));
-                gameManager.getGame().getBoard().leaveTravel(penaltyPlayer);
             }
         }
     }

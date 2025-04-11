@@ -73,24 +73,6 @@ public class StardustController extends EventControllerAbstract {
                 sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
             }
-
-            // Updates turn order
-            board.updateTurnOrder();
-
-            // Checks for lapped player
-            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-            if (lappedPlayers != null) {
-                for (Player lappedPlayer : lappedPlayers) {
-
-                    // Gets lapped player sender reference
-                    Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
-
-                    senderLapped.sendMessage("YouGotLapped");
-                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                    board.leaveTravel(lappedPlayer);
-                }
-            }
         }
     }
 }

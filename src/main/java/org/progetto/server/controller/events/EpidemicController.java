@@ -68,18 +68,6 @@ public class EpidemicController extends EventControllerAbstract {
                 sender.sendMessage(new CrewInfectedAmountMessage(infectedCount));
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
             }
-
-            // Checks for defeated players
-            for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
-
-                if (player.getSpaceship().getTotalCrewCount() == 0) {
-                    Sender sender = gameManager.getSenderByPlayer(player);
-
-                    sender.sendMessage("NotEnoughCrew");
-                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                    gameManager.getGame().getBoard().leaveTravel(player);
-                }
-            }
         }
     }
 }

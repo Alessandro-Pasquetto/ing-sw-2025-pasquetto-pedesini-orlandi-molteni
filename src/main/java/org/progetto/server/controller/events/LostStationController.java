@@ -208,24 +208,6 @@ public class LostStationController extends EventControllerAbstract {
                 sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
                 gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
 
-                // Updates turn order
-                board.updateTurnOrder();
-
-                // Checks for lapped player
-                ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-                if (lappedPlayers != null) {
-                    for (Player lappedPlayer : lappedPlayers) {
-
-                        // Gets lapped player sender reference
-                        Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
-
-                        senderLapped.sendMessage("YouGotLapped");
-                        gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                        board.leaveTravel(lappedPlayer);
-                    }
-                }
-
             } else {
                 sender.sendMessage("NotYourTurn");
             }

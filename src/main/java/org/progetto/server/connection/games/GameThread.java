@@ -95,10 +95,8 @@ public class GameThread extends Thread {
                         System.out.println();
                         System.out.println("New event...");
 
-                        /*
-                        //todo richiedere al player di pescare una carta
-                        waitFirstNotify();
-                         */
+                        // todo richiedere al player di pescare una carta
+                        // waitFirstNotify();
 
                         // todo da rimuovere, sarà chiamato da un player
                         EventController.pickEventCard(gameManager);
@@ -109,9 +107,16 @@ public class GameThread extends Thread {
                         gameManager.getEventController().start();
 
                         gameManager.getGame().getBoard().updateTurnOrder();
+
+                        EventController.handleDefeatedPlayers(gameManager);
+
                         gameManager.getGame().setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
+                        game.setPhase(GamePhase.TRAVEL);
                         break;
+
+                    case TRAVEL:
+                        // todo gestire il fatto che un player dopo una eventcard possa decidere di abbandonare il viaggio
 
                     case ENDGAME:
                         System.out.println("Endgame...");

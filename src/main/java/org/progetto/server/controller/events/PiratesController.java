@@ -342,24 +342,6 @@ public class PiratesController extends EventControllerAbstract {
             gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()));
             gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()));
 
-            // Updates turn order
-            board.updateTurnOrder();
-
-            // Checks for lapped player
-            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-            if (lappedPlayers != null) {
-                for (Player lappedPlayer : lappedPlayers) {
-
-                    // Gets lapped player sender reference
-                    Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
-
-                    senderLapped.sendMessage("YouGotLapped");
-                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                    board.leaveTravel(lappedPlayer);
-                }
-            }
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         }
@@ -646,21 +628,6 @@ public class PiratesController extends EventControllerAbstract {
 
                     notProtectedPlayer.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
-                }
-            }
-
-            // Checks if someone lost
-            for (Player shieldNotProtectedPlayer : protectedPlayers) {
-
-                // Total amount of crew members
-                int totalCrew = shieldNotProtectedPlayer.getSpaceship().getTotalCrewCount();
-
-                if (totalCrew == 0) {
-                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(shieldNotProtectedPlayer.getName()));
-                    gameManager.getGame().getBoard().leaveTravel(shieldNotProtectedPlayer);
-
-                    // Remove him from defeated players still to handle
-                    defeatedPlayers.remove(shieldNotProtectedPlayer);
                 }
             }
         }

@@ -283,14 +283,9 @@ public class SlaversController extends EventControllerAbstract {
                     phase = EventPhase.DISCARDED_CREW;
 
                 } else {
-                    sender.sendMessage("NotEnoughCrew");
-                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-                    gameManager.getGame().getBoard().leaveTravel(player);
-
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                 }
-
 
             } else {
                 sender.sendMessage("NotYourTurn");
@@ -416,24 +411,6 @@ public class SlaversController extends EventControllerAbstract {
             sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
             gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
             gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
-
-            // Updates turn order
-            board.updateTurnOrder();
-
-            // Checks for lapped player
-            ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
-
-            if (lappedPlayers != null) {
-                for (Player lappedPlayer : lappedPlayers) {
-
-                    // Gets lapped player sender reference
-                    Sender senderLapped = gameManager.getSenderByPlayer(lappedPlayer);
-
-                    senderLapped.sendMessage("YouGotLapped");
-                    gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), senderLapped);
-                    board.leaveTravel(lappedPlayer);
-                }
-            }
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
