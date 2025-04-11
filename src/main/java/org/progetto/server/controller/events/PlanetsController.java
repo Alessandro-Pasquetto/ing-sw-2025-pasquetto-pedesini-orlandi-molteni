@@ -172,7 +172,7 @@ public class PlanetsController extends EventControllerAbstract {
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 try {
-                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                     BoxStorage storage = (BoxStorage) matrix[y][x];
                     Box box = rewardBoxes.get(idxBox);
 

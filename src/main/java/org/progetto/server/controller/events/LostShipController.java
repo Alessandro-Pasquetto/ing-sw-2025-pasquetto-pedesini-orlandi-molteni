@@ -163,7 +163,7 @@ public class LostShipController extends EventControllerAbstract  {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
                 if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {

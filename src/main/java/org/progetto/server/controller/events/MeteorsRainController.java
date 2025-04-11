@@ -91,7 +91,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
-                gameManager.getGameThread().waitPlayersReady(gameManager.getGame());
+                gameManager.getGameThread().resetAndWaitPlayersReady();
 
                 // Resets elaboration attributes
                 decisionPlayers.clear();
@@ -380,7 +380,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if the player that calls the methods has to discard a battery to activate protection
             if (discardedBattery.contains(player)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {

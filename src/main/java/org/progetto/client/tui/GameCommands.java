@@ -17,7 +17,7 @@ public class GameCommands {
 
     public static void printShipStatus(Spaceship ship) {
 
-        Component[][] spaceshipMatrix = ship.getBuildingBoard().getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
 
         System.out.println("\n🛠  Spaceship Matrix View");
         System.out.println("   ┌──────────────────────────────┐");

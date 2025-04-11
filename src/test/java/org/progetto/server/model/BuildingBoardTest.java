@@ -2,7 +2,6 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.components.*;
 
@@ -21,11 +20,11 @@ class BuildingBoardTest {
         for (int i = 0; i < 5; i++) {
             System.out.printf("%-20s", 5 + i);
         }
-        for (int i = 0; i < buildingBoard.getSpaceshipMatrix().length; i++) {
+        for (int i = 0; i < buildingBoard.getCopySpaceshipMatrix().length; i++) {
             System.out.println();
             System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard.getSpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard.getSpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrix()[i][j].getRotation();
+            for (int j = 0; j < buildingBoard.getCopySpaceshipMatrix()[0].length; j++) {
+                String value = (buildingBoard.getCopySpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getCopySpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getCopySpaceshipMatrix()[i][j].getRotation();
                 System.out.printf("%-20s", value);
             }
         }
@@ -64,11 +63,11 @@ class BuildingBoardTest {
     }
 
     @Test
-    void getSpaceshipMatrix() {
+    void getCopySpaceshipMatrix() {
         // Create board for level 1
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
 
-        Component[][] matrix = board.getSpaceshipMatrix();
+        Component[][] matrix = board.getCopySpaceshipMatrix();
 
         // Test matrix is not null
         assertNotNull(matrix);
@@ -203,7 +202,7 @@ class BuildingBoardTest {
         Spaceship spaceship = new Spaceship(1, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
 
         Component c;
 
@@ -668,7 +667,7 @@ class BuildingBoardTest {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         buildingBoard.getHandComponent().setRotation(0);

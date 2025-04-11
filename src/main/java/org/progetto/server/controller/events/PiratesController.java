@@ -200,7 +200,7 @@ public class PiratesController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
@@ -390,7 +390,7 @@ public class PiratesController extends EventControllerAbstract {
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
-                gameManager.getGameThread().waitPlayersReady(gameManager.getGame());
+                gameManager.getGameThread().resetAndWaitPlayersReady();
 
                 // Resets elaboration attributes
                 protectedPlayers.clear();
@@ -576,7 +576,7 @@ public class PiratesController extends EventControllerAbstract {
             // Checks if the player that calls the methods has to discard a battery to activate a shield
             if (discardedBattery.contains(player)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {

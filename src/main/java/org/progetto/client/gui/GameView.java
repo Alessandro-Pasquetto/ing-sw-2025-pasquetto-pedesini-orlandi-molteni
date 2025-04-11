@@ -74,13 +74,12 @@ public class GameView {
             return;
         }
 
-        if (BuildingData.getHandComponent() == null) {
+        if (BuildingData.getHandComponent() == null)
             GameData.getSender().pickHiddenComponent();
-        }
-        else if (BuildingData.getXHandComponent() != -1){
 
+        else if (BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
-        }
+
     }
 
     public void pickVisibleComponent() {

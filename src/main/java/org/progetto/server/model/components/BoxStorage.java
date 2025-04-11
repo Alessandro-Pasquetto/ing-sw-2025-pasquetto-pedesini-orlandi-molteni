@@ -1,6 +1,5 @@
 package org.progetto.server.model.components;
 
-import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 
 public class BoxStorage extends Component {
@@ -9,7 +8,7 @@ public class BoxStorage extends Component {
     // ATTRIBUTES
     // =======================
 
-    private Box[] boxStorage;
+    private final Box[] boxStorage;
     private int boxCount;
 
     // =======================

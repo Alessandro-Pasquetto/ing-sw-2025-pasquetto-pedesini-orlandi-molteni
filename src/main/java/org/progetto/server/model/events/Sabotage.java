@@ -1,10 +1,8 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Sabotage extends EventCard {
 
@@ -61,7 +59,7 @@ public class Sabotage extends EventCard {
      * @return the component to destroy, null otherwise
      */
     public Component penalty(int y, int x, Player player) {
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
         if (y >= 0 && y < spaceshipMatrix.length && x >= 0 && x < spaceshipMatrix[0].length) {
             if (spaceshipMatrix[y][x] != null) {

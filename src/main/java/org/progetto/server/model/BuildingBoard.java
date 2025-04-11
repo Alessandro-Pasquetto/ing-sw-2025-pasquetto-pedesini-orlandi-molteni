@@ -49,8 +49,13 @@ public class BuildingBoard implements Serializable {
         return handComponent;
     }
 
-    public Component[][] getSpaceshipMatrix() {
-        return spaceshipMatrix;
+    public Component[][] getCopySpaceshipMatrix() {
+        Component[][] SpaceshipMatrix = new Component[spaceshipMatrix.length][];
+        for (int i = 0; i < spaceshipMatrix.length; i++) {
+            SpaceshipMatrix[i] = spaceshipMatrix[i].clone();
+        }
+
+        return SpaceshipMatrix;
     }
 
     public int[][] getBoardMask() {

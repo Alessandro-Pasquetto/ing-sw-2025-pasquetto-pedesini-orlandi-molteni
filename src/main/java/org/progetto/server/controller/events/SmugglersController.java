@@ -4,7 +4,6 @@ import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
-import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -184,7 +183,7 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
@@ -316,7 +315,7 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
                 if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
@@ -371,7 +370,7 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
@@ -466,7 +465,7 @@ public class SmugglersController extends EventControllerAbstract {
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 try {
-                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                     BoxStorage storage = (BoxStorage) matrix[y][x];
                     Box box = rewardBoxes.get(idxBox);
 

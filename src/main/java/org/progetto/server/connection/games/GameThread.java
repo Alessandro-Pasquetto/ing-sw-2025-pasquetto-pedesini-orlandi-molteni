@@ -48,7 +48,7 @@ public class GameThread extends Thread {
                     case INIT:
                         System.out.println("Waiting players...");
 
-                        waitPlayersReady(game);
+                        resetAndWaitPlayersReady();
 
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
@@ -70,15 +70,13 @@ public class GameThread extends Thread {
                         }
                         gameManager.getTimerController().stopTimer();
 
-                        // todo la riga sotto è da eliminare quando si farà che il ready in building fa anche il placeLastComponent
-                        gameManager.broadcastGameMessage("TimerExpired");
                         // Waiting for placing the last component
-                        waitPlayersReady(game);
+                        waitPlayersReady();
 
                         if(!BuildingController.checkAllShipValidity(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions)
-                            waitPlayersReady(game);
+                            waitPlayersReady();
                         }
 
                         // preparing players in track
@@ -104,6 +102,8 @@ public class GameThread extends Thread {
 
                         // todo da rimuovere, sarà chiamato da un player
                         EventController.pickEventCard(gameManager);
+
+                        System.out.println(gameManager.getGame().getActiveEventCard().getType().toString());
 
                         gameManager.createEventController();
                         gameManager.getEventController().start();
@@ -148,12 +148,13 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all players are ready to continue
+     * Reset players ready and pauses the game thread until all players are ready to continue
      *
      * @author Alessandro
      */
-    public void waitPlayersReady(Game game) throws InterruptedException {
-        gameManager.getGame().resetReadyPlayers();
+    public void resetAndWaitPlayersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        game.resetReadyPlayers();
 
         synchronized (gameThreadLock) {
             while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
@@ -162,15 +163,30 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all active players are ready to continue
+     * Pauses the game thread until all players are ready to continue
+     *
+     * @author Alessandro
+     */
+    public void waitPlayersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+
+        synchronized (gameThreadLock) {
+            while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
+                gameThreadLock.wait();
+        }
+    }
+
+    /**
+     * Pauses the game thread until all travelers are ready to continue
      *
      * @author Gabriele
      */
-    public void waitTravelersReady(Game game) throws InterruptedException {
-        Board board = gameManager.getGame().getBoard();
+    public void waitTravelersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        Board board = game.getBoard();
 
         for (Player player : board.getCopyTravelers()) {
-            player.setIsReady(false, gameManager.getGame());
+            player.setIsReady(false, game);
         }
 
         synchronized (gameThreadLock) {

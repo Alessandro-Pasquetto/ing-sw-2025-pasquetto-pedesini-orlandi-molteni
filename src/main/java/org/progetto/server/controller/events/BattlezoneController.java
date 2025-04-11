@@ -307,7 +307,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
@@ -553,7 +553,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
                 if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
@@ -651,7 +651,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
                 if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
@@ -725,7 +725,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(penaltyPlayer)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
@@ -943,7 +943,7 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if the player that calls the methods has to discard a battery to activate a shield
             if (player.equals(penaltyPlayer)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {

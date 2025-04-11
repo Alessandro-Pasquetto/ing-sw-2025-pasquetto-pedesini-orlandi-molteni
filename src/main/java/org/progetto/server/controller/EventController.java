@@ -26,7 +26,6 @@ public class EventController {
 
         EventCard card = gameManager.getGame().pickEventCard();
 
-        System.out.println(card.getType().toString());
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
 
         gameManager.getGameThread().notifyThread();

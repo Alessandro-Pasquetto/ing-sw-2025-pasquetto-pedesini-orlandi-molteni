@@ -96,8 +96,8 @@ public class SpaceshipController {
             } else {
 
                 try {
-                    BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[startY][startX];
-                    BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[endY][endX];
+                    BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[startY][startX];
+                    BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[endY][endX];
 
                     Box box = startComponent.getBoxStorage()[startIdx];
 
@@ -169,7 +169,7 @@ public class SpaceshipController {
         if (activePlayer.equals(player) && phase.equals(EventPhase.CHOOSE_BOX)) {
 
             try {
-                BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrix()[storageY][storageX];
+                BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[storageY][storageX];
 
                 // Removes selected box
                 if (component.removeBox(player.getSpaceship(), idx)) {

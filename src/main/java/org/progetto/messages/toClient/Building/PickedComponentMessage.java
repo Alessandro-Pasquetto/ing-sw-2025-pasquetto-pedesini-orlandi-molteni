@@ -1,7 +1,6 @@
 package org.progetto.messages.toClient.Building;
 
 import org.progetto.server.model.components.Component;
-
 import java.io.Serializable;
 
 public class PickedComponentMessage implements Serializable {
@@ -10,7 +9,7 @@ public class PickedComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Component component;
+    private final Component component;
 
     // =======================
     // CONSTRUCTORS
@@ -32,9 +31,7 @@ public class PickedComponentMessage implements Serializable {
         return component.getType().toString();
     }
 
-
     public String getImgPath() {
         return component.getImgSrc();
     }
-
 }

@@ -64,7 +64,7 @@ class MeteorsRainTest {
         Projectile s3 = new Projectile(ProjectileSize.BIG, 2);
         Projectile s4 = new Projectile(ProjectileSize.SMALL, 3);
 
-        Component[][] spaceshipMatrix = bb.getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = bb.getCopySpaceshipMatrix();
 
         // up
         assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 2));

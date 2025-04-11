@@ -22,8 +22,8 @@ public class SocketWriter extends Thread {
     // =======================
 
     public SocketWriter(ObjectOutputStream out) {
-        this.out = out;
-        this.messageQueue = new LinkedBlockingQueue<>();
+        SocketWriter.out = out;
+        messageQueue = new LinkedBlockingQueue<>();
     }
 
     // =======================

@@ -98,7 +98,7 @@ public class Pirates extends EventCard {
      * @return the component to destroy, null otherwise
      */
     public Component penaltyShot(Game game, Player player, Projectile shot, int position) {
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrix();
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
         int row, column;
 
         switch (shot.getFrom()) {
