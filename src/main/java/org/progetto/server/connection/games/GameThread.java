@@ -162,16 +162,21 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all travelers are ready to continue
+     * Pauses the game thread until all active players are ready to continue
      *
-     * @author Alessandro
+     * @author Gabriele
      */
     public void waitTravelersReady(Game game) throws InterruptedException {
-        gameManager.getGame().resetReadyPlayers();
+        Board board = gameManager.getGame().getBoard();
+
+        for (Player player : board.getCopyTravelers()) {
+            player.setIsReady(false, gameManager.getGame());
+        }
 
         synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() != game.getBoard().getNumTravelers())
+            while (!board.allTravelersReady()) {
                 gameThreadLock.wait();
+            }
         }
     }
 

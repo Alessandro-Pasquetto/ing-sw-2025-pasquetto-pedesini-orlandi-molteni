@@ -84,9 +84,6 @@ public class Board {
      * Adds ready players to the list of players participating in the journey
      *
      * @author Alessandro
-     * Removes a player to the list of ready ones
-     *
-     * @author Alessandro
      * @param player reference to ready player
      */
     public synchronized void removeTraveler(Player player) {
@@ -97,8 +94,20 @@ public class Board {
         travelers.remove(player);
     }
 
+    public synchronized boolean allTravelersReady() {
+        for (Player traveler : travelers){
+            if(!traveler.getIsReady())
+                return false;
+        }
+
+        return true;
+    }
+
     /**
      * Adds ready players to the list of players participating in the journey
+     *
+     * @author Alessandro
+     * @param levelBoard
      */
     public synchronized void addTravelersInTrack(int levelBoard) {
 
