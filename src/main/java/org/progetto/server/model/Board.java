@@ -222,7 +222,7 @@ public class Board {
         ArrayList<Player> lappedPlayers = new ArrayList<>();
         Player leader = travelers.getFirst();
 
-        for (Player player : travelers) {
+        for (Player player : new ArrayList<>(travelers)) {
             if (leader.getPosition() >= player.getPosition() + track.length) {
                 lappedPlayers.add(player);
                 leaveTravel(player);
@@ -241,7 +241,7 @@ public class Board {
     public ArrayList<Player> checkNoCrewPlayers() {
         ArrayList<Player> noCrewPlayers = new ArrayList<>();
 
-        for (Player player : travelers) {
+        for (Player player : new ArrayList<>(travelers)) {
             if (player.getSpaceship().getTotalCrewCount() == 0) {
                 noCrewPlayers.add(player);
                 leaveTravel(player);

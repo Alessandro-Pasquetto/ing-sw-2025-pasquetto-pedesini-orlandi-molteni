@@ -44,6 +44,7 @@ class BoardTest {
         Player p3 = new Player("andrea", 2, 1);
         Player p4 = new Player("gianmaria", 3, 1);
 
+        Game game = new Game(0, 4, 1);
         Board board;
         Player[] track;
 
@@ -70,6 +71,13 @@ class BoardTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
+        p1.setIsReady(true, game);
+        p2.setIsReady(true, game);
+        p3.setIsReady(true, game);
+        p4.setIsReady(true, game);
+
+        assertTrue(board.allTravelersReady());
+
         board.addTravelersInTrack(2);
         track = board.getTrack();
 
@@ -77,6 +85,8 @@ class BoardTest {
         assertEquals(p2, track[3]);
         assertEquals(p3, track[1]);
         assertEquals(p4, track[0]);
+
+        assertEquals(4, board.getNumTravelers());
     }
 
     @Test
@@ -212,5 +222,65 @@ class BoardTest {
         assertEquals(p2, board.getCopyTravelers().get(1));
         assertEquals(p3, board.getCopyTravelers().get(2));
         assertEquals(p4, board.getCopyTravelers().get(3));
+    }
+
+    @Test
+    void checkLappedPlayer() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("alessandro", 1, 1);
+
+        Board board = new Board(1);
+
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTravelersInTrack(1);
+        board.movePlayerByDistance(p1, 30);
+
+        board.checkLappedPlayers();
+
+        assertTrue(p2.getHasLeft());
+
+        Player p3 = new Player("gino", 0, 1);
+        Player p4 = new Player("alessandro", 1, 1);
+
+        Board board2 = new Board(1);
+
+        board2.addTraveler(p3);
+        board2.addTraveler(p4);
+        board2.addTravelersInTrack(1);
+        board2.movePlayerByDistance(p3, 3);
+
+        assertNull(board2.checkLappedPlayers());
+    }
+
+    @Test
+    void checkNoCrewPlayers() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("alessandro", 1, 1);
+
+        Board board = new Board(1);
+
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+
+        p1.getSpaceship().addCrewCount(3);
+        p2.getSpaceship().addCrewCount(0);
+
+        board.checkNoCrewPlayers();
+
+        assertTrue(p2.getHasLeft());
+
+        Player p3 = new Player("gino", 0, 1);
+        Player p4 = new Player("alessandro", 1, 1);
+
+        Board board2 = new Board(1);
+
+        board2.addTraveler(p3);
+        board2.addTraveler(p4);
+
+        p3.getSpaceship().addCrewCount(3);
+        p4.getSpaceship().addCrewCount(2);
+
+        assertNull(board2.checkNoCrewPlayers());
     }
 }

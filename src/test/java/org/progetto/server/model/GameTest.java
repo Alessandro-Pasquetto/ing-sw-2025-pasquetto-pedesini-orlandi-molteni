@@ -384,6 +384,8 @@ class GameTest {
         game.addPlayer(mario);
 
         assertNotNull(game.pickEventCard());
+
+        assertEquals(2, game.getEventDeckSize());
     }
 
     @Test
@@ -408,5 +410,26 @@ class GameTest {
         game.addReadyPlayers(false);
 
         assertEquals(2, game.getNumReadyPlayers());
+    }
+
+    @Test
+    void resetReadyPlayers(){
+        Game game = new Game(0,3,2);
+
+        Player p1 = new Player("alice",1,2);
+        Player p2 = new Player("matteo",1,2);
+        Player p3 = new Player("gianfranco",1,2);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+
+        p1.setIsReady(true, game);
+        p2.setIsReady(true, game);
+        p3.setIsReady(true, game);
+
+        game.resetReadyPlayers();
+
+        assertEquals(0, game.getNumReadyPlayers());
     }
 }

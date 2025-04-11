@@ -556,4 +556,84 @@ class SpaceshipTest {
         spaceship2.addBoxCount(1, Box.RED);
         assertArrayEquals(new int[] {1, 2, 1, 1}, spaceship2.getBoxCounts());
     }
+
+    @Test
+    void maxNumberOfDoubleEnginesUsable() {
+        Player p1 = new Player("alice",1,2);
+
+        p1.getSpaceship().addDoubleEngineCount(2);
+        p1.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(2, p1.getSpaceship().maxNumberOfDoubleEnginesUsable());
+
+        Player p2 = new Player("valeria",1,2);
+
+        p2.getSpaceship().addDoubleEngineCount(2);
+        p2.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(2, p2.getSpaceship().maxNumberOfDoubleEnginesUsable());
+
+        Player p3 = new Player("anna",1,2);
+
+        p3.getSpaceship().addDoubleEngineCount(3);
+        p3.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(3, p3.getSpaceship().maxNumberOfDoubleEnginesUsable());
+
+        Player p4 = new Player("matteo",1,2);
+
+        p4.getSpaceship().addDoubleEngineCount(0);
+        p4.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(0, p4.getSpaceship().maxNumberOfDoubleEnginesUsable());
+
+        Player p5 = new Player("luca",1,2);
+
+        p5.getSpaceship().addDoubleEngineCount(3);
+        p5.getSpaceship().addBatteriesCount(0);
+
+        assertEquals(0, p5.getSpaceship().maxNumberOfDoubleEnginesUsable());
+    }
+
+    @Test
+    void maxNumberOfDoubleCannonsUsable() {
+        Player p1 = new Player("alice",1,2);
+
+        p1.getSpaceship().addFullDoubleCannonCount(1);
+        p1.getSpaceship().addHalfDoubleCannonCount(1);
+        p1.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(2, p1.getSpaceship().maxNumberOfDoubleCannonsUsable());
+
+        Player p2 = new Player("valeria",1,2);
+
+        p2.getSpaceship().addHalfDoubleCannonCount(2);
+        p2.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(2, p2.getSpaceship().maxNumberOfDoubleCannonsUsable());
+
+        Player p3 = new Player("anna",1,2);
+
+        p3.getSpaceship().addFullDoubleCannonCount(3);
+        p3.getSpaceship().addHalfDoubleCannonCount(3);
+        p3.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(3, p3.getSpaceship().maxNumberOfDoubleCannonsUsable());
+
+        Player p4 = new Player("matteo",1,2);
+
+        p4.getSpaceship().addFullDoubleCannonCount(0);
+        p4.getSpaceship().addHalfDoubleCannonCount(0);
+        p4.getSpaceship().addBatteriesCount(3);
+
+        assertEquals(0, p4.getSpaceship().maxNumberOfDoubleCannonsUsable());
+
+        Player p5 = new Player("luca",1,2);
+
+        p5.getSpaceship().addFullDoubleCannonCount(3);
+        p5.getSpaceship().addHalfDoubleCannonCount(5);
+        p5.getSpaceship().addBatteriesCount(0);
+
+        assertEquals(0, p5.getSpaceship().maxNumberOfDoubleCannonsUsable());
+    }
 }
