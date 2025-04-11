@@ -109,7 +109,7 @@ public class GameCommands {
      * @author Lorenzo
      */
     public static void printHelp() {
-        String path = "src/main/resources/org/progetto/client/Commands/commandsList.json";
+        String path = "src/main/resources/org/progetto/client/commands/commandsList.json";
         Gson gson = new Gson();
         try (Reader reader = new FileReader(path)) {
             Type listType = new TypeToken<List<CommandEntity>>() {}.getType();
