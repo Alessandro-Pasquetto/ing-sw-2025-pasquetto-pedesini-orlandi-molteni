@@ -127,7 +127,7 @@ public class SocketListener extends Thread {
 
             case BUILDING:
 
-                if (messageObj instanceof PlaceLastComponent placeLastComponentMessage) {
+                if (messageObj instanceof PlaceLastComponentMessage placeLastComponentMessage) {
                     int xPlaceComponent = placeLastComponentMessage.getX();
                     int yPlaceComponent = placeLastComponentMessage.getY();
                     int rPlaceComponent = placeLastComponentMessage.getRotation();

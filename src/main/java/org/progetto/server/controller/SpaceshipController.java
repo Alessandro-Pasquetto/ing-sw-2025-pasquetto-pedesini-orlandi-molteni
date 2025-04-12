@@ -2,7 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
-import org.progetto.messages.toClient.Spaceship.RequestedSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdatedSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -36,7 +36,7 @@ public class SpaceshipController {
 
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
-            sender.sendMessage(new RequestedSpaceshipMessage(owner.getSpaceship(), owner.getName()));
+            sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner.getName()));
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))
                 sender.sendMessage("PlayerNameNotFound");

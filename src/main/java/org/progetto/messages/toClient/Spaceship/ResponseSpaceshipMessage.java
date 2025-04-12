@@ -4,20 +4,20 @@ import org.progetto.server.model.Spaceship;
 
 import java.io.Serializable;
 
-public class RequestedSpaceshipMessage implements Serializable {
+public class ResponseSpaceshipMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private Spaceship spaceship;
-    private String owner;
+    private final Spaceship spaceship;
+    private final String owner;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public RequestedSpaceshipMessage(Spaceship spaceship, String owner) {
+    public ResponseSpaceshipMessage(Spaceship spaceship, String owner) {
         this.spaceship = spaceship;
         this.owner = owner;
     }

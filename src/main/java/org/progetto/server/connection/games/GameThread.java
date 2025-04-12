@@ -46,16 +46,15 @@ public class GameThread extends Thread {
                 switch (gameManager.getGame().getPhase()) {
 
                     case INIT:
-                        System.out.println("Waiting players...");
+                        System.out.println("Waiting ready players...");
 
                         resetAndWaitPlayersReady();
 
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
-
                         break;
 
                     case BUILDING:
-                        System.out.println("Building...");
+                        System.out.println("Start building...");
                         GameController.startBuilding(gameManager);
 
                         gameManager.getGame().resetReadyPlayers();
@@ -87,18 +86,9 @@ public class GameThread extends Thread {
                         break;
 
                     case EVENT:
-                        if(gameManager.getGame().getEventDeckSize() == 0){
-                            game.setPhase(GamePhase.ENDGAME);
-                            break;
-                        }
-
                         System.out.println();
                         System.out.println("New event...");
 
-                        // todo richiedere al player di pescare una carta
-                        // waitFirstNotify();
-
-                        // todo da rimuovere, sarà chiamato da un player
                         EventController.pickEventCard(gameManager);
 
                         System.out.println(gameManager.getGame().getActiveEventCard().getType().toString());
@@ -116,11 +106,19 @@ public class GameThread extends Thread {
                         break;
 
                     case TRAVEL:
-                        // todo gestire il fatto che un player dopo una eventcard possa decidere di abbandonare il viaggio
+                        if(gameManager.getGame().getEventDeckSize() > 0){
+                            gameManager.broadcastGameMessage("DoUWannaContinueTravel");
+                            resetAndWaitPlayersReady();
+                            game.setPhase(GamePhase.EVENT);
+                        }
+                        else
+                            game.setPhase(GamePhase.ENDGAME);
+                        break;
 
                     case ENDGAME:
+                        System.out.println();
                         System.out.println("Endgame...");
-                        break;
+                        return;
                 }
             }
         } catch (InterruptedException | RemoteException e) {

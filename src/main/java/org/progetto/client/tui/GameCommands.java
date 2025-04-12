@@ -408,7 +408,11 @@ public class GameCommands {
      */
     public static void showSpaceship(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.showSpaceship(commandParts[1]);
+
+        if(commandParts.length == 1)
+            sender.showSpaceship(GameData.getNamePlayer());
+        else
+            sender.showSpaceship(commandParts[1]);
     }
 
     /**

@@ -232,7 +232,9 @@ public class TuiCommandFilter {
                 break;
 
             case "SHOWSPACESHIP":
-                if (!isValidCommand(commandParts.length, 2)) {
+
+                if (commandParts.length > 2) {
+                    System.out.println("Invalid command format");
                     expectedFormat(commandType);
                     return;
                 }

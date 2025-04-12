@@ -62,7 +62,7 @@ public class LobbyController {
         return new InternalGameInfo(gameManager, player);
     }
 
-    public static InternalGameInfo joinGame(int idGame ,String name) throws IllegalStateException{
+    public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException{
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
         Game game = gameManager.getGame();

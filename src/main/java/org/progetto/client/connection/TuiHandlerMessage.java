@@ -1,6 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.BuildingCommands;
@@ -12,9 +11,8 @@ import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.Spaceship.RequestedSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import java.util.ArrayList;
 
 /**
@@ -42,7 +40,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("Create new game with ID:"+initGameMessage.getIdGame());
+            System.out.println("Create new game with ID:" + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
         }
 
@@ -66,9 +64,9 @@ public class TuiHandlerMessage {
             EventCommands.printEventCard(pickedEventCardMessage.getEventCard());
         }
 
-        else if (messageObj instanceof RequestedSpaceshipMessage requestedSpaceshipMessage) {
-            System.out.println(requestedSpaceshipMessage.getOwner()+"'s spaceship:");
-            GameCommands.printSpaceship(requestedSpaceshipMessage.getSpaceship());
+        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
+            System.out.println(responseSpaceshipMessage.getOwner()+"'s spaceship:");
+            GameCommands.printSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {

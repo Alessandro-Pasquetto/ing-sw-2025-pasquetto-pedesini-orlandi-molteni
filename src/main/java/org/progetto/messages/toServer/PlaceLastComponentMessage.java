@@ -2,7 +2,7 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class PlaceLastComponent implements Serializable {
+public class PlaceLastComponentMessage implements Serializable {
 
     private int x;
     private int y;
@@ -12,7 +12,7 @@ public class PlaceLastComponent implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PlaceLastComponent(int x, int y, int rotation) {
+    public PlaceLastComponentMessage(int x, int y, int rotation) {
         this.x = x;
         this.y = y;
         this.rotation = rotation;

@@ -79,7 +79,7 @@ public class SocketClient implements Sender {
 
     @Override
     public void createGame(int levelGame, int numMaxPlayers) {
-        SocketWriter.sendMessage(new CreateGameMessage(1, 2, GameData.getNamePlayer()));
+        SocketWriter.sendMessage(new CreateGameMessage(levelGame, numMaxPlayers, GameData.getNamePlayer()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class SocketClient implements Sender {
 
     @Override
     public void placeLastComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
-        SocketWriter.sendMessage(new PlaceLastComponent(xHandComponent, yHandComponent, rHandComponent));
+        SocketWriter.sendMessage(new PlaceLastComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
     @Override

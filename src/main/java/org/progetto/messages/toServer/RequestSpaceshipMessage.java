@@ -1,7 +1,5 @@
 package org.progetto.messages.toServer;
 
-import org.progetto.server.model.Player;
-
 import java.io.Serializable;
 
 public class RequestSpaceshipMessage implements Serializable{
