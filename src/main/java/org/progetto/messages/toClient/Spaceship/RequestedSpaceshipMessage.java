@@ -10,14 +10,14 @@ public class RequestedSpaceshipMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    Spaceship spaceship;
-    String owner;
+    private Spaceship spaceship;
+    private String owner;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public RequestedSpaceshipMessage(Spaceship spaceship,String owner) {
+    public RequestedSpaceshipMessage(Spaceship spaceship, String owner) {
         this.spaceship = spaceship;
         this.owner = owner;
     }
@@ -25,6 +25,7 @@ public class RequestedSpaceshipMessage implements Serializable {
     // =======================
     // GETTERS
     // =======================
+
     public Spaceship getSpaceship() {
         return spaceship;
     }
@@ -32,6 +33,4 @@ public class RequestedSpaceshipMessage implements Serializable {
     public String getOwner() {
         return owner;
     }
-
-
 }

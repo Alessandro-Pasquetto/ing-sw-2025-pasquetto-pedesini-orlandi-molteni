@@ -40,5 +40,4 @@ public class MaskMatrix {
     public void setAdvancedMatrix(int[][] advancedMatrix) {
         this.advancedMatrix = advancedMatrix;
     }
-
 }

@@ -68,7 +68,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof RequestedSpaceshipMessage requestedSpaceshipMessage) {
             System.out.println(requestedSpaceshipMessage.getOwner()+"'s spaceship:");
-            GameCommands.printShipStatus(requestedSpaceshipMessage.getSpaceship());
+            GameCommands.printSpaceship(requestedSpaceshipMessage.getSpaceship());
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {

@@ -25,7 +25,7 @@ public class SpaceshipController {
     // =======================
 
     /**
-     * send the owner's spaceship to the player that request it
+     * Sends the owner's spaceship to the player that request it
      *
      * @author Lorenzo
      * @param gameManager of the current game
@@ -42,8 +42,6 @@ public class SpaceshipController {
                 sender.sendMessage("PlayerNameNotFound");
         }
     }
-
-
 
     /**
      * Called after every modification of a component attributes, updates the view of that player and send a broadcast to other players
@@ -145,7 +143,6 @@ public class SpaceshipController {
         } else {
             sender.sendMessage("PermissionDenied");
         }
-
     }
 
     /**

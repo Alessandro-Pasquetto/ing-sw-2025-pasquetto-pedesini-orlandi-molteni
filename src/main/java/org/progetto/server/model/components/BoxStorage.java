@@ -33,6 +33,20 @@ public class BoxStorage extends Component {
         return boxStorage;
     }
 
+    public int[] getBoxStorageValues() {
+        int[] boxStorageValues = new int[boxStorage.length];
+
+        for (int i = 0; i < boxStorage.length; i++) {
+            if (boxStorage[i] != null) {
+                boxStorageValues[i] = boxStorage[i].getValue();
+            } else {
+                boxStorageValues[i] = 0;
+            }
+        }
+
+        return boxStorageValues;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================

@@ -362,20 +362,20 @@ public class BuildingBoard implements Serializable {
                 case SHIELD:
                     switch (destroyedComponent.getRotation()) {
 
-                        case 0: // left-up
-                            spaceship.addLeftUpShieldCount(-1);
-                            break;
-
-                        case 1: // up-right
+                        case 0: // up-right
                             spaceship.addUpRightShieldCount(-1);
                             break;
 
-                        case 2: // right-down
+                        case 1: // right-down
                             spaceship.addRightDownShieldCount(-1);
                             break;
 
-                        case 3: // down-left
+                        case 2: // down-left
                             spaceship.addDownLeftShieldCount(-1);
+                            break;
+
+                        case 3: // left-up
+                            spaceship.addLeftUpShieldCount(-1);
                             break;
                     }
                     break;
@@ -446,14 +446,17 @@ public class BuildingBoard implements Serializable {
                 if(y > 0 && spaceshipMatrix[y - 1][x] != null)
                     return false;
                 break;
+
             case 1: // right
                 if(x + 1 < spaceshipMatrix[0].length && spaceshipMatrix[y][x + 1] != null)
                     return false;
                 break;
+
             case 2: // bottom
                 if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null)
                     return false;
                 break;
+
             case 3: // left
                 if(x > 0 && spaceshipMatrix[y][x - 1] != null)
                     return false;
@@ -902,20 +905,20 @@ public class BuildingBoard implements Serializable {
                     case SHIELD:
                         switch (component.getRotation()) {
 
-                            case 0: // left-up
-                                spaceship.addLeftUpShieldCount(1);
-                                break;
-
-                            case 1: // up-right
+                            case 0: // up-right
                                 spaceship.addUpRightShieldCount(1);
                                 break;
 
-                            case 2: // right-down
+                            case 1: // right-down
                                 spaceship.addRightDownShieldCount(1);
                                 break;
 
-                            case 3: // down-left
+                            case 2: // down-left
                                 spaceship.addDownLeftShieldCount(1);
+                                break;
+
+                            case 3: // left-up
+                                spaceship.addLeftUpShieldCount(1);
                                 break;
                         }
                         break;

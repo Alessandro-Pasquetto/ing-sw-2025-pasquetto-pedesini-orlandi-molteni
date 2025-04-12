@@ -51,7 +51,6 @@ public class BuildingCommands {
         System.out.println("└────────────────────────────┘");
     }
 
-
     // =======================
     // COMMANDS
     // =======================
@@ -92,7 +91,6 @@ public class BuildingCommands {
                 Integer.parseInt(commandParts[3])
         );
     }
-
 
     /**
      * Enables to discard the hand component,

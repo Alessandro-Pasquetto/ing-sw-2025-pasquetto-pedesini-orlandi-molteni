@@ -30,7 +30,6 @@ public class Spaceship implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    // Initialize spaceship with initial values of attributes
     public Spaceship(int levelShip, int color) {
         this.levelShip = levelShip;
         this.shipComponentsCount = 1;
