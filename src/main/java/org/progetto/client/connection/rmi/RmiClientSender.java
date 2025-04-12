@@ -4,9 +4,6 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.server.connection.rmi.VirtualServer;
-import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Box;
-
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -28,8 +25,10 @@ public class RmiClientSender implements Sender {
             server.connect(RmiClientReceiver.getInstance());
 
             System.out.println("Connected to the RMIServer");
-            if(GameData.getUIType().equals("GUI"))
+            if(GameData.getUIType().equals("GUI")){
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                showWaitingGames();
+            }
 
         } catch (Exception e) {
             System.out.println("Error connecting to the RMI server");
@@ -37,6 +36,15 @@ public class RmiClientSender implements Sender {
     }
 
     // The following methods call functions implemented in the RmiServerReceiver
+
+    @Override
+    public void showWaitingGames(){
+        try{
+            server.showWaitingGames(RmiClientReceiver.getInstance());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void createGame(int levelGame, int numMaxPlayers) {

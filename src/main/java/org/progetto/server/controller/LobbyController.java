@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+import org.progetto.messages.toClient.ShowWaitingGamesMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
@@ -9,6 +10,8 @@ import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
+
+import java.rmi.RemoteException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -41,6 +44,10 @@ public class LobbyController {
             RmiServer.broadcastLobbyMessageToOthers(sender, messageObj);
             SocketServer.broadcastLobbyMessage(messageObj);
         }
+    }
+
+    public static void showWaitingGames(Sender sender) throws RemoteException {
+        sender.sendMessage(new ShowWaitingGamesMessage(GameManagerMaps.getIdWaitingGames()));
     }
 
     // Create game objects and player, add player to the game

@@ -1,5 +1,6 @@
 package org.progetto.server.connection.games;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -36,6 +37,16 @@ public class GameManagerMaps {
         synchronized (waitingGamesManager) {
             return waitingGamesManager.size();
         }
+    }
+
+    public static ArrayList<Integer> getIdWaitingGames(){
+
+        ArrayList<Integer> idWaitingGames = new ArrayList<Integer>();
+
+        synchronized (waitingGamesManager) {
+            idWaitingGames.addAll(waitingGamesManager.keySet());
+        }
+        return idWaitingGames;
     }
 
     // =======================

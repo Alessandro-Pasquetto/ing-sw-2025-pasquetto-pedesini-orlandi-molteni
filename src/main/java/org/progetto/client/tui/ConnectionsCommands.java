@@ -26,6 +26,15 @@ public class ConnectionsCommands {
     }
 
     /**
+     * Shows the waiting games
+     *
+     * @author Alessandro
+     */
+    public static void showWaitingGames(){
+        GameData.getSender().showWaitingGames();
+    }
+
+    /**
      * Enable to create a game, usage : CreateGame playerName
      *
      * @author Alessandro

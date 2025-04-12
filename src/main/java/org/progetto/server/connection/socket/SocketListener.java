@@ -48,7 +48,7 @@ public class SocketListener extends Thread {
     // Methods that handle the messages by calling the necessary functions
     // =======================
 
-    private void handlerLobbyMessages(Object messageObj) {
+    private void handlerLobbyMessages(Object messageObj) throws RemoteException {
         if (messageObj instanceof CreateGameMessage createGameMessage) {
             int levelGame = createGameMessage.getLevelGame();
             int numPlayers = createGameMessage.getNumPlayers();
@@ -90,6 +90,18 @@ public class SocketListener extends Thread {
             clientHandler.initPlayerConnection(gameManager, player);
             clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        }
+
+        else if (messageObj instanceof String messageString) {
+            switch (messageString){
+                case "ShowWaitingGames":
+                    LobbyController.showWaitingGames(clientHandler.getSocketWriter());
+                    break;
+
+                default:
+                    System.out.println(messageString + " not allowed");
+                    break;
+            }
         }
     }
 

@@ -46,8 +46,10 @@ public class SocketClient implements Sender {
             new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
             new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
 
-            if(GameData.getUIType().equals("GUI"))
+            if(GameData.getUIType().equals("GUI")){
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                showWaitingGames();
+            }
 
         }catch(IOException e){
             System.out.println("Error connecting to the socket server");
@@ -68,6 +70,11 @@ public class SocketClient implements Sender {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    @Override
+    public void showWaitingGames() {
+        SocketWriter.sendMessage("ShowWaitingGames");
     }
 
     @Override

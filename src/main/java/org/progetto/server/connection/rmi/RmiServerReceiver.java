@@ -40,6 +40,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void showWaitingGames(VirtualClient virtualClient) throws RemoteException {
+        LobbyController.showWaitingGames(virtualClient);
+    }
+
+    @Override
     public void createGame(VirtualClient virtualClient, String name, int gameLevel, int numPlayers) throws RemoteException {
         InternalGameInfo internalGameInfo = LobbyController.createGame(name, gameLevel, numPlayers);
 

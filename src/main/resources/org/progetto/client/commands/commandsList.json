@@ -5,6 +5,11 @@
     "usage": "Connect <ip> <port>"
   },
   {
+    "name": "ShowWaitingGames",
+    "description": "Show the waiting games.",
+    "usage": "ShowWaitingGames"
+  },
+  {
     "name": "CreateGame",
     "description": "Create a new game session.",
     "usage": "CreateGame <nickname> <level> <numPlayers>"

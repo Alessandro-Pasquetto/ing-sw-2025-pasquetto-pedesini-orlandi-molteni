@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.BuildingCommands;
@@ -27,9 +28,12 @@ public class TuiHandlerMessage {
      */
     public static void handleMessage(Object messageObj) {
 
-        if (messageObj instanceof GameListMessage gameListMessage) {
-            ArrayList<Integer> idGames = gameListMessage.getIdGames();
-            System.out.println("Gamelist arrivata... da elaborare");
+        if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
+            ArrayList<Integer> idGames = showWaitingGamesMessage.getIdWaitingGames();
+
+            for (Integer idGame : idGames) {
+                System.out.println("New Game: " + idGame);
+            }
         }
 
         else if (messageObj instanceof NotifyNewGameMessage notifyNewGameMessage) {

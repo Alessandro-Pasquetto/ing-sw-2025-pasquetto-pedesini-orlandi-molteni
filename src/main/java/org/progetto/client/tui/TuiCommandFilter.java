@@ -101,6 +101,15 @@ public class TuiCommandFilter {
                 ConnectionsCommands.connect(commandParts);
                 break;
 
+            case "SHOWWAITINGGAMES":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                ConnectionsCommands.showWaitingGames();
+                break;
+
+
             case "CREATEGAME":
                 if (!isValidCommand(commandParts.length, 4)) {
                     expectedFormat(commandType);

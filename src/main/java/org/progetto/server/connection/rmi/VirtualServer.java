@@ -11,6 +11,8 @@ public interface VirtualServer extends Remote {
 
     void connect(VirtualClient virtualClient) throws RemoteException;
 
+    void showWaitingGames(VirtualClient virtualClient) throws RemoteException;
+
     void createGame(VirtualClient virtualClient, String name, int gameLevel, int numPlayers) throws RemoteException;
 
     void joinGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException;

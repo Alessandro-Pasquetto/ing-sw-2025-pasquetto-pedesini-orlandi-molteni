@@ -3,6 +3,8 @@ package org.progetto.client.connection;
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
+    void showWaitingGames();
+
     void createGame(int levelGame, int numMaxPlayers);
 
     void tryJoinToGame(int idGame);
