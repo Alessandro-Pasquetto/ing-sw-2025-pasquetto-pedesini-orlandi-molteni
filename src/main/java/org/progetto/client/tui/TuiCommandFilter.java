@@ -142,55 +142,14 @@ public class TuiCommandFilter {
                 BuildingCommands.pickVisibleComponent(commandParts);
                 break;
 
-            case "PLACELAST":
+            case "PLACE":
                 if (!isValidCommand(commandParts.length, 4)) {
                     expectedFormat(commandType);
                     return;
                 }
-                BuildingCommands.placeLastComponent(commandParts);
+                BuildingCommands.placeComponent(commandParts);
                 break;
 
-                //todo rotate
-
-            case "PLACEANDPICKHIDDEN":
-                if (!isValidCommand(commandParts.length, 4)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.placeHandComponentAndPickHiddenComponent(commandParts);
-                break;
-
-            case "PLACEANDPICKVISIBLE":
-                if (!isValidCommand(commandParts.length, 5)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.placeHandComponentAndPickVisibleComponent(commandParts);
-                break;
-
-            case "PLACEANDPICKEVENT":
-                if (!isValidCommand(commandParts.length, 5)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.placeHandComponentAndPickUpEventCardDeck(commandParts);
-                break;
-
-            case "PLACEANDPICKBOOKED":
-                if (!isValidCommand(commandParts.length, 5)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.placeHandComponentAndPickBookedComponent(commandParts);
-                break;
-
-            case "PLACEANDREADY":
-                if (!isValidCommand(commandParts.length, 4)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.placeHandComponentAndReady(commandParts);
-                break;
 
             case "DISCARD":
                 if (!isValidCommand(commandParts.length, 1)) {

@@ -1,8 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
-import org.progetto.messages.toClient.LostShip.AnotherPlayerLandedMessage;
+import org.progetto.messages.toClient.LostStation.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;

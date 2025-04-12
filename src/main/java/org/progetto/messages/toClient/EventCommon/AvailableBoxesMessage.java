@@ -11,7 +11,7 @@ public class AvailableBoxesMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    ArrayList<Box> boxes;
+    private final ArrayList<Box> boxes;
 
     // =======================
     // CONSTRUCTORS
@@ -24,8 +24,12 @@ public class AvailableBoxesMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public ArrayList<Box> getBoxes() {
-        return boxes;
+    public String[] getBoxes() {
+        String[] out = new String[boxes.size()];
+        for(int i = 0; i < boxes.size(); i++) {
+            out[i] = boxes.get(i).toString();
+        }
+        return out;
     }
 
 

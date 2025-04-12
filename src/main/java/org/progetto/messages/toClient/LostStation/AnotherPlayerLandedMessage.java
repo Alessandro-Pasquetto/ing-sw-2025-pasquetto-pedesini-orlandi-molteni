@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient.LostShip;
+package org.progetto.messages.toClient.LostStation;
 
 import org.progetto.server.model.Player;
 

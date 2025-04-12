@@ -51,94 +51,6 @@ public class BuildingCommands {
         System.out.println("└────────────────────────────┘");
     }
 
-    public static void printEventCard(EventCard card) {
-        System.out.println("┌────────────────────────────────────────────┐");
-        System.out.printf ("│ Type       : %-30s │%n", card.getType(),  "|");
-        System.out.printf ("│ Level      : %-30s │%n", card.getLevel(), "|");
-
-        switch (card.getType()){
-
-            case METEORSRAIN -> {
-                MeteorsRain meteors = (MeteorsRain) card;
-                System.out.println("┌── Meteor Rain ────────────────────────────┐");
-                System.out.printf ("│ Mereors  : %-28s   │%n", meteors.getMeteors());
-                System.out.printf ("│ Count      : %-28d │%n", meteors.getMeteors().size());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case SLAVERS -> {
-                Slavers slavers = (Slavers) card;
-                System.out.println("┌── Slavers ──────────────────────────────────┐");
-                System.out.printf ("│ Crew penalty  : %-24d │%n", slavers.getPenaltyCrew());
-                System.out.printf ("│ Penalty Days  : %-24d │%n", slavers.getPenaltyDays());
-                System.out.printf ("│ Strength      : %-24d │%n", slavers.getFirePowerRequired());
-                System.out.printf ("│ Credits reward: %-24d │%n", slavers.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case SMUGGLERS -> {
-                Smugglers smugglers = (Smugglers) card;
-                System.out.println("┌── Smugglers ────────────────────────────────┐");
-                System.out.printf ("│ Rewards      : %-24s │%n", smugglers.getRewardBoxes());
-                System.out.printf ("│ Penalty Days : %-24d │%n", smugglers.getPenaltyDays());
-                System.out.printf ("│ Strength     : %-24d │%n", smugglers.getFirePowerRequired());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case LOSTSTATION -> {
-                LostStation station = (LostStation) card;
-                System.out.println("┌── Lost Station ─────────────────────────────┐");
-                System.out.printf ("│ Rewards      : %-24s │%n", station.getRewardBoxes());
-                System.out.printf ("│ Penalty Days : %-24d │%n", station.getPenaltyDays());
-                System.out.printf ("│ Required crew: %-24d │%n", station.getRequiredCrew());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case BATTLEZONE -> {
-                Battlezone battlezone = (Battlezone) card;
-                ArrayList<ConditionPenalty> couples = battlezone.getCouples();
-                System.out.println("┌── Battlezone ───────────────────────────────────┐");
-                for (ConditionPenalty couple : couples) {
-                    System.out.printf ("│ Condition : %-29s │%n", couple.getCondition());
-                    System.out.printf ("│ Penalty   : %-10s (x%-5d)         │%n",
-                            couple.getPenalty().getType(),
-                            couple.getPenalty().getNeededAmount());
-                    System.out.println("├─────────────────────────────────────────────┤");
-                }
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case PIRATES -> {
-                Pirates pirates = (Pirates) card;
-                System.out.println("┌── Pirates ──────────────────────────────────┐");
-                System.out.printf ("│ Strength   : %-26d │%n", pirates.getFirePowerRequired());
-                System.out.printf ("│ Penalty Days: %-26d│%n",pirates.getPenaltyDays());
-                System.out.printf ("│ Shots  : %-26s     │%n", pirates.getPenaltyShots());
-                System.out.printf ("│ Credits reward: %-26d │%n", pirates.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case PLANETS -> {
-                Planets planets = (Planets) card;
-                System.out.println("┌── Planets ──────────────────────────────────┐");
-                System.out.printf ("│ Number of planets : %-20d │%n", planets.getPlanetsTaken().length);
-                System.out.printf ("│ Rewards per planet: %-20s │%n", planets.getRewardsForPlanets());
-                System.out.printf ("│ Penalty days: %-20d       │%n",planets.getPenaltyDays());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-
-            case LOSTSHIP -> {
-                LostShip lostShip = (LostShip) card;
-                System.out.println("┌── Lost Ship ────────────────────────────────┐");
-                System.out.printf ("│ Penalty Crew     : %-22d │%n", lostShip.getPenaltyCrew());
-                System.out.printf ("│ Penalty Days     : %-22d │%n", lostShip.getPenaltyDays());
-                System.out.printf ("│ Reward Credits   : %-22d │%n", lostShip.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
-            }
-        }
-
-        System.out.println();
-    }
 
     // =======================
     // COMMANDS
@@ -167,97 +79,14 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to place the hand component given its coordinates and rotation, usage : PlaceLast pos_x pos_y rot
+     * Enables to place the hand component given its coordinates and rotation, usage : Place pos_x pos_y rot
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
      */
-    public static void placeLastComponent(String[] commandParts){
+    public static void placeComponent(String[] commandParts){
         Sender sender = GameData.getSender();
         sender.placeLastComponent(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3])
-        );
-    }
-
-    /**
-     * Enables to place the hand component given its coordinates and rotation and pick a hidden component,
-     * usage : PlaceAndPickHidden pos_x pos_y rot
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void placeHandComponentAndPickHiddenComponent(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.placeHandComponentAndPickHiddenComponent(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3])
-        );
-    }
-
-    /**
-     * Enables to place the hand component given its coordinates and rotation and pick a visible component given its index,
-     * usage : PlaceAndPickVisible pos_x pos_y rot component_idx
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void placeHandComponentAndPickVisibleComponent(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.placeHandComponentAndPickVisibleComponent(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3]),
-                Integer.parseInt(commandParts[4])
-        );
-    }
-
-    /**
-     * Enables to place the hand component given its coordinates and rotation and pick an event deck given its index,
-     * usage : PlaceAndPickEvent pos_x pos_y rot deck_idx
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void placeHandComponentAndPickUpEventCardDeck(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.placeHandComponentAndPickUpEventCardDeck(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3]),
-                Integer.parseInt(commandParts[4])
-        );
-    }
-
-    /**
-     * Enables to place the hand component given its coordinates and rotation and pick a booked component given its index,
-     * usage : PlaceAndPickBooked pos_x pos_y rot component_idx
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void placeHandComponentAndPickBookedComponent(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.placeHandComponentAndPickBookedComponent(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3]),
-                Integer.parseInt(commandParts[4])
-        );
-    }
-
-    /**
-     * Enables to place the hand component given its coordinates and rotation and set as ready,
-     * usage : PlaceAndReady pos_x pos_y rot
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void placeHandComponentAndReady(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.placeHandComponentAndReady(
                 Integer.parseInt(commandParts[1]),
                 Integer.parseInt(commandParts[2]),
                 Integer.parseInt(commandParts[3])

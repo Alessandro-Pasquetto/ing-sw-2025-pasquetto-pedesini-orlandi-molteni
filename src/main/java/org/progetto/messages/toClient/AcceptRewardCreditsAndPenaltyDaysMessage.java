@@ -8,8 +8,8 @@ public class AcceptRewardCreditsAndPenaltyDaysMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int rewardCredits;
-    private int penaltyDays;
+    private final int rewardCredits;
+    private final int penaltyDays;
 
     // =======================
     // CONSTRUCTORS

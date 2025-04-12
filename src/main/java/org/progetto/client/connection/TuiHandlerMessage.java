@@ -11,6 +11,7 @@ import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessa
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Spaceship.RequestedSpaceshipMessage;
@@ -62,7 +63,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
-            BuildingCommands.printEventCard(pickedEventCardMessage.getEventCard());
+            EventCommands.printEventCard(pickedEventCardMessage.getEventCard());
         }
 
         else if (messageObj instanceof RequestedSpaceshipMessage requestedSpaceshipMessage) {
@@ -101,9 +102,21 @@ public class TuiHandlerMessage {
             );
         }
 
+        else if(messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
+            EventCommands.responseAcceptRewardCreditsAndPenaltyDays(
+                    acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits(),
+                    acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays()
+            );
+        }
+
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
             EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());
         }
+
+        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
+            EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
+        }
+
 
         else if (messageObj instanceof String messageString) {
 

@@ -30,34 +30,9 @@
     "usage": "PickVisible <index>"
   },
   {
-    "name": "PlaceLast",
+    "name": "Place",
     "description": "Place the last drawn component on the board.",
     "usage": "PlaceLast <x> <y> <rotation>"
-  },
-  {
-    "name": "PlaceAndPickHidden",
-    "description": "Place a component and pick a hidden one.",
-    "usage": "PlaceAndPickHidden <x> <y> <rotation>"
-  },
-  {
-    "name": "PlaceAndPickVisible",
-    "description": "Place a component and pick a visible one.",
-    "usage": "PlaceAndPickVisible <x> <y> <rotation> <index>"
-  },
-  {
-    "name": "PlaceAndPickEvent",
-    "description": "Place a component and draw an event deck.",
-    "usage": "PlaceAndPickEvent <x> <y> <rotation> <deckIndex>"
-  },
-  {
-    "name": "PlaceAndPickBooked",
-    "description": "Place a component and pick a booked one.",
-    "usage": "PlaceAndPickBooked <x> <y> <rotation> <index>"
-  },
-  {
-    "name": "PlaceAndReady",
-    "description": "Place a component and mark ready.",
-    "usage": "PlaceAndReady <x> <y> <rotation>"
   },
   {
     "name": "Discard",
