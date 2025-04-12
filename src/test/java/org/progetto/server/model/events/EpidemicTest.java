@@ -89,8 +89,8 @@ class EpidemicTest {
         assertEquals(0, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][4]).getCrewCount());
         assertEquals(1, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][3]).getCrewCount());
         assertEquals(2, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[2][1]).getCrewCount());
-        assertEquals(false, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][0]).getHasPurpleAlien());
-        assertEquals(false, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][1]).getHasOrangeAlien());
+        assertFalse(((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][0]).getHasPurpleAlien());
+        assertFalse(((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][1]).getHasOrangeAlien());
         assertEquals(1, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[4][0]).getCrewCount());
     }
 }

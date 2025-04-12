@@ -239,33 +239,33 @@ class BattlezoneTest {
 
 
         Game game2 = new Game(1, 3, 2);
+
         Player p2 = new Player("a", 1, 2);
 
-        /*
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb2.placeComponent(1, 3, 0));
+        assertTrue(bb2.placeComponent(3, 1, 0));
 
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb2.placeComponent(1, 2, 1));
+        assertTrue(bb2.placeComponent(2, 1, 1));
 
         bb2.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
         assertTrue(bb2.placeComponent(3, 3, 1));
 
         bb2.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        assertTrue(bb2.placeComponent(3, 2, 1));
+        assertTrue(bb2.placeComponent(2, 3, 1));
 
         bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb2.placeComponent(2, 4, 1));
+        assertTrue(bb2.placeComponent(4, 2, 1));
 
-        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
-        assertTrue(bb2.placeComponent(3, 4, 0));
+        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
+        assertTrue(bb2.placeComponent(4, 3, 0));
 
-        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
-        assertTrue(bb2.placeComponent(3, 1, 0));
+        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
+        assertTrue(bb2.placeComponent(1, 3, 2));
 
-        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
-        assertTrue(bb2.placeComponent(3, 5, 0));
+        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
+        assertTrue(bb2.placeComponent(5, 3, 0));
 
         Battlezone battlezone2 = new Battlezone(CardType.BATTLEZONE, 1, "img", new ArrayList<>());
 
@@ -286,7 +286,7 @@ class BattlezoneTest {
         // bottom
         assertNull(battlezone2.penaltyShot(game2, p2, ss3, 2));
         assertNull(battlezone2.penaltyShot(game2, p2, ss3, 4));
-        assertNull(battlezone2.penaltyShot(game2, p2, ss3, 5));
+        assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 5));
         assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 6));
         assertNotNull(battlezone2.penaltyShot(game2, p2, ss3, 9));
         assertNull(battlezone2.penaltyShot(game2, p2, ss3, 10));
@@ -306,7 +306,6 @@ class BattlezoneTest {
         assertNotNull(battlezone2.penaltyShot(game2, p2, ss4, 8));
         assertNull(battlezone2.penaltyShot(game2, p2, ss4, 9));
         assertNull(battlezone2.penaltyShot(game2, p2, ss4, 10));
-        */
     }
 
     @Test
