@@ -8,7 +8,7 @@ public class NotifyNewGameMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int idGame;
+    private final int idGame;
 
     // =======================
     // CONSTRUCTORS

@@ -9,7 +9,7 @@ public class ShowWaitingGamesMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    ArrayList<Integer> idWaitingGames = new ArrayList<Integer>();
+    private ArrayList<Integer> idWaitingGames = new ArrayList<Integer>();
 
     // =======================
     // CONSTRUCTORS

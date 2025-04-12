@@ -8,7 +8,7 @@ public class GameListMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    private ArrayList<Integer> idGames;
+    private final ArrayList<Integer> idGames;
 
     // =======================
     // CONSTRUCTORS

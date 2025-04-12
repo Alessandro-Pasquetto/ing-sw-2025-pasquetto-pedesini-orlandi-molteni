@@ -150,6 +150,8 @@ public class TuiCommandFilter {
                 BuildingCommands.placeLastComponent(commandParts);
                 break;
 
+                //todo rotate
+
             case "PLACEANDPICKHIDDEN":
                 if (!isValidCommand(commandParts.length, 4)) {
                     expectedFormat(commandType);
@@ -259,7 +261,7 @@ public class TuiCommandFilter {
                     expectedFormat(commandType);
                     return;
                 }
-                BuildingCommands.rollDice(commandParts);
+                EventCommands.rollDice(commandParts);
                 break;
 
             case "CLOSE":

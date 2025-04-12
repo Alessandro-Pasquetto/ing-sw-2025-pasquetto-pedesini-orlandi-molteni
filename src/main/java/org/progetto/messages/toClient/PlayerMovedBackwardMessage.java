@@ -8,7 +8,7 @@ public class PlayerMovedBackwardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int stepsCount;
+    private final int stepsCount;
 
     // =======================
     // CONSTRUCTORS

@@ -362,18 +362,6 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to roll the dice
-     * usage : Roll
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void rollDice(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.rollDice();
-    }
-
-    /**
      * Enables to close the connection with the server
      * usage : Close
      *

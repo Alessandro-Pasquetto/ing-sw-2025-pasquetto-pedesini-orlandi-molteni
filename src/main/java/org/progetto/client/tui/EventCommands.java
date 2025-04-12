@@ -92,9 +92,6 @@ public class EventCommands {
         System.out.print("Y: ");
         y = listenResponse();
 
-        // todo fixato!
-        //non so se è giusto ma praticamente ricevo quante batterie da scartare e faccio scegliere un tot di componenti da cui scartare
-        //non mi è chiaro però come avviene il controllo che il componente sia giusto e nel caso come viene gestito l'errore, spero sia stato implementato
 
         Sender sender = GameData.getSender();
         try{
@@ -151,10 +148,6 @@ public class EventCommands {
         System.out.print("Storage idx: ");
         idx = listenResponse();
 
-        // todo fixato!
-        //ancora idem, mi convince sempre meno, chi controlla che ho abbastanza casse da scartare
-        //gestirei la comunicazione singolarmente e sequenzialmente
-        // (e' letteralmente quello che e' stato fatto g!!!!!)
         Sender sender = GameData.getSender();
         try{
             sender.responseBoxToDiscard(Integer.parseInt(x),Integer.parseInt(y),Integer.parseInt(idx));
@@ -276,4 +269,19 @@ public class EventCommands {
         }else
             System.out.println("You must choose between YES or NO");
     }
+
+
+    /**
+     * Enables to roll the dice
+     * usage : Roll
+     *
+     * @author Lorenzo
+     * @param commandParts are segments of the command
+     */
+    public static void rollDice(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.rollDice();
+    }
+
+
 }

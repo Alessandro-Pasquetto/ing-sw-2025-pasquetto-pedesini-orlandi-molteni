@@ -8,7 +8,7 @@ public class DiceResultMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int diceResult;
+    private final int diceResult;
 
     // =======================
     // CONSTRUCTORS
