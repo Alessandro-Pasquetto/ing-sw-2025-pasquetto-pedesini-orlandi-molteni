@@ -65,7 +65,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
-            System.out.println(responseSpaceshipMessage.getOwner()+"'s spaceship:");
+            System.out.println(responseSpaceshipMessage.getOwner() + "'s spaceship:");
             GameCommands.printSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
@@ -112,7 +112,8 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-            EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
+            //EventCommands.responseRewardBox(availableBoxesMessage.getBoxes()); todo
+            System.out.println("todo: availableBoxesMessage");
         }
 
 

@@ -17,7 +17,10 @@ import org.progetto.client.model.GameData;
 public class GameView {
 
     @FXML
-    private VBox handComponentBox;
+    private Pane handComponentBox;
+
+    @FXML
+    private ImageView provaBoxImage;
 
     @FXML
     private GridPane spaceshipMatrix;
@@ -30,24 +33,18 @@ public class GameView {
     // Initialize the grid when the view is loaded
     public void initialize() {
         setupGrid(5);
+        DragAndDrop.enableDragAndDropBoxes(provaBoxImage);
     }
 
     // Setup a grid with a given size
     private void setupGrid(int size) {
         int cellSize = 100;
 
-        for (int i = 0; i < size; i++) {
-            ColumnConstraints colConstraints = new ColumnConstraints(cellSize);
-            spaceshipMatrix.getColumnConstraints().add(colConstraints);
-
-            RowConstraints rowConstraints = new RowConstraints(cellSize);
-            spaceshipMatrix.getRowConstraints().add(rowConstraints);
-        }
-
         // spaceshipMatrix
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Pane cell = new Pane();
+                cell.setPrefSize(cellSize, cellSize);
                 cell.setStyle("-fx-border-color: black; -fx-background-color: rgba(255,255,255,0.3);");
                 spaceshipMatrix.add(cell, col, row);
             }
@@ -79,7 +76,6 @@ public class GameView {
 
         else if (BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
-
     }
 
     public void pickVisibleComponent() {
@@ -124,8 +120,8 @@ public class GameView {
             if (node instanceof Pane cell) {
                 if (!cell.getChildren().isEmpty()) {
                     Node child = cell.getChildren().get(0);
-                    if (child instanceof ImageView imageView) {
-                        DragAndDrop.disableDragAndDrop(imageView);
+                    if (child instanceof Pane componentPane) {
+                        DragAndDrop.disableDragAndDropComponent(componentPane);
                     }
                 }
             }
@@ -190,12 +186,31 @@ public class GameView {
     // Generate a draggable component with an image
     public void generateComponent(String imgComponent) {
 
+        final int componentSize = 100;
+        final int boxSize = 40;
+
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgComponent)));
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(100);
-        imageView.setFitHeight(100);
+        imageView.setFitWidth(componentSize);
+        imageView.setFitHeight(componentSize);
 
-        BuildingData.setNewHandComponent(imageView);
+        //todo: inserire gli slot in base al componente
+        Pane slot1 = new Pane();
+        slot1.setId("boxSlot1");
+        slot1.setLayoutX(50.0);
+        slot1.setLayoutY(30.0);
+        slot1.setPrefWidth(boxSize);
+        slot1.setPrefHeight(boxSize);
+        slot1.setStyle("-fx-border-color: gray;");
+
+        Pane componentPane = new Pane();
+        componentPane.setPrefWidth(componentSize);
+        componentPane.setPrefHeight(componentSize);
+
+        componentPane.getChildren().add(imageView);
+        componentPane.getChildren().add(slot1);
+
+        BuildingData.setNewHandComponent(componentPane);
 
         Platform.runLater(() -> {
             handComponentBox.getChildren().add(BuildingData.getHandComponent());

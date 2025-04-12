@@ -29,11 +29,8 @@ public class AvailableBoxesMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public String[] getBoxes() {
-        String[] out = new String[boxes.size()];
-        for(int i = 0; i < boxes.size(); i++) {
-            out[i] = boxes.get(i).toString();
-        }
-        return out;
+
+    public ArrayList<Integer> getBoxes() {
+        return boxes;
     }
 }

@@ -58,22 +58,6 @@ public class PageController {
         PageController.stage = stage;
     }
 
-    public static void setConnectionView(ConnectionView connectionView) {
-        PageController.connectionView = connectionView;
-    }
-
-    public static void setChooseGameView(ChooseGameView chooseGameView) {
-        PageController.chooseGameView = chooseGameView;
-    }
-
-    public static void setCreateGameView(CreateGameView createGameView) {
-        PageController.createGameView = createGameView;
-    }
-
-    public static void setGameView(GameView gameView) {
-        PageController.gameView = gameView;
-    }
-
     // =======================
     // OTHER METHODS
     // =======================
@@ -132,6 +116,7 @@ public class PageController {
     public static void initGame(String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
         Platform.runLater(() -> {
             gameView.insertCentralUnitComponent(imgSrcCentralUnit, 1);
+            //todo
             //gameView.loadBoardImg(imgSrcBoard);
             //gameView.loadShipImg(imgSrcSpaceship);
         });

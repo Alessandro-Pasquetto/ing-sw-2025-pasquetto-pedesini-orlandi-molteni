@@ -5,9 +5,6 @@ import org.progetto.client.model.GameData;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.events.*;
-
-import java.util.ArrayList;
 
 /**
  * Contains commands relating to the building phase

@@ -1,6 +1,6 @@
 package org.progetto.client.model;
 
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import org.progetto.client.gui.DragAndDrop;
 
 public class BuildingData {
@@ -9,8 +9,8 @@ public class BuildingData {
     // ATTRIBUTES
     // =======================
 
-    private static ImageView handComponent = null;
-    private static ImageView tempBookedComponent = null;
+    private static Pane handComponent = null;
+    private static Pane tempBookedComponent = null;
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
@@ -20,11 +20,11 @@ public class BuildingData {
     // GETTERS
     // =======================
 
-    public static ImageView getHandComponent() {
+    public static Pane getHandComponent() {
         return handComponent;
     }
 
-    public static ImageView getTempBookedComponent() {
+    public static Pane getTempBookedComponent() {
         return tempBookedComponent;
     }
 
@@ -48,15 +48,15 @@ public class BuildingData {
     // SETTERS
     // =======================
 
-    public static void setNewHandComponent(ImageView handComponent) {
+    public static void setNewHandComponent(Pane handComponent) {
         resetHandComponent();
 
         BuildingData.handComponent = handComponent;
         if(GameData.getUIType().equals("GUI"))
-            DragAndDrop.enableDragAndDrop(BuildingData.handComponent);
+            DragAndDrop.enableDragAndDropComponent(BuildingData.handComponent);
     }
 
-    public static void setTempBookedComponent(ImageView tempBookedComponent) {
+    public static void setTempBookedComponent(Pane tempBookedComponent) {
         BuildingData.tempBookedComponent = tempBookedComponent;
     }
 
@@ -88,7 +88,7 @@ public class BuildingData {
     public static void resetHandComponent(){
         if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired())){
             if(GameData.getUIType().equals("GUI"))
-                DragAndDrop.disableDragAndDrop(BuildingData.handComponent);
+                DragAndDrop.disableDragAndDropComponent(BuildingData.handComponent);
         }
 
         handComponent = null;
