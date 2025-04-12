@@ -43,12 +43,12 @@ public class TuiCommandFilter {
 
     public static void listenCommand(){
 
-       while(true){
+       while (true){
            System.out.println();
 
            String command = scanner.nextLine();
 
-           if(command.equals("exit")) break;
+           if (command.equalsIgnoreCase("exit")) break;
 
            handleCommand(command);
        }
@@ -75,7 +75,7 @@ public class TuiCommandFilter {
 
             for (CommandEntity cmd : commands) {
                 if (cmd.getName().equalsIgnoreCase(command)) {
-                    System.out.println("Expected Format: " + cmd.getUsage());
+                    System.out.println("Expected format: " + cmd.getUsage());
                     return;
                 }
             }
@@ -231,7 +231,7 @@ public class TuiCommandFilter {
                 BuildingCommands.close(commandParts);
                 break;
 
-            case "SHOWSPACESHIP":
+            case "SHOWSHIP":
 
                 if (commandParts.length > 2) {
                     System.out.println("Invalid command format");

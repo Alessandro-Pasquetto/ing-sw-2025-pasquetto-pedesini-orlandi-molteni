@@ -85,8 +85,8 @@
     "usage": "Close"
   },
   {
-    "name": "ShowSpaceship",
+    "name": "ShowShip",
     "description": "Show the structure of a player's spaceship.",
-    "usage": "ShowSpaceship <nickname>"
+    "usage": "ShowShip <nickname>"
   }
 ]

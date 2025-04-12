@@ -5,10 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.*;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,6 +56,8 @@ public class GameCommands {
 
         System.out.println("\n🛠  Spaceship Matrix View");
 
+        System.out.println();
+
         String[][][] gridVisual = new String[rows][cols][5];
 
         for (int i = 0; i < rows; i++) {
@@ -78,8 +77,23 @@ public class GameCommands {
             }
         }
 
+        System.out.print("      ");
+        for (int j = 0; j < cols; j++) {
+            int num = j + 6 - spaceship.getLevelShip();
+            System.out.print("      " + num + "       ");
+        }
+        System.out.println();
+        System.out.println();
+
         for (int i = 0; i < rows; i++) {
             for (int line = 0; line < 5; line++) {
+                if (line == 2) {
+                    int num = i + 5;
+                    System.out.print(String.format(" %2d   ", num));
+                } else {
+                    System.out.print("      ");
+                }
+
                 for (int j = 0; j < cols; j++) {
                     System.out.print(gridVisual[i][j][line] + " ");
                 }
@@ -211,33 +225,33 @@ public class GameCommands {
                     switch (rotation) {
                         case 0:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ ════════╗ │";
-                            lines[2] = connections[3] + "     " + abbreviateType + "   ║ " + connections[1];
-                            lines[3] = "│         ║ │";
+                            lines[1] = "│ " + GREEN + "════════╗" + RESET + " │";
+                            lines[2] = connections[3] + "     " + abbreviateType + GREEN + "   ║ " + RESET + connections[1];
+                            lines[3] = "│         " + GREEN + "║" + RESET + " │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
 
                         case 1:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│         ║ │";
-                            lines[2] = connections[3] + "     " + abbreviateType + "   ║ " + connections[1];
-                            lines[3] = "│ ════════╝ │";
+                            lines[1] = "│         " + GREEN + "║" + RESET + " │";
+                            lines[2] = connections[3] + "     " + abbreviateType + GREEN + "   ║ " + RESET + connections[1];
+                            lines[3] = "│ " + GREEN + "════════╝" + RESET + " │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
 
                         case 2:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ ║         │";
-                            lines[2] = connections[3] + " ║   " + abbreviateType + "     " + connections[1];
-                            lines[3] = "│ ╚════════ │";
+                            lines[1] = "│ " + GREEN + "║" + RESET + "         │";
+                            lines[2] = connections[3] + GREEN + " ║   " + RESET + abbreviateType + "     " + connections[1];
+                            lines[3] = "│ " + GREEN + "╚════════" + RESET + " │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
 
                         case 3:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ ╔════════ │";
-                            lines[2] = connections[3] + " ║   " + abbreviateType + "     " + connections[1];
-                            lines[3] = "│ ║         │";
+                            lines[1] = "│ " + GREEN + "╔════════" + RESET + " │";
+                            lines[2] = connections[3] + GREEN + " ║   " + RESET + abbreviateType + "     " + connections[1];
+                            lines[3] = "│ " + GREEN + "║" + RESET + "         │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
                     }
@@ -246,10 +260,23 @@ public class GameCommands {
 
                 case HOUSING_UNIT, CENTRAL_UNIT:
                     // TODO: print "H" of the same color of the player, need to get player's color
+
+                    HousingUnit housingUnit = (HousingUnit) component;
+                    itemsCount = housingUnit.getCrewCount();
+                    String color;
+
+                    if (housingUnit.getHasPurpleAlien()) {
+                        color = PURPLE;
+                    } else if (housingUnit.getHasOrangeAlien()) {
+                        color = ORANGE;
+                    } else {
+                        color = RESET;
+                    }
+
                     lines[0] = "┌─────" + connections[0] + "─────┐";
                     lines[1] = "│           │";
                     lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│           │";
+                    lines[3] = "│    (" + color + itemsCount + RESET + ")    │";
                     lines[4] = "└─────" + connections[2] + "─────┘";
                     break;
 
@@ -323,14 +350,14 @@ public class GameCommands {
                             lines[0] = "┌─────" + connections[0] + "─────┐";
                             lines[1] = "│           │";
                             lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                            lines[3] = "│    (" + boxesStr[0] + ")    │";
+                            lines[3] = "│    [" + boxesStr[0] + "]    │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
 
                         case 2:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
                             lines[1] = "│           │";
-                            lines[2] = connections[3] + " (" + boxesStr[0] + ") " + abbreviateType + " (" + boxesStr[1] + ") " + connections[1];
+                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
                             lines[3] = "│           │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
@@ -368,7 +395,7 @@ public class GameCommands {
                         case 2:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
                             lines[1] = "│           │";
-                            lines[2] = connections[3] + " (" + boxesStr[0] + ") " + abbreviateType + " (" + boxesStr[1] + ") " + connections[1];
+                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
                             lines[3] = "│           │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
@@ -376,8 +403,8 @@ public class GameCommands {
                         case 3:
                             lines[0] = "┌─────" + connections[0] + "─────┐";
                             lines[1] = "│           │";
-                            lines[2] = connections[3] + " (" + boxesStr[0] + ") " + abbreviateType + " (" + boxesStr[1] + ") " + connections[1];
-                            lines[3] = "│    (" + boxesStr[2] + ")    │";
+                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
+                            lines[3] = "│    [" + boxesStr[2] + "]    │";
                             lines[4] = "└─────" + connections[2] + "─────┘";
                             break;
                     }
