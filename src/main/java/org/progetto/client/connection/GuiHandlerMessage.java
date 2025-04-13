@@ -30,7 +30,6 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("You have created a new game");
             GameData.setIdGame(initGameMessage.getIdGame());
 
             try {
@@ -39,7 +38,7 @@ public class GuiHandlerMessage {
                 System.out.println("Error loading the page");
             }
 
-            PageController.initGame(initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
+            PageController.initGame(initGameMessage.getLevelGame(), initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {

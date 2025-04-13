@@ -18,6 +18,9 @@ import org.progetto.server.model.components.Component;
 
 public class GameView {
 
+    final int COMPONENT_SIZE = 100;
+    final int BOX_SLOT_SIZE = 35;
+
     @FXML
     private Pane handComponentBox;
 
@@ -40,13 +43,12 @@ public class GameView {
 
     // Setup a grid with a given size
     private void setupGrid(int size) {
-        int cellSize = 100;
 
         // spaceshipMatrix
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 Pane cell = new Pane();
-                cell.setPrefSize(cellSize, cellSize);
+                cell.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
                 cell.setStyle("-fx-border-color: black; -fx-background-color: rgba(255,255,255,0.3);");
                 spaceshipMatrix.add(cell, col, row);
             }
@@ -188,17 +190,14 @@ public class GameView {
     // Generate a draggable component with an image
     public void generateComponent(Component component) {
 
-        final int componentSize = 100;
-        final int boxSize = 35;
-
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(componentSize);
-        imageView.setFitHeight(componentSize);
+        imageView.setFitWidth(COMPONENT_SIZE);
+        imageView.setFitHeight(COMPONENT_SIZE);
 
         Pane componentPane = new Pane();
-        componentPane.setPrefWidth(componentSize);
-        componentPane.setPrefHeight(componentSize);
+        componentPane.setPrefWidth(COMPONENT_SIZE);
+        componentPane.setPrefHeight(COMPONENT_SIZE);
 
         componentPane.getChildren().add(imageView);
 
@@ -211,9 +210,10 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(30.0);
                     slot1.setLayoutY(30.0);
-                    slot1.setPrefWidth(boxSize);
-                    slot1.setPrefHeight(boxSize);
+                    slot1.setPrefWidth(BOX_SLOT_SIZE);
+                    slot1.setPrefHeight(BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
+                    slot1.getProperties().put("idx", 1);
 
                     componentPane.getChildren().add(slot1);
                     break;
@@ -223,17 +223,19 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(30.0);
                     slot1.setLayoutY(10.0);
-                    slot1.setPrefWidth(boxSize);
-                    slot1.setPrefHeight(boxSize);
+                    slot1.setPrefWidth(BOX_SLOT_SIZE);
+                    slot1.setPrefHeight(BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
+                    slot1.getProperties().put("idx", 1);
 
                     Pane slot2 = new Pane();
                     slot2.setId("boxSlot2");
                     slot2.setLayoutX(30.0);
                     slot2.setLayoutY(50.0);
-                    slot2.setPrefWidth(boxSize);
-                    slot2.setPrefHeight(boxSize);
+                    slot2.setPrefWidth(BOX_SLOT_SIZE);
+                    slot2.setPrefHeight(BOX_SLOT_SIZE);
                     slot2.setStyle("-fx-border-color: gray;");
+                    slot2.getProperties().put("idx", 2);
 
                     componentPane.getChildren().add(slot1);
                     componentPane.getChildren().add(slot2);
@@ -244,25 +246,28 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(10.0);
                     slot1.setLayoutY(30.0);
-                    slot1.setPrefWidth(boxSize);
-                    slot1.setPrefHeight(boxSize);
+                    slot1.setPrefWidth(BOX_SLOT_SIZE);
+                    slot1.setPrefHeight(BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
+                    slot1.getProperties().put("idx", 1);
 
                     slot2 = new Pane();
                     slot2.setId("boxSlot2");
                     slot2.setLayoutX(50.0);
                     slot2.setLayoutY(10.0);
-                    slot2.setPrefWidth(boxSize);
-                    slot2.setPrefHeight(boxSize);
+                    slot2.setPrefWidth(BOX_SLOT_SIZE);
+                    slot2.setPrefHeight(BOX_SLOT_SIZE);
                     slot2.setStyle("-fx-border-color: gray;");
+                    slot2.getProperties().put("idx", 2);
 
                     Pane slot3 = new Pane();
                     slot3.setId("boxSlot3");
                     slot3.setLayoutX(50.0);
                     slot3.setLayoutY(50.0);
-                    slot3.setPrefWidth(boxSize);
-                    slot3.setPrefHeight(boxSize);
+                    slot3.setPrefWidth(BOX_SLOT_SIZE);
+                    slot3.setPrefHeight(BOX_SLOT_SIZE);
                     slot3.setStyle("-fx-border-color: gray;");
+                    slot3.getProperties().put("idx", 3);
 
                     componentPane.getChildren().add(slot1);
                     componentPane.getChildren().add(slot2);
@@ -317,8 +322,8 @@ public class GameView {
                 Pane cell = (Pane) node;
                 Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgSrcCentralUnit)));
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
+                imageView.setFitWidth(COMPONENT_SIZE);
+                imageView.setFitHeight(COMPONENT_SIZE);
                 cell.getChildren().add(imageView);
 
                 // Center the image inside the cell

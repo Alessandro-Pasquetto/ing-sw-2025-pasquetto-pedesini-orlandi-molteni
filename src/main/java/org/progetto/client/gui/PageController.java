@@ -115,9 +115,9 @@ public class PageController {
         gameView.generateComponent(component);
     }
 
-    public static void initGame(String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
+    public static void initGame(int levelGame, String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
         Platform.runLater(() -> {
-            gameView.insertCentralUnitComponent(imgSrcCentralUnit, 1);
+            gameView.insertCentralUnitComponent(imgSrcCentralUnit, levelGame);
             //todo
             //gameView.loadBoardImg(imgSrcBoard);
             //gameView.loadShipImg(imgSrcSpaceship);

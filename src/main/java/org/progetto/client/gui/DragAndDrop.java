@@ -127,8 +127,8 @@ public class DragAndDrop {
                     cell.getChildren().add(componentPane);
 
                     // Center the image inside the cell
-                    componentPane.setLayoutX(cell.getWidth() - componentPane.getPrefWidth());
-                    componentPane.setLayoutY(cell.getHeight() - componentPane.getPrefHeight());
+                    componentPane.setLayoutX((cell.getWidth() - componentPane.getPrefWidth()) / 2);
+                    componentPane.setLayoutY((cell.getHeight() - componentPane.getPrefHeight()) / 2);
 
                     // save the row and column index of the dropped cell
                     BuildingData.setXHandComponent(colIndex);
@@ -316,11 +316,11 @@ public class DragAndDrop {
                                         slot.getChildren().add(boxImage);
 
                                         // Center the image inside the slot
-                                        boxImage.setLayoutX(slot.getWidth() - boxImage.getFitWidth());
-                                        boxImage.setLayoutY(slot.getHeight() - boxImage.getFitHeight());
+                                        boxImage.setLayoutX((slot.getWidth() - boxImage.getFitWidth()) /2);
+                                        boxImage.setLayoutY((slot.getHeight() - boxImage.getFitHeight()) /2);
 
-                                        // todo
-                                        // Save some index
+                                        //todo handle idx
+                                        System.out.println("Released box in slot " + slot.getProperties().get("idx"));
 
                                         droppedInCell = true;
                                         break;
