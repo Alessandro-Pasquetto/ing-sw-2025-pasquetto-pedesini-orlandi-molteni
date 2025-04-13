@@ -10,6 +10,7 @@ import org.progetto.client.MainClient;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -106,8 +107,8 @@ public class PageController {
         });
     }
 
-    public static void generateGameList(int id){
-        chooseGameView.generateGameList(id);
+    public static void generateGameList(ArrayList<Integer> idGames){
+        chooseGameView.generateGameRecordList(idGames);
     }
 
     public static void generateComponent(Component component){

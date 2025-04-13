@@ -25,15 +25,8 @@ public class GuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            ArrayList<Integer> idGames = showWaitingGamesMessage.getIdWaitingGames();
 
-            for (Integer idGame : idGames) {
-                PageController.generateGameList(idGame);
-            }
-        }
-
-        else if (messageObj instanceof NotifyNewGameMessage notifyNewGameMessage) {
-            PageController.generateGameList(notifyNewGameMessage.getIdGame());
+            PageController.generateGameList(showWaitingGamesMessage.getIdWaitingGames());
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
@@ -77,6 +70,10 @@ public class GuiHandlerMessage {
                     } catch (IOException e) {
                         System.out.println("Error loading the page");
                     }
+                    break;
+
+                case "UpdateGameList":
+                    PageController.getChooseGameView().updateGameList();
                     break;
 
                 case "NotAvailableName":

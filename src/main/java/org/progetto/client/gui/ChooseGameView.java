@@ -7,8 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.progetto.client.model.GameData;
-import org.progetto.client.connection.rmi.RmiClientSender;
-import org.progetto.client.connection.socket.SocketClient;
+
+import java.util.ArrayList;
 
 public class ChooseGameView {
 
@@ -36,19 +36,28 @@ public class ChooseGameView {
         }
     }
 
+    public void updateGameList() {
+        GameData.getSender().updateGameList();
+    }
 
-    public void generateGameList(int idGame){
-
-        Label messageLabel = new Label("Game " + idGame);
-
-        Button button = new Button("Entra");
-
-        button.setOnAction(e -> {
-            joinToGame(idGame);
-        });
+    public void generateGameRecordList(ArrayList<Integer> idGames){
 
         Platform.runLater(() -> {
-            chooseGameLayout.getChildren().addAll(messageLabel, button);
+            chooseGameLayout.getChildren().clear();
         });
+
+        for(Integer idGame : idGames){
+            Label messageLabel = new Label("Game " + idGame);
+
+            Button button = new Button("Entra");
+
+            button.setOnAction(e -> {
+                joinToGame(idGame);
+            });
+
+            Platform.runLater(() -> {
+                chooseGameLayout.getChildren().addAll(messageLabel, button);
+            });
+        }
     }
 }

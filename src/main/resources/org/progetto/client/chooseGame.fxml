@@ -11,6 +11,6 @@
 
     <TextField fx:id="usernameTextField" layoutX="135.0" layoutY="32.0" promptText="Username" />
 
-    <VBox fx:id="chooseGameLayout" alignment="CENTER" layoutX="210.0" layoutY="108.0"> </VBox>
+    <VBox fx:id="chooseGameLayout" alignment="CENTER" layoutX="210.0" layoutY="108.0" />
 
 </AnchorPane>

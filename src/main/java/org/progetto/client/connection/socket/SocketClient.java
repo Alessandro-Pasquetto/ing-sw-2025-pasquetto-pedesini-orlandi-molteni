@@ -48,7 +48,7 @@ public class SocketClient implements Sender {
 
             if(GameData.getUIType().equals("GUI")){
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
-                showWaitingGames();
+                PageController.getChooseGameView().updateGameList();
             }
 
         }catch(IOException e){
@@ -73,8 +73,8 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void showWaitingGames() {
-        SocketWriter.sendMessage("ShowWaitingGames");
+    public void updateGameList() {
+        SocketWriter.sendMessage("UpdateGameList");
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ConnectionsCommands {
      * @author Alessandro
      */
     public static void showWaitingGames(){
-        GameData.getSender().showWaitingGames();
+        GameData.getSender().updateGameList();
     }
 
     /**

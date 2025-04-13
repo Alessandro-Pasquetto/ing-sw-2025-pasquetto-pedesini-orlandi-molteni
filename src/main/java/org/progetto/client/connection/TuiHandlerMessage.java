@@ -32,10 +32,6 @@ public class TuiHandlerMessage {
             }
         }
 
-        else if (messageObj instanceof NotifyNewGameMessage notifyNewGameMessage) {
-            System.out.println("New Game: " + notifyNewGameMessage.getIdGame());
-        }
-
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
             System.out.println("Created new game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());

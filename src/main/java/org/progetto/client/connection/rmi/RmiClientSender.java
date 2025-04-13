@@ -27,7 +27,7 @@ public class RmiClientSender implements Sender {
             System.out.println("Connected to the RMIServer");
             if(GameData.getUIType().equals("GUI")){
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
-                showWaitingGames();
+                PageController.getChooseGameView().updateGameList();
             }
 
         } catch (Exception e) {
@@ -38,10 +38,10 @@ public class RmiClientSender implements Sender {
     // The following methods call functions implemented in the RmiServerReceiver
 
     @Override
-    public void showWaitingGames(){
+    public void updateGameList(){
         try{
             server.showWaitingGames(RmiClientReceiver.getInstance());
-        } catch (RemoteException e) {
+        }catch (RemoteException e){
             throw new RuntimeException(e);
         }
     }

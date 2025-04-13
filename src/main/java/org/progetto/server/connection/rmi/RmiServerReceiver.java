@@ -1,9 +1,7 @@
 package org.progetto.server.connection.rmi;
 
-import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
-import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.connection.games.GameManager;
@@ -60,7 +58,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         gameManager.addRmiClient(player, virtualClient);
         GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
-        LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(idGame), virtualClient);
         virtualClient.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 
@@ -70,7 +67,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         try {
             internalGameInfo = LobbyController.joinGame(idGame, name);
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("NotAvailableName"))
+            if(e.getMessage().equals("GameFull"))
+                virtualClient.sendMessage("GameFull");
+
+            else if(e.getMessage().equals("NotAvailableName"))
                 virtualClient.sendMessage("NotAvailableName");
             return;
         }

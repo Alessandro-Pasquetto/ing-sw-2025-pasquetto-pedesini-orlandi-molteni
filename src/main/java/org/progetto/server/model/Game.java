@@ -1,6 +1,8 @@
 package org.progetto.server.model;
 
 import com.google.gson.reflect.TypeToken;
+import org.progetto.server.connection.games.GameManagerMaps;
+import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
 import java.lang.reflect.Type;
@@ -280,9 +282,17 @@ public class Game {
      * @author Alessandro
      * @param player the new player joining the game
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player) throws IllegalStateException {
         synchronized (players) {
+            if(players.size() == maxNumPlayers)
+                throw new IllegalStateException("GameFull");
+
             players.add(player);
+
+            if(players.size() == maxNumPlayers){
+                GameManagerMaps.removeWaitingGameManager(id);
+                LobbyController.broadcastLobbyMessage("UpdateGameList");
+            }
         }
     }
 

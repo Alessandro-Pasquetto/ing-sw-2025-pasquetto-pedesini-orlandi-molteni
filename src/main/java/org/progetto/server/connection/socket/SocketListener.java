@@ -1,13 +1,11 @@
 package org.progetto.server.connection.socket;
 
-import org.progetto.messages.toClient.NotifyNewGameMessage;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.*;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.rmi.RemoteException;
@@ -48,6 +46,9 @@ public class SocketListener extends Thread {
     // Methods that handle the messages by calling the necessary functions
     // =======================
 
+    /**
+     * Method that handle lobby requests
+     */
     private void handlerLobbyMessages(Object messageObj) throws RemoteException {
         if (messageObj instanceof CreateGameMessage createGameMessage) {
             int levelGame = createGameMessage.getLevelGame();
@@ -65,7 +66,7 @@ public class SocketListener extends Thread {
 
             clientHandler.initPlayerConnection(gameManager, player);
 
-            LobbyController.broadcastLobbyMessageToOthers(new NotifyNewGameMessage(gameManager.getGame().getId()), clientHandler.getSocketWriter());
+            LobbyController.broadcastLobbyMessageToOthers("UpdateGameList", clientHandler.getSocketWriter());
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
@@ -76,7 +77,10 @@ public class SocketListener extends Thread {
             try {
                 internalGameInfo = LobbyController.joinGame(idGame, name);
             } catch (IllegalStateException e) {
-                if(e.getMessage().equals("NotAvailableName"))
+                if(e.getMessage().equals("GameFull"))
+                    clientHandler.getSocketWriter().sendMessage("GameFull");
+
+                else if(e.getMessage().equals("NotAvailableName"))
                     clientHandler.getSocketWriter().sendMessage("NotAvailableName");
                 return;
             }
@@ -94,7 +98,7 @@ public class SocketListener extends Thread {
 
         else if (messageObj instanceof String messageString) {
             switch (messageString){
-                case "ShowWaitingGames":
+                case "UpdateGameList":
                     LobbyController.showWaitingGames(clientHandler.getSocketWriter());
                     break;
 
@@ -105,6 +109,10 @@ public class SocketListener extends Thread {
         }
     }
 
+
+    /**
+     * Method that handle game requests
+     */
     private void handlerGameMessages(Object messageObj) throws RemoteException, InterruptedException {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
         GameManager gameManager = clientHandler.getGameManager();
