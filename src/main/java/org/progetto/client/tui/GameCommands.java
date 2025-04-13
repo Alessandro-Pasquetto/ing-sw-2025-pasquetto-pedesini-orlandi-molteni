@@ -51,7 +51,7 @@ public class GameCommands {
 
                 // Checks current cell could be occupied
                 if (mask[i][j] != 0) {
-                    gridVisual[i][j] = printComponent(spaceshipMatrix[i][j]);
+                    gridVisual[i][j] = drawComponent(spaceshipMatrix[i][j]);
 
                 } else {
                     gridVisual[i][j][0] = "             ";
@@ -133,7 +133,7 @@ public class GameCommands {
         };
     }
 
-    public static String[] printComponent(Component component) {
+    public static String[] drawComponent(Component component) {
 
         String[] lines = new String[5];
 

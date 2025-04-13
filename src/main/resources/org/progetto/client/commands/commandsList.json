@@ -20,6 +20,11 @@
     "usage": "JoinGame <id> <nickname>"
   },
   {
+    "name": "ShowHand",
+    "description": "Show hand components.",
+    "usage": "ShowHand"
+  },
+  {
     "name": "PickHidden",
     "description": "Pick a hidden component from the deck.",
     "usage": "PickHidden"

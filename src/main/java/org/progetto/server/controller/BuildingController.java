@@ -24,6 +24,40 @@ public class BuildingController {
     // todo: add check if is building phase and check if the player is already ready
 
     /**
+     * Handles player decision to show hand component
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param sender
+     */
+    public static void showHandComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
+
+        if (player.getIsReady()) {
+            sender.sendMessage("ActionNotAllowedInReadyState");
+            return;
+        }
+
+        if (gameManager.getTimerExpired()) {
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        try {
+            Component handComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
+
+            if (handComponent != null) {
+                sender.sendMessage(new ShowHandComponentMessage(handComponent));
+            } else {
+                sender.sendMessage("EmptyHand");
+            }
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
+    }
+
+    /**
      * Handles player decision to pick a hidden component
      *
      * @author Alessandro
@@ -123,6 +157,39 @@ public class BuildingController {
     }
 
     /**
+     * Place component
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param xPlaceComponent
+     * @param yPlaceComponent
+     * @param rPlaceComponent
+     * @param sender
+     */
+    public static void placeComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+
+        if (player.getIsReady()){
+            sender.sendMessage("ActionNotAllowedInReadyState");
+            return;
+        }
+
+        if (gameManager.getTimerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        if (buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+            sender.sendMessage("AllowedToPlaceComponent");
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
+
+        } else
+            sender.sendMessage("NotAllowedToPlaceComponent");
+    }
+
+    /**
      * Place last component
      *
      * @author Alessandro
@@ -137,11 +204,11 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        if (buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
             sender.sendMessage("AllowedToPlaceComponent");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
 
-        }else
+        } else
             sender.sendMessage("NotAllowedToPlaceComponent");
 
         player.setIsReady(true, gameManager.getGame());

@@ -67,7 +67,7 @@ public class SocketListener extends Thread {
             clientHandler.initPlayerConnection(gameManager, player);
 
             LobbyController.broadcastLobbyMessageToOthers("UpdateGameList", clientHandler.getSocketWriter());
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
             int idGame = joinGameMessage.getIdGame();
@@ -93,7 +93,7 @@ public class SocketListener extends Thread {
 
             clientHandler.initPlayerConnection(gameManager, player);
             clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
         }
 
         else if (messageObj instanceof String messageString) {
@@ -134,8 +134,14 @@ public class SocketListener extends Thread {
                 break;
 
             case BUILDING:
+                if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
+                    int xPlaceComponent = placeComponentMessage.getX();
+                    int yPlaceComponent = placeComponentMessage.getY();
+                    int rPlaceComponent = placeComponentMessage.getRotation();
+                    BuildingController.placeComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+                }
 
-                if (messageObj instanceof PlaceLastComponentMessage placeLastComponentMessage) {
+                else if (messageObj instanceof PlaceLastComponentMessage placeLastComponentMessage) {
                     int xPlaceComponent = placeLastComponentMessage.getX();
                     int yPlaceComponent = placeLastComponentMessage.getY();
                     int rPlaceComponent = placeLastComponentMessage.getRotation();
@@ -213,6 +219,11 @@ public class SocketListener extends Thread {
 
                 else if (messageObj instanceof String messageString) {
                     switch (messageString){
+
+                        case "ShowHandComponent":
+                            BuildingController.showHandComponent(gameManager, player, socketWriter);
+                            break;
+
                         case "PickHiddenComponent":
                             BuildingController.pickHiddenComponent(gameManager, player, socketWriter);
                             break;

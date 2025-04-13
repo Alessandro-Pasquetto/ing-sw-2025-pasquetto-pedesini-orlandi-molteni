@@ -23,6 +23,7 @@ public class BuildingCommands {
     // PRINTING
     // =======================
 
+    // TODO: secondo me non conviene piu' usare questa rappresentazione (sostituita dalla rappresentazione quadrata)
     public static void printComponentInfo(Component component) {
 
         String[] directions = {"↑", "→", "↓", "←"};
@@ -48,17 +49,47 @@ public class BuildingCommands {
         System.out.println("└────────────────────────────┘");
     }
 
+    public static void printComponent(Component component) {
+
+        String[] lines = GameCommands.drawComponent(component);
+
+        for (int row = 0; row < 5; row++) {
+            System.out.print(lines[row]);
+            System.out.println();
+        }
+    }
+
     public static void printVisibleComponents(ArrayList<Component> visibleComponents) {
 
         System.out.println("Current Visible Components:");
         System.out.println();
 
-        for (int i = 0; i < visibleComponents.size(); i++) {
-            System.out.println("Index " + i + ": ");
+        int totalComponents = visibleComponents.size();
+        int maxPerRow = 5;
 
-            Component component = visibleComponents.get(i);
-            printComponentInfo(component);
+        for (int start = 0; start < totalComponents; start += maxPerRow) {
+            int end = Math.min(start + maxPerRow, totalComponents);
+            int numComponentsInRow = end - start;
 
+            String[][] componentLines = new String[numComponentsInRow][5];
+
+            for (int i = 0; i < numComponentsInRow; i++) {
+                componentLines[i] = GameCommands.drawComponent(visibleComponents.get(start + i));
+            }
+
+            for (int row = 0; row < 5; row++) {
+                for (int col = 0; col < numComponentsInRow; col++) {
+                    System.out.print(componentLines[col][row] + "  ");
+                }
+                System.out.println();
+            }
+
+            for (int i = 0; i < numComponentsInRow; i++) {
+                String indexStr = String.format("     [%d]     ", start + i);
+                System.out.print(indexStr + "  ");
+            }
+
+            System.out.println();
             System.out.println();
         }
     }
@@ -72,7 +103,7 @@ public class BuildingCommands {
         String[][] componentLines = new String[numComponents][5];
 
         for (int i = 0; i < numComponents; i++) {
-            componentLines[i] = GameCommands.printComponent(bookedComponents[i]);
+            componentLines[i] = GameCommands.drawComponent(bookedComponents[i]);
         }
 
         for (int row = 0; row < 5; row++) {
@@ -94,6 +125,18 @@ public class BuildingCommands {
     // =======================
 
     /**
+     * Enables player to view hand component
+     * usage : ShowHand
+     *
+     * @author Gabriele
+     * @param commandParts
+     */
+    public static void showHandComponent(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.showHandComponent();
+    }
+
+    /**
      * Enables to pick a hidden component if possible
      * usage : PickHidden
      *
@@ -106,7 +149,7 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables player to view visible component
+     * Enables player to view visible components
      * usage : ShowVisible
      *
      * @author Gabriele
@@ -133,16 +176,18 @@ public class BuildingCommands {
      * Enables to place the hand component given its coordinates and rotation
      * usage : Place pos_x pos_y rot
      *
-     * @author Lorenzo
+     * @author Gabriele
      * @param commandParts are segments of the command
      */
     public static void placeComponent(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.placeLastComponent(
-                Integer.parseInt(commandParts[1]),
-                Integer.parseInt(commandParts[2]),
-                Integer.parseInt(commandParts[3])
-        );
+        int levelGame = GameData.getLevelGame();
+
+        int x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+        int y = Integer.parseInt(commandParts[2]) - 5;
+        int rot = Integer.parseInt(commandParts[3]);
+
+        sender.placeComponent(x, y, rot);
     }
 
     /**

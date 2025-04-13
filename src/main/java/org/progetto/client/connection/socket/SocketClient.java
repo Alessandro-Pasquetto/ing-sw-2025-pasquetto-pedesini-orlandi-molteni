@@ -88,6 +88,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void showHandComponent() {
+        SocketWriter.sendMessage("ShowHandComponent");
+    }
+
+    @Override
     public void pickHiddenComponent(){
         SocketWriter.sendMessage("PickHiddenComponent");
     }
@@ -100,6 +105,11 @@ public class SocketClient implements Sender {
     @Override
     public void pickVisibleComponent(int idx){
         SocketWriter.sendMessage(new PickVisibleComponentMessage(idx));
+    }
+
+    @Override
+    public void placeComponent(int xHandComponent, int yHandComponent, int rHandComponent) {
+        SocketWriter.sendMessage(new PlaceComponentMessage(xHandComponent, yHandComponent, rHandComponent));
     }
 
     @Override

@@ -14,6 +14,7 @@ public class GameData {
     // Client data that I want to store
     private static Sender sender;
     private static int idGame;
+    private static int levelGame;
     private static String namePlayer;
     private static String UIType;
 
@@ -27,6 +28,10 @@ public class GameData {
 
     public static int getIdGame() {
         return idGame;
+    }
+
+    public static int getLevelGame() {
+        return levelGame;
     }
 
     public static String getNamePlayer(){
@@ -47,6 +52,10 @@ public class GameData {
 
     public static void setIdGame(int idGame) {
         GameData.idGame = idGame;
+    }
+
+    public static void setLevelGame(int levelGame) {
+        GameData.levelGame = levelGame;
     }
 
     public static void setNamePlayer(String namePlayer){

@@ -58,7 +58,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         gameManager.addRmiClient(player, virtualClient);
         GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
-        virtualClient.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 
     @Override
@@ -85,7 +85,22 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         gameManager.addRmiClient(player, virtualClient);
 
         virtualClient.sendMessage("AllowedToJoinGame");
-        virtualClient.sendMessage(new GameInfoMessage(idGame, board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+    }
+
+    @Override
+    public void showHandComponent(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.showHandComponent(gameManager, player, virtualClient);
     }
 
     @Override
@@ -131,6 +146,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         BuildingController.pickVisibleComponent(gameManager, player, idx, virtualClient);
+    }
+
+    @Override
+    public void placeComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.placeComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, virtualClient);
     }
 
     @Override

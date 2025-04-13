@@ -41,7 +41,7 @@ public class TuiCommandFilter {
         }
     }
 
-    public static void listenCommand(){
+    public static void listenCommand() {
 
        while (true){
            System.out.println();
@@ -139,6 +139,14 @@ public class TuiCommandFilter {
                     return;
                 }
                 BuildingCommands.resetTimer(commandParts);
+                break;
+
+            case "SHOWHAND":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                BuildingCommands.showHandComponent(commandParts);
                 break;
 
             case "PICKHIDDEN":

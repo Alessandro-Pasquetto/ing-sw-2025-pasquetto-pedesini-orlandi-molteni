@@ -65,6 +65,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void showHandComponent(){
+        try {
+            server.showHandComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void pickHiddenComponent(){
         try {
             server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
@@ -86,6 +95,15 @@ public class RmiClientSender implements Sender {
     public void pickVisibleComponent(int idx){
         try {
             server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void placeComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) {
+        try {
+            server.placeComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }

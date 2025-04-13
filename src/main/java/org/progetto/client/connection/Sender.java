@@ -9,11 +9,15 @@ public interface Sender {
 
     void tryJoinToGame(int idGame);
 
+    void showHandComponent();
+
     void pickHiddenComponent();
 
     void showVisibleComponents();
 
     void pickVisibleComponent(int idx);
+
+    void placeComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 
     void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
 

@@ -35,16 +35,19 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
             System.out.println("Created new game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
+        } else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
+            System.out.println("Current Hand Component:");
+            BuildingCommands.printComponent(showHandComponentMessage.getHandComponent());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
-            System.out.println("New component picked");
-            BuildingCommands.printComponentInfo(pickedComponentMessage.getPickedComponent());
+            System.out.println("New component picked:");
+            BuildingCommands.printComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
             System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " );
-            BuildingCommands.printComponentInfo(anotherPlayerPlacedComponentMessage.getComponent());
+            BuildingCommands.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
         }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {

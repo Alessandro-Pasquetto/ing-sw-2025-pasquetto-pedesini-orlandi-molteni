@@ -22,6 +22,8 @@ public interface VirtualServer extends Remote {
 
     void pickVisibleComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException;
 
+    void placeComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
+
     void placeLastComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
 
     void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException;
@@ -81,4 +83,6 @@ public interface VirtualServer extends Remote {
     void showVisibleComponents(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void showBookedComponents(VirtualClient virtualClient, int idGame) throws RemoteException;
+
+    void showHandComponent(VirtualClient virtualClient, int idGame) throws RemoteException;
 }
