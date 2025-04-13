@@ -102,9 +102,11 @@ public class EventCommands {
         System.out.println();
     }
 
+
     // =======================
     // SCANNER
     // =======================
+
     private static Scanner scanner = new Scanner(System.in);
 
     public static String listenResponse(){
@@ -317,10 +319,18 @@ public class EventCommands {
      * @author Lorenzo
      * @param availableBoxes is the list of all available boxes
      */
-    public static void responseRewardBox(String[] availableBoxes) {
+    public static void responseRewardBox(ArrayList<Integer> availableBoxes) {
         System.out.println("📦 Box list:");
-        for (int i = 0; i < availableBoxes.length; i++) {
-            String box = availableBoxes[i];
+
+        for (int i = 0; i < availableBoxes.size(); i++) {
+            String box = switch (availableBoxes.get(i)) {
+                            case 1 -> "BLUE";
+                            case 2 -> "GREEN";
+                            case 3 -> "YELLOW";
+                            case 4 -> "RED";
+                            default -> "?";
+                        };
+
             System.out.printf(" [%2d]  Color: %-10s%n", i, box);
         }
 
@@ -328,7 +338,7 @@ public class EventCommands {
         String idx = listenResponse();
         try{
             int box_idx = Integer.parseInt(idx);
-            if(box_idx >=0 && box_idx < availableBoxes.length){
+            if(box_idx >= 0 && box_idx < availableBoxes.size()){
                 System.out.println("Select a box storage were you want to insert the box: <X> <Y> <storage_idx>");
                 String x = listenResponse();
                 String y = listenResponse();

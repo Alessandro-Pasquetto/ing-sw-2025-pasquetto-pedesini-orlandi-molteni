@@ -100,9 +100,8 @@ public class SmugglersController extends EventControllerAbstract {
                         battleResult(player, sender);
 
                     } else {
-                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
-
                         phase = EventPhase.CANNON_NUMBER;
+                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
                     }
                 }
 

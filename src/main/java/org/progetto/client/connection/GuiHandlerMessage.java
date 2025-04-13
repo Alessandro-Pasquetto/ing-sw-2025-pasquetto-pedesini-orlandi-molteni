@@ -50,7 +50,7 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
-            PageController.generateComponent(pickedComponentMessage.getImgPath());
+            PageController.generateComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {

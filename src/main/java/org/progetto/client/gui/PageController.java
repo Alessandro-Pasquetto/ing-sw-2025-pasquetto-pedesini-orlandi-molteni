@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.progetto.client.MainClient;
+import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -109,8 +110,8 @@ public class PageController {
         chooseGameView.generateGameList(id);
     }
 
-    public static void generateComponent(String imgComponent){
-        gameView.generateComponent(imgComponent);
+    public static void generateComponent(Component component){
+        gameView.generateComponent(component);
     }
 
     public static void initGame(String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {

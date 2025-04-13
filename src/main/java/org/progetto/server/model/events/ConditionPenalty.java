@@ -1,13 +1,15 @@
 package org.progetto.server.model.events;
 
-public class ConditionPenalty {
+import java.io.Serializable;
+
+public class ConditionPenalty implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private ConditionType condition;
-    private Penalty penalty;
+    private final ConditionType condition;
+    private final Penalty penalty;
 
     // =======================
     // CONSTRUCTORS

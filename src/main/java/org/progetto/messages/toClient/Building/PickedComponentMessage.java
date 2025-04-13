@@ -26,12 +26,4 @@ public class PickedComponentMessage implements Serializable {
     public Component getPickedComponent() {
         return component;
     }
-
-    public String getComponentType(){
-        return component.getType().toString();
-    }
-
-    public String getImgPath() {
-        return component.getImgSrc();
-    }
 }

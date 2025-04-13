@@ -38,7 +38,7 @@
     <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" style="-fx-font-size: 24;" text="00:00" />
 
 
-    <ImageView fx:id="provaBoxImage" fitHeight="40" fitWidth="40" layoutX="89.0" layoutY="392.0" preserveRatio="true">
+    <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="392.0" preserveRatio="true">
         <Image url="@img/Green.png" />
     </ImageView>
 

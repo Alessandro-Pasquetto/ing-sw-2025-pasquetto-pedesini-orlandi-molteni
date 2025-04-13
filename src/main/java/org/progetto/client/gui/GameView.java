@@ -12,6 +12,8 @@ import javafx.scene.layout.*;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.components.BoxStorage;
+import org.progetto.server.model.components.Component;
 
 
 public class GameView {
@@ -184,31 +186,90 @@ public class GameView {
     }
 
     // Generate a draggable component with an image
-    public void generateComponent(String imgComponent) {
+    public void generateComponent(Component component) {
 
         final int componentSize = 100;
-        final int boxSize = 40;
+        final int boxSize = 35;
 
-        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgComponent)));
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(componentSize);
         imageView.setFitHeight(componentSize);
-
-        //todo: inserire gli slot in base al componente
-        Pane slot1 = new Pane();
-        slot1.setId("boxSlot1");
-        slot1.setLayoutX(50.0);
-        slot1.setLayoutY(30.0);
-        slot1.setPrefWidth(boxSize);
-        slot1.setPrefHeight(boxSize);
-        slot1.setStyle("-fx-border-color: gray;");
 
         Pane componentPane = new Pane();
         componentPane.setPrefWidth(componentSize);
         componentPane.setPrefHeight(componentSize);
 
         componentPane.getChildren().add(imageView);
-        componentPane.getChildren().add(slot1);
+
+        //todo: inserire gli slot in base al componente
+        if(component instanceof BoxStorage boxStorage){
+
+            switch (boxStorage.getCapacity()){
+                case 1:
+                    Pane slot1 = new Pane();
+                    slot1.setId("boxSlot1");
+                    slot1.setLayoutX(30.0);
+                    slot1.setLayoutY(30.0);
+                    slot1.setPrefWidth(boxSize);
+                    slot1.setPrefHeight(boxSize);
+                    slot1.setStyle("-fx-border-color: gray;");
+
+                    componentPane.getChildren().add(slot1);
+                    break;
+
+                case 2:
+                    slot1 = new Pane();
+                    slot1.setId("boxSlot1");
+                    slot1.setLayoutX(30.0);
+                    slot1.setLayoutY(10.0);
+                    slot1.setPrefWidth(boxSize);
+                    slot1.setPrefHeight(boxSize);
+                    slot1.setStyle("-fx-border-color: gray;");
+
+                    Pane slot2 = new Pane();
+                    slot2.setId("boxSlot2");
+                    slot2.setLayoutX(30.0);
+                    slot2.setLayoutY(50.0);
+                    slot2.setPrefWidth(boxSize);
+                    slot2.setPrefHeight(boxSize);
+                    slot2.setStyle("-fx-border-color: gray;");
+
+                    componentPane.getChildren().add(slot1);
+                    componentPane.getChildren().add(slot2);
+                    break;
+
+                case 3:
+                    slot1 = new Pane();
+                    slot1.setId("boxSlot1");
+                    slot1.setLayoutX(10.0);
+                    slot1.setLayoutY(30.0);
+                    slot1.setPrefWidth(boxSize);
+                    slot1.setPrefHeight(boxSize);
+                    slot1.setStyle("-fx-border-color: gray;");
+
+                    slot2 = new Pane();
+                    slot2.setId("boxSlot2");
+                    slot2.setLayoutX(50.0);
+                    slot2.setLayoutY(10.0);
+                    slot2.setPrefWidth(boxSize);
+                    slot2.setPrefHeight(boxSize);
+                    slot2.setStyle("-fx-border-color: gray;");
+
+                    Pane slot3 = new Pane();
+                    slot3.setId("boxSlot3");
+                    slot3.setLayoutX(50.0);
+                    slot3.setLayoutY(50.0);
+                    slot3.setPrefWidth(boxSize);
+                    slot3.setPrefHeight(boxSize);
+                    slot3.setStyle("-fx-border-color: gray;");
+
+                    componentPane.getChildren().add(slot1);
+                    componentPane.getChildren().add(slot2);
+                    componentPane.getChildren().add(slot3);
+                    break;
+            }
+        }
 
         BuildingData.setNewHandComponent(componentPane);
 

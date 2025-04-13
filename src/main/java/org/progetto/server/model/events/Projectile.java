@@ -1,13 +1,15 @@
 package org.progetto.server.model.events;
 
-public class Projectile {
+import java.io.Serializable;
+
+public class Projectile implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private ProjectileSize size;
-    private int from;   // [0, 1, 2, 3] = [top, right, bottom, left]
+    private final ProjectileSize size;
+    private final int from;   // [0, 1, 2, 3] = [top, right, bottom, left]
 
     // =======================
     // CONSTRUCTORS
@@ -29,5 +31,4 @@ public class Projectile {
     public int getFrom() {
         return from;
     }
-
 }

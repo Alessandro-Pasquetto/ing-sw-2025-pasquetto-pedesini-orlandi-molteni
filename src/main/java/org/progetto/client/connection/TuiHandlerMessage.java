@@ -118,8 +118,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-            //EventCommands.responseRewardBox(availableBoxesMessage.getBoxes()); todo
-            System.out.println("todo: availableBoxesMessage");
+            EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
         }
 
         else if (messageObj instanceof String messageString) {

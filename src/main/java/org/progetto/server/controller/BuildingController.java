@@ -314,7 +314,7 @@ public class BuildingController {
 
                 gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
                 String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-                //sender.sendMessage(new PickedComponentMessage(pickedComponentImg));
+
                 sender.sendMessage("PickedBookedComponent");
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg),sender);
 
@@ -521,7 +521,7 @@ public class BuildingController {
         try{
             player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-            //sender.sendMessage(new PickedComponentMessage(imgSrc));
+
             sender.sendMessage("PickedBookedComponent");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc),sender);
 
