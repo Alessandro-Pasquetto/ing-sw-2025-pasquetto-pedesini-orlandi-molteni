@@ -217,6 +217,14 @@ public class SocketListener extends Thread {
                             BuildingController.putDownEventCardDeck(gameManager, player, socketWriter);
                             break;
 
+                        case "ShowVisibleComponents":
+                            BuildingController.showVisibleComponents(gameManager, player, socketWriter);
+                            break;
+
+                        case "ShowBookedComponents":
+                            BuildingController.showBookedComponents(gameManager, player, socketWriter);
+                            break;
+
                         case "ResetTimer":
                             BuildingController.resetTimer(gameManager, socketWriter);
                             break;

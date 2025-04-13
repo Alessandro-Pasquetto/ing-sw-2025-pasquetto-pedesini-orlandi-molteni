@@ -107,7 +107,7 @@ public class GameThread extends Thread {
 
                     case TRAVEL:
                         if(gameManager.getGame().getEventDeckSize() > 0){
-                            gameManager.broadcastGameMessage("DoUWannaContinueTravel");
+                            gameManager.broadcastGameMessage("Do you want to continue traveling?");
                             resetAndWaitPlayersReady();
                             game.setPhase(GamePhase.EVENT);
                         }

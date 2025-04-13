@@ -40,20 +40,6 @@ public class GameCommands {
 
         int[][] mask = spaceship.getBuildingBoard().getBoardMask();
 
-//        System.out.println("   ┌──────────────────────────────┐");
-//
-//        for (int y = 0; y < spaceshipMatrix.length; y++) {
-//            System.out.print("   │ ");
-//            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
-//                Component c = spaceshipMatrix[y][x];
-//                String symbol = (c != null) ? abbreviateType(c.getType()) : " . ";
-//                System.out.print(symbol + " ");
-//            }
-//            System.out.println("│");
-//        }
-//
-//        System.out.println("   └──────────────────────────────┘");
-
         System.out.println("\n🛠  Spaceship Matrix View");
 
         System.out.println();
@@ -131,7 +117,7 @@ public class GameCommands {
         System.out.println();
     }
 
-    private static String abbreviateType(ComponentType type) {
+    public static String abbreviateType(ComponentType type) {
         return switch (type) {
             case CANNON, DOUBLE_CANNON -> "C";
             case ENGINE, DOUBLE_ENGINE -> "E";
@@ -147,7 +133,7 @@ public class GameCommands {
         };
     }
 
-    private static String[] printComponent(Component component) {
+    public static String[] printComponent(Component component) {
 
         String[] lines = new String[5];
 
@@ -447,7 +433,7 @@ public class GameCommands {
      *
      * @author Lorenzo
      */
-    public static void printHelp() {
+    public static void showHelp() {
         String path = "src/main/resources/org/progetto/client/commands/commandsList.json";
         Gson gson = new Gson();
         try (Reader reader = new FileReader(path)) {

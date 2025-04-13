@@ -17,6 +17,4 @@ public class CommandEntity {
     public String getUsage() {
         return usage;
     }
-
-
 }

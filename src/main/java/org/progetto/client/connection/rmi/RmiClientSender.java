@@ -74,6 +74,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void showVisibleComponents(){
+        try {
+            server.showVisibleComponents(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void pickVisibleComponent(int idx){
         try {
             server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
@@ -165,6 +174,15 @@ public class RmiClientSender implements Sender {
         }
     }
 
+    @Override
+    public void showBookedComponents(){
+        try {
+            server.showBookedComponents(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Allows RMI on client to call for the respective method on RMI server
      *
@@ -248,7 +266,6 @@ public class RmiClientSender implements Sender {
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

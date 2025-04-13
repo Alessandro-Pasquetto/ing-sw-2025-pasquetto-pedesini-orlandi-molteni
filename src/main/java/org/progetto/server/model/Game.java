@@ -94,6 +94,12 @@ public class Game {
         }
     }
 
+    public ArrayList<Component> getVisibleComponentDeckCopy() {
+        synchronized (visibleComponentDeck) {
+            return new ArrayList<>(visibleComponentDeck);
+        }
+    }
+
     public int getPlayersSize() {
         synchronized (players) {
             return players.size();

@@ -109,7 +109,6 @@ public class TuiCommandFilter {
                 ConnectionsCommands.showWaitingGames();
                 break;
 
-
             case "CREATEGAME":
                 if (!isValidCommand(commandParts.length, 4)) {
                     expectedFormat(commandType);
@@ -126,12 +125,36 @@ public class TuiCommandFilter {
                 ConnectionsCommands.joinGame(commandParts);
                 break;
 
+            case "READY":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                BuildingCommands.readyPlayer(commandParts);
+                break;
+
+            case "TIMERRESET":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                BuildingCommands.resetTimer(commandParts);
+                break;
+
             case "PICKHIDDEN":
                 if (!isValidCommand(commandParts.length, 1)) {
                     expectedFormat(commandType);
                     return;
                 }
                 BuildingCommands.pickHiddenComponent(commandParts);
+                break;
+
+            case "SHOWVISIBLE":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                BuildingCommands.showVisibleComponents(commandParts);
                 break;
 
             case "PICKVISIBLE":
@@ -150,7 +173,6 @@ public class TuiCommandFilter {
                 BuildingCommands.placeComponent(commandParts);
                 break;
 
-
             case "DISCARD":
                 if (!isValidCommand(commandParts.length, 1)) {
                     expectedFormat(commandType);
@@ -165,6 +187,14 @@ public class TuiCommandFilter {
                     return;
                 }
                 BuildingCommands.bookComponent(commandParts);
+                break;
+
+            case "SHOWBOOKED":
+                if (!isValidCommand(commandParts.length, 1)) {
+                    expectedFormat(commandType);
+                    return;
+                }
+                BuildingCommands.showBookedComponents(commandParts);
                 break;
 
             case "PICKBOOKED":
@@ -191,28 +221,21 @@ public class TuiCommandFilter {
                 BuildingCommands.putDownEventCardDeck(commandParts);
                 break;
 
+            case "SHOWSHIP":
+                if (commandParts.length > 2) {
+                    System.out.println("Invalid command format");
+                    expectedFormat(commandType);
+                    return;
+                }
+                GameCommands.showSpaceship(commandParts);
+                break;
+
             case "DESTROY":
                 if (!isValidCommand(commandParts.length, 3)) {
                     expectedFormat(commandType);
                     return;
                 }
                 BuildingCommands.destroyComponent(commandParts);
-                break;
-
-            case "READY":
-                if (!isValidCommand(commandParts.length, 1)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.readyPlayer(commandParts);
-                break;
-
-            case "TIMERRESET":
-                if (!isValidCommand(commandParts.length, 1)) {
-                    expectedFormat(commandType);
-                    return;
-                }
-                BuildingCommands.resetTimer(commandParts);
                 break;
 
             case "ROLL":
@@ -231,18 +254,8 @@ public class TuiCommandFilter {
                 BuildingCommands.close(commandParts);
                 break;
 
-            case "SHOWSHIP":
-
-                if (commandParts.length > 2) {
-                    System.out.println("Invalid command format");
-                    expectedFormat(commandType);
-                    return;
-                }
-                GameCommands.showSpaceship(commandParts);
-                break;
-
             case "HELP":
-                GameCommands.printHelp();
+                GameCommands.showHelp();
                 break;
 
             default:

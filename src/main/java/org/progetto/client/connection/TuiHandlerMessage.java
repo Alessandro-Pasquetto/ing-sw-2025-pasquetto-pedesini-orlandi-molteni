@@ -6,10 +6,7 @@ import org.progetto.client.tui.BuildingCommands;
 import org.progetto.client.tui.EventCommands;
 import org.progetto.client.tui.GameCommands;
 import org.progetto.messages.toClient.*;
-import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
-import org.progetto.messages.toClient.Building.PickedComponentMessage;
-import org.progetto.messages.toClient.Building.PickedEventCardMessage;
-import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -40,11 +37,12 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("Create new game with ID:" + initGameMessage.getIdGame());
+            System.out.println("Created new game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
+            System.out.println("New component picked");
             BuildingCommands.printComponentInfo(pickedComponentMessage.getPickedComponent());
         }
 
@@ -53,9 +51,17 @@ public class TuiHandlerMessage {
             BuildingCommands.printComponentInfo(anotherPlayerPlacedComponentMessage.getComponent());
         }
 
+        else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
+            BuildingCommands.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
+        }
+
+        else if (messageObj instanceof ShowBookedComponentsMessage pickedBookedComponentsMessage) {
+            BuildingCommands.printBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
-            if(timer == 10)
+            if (timer == 10)
                 System.out.print("10 seconds to the end");
         }
 
@@ -116,7 +122,6 @@ public class TuiHandlerMessage {
             System.out.println("todo: availableBoxesMessage");
         }
 
-
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
@@ -128,6 +133,9 @@ public class TuiHandlerMessage {
                     System.out.println("Username not available");
                     break;
 
+                case "HandComponentDiscarded":
+                    System.out.println("Current hand component discarded");
+
                 case "AllowedToPlaceComponent":
                     BuildingData.resetHandComponent();
                     break;
@@ -137,7 +145,13 @@ public class TuiHandlerMessage {
                         System.out.print("Time finished");
                     break;
 
+                case "ComponentBooked":
+                    System.out.println("Component booked");
+                    BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
+                    break;
+
                 case "PickedBookedComponent":
+                    System.out.println("Picked booked");
                     BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
                     break;
 
@@ -167,7 +181,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "IncorrectPhase":
-                    System.out.println("Can't call,incorrect phase!");
+                    System.out.println("Can't call, incorrect phase!");
                     break;
 
                 case "NotEnoughBatteries":

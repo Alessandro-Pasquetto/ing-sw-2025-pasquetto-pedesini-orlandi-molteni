@@ -59,6 +59,35 @@ public class BuildingController {
     }
 
     /**
+     * Handles player decision to show visible components
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void showVisibleComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+        if(player.getIsReady()){
+            sender.sendMessage("ActionNotAllowedInReadyState");
+            return;
+        }
+
+        if(gameManager.getTimerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        try {
+            ArrayList<Component> visibleDeck = gameManager.getGame().getVisibleComponentDeckCopy();
+            sender.sendMessage(new ShowVisibleComponentsMessage(visibleDeck));
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
+    }
+
+    /**
      * Handles player decision to pick a visible component
      *
      * @author Gabriele
@@ -362,10 +391,10 @@ public class BuildingController {
             return;
         }
 
-        player.setIsReady(true, gameManager.getGame());
-        gameManager.getGame().getBoard().addTraveler(player);
         sender.sendMessage("YouAreReady");
-        gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
+        gameManager.getGame().getBoard().addTraveler(player);
+        player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
     }
 
@@ -391,6 +420,7 @@ public class BuildingController {
 
         try{
             String imgSrc = gameManager.getGame().discardComponent(player);
+            sender.sendMessage("HandComponentDiscarded");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), sender);
 
         }catch (IllegalStateException e){
@@ -424,8 +454,8 @@ public class BuildingController {
 
         try {
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
-
-            gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().setAsBooked(idx);
+            player.getSpaceship().getBuildingBoard().setAsBooked(idx);
+            sender.sendMessage("ComponentBooked");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),sender);
 
         }catch (IllegalStateException e){
@@ -435,6 +465,35 @@ public class BuildingController {
                 sender.sendMessage("IllegalIndex");
             else if (e.getMessage().equals("BookedCellOccupied"))
                 sender.sendMessage("BookedCellOccupied");
+        }
+    }
+
+    /**
+     * Handles player decision to show booked components
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void showBookedComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+        if(player.getIsReady()){
+            sender.sendMessage("ActionNotAllowedInReadyState");
+            return;
+        }
+
+        if(gameManager.getTimerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        try {
+            Component[] bookedComponents = player.getSpaceship().getBuildingBoard().getBookedCopy();
+            sender.sendMessage(new ShowBookedComponentsMessage(bookedComponents));
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
         }
     }
 
@@ -460,7 +519,7 @@ public class BuildingController {
         }
 
         try{
-            gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
+            player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
             //sender.sendMessage(new PickedComponentMessage(imgSrc));
             sender.sendMessage("PickedBookedComponent");

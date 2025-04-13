@@ -12,6 +12,7 @@ public class EventCommands {
     // =======================
     // PRINTING
     // =======================
+
     public static void printEventCard(EventCard card) {
         System.out.println("┌────────────────────────────────────────────┐");
         System.out.printf ("│ Type       : %-30s │%n", card.getType(),  "|");
@@ -101,7 +102,6 @@ public class EventCommands {
         System.out.println();
     }
 
-
     // =======================
     // SCANNER
     // =======================
@@ -154,7 +154,7 @@ public class EventCommands {
      */
     public static void responseHowManyDoubleEngines(int max) {
         System.out.println("How many double engines?");
-        System.out.println("You have" + max+" double engines");
+        System.out.println("You have" + max + " double engines");
 
         String response = listenResponse();
         Sender sender = GameData.getSender();
@@ -267,7 +267,6 @@ public class EventCommands {
 
         }else
             System.out.println("You must choose between YES or NO");
-
     }
 
     /**
@@ -329,7 +328,7 @@ public class EventCommands {
         String idx = listenResponse();
         try{
             int box_idx = Integer.parseInt(idx);
-            if(box_idx>=0 && box_idx<availableBoxes.length){
+            if(box_idx >=0 && box_idx < availableBoxes.length){
                 System.out.println("Select a box storage were you want to insert the box: <X> <Y> <storage_idx>");
                 String x = listenResponse();
                 String y = listenResponse();
@@ -345,7 +344,6 @@ public class EventCommands {
         }catch (NumberFormatException e){
             System.out.println("You must insert a number!");
         }
-
     }
 
     /**
@@ -397,8 +395,6 @@ public class EventCommands {
         }
     }
 
-
-
     /**
      * Handles player decision to use a double cannon to protect in meteors rain
      *
@@ -416,7 +412,6 @@ public class EventCommands {
             System.out.println("You must choose between YES or NO");
     }
 
-
     /**
      * Enables to roll the dice
      * usage : Roll
@@ -428,6 +423,4 @@ public class EventCommands {
         Sender sender = GameData.getSender();
         sender.rollDice();
     }
-
-
 }

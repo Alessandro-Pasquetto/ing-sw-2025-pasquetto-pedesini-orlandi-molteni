@@ -11,6 +11,8 @@ public interface Sender {
 
     void pickHiddenComponent();
 
+    void showVisibleComponents();
+
     void pickVisibleComponent(int idx);
 
     void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent);
@@ -28,6 +30,8 @@ public interface Sender {
     void discardComponent();
 
     void bookComponent(int idx);
+
+    void showBookedComponents();
 
     void pickBookedComponent(int idx);
 

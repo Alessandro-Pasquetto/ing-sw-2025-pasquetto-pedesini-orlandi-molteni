@@ -1,5 +1,6 @@
 package org.progetto.server.connection.rmi;
 
+import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.messages.toClient.NotifyNewGameMessage;
@@ -100,6 +101,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         BuildingController.pickHiddenComponent(gameManager, player, virtualClient);
+    }
+
+    @Override
+    public void showVisibleComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try {
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.showVisibleComponents(gameManager, player, virtualClient);
     }
 
     @Override
@@ -233,7 +249,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     /**
      * Allows client to call for bookedComponent with RMI in server proxy
      *
-     * @author lorenzo
+     * @author Lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to discard
      * @param idx in the array where we want to insert the component
@@ -254,10 +270,25 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.bookComponent(gameManager, player, idx, virtualClient);
     }
 
+    @Override
+    public void showBookedComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        } catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.showBookedComponents(gameManager, player, virtualClient);
+    }
+
     /**
      * Allows client to call for pickBookedComponent with RMI in server proxy
      *
-     * @author lorenzo
+     * @author Lorenzo
      * @param virtualClient is the interface we want to address
      * @param idGame were we want to pick
      * @param idx in the array where we want to pick the component

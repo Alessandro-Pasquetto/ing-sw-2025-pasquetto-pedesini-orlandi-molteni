@@ -6,6 +6,8 @@ import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 
+import java.util.ArrayList;
+
 /**
  * Contains commands relating to the building phase
  */
@@ -23,8 +25,6 @@ public class BuildingCommands {
 
     public static void printComponentInfo(Component component) {
 
-        System.out.println("New component picked");
-
         String[] directions = {"↑", "→", "↓", "←"};
         int[] conn = component.getConnections();
         ComponentType type = component.getType();
@@ -32,20 +32,61 @@ public class BuildingCommands {
         System.out.println("┌────────────────────────────┐");
         System.out.printf ("│ Type: %-20s │%n", type.name());
         System.out.println("├────────────────────────────┤");
-        System.out.printf ("│ Position: (%2d, %2d)         │%n", component.getX(), component.getY());
+        System.out.printf ("│ Position: (%1d, %1d)           │%n", component.getX(), component.getY());
 
-        if((type == ComponentType.RED_BOX_STORAGE) || (type == ComponentType.BOX_STORAGE)) {
+        if(type == ComponentType.RED_BOX_STORAGE || type == ComponentType.BOX_STORAGE || type == ComponentType.BATTERY_STORAGE) {
             BoxStorage storage = (BoxStorage) component;
-            System.out.printf("│ Capacity : %-19d │%n", storage.getCapacity());
+            System.out.printf("│ Capacity: %-15d  │%n", storage.getCapacity());
         }
         System.out.println("├───── Connectors ───────────┤");
 
         for (int i = 0; i < 4; i++) {
-            String value = conn[i] == 0 ? "none" : String.valueOf(conn[i]);
-            System.out.printf("│ %s : %-21s │%n", directions[i], value);
+            String value = String.valueOf(conn[i]);
+            System.out.printf("│ %s : %-21s  │%n", directions[i], value);
         }
 
         System.out.println("└────────────────────────────┘");
+    }
+
+    public static void printVisibleComponents(ArrayList<Component> visibleComponents) {
+
+        System.out.println("Current Visible Components:");
+        System.out.println();
+
+        for (int i = 0; i < visibleComponents.size(); i++) {
+            System.out.println("Index " + i + ": ");
+
+            Component component = visibleComponents.get(i);
+            printComponentInfo(component);
+
+            System.out.println();
+        }
+    }
+
+    public static void printBookedComponents(Component[] bookedComponents) {
+
+        System.out.println("Current Booked Components:");
+        System.out.println();
+
+        int numComponents = bookedComponents.length;
+        String[][] componentLines = new String[numComponents][5];
+
+        for (int i = 0; i < numComponents; i++) {
+            componentLines[i] = GameCommands.printComponent(bookedComponents[i]);
+        }
+
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < numComponents; col++) {
+                System.out.print(componentLines[col][row] + "  ");
+            }
+            System.out.println();
+        }
+
+        for (int i = 0; i < numComponents; i++) {
+            String indexStr = String.format("     [%d]     ", i);
+            System.out.print(indexStr + "  ");
+        }
+        System.out.println();
     }
 
     // =======================
@@ -53,7 +94,8 @@ public class BuildingCommands {
     // =======================
 
     /**
-     * Enables to pick a hidden component if possible, usage : PickHidden
+     * Enables to pick a hidden component if possible
+     * usage : PickHidden
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
@@ -64,7 +106,20 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to pick a visible component given its index, usage : PickVisible componentIdx
+     * Enables player to view visible component
+     * usage : ShowVisible
+     *
+     * @author Gabriele
+     * @param commandParts
+     */
+    public static void showVisibleComponents(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.showVisibleComponents();
+    }
+
+    /**
+     * Enables to pick a visible component given its index
+     * usage : PickVisible componentIdx
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
@@ -75,7 +130,8 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to place the hand component given its coordinates and rotation, usage : Place pos_x pos_y rot
+     * Enables to place the hand component given its coordinates and rotation
+     * usage : Place pos_x pos_y rot
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
@@ -111,6 +167,18 @@ public class BuildingCommands {
     public static void bookComponent(String[] commandParts){
         Sender sender = GameData.getSender();
         sender.bookComponent(Integer.parseInt(commandParts[1]));
+    }
+
+    /**
+     * Enables player to view booked component
+     * usage : ShowBooked
+     *
+     * @author Gabriele
+     * @param commandParts
+     */
+    public static void showBookedComponents(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.showBookedComponents();
     }
 
     /**

@@ -93,6 +93,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void showVisibleComponents(){
+        SocketWriter.sendMessage("ShowVisibleComponents");
+    }
+
+    @Override
     public void pickVisibleComponent(int idx){
         SocketWriter.sendMessage(new PickVisibleComponentMessage(idx));
     }
@@ -150,6 +155,11 @@ public class SocketClient implements Sender {
     @Override
     public void bookComponent(int idx){
         SocketWriter.sendMessage(new BookComponentMessage(idx));
+    }
+
+    @Override
+    public void showBookedComponents(){
+        SocketWriter.sendMessage("ShowBookedComponents");
     }
 
     @Override

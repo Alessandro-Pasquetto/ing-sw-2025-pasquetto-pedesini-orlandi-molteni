@@ -66,6 +66,18 @@ public class BuildingBoard implements Serializable {
         return booked;
     }
 
+    public Component[] getBookedCopy() {
+        synchronized (booked) {
+            Component[] bookedComponents = new Component[booked.length];
+
+            for (int i = 0; i < booked.length; i++) {
+                bookedComponents[i] = booked[i];
+            }
+
+            return bookedComponents;
+        }
+    }
+
     public String getImgSrc() {
         return imgSrc;
     }

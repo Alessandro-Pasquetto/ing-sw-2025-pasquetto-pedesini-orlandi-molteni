@@ -25,6 +25,11 @@
     "usage": "PickHidden"
   },
   {
+    "name": "ShowVisible",
+    "description": "Show visible components.",
+    "usage": "ShowVisible"
+  },
+  {
     "name": "PickVisible",
     "description": "Pick a visible component by index.",
     "usage": "PickVisible <index>"
@@ -43,6 +48,11 @@
     "name": "Book",
     "description": "Book a visible component.",
     "usage": "Book <index>"
+  },
+  {
+    "name": "ShowBooked",
+    "description": "Show booked components.",
+    "usage": "ShowBooked"
   },
   {
     "name": "PickBooked",
