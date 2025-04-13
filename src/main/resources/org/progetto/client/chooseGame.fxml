@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.ChooseGameView">
 
-    <Button layoutX="340.0" layoutY="24.0" onAction="#createNewGame" prefHeight="42.0" prefWidth="149.0" text="Crea nuova partita" />
+    <Button layoutX="415.0" layoutY="25.0" onAction="#createNewGame" prefHeight="42.0" prefWidth="149.0" text="Crea nuova partita" />
 
     <TextField fx:id="usernameTextField" layoutX="135.0" layoutY="32.0" promptText="Username" />
 
-    <VBox fx:id="chooseGameLayout" alignment="CENTER" layoutX="210.0" layoutY="108.0" />
+    <ComboBox fx:id="boxNumMaxPlayers" layoutX="320.0" layoutY="32.0" />
+
+    <VBox fx:id="chooseGameLayout" alignment="CENTER" layoutX="210.0" layoutY="110.0" />
 
 </AnchorPane>

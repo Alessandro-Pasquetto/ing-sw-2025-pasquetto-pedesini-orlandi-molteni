@@ -1,8 +1,10 @@
 package org.progetto.client.gui;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -16,6 +18,20 @@ public class ChooseGameView {
     private TextField usernameTextField;
     @FXML
     private VBox chooseGameLayout;
+    @FXML
+    public ComboBox boxNumMaxPlayers;
+
+    int numMaxPlayers = 1;
+
+    @FXML
+    public void initialize() {
+        boxNumMaxPlayers.setValue(1);
+        boxNumMaxPlayers.setItems(FXCollections.observableArrayList(1, 2, 3, 4));
+
+        boxNumMaxPlayers.setOnAction(event -> {
+            numMaxPlayers = (int) boxNumMaxPlayers.getValue();
+        });
+    }
 
     public void createNewGame() {
         // For now, there is no createGame page, so I'll do it here.
@@ -23,7 +39,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
-            GameData.getSender().createGame(1, 1);// todo selection levelGame and numMaxPlayers in gui
+            GameData.getSender().createGame(1, numMaxPlayers);// todo selection levelGame and numMaxPlayers in gui
         }
     }
 
