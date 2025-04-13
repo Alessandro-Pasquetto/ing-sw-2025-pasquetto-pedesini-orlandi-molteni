@@ -16,15 +16,29 @@ public class ChooseGameView {
 
     @FXML
     private TextField usernameTextField;
+
     @FXML
     private VBox chooseGameLayout;
+
+    @FXML
+    public ComboBox boxGameLevel;
+
     @FXML
     public ComboBox boxNumMaxPlayers;
 
+    int gameLevel = 1;
     int numMaxPlayers = 1;
 
     @FXML
     public void initialize() {
+        boxGameLevel.setValue(1);
+        boxGameLevel.setItems(FXCollections.observableArrayList(1, 2));
+
+        boxGameLevel.setOnAction(event -> {
+            gameLevel = (int) boxGameLevel.getValue();
+        });
+
+
         boxNumMaxPlayers.setValue(1);
         boxNumMaxPlayers.setItems(FXCollections.observableArrayList(1, 2, 3, 4));
 
@@ -39,7 +53,7 @@ public class ChooseGameView {
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
-            GameData.getSender().createGame(1, numMaxPlayers);// todo selection levelGame and numMaxPlayers in gui
+            GameData.getSender().createGame(gameLevel, numMaxPlayers);
         }
     }
 
