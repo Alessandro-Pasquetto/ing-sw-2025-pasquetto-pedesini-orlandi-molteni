@@ -89,6 +89,9 @@ public class DragAndDrop {
                         break;
                     }
 
+                    if(!BuildingData.getCellMask(colIndex, rowIndex))
+                        break;
+
                     // If dropped inside a cell and the cell is not occupied, move the image into the cell
                     root.getChildren().remove(componentPane);
                     cell.getChildren().add(componentPane);
@@ -297,6 +300,10 @@ public class DragAndDrop {
 
                     // Check if the cell contains a component
                     if (!cell.getChildren().isEmpty()) {
+
+                        Integer rowIndex = GridPane.getRowIndex(cell);
+                        Integer colIndex = GridPane.getColumnIndex(cell);
+
                         Node node2 = cell.getChildren().get(0);
                         if(node2 instanceof Pane componentPane) {
                             for (Node node3 : componentPane.getChildren()) {
@@ -316,11 +323,11 @@ public class DragAndDrop {
                                         slot.getChildren().add(boxImage);
 
                                         // Center the image inside the slot
-                                        boxImage.setLayoutX((slot.getWidth() - boxImage.getFitWidth()) /2);
-                                        boxImage.setLayoutY((slot.getHeight() - boxImage.getFitHeight()) /2);
+                                        boxImage.setLayoutX((slot.getWidth() - boxImage.getFitWidth()) / 2);
+                                        boxImage.setLayoutY((slot.getHeight() - boxImage.getFitHeight()) / 2);
 
                                         //todo handle idx
-                                        System.out.println("Released box in slot " + slot.getProperties().get("idx"));
+                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
 
                                         droppedInCell = true;
                                         break;

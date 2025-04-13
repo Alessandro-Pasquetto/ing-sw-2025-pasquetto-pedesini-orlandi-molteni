@@ -1,17 +1,5 @@
-.root {
-    -fx-background-image: url("../img/cardboard/spaceship1.jpg");
-    -fx-background-size: 750px;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
-}
-
-#grid {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-}
-
-#grid .grid-cell {
+#spaceshipCell {
     -fx-border-color: black;
     -fx-border-width: 1px;
+    -fx-background-color: rgba(255, 255, 255, 0.3);
 }

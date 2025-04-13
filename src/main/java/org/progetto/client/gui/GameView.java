@@ -22,6 +22,9 @@ public class GameView {
     final int BOX_SLOT_SIZE = 35;
 
     @FXML
+    public ImageView spaceShipImage;
+
+    @FXML
     private Pane handComponentBox;
 
     @FXML
@@ -29,6 +32,7 @@ public class GameView {
 
     @FXML
     private GridPane spaceshipMatrix;
+
     @FXML
     private GridPane bookedArray;
 
@@ -37,20 +41,66 @@ public class GameView {
 
     // Initialize the grid when the view is loaded
     public void initialize() {
-        setupGrid(5);
         DragAndDrop.enableDragAndDropBoxes(provaBoxImage);
     }
 
     // Setup a grid with a given size
-    private void setupGrid(int size) {
+    public void initSpaceship(int levelShip, String imgSrcCentralUnit) {
+
+        int sizeX = 5;
+        int sizeY = 5;
+
+        if (levelShip == 2){
+            spaceshipMatrix.setLayoutX(190.0);
+            sizeX = 7;
+        }
 
         // spaceshipMatrix
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < sizeY; row++) {
+            for (int col = 0; col < sizeX; col++) {
                 Pane cell = new Pane();
                 cell.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-                cell.setStyle("-fx-border-color: black; -fx-background-color: rgba(255,255,255,0.3);");
+
+                if(BuildingData.getCellMask(col, row))
+                    cell.setId("spaceshipCell");
+
                 spaceshipMatrix.add(cell, col, row);
+            }
+        }
+
+        insertCentralUnitComponent(levelShip, imgSrcCentralUnit);
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
+        spaceShipImage.setImage(image);
+    }
+
+    public void insertCentralUnitComponent(int levelShip, String imgSrcCentralUnit) {
+        int y = 2;
+        int x = 2;
+
+        if(levelShip == 2)
+            x = 3;
+
+        for (Node node : spaceshipMatrix.getChildren()) {
+            if(node instanceof Pane cell) {
+                Integer rowIndex = GridPane.getRowIndex(cell);
+                Integer colIndex = GridPane.getColumnIndex(cell);
+
+                if (rowIndex == y && colIndex == x) {
+
+                    Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgSrcCentralUnit)));
+                    ImageView imageView = new ImageView(image);
+
+                    imageView.setFitWidth(COMPONENT_SIZE);
+                    imageView.setFitHeight(COMPONENT_SIZE);
+
+                    Pane componentPane = new Pane();
+                    componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
+
+                    componentPane.getChildren().add(imageView);
+                    cell.getChildren().add(componentPane);
+
+                    break;
+                }
             }
         }
     }
@@ -196,8 +246,7 @@ public class GameView {
         imageView.setFitHeight(COMPONENT_SIZE);
 
         Pane componentPane = new Pane();
-        componentPane.setPrefWidth(COMPONENT_SIZE);
-        componentPane.setPrefHeight(COMPONENT_SIZE);
+        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
 
         componentPane.getChildren().add(imageView);
 
@@ -210,8 +259,7 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(30.0);
                     slot1.setLayoutY(30.0);
-                    slot1.setPrefWidth(BOX_SLOT_SIZE);
-                    slot1.setPrefHeight(BOX_SLOT_SIZE);
+                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
                     slot1.getProperties().put("idx", 1);
 
@@ -223,8 +271,7 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(30.0);
                     slot1.setLayoutY(10.0);
-                    slot1.setPrefWidth(BOX_SLOT_SIZE);
-                    slot1.setPrefHeight(BOX_SLOT_SIZE);
+                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
                     slot1.getProperties().put("idx", 1);
 
@@ -232,8 +279,7 @@ public class GameView {
                     slot2.setId("boxSlot2");
                     slot2.setLayoutX(30.0);
                     slot2.setLayoutY(50.0);
-                    slot2.setPrefWidth(BOX_SLOT_SIZE);
-                    slot2.setPrefHeight(BOX_SLOT_SIZE);
+                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot2.setStyle("-fx-border-color: gray;");
                     slot2.getProperties().put("idx", 2);
 
@@ -246,8 +292,7 @@ public class GameView {
                     slot1.setId("boxSlot1");
                     slot1.setLayoutX(10.0);
                     slot1.setLayoutY(30.0);
-                    slot1.setPrefWidth(BOX_SLOT_SIZE);
-                    slot1.setPrefHeight(BOX_SLOT_SIZE);
+                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot1.setStyle("-fx-border-color: gray;");
                     slot1.getProperties().put("idx", 1);
 
@@ -255,8 +300,7 @@ public class GameView {
                     slot2.setId("boxSlot2");
                     slot2.setLayoutX(50.0);
                     slot2.setLayoutY(10.0);
-                    slot2.setPrefWidth(BOX_SLOT_SIZE);
-                    slot2.setPrefHeight(BOX_SLOT_SIZE);
+                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot2.setStyle("-fx-border-color: gray;");
                     slot2.getProperties().put("idx", 2);
 
@@ -264,8 +308,7 @@ public class GameView {
                     slot3.setId("boxSlot3");
                     slot3.setLayoutX(50.0);
                     slot3.setLayoutY(50.0);
-                    slot3.setPrefWidth(BOX_SLOT_SIZE);
-                    slot3.setPrefHeight(BOX_SLOT_SIZE);
+                    slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                     slot3.setStyle("-fx-border-color: gray;");
                     slot3.getProperties().put("idx", 3);
 
@@ -301,37 +344,6 @@ public class GameView {
 
         if(BuildingData.getHandComponent() != null)
             BuildingData.rotateComponent();
-    }
-
-    public void insertCentralUnitComponent(String imgSrcCentralUnit, int levelShip) {
-        int x = 0, y = 0;
-        if(levelShip == 1){
-            x = 2;
-            y = 2;
-        } else if (levelShip == 2) {
-            x = 3;
-            y = 2;
-        }
-
-        for (Node node : spaceshipMatrix.getChildren()) {
-            Integer rowIndex = GridPane.getRowIndex(node);
-            Integer colIndex = GridPane.getColumnIndex(node);
-            if (rowIndex == null) rowIndex = 0;
-            if (colIndex == null) colIndex = 0;
-            if (rowIndex == y && colIndex == x) {
-                Pane cell = (Pane) node;
-                Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + imgSrcCentralUnit)));
-                ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(COMPONENT_SIZE);
-                imageView.setFitHeight(COMPONENT_SIZE);
-                cell.getChildren().add(imageView);
-
-                // Center the image inside the cell
-                imageView.setLayoutX((cell.getWidth() - imageView.getFitWidth()) / 2);
-                imageView.setLayoutY((cell.getHeight() - imageView.getFitHeight()) / 2);
-                break;
-            }
-        }
     }
 
     public void resetTimer() {

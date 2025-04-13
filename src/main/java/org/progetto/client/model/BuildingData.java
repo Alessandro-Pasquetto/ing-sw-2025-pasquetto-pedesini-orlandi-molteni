@@ -16,6 +16,8 @@ public class BuildingData {
     private static int yHandComponent = 0;
     private static boolean isTimerExpired;
 
+    private static int[][] shipMask;
+
     // =======================
     // GETTERS
     // =======================
@@ -42,6 +44,10 @@ public class BuildingData {
 
     public static boolean getIsTimerExpired(){
         return isTimerExpired;
+    }
+
+    public static boolean getCellMask(int x, int y){
+        return shipMask[y][x] == 1;
     }
 
     // =======================
@@ -75,6 +81,26 @@ public class BuildingData {
     // =======================
     // OTHER METHODS
     // =======================
+
+    public static void initMask(int levelShip){
+        shipMask =  switch (levelShip) {
+                        case 1 -> new int[][]{
+                                {0, 0, 1, 0, 0},
+                                {0, 1, 1, 1, 0},
+                                {1, 1, 1, 1, 1},
+                                {1, 1, 1, 1, 1},
+                                {1, 1, 0, 1, 1},
+                        };
+                        case 2 -> new int[][]{
+                                {0, 0, 1, 0, 1, 0, 0},
+                                {0, 1, 1, 1, 1, 1, 0},
+                                {1, 1, 1, 1, 1, 1, 1},
+                                {1, 1, 1, 1, 1, 1, 1},
+                                {1, 1, 1, 0, 1, 1, 1},
+                        };
+                        default -> null;
+                    };
+    }
 
     public static void rotateComponent(){
         handComponent.setRotate(handComponent.getRotate() + 90);

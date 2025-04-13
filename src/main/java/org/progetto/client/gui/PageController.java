@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.progetto.client.MainClient;
+import org.progetto.client.model.BuildingData;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
@@ -117,7 +118,8 @@ public class PageController {
 
     public static void initGame(int levelGame, String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
         Platform.runLater(() -> {
-            gameView.insertCentralUnitComponent(imgSrcCentralUnit, levelGame);
+            BuildingData.initMask(levelGame);
+            gameView.initSpaceship(levelGame, imgSrcCentralUnit);
             //todo
             //gameView.loadBoardImg(imgSrcBoard);
             //gameView.loadShipImg(imgSrcSpaceship);
