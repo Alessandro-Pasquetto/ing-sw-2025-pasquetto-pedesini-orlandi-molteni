@@ -35,7 +35,10 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
             System.out.println("Created new game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
-        } else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
+            GameData.setLevelGame(initGameMessage.getLevelGame());
+        }
+
+        else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
             System.out.println("Current Hand Component:");
             BuildingCommands.printComponent(showHandComponentMessage.getHandComponent());
         }
