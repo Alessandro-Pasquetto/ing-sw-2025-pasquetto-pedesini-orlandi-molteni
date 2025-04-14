@@ -24,36 +24,40 @@ public class TuiCommandFilter {
     public static void setProtocol(){
         System.out.println();
         System.out.println("Select Socket/Rmi:");
+
         while(true){
             String protocol = scanner.nextLine().toUpperCase();
 
-            if(protocol.equals("SOCKET")){
+            if (protocol.equals("SOCKET")) {
                 GameData.setSender(new SocketClient());
                 System.out.println("Socket selected");
                 break;
-            } else if (protocol.equals("RMI")){
+            } else if (protocol.equals("RMI")) {
                 GameData.setSender(new RmiClientSender());
                 System.out.println("RMI selected");
                 break;
-            } else{
+            } else {
                 System.out.println("Command not found");
             }
         }
+
+        System.out.println();
     }
 
     public static void listenCommand() {
 
-       while (true){
-           System.out.println();
+        while (true){
 
-           String command = scanner.nextLine();
+            String command = scanner.nextLine();
 
-           if (command.equalsIgnoreCase("exit")) break;
+            if (command.equalsIgnoreCase("exit")) break;
 
-           handleCommand(command);
-       }
+            handleCommand(command);
 
-       GameData.getSender().close();
+            System.out.println();
+        }
+
+        GameData.getSender().close();
     }
 
     private static boolean isValidCommand(int commandLength, int l){

@@ -54,11 +54,11 @@ public class GameCommands {
                     gridVisual[i][j] = drawComponent(spaceshipMatrix[i][j]);
 
                 } else {
-                    gridVisual[i][j][0] = "             ";
-                    gridVisual[i][j][1] = "             ";
-                    gridVisual[i][j][2] = "             ";
-                    gridVisual[i][j][3] = "             ";
-                    gridVisual[i][j][4] = "             ";
+                    gridVisual[i][j][0] = "               ";
+                    gridVisual[i][j][1] = "               ";
+                    gridVisual[i][j][2] = "               ";
+                    gridVisual[i][j][3] = "               ";
+                    gridVisual[i][j][4] = "               ";
                 }
             }
         }
@@ -66,7 +66,7 @@ public class GameCommands {
         System.out.print("      ");
         for (int j = 0; j < cols; j++) {
             int num = j + 6 - spaceship.getLevelShip();
-            System.out.print("      " + num + "       ");
+            System.out.print("      [" + num + "]      ");
         }
         System.out.println();
         System.out.println();
@@ -75,13 +75,13 @@ public class GameCommands {
             for (int line = 0; line < 5; line++) {
                 if (line == 2) {
                     int num = i + 5;
-                    System.out.print(String.format(" %2d   ", num));
+                    System.out.print(String.format("[%d]   ", num));
                 } else {
                     System.out.print("      ");
                 }
 
                 for (int j = 0; j < cols; j++) {
-                    System.out.print(gridVisual[i][j][line] + " ");
+                    System.out.print(gridVisual[i][j][line] + "");
                 }
                 System.out.println();
             }
@@ -142,13 +142,107 @@ public class GameCommands {
 
             String abbreviateType = abbreviateType(type);
 
-            // Temp variables
+            // Rotation and Connections
             int rotation = component.getRotation();
             int[] connections = component.getConnections();
+
+            String[] upConnections = new String[3];
+            String[] rightConnections = new String[3];
+            String[] downConnections = new String[3];
+            String[] leftConnections = new String[3];
+
+            for (int i = 0; i < connections.length; i++) {
+
+                switch (i) {
+                    case 0:
+                        if (connections[i] == 0) {
+                            upConnections[0] = "─";
+                            upConnections[1] = "─";
+                            upConnections[2] = "─";
+                        } else if (connections[i] == 1) {
+                            upConnections[0] = "─";
+                            upConnections[1] = "┴";
+                            upConnections[2] = "─";
+                        } else if (connections[i] == 2) {
+                            upConnections[0] = "┴";
+                            upConnections[1] = "─";
+                            upConnections[2] = "┴";
+                        } else if (connections[i] == 3) {
+                            upConnections[0] = "┴";
+                            upConnections[1] = "┴";
+                            upConnections[2] = "┴";
+                        }
+                        break;
+
+                    case 1:
+                        if (connections[i] == 0) {
+                            rightConnections[0] = "│ ";
+                            rightConnections[1] = "│ ";
+                            rightConnections[2] = "│ ";
+                        } else if (connections[i] == 1) {
+                            rightConnections[0] = "│ ";
+                            rightConnections[1] = "├─";
+                            rightConnections[2] = "│ ";
+                        } else if (connections[i] == 2) {
+                            rightConnections[0] = "├─";
+                            rightConnections[1] = "│ ";
+                            rightConnections[2] = "├─";
+                        } else if (connections[i] == 3) {
+                            rightConnections[0] = "├─";
+                            rightConnections[1] = "├─";
+                            rightConnections[2] = "├─";
+                        }
+                        break;
+
+                    case 2:
+                        if (connections[i] == 0) {
+                            downConnections[0] = "─";
+                            downConnections[1] = "─";
+                            downConnections[2] = "─";
+                        } else if (connections[i] == 1) {
+                            downConnections[0] = "─";
+                            downConnections[1] = "┬";
+                            downConnections[2] = "─";
+                        } else if (connections[i] == 2) {
+                            downConnections[0] = "┬";
+                            downConnections[1] = "─";
+                            downConnections[2] = "┬";
+                        } else if (connections[i] == 3) {
+                            downConnections[0] = "┬";
+                            downConnections[1] = "┬";
+                            downConnections[2] = "┬";
+                        }
+                        break;
+
+                    case 3:
+                        if (connections[i] == 0) {
+                            leftConnections[0] = " │";
+                            leftConnections[1] = " │";
+                            leftConnections[2] = " │";
+                        } else if (connections[i] == 1) {
+                            leftConnections[0] = " │";
+                            leftConnections[1] = "─┤";
+                            leftConnections[2] = " │";
+                        } else if (connections[i] == 2) {
+                            leftConnections[0] = "─┤";
+                            leftConnections[1] = " │";
+                            leftConnections[2] = "─┤";
+                        } else if (connections[i] == 3) {
+                            leftConnections[0] = "─┤";
+                            leftConnections[1] = "─┤";
+                            leftConnections[2] = "─┤";
+                        }
+                        break;
+                }
+            }
+
+            // Engines/Cannons directions
             String up;
             String right;
             String down;
             String left;
+
+            // Storages
             int capacity;
             int itemsCount;
             int[] boxes;
@@ -161,11 +255,11 @@ public class GameCommands {
                     down = rotation == 2 ? "↓" : " ";
                     left = rotation == 3 ? "←" : " ";
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] ="│     " + up + "     │";
-                    lines[2] = connections[3] + "  " + left + "  " + abbreviateType + "  " + right + "  " + connections[1];
-                    lines[3] = "│     " + down + "     │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "     " + up + "     " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "  " + left + "  " + abbreviateType + "  " + right + "  " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "     " + down + "     " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case DOUBLE_CANNON:
@@ -174,11 +268,11 @@ public class GameCommands {
                     down = rotation == 2 ? "↓" : " ";
                     left = rotation == 3 ? "←" : " ";
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│  " + left + " " + up + " " + up + " " + right + "  │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│  " + left + " " + down + " " + down + " " + right + "  │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "  " + left + " " + up + " " + up + " " + right + "  " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "  " + left + " " + down + " " + down + " " + right + "  " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case ENGINE:
@@ -187,11 +281,11 @@ public class GameCommands {
                     down = rotation == 0 ? "↓" : " ";
                     left = rotation == 1 ? "←" : " ";
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│     " + up + "     │";
-                    lines[2] = connections[3] + "  " + left + "  " + abbreviateType + "  " + right + "  " + connections[1];
-                    lines[3] = "│     " + down + "     │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "     " + up + "     " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "  " + left + "  " + abbreviateType + "  " + right + "  " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "     " + down + "     " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case DOUBLE_ENGINE:
@@ -200,49 +294,46 @@ public class GameCommands {
                     down = rotation == 0 ? "↓" : " ";
                     left = rotation == 1 ? "←" : " ";
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│  " + left + " " + up + " " + up + " " + right + "  │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│  " + left + " " + down + " " + down + " " + right + "  │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "  " + left + " " + up + " " + up + " " + right + "  " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "  " + left + " " + down + " " + down + " " + right + "  " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case SHIELD:
                     switch (rotation) {
                         case 0:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ " + GREEN + "════════╗" + RESET + " │";
-                            lines[2] = connections[3] + "     " + abbreviateType + GREEN + "   ║ " + RESET + connections[1];
-                            lines[3] = "│         " + GREEN + "║" + RESET + " │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + "════════╗" + RESET + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "   ║ " + RESET + rightConnections[1];
+                            lines[3] = leftConnections[2] + "         " + GREEN + "║" + RESET + " " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
-
                         case 1:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│         " + GREEN + "║" + RESET + " │";
-                            lines[2] = connections[3] + "     " + abbreviateType + GREEN + "   ║ " + RESET + connections[1];
-                            lines[3] = "│ " + GREEN + "════════╝" + RESET + " │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + "         " + GREEN + "║" + RESET + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "   ║ " + RESET + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + "════════╝" + RESET + " " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
-
                         case 2:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ " + GREEN + "║" + RESET + "         │";
-                            lines[2] = connections[3] + GREEN + " ║   " + RESET + abbreviateType + "     " + connections[1];
-                            lines[3] = "│ " + GREEN + "╚════════" + RESET + " │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + "║" + RESET + "         " + rightConnections[0];
+                            lines[2] = leftConnections[1] + GREEN + " ║   " + RESET + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + "╚════════" + RESET + " " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
-
                         case 3:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│ " + GREEN + "╔════════" + RESET + " │";
-                            lines[2] = connections[3] + GREEN + " ║   " + RESET + abbreviateType + "     " + connections[1];
-                            lines[3] = "│ " + GREEN + "║" + RESET + "         │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + "╔════════" + RESET + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + GREEN + " ║   " + RESET + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + "║" + RESET + "         " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
                     }
-
                     break;
+
 
                 case HOUSING_UNIT, CENTRAL_UNIT:
                     // TODO: print "H" of the same color of the player, need to get player's color
@@ -259,46 +350,46 @@ public class GameCommands {
                         color = RESET;
                     }
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│           │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│    (" + color + itemsCount + RESET + ")    │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "    (" + color + itemsCount + RESET + ")    " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case ORANGE_HOUSING_UNIT:
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│           │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│           │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "           " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case PURPLE_HOUSING_UNIT:
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│           │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│           │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "           " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case STRUCTURAL_UNIT:
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│           │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│           │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "           " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case BATTERY_STORAGE:
                     BatteryStorage batteryStorage = (BatteryStorage) component;
                     itemsCount = batteryStorage.getItemsCount();
 
-                    lines[0] = "┌─────" + connections[0] + "─────┐";
-                    lines[1] = "│           │";
-                    lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                    lines[3] = "│    (" + itemsCount + ")    │";
-                    lines[4] = "└─────" + connections[2] + "─────┘";
+                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "    (" + itemsCount + ")    " + rightConnections[2];
+                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 
                 case RED_BOX_STORAGE:
@@ -333,19 +424,19 @@ public class GameCommands {
 
                     switch (capacity) {
                         case 1:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│           │";
-                            lines[2] = connections[3] + "     " + abbreviateType + "     " + connections[1];
-                            lines[3] = "│    [" + boxesStr[0] + "]    │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + "    [" + boxesStr[0] + "]    " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
 
                         case 2:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│           │";
-                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
-                            lines[3] = "│           │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
+                            lines[3] = leftConnections[2] + "           " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
                     }
 
@@ -379,19 +470,19 @@ public class GameCommands {
 
                     switch (capacity) {
                         case 2:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│           │";
-                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
-                            lines[3] = "│           │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] "  + rightConnections[1];
+                            lines[3] = leftConnections[2] + "           " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
 
                         case 3:
-                            lines[0] = "┌─────" + connections[0] + "─────┐";
-                            lines[1] = "│           │";
-                            lines[2] = connections[3] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + connections[1];
-                            lines[3] = "│    [" + boxesStr[2] + "]    │";
-                            lines[4] = "└─────" + connections[2] + "─────┘";
+                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
+                            lines[3] = leftConnections[2] + "    [" + boxesStr[2] + "]    " + rightConnections[2];
+                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                             break;
                     }
 
@@ -399,11 +490,11 @@ public class GameCommands {
             }
 
         } else {
-            lines[0] = "┌───────────┐";
-            lines[1] = "│           │";
-            lines[2] = "│           │";
-            lines[3] = "│           │";
-            lines[4] = "└───────────┘";
+            lines[0] = " ┌───────────┐ ";
+            lines[1] = " │           │ ";
+            lines[2] = " │           │ ";
+            lines[3] = " │           │ ";
+            lines[4] = " └───────────┘ ";
         }
 
         return lines;

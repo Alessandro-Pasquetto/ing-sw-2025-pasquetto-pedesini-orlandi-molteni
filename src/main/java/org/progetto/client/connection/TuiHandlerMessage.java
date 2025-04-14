@@ -143,10 +143,12 @@ public class TuiHandlerMessage {
                     break;
 
                 case "AllowedToPlaceComponent":
+                    System.out.println("Component placed successfully!");
                     BuildingData.resetHandComponent();
                     break;
 
                 case "NotAllowedToPlaceComponent":
+                    System.out.println("Component not placed");
                     if(BuildingData.getIsTimerExpired())
                         System.out.print("Time finished");
                     break;
@@ -189,7 +191,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "IncorrectPhase":
-                    System.out.println("Can't call, incorrect phase!");
+                    System.out.println("Can't use that, incorrect phase!");
                     break;
 
                 case "NotEnoughBatteries":
