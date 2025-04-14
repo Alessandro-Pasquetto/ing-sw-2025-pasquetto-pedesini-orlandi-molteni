@@ -33,6 +33,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
+            System.out.println("You joined a game");
             GameData.setIdGame(initGameMessage.getIdGame());
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
@@ -128,10 +129,6 @@ public class TuiHandlerMessage {
 
             switch (messageString) {
                 case "UpdateGameList":
-                    break;
-
-                case "AllowedToJoinGame":
-                    System.out.println("You joined a game");
                     break;
 
                 case "NotAvailableName":

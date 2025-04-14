@@ -10,15 +10,17 @@
 <?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="824.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.GameView">
-    <stylesheets><URL value="@style/game_style.css"/></stylesheets>
+    <stylesheets><URL value="@style/game_style.css" /></stylesheets>
 
     <ImageView fx:id="spaceShipImage" fitHeight="554.0" fitWidth="757.0" layoutX="164.0" layoutY="138.0" preserveRatio="true" />
 
     <GridPane fx:id="spaceshipMatrix" layoutX="290.0" layoutY="160.0" />
 
-    <GridPane fx:id="bookedArray" gridLinesVisible="true" layoutX="702.0" layoutY="160.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
-        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;" GridPane.columnIndex="0" />
-        <Pane prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;" GridPane.columnIndex="1" />
+    <Pane fx:id="handComponentBox" layoutX="190.0" layoutY="160.0" prefHeight="100.0" prefWidth="100.0" />
+
+    <GridPane fx:id="bookedArray" layoutX="702.0" layoutY="160.0">
+        <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
+        <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
     </GridPane>
 
     <Button layoutX="14.0" layoutY="13.0" onAction="#ready" prefHeight="42.0" prefWidth="149.0" text="Ready" />
@@ -33,13 +35,15 @@
 
     <Button layoutX="466.0" layoutY="34.0" onAction="#resetTimer" prefHeight="42.0" prefWidth="149.0" text="resetTimer" />
 
-    <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" style="-fx-font-size: 24;" text="00:00" />
+    <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" text="00:00" />
 
 
     <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="392.0" preserveRatio="true">
         <Image url="@img/Green.png" />
     </ImageView>
 
-    <Pane fx:id="handComponentBox" layoutX="190.0" layoutY="160.0" prefHeight="100.0" prefWidth="100.0" style="-fx-border-color: black; -fx-background-color: black;" />
+    <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="438.0" preserveRatio="true">
+        <Image url="@img/CrewXD.png" />
+    </ImageView>
 
 </AnchorPane>

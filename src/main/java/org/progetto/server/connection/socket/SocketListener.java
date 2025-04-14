@@ -92,7 +92,6 @@ public class SocketListener extends Thread {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             clientHandler.initPlayerConnection(gameManager, player);
-            clientHandler.getSocketWriter().sendMessage("AllowedToJoinGame");
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
         }
 
@@ -108,7 +107,6 @@ public class SocketListener extends Thread {
             }
         }
     }
-
 
     /**
      * Method that handle game requests

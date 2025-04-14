@@ -27,13 +27,16 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            GameData.setIdGame(initGameMessage.getIdGame());
+
+            System.out.println("You joined a game");
 
             try {
                 PageController.switchScene("game.fxml", "Game");
             } catch (IOException e) {
                 System.out.println("Error loading the page");
             }
+
+            GameData.setIdGame(initGameMessage.getIdGame());
 
             PageController.initGame(initGameMessage.getLevelGame(), initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
         }
@@ -58,15 +61,6 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
-                case "AllowedToJoinGame":
-                    System.out.println("You joined a game");
-
-                    try {
-                        PageController.switchScene("game.fxml", "Game");
-                    } catch (IOException e) {
-                        System.out.println("Error loading the page");
-                    }
-                    break;
 
                 case "UpdateGameList":
                     PageController.getChooseGameView().updateGameList();

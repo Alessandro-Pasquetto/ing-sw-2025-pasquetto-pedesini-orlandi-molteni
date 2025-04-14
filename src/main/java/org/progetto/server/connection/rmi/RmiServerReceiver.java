@@ -84,7 +84,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         RmiServer.removeLobbyRmiClient(virtualClient);
         gameManager.addRmiClient(player, virtualClient);
 
-        virtualClient.sendMessage("AllowedToJoinGame");
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
     }
 

@@ -24,7 +24,7 @@ class BattlezoneTest {
 
     @Test
     void lessPopulatedSpaceship() {
-        Game game = new Game(0, 3, 1);
+        Game game = new Game(0, 4, 1);
         Board board = game.getBoard();
 
         Player p1 = new Player("a", 0, 1);
@@ -63,7 +63,7 @@ class BattlezoneTest {
     @Test
     void penaltyDays() {
 
-        Game game = new Game(0, 3, 1);
+        Game game = new Game(0, 4, 1);
         Board board = game.getBoard();
 
         Player p1 = new Player("a", 0, 1);

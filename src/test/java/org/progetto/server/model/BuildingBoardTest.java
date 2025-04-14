@@ -382,7 +382,7 @@ class BuildingBoardTest {
 
         // Removing left-up shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(1, 2, 0);
+        buildingBoard.placeComponent(1, 2, 3);
 
         buildingBoard.initSpaceshipParams();
         assertEquals(1, spaceship.getIdxShieldCount(0));
@@ -397,7 +397,7 @@ class BuildingBoardTest {
 
         // Removing up-right shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(1, 2, 1);
+        buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.initSpaceshipParams();
         assertEquals(1, spaceship.getIdxShieldCount(0));
@@ -412,7 +412,7 @@ class BuildingBoardTest {
 
         // Removing right-down shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(1, 2, 2);
+        buildingBoard.placeComponent(1, 2, 1);
 
         buildingBoard.initSpaceshipParams();
         assertEquals(1, spaceship.getIdxShieldCount(1));
@@ -427,7 +427,7 @@ class BuildingBoardTest {
 
         // Removing down-left shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(1, 2, 3);
+        buildingBoard.placeComponent(1, 2, 2);
 
         buildingBoard.initSpaceshipParams();
         assertEquals(1, spaceship.getIdxShieldCount(2));
