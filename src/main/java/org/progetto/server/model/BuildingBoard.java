@@ -187,6 +187,7 @@ public class BuildingBoard implements Serializable {
             throw new IllegalStateException("BookedCellOccupied");
 
         booked[idx] = handComponent;
+        booked[idx].setHasBeenBooked(true);
         handComponent = null;
     }
 

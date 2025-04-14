@@ -493,6 +493,8 @@ public class BuildingController {
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
                 sender.sendMessage("EmptyHandComponent");
+            if(e.getMessage().equals("HasBeenBooked"))
+                sender.sendMessage("HasBeenBooked");
             else
                 sender.sendMessage(e.getMessage());
         }

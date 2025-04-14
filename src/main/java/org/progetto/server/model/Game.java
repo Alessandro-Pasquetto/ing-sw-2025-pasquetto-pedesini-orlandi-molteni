@@ -336,6 +336,9 @@ public class Game {
         if(discardedComponent == null)
             throw new IllegalStateException("EmptyHandComponent");
 
+        if(discardedComponent.getHasBeenBooked())
+            throw new IllegalStateException("HasBeenBooked");
+
         buildingBoard.setHandComponent(null);
 
         synchronized (visibleComponentDeck) {

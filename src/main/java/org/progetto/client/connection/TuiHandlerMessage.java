@@ -33,7 +33,6 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("Created new game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
@@ -65,6 +64,8 @@ public class TuiHandlerMessage {
             int timer = timerMessage.getTime();
             if (timer == 10)
                 System.out.print("10 seconds to the end");
+            else if(timer == 0)
+                System.out.print("The timer is at 0");
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -126,6 +127,9 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
+                case "UpdateGameList":
+                    break;
+
                 case "AllowedToJoinGame":
                     System.out.println("You joined a game");
                     break;
@@ -136,6 +140,7 @@ public class TuiHandlerMessage {
 
                 case "HandComponentDiscarded":
                     System.out.println("Current hand component discarded");
+                    break;
 
                 case "AllowedToPlaceComponent":
                     BuildingData.resetHandComponent();
@@ -148,12 +153,14 @@ public class TuiHandlerMessage {
 
                 case "ComponentBooked":
                     System.out.println("Component booked");
-                    BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
+                    break;
+
+                case "HasBeenBooked":
+                    System.out.println("You cannot discard a booked component");
                     break;
 
                 case "PickedBookedComponent":
                     System.out.println("Picked booked");
-                    BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
                     break;
 
                 case "TimerExpired":

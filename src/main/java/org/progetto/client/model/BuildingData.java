@@ -15,7 +15,6 @@ public class BuildingData {
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
     private static boolean isTimerExpired;
-
     private static int[][] shipMask;
 
     // =======================

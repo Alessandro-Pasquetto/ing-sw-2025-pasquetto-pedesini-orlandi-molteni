@@ -33,7 +33,6 @@ public class SocketClient implements Sender {
     @Override
     public void connect(String serverIp, int port) {
         try{
-
             if (!isSocketServerReachable(serverIp, port)) {
                 System.out.println("Error: The port " + port + " is not available for socket connection");
                 return;

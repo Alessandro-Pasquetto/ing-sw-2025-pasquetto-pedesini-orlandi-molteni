@@ -14,6 +14,7 @@ public class Component implements Serializable {
     private int xCoordinate;           // x coordinate in matrix
     private int yCoordinate;           // y coordinate in matrix
     private final String imgSrc;
+    private boolean hasBeenBooked;
 
     // =======================
     // CONSTRUCTORS
@@ -24,6 +25,7 @@ public class Component implements Serializable {
         this.connections = connections;
         this.rotation = 0;
         this.imgSrc = imgSrc;
+        this.hasBeenBooked = false;
     }
 
     // =======================
@@ -54,6 +56,10 @@ public class Component implements Serializable {
         return yCoordinate;
     }
 
+    public boolean getHasBeenBooked(){
+        return hasBeenBooked;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -70,6 +76,10 @@ public class Component implements Serializable {
 
     public void setY(int yCoordinate) {
         this.yCoordinate = yCoordinate;
+    }
+
+    public void setHasBeenBooked(boolean hasBeenBooked) {
+        this.hasBeenBooked = hasBeenBooked;
     }
 
     // =======================

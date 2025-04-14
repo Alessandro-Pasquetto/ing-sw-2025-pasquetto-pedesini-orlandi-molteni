@@ -8,9 +8,7 @@ import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessa
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Handles messages coming from server
@@ -25,7 +23,6 @@ public class GuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-
             PageController.generateGameList(showWaitingGamesMessage.getIdWaitingGames());
         }
 
@@ -87,6 +84,16 @@ public class GuiHandlerMessage {
                     if(BuildingData.getIsTimerExpired())
                         PageController.removeHandComponent();
                     break;
+
+                case "ComponentBooked":
+                    break;
+
+                case "HandComponentDiscarded":
+                    PageController.removeHandComponent();
+                    break;
+
+                case "HasBeenBooked":
+                    System.out.println("You cannot discard a booked component");
 
                 case "PickedBookedComponent":
                     BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());

@@ -156,6 +156,11 @@ public class GameView {
             GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 
+    /**
+     * After the timer expires, try to place the last component
+     *
+     * @author Alessandro
+     */
     public void placeLastComponent(){
 
         if(BuildingData.getHandComponent() == null)
@@ -169,6 +174,11 @@ public class GameView {
         GameData.getSender().placeLastComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 
+    /**
+     * Disables drag&drop for bookComponents
+     *
+     * @author Alessandro
+     */
     public void disableDraggableBookedComponents() {
         for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
             if (node instanceof Pane cell) {
@@ -194,24 +204,29 @@ public class GameView {
             return;
         }
 
-        if(BuildingData.getHandComponent() != null){
+        if(BuildingData.getHandComponent() != null)
             GameData.getSender().discardComponent();
-            removeHandComponent();
-        }
     }
 
+    /**
+     * Removes the handComponentPane wherever it is
+     *
+     * @author Alessandro
+     */
     public void removeHandComponent() {
         Node parent = BuildingData.getHandComponent().getParent();
 
-        if (parent instanceof VBox)
-            handComponentBox.getChildren().remove(BuildingData.getHandComponent());
-
-        else if (parent instanceof Pane pane)
+        if (parent instanceof Pane pane)
             pane.getChildren().remove(BuildingData.getHandComponent());
 
         BuildingData.resetHandComponent();
     }
 
+    /**
+     * Shows an event card deck
+     *
+     * @author Alessandro
+     */
     public void showEventCardDeck(ActionEvent event) {
 
         if(BuildingData.getIsTimerExpired()){
@@ -237,7 +252,11 @@ public class GameView {
             GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
     }
 
-    // Generate a draggable component with an image
+    /**
+     * Generates a draggable paneComponent
+     *
+     * @author Alessandro
+     */
     public void generateComponent(Component component) {
 
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
@@ -250,7 +269,7 @@ public class GameView {
 
         componentPane.getChildren().add(imageView);
 
-        //todo: inserire gli slot in base al componente
+        //todo: batterySlots, crewSlots
         if(component instanceof BoxStorage boxStorage){
 
             switch (boxStorage.getCapacity()){
@@ -326,6 +345,11 @@ public class GameView {
         });
     }
 
+    /**
+     * Updates timer
+     *
+     * @author Alessandro
+     */
     public void updateTimer(int timer) {
         int minutes = timer / 60;
         int seconds = timer % 60;
@@ -335,6 +359,11 @@ public class GameView {
         timerLabel.setText(timeText);
     }
 
+    /**
+     * Rotates the paneComponent
+     *
+     * @author Alessandro
+     */
     public void rotateComponent() {
 
         if(BuildingData.getIsTimerExpired()){
@@ -346,6 +375,11 @@ public class GameView {
             BuildingData.rotateComponent();
     }
 
+    /**
+     * Ask to reset timer
+     *
+     * @author Alessandro
+     */
     public void resetTimer() {
         GameData.getSender().resetTimer();
     }
