@@ -1,7 +1,10 @@
 package org.progetto.server.model;
 
 import org.junit.jupiter.api.Test;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.Epidemic;
 import org.progetto.server.model.events.EventCard;
@@ -67,6 +70,63 @@ class GameTest {
         ArrayList<Player> players1 = game.getPlayersCopy();
         ArrayList<Player> players2 = game.getPlayersCopy();
         assertNotSame(players1, players2);
+    }
+
+    @Test
+    void getVisibleComponentDeckCopy() {
+        Game game = new Game(1, 4, 2);
+
+        Player player = new Player("gino", 0, 2);
+        game.addPlayer(player);
+
+        ArrayList<Component> visibleComponent = new ArrayList<>();
+
+        assertEquals(visibleComponent, game.getVisibleComponentDeckCopy());
+
+        Spaceship spaceship = player.getSpaceship();
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        // Cannon
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // HousingUnit
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 3, 3, 3}, "imgPath", 2));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // Engine
+        buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // DoubleEngine
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // Shields (x2)
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // BatteryStorage
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        // DoubleCannon
+        buildingBoard.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        visibleComponent.add(buildingBoard.getHandComponent());
+        game.discardComponent(player);
+
+        assertEquals(visibleComponent, game.getVisibleComponentDeckCopy());
+
     }
 
     @Test

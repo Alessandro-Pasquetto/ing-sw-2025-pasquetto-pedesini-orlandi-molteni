@@ -6,6 +6,7 @@ import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BuildingBoardTest {
@@ -108,6 +109,29 @@ class BuildingBoardTest {
         // Test all slots are initially null
         assertNull(booked[0]);
         assertNull(booked[1]);
+    }
+
+    @Test
+    void getBookedCopy() {
+        BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
+
+        // Test initial state
+        Component[] booked = board.getBooked();
+        assertNotNull(booked);
+        assertEquals(2, booked.length);
+
+        // Test all slots are initially null
+        assertNull(booked[0]);
+        assertNull(booked[1]);
+
+        Component component1 = new Component(ComponentType.ENGINE, new int[]{1, 1, 1, 1}, "imgSrc");
+        board.setHandComponent(component1);
+        board.setAsBooked(0);
+        Component component2 = new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgSrc");
+        board.setHandComponent(component2);
+        board.setAsBooked(1);
+        Component[] expected = {component1, component2};
+        assertArrayEquals(expected, board.getBookedCopy());
     }
 
     @Test
@@ -382,21 +406,6 @@ class BuildingBoardTest {
 
         // Removing left-up shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-        buildingBoard.placeComponent(1, 2, 3);
-
-        buildingBoard.initSpaceshipParams();
-        assertEquals(1, spaceship.getIdxShieldCount(0));
-        assertEquals(1, spaceship.getIdxShieldCount(3));
-
-        buildingBoard.destroyComponent(1, 2);
-        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
-
-        assertEquals(0, spaceship.getIdxShieldCount(0));
-        assertEquals(0, spaceship.getIdxShieldCount(3));
-
-
-        // Removing up-right shield //
-        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -410,7 +419,7 @@ class BuildingBoardTest {
         assertEquals(0, spaceship.getIdxShieldCount(1));
 
 
-        // Removing right-down shield //
+        // Removing up-right shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(1, 2, 1);
 
@@ -425,7 +434,7 @@ class BuildingBoardTest {
         assertEquals(0, spaceship.getIdxShieldCount(2));
 
 
-        // Removing down-left shield //
+        // Removing right-down shield //
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard.placeComponent(1, 2, 2);
 
@@ -437,6 +446,21 @@ class BuildingBoardTest {
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         assertEquals(0, spaceship.getIdxShieldCount(2));
+        assertEquals(0, spaceship.getIdxShieldCount(3));
+
+
+        // Removing down-left shield //
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(1, 2, 3);
+
+        buildingBoard.initSpaceshipParams();
+        assertEquals(1, spaceship.getIdxShieldCount(0));
+        assertEquals(1, spaceship.getIdxShieldCount(3));
+
+        buildingBoard.destroyComponent(1, 2);
+        assertTrue(buildingBoard.checkShipValidityAndTryToFix());
+
+        assertEquals(0, spaceship.getIdxShieldCount(0));
         assertEquals(0, spaceship.getIdxShieldCount(3));
 
        // removing housing unit with alien orange //
@@ -905,10 +929,22 @@ class BuildingBoardTest {
         buildingBoard2.destroyComponent(4, 1);
 
         assertTrue(buildingBoard2.checkShipValidityAndTryToFix());
-
         assertEquals(2, spaceship2.getCrewCount());
-
         assertFalse(hu.getHasPurpleAlien());
+
+        buildingBoard2.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard2.placeComponent(4, 1, 0);
+
+        hu.setAlienOrange(true);
+        spaceship2.addCrewCount(1);
+
+        assertTrue(hu.getHasOrangeAlien());
+
+        buildingBoard2.destroyComponent(4, 1);
+
+        assertTrue(buildingBoard2.checkShipValidityAndTryToFix());
+        assertEquals(2, spaceship2.getCrewCount());
+        assertFalse(hu.getHasOrangeAlien());
 
         //printBoard(buildingBoard2);
     }
@@ -957,7 +993,6 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(1, 3, 0);
 
         assertTrue(buildingBoard.initSpaceshipParams());
-
         assertEquals(4, spaceship.getCrewCount());
 
         //printBoard(buildingBoard);
@@ -965,9 +1000,7 @@ class BuildingBoardTest {
 
         // Destroy
         buildingBoard.destroyComponent(3, 2);
-
         assertFalse(buildingBoard.checkShipValidityAndTryToFix());
-
         SpaceshipController.chooseSpaceshipPartToKeep(null, player, 2, 3, null);
 
         //printBoard(buildingBoard);
@@ -979,11 +1012,10 @@ class BuildingBoardTest {
         assertFalse(buildingBoard.checkShipValidityAndTryToFix());
 
         //printBoard(buildingBoard);
-
         SpaceshipController.chooseSpaceshipPartToKeep(null, player, 4, 3, null);
 
         //printBoard(buildingBoard);
-
         assertEquals(3, spaceship.getExposedConnectorsCount());
     }
+
 }

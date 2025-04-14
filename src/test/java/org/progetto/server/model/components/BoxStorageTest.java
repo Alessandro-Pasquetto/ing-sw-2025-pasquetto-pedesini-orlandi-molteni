@@ -2,6 +2,7 @@ package org.progetto.server.model.components;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 
@@ -104,9 +105,35 @@ class BoxStorageTest {
     }
 
     @Test
-    void getValue(){
-        Box box = Box.GREEN;
+    void getBoxStorageValues(){
+        Spaceship s = new Spaceship(1, 0);
 
-        assertEquals(2, box.getValue());
+        // Adds a new box into a normal box storage
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3);
+
+        Box box1 = Box.GREEN;
+        Box box2 = Box.YELLOW;
+        Box box3 = Box.RED;
+
+        bs1.addBox(s, box1, 2);
+        bs1.addBox(s, box2, 0);
+        bs1.addBox(s, box3, 1);
+
+        int[] boxStorageValues = new int[]{3, 0, 2};
+
+        assertArrayEquals(boxStorageValues, bs1.getBoxStorageValues());
+
+        // Adds a new box into a normal box storage
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3);
+
+        Box box4 = Box.BLUE;
+
+        bs2.addBox(s, box1, 2);
+        bs2.addBox(s, box4, 0);
+        bs2.addBox(s, box3, 1);
+
+        int[] boxStorageValues2 = new int[]{1, 4, 2};
+
+        assertArrayEquals(boxStorageValues2, bs2.getBoxStorageValues());
     }
 }

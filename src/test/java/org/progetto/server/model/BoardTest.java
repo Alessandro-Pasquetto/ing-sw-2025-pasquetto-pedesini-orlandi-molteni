@@ -3,6 +3,8 @@ package org.progetto.server.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
@@ -87,6 +89,32 @@ class BoardTest {
         assertEquals(p4, track[0]);
 
         assertEquals(4, board.getNumTravelers());
+    }
+
+    @Test
+    void removeTraveler() {
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("arnoldo", 1, 1);
+        Player p3 = new Player("andrea", 2, 1);
+        Player p4 = new Player("gianmaria", 3, 1);
+
+        Game game = new Game(0, 4, 1);
+
+        // Add travelers in level 1 spaceship
+        Board board = new Board(1);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        board.removeTraveler(p1);
+        board.removeTraveler(p2);
+
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(p3);
+        players.add(p4);
+
+        assertEquals(players, board.getCopyTravelers());
     }
 
     @Test

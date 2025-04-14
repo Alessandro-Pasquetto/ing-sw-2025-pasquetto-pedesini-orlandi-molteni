@@ -258,29 +258,6 @@ public class BuildingBoard implements Serializable {
     }
 
     /**
-     * Search for component of the same type
-     *
-     * @author Lorenzo
-     * @param type is the component type to search in the matrix
-     * @return list of components found
-     */
-    private List<Component> typeSearch(ComponentType type) {
-
-        ArrayList<Component> foundList = new ArrayList<>();
-
-        for(int y = 0; y < spaceshipMatrix.length; y++) {
-            for(int x = 0; x < spaceshipMatrix[y].length; x++) {
-
-                if(spaceshipMatrix[y][x] != null) {
-                    if (spaceshipMatrix[y][x].getType() == type)
-                        foundList.add(spaceshipMatrix[y][x]);
-                }
-            }
-        }
-        return foundList;
-    }
-
-    /**
      * Loading mask for the building board
      *
      * @author Lorenzo
