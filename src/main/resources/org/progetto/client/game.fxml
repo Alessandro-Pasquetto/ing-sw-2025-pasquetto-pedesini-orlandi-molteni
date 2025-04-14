@@ -38,12 +38,20 @@
     <Label fx:id="timerLabel" layoutX="512.0" layoutY="91.0" text="00:00" />
 
 
-    <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="392.0" preserveRatio="true">
-        <Image url="@img/Green.png" />
+    <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="341.0" preserveRatio="true">
+        <Image url="@img/items/Green.png" />
     </ImageView>
 
-    <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="438.0" preserveRatio="true">
-        <Image url="@img/CrewXD.png" />
+    <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="443.0" preserveRatio="true">
+        <Image url="@img/items/CrewXD.png" />
+    </ImageView>
+
+    <ImageView fx:id="provaAlienImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="491.0" preserveRatio="true">
+        <Image url="@img/items/Alien.png" />
+    </ImageView>
+
+    <ImageView fx:id="provaBatteryImage" fitHeight="45" fitWidth="18" layoutX="98.0" layoutY="387.0" preserveRatio="true">
+        <Image url="@img/items/Battery.png" />
     </ImageView>
 
 </AnchorPane>

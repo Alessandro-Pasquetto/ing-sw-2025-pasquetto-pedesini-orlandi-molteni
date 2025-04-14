@@ -314,7 +314,6 @@ public class DragAndDrop {
 
                                         if(!slot.getChildren().isEmpty()){
                                             System.out.println("Slot already occupied.");
-                                            System.out.println(slot.getChildren().toString());
                                             break;
                                         }
 
@@ -343,6 +342,20 @@ public class DragAndDrop {
 
                                             //todo handle idx
                                             System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released crew in slot " + slot.getProperties().get("idx"));
+
+                                            isValidDrop = true;
+                                        }
+                                        else if(targetId.equals("batterySlot") && slot.getId().equals("batterySlot")){
+                                            // If dropped inside a slot and the slot is not occupied, move the image into the slot
+                                            root.getChildren().remove(itemImage);
+                                            slot.getChildren().add(itemImage);
+
+                                            // Center the image inside the slot
+                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+
+                                            //todo handle idx
+                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released battery in slot " + slot.getProperties().get("idx"));
 
                                             isValidDrop = true;
                                         }

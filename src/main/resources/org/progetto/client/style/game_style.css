@@ -16,3 +16,7 @@
 #timerLabel {
     -fx-font-size: 24;
 }
+
+#batterySlot, #crewSlot, #boxSlot {
+    -fx-border-color: gray;
+}

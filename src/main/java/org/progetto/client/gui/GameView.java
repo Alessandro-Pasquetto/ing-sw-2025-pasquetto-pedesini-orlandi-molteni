@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
@@ -21,11 +22,18 @@ public class GameView {
 
     final int COMPONENT_SIZE = 100;
     final int BOX_SLOT_SIZE = 35;
+    final int CREW_SLOT_SIZE = 35;
+    final int BATTERY_SLOT_WIDTH = 18;
+    final int BATTERY_SLOT_HEIGHT = 45;
 
     @FXML
     public ImageView spaceShipImage;
     @FXML
     public ImageView provaCrewImage;
+    @FXML
+    public ImageView provaAlienImage;
+    @FXML
+    public ImageView provaBatteryImage;
 
     @FXML
     private Pane handComponentBox;
@@ -46,6 +54,8 @@ public class GameView {
     public void initialize() {
         DragAndDrop.enableDragAndDropItems(provaBoxImage, "boxSlot");
         DragAndDrop.enableDragAndDropItems(provaCrewImage, "crewSlot");
+        DragAndDrop.enableDragAndDropItems(provaAlienImage, "crewSlot");
+        DragAndDrop.enableDragAndDropItems(provaBatteryImage, "batterySlot");
     }
 
     // Setup a grid with a given size
@@ -102,14 +112,21 @@ public class GameView {
 
                     Pane slot1 = new Pane();
                     slot1.setId("crewSlot");
-                    slot1.setLayoutX(30.0);
+                    slot1.setLayoutX(10.0);
                     slot1.setLayoutY(30.0);
-                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot1.setStyle("-fx-border-color: gray;");
+                    slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                     slot1.getProperties().put("idx", 0);
+
+                    Pane slot2 = new Pane();
+                    slot2.setId("crewSlot");
+                    slot2.setLayoutX(50.0);
+                    slot2.setLayoutY(30.0);
+                    slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                    slot2.getProperties().put("idx", 1);
 
                     componentPane.getChildren().add(imageView);
                     componentPane.getChildren().add(slot1);
+                    componentPane.getChildren().add(slot2);
 
                     cell.getChildren().add(componentPane);
 
@@ -283,84 +300,137 @@ public class GameView {
 
         componentPane.getChildren().add(imageView);
 
-        //todo: batterySlots, crewSlots
-        if(component instanceof BoxStorage boxStorage){
+        switch (component) {
+            case BoxStorage boxStorage -> {
 
-            switch (boxStorage.getCapacity()){
-                case 1:
-                    Pane slot1 = new Pane();
-                    slot1.setId("boxSlot");
-                    slot1.setLayoutX(30.0);
-                    slot1.setLayoutY(30.0);
-                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot1.setStyle("-fx-border-color: gray;");
-                    slot1.getProperties().put("idx", 0);
+                switch (boxStorage.getCapacity()) {
+                    case 1:
+                        Pane slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
 
-                    componentPane.getChildren().add(slot1);
-                    break;
+                        componentPane.getChildren().add(slot1);
+                        break;
 
-                case 2:
-                    slot1 = new Pane();
-                    slot1.setId("boxSlot");
-                    slot1.setLayoutX(30.0);
-                    slot1.setLayoutY(10.0);
-                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot1.setStyle("-fx-border-color: gray;");
-                    slot1.getProperties().put("idx", 0);
+                    case 2:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(10.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
 
-                    Pane slot2 = new Pane();
-                    slot2.setId("boxSlot");
-                    slot2.setLayoutX(30.0);
-                    slot2.setLayoutY(50.0);
-                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot2.setStyle("-fx-border-color: gray;");
-                    slot2.getProperties().put("idx", 1);
+                        Pane slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(30.0);
+                        slot2.setLayoutY(50.0);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
 
-                    componentPane.getChildren().add(slot1);
-                    componentPane.getChildren().add(slot2);
-                    break;
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        break;
 
-                case 3:
-                    slot1 = new Pane();
-                    slot1.setId("boxSlot");
-                    slot1.setLayoutX(10.0);
-                    slot1.setLayoutY(30.0);
-                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot1.setStyle("-fx-border-color: gray;");
-                    slot1.getProperties().put("idx", 0);
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(10.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
 
-                    slot2 = new Pane();
-                    slot2.setId("boxSlot");
-                    slot2.setLayoutX(50.0);
-                    slot2.setLayoutY(10.0);
-                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot2.setStyle("-fx-border-color: gray;");
-                    slot2.getProperties().put("idx", 1);
+                        slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(50.0);
+                        slot2.setLayoutY(10.0);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
 
-                    Pane slot3 = new Pane();
-                    slot3.setId("boxSlot");
-                    slot3.setLayoutX(50.0);
-                    slot3.setLayoutY(50.0);
-                    slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                    slot3.setStyle("-fx-border-color: gray;");
-                    slot3.getProperties().put("idx", 2);
+                        Pane slot3 = new Pane();
+                        slot3.setId("boxSlot");
+                        slot3.setLayoutX(50.0);
+                        slot3.setLayoutY(50.0);
+                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot3.getProperties().put("idx", 2);
 
-                    componentPane.getChildren().add(slot1);
-                    componentPane.getChildren().add(slot2);
-                    componentPane.getChildren().add(slot3);
-                    break;
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
             }
-        }
-        else if (component instanceof HousingUnit housingUnit){
-            Pane slot1 = new Pane();
-            slot1.setId("crewSlot");
-            slot1.setLayoutX(30.0);
-            slot1.setLayoutY(30.0);
-            slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-            slot1.setStyle("-fx-border-color: gray;");
-            slot1.getProperties().put("idx", 0);
+            case HousingUnit housingUnit -> {
+                Pane slot1 = new Pane();
+                slot1.setId("crewSlot");
+                slot1.setLayoutX(10.0);
+                slot1.setLayoutY(30.0);
+                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
 
-            componentPane.getChildren().add(slot1);
+                Pane slot2 = new Pane();
+                slot2.setId("crewSlot");
+                slot2.setLayoutX(50.0);
+                slot2.setLayoutY(30.0);
+                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+            }
+            case BatteryStorage batteryStorage -> {
+                switch (batteryStorage.getCapacity()) {
+                    case 2:
+                        Pane slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        Pane slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(50.0);
+                        slot2.setLayoutY(30.0);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+
+                        break;
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(20.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(30.0);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        Pane slot3 = new Pane();
+                        slot3.setId("batterySlot");
+                        slot3.setLayoutX(60.0);
+                        slot3.setLayoutY(30.0);
+                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot3.getProperties().put("idx", 2);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
+            }
+            default -> {
+            }
         }
 
         BuildingData.setNewHandComponent(componentPane);
