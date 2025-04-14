@@ -94,6 +94,7 @@ public class GuiHandlerMessage {
 
                 case "HasBeenBooked":
                     System.out.println("You cannot discard a booked component");
+                    break;
 
                 case "PickedBookedComponent":
                     BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
