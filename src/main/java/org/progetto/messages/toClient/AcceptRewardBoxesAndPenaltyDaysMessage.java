@@ -12,7 +12,7 @@ public class AcceptRewardBoxesAndPenaltyDaysMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Box> rewardBoxes;  //todo
+    private ArrayList<Box> rewardBoxes;
     private int penaltyDays;
 
     // =======================

@@ -718,7 +718,21 @@ public class BuildingController {
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
+            }else{
+
+                Sender sender = gameManager.getSocketWriterByPlayer(player);
+
+                if(sender == null)
+                    sender = gameManager.getVirtualClientByPlayer(player);
+
+                try {
+                    sender.sendMessage("ValidSpaceShip");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
+
         }
 
         return areAllValid;

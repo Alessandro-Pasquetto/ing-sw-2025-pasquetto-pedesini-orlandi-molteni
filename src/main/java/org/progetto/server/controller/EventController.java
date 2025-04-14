@@ -34,6 +34,7 @@ public class EventController {
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
 
         gameManager.getGameThread().notifyThread();
+
     }
 
     public static void handleDefeatedPlayers(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {

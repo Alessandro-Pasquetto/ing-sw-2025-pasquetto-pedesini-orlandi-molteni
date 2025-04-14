@@ -5,6 +5,7 @@ import org.progetto.client.model.GameData;
 import org.progetto.client.tui.BuildingCommands;
 import org.progetto.client.tui.EventCommands;
 import org.progetto.client.tui.GameCommands;
+import org.progetto.client.tui.TuiCommandFilter;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
@@ -64,9 +65,9 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             if (timer == 10)
-                System.out.print("10 seconds to the end");
+                System.out.println("10 seconds to the end");
             else if(timer == 0)
-                System.out.print("The timer is at 0");
+                System.out.println("Stop building!");
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -205,6 +206,16 @@ public class TuiHandlerMessage {
 
                 case "YouAreSafe":
                     System.out.println("You are safe");
+                    break;
+
+                case "NotValidSpaceShip":
+                    System.out.println("Your spaceship is trash, fix it !");
+                    TuiCommandFilter.setFixing(true);
+                    break;
+
+                case "ValidSpaceShip":
+                    System.out.println("Your spaceship is pretty good, you're ready to go!");
+                    TuiCommandFilter.setFixing(false);
                     break;
 
                 default:
