@@ -26,6 +26,8 @@ public class GameManager {
     private final HashMap<Player, SocketWriter> playerSocketWriters = new HashMap<>();
     private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
 
+    private final ArrayList<Player> notCheckedReadyPlayers = new ArrayList<>();
+
     GameThread gameThread;
     private final Game game;
     private EventControllerAbstract eventController;
@@ -67,6 +69,16 @@ public class GameManager {
         }
 
         return rmiClientsCopy;
+    }
+
+    public ArrayList<Player> getCheckedNotReadyPlayersCopy() {
+        ArrayList<Player> checkedNotReadyPlayersCopy;
+
+        synchronized (notCheckedReadyPlayers) {
+            checkedNotReadyPlayersCopy = new ArrayList<>(notCheckedReadyPlayers);
+        }
+
+        return checkedNotReadyPlayersCopy;
     }
 
     public Game getGame() {
@@ -146,6 +158,30 @@ public class GameManager {
     public void removeRmiClient(Player player){
         synchronized (playerRmiClients){
             playerRmiClients.remove(player);
+        }
+    }
+
+    public void addNotCheckedReadyPlayer(Player player){
+        synchronized (notCheckedReadyPlayers){
+            notCheckedReadyPlayers.add(player);
+        }
+    }
+
+    public void addAllNotCheckReadyPlayers(){
+        synchronized (notCheckedReadyPlayers){
+            notCheckedReadyPlayers.addAll(game.getPlayersCopy());
+        }
+    }
+
+    public void removeNotCheckedReadyPlayer(Player player){
+        synchronized (notCheckedReadyPlayers){
+            notCheckedReadyPlayers.remove(player);
+        }
+    }
+
+    public void removeAllNotCheckReadyPlayers(){
+        synchronized (notCheckedReadyPlayers){
+            notCheckedReadyPlayers.clear();
         }
     }
 

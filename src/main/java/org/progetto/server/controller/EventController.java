@@ -9,7 +9,6 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -36,7 +35,6 @@ public class EventController {
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
 
         gameManager.getGameThread().notifyThread();
-
     }
 
     /**

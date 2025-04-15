@@ -1,5 +1,7 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.connection.rmi.RmiClientReceiver;
+
 public interface Sender {
     void connect(String serverIp, int serverPort);
 
@@ -44,6 +46,8 @@ public interface Sender {
     void putDownEventCardDeck();
 
     void destroyComponent(int xComponent, int yComponent);
+
+    void populateComponent(String crewType, int xComponent, int yComponent);
 
     void readyPlayer();
 

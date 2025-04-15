@@ -148,34 +148,33 @@ public class BuildingBoard implements Serializable {
      * @param x coordinate for placing component
      * @param y coordinate for placing component
      * @param r rotation value of placing component
-     * @return true if component has been placed correctly, otherwise false
      */
-    public boolean placeComponent(int x, int y, int r) {
-        try {
-            if (boardMask[y][x] != 1)
-                return false;
+    public void placeComponent(int x, int y, int r) {
 
-            // If it's not connected to at least one component returns false
-            if ((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
-                return false;
-            }
+        if(x < 0 || y < 0 || x >= boardMask[0].length || y >= boardMask.length)
+            throw new IllegalStateException("NotValidCoordinates");
 
-            spaceship.addComponentsShipCount(1);
+        if(boardMask[y][x] != 1)
+            throw new IllegalStateException("NotAllowedToPlaceComponent");
 
-            handComponent.setY(y);
-            handComponent.setX(x);
-            handComponent.setRotation(r);
+        if(handComponent == null)
+            throw new IllegalStateException("EmptyHandComponent");
 
-            spaceshipMatrix[y][x] = handComponent;
+        // If it's not connected to at least one component returns false
+        if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1))
+            throw new IllegalStateException("NotAllowedToPlaceComponent");
 
-            boardMask[y][x] = -1;   // signals the presence of a component
-            handComponent = null;
-            return true;
 
-        }catch (ArrayIndexOutOfBoundsException e) {
-            return false;
-        }
+        spaceship.addComponentsShipCount(1);
 
+        handComponent.setY(y);
+        handComponent.setX(x);
+        handComponent.setRotation(r);
+
+        spaceshipMatrix[y][x] = handComponent;
+
+        boardMask[y][x] = -1;   // signals the presence of a component
+        handComponent = null;
     }
 
     /**
@@ -921,7 +920,7 @@ public class BuildingBoard implements Serializable {
                     case HOUSING_UNIT:
                         HousingUnit hu = (HousingUnit) component;
 
-                        if(checkAllowPurpleAlien(hu) || checkAllowOrangeAlien(hu))
+                        if(spaceship.getLevelShip() != 1 && (checkAllowPurpleAlien(hu) || checkAllowOrangeAlien(hu)))
                             doesNotRequirePlayerAction = false;
                         else
                             hu.incrementCrewCount(spaceship,2);
@@ -1037,5 +1036,45 @@ public class BuildingBoard implements Serializable {
 
         spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
         deleteDisconnectedComponents(visited);
+    }
+
+
+    public void populateComponent(String crewType, int xComponent, int yComponent) throws IllegalStateException{
+
+        if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
+            throw new IllegalStateException("NotValidCoordinates");
+
+        Component component = spaceshipMatrix[xComponent][yComponent];
+
+        if(component == null || component.getType() != ComponentType.HOUSING_UNIT)
+            throw new IllegalStateException("NotValidCoordinates");
+
+        HousingUnit hu = (HousingUnit) component;
+
+        if(hu.getCrewCount() == 2 || hu.getHasPurpleAlien() || hu.getHasOrangeAlien())
+            throw new IllegalStateException("ComponentAlreadyOccupied");
+
+        switch(crewType){
+            case "OrangeAlien":
+
+                if(hu.getAllowAlienOrange()){
+                    ((HousingUnit) component).setAlienOrange(true);
+                    hu.setCrewCount(1);
+                }else
+                    throw new IllegalStateException("CannotContainOrangeAlien");
+                break;
+
+            case "PurpleAlien":
+                if(hu.getAllowAlienPurple()){
+                    ((HousingUnit) component).setAlienPurple(true);
+                    hu.setCrewCount(1);
+                }else
+                    throw new IllegalStateException("CannotContainPurpleAlien");
+                break;
+
+            case "Human":
+                hu.setCrewCount(hu.getCrewCount() + 1);
+                break;
+        }
     }
 }

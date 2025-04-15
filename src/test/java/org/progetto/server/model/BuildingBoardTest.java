@@ -230,43 +230,45 @@ class BuildingBoardTest {
 
         Component c;
 
-        boolean result; // function return value
-
         // Placed in a correct place
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
 
-        result = buildingBoard.placeComponent(2, 1, 0);
+        buildingBoard.placeComponent(2, 1, 0);
 
         c = buildingBoard.getHandComponent();
 
         assertEquals(c, spaceshipMatrix[1][2]);
-        assertTrue(result);
 
         // Placed outside the spaceship
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(0, 0, 0);
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.placeComponent(0, 0, 0);
+        });
+        assertEquals("NotAllowedToPlaceComponent", exception.getMessage());
 
         assertNull(spaceshipMatrix[0][0]);
-        assertFalse(result);
 
         // Placed in the center cell of the spaceship
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(2, 2, 0);
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.placeComponent(2, 2, 0);
+        });
+        assertEquals("NotAllowedToPlaceComponent", exception.getMessage());
 
         assertNotEquals(c, spaceshipMatrix[2][2]);
-        assertFalse(result);
 
         //Placed away from a placed component
         buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 0, 1, 1}, "imgPath"));
         c = buildingBoard.getHandComponent();
 
-        result = buildingBoard.placeComponent(3, 4, 0);
-
-        assertFalse(result);
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.placeComponent(3, 4, 0);
+        });
+        assertEquals("NotAllowedToPlaceComponent", exception.getMessage());
     }
 
     @Test

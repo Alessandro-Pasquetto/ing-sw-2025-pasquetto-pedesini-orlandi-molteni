@@ -3,6 +3,7 @@ package org.progetto.server.connection.socket;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.*;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
@@ -254,6 +255,43 @@ public class SocketListener extends Thread {
                             System.out.println(messageString + " not allowed");
                             break;
                     }
+                }
+                break;
+
+            case START_ADJUSTING:
+                if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
+                    int x = destroyComponentMessage.getX();
+                    int y = destroyComponentMessage.getY();
+                    SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, x, y, socketWriter);
+                }
+                break;
+
+            case POPULATING:
+                if(messageObj instanceof PopulatingMessage populatingMessage){
+                    String crewType = populatingMessage.getCrewType();
+                    int xComponent = populatingMessage.getxComponent();
+                    int yComponent = populatingMessage.getyComponent();
+
+                    SpaceshipController.populateComponent(player, crewType, xComponent, yComponent, socketWriter);
+                }
+                else if(messageObj instanceof String messageString) {
+                    switch (messageString){
+                        case "Ready":
+                            player.setIsReady(true, game);
+                            gameManager.getGameThread().notifyThread();
+                            break;
+                        default:
+                            System.out.println(messageString + " not allowed");
+                            break;
+                    }
+                }
+                break;
+
+            case ADJUSTING:
+                if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
+                    int x = destroyComponentMessage.getX();
+                    int y = destroyComponentMessage.getY();
+                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
                 }
                 break;
 

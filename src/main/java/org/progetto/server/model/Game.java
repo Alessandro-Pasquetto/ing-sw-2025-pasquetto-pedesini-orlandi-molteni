@@ -264,7 +264,7 @@ public class Game {
      * @return list of players sorted in order of credit number
      */
     public ArrayList<Player> scoreBoard() {
-        ArrayList<Player> arrivalOrderPlayers = new ArrayList(players);
+        ArrayList<Player> arrivalOrderPlayers = new ArrayList<>(players);
         arrivalOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getPosition(), p1.getPosition()));
 
         int minExposedConnectorsCount = Integer.MAX_VALUE;
@@ -302,7 +302,7 @@ public class Game {
             player.addCredits(-destroyedComponents);
         }
 
-        ArrayList<Player> creditsOrderPlayers = new ArrayList(players);
+        ArrayList<Player> creditsOrderPlayers = new ArrayList<>(players);
         creditsOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getCredits(), p1.getCredits()));
         return creditsOrderPlayers;
     }

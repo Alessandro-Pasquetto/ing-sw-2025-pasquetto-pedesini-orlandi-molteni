@@ -45,11 +45,6 @@ public class SocketClient implements Sender {
             new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
             new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
 
-            if(GameData.getUIType().equals("GUI")){
-                PageController.switchScene("chooseGame.fxml", "ChooseGame");
-                PageController.getChooseGameView().updateGameList();
-            }
-
         }catch(IOException e){
             System.out.println("Error connecting to the socket server");
         }
@@ -159,6 +154,11 @@ public class SocketClient implements Sender {
     @Override
     public void destroyComponent(int xComponent, int yComponent) {
         SocketWriter.sendMessage(new DestroyComponentMessage(xComponent, yComponent));
+    }
+
+    @Override
+    public void populateComponent(String crewType, int xComponent, int yComponent) {
+        SocketWriter.sendMessage(new PopulatingMessage(crewType, xComponent, yComponent));
     }
 
     @Override

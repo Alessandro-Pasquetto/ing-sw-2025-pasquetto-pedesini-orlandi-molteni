@@ -228,6 +228,37 @@ public class SpaceshipController {
     }
 
     /**
+     * Called after in the firstAdjusting
+     *
+     * @author Lorenzo, Alessandro
+     * @param gameManager of the current game
+     * @param player owner of the spaceship
+     * @param yComponent coordinate for the destroyed component
+     * @param xComponent coordinate fot the destroyed component
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void destroyComponentWithoutAnyCheck(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+        try{
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+            buildingBoard.destroyComponent(xComponent, yComponent);
+
+            sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("EmptyComponentCell"))
+                sender.sendMessage("EmptyComponentCell");
+
+            if (e.getMessage().equals("EmptySpaceship"))
+                sender.sendMessage("EmptySpaceship");
+        }
+    }
+
+    /**
      * Player selects a component, we receive its coordinates, then dfs to find the other connected components
      *
      * @author Alessandro
@@ -246,11 +277,19 @@ public class SpaceshipController {
             // player.setIsReady(true, gameManager.getGame());
             // gameManager.getGameThread().notifyThread();
 
-            // todo notificare spaceship
-            // gameManager.broadcastGameMessageToOthers();
+            // todo notificare spaceship  // serve updateSpaceship con nome
+            //gameManager.broadcastGameMessage();
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotValidCoordinates"))
                 sender.sendMessage("NotValidCoordinates");
+        }
+    }
+
+    public static void populateComponent(Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {
+        try{
+            player.getSpaceship().getBuildingBoard().populateComponent(crewType, xComponent, yComponent);
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
         }
     }
 }

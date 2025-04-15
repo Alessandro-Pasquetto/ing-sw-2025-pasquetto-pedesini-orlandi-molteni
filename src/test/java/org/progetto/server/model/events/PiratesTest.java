@@ -99,22 +99,22 @@ class PiratesTest {
 
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb1.placeComponent(2, 1, 0));
+        bb1.placeComponent(2, 1, 0);
 
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb1.placeComponent(1, 1, 1));
+        bb1.placeComponent(1, 1, 1);
 
         bb1.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        assertTrue(bb1.placeComponent(3, 2, 1));
+        bb1.placeComponent(3, 2, 1);
 
         bb1.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
-        assertTrue(bb1.placeComponent(2, 3, 1));
+        bb1.placeComponent(2, 3, 1);
 
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
-        assertTrue(bb1.placeComponent(1, 2, 2));
+        bb1.placeComponent(1, 2, 2);
 
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
-        assertTrue(bb1.placeComponent(3, 3, 0));
+        bb1.placeComponent(3, 3, 0);
 
 //        System.out.println();
 //        System.out.printf("%-20s", "-");

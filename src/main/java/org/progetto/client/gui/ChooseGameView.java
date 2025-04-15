@@ -66,10 +66,6 @@ public class ChooseGameView {
         }
     }
 
-    public void updateGameList() {
-        GameData.getSender().updateGameList();
-    }
-
     public void generateGameRecordList(ArrayList<Integer> idGames){
 
         Platform.runLater(() -> {

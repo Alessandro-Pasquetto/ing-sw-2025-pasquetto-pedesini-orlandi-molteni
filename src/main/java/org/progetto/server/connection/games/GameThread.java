@@ -1,11 +1,9 @@
 package org.progetto.server.connection.games;
 
-import javafx.event.EventType;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
-import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
@@ -63,6 +61,7 @@ public class GameThread extends Thread {
                         System.out.println("Start building...");
                         GameController.startBuilding(gameManager);
 
+                        gameManager.addAllNotCheckReadyPlayers();
                         gameManager.getGame().resetReadyPlayers();
                         synchronized (gameThreadLock) {
                             while (game.getNumReadyPlayers() != game.getMaxNumPlayers() && !gameManager.getTimerExpired())
@@ -78,10 +77,18 @@ public class GameThread extends Thread {
                         // Waiting for placing the last component
                         waitPlayersReady();
 
-                        if(!BuildingController.checkAllShipValidity(gameManager)){
+                        while(!BuildingController.checkAllNotReadyStartShipValidity(gameManager)){
                             System.out.println("Adjusting spaceships...");
-                            // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions)
-                            // TODO: rivedere questa cosa
+                            game.setPhase(GamePhase.START_ADJUSTING);
+                            // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions after this)
+                            waitPlayersReady();
+                        }
+
+                        if(BuildingController.initializeAllSpaceship(game)){
+                            game.setPhase(GamePhase.POPULATING);
+                            System.out.println("Waiting for the players to populate their ships...");
+
+                            // Waiting to populate the spaceship (don't do another phase for this, bcs custom actions after this)
                             waitPlayersReady();
                         }
 

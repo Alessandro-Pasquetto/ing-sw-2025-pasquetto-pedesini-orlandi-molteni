@@ -8,6 +8,8 @@ import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.model.GameData;
 
+import java.io.IOException;
+
 public class ConnectionView {
 
     @FXML
@@ -52,8 +54,13 @@ public class ConnectionView {
 
             GameData.getSender().connect(serverIp, serverPort);
 
+            PageController.switchScene("chooseGame.fxml", "ChooseGame");
+            GameData.getSender().updateGameList();
+
         }catch (NumberFormatException e) {
             System.out.println("Errore: Porta non valida.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

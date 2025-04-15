@@ -63,7 +63,7 @@ public class GuiHandlerMessage {
             switch (messageString) {
 
                 case "UpdateGameList":
-                    PageController.getChooseGameView().updateGameList();
+                    GameData.getSender().updateGameList();
                     break;
 
                 case "NotAvailableName":

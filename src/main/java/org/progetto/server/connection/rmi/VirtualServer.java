@@ -48,6 +48,8 @@ public interface VirtualServer extends Remote {
 
     void destroyComponent(VirtualClient virtualClient, int idGame, int xComponent, int yComponent) throws RemoteException;
 
+    void populateComponent(VirtualClient virtualClient, int idGame, String crewType, int xComponent, int yComponent) throws RemoteException;
+
     void playerReady(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException;

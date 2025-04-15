@@ -49,7 +49,7 @@ public class BuildingController {
             if (handComponent != null) {
                 sender.sendMessage(new ShowHandComponentMessage(handComponent));
             } else {
-                sender.sendMessage("EmptyHand");
+                sender.sendMessage("EmptyHandComponent");
             }
 
         } catch (IllegalStateException e) {
@@ -181,12 +181,20 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        if (buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+
             sender.sendMessage("AllowedToPlaceComponent");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
 
-        } else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -204,12 +212,20 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        if (buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+
             sender.sendMessage("AllowedToPlaceComponent");
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
 
-        } else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
@@ -240,7 +256,9 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+
             sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
@@ -254,8 +272,14 @@ public class BuildingController {
                 if (e.getMessage().equals("EmptyComponentDeck"))
                     sender.sendMessage("EmptyComponentDeck");
             }
-        }else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -285,7 +309,10 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
 
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+
             sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
@@ -297,11 +324,17 @@ public class BuildingController {
                 if (e.getMessage().equals("FullHandComponent"))
                     sender.sendMessage("FullHandComponent");
 
-                if (e.getMessage().equals("IllegalIndexComponent"))
+                else if (e.getMessage().equals("IllegalIndexComponent"))
                     sender.sendMessage("IllegalIndexComponent");
             }
-        }else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -330,8 +363,9 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
             sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
@@ -343,8 +377,14 @@ public class BuildingController {
                 if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
                     sender.sendMessage("EventCardDeckIsAlreadyTaken");
             }
-        }else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -374,7 +414,9 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+
             sender.sendMessage("AllowedToPlaceComponent");
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
@@ -393,8 +435,14 @@ public class BuildingController {
                 else if (e.getMessage().equals("EmptyBookedCell"))
                     sender.sendMessage("EmptyBookedCell");
             }
-        }else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -423,8 +471,8 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-
-        if(buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent)){
+        try{
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
             sender.sendMessage("AllowedToPlaceComponent");
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
@@ -434,8 +482,14 @@ public class BuildingController {
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
             gameManager.getGameThread().notifyThread();
 
-        }else
-            sender.sendMessage("NotAllowedToPlaceComponent");
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+                sender.sendMessage("NotAllowedToPlaceComponent");
+            else if(e.getMessage().equals("EmptyHandComponent"))
+                sender.sendMessage("EmptyHandComponent");
+            else
+                sender.sendMessage(e.getMessage());
+        }
     }
 
     /**
@@ -690,20 +744,35 @@ public class BuildingController {
     }
 
     /**
-     * Checks the validity of the spaceship for each player
-     * todo: rimuovere dai ready travelers?
+     * Checks the validity of the spaceship for each not ready player.
+     * If it's valid, it adds the player to the travelers
      *
      * @author Alessandro
      * @param gameManager
      * @return areAllValid
      */
-    public static boolean checkAllShipValidity(GameManager gameManager) {
+    public static boolean checkAllNotReadyStartShipValidity(GameManager gameManager) {
         Game game = gameManager.getGame();
         boolean areAllValid = true;
 
-        for (Player player : game.getPlayersCopy()) {
+        for (Player player : gameManager.getCheckedNotReadyPlayersCopy()) {
 
-            if(!player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
+            if(player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
+
+                gameManager.removeNotCheckedReadyPlayer(player);
+                game.getBoard().addTraveler(player);
+
+                Sender sender = gameManager.getSocketWriterByPlayer(player);
+
+                if(sender == null)
+                    sender = gameManager.getVirtualClientByPlayer(player);
+
+                try {
+                    sender.sendMessage("ValidSpaceShip");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }else{
                 areAllValid = false;
                 player.setIsReady(false, game);
                 game.getBoard().removeTraveler(player);
@@ -718,21 +787,30 @@ public class BuildingController {
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
-            }else{
+            }
+        }
+        return areAllValid;
+    }
 
-                Sender sender = gameManager.getSocketWriterByPlayer(player);
+    /**
+     * Try to initialize all spaceship
+     *
+     * @author Alessandro
+     * @param game
+     * @return areAllInit
+     */
+    public static boolean initializeAllSpaceship(Game game){
 
-                if(sender == null)
-                    sender = gameManager.getVirtualClientByPlayer(player);
+        boolean areAllInit = true;
 
-                try {
-                    sender.sendMessage("ValidSpaceShip");
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
+        for(Player player : game.getPlayersCopy()){
+
+            if(!player.getSpaceship().getBuildingBoard().initSpaceshipParams()){
+                player.setIsReady(false, game);
+                areAllInit = false;
             }
         }
 
-        return areAllValid;
+        return areAllInit;
     }
 }

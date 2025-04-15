@@ -25,10 +25,6 @@ public class RmiClientSender implements Sender {
             server.connect(RmiClientReceiver.getInstance());
 
             System.out.println("Connected to the RMIServer");
-            if(GameData.getUIType().equals("GUI")){
-                PageController.switchScene("chooseGame.fxml", "ChooseGame");
-                PageController.getChooseGameView().updateGameList();
-            }
 
         } catch (Exception e) {
             System.out.println("Error connecting to the RMI server");
@@ -245,6 +241,15 @@ public class RmiClientSender implements Sender {
     public void destroyComponent(int xComponent, int yComponent){
         try {
             server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xComponent, yComponent);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void populateComponent(String crewType, int xComponent, int yComponent){
+        try {
+            server.populateComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), crewType, xComponent, yComponent);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

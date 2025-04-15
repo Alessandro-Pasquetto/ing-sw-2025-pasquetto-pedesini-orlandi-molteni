@@ -113,7 +113,7 @@ class BuildingControllerTest {
         Component component = buildingBoard.getHandComponent();
 
         // Place the last component
-        assertDoesNotThrow(() -> BuildingController.placeLastComponent(gameManager, player, 0, 0, 0, sender));
+        assertDoesNotThrow(() -> BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender));
 
         assertEquals(2, component.getX());
         assertEquals(1, component.getY());
