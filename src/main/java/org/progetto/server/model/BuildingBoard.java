@@ -151,25 +151,31 @@ public class BuildingBoard implements Serializable {
      * @return true if component has been placed correctly, otherwise false
      */
     public boolean placeComponent(int x, int y, int r) {
-        if(boardMask[y][x] != 1)
-            return false;
+        try {
+            if (boardMask[y][x] != 1)
+                return false;
 
-        // If it's not connected to at least one component returns false
-        if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
+            // If it's not connected to at least one component returns false
+            if ((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1)) {
+                return false;
+            }
+
+            spaceship.addComponentsShipCount(1);
+
+            handComponent.setY(y);
+            handComponent.setX(x);
+            handComponent.setRotation(r);
+
+            spaceshipMatrix[y][x] = handComponent;
+
+            boardMask[y][x] = -1;   // signals the presence of a component
+            handComponent = null;
+            return true;
+
+        }catch (ArrayIndexOutOfBoundsException e) {
             return false;
         }
 
-        spaceship.addComponentsShipCount(1);
-
-        handComponent.setY(y);
-        handComponent.setX(x);
-        handComponent.setRotation(r);
-
-        spaceshipMatrix[y][x] = handComponent;
-
-        boardMask[y][x] = -1;   // signals the presence of a component
-        handComponent = null;
-        return true;
     }
 
     /**

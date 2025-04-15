@@ -730,9 +730,7 @@ public class BuildingController {
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
-
             }
-
         }
 
         return areAllValid;
