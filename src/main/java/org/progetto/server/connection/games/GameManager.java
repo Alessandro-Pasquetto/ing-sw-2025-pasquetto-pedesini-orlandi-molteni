@@ -186,6 +186,7 @@ public class GameManager {
     }
 
     public void broadcastGameMessage(Object messageObj) {
+
         ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
 
         for (SocketWriter sw : socketWritersCopy) {

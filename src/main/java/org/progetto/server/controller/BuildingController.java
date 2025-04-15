@@ -477,7 +477,7 @@ public class BuildingController {
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
             player.setIsReady(true, gameManager.getGame());
-            gameManager.getGame().getBoard().addTraveler(player);
+
             sender.sendMessage("YouAreReady");
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
             gameManager.getGameThread().notifyThread();
@@ -514,7 +514,7 @@ public class BuildingController {
 
         sender.sendMessage("YouAreReady");
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
-        gameManager.getGame().getBoard().addTraveler(player);
+
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
     }
@@ -775,7 +775,6 @@ public class BuildingController {
             }else{
                 areAllValid = false;
                 player.setIsReady(false, game);
-                game.getBoard().removeTraveler(player);
 
                 Sender sender = gameManager.getSocketWriterByPlayer(player);
 

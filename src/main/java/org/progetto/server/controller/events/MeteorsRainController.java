@@ -81,7 +81,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     private void sendMeteor() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SEND_METEOR)) {
 
-            for (Projectile meteor : meteors) {
+            for (Projectile meteor : meteors) {//todo errore: meteor non usato
 
                 // Sends to each player information about incoming meteor
                 for (Player player : activePlayers) {

@@ -55,7 +55,7 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
-            System.out.println("Current card: "+ pickedEventCardMessage.getImgSrc());
+            System.out.println("Current card: " + pickedEventCardMessage.getImgSrc());
         }
 
         else if (messageObj instanceof String messageString) {

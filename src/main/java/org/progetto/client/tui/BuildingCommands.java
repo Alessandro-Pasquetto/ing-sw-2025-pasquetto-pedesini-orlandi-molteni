@@ -14,12 +14,6 @@ import java.util.ArrayList;
 public class BuildingCommands {
 
     // =======================
-    // ATTRIBUTES
-    // =======================
-
-
-
-    // =======================
     // PRINTING
     // =======================
 
@@ -301,6 +295,18 @@ public class BuildingCommands {
     public static void resetTimer(String[] commandParts){
         Sender sender = GameData.getSender();
         sender.resetTimer();
+        System.out.println("Timer reset");
+    }
+
+    //todo comment
+    public static void populateComponent(String[] commandParts){
+        Sender sender = GameData.getSender();
+        int levelGame = GameData.getLevelGame();
+
+        String crewType = commandParts[1];
+        int x = Integer.parseInt(commandParts[2]) - 6 + levelGame;
+        int y = Integer.parseInt(commandParts[3]) - 5;
+        sender.populateComponent(crewType, x, y);
     }
 
     /**

@@ -178,12 +178,10 @@ public class GameView {
     }
 
     public void placeHandComponentAndReady(){
-        if(BuildingData.getHandComponent() == null){
+        if(BuildingData.getHandComponent() == null)
             GameData.getSender().readyPlayer();
-            return;
-        }
 
-        if(BuildingData.getXHandComponent() != -1)
+        else if(BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 

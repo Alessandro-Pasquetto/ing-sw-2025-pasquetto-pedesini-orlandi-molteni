@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.GamePhase;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -60,7 +61,6 @@ public class TuiCommandFilter {
     // =======================
 
     public static String waitResponse() {
-
         isWaitingResponse = true;
         synchronized (responseLock) {
             try {
@@ -105,7 +105,6 @@ public class TuiCommandFilter {
             if(command.isEmpty()) continue;
 
             if (command.equalsIgnoreCase("exit")) break;
-
 
             if(!isWaitingResponse)
                 handleCommand(command);
@@ -159,220 +158,207 @@ public class TuiCommandFilter {
         String[] commandParts = command.split(" ");
         String commandType = commandParts[0].toUpperCase();
 
-        if(!fixing) {
 
-            switch (commandType) {
-
-                case "CONNECT":
-                    if (!isValidCommand(commandParts.length, 3)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    ConnectionsCommands.connect(commandParts);
-                    break;
-
-                case "SHOWWAITINGGAMES":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    ConnectionsCommands.showWaitingGames();
-                    break;
-
-                case "CREATEGAME":
-                    if (!isValidCommand(commandParts.length, 4)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    ConnectionsCommands.createGame(commandParts);
-                    break;
-
-                case "JOINGAME":
-                    if (!isValidCommand(commandParts.length, 3)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    ConnectionsCommands.joinGame(commandParts);
-                    break;
-
-                case "READY":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.readyPlayer(commandParts);
-                    break;
-
-                case "TIMERRESET":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.resetTimer(commandParts);
-                    break;
-
-                case "SHOWHAND":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.showHandComponent(commandParts);
-                    break;
-
-                case "PICKHIDDEN":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.pickHiddenComponent(commandParts);
-                    break;
-
-                case "SHOWVISIBLE":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.showVisibleComponents(commandParts);
-                    break;
-
-                case "PICKVISIBLE":
-                    if (!isValidCommand(commandParts.length, 2)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.pickVisibleComponent(commandParts);
-                    break;
-
-                case "PLACE":
-                    if (!isValidCommand(commandParts.length, 4)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.placeComponent(commandParts);
-                    break;
-
-                case "DISCARD":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.discardComponent(commandParts);
-                    break;
-
-                case "BOOK":
-                    if (!isValidCommand(commandParts.length, 2)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.bookComponent(commandParts);
-                    break;
-
-                case "SHOWBOOKED":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.showBookedComponents(commandParts);
-                    break;
-
-                case "PICKBOOKED":
-                    if (!isValidCommand(commandParts.length, 2)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.pickBookedComponent(commandParts);
-                    break;
-
-                case "PICKDECK":
-                    if (!isValidCommand(commandParts.length, 2)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.pickUpEventCardDeck(commandParts);
-                    break;
-
-                case "PUTDOWNDECK":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    BuildingCommands.putDownEventCardDeck(commandParts);
-                    break;
-
-                case "SHOWSHIP":
-                    if (commandParts.length > 2) {
-                        System.out.println("Invalid command format");
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    GameCommands.showSpaceship(commandParts);
-                    break;
-
-                case "ROLL":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
-                    EventCommands.rollDice();
-                    break;
-
-                case "CLOSE":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
-                        return;
-                    }
+        switch (commandType) {
+            case "CLOSE":
+                if (isValidCommand(commandParts.length, 1))
                     BuildingCommands.close(commandParts);
-                    break;
+                else
+                    expectedFormat(commandType);
+                return;
 
-                case "HELP":
-                    GameCommands.showHelp();
-                    break;
+            case "HELP":
+                GameCommands.showHelp();
+                return;
+        }
 
-                default:
-                    System.out.println("Command not found");
-                    break;
-            }
+        switch (GameData.getPhaseGame()) {
+            case "LOBBY":
+                switch (commandType) {
 
-        }else if(fixing){
-            switch (commandType) {
-
-                case "DESTROY":
-                    if (!isValidCommand(commandParts.length, 3)) {
-                        expectedFormat(commandType);
+                    case "CONNECT":
+                        if (isValidCommand(commandParts.length, 3))
+                            ConnectionsCommands.connect(commandParts);
+                        else
+                            expectedFormat(commandType);
                         return;
-                    }
-                    BuildingCommands.destroyComponent(commandParts);
-                    break;
 
-                case "READY":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
+                    case "SHOWWAITINGGAMES":
+                        if (isValidCommand(commandParts.length, 1))
+                            ConnectionsCommands.showWaitingGames();
+                        else
+                            expectedFormat(commandType);
                         return;
-                    }
-                    BuildingCommands.readyPlayer(commandParts);
-                    break;
 
-                case "SHOWSHIP":
-                    if (commandParts.length > 2) {
-                        System.out.println("Invalid command format");
-                        expectedFormat(commandType);
+                    case "CREATEGAME":
+                        if (isValidCommand(commandParts.length, 4))
+                            ConnectionsCommands.createGame(commandParts);
+                        else
+                            expectedFormat(commandType);
                         return;
-                    }
-                    GameCommands.showSpaceship(commandParts);
-                    break;
 
-                case "CLOSE":
-                    if (!isValidCommand(commandParts.length, 1)) {
-                        expectedFormat(commandType);
+                    case "JOINGAME":
+                        if (isValidCommand(commandParts.length, 3))
+                            ConnectionsCommands.joinGame(commandParts);
+                        else
+                            expectedFormat(commandType);
                         return;
-                    }
-                    BuildingCommands.close(commandParts);
-                    break;
 
-                default:
-                    System.out.println("Command not found");
-                    break;
-            }
+                    case "READY":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.readyPlayer(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+                }
+                break;
+
+            case "BUILDING":
+                switch (commandType) {
+                    case "TIMERRESET":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.resetTimer(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWHAND":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.showHandComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PICKHIDDEN":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.pickHiddenComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWVISIBLE":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.showVisibleComponents(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PICKVISIBLE":
+                        if (isValidCommand(commandParts.length, 2))
+                            BuildingCommands.pickVisibleComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PLACE":
+                        if (isValidCommand(commandParts.length, 4))
+                            BuildingCommands.placeComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "DISCARD":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.discardComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "BOOK":
+                        if (isValidCommand(commandParts.length, 2))
+                            BuildingCommands.bookComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWBOOKED":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.showBookedComponents(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PICKBOOKED":
+                        if (isValidCommand(commandParts.length, 2))
+                            BuildingCommands.pickBookedComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PICKDECK":
+                        if (isValidCommand(commandParts.length, 2))
+                            BuildingCommands.pickUpEventCardDeck(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "PUTDOWNDECK":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.putDownEventCardDeck(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+                    case "READY":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.readyPlayer(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+                }
+                break;
+
+            case "START_ADJUSTING", "ADJUSTING":
+                switch (commandType) {
+                    case "DESTROY":
+                        if (isValidCommand(commandParts.length, 3))
+                            BuildingCommands.destroyComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+                }
+                break;
+            case "POPULATING":
+                switch (commandType) {
+                    case "POPULATE":
+                        if (isValidCommand(commandParts.length, 4))
+                            BuildingCommands.populateComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+                    case "READY":
+                        if (isValidCommand(commandParts.length, 1))
+                            BuildingCommands.readyPlayer(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        return;
+                }
         }
     }
 }

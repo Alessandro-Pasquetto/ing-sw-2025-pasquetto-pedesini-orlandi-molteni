@@ -15,7 +15,7 @@ public class GameData {
     private static Sender sender;
     private static int idGame;
     private static int levelGame;
-    private static String phaseGame;
+    private static String phaseGame = "LOBBY";
     private static String namePlayer;
     private static String UIType;
 

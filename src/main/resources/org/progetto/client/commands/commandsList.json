@@ -103,5 +103,10 @@
     "name": "ShowShip",
     "description": "Show the structure of a player's spaceship.",
     "usage": "ShowShip <nickname>"
+  },
+  {
+    "name": "Populate",
+    "description": "Populate a component.",
+    "usage": "Populate <Human/OrangeAlien/PurpleAlien> <x> <y>"
   }
 ]

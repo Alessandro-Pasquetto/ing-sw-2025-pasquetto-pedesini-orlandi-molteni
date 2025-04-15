@@ -84,7 +84,7 @@ public class SocketWriter extends Thread implements Sender {
     }
 
     public synchronized void sendMessageToOtherPlayersInGame(Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy = new ArrayList<>(clientHandler.getGameManager().getSocketWritersCopy());
+        ArrayList<SocketWriter> socketWritersCopy = clientHandler.getGameManager().getSocketWritersCopy();
 
         for (SocketWriter sw : socketWritersCopy) {
             if(!sw.equals(clientHandler.getSocketWriter()))

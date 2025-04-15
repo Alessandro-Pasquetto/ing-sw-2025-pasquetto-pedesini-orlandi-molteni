@@ -73,8 +73,11 @@ public class Board {
      * @param player reference to ready player
      */
     public synchronized void addTraveler(Player player) {
+
+        System.out.println("Adding traveler " + player.getName());
+
         if (travelers.contains(player)){
-            throw new IllegalStateException("PlayerIsAlreadyReady");
+            throw new IllegalStateException("PlayerIsAlreadyATraveler");
         }
 
         travelers.add(player);

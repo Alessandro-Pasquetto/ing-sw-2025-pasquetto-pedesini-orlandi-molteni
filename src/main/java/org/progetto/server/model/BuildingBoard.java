@@ -1044,7 +1044,7 @@ public class BuildingBoard implements Serializable {
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
             throw new IllegalStateException("NotValidCoordinates");
 
-        Component component = spaceshipMatrix[xComponent][yComponent];
+        Component component = spaceshipMatrix[yComponent][xComponent];
 
         if(component == null || component.getType() != ComponentType.HOUSING_UNIT)
             throw new IllegalStateException("NotValidCoordinates");
@@ -1056,7 +1056,6 @@ public class BuildingBoard implements Serializable {
 
         switch(crewType){
             case "OrangeAlien":
-
                 if(hu.getAllowAlienOrange()){
                     ((HousingUnit) component).setAlienOrange(true);
                     hu.setCrewCount(1);

@@ -35,7 +35,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("You joined a game with ID: "+initGameMessage.getIdGame());
+            System.out.println("You joined a game with ID: " + initGameMessage.getIdGame());
             GameData.setIdGame(initGameMessage.getIdGame());
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
@@ -73,7 +73,7 @@ public class TuiHandlerMessage {
             if (timer == 10)
                 System.out.println("10 seconds to the end");
             else if(timer == 0)
-                System.out.println("Stop building!");
+                System.out.println("Timer is at 0s");
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
