@@ -19,7 +19,13 @@ public class TuiCommandFilter {
     // ATTRIBUTES
     // =======================
 
-    public static boolean fixing = false;
+    private static final Scanner scanner = new Scanner(System.in);
+
+    private static boolean fixing = false;
+
+    private final static Object responseLock = new Object();
+    private static boolean isWaitingResponse = false;
+    private static String response = "";
 
     // =======================
     // GETTERS
@@ -27,6 +33,14 @@ public class TuiCommandFilter {
 
     public static boolean getFixing(){
         return fixing;
+    }
+
+    public static Object getResponseLock() {
+        return responseLock;
+    }
+
+    public static boolean getIsWaitingResponse() {
+        return isWaitingResponse;
     }
 
     // =======================
@@ -37,11 +51,27 @@ public class TuiCommandFilter {
         TuiCommandFilter.fixing = fixing;
     }
 
+    public static void setIsWaitingResponse(boolean isWaitingResponse) {
+        TuiCommandFilter.isWaitingResponse = isWaitingResponse;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
 
-    private static Scanner scanner = new Scanner(System.in);
+    public static String waitResponse() {
+
+        isWaitingResponse = true;
+        synchronized (responseLock) {
+            try {
+                responseLock.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return response;
+    }
 
     public static void setProtocol(){
         System.out.println();
@@ -72,9 +102,21 @@ public class TuiCommandFilter {
 
             String command = scanner.nextLine();
 
+            if(command.isEmpty()) continue;
+
             if (command.equalsIgnoreCase("exit")) break;
 
-            handleCommand(command);
+
+            if(!isWaitingResponse)
+                handleCommand(command);
+            else{
+                response = command;
+                isWaitingResponse = false;
+
+                synchronized(responseLock){
+                    responseLock.notify();
+                }
+            }
 
             System.out.println();
         }
@@ -271,7 +313,7 @@ public class TuiCommandFilter {
                         expectedFormat(commandType);
                         return;
                     }
-                    EventCommands.rollDice(commandParts);
+                    EventCommands.rollDice();
                     break;
 
                 case "CLOSE":
@@ -330,9 +372,7 @@ public class TuiCommandFilter {
                 default:
                     System.out.println("Command not found");
                     break;
-
             }
-
         }
     }
 }

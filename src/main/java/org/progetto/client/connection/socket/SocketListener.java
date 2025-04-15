@@ -25,7 +25,7 @@ public class SocketListener extends Thread {
     // =======================
 
     public SocketListener(ObjectInputStream in) {
-        this.in = in;
+        SocketListener.in = in;
     }
 
     // =======================
@@ -37,10 +37,13 @@ public class SocketListener extends Thread {
         try {
             while (running) {
                 Object messageObj = in.readObject();
-                if(GameData.getUIType().equals("GUI"))
-                    GuiHandlerMessage.handleMessage(messageObj);
-                else if(GameData.getUIType().equals("TUI"))
-                    TuiHandlerMessage.handleMessage(messageObj);
+
+                new Thread(() -> {
+                    if(GameData.getUIType().equals("GUI"))
+                        GuiHandlerMessage.handleMessage(messageObj);
+                    else if(GameData.getUIType().equals("TUI"))
+                        TuiHandlerMessage.handleMessage(messageObj);
+                }).start();
 
             }
         } catch (IOException | ClassNotFoundException e) {

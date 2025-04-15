@@ -24,7 +24,7 @@ public class TuiHandlerMessage {
      *
      * @param messageObj the message that has arrived
      */
-    public static void handleMessage(Object messageObj) {
+    public synchronized static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
             ArrayList<Integer> idGames = showWaitingGamesMessage.getIdWaitingGames();
