@@ -18,7 +18,6 @@ public class GameController {
 
     public static void startBuilding(GameManager gameManager) throws RemoteException {
 
-        gameManager.broadcastGameMessage("Start Building");
         gameManager.startTimer();
     }
 

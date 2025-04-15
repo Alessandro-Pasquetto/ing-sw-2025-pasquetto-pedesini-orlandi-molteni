@@ -21,10 +21,10 @@ public class TuiCommandFilter {
 
     public static boolean fixing = false;
 
-
     // =======================
     // GETTERS
     // =======================
+
     public static boolean getFixing(){
         return fixing;
     }
@@ -32,6 +32,7 @@ public class TuiCommandFilter {
     // =======================
     // SETTERS
     // =======================
+
     public static void setFixing(boolean fixing) {
         TuiCommandFilter.fixing = fixing;
     }

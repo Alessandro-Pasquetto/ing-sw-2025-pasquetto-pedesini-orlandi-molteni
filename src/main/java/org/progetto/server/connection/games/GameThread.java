@@ -1,5 +1,6 @@
 package org.progetto.server.connection.games;
 
+import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
@@ -50,6 +51,7 @@ public class GameThread extends Thread {
                         resetAndWaitPlayersReady();
 
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case BUILDING:
@@ -82,6 +84,7 @@ public class GameThread extends Thread {
 
                         System.out.println("End building phase...");
                         game.setPhase(GamePhase.EVENT);
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case EVENT:
@@ -102,6 +105,7 @@ public class GameThread extends Thread {
                         gameManager.getGame().setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
                         game.setPhase(GamePhase.TRAVEL);
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case TRAVEL:
@@ -109,14 +113,16 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage("Do you want to continue traveling?");
                             resetAndWaitPlayersReady();
                             game.setPhase(GamePhase.EVENT);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         }
                         else
                             game.setPhase(GamePhase.ENDGAME);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case ENDGAME:
                         System.out.println();
-                        System.out.println("Endgame...");
+                        System.out.println("Game over");
                         return;
                 }
             }

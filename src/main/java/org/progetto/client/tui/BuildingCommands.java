@@ -271,7 +271,12 @@ public class BuildingCommands {
      */
     public static void destroyComponent(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.destroyComponent(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[1]));
+        int levelGame = GameData.getLevelGame();
+
+        int x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+        int y = Integer.parseInt(commandParts[2]) - 5;
+
+        sender.destroyComponent(x, y);
     }
 
     /**

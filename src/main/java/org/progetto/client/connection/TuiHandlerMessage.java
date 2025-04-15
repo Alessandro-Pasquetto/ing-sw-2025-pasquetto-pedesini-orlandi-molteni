@@ -39,6 +39,11 @@ public class TuiHandlerMessage {
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
 
+        else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
+            System.out.println(newGamePhaseMessage.getPhaseGame() + " phase started...");
+            GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
+        }
+
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
             System.out.println("Current Hand Component:");
             BuildingCommands.printComponent(showHandComponentMessage.getHandComponent());
@@ -209,7 +214,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NotValidSpaceShip":
-                    System.out.println("Your spaceship is trash, fix it !");
+                    System.out.println("Your spaceship is trash, fix it!");
                     TuiCommandFilter.setFixing(true);
                     break;
 

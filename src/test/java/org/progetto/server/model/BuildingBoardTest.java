@@ -267,7 +267,6 @@ class BuildingBoardTest {
         result = buildingBoard.placeComponent(3, 4, 0);
 
         assertFalse(result);
-
     }
 
     @Test
@@ -545,10 +544,10 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 2, 0);
 
 
-        buildingBoard.checkStartShipValidity();                                //update connectors count
+        buildingBoard.checkStartShipValidity();                            // update connectors count
         assertEquals(6, spaceship.getExposedConnectorsCount());
 
-        buildingBoard.destroyComponent(2, 2);                        //remove component and check new connectors count
+        buildingBoard.destroyComponent(2, 2);                        // remove component and check new connectors count
         buildingBoard.checkStartShipValidity();
         assertEquals(4, spaceship.getExposedConnectorsCount());
 
@@ -774,6 +773,16 @@ class BuildingBoardTest {
         buildingBoard4.placeComponent(1, 2, 3);
 
         assertFalse(buildingBoard4.checkStartShipValidity());
+
+        // Case incorrect connection
+        Spaceship spaceship5 = new Spaceship(2, 1);
+
+        BuildingBoard buildingBoard5 = spaceship5.getBuildingBoard();
+
+        buildingBoard5.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 0, 0, 0}, "imgPath"));
+        buildingBoard5.placeComponent(2, 2, 0);
+
+        assertFalse(buildingBoard5.checkStartShipValidity());
     }
 
     @Test
@@ -953,7 +962,6 @@ class BuildingBoardTest {
     @Test
     void keepSpaceshipPart() throws RemoteException {
 
-
         // TEST DISCONNECTED COMPONENTS
 
         Player player = new Player("a", 1, 2);
@@ -997,14 +1005,12 @@ class BuildingBoardTest {
 
         //printBoard(buildingBoard);
 
-
         // Destroy
         buildingBoard.destroyComponent(3, 2);
         assertFalse(buildingBoard.checkShipValidityAndTryToFix());
         SpaceshipController.chooseSpaceshipPartToKeep(null, player, 2, 3, null);
 
         //printBoard(buildingBoard);
-
 
         // Destroy
         buildingBoard.destroyComponent(3, 3);

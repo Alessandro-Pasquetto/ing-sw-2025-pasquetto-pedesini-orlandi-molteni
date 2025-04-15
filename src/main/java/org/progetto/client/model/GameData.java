@@ -15,6 +15,7 @@ public class GameData {
     private static Sender sender;
     private static int idGame;
     private static int levelGame;
+    private static String phaseGame;
     private static String namePlayer;
     private static String UIType;
 
@@ -32,6 +33,10 @@ public class GameData {
 
     public static int getLevelGame() {
         return levelGame;
+    }
+
+    public static String getPhaseGame() {
+        return phaseGame;
     }
 
     public static String getNamePlayer(){
@@ -56,6 +61,10 @@ public class GameData {
 
     public static void setLevelGame(int levelGame) {
         GameData.levelGame = levelGame;
+    }
+
+    public static void setPhaseGame(String phaseGame) {
+        GameData.phaseGame = phaseGame;
     }
 
     public static void setNamePlayer(String namePlayer){

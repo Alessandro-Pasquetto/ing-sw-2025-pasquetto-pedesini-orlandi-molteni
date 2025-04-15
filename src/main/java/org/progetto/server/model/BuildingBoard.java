@@ -219,36 +219,36 @@ public class BuildingBoard implements Serializable {
      */
     public boolean areConnected(Component c1, Component c2) {
 
-        int[] c1_connections = c1.getConnections();
-        int[] c2_connections = c2.getConnections();
+        int[] c1Connections = c1.getConnections();
+        int[] c2Connections = c2.getConnections();
 
         if (c1.getX() == c2.getX() + 1 && c1.getY() == c2.getY()) {  //c1 on the right
-            if (c1_connections[3] != 0 && c2_connections[1] != 0) {
-                if (c1_connections[3] == c2_connections[1] || c1_connections[3] == 3 || c2_connections[1] == 3) {
+            if (c1Connections[3] != 0 && c2Connections[1] != 0) {
+                if (c1Connections[3] == c2Connections[1] || c1Connections[3] == 3 || c2Connections[1] == 3) {
                     return true;
                 }
             }
         }
 
         if (c1.getX() == c2.getX() - 1 && c1.getY() == c2.getY()) {  //c1 on the left
-            if (c1_connections[1] != 0 && c2_connections[3] != 0) {
-                if (c1_connections[1] == c2_connections[3] || c1_connections[1] == 3 || c2_connections[3] == 3) {
+            if (c1Connections[1] != 0 && c2Connections[3] != 0) {
+                if (c1Connections[1] == c2Connections[3] || c1Connections[1] == 3 || c2Connections[3] == 3) {
                     return true;
                 }
             }
         }
 
         if (c1.getX() == c2.getX() && c1.getY() == c2.getY() - 1) {  //c1 above c2
-            if (c1_connections[2] != 0 && c2_connections[0] != 0) {
-                if (c1_connections[2] == c2_connections[0] || c1_connections[2] == 3 || c2_connections[0] == 3) {
+            if (c1Connections[2] != 0 && c2Connections[0] != 0) {
+                if (c1Connections[2] == c2Connections[0] || c1Connections[2] == 3 || c2Connections[0] == 3) {
                     return true;
                 }
             }
         }
 
         if (c1.getX() == c2.getX() && c1.getY() == c2.getY() + 1) {  //c1 under c2
-            if (c1_connections[0] != 0 && c2_connections[2] != 0) {
-                if (c1_connections[0] == c2_connections[2] || c1_connections[0] == 3 || c2_connections[2] == 3) {
+            if (c1Connections[0] != 0 && c2Connections[2] != 0) {
+                if (c1Connections[0] == c2Connections[2] || c1Connections[0] == 3 || c2Connections[2] == 3) {
                     return true;
                 }
             }
@@ -583,7 +583,6 @@ public class BuildingBoard implements Serializable {
 
         return result;
     }
-
 
     /**
      * DFS that checks for disconnected components
