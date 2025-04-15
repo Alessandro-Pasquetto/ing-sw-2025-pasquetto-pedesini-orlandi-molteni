@@ -1,0 +1,28 @@
+package org.progetto.messages.toClient.EventCommon;
+
+import java.io.Serializable;
+
+public class PlayerLeftMessage implements Serializable {
+
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
+    private String playerName;
+
+    // =======================
+    // CONSTRUCTORS
+    // =======================
+
+    public PlayerLeftMessage(String playerName) {
+        this.playerName = playerName;
+    }
+
+    // =======================
+    // GETTERS
+    // =======================
+
+    public String getPlayerName() {
+        return playerName;
+    }
+}

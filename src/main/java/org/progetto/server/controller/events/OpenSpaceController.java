@@ -1,7 +1,10 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
+import org.progetto.messages.toClient.EventCommon.HowManyDoubleEnginesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
+import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;

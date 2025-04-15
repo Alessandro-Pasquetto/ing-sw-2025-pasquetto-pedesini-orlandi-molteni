@@ -41,4 +41,7 @@ module org.progetto{
     opens org.progetto.client.tui to com.google.gson, javafx.fxml;
     exports org.progetto.server;
     opens org.progetto.server to com.google.gson, javafx.fxml;
+    exports org.progetto.messages.toClient.OpenSpace;
+    exports org.progetto.messages.toClient.Smugglers;
+    exports org.progetto.messages.toClient.Sabotage;
 }

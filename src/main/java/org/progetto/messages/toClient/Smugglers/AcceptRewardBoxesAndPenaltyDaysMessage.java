@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Smugglers;
 
 
 import org.progetto.server.model.components.Box;

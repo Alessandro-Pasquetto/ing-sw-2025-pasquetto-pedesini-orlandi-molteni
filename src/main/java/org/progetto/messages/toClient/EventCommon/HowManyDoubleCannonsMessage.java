@@ -1,21 +1,23 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.EventCommon;
 
 import java.io.Serializable;
 
-public class HowManyDoubleEnginesMessage implements Serializable {
+public class HowManyDoubleCannonsMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
     int maxUsable;
+    int firePowerRequired;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public HowManyDoubleEnginesMessage(int maxUsable) {
+    public HowManyDoubleCannonsMessage(int maxUsable, int firePowerRequired) {
         this.maxUsable = maxUsable;
+        this.firePowerRequired = firePowerRequired;
     }
 
     // =======================
@@ -25,4 +27,5 @@ public class HowManyDoubleEnginesMessage implements Serializable {
     public int getMaxUsable() {
         return maxUsable;
     }
+    public int getFirePowerRequired() {return firePowerRequired;}
 }

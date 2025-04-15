@@ -2,9 +2,11 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
 
@@ -37,6 +39,15 @@ public class EventController {
 
     }
 
+    /**
+     * Checks if there is any defeated player
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @throws RemoteException
+     * @throws IllegalStateException
+     * @throws InterruptedException
+     */
     public static void handleDefeatedPlayers(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
 
         Board board = gameManager.getGame().getBoard();
@@ -69,6 +80,53 @@ public class EventController {
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(noCrewPlayer.getName()), sender);
                 board.leaveTravel(noCrewPlayer);
             }
+        }
+    }
+
+    /**
+     * Handles player decision to leave travel
+     *
+     * @author Gabriele
+     * @param gameManager
+     * @param response
+     * @param player
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void chooseToLeaveTravel(GameManager gameManager, String response, Player player, Sender sender) throws RemoteException {
+
+        GamePhase gamePhase = gameManager.getGame().getPhase();
+        Board board = gameManager.getGame().getBoard();
+
+        // Checks if player can decide to leave travel
+        if (gamePhase.equals(GamePhase.TRAVEL) && !player.getIsReady() && board.getCopyTravelers().contains(player)) {
+
+            String upperCaseResponse = response.toUpperCase();
+
+            switch (upperCaseResponse) {
+                case "YES":
+                    sender.sendMessage("YouLeftTravel");
+                    gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
+                    board.leaveTravel(player);
+
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
+                    break;
+
+                case "NO":
+                    sender.sendMessage("YouAreContinuingTravel");
+
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
+                    break;
+
+                default:
+                    sender.sendMessage("IncorrectResponse");
+                    break;
+            }
+
+        } else {
+            sender.sendMessage("NotAllowedToDoThat");
         }
     }
 }

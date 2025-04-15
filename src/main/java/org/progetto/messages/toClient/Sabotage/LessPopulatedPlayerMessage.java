@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Sabotage;
 
 import java.io.Serializable;
 

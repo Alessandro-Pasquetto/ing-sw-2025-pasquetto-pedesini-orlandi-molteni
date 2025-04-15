@@ -258,22 +258,53 @@ public class Game {
     }
 
     /**
-     * Returns the list of players who have more than 0 credits (winners)
+     * Elaborates score board calculating final credits for each player
      *
-     * @author Alessandro
-     * @return list of the winner players
+     * @author Gabriele
+     * @return list of players sorted in order of credit number
      */
-    public ArrayList<Player> winnerPlayers() {
+    public ArrayList<Player> scoreBoard() {
+        ArrayList<Player> arrivalOrderPlayers = new ArrayList(players);
+        arrivalOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getPosition(), p1.getPosition()));
 
-        ArrayList<Player> winners = new ArrayList<>();
+        int minExposedConnectorsCount = Integer.MAX_VALUE;
 
+        // Finds min amount of exposed connector among player's ships
         for (Player player : players) {
-            if (player.getCredits() > 0) {
-                winners.add(player);
+            if (player.getSpaceship().getExposedConnectorsCount() < minExposedConnectorsCount) {
+                minExposedConnectorsCount = player.getSpaceship().getExposedConnectorsCount();
             }
         }
 
-        return winners;
+        // Loop to update player's final score
+        for (int i = 0; i < players.size(); i++) {
+            Player player = arrivalOrderPlayers.get(i);
+
+            boolean hasLeft = player.getHasLeft();
+
+            // Reward for arrival order
+            if (!hasLeft) {
+                player.addCredits(4 - i);
+            }
+
+            // Reward for most beautiful ship
+            if (!hasLeft && player.getSpaceship().getExposedConnectorsCount() == minExposedConnectorsCount) {
+                player.addCredits(2);
+            }
+
+            // Reward for boxes
+            int boxValueDivider = hasLeft ? 2 : 1;
+            int boxesValue = player.getSpaceship().getBoxesValue();
+            player.addCredits((int) Math.ceil((double) boxesValue / boxValueDivider));
+
+            // Looses a credit for each destroyed component
+            int destroyedComponents = player.getSpaceship().getDestroyedCount();
+            player.addCredits(-destroyedComponents);
+        }
+
+        ArrayList<Player> creditsOrderPlayers = new ArrayList(players);
+        creditsOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getCredits(), p1.getCredits()));
+        return creditsOrderPlayers;
     }
 
     /**

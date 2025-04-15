@@ -1,8 +1,8 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.OpenSpace;
 
 import java.io.Serializable;
 
-public class AnotherPlayerMovedBackwardMessage implements Serializable {
+public class AnotherPlayerMovedAheadMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -15,7 +15,7 @@ public class AnotherPlayerMovedBackwardMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerMovedBackwardMessage(String namePlayer, int stepsCount) {
+    public AnotherPlayerMovedAheadMessage(String namePlayer, int stepsCount) {
         this.namePlayer = namePlayer;
         this.stepsCount = stepsCount;
     }

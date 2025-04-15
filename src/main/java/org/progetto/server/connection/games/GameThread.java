@@ -1,13 +1,18 @@
 package org.progetto.server.connection.games;
 
+import javafx.event.EventType;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.GameController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.events.CardType;
+
 import java.rmi.RemoteException;
 
 public class GameThread extends Thread {
@@ -76,10 +81,11 @@ public class GameThread extends Thread {
                         if(!BuildingController.checkAllShipValidity(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions)
+                            // TODO: rivedere questa cosa
                             waitPlayersReady();
                         }
 
-                        // preparing players in track
+                        // Preparing travelers on the track
                         game.getBoard().addTravelersInTrack(game.getLevel());
 
                         System.out.println("End building phase...");
@@ -95,33 +101,63 @@ public class GameThread extends Thread {
 
                         System.out.println(gameManager.getGame().getActiveEventCard().getType().toString());
 
+                        String eventType = gameManager.getGame().getActiveEventCard().getType().toString();
+                        int travelersCount = gameManager.getGame().getBoard().getNumTravelers();
+
+                        // Checks if remains only a traveler and picked event is battlezone
+                        if (eventType.equals(CardType.BATTLEZONE.toString()) && travelersCount == 1) {
+                            gameManager.broadcastGameMessage("This event card had been skipped");
+
+                            game.setPhase(GamePhase.TRAVEL);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        }
+
                         gameManager.createEventController();
                         gameManager.getEventController().start();
 
                         gameManager.getGame().getBoard().updateTurnOrder();
 
-                        EventController.handleDefeatedPlayers(gameManager);
-
                         gameManager.getGame().setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
-                        game.setPhase(GamePhase.TRAVEL);
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        EventController.handleDefeatedPlayers(gameManager);
+
+                        // Checks if there isn't any traveler remaining
+                        if (gameManager.getGame().getBoard().getNumTravelers() == 0) {
+                            game.setPhase(GamePhase.ENDGAME);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        } else {
+                            game.setPhase(GamePhase.TRAVEL);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        }
+
                         break;
 
                     case TRAVEL:
                         if(gameManager.getGame().getEventDeckSize() > 0){
-                            gameManager.broadcastGameMessage("Do you want to continue traveling?");
+
+                            // Asks for each traveler if he wants to continue travel
+                            for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+                                Sender sender = gameManager.getSenderByPlayer(player);
+                                sender.sendMessage("Do you want to continue traveling?");
+                            }
+
                             resetAndWaitTravelersReady();
-                            game.setPhase(GamePhase.EVENT);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                            // Checks if there is at least a traveler remaining
+                            if (gameManager.getGame().getBoard().getNumTravelers() > 0) {
+                                game.setPhase(GamePhase.EVENT);
+                                gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                                break;
+                            }
                         }
-                        else
-                            game.setPhase(GamePhase.ENDGAME);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        game.setPhase(GamePhase.ENDGAME);
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case ENDGAME:
-                        System.out.println();
                         System.out.println("Game over");
                         return;
                 }

@@ -1,7 +1,6 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.*;
-import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;

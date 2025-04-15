@@ -4,7 +4,7 @@ import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMess
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventCommon.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;

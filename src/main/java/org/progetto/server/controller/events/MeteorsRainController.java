@@ -1,8 +1,10 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
+import org.progetto.messages.toClient.EventCommon.AnotherPlayerDiceResultMessage;
+import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
+import org.progetto.messages.toClient.EventCommon.DiceResultMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;

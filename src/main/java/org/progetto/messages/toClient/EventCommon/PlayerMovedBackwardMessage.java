@@ -1,8 +1,8 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.EventCommon;
 
 import java.io.Serializable;
 
-public class PlayerMovedAheadMessage implements Serializable {
+public class PlayerMovedBackwardMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -14,7 +14,7 @@ public class PlayerMovedAheadMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PlayerMovedAheadMessage(int stepsCount) {
+    public PlayerMovedBackwardMessage(int stepsCount) {
         this.stepsCount = stepsCount;
     }
 
