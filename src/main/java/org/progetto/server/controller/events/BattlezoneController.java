@@ -3,7 +3,6 @@ package org.progetto.server.controller.events;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -156,7 +155,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     phase = EventPhase.ENGINE_NUMBER;
                 }
 
-                gameManager.getGameThread().waitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
 
             phase = EventPhase.CHOOSE_WEAKEST_ENGINES;
@@ -233,7 +232,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     phase = EventPhase.CANNON_NUMBER;
                 }
 
-                gameManager.getGameThread().waitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
 
             phase = EventPhase.CHOOSE_WEAKEST_CANNONS;
@@ -504,7 +503,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
                 phase = EventPhase.DISCARDED_CREW;
 
-                gameManager.getGameThread().waitPlayerReady(penaltyPlayer);
+                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
             }
 
@@ -589,7 +588,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
                 phase = EventPhase.DISCARDED_BOXES;
 
-                gameManager.getGameThread().waitPlayerReady(penaltyPlayer);
+                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
             } else {
 
@@ -599,7 +598,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
                     phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
-                    gameManager.getGameThread().waitPlayerReady(penaltyPlayer);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
                 } else {
                     sender.sendMessage("NotEnoughBatteries");
@@ -772,7 +771,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
-                gameManager.getGameThread().waitPlayerReady(penaltyPlayer);
+                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
             }
 
             // Next Couple

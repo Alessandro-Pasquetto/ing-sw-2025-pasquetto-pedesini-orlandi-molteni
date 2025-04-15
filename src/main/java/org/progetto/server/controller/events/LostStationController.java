@@ -70,7 +70,7 @@ public class LostStationController extends EventControllerAbstract {
                     sender.sendMessage("LandRequest");
                     phase = EventPhase.LAND;
 
-                    gameManager.getGameThread().waitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 } else {
                     sender.sendMessage("NotEnoughCrew");

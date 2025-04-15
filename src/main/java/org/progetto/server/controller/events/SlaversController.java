@@ -2,7 +2,6 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -106,7 +105,7 @@ public class SlaversController extends EventControllerAbstract {
                     }
                 }
 
-                gameManager.getGameThread().waitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 // Checks if card got defeated
                 if (defeated) {

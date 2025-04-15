@@ -3,7 +3,6 @@ package org.progetto.server.controller.events;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -120,7 +119,7 @@ public class PiratesController extends EventControllerAbstract {
                     }
                 }
 
-                gameManager.getGameThread().waitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 // Checks if card got defeated
                 if (defeated) {
@@ -372,7 +371,7 @@ public class PiratesController extends EventControllerAbstract {
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
-                gameManager.getGameThread().resetAndWaitPlayersReady();
+                gameManager.getGameThread().resetAndWaitTravelersReady();
 
                 // Resets elaboration attributes
                 protectedPlayers.clear();

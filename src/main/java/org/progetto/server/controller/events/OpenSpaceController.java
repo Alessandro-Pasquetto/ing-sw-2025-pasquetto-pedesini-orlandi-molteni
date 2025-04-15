@@ -85,7 +85,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = EventPhase.ENGINE_NUMBER;
 
-                    gameManager.getGameThread().waitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
                 }
 
                 phase = EventPhase.EFFECT;

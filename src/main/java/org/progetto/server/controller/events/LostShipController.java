@@ -2,7 +2,6 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -70,7 +69,7 @@ public class LostShipController extends EventControllerAbstract  {
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
                     phase = EventPhase.REWARD_DECISION;
 
-                    gameManager.getGameThread().waitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 } else {
                     sender.sendMessage("NotEnoughCrew");

@@ -111,7 +111,7 @@ public class GameThread extends Thread {
                     case TRAVEL:
                         if(gameManager.getGame().getEventDeckSize() > 0){
                             gameManager.broadcastGameMessage("Do you want to continue traveling?");
-                            resetAndWaitPlayersReady();
+                            resetAndWaitTravelersReady();
                             game.setPhase(GamePhase.EVENT);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         }
@@ -146,7 +146,7 @@ public class GameThread extends Thread {
      *
      * @author Alessandro
      */
-    public void waitPlayerReady(Player player) throws InterruptedException {
+    public void resetAndWaitPlayerReady(Player player) throws InterruptedException {
         player.setIsReady(false, gameManager.getGame());
 
         synchronized (gameThreadLock) {
@@ -189,7 +189,7 @@ public class GameThread extends Thread {
      *
      * @author Gabriele
      */
-    public void waitTravelersReady() throws InterruptedException {
+    public void resetAndWaitTravelersReady() throws InterruptedException {
         Game game = gameManager.getGame();
         Board board = game.getBoard();
 

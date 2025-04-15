@@ -215,6 +215,9 @@ public class SpaceshipController {
             if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix())
                 sender.sendMessage("SpaceshipNotValidSelectPart");
 
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("EmptyComponentCell"))
                 sender.sendMessage("EmptyComponentCell");
@@ -240,8 +243,11 @@ public class SpaceshipController {
         try{
             buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
-            //todo notificare spaceship
-            //gameManager.broadcastGameMessageToOthers();
+            // player.setIsReady(true, gameManager.getGame());
+            // gameManager.getGameThread().notifyThread();
+
+            // todo notificare spaceship
+            // gameManager.broadcastGameMessageToOthers();
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotValidCoordinates"))
                 sender.sendMessage("NotValidCoordinates");

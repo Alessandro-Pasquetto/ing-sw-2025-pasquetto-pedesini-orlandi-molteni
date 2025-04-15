@@ -157,8 +157,8 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void destroyComponent(int yComponent, int xComponent) {
-        SocketWriter.sendMessage(new DestroyComponentMessage(yComponent, xComponent));
+    public void destroyComponent(int xComponent, int yComponent) {
+        SocketWriter.sendMessage(new DestroyComponentMessage(xComponent, yComponent));
     }
 
     @Override

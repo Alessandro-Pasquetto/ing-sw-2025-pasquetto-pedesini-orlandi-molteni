@@ -2,7 +2,6 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.PlayerMovedBackwardMessage;
@@ -75,7 +74,7 @@ public class PlanetsController extends EventControllerAbstract {
                     sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
                     phase = EventPhase.LAND;
 
-                    gameManager.getGameThread().waitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 } else {
                     sender.sendMessage("AllPlanetsAlreadyTaken");

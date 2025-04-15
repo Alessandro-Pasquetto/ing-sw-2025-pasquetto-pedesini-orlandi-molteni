@@ -43,7 +43,7 @@ public interface Sender {
 
     void putDownEventCardDeck();
 
-    void destroyComponent(int yComponent, int xComponent);
+    void destroyComponent(int xComponent, int yComponent);
 
     void readyPlayer();
 

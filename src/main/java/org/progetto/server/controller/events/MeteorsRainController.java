@@ -91,7 +91,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
 
-                gameManager.getGameThread().resetAndWaitPlayersReady();
+                gameManager.getGameThread().resetAndWaitTravelersReady();
 
                 // Resets elaboration attributes
                 decisionPlayers.clear();

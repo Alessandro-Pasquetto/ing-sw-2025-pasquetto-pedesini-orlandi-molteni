@@ -1,8 +1,9 @@
 package org.progetto.server.model.events;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Penalty {
+public class Penalty implements Serializable {
 
     // =======================
     // ATTRIBUTES

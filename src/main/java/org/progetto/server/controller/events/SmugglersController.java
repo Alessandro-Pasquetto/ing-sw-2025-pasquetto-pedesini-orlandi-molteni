@@ -105,7 +105,7 @@ public class SmugglersController extends EventControllerAbstract {
                     }
                 }
 
-                gameManager.getGameThread().waitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 // Checks if card got defeated
                 if (defeated) {
