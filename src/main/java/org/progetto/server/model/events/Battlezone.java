@@ -14,7 +14,7 @@ public class Battlezone extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<ConditionPenalty> couples;
+    private final ArrayList<ConditionPenalty> couples;
 
     // =======================
     // CONSTRUCTORS
@@ -22,11 +22,6 @@ public class Battlezone extends EventCard {
 
     public Battlezone(CardType type, int level, String imgSrc,ArrayList<ConditionPenalty> couples) {
         super(type, level, imgSrc);
-        System.out.println("Battlezone couples size : " + couples.size());
-        for (ConditionPenalty couple : couples) {
-            System.out.println("Condition : " + couple.getCondition().toString());
-            System.out.println("Penalty : " + couple.getPenalty().getType().toString());
-        }
         this.couples = couples;
     }
 

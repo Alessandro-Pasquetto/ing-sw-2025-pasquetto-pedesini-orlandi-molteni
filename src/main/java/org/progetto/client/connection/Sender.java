@@ -1,7 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.connection.rmi.RmiClientReceiver;
-
 public interface Sender {
     void connect(String serverIp, int serverPort);
 

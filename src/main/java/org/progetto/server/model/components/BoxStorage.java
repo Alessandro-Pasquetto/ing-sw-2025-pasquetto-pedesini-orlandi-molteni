@@ -9,7 +9,6 @@ public class BoxStorage extends Component {
     // =======================
 
     private final Box[] boxStorage;
-    private int boxCount;
 
     // =======================
     // CONSTRUCTORS
@@ -18,7 +17,6 @@ public class BoxStorage extends Component {
     public BoxStorage(ComponentType type, int[] connections, String imgSrc, int capacity) {
         super(type, connections, imgSrc);
         this.boxStorage = new Box[capacity];
-        this.boxCount = 0;
     }
 
     // =======================
@@ -32,20 +30,6 @@ public class BoxStorage extends Component {
     public Box[] getBoxStorage() {
         return boxStorage;
     }
-
-//    public int[] getBoxStorageValues() {
-//        int[] boxStorageValues = new int[boxStorage.length];
-//
-//        for (int i = 0; i < boxStorage.length; i++) {
-//            if (boxStorage[i] != null) {
-//                boxStorageValues[i] = boxStorage[i].getValue();
-//            } else {
-//                boxStorageValues[i] = 0;
-//            }
-//        }
-//
-//        return boxStorageValues;
-//    }
 
     // =======================
     // OTHER METHODS
@@ -63,7 +47,6 @@ public class BoxStorage extends Component {
         if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
             if (box != Box.RED || type.equals(ComponentType.RED_BOX_STORAGE)) {  // Checks in case of red box if its is possible
                 boxStorage[idx] = box;
-                this.boxCount += 1;
                 spaceship.addBoxCount(1, box);
                 return true;
             }
@@ -83,7 +66,6 @@ public class BoxStorage extends Component {
             if (boxStorage[idx] != null) {
                 spaceship.addBoxCount(-1, boxStorage[idx]);
                 boxStorage[idx] = null;
-                this.boxCount -= 1;
                 System.gc();
                 return true;
             } else {

@@ -119,9 +119,9 @@ class BoxStorageTest {
         bs1.addBox(s, box2, 0);
         bs1.addBox(s, box3, 1);
 
-        int[] boxStorageValues = new int[]{3, 0, 2};
+        Box[] boxStorage = new Box[]{Box.YELLOW, null, Box.GREEN};
 
-        assertArrayEquals(boxStorageValues, bs1.getBoxStorageValues());
+        assertArrayEquals(boxStorage, bs1.getBoxStorage());
 
         // Adds a new box into a normal box storage
         BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3);
@@ -132,8 +132,8 @@ class BoxStorageTest {
         bs2.addBox(s, box4, 0);
         bs2.addBox(s, box3, 1);
 
-        int[] boxStorageValues2 = new int[]{1, 4, 2};
+        Box[]boxStorage2 = new Box[]{Box.BLUE, Box.RED, Box.GREEN};
 
-        assertArrayEquals(boxStorageValues2, bs2.getBoxStorageValues());
+        assertArrayEquals(boxStorage2, bs2.getBoxStorage());
     }
 }

@@ -680,6 +680,16 @@ public class BuildingController {
             return;
         }
 
+        if(player.getSpaceship().getBuildingBoard().getHandComponent() == null){
+            sender.sendMessage("FullHandComponent");
+            return;
+        }
+
+        if(gameManager.getGame().getLevel() == 1){
+            sender.sendMessage("CannotPickUpEventCardDeck");
+            return;
+        }
+
         try{
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
             sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));

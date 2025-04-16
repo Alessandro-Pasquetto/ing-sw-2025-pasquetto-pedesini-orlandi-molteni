@@ -209,12 +209,12 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
-                hiddenEventDeck.addAll(lv2Deck.subList(0,2));
+                hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
 
 
-                for(int i = 1; i<4; i++) {
-                    Deck[i-1].add(lv1Deck.get(i));
-                    Deck[i-1].addAll(lv2Deck.subList(i*i+1, i*i+3));
+                for(int i = 1; i < 4; i++) {
+                    Deck[i - 1].add(lv1Deck.get(i));
+                    Deck[i - 1].addAll(lv2Deck.subList(i*i + 1, i*i + 3));
                 }
 
                 return Deck;
@@ -222,8 +222,6 @@ public class Game {
 
         } catch (IOException e) {
             e.printStackTrace();
-
-            return null;
         }
 
         return null;
