@@ -40,7 +40,7 @@ public class GameManager {
     public GameManager(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
-        this.timer = new TimerController(this, 120, 2);
+        this.timer = new TimerController(this, 5, 2);
         GameManagerMaps.addWaitingGameManager(idGame, this);
 
         gameThread = new GameThread(this);
@@ -98,7 +98,7 @@ public class GameManager {
     }
 
     public boolean getTimerExpired() {
-        return timer.isTimerExpired();
+        return timer.getIsTimerExpired();
     }
 
     public SocketWriter getSocketWriterByPlayer(Player player) {
@@ -186,7 +186,6 @@ public class GameManager {
     }
 
     public void broadcastGameMessage(Object messageObj) {
-
         ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
 
         for (SocketWriter sw : socketWritersCopy) {

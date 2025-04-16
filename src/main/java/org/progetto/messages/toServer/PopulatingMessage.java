@@ -7,6 +7,7 @@ public class PopulatingMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private String crewType;
     private int xComponent;
     private int yComponent;
@@ -14,6 +15,7 @@ public class PopulatingMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
+
     public PopulatingMessage(String crewType, int xComponent, int yComponent) {
         this.crewType = crewType;
         this.xComponent = xComponent;

@@ -18,6 +18,7 @@ public class TimerController {
     private int timer;
     private int timerFlipsAllowed;
     private boolean isTimerRunning = false;
+    private boolean isTimerExpired = false;
 
     // =======================
     // CONSTRUCTORS
@@ -34,8 +35,8 @@ public class TimerController {
     // GETTERS
     // =======================
 
-    public synchronized boolean isTimerExpired() {
-        return !(isTimerRunning || timerFlipsAllowed > 0);
+    public synchronized boolean getIsTimerExpired() {
+        return isTimerExpired;
     }
 
     // =======================
@@ -43,7 +44,7 @@ public class TimerController {
     // =======================
 
     public synchronized void resetTimer() throws IllegalStateException {
-        if (gameManager.getGame().getPhase() != GamePhase.BUILDING || isTimerRunning || timerFlipsAllowed == 0) {
+        if (gameManager.getGame().getPhase() != GamePhase.BUILDING || gameManager.getGame().getLevel() == 1 || isTimerRunning || timerFlipsAllowed == 0) {
             throw new IllegalStateException("ImpossibleToResetTimer");
         }
 
@@ -84,6 +85,7 @@ public class TimerController {
             }
 
             if (timerFlipsAllowed == 0) {
+                isTimerExpired = true;
                 gameManager.getGameThread().notifyThread();
             }
 

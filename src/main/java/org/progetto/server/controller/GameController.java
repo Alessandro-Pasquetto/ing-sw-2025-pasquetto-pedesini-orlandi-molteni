@@ -17,8 +17,8 @@ public class GameController {
     // =======================
 
     public static void startBuilding(GameManager gameManager) throws RemoteException {
-
-        gameManager.startTimer();
+        if(gameManager.getGame().getLevel() != 1)
+            gameManager.startTimer();
     }
 
 
