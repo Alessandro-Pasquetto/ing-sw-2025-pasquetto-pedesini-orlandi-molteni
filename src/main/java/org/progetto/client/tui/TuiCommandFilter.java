@@ -158,7 +158,6 @@ public class TuiCommandFilter {
         String[] commandParts = command.split(" ");
         String commandType = commandParts[0].toUpperCase();
 
-
         switch (commandType) {
             case "CLOSE":
                 if (isValidCommand(commandParts.length, 1))
@@ -285,7 +284,7 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         return;
 
-                    case "PICKDECK":
+                    case "PICKUPDECK":
                         if (isValidCommand(commandParts.length, 2))
                             BuildingCommands.pickUpEventCardDeck(commandParts);
                         else
@@ -307,6 +306,7 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         }
                         return;
+
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
@@ -335,6 +335,7 @@ public class TuiCommandFilter {
                         return;
                 }
                 break;
+
             case "POPULATING":
                 switch (commandType) {
                     case "POPULATE":
@@ -352,6 +353,7 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         }
                         return;
+
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);

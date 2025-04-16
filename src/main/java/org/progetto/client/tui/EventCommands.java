@@ -16,92 +16,157 @@ public class EventCommands {
 
     public static void printEventCard(EventCard card) {
 
-        System.out.println("┌────────────────────────────────────────────┐");
-        System.out.printf ("│ Type       : %-30s │%n", card.getType(),  "|");
-        System.out.printf ("│ Level      : %-30s │%n", card.getLevel(), "|");
-
         switch (card.getType()){
-
             case METEORSRAIN -> {
-                MeteorsRain meteors = (MeteorsRain) card;
-                System.out.println("┌── Meteor Rain ────────────────────────────┐");
-                System.out.printf ("│ Mereors  : %-28s   │%n", meteors.getMeteors());
-                System.out.printf ("│ Count      : %-28d │%n", meteors.getMeteors().size());
-                System.out.println("└─────────────────────────────────────────────┘");
+                MeteorsRain meteorsRain = (MeteorsRain) card;
+                System.out.println ("┌─ Meteor Rain ───────");
+                System.out.println ("│  Meteors : ");
+
+                for (int i = 0; i < meteorsRain.getMeteors().size(); i++) {
+                    System.out.printf("│    Meteor %d :  ", i);
+                    System.out.print(meteorsRain.getMeteors().get(i).toString());
+                    System.out.println();
+                }
+                System.out.println("└─────────────────────");
             }
 
             case SLAVERS -> {
                 Slavers slavers = (Slavers) card;
-                System.out.println("┌── Slavers ──────────────────────────────────┐");
-                System.out.printf ("│ Crew penalty  : %-24d │%n", slavers.getPenaltyCrew());
-                System.out.printf ("│ Penalty Days  : %-24d │%n", slavers.getPenaltyDays());
-                System.out.printf ("│ Strength      : %-24d │%n", slavers.getFirePowerRequired());
-                System.out.printf ("│ Credits reward: %-24d │%n", slavers.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Slavers ───────────");
+                System.out.printf ("│  Strength : %d %n", slavers.getFirePowerRequired());
+                System.out.printf ("│  Penalty crew : %d %n", slavers.getPenaltyCrew());
+                System.out.printf ("│  Penalty days : %d %n", slavers.getPenaltyDays());
+                System.out.printf ("│  Credits reward : %d %n", slavers.getRewardCredits());
+                System.out.println("└─────────────────────");
             }
 
             case SMUGGLERS -> {
                 Smugglers smugglers = (Smugglers) card;
-                System.out.println("┌── Smugglers ────────────────────────────────┐");
-                System.out.printf ("│ Rewards      : %-24s │%n", smugglers.getRewardBoxes());
-                System.out.printf ("│ Penalty Days : %-24d │%n", smugglers.getPenaltyDays());
-                System.out.printf ("│ Strength     : %-24d │%n", smugglers.getFirePowerRequired());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Smugglers ─────────");
+                System.out.printf ("│  Strength : %d %n", smugglers.getFirePowerRequired());
+                System.out.printf ("│  Penalty boxes : %d %n", smugglers.getPenaltyBoxes());
+                System.out.printf ("│  Penalty days : %d %n", smugglers.getPenaltyDays());
+
+                System.out.printf("│  Rewards :  ");
+                for (int i = 0; i < smugglers.getRewardBoxes().size(); i++) {
+                    System.out.print(GameCommands.drawBox(smugglers.getRewardBoxes().get(i)) + " ");
+                }
+                System.out.println();
+
+                System.out.println("└─────────────────────");
             }
 
             case LOSTSTATION -> {
                 LostStation station = (LostStation) card;
-                System.out.println("┌── Lost Station ─────────────────────────────┐");
-                System.out.printf ("│ Rewards      : %-24s │%n", station.getRewardBoxes());
-                System.out.printf ("│ Penalty Days : %-24d │%n", station.getPenaltyDays());
-                System.out.printf ("│ Required crew: %-24d │%n", station.getRequiredCrew());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Lost Station ──────");
+
+                System.out.printf("│  Rewards :  ");
+                for (int i = 0; i < station.getRewardBoxes().size(); i++) {
+                    System.out.print(GameCommands.drawBox(station.getRewardBoxes().get(i)) + " ");
+                }
+                System.out.println();
+
+                System.out.printf ("│  Penalty days : %d %n", station.getPenaltyDays());
+                System.out.printf ("│  Required crew : %d %n", station.getRequiredCrew());
+                System.out.println("└─────────────────────");
             }
 
             case BATTLEZONE -> {
                 Battlezone battlezone = (Battlezone) card;
                 ArrayList<ConditionPenalty> couples = battlezone.getCouples();
-                System.out.println("┌── Battlezone ───────────────────────────────────┐");
+                System.out.println("┌─ Battlezone ────────");
+
                 for (ConditionPenalty couple : couples) {
-                    System.out.printf ("│ Condition : %-29s │%n", couple.getCondition());
-                    System.out.printf ("│ Penalty   : %-10s (x%-5d)         │%n",
-                            couple.getPenalty().getType(),
-                            couple.getPenalty().getNeededAmount());
-                    System.out.println("├─────────────────────────────────────────────┤");
+                    System.out.println("├─────────────────────");
+
+                    System.out.printf ("│  Condition type : %s %n", couple.getCondition().toString());
+                    System.out.printf ("│  Penalty type : %s %n", couple.getPenalty().getType().toString());
+
+                    if (couple.getPenalty().getType().toString().equals("PENALTYSHOTS")) {
+                        for (int i = 0; i < couple.getPenalty().getShots().size(); i++) {
+                            System.out.printf("│    Shot %d :  ", i);
+                            System.out.print(couple.getPenalty().getShots().get(i).toString());
+                            System.out.println();
+                        }
+                    } else {
+                        System.out.printf ("│    Amount to discard : %d %n", couple.getPenalty().getNeededAmount());
+                    }
                 }
-                System.out.println("└─────────────────────────────────────────────┘");
+
+                System.out.println("└─────────────────────");
             }
 
             case PIRATES -> {
                 Pirates pirates = (Pirates) card;
-                System.out.println("┌── Pirates ──────────────────────────────────┐");
-                System.out.printf ("│ Strength   : %-26d │%n", pirates.getFirePowerRequired());
-                System.out.printf ("│ Penalty Days: %-26d│%n",pirates.getPenaltyDays());
-                System.out.printf ("│ Shots  : %-26s     │%n", pirates.getPenaltyShots());
-                System.out.printf ("│ Credits reward: %-26d │%n", pirates.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Pirates ───────────");
+                System.out.printf ("│  Strength : %d %n", pirates.getFirePowerRequired());
+                System.out.println ("│  Shots : ");
+
+                for (int i = 0; i < pirates.getPenaltyShots().size(); i++) {
+                    System.out.printf("│    Shot %d :  ", i);
+                    System.out.print(pirates.getPenaltyShots().get(i).toString());
+                    System.out.println();
+                }
+
+                System.out.printf ("│  Penalty days : %d %n", pirates.getPenaltyDays());
+                System.out.printf ("│  Credits reward : %d %n", pirates.getRewardCredits());
+                System.out.println("└─────────────────────");
             }
 
             case PLANETS -> {
                 Planets planets = (Planets) card;
-                System.out.println("┌── Planets ──────────────────────────────────┐");
-                System.out.printf ("│ Number of planets : %-20d │%n", planets.getPlanetsTaken().length);
-                System.out.printf ("│ Rewards per planet: %-20s │%n", planets.getRewardsForPlanets());
-                System.out.printf ("│ Penalty days: %-20d       │%n",planets.getPenaltyDays());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Planets ───────────");
+                System.out.println("│  Rewards per planet :");
+
+                for (int i = 0; i < planets.getRewardsForPlanets().size(); i++) {
+                    System.out.printf("│    Planet %d :  ", i);
+                    for (int j = 0; j < planets.getRewardsForPlanets().get(i).size(); j++) {
+                        System.out.print(GameCommands.drawBox(planets.getRewardsForPlanets().get(i).get(j)) + " ");
+                    }
+                    System.out.println();
+                }
+
+                System.out.printf("│  Penalty days : %d%n", planets.getPenaltyDays());
+                System.out.println("└─────────────────────");
             }
 
             case LOSTSHIP -> {
                 LostShip lostShip = (LostShip) card;
-                System.out.println("┌── Lost Ship ────────────────────────────────┐");
-                System.out.printf ("│ Penalty Crew     : %-22d │%n", lostShip.getPenaltyCrew());
-                System.out.printf ("│ Penalty Days     : %-22d │%n", lostShip.getPenaltyDays());
-                System.out.printf ("│ Reward Credits   : %-22d │%n", lostShip.getRewardCredits());
-                System.out.println("└─────────────────────────────────────────────┘");
+                System.out.println("┌─ Lost Ship ─────────");
+                System.out.printf ("│  Penalty crew : %d %n", lostShip.getPenaltyCrew());
+                System.out.printf ("│  Penalty days : %d %n", lostShip.getPenaltyDays());
+                System.out.printf ("│  Reward credits : %d %n", lostShip.getRewardCredits());
+                System.out.println("└─────────────────────");
+            }
+
+            case STARDUST -> {
+                Stardust stardust = (Stardust) card;
+                System.out.println("┌─ Stardust ──────────");
+                System.out.println("└─────────────────────");
+            }
+
+            case EPIDEMIC -> {
+                Epidemic epidemic = (Epidemic) card;
+                System.out.println("┌─ Epidemic ──────────");
+                System.out.println("└─────────────────────");
+            }
+
+            case OPENSPACE -> {
+                OpenSpace openSpace = (OpenSpace) card;
+                System.out.println("┌─ OpenSpace ─────────");
+                System.out.println("└─────────────────────");
             }
         }
+    }
 
-        System.out.println();
+    public static void printEventCardDeck(ArrayList<EventCard> eventCardDeck) {
+
+        System.out.println("Picked Up Event Card Deck:");
+
+        for (EventCard eventCard : eventCardDeck) {
+            System.out.println();
+            printEventCard(eventCard);
+        }
     }
 
     // =======================

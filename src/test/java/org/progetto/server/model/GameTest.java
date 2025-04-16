@@ -294,7 +294,7 @@ class GameTest {
         game.addPlayer(player);
         game.addPlayer(player2);
 
-        game.pickUpEventCardDeck(player,0);
+        assertNotNull(game.pickUpEventCardDeck(player,0));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             game.pickUpEventCardDeck(player, 6);

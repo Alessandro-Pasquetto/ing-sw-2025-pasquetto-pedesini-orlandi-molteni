@@ -17,32 +17,6 @@ public class BuildingCommands {
     // PRINTING
     // =======================
 
-    // TODO: secondo me non conviene piu' usare questa rappresentazione (sostituita dalla rappresentazione quadrata)
-    public static void printComponentInfo(Component component) {
-
-        String[] directions = {"↑", "→", "↓", "←"};
-        int[] conn = component.getConnections();
-        ComponentType type = component.getType();
-
-        System.out.println("┌────────────────────────────┐");
-        System.out.printf ("│ Type: %-20s │%n", type.name());
-        System.out.println("├────────────────────────────┤");
-        System.out.printf ("│ Position: (%1d, %1d)           │%n", component.getX(), component.getY());
-
-        if(type == ComponentType.RED_BOX_STORAGE || type == ComponentType.BOX_STORAGE || type == ComponentType.BATTERY_STORAGE) {
-            BoxStorage storage = (BoxStorage) component;
-            System.out.printf("│ Capacity: %-15d  │%n", storage.getCapacity());
-        }
-        System.out.println("├───── Connectors ───────────┤");
-
-        for (int i = 0; i < 4; i++) {
-            String value = String.valueOf(conn[i]);
-            System.out.printf("│ %s : %-21s  │%n", directions[i], value);
-        }
-
-        System.out.println("└────────────────────────────┘");
-    }
-
     public static void printComponent(Component component) {
 
         String[] lines = GameCommands.drawComponent(component);

@@ -4,7 +4,7 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.HousingUnit;
 
-public class LostShip extends EventCard{
+public class LostShip extends EventCard {
 
     // =======================
     // ATTRIBUTES

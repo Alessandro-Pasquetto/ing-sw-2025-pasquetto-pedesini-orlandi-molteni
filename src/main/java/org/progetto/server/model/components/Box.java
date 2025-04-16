@@ -1,6 +1,8 @@
 package org.progetto.server.model.components;
 
-public enum Box {
+import java.io.Serializable;
+
+public enum Box implements Serializable {
 
     BLUE(1),
     GREEN(2),

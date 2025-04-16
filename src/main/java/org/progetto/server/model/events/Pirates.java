@@ -24,8 +24,8 @@ public class Pirates extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Pirates(CardType type,int level, String imgSrc, int firePowerRequired, int penaltyDays, int rewardCredits, ArrayList<Projectile> penaltyShots) {
-        super(type, level,imgSrc);
+    public Pirates(CardType type, int level, String imgSrc, int firePowerRequired, int penaltyDays, int rewardCredits, ArrayList<Projectile> penaltyShots) {
+        super(type, level, imgSrc);
         this.firePowerRequired = firePowerRequired;
         this.penaltyDays = penaltyDays;
         this.rewardCredits = rewardCredits;
@@ -49,7 +49,7 @@ public class Pirates extends EventCard {
     }
 
     public ArrayList<Projectile> getPenaltyShots() {
-        return penaltyShots;
+        return new ArrayList<>(penaltyShots);
     }
 
     // =======================

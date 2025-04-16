@@ -40,7 +40,7 @@ public class GameManager {
     public GameManager(int idGame, int numPlayers, int level) {
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
-        this.timer = new TimerController(this, 5, 2);
+        this.timer = new TimerController(this, 120, 2);
         GameManagerMaps.addWaitingGameManager(idGame, this);
 
         gameThread = new GameThread(this);

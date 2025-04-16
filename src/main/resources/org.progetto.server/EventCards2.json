@@ -53,16 +53,16 @@
     "imgSrc": "card6-lvl2.jpg",
     "couples": [
       {
-        "type": "FirePowerRequirement",
-        "penalty": {"type": "PenaltyCrew", "neededAmount": 4, "shots": []}
+        "type": "FIREPOWERREQUIREMENT",
+        "penalty": {"type": "PENALTYCREW", "neededAmount": 4, "shots": []}
       },
       {
-        "type": "EnginePowerRequirement",
-        "penalty": {"type": "PenaltyBoxes", "neededAmount": 3, "shots": []}
+        "type": "ENGINEPOWERREQUIREMENT",
+        "penalty": {"type": "PENALTYBOXES", "neededAmount": 3, "shots": []}
       },
       {
-        "type": "CrewRequirement",
-        "penalty": {"type": "PenaltyShots", "neededAmount": 0,
+        "type": "CREWREQUIREMENT",
+        "penalty": {"type": "PENALTYSHOTS", "neededAmount": 0,
           "shots":  [
             {"size": "SMALL", "from": 0},
             {"size": "SMALL", "from": 1},

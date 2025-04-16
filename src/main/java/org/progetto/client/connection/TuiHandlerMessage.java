@@ -68,6 +68,18 @@ public class TuiHandlerMessage {
             BuildingCommands.printBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
+        else if (messageObj instanceof PickedUpEventCardDeckMessage pickedUpEventCardDeckMessage) {
+            EventCommands.printEventCardDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
+        }
+
+        else if (messageObj instanceof AnotherPlayerPickedUpEventCardDeck anotherPlayerPickedUpEventCardDeck) {
+            System.out.println(anotherPlayerPickedUpEventCardDeck.getNamePlayer() + " picked up event card deck " + anotherPlayerPickedUpEventCardDeck.getDeckIdx());
+        }
+
+        else if (messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
+            System.out.println(anotherPlayerPutDownEventCardDeckMessage.getNamePlayer() + " put down event card deck " + anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             if (timer == 10)
@@ -167,6 +179,10 @@ public class TuiHandlerMessage {
 
                 case "PickedBookedComponent":
                     System.out.println("Picked booked");
+                    break;
+
+                case "EventCardDeckPutDown":
+                    System.out.println("Event card deck put down!");
                     break;
 
                 case "TimerExpired":

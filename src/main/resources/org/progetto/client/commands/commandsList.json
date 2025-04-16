@@ -65,14 +65,14 @@
     "usage": "PickBooked <index>"
   },
   {
-    "name": "PickDeck",
+    "name": "PickUpDeck",
     "description": "Pick up an event card deck.",
-    "usage": "PickDeck <deckIndex>"
+    "usage": "PickUpDeck <deckIndex>"
   },
   {
     "name": "PutDownDeck",
     "description": "Put down an event card deck.",
-    "usage": "PutDownDeck <deckIndex>"
+    "usage": "PutDownDeck"
   },
   {
     "name": "Destroy",

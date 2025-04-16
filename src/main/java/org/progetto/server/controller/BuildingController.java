@@ -502,6 +502,7 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException{
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -682,7 +683,7 @@ public class BuildingController {
         try{
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
             sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));
-            gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))

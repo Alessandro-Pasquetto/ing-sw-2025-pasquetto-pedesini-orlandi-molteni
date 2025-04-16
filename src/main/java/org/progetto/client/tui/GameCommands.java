@@ -87,32 +87,32 @@ public class GameCommands {
             }
         }
 
-        System.out.println();
-
-        System.out.println("\n🔧 Ship Attributes");
-        System.out.printf("│ Level                : %d%n", spaceship.getLevelShip());
-        System.out.printf("│ Destroyed components : %d%n", spaceship.getDestroyedCount());
-        System.out.printf("│ Crew members         : %d%n", spaceship.getCrewCount());
-        System.out.printf("│ Batteries            : %d%n", spaceship.getBatteriesCount());
-        System.out.printf("│ Exposed connectors   : %d%n", spaceship.getExposedConnectorsCount());
-        System.out.printf("│ Purple alien         : %b%n", spaceship.getAlienPurple());
-        System.out.printf("│ Orange alien         : %b%n", spaceship.getAlienOrange());
-
-        System.out.println("\n🔫 Cannons");
-        System.out.printf("│ Normal power         : %.1f%n", spaceship.getNormalShootingPower());
-        System.out.printf("│ Half double cannons  : %d%n", spaceship.getHalfDoubleCannonCount());
-        System.out.printf("│ Full double cannons  : %d%n", spaceship.getFullDoubleCannonCount());
-
-        System.out.println("\n🚀 Engines");
-        System.out.printf("│ Normal engine power  : %d%n", spaceship.getNormalEnginePower());
-        System.out.printf("│ Double engines       : %d%n", spaceship.getDoubleEngineCount());
-
-        System.out.println("\n🛡  Shields (up, right, down, left)");
-        System.out.printf("│ Shields              : [%d, %d, %d, %d]%n", spaceship.getIdxShieldCount(0), spaceship.getIdxShieldCount(1), spaceship.getIdxShieldCount(2), spaceship.getIdxShieldCount(3));
-
-        System.out.println("\n📦 Storage (red, yellow, green, blue)");
-        int[] boxes = spaceship.getBoxCounts();
-        System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
+//        System.out.println();
+//
+//        System.out.println("\n🔧 Ship Attributes");
+//        System.out.printf("│ Level                : %d%n", spaceship.getLevelShip());
+//        System.out.printf("│ Destroyed components : %d%n", spaceship.getDestroyedCount());
+//        System.out.printf("│ Crew members         : %d%n", spaceship.getCrewCount());
+//        System.out.printf("│ Batteries            : %d%n", spaceship.getBatteriesCount());
+//        System.out.printf("│ Exposed connectors   : %d%n", spaceship.getExposedConnectorsCount());
+//        System.out.printf("│ Purple alien         : %b%n", spaceship.getAlienPurple());
+//        System.out.printf("│ Orange alien         : %b%n", spaceship.getAlienOrange());
+//
+//        System.out.println("\n🔫 Cannons");
+//        System.out.printf("│ Normal power         : %.1f%n", spaceship.getNormalShootingPower());
+//        System.out.printf("│ Half double cannons  : %d%n", spaceship.getHalfDoubleCannonCount());
+//        System.out.printf("│ Full double cannons  : %d%n", spaceship.getFullDoubleCannonCount());
+//
+//        System.out.println("\n🚀 Engines");
+//        System.out.printf("│ Normal engine power  : %d%n", spaceship.getNormalEnginePower());
+//        System.out.printf("│ Double engines       : %d%n", spaceship.getDoubleEngineCount());
+//
+//        System.out.println("\n🛡  Shields (up, right, down, left)");
+//        System.out.printf("│ Shields              : [%d, %d, %d, %d]%n", spaceship.getIdxShieldCount(0), spaceship.getIdxShieldCount(1), spaceship.getIdxShieldCount(2), spaceship.getIdxShieldCount(3));
+//
+//        System.out.println("\n📦 Storage (red, yellow, green, blue)");
+//        int[] boxes = spaceship.getBoxCounts();
+//        System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
 
         System.out.println();
     }
@@ -132,6 +132,30 @@ public class GameCommands {
             default -> "?";
         };
     }
+
+    public static String drawBox(Box box) {
+
+        switch (box.getValue()) {
+            case 0:
+                return " ";
+
+            case 1:
+                return BLUE + "■" + RESET;
+
+            case 2:
+                return GREEN + "■" + RESET;
+
+            case 3:
+                return YELLOW + "■" + RESET;
+
+            case 4:
+                return RED + "■" + RESET;
+
+            default:
+                return "";
+        }
+    }
+
 
     public static String[] drawComponent(Component component) {
 
@@ -245,7 +269,7 @@ public class GameCommands {
             // Storages
             int capacity;
             int itemsCount;
-            int[] boxes;
+            Box[] boxes;
             String[] boxesStr;
 
             switch (type) {
@@ -395,31 +419,11 @@ public class GameCommands {
                 case RED_BOX_STORAGE:
                     BoxStorage redBoxStorage = (BoxStorage) component;
                     capacity = redBoxStorage.getCapacity();
-                    boxes = redBoxStorage.getBoxStorageValues();
+                    boxes = redBoxStorage.getBoxStorage();
                     boxesStr = new String[boxes.length];
 
                     for (int i = 0; i < boxes.length; i++) {
-                        switch (boxes[i]) {
-                            case 0:
-                                boxesStr[i] = " ";
-                                break;
-
-                            case 1:
-                                boxesStr[i] = BLUE + "■" + RESET;
-                                break;
-
-                            case 2:
-                                boxesStr[i] = GREEN + "■" + RESET;
-                                break;
-
-                            case 3:
-                                boxesStr[i] = YELLOW + "■" + RESET;
-                                break;
-
-                            case 4:
-                                boxesStr[i] = RED + "■" + RESET;
-                                break;
-                        }
+                        boxesStr[i] = drawBox(boxes[i]);
                     }
 
                     switch (capacity) {
@@ -445,27 +449,11 @@ public class GameCommands {
                 case BOX_STORAGE:
                     BoxStorage boxStorage = (BoxStorage) component;
                     capacity = boxStorage.getCapacity();
-                    boxes = boxStorage.getBoxStorageValues();
+                    boxes = boxStorage.getBoxStorage();
                     boxesStr = new String[boxes.length];
 
                     for (int i = 0; i < boxes.length; i++) {
-                        switch (boxes[i]) {
-                            case 0:
-                                boxesStr[i] = " ";
-                                break;
-
-                            case 1:
-                                boxesStr[i] = BLUE + "■" + RESET;
-                                break;
-
-                            case 2:
-                                boxesStr[i] = GREEN + "■" + RESET;
-                                break;
-
-                            case 3:
-                                boxesStr[i] = YELLOW + "■" + RESET;
-                                break;
-                        }
+                        boxesStr[i] = drawBox(boxes[i]);
                     }
 
                     switch (capacity) {

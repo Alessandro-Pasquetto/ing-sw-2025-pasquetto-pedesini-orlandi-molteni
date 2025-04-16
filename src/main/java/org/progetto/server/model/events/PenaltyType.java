@@ -1,6 +1,8 @@
 package org.progetto.server.model.events;
 
-public enum PenaltyType {
+import java.io.Serializable;
+
+public enum PenaltyType implements Serializable {
     PENALTYDAYS,
     PENALTYCREW,
     PENALTYSHOTS,

@@ -31,4 +31,11 @@ public class Projectile implements Serializable {
     public int getFrom() {
         return from;
     }
+
+    @Override
+    public String toString() {
+        String[] directions = {"TOP", "RIGHT", "BOTTOM", "LEFT"};
+        String direction = (from >= 0 && from < directions.length) ? directions[from] : "unknown";
+        return String.format("Size = %s, From = %s", size.toString(), direction);
+    }
 }
