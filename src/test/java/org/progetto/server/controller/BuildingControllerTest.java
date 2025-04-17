@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
+import org.progetto.messages.toClient.Building.PickedUpEventCardDeckMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -359,13 +360,192 @@ class BuildingControllerTest {
 
     @Test
     void pickUpEventCardDeck() throws RemoteException {
+        GameManager gameManager = new GameManager(0, 4, 1);
+
+        Player player = new Player("mario", 0, 1);
+        gameManager.getGame().addPlayer(player);
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        //Test unable to pick for level 1
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("CannotPickUpEventCardDeck", message);
+
+            }
+        };
+
+       BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+
+
+        //Test unable to pick with hand full
+        gameManager = new GameManager(0, 4, 2);
+        gameManager.getGame().addPlayer(player);
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("FullHandComponent", message);
+
+            }
+        };
+
+        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+        buildingBoard.setHandComponent(null);   //reset hand
+
+
+        //Test unable to pick while ready   //todo check why it doesn't set ready the player
+//        gameManager = new GameManager(0, 4, 2);
+//        gameManager.getGame().addPlayer(player);
+//        player.setIsReady(true,gameManager.getGame());
+//
+//        sender = new Sender() {
+//            @Override
+//            public void sendMessage(Object message) {
+//                assertEquals("ActionNotAllowedInReadyState", message);
+//
+//            }
+//        };
+//
+//        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+
+
+        //Test idxOutOfBound
+        gameManager = new GameManager(0, 4, 2);
+        gameManager.getGame().addPlayer(player);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("IllegalIndexEventCardDeck", message);
+
+            }
+        };
+
+        BuildingController.pickUpEventCardDeck(gameManager,player,-1,sender);
+
+        //Test deck already taken
+        gameManager = new GameManager(0, 4, 2);
+        Player otherPLayer = new Player("Giovanni", 0, 1);
+        gameManager.getGame().addPlayer(otherPLayer);
+        gameManager.getGame().addPlayer(player);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+            }
+        };
+        BuildingController.pickUpEventCardDeck(gameManager,otherPLayer,1,sender);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("EventCardDeckIsAlreadyTaken", message);
+
+            }
+        };
+        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+
+
+        //Test deck picked
+        gameManager = new GameManager(0, 4, 2);
+        gameManager.getGame().addPlayer(player);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertInstanceOf(PickedUpEventCardDeckMessage.class, message);
+
+            }
+        };
+        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+
+
     }
 
     @Test
     void putDownEventCardDeck() throws RemoteException {
+
+        //Test empty hand deck
+        GameManager gameManager = new GameManager(0, 4, 2);
+        Player player = new Player("mario", 0, 1);
+        gameManager.getGame().addPlayer(player);
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("NoEventCardDeckTaken", message);
+            }
+        };
+        BuildingController.putDownEventCardDeck(gameManager,player,sender);
+
+
+        //Test full hand
+        gameManager = new GameManager(0, 4, 2);
+        player = new Player("mario", 0, 1);
+        gameManager.getGame().addPlayer(player);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {}
+        };
+        BuildingController.pickUpEventCardDeck(gameManager,player,2,sender);
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("EventCardDeckPutDown", message);
+            }
+        };
+
+        BuildingController.putDownEventCardDeck(gameManager,player,sender);
+
     }
 
     @Test
-    void checkAllShipValidity() throws RemoteException {
+    void checkAllNotReadyStartShipValidity() throws RemoteException {
+        //setup
+        GameManager gameManager = new GameManager(0, 4, 2);
+        Player player_1 = new Player("mario", 0, 1);
+        Player player_2 = new Player("marco", 1, 1);
+        gameManager.getGame().addPlayer(player_1);
+        gameManager.getGame().addPlayer(player_2);
+
+        BuildingBoard bb1 = player_1.getSpaceship().getBuildingBoard();
+        BuildingBoard bb2 = player_2.getSpaceship().getBuildingBoard();
+
+
+        //init first spaceship (not valid)
+        bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        bb1.placeComponent(1,2,0);
+
+        //test validity for first ship
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("ValidSpaceShip", message);
+            }
+        };
+
+        BuildingController.checkAllNotReadyStartShipValidity(gameManager);
+
+
+        //init second spaceship(valid)
+        bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 1}, "imgPath"));
+        bb2.placeComponent(1,2,0);
+
+
+        //test validity for first+second ship
+       sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+            assertEquals("NotValidSpaceShip", message);
+            }
+       };
+
+       BuildingController.checkAllNotReadyStartShipValidity(gameManager);
+
+
     }
 }

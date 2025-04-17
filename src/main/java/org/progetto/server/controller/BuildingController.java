@@ -680,7 +680,7 @@ public class BuildingController {
             return;
         }
 
-        if(player.getSpaceship().getBuildingBoard().getHandComponent() == null){
+        if(player.getSpaceship().getBuildingBoard().getHandComponent() != null){
             sender.sendMessage("FullHandComponent");
             return;
         }
