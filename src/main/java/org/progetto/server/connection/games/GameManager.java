@@ -133,6 +133,10 @@ public class GameManager {
         throw new IllegalStateException("PlayerNotFound");
     }
 
+    public void setGameThread(GameThread gameThread) {
+        this.gameThread = gameThread;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================

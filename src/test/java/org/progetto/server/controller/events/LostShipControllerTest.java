@@ -6,6 +6,7 @@ import org.progetto.client.connection.socket.SocketWriter;
 import org.progetto.messages.toClient.EventCommon.CrewToDiscardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
@@ -84,7 +85,7 @@ class LostShipControllerTest {
         VirtualClient sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {
-                System.out.println("Sending message: " + message);
+
             }
         };
 
@@ -103,30 +104,31 @@ class LostShipControllerTest {
         // Controller
         LostShipController controller = new LostShipController(gameManager);
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(100);
+        GameThread gameThread = new GameThread(gameManager) {
 
-                gameManager.getGame().setActivePlayer(p1);
-                controller.getRewardDecision(p1, "YES", sender);
-                Thread.sleep(100);
-
-                // p2: Refuses
-                p2.setIsReady(true, gameManager.getGame());
-                controller.getRewardDecision(p2, "NO", sender);
-                assertEquals(EventPhase.ASK_TO_LAND, controller.phase);
-                Thread.sleep(100);
-
-                // p3: Accepts, should go to DISCARD_CREW
-                p3.setIsReady(true, gameManager.getGame());
-                controller.getRewardDecision(p3, "YES", sender);
-                assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
-            } catch (RemoteException | InterruptedException e) {
-                throw new RuntimeException(e);
+            @Override
+            public void run(){
+                try {
+                    controller.start();
+                } catch (RemoteException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }).start();
+        };
 
-        controller.start();
+        gameManager.setGameThread(gameThread);
+        gameThread.start();
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.REWARD_DECISION, controller.phase);
+
+        controller.getRewardDecision(p2, "NO", sender);
+        assertEquals(EventPhase.ASK_TO_LAND, controller.phase);
+        Thread.sleep(200);
+
+        // p3: Accepts, should go to DISCARD_CREW
+        controller.getRewardDecision(p3, "YES", sender);
+        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
     }
 
     @Test
