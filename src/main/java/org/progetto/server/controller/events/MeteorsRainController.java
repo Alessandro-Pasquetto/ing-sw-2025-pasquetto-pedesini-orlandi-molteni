@@ -81,13 +81,13 @@ public class MeteorsRainController extends EventControllerAbstract {
     private void sendMeteor() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SEND_METEOR)) {
 
-            for (Projectile meteor : meteors) {//todo errore: meteor non usato
+            for (Projectile meteor : meteors) {
 
                 // Sends to each player information about incoming meteor
                 for (Player player : activePlayers) {
                     Sender sender = gameManager.getSenderByPlayer(player);
 
-                    sender.sendMessage(new IncomingProjectileMessage(meteors.getFirst().getSize(), meteors.getFirst().getFrom()));
+                    sender.sendMessage(new IncomingProjectileMessage(meteor.getSize(), meteor.getFrom()));
                 }
 
                 phase = EventPhase.ASK_ROLL_DICE;
@@ -219,7 +219,6 @@ public class MeteorsRainController extends EventControllerAbstract {
                 phase = EventPhase.ASK_TO_PROTECT;
                 askToProtect();
             }
-
         }
     }
 
@@ -278,7 +277,6 @@ public class MeteorsRainController extends EventControllerAbstract {
                 phase = EventPhase.ASK_TO_PROTECT;
                 askToProtect();
             }
-
         }
     }
 

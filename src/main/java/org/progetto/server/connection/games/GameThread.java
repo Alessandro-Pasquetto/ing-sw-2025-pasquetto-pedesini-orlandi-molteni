@@ -54,12 +54,12 @@ public class GameThread extends Thread {
                         resetAndWaitPlayersReady();
 
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case BUILDING:
                         System.out.println("Start building...");
                         GameController.startBuilding(gameManager);
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
                         gameManager.addAllNotCheckReadyPlayers();
                         gameManager.getGame().resetReadyPlayers();
@@ -99,12 +99,12 @@ public class GameThread extends Thread {
 
                         System.out.println("End building phase...");
                         game.setPhase(GamePhase.EVENT);
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case EVENT:
                         System.out.println();
                         System.out.println("New event...");
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
                         EventController.pickEventCard(gameManager);
 
@@ -118,32 +118,31 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage("This event card had been skipped");
 
                             game.setPhase(GamePhase.TRAVEL);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                            break;
                         }
 
                         gameManager.createEventController();
                         gameManager.getEventController().start();
 
-                        gameManager.getGame().getBoard().updateTurnOrder();
-
+                        // After event
                         gameManager.getGame().setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
 
-                        EventController.handleDefeatedPlayers(gameManager);
-
                         // Checks if there isn't any traveler remaining
-                        if (gameManager.getGame().getBoard().getNumTravelers() == 0) {
+                        if (gameManager.getGame().getBoard().getNumTravelers() == 0)
                             game.setPhase(GamePhase.ENDGAME);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
-
-                        } else {
+                        else{
+                            gameManager.getGame().getBoard().updateTurnOrder();
+                            EventController.handleDefeatedPlayers(gameManager);
                             game.setPhase(GamePhase.TRAVEL);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         }
 
                         break;
 
                     case TRAVEL:
+                        System.out.println("Travel phase started...");
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
                         if(gameManager.getGame().getEventDeckSize() > 0){
 
                             // Asks for each traveler if he wants to continue travel
@@ -163,11 +162,20 @@ public class GameThread extends Thread {
                         }
 
                         game.setPhase(GamePhase.ENDGAME);
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         break;
 
                     case ENDGAME:
                         System.out.println("Game over");
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        for (Player player : gameManager.getGame().scoreBoard()) {
+                            Sender sender = gameManager.getSenderByPlayer(player);
+
+                            if(player.getCredits() >= 0)
+                                sender.sendMessage("You have won");
+                            else
+                                sender.sendMessage("You have lost");
+                        }
                         return;
                 }
             }

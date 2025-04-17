@@ -415,7 +415,11 @@ public class Game {
             if(hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            int randomPos = 0;
+
+            do{
+                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.OPENSPACE));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }

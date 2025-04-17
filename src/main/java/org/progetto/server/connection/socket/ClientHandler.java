@@ -25,7 +25,7 @@ public class ClientHandler {
     public ClientHandler(ObjectOutputStream out, ObjectInputStream in) {
         gameManager = null;
         player = null;
-        socketWriter = new SocketWriter(this, out);
+        socketWriter = new SocketWriter(out);
         socketListener = new SocketListener(this, in);
 
         SocketServer.addSocketWriter(socketWriter);

@@ -48,7 +48,7 @@ public class EventCommands {
     /**
      * Handles player decision on how many double engines to use
      *
-     * @author Lorenzo
+     * @author Lorenzo, Alessandro
      * @param max is the total amount of usable double engines
      */
     public static void responseHowManyDoubleEngines(int max) {
@@ -59,12 +59,12 @@ public class EventCommands {
 
             String response = TuiCommandFilter.waitResponse();
 
-            Sender sender = GameData.getSender();
             try{
                 int amount = Integer.parseInt(response);
                 if (amount > max)
                     System.out.println("You have exceeded the maximum number of double engines!");
                 else{
+                    Sender sender = GameData.getSender();
                     sender.responseHowManyDoubleEngines(amount);
                     break;
                 }

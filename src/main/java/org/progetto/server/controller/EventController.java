@@ -33,8 +33,6 @@ public class EventController {
         EventCard card = gameManager.getGame().pickEventCard();
 
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
-
-        gameManager.getGameThread().notifyThread();
     }
 
     /**

@@ -13,21 +13,23 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class SocketWriter extends Thread implements Sender {
 
-    private ClientHandler clientHandler;
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
     private LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
     private boolean running = true;
 
-    public SocketWriter(ClientHandler clientHandler, ObjectOutputStream out) {
-        this.clientHandler = clientHandler;
+    public SocketWriter(ObjectOutputStream out) {
         this.out = out;
         this.messageQueue = new LinkedBlockingQueue<>();
     }
 
+    // todo disattivato il threadWriter perchè non inviava i messaggi sequenzialmente dovuto ai ritardi delle serializzazione i messaggi "pesanti" ...
+    //  lascio momentaneamente il codice commentato nel caso si dovesse ripristinare
     @Override
     public void run() {
+        /*
         while (running) {
             try {
+
                 Object messageObj = messageQueue.take();
                 out.reset();
                 out.writeObject(messageObj);
@@ -37,26 +39,7 @@ public class SocketWriter extends Thread implements Sender {
                 e.printStackTrace();
             }
         }
-    }
-
-    // =======================
-    // GETTERS
-    // =======================
-
-    public ClientHandler getClientHandler() {
-        return clientHandler;
-    }
-
-    public ObjectOutputStream getOutputStream() {
-        return out;
-    }
-
-    // =======================
-    // SETTERS
-    // =======================
-
-    public void setClientHandler(ClientHandler clientHandler) {
-        this.clientHandler = clientHandler;
+         */
     }
 
     // =======================
@@ -77,18 +60,20 @@ public class SocketWriter extends Thread implements Sender {
     @Override
     public synchronized void sendMessage(Object messageObj) {
         try {
-            messageQueue.put(messageObj);
-        } catch (InterruptedException e) {
+            out.reset();
+            out.writeObject(messageObj);
+            out.flush();
+        } catch (IOException e) {
             Thread.currentThread().interrupt();
         }
-    }
 
-    public synchronized void sendMessageToOtherPlayersInGame(Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy = clientHandler.getGameManager().getSocketWritersCopy();
-
-        for (SocketWriter sw : socketWritersCopy) {
-            if(!sw.equals(clientHandler.getSocketWriter()))
-                sw.sendMessage(messageObj);
+        /*
+        try{
+            messageQueue.put(messageObj);
         }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+         */
     }
 }

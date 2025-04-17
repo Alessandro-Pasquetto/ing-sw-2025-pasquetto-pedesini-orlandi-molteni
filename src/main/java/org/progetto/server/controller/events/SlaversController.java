@@ -357,7 +357,7 @@ public class SlaversController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals("REWARD_DECISION")) {
+        if (phase.equals(EventPhase.REWARD_DECISION)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 

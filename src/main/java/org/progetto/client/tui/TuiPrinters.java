@@ -29,25 +29,16 @@ public class TuiPrinters {
 
     public static String drawBox(Box box) {
 
-        switch (box.getValue()) {
-            case 0:
-                return " ";
+        if(box == null)
+            return " ";
 
-            case 1:
-                return BLUE + "■" + RESET;
-
-            case 2:
-                return GREEN + "■" + RESET;
-
-            case 3:
-                return YELLOW + "■" + RESET;
-
-            case 4:
-                return RED + "■" + RESET;
-
-            default:
-                return "";
-        }
+        return switch (box.getValue()) {
+            case 1 -> BLUE + "■" + RESET;
+            case 2 -> GREEN + "■" + RESET;
+            case 3 -> YELLOW + "■" + RESET;
+            case 4 -> RED + "■" + RESET;
+            default -> "";
+        };
     }
 
     public static String abbreviateComponentType(ComponentType type) {

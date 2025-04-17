@@ -80,10 +80,9 @@ public class OpenSpaceController extends EventControllerAbstract {
                 int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
                 // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-                if (maxUsable == 0) {
+                if (maxUsable == 0)
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
-
-                } else {
+                else {
                     System.out.println("Waiting for HowManyDoubleEngines");
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = EventPhase.ENGINE_NUMBER;
@@ -214,6 +213,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("NoEnginePower");
+                sender.sendMessage("youHaveLeftTheFlight");
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
                 board.leaveTravel(player);
             }

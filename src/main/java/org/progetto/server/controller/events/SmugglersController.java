@@ -224,7 +224,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals("BATTLE_RESULT")) {
+        if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
