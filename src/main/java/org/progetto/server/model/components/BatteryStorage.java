@@ -45,14 +45,14 @@ public class BatteryStorage extends Component {
      * @param num Amount to add
      * @return true if it got incremented, otherwise false
      */
-    public boolean incrementItemsCount(Spaceship spaceship,int num) {
+    public boolean incrementItemsCount(Spaceship spaceship, int num) {
         if (num + itemsCount <= capacity) {
             spaceship.addBatteriesCount(num);
             this.itemsCount += num;
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -62,13 +62,12 @@ public class BatteryStorage extends Component {
      * @param num Amount to remove
      * @return true if it got decreased, otherwise false
      */
-    public boolean decrementItemsCount(Spaceship spaceship,int num) {
+    public boolean decrementItemsCount(Spaceship spaceship, int num) {
         if (num <= itemsCount) {
             spaceship.addBatteriesCount(-num);
             this.itemsCount -= num;
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

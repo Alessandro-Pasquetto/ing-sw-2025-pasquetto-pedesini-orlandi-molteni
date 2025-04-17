@@ -20,21 +20,6 @@ public class OpenSpace extends EventCard {
     // =======================
 
     /**
-     * Checks if the StorageComponent chosen by player is a battery storage
-     * If that is true, the battery will be removed
-     *
-     * @author Gabriele
-     * @author Stefano
-     * @param component StorageComponent from which the battery will be discarded
-     * @return true if the battery was successfully discarded, false if the battery storage is empty
-     */
-    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship,1);
-        } else return false;
-    }
-
-    /**
      * Moves player ahead of a distance equal to enginePower
      *
      * @author Gabriele

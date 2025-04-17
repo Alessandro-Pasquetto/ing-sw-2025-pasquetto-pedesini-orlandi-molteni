@@ -203,9 +203,8 @@ public class GameThread extends Thread {
         player.setIsReady(false, gameManager.getGame());
 
         synchronized (gameThreadLock) {
-            while (!player.getIsReady()){
+            while (!player.getIsReady())
                 gameThreadLock.wait();
-            }
         }
     }
 

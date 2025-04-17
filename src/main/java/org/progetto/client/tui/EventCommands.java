@@ -25,7 +25,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("How many double cannons?");
-            System.out.println("Firepower required is " + required + " and you have" + max + " double cannons");
+            System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -55,7 +55,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("How many double engines?");
-            System.out.println("You have" + max + " double engines");
+            System.out.println("You have " + max + " double engines");
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -85,7 +85,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("Select the battery storage from which to remove the battery");
-            System.out.println("You need to discard" + required + " batteries");
+            System.out.println("You need to discard " + required + " batteries");
 
             System.out.print("X: ");
             String x = TuiCommandFilter.waitResponse();
@@ -112,7 +112,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("Select the housing unit from which to remove the crew member");
-            System.out.println("You need to discard" + required + " crew members");
+            System.out.println("You need to discard " + required + " crew members");
 
             System.out.print("X: ");
             String x = TuiCommandFilter.waitResponse();
@@ -139,7 +139,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("Select the box storage from which to remove the box: <X> <Y> <storage_idx>");
-            System.out.println("You need to discard" + required + " boxes");
+            System.out.println("You need to discard " + required + " boxes");
 
             System.out.print("X: ");
             String x = TuiCommandFilter.waitResponse();

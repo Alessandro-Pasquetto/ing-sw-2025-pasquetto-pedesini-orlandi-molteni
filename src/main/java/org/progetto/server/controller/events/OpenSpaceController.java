@@ -133,6 +133,8 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 } else {
                     sender.sendMessage("IncorrectNumber");
+                    int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
+                    sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                 }
 
             } else {
@@ -160,15 +162,21 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             // Checks if the player that calls the methods is also the current one in the controller
             if (player.equals(gameManager.getGame().getActivePlayer())) {
-
                 Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+
+                if(xBatteryStorage < 0 || yBatteryStorage < 0 || xBatteryStorage >= spaceshipMatrix[0].length || yBatteryStorage >= spaceshipMatrix.length){
+                    sender.sendMessage("InvalidCoordinates");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+                    return;
+                }
+
                 Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
                 if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
                     OpenSpace openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
 
                     // Checks if a battery has been discarded
-                    if (openSpace.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                    if (((BatteryStorage) batteryStorage).decrementItemsCount(player.getSpaceship(), 1)) {
                         requestedNumber--;
                         sender.sendMessage("BatteryDiscarded");
                         if (requestedNumber == 0) {
@@ -181,11 +189,13 @@ public class OpenSpaceController extends EventControllerAbstract {
                         }
 
                     } else {
-                        sender.sendMessage("NotEnoughBatteries");
+                        sender.sendMessage("EmptyBatteryStorage");
+                        sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
                     }
 
                 } else {
                     sender.sendMessage("InvalidCoordinates");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
                 }
 
             } else {
@@ -222,7 +232,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("NoEnginePower");
-                sender.sendMessage("youHaveLeftTheFlight");
+                sender.sendMessage("YouHaveLeftTheFlight");
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
                 board.leaveTravel(player);
             }
