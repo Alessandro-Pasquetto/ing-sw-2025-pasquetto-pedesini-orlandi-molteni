@@ -64,11 +64,10 @@ public class LostShipController extends EventControllerAbstract  {
 
                 // Calculates max crew number available to discard
                 int maxCrewCount = player.getSpaceship().getTotalCrewCount();
-
+                System.out.println("ciao");
                 if (maxCrewCount > lostShip.getPenaltyCrew()) {
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
                     phase = EventPhase.REWARD_DECISION;
-
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 } else {
@@ -115,7 +114,7 @@ public class LostShipController extends EventControllerAbstract  {
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("IncorrectPhase" + phase);
         }
     }
 
