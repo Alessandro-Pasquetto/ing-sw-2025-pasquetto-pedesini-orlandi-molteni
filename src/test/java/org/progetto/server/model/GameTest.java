@@ -515,6 +515,6 @@ class GameTest {
 
         assertEquals(9, p1.getCredits());
         assertEquals(1, p2.getCredits());
-        assertEquals(2, p3.getCredits());
+        assertEquals(3, p3.getCredits());
     }
 }

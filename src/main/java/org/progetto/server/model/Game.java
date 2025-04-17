@@ -274,6 +274,8 @@ public class Game {
             }
         }
 
+        int rewardForPosition = 4;
+
         // Loop to update player's final score
         for (int i = 0; i < players.size(); i++) {
             Player player = arrivalOrderPlayers.get(i);
@@ -282,7 +284,8 @@ public class Game {
 
             // Reward for arrival order
             if (!hasLeft) {
-                player.addCredits(4 - i);
+                player.addCredits(rewardForPosition);
+                rewardForPosition--;
             }
 
             // Reward for most beautiful ship
