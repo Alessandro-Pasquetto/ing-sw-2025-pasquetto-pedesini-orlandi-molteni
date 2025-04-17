@@ -25,51 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class LostShipControllerTest {
 
     @Test
-    void start() {
-        GameManager gameManager = new GameManager(0, 4, 1);
-        Player player = new Player("mario", 0, 1);
-        gameManager.getGame().addPlayer(player);
-
-        player.getSpaceship().getBuildingBoard().setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2));
-        player.getSpaceship().getBuildingBoard().placeComponent(2, 1, 0);
-
-        LostShipController controller = new LostShipController(gameManager);
-        assertDoesNotThrow(controller::start);
-    }
-
-    @Test
-    void getRewardDecision() throws RemoteException {
-        GameManager gameManager = new GameManager(0, 4, 1);
-        Player player = new Player("mario", 0, 1);
-        gameManager.getGame().addPlayer(player);
-
-        LostShipController controller = new LostShipController(gameManager);
-        controller.phase = EventPhase.REWARD_DECISION;
-        gameManager.getGame().setActivePlayer(player);
-
-        Sender sender = message -> {};
-
-        controller.getRewardDecision(player, "YES", sender);
-
-        assertEquals(EventPhase.PENALTY_EFFECT, controller.phase);
-
-        GameManager gameManager2 = new GameManager(0, 4, 1);
-        Player player2 = new Player("mario", 0, 1);
-        gameManager2.getGame().addPlayer(player2);
-
-        LostShipController controller2 = new LostShipController(gameManager2);
-        controller2.phase = EventPhase.REWARD_DECISION;
-        gameManager2.getGame().setActivePlayer(player2);
-
-        Sender sender2 = message -> {};
-
-        controller2.getRewardDecision(player2, "NO", sender2);
-
-        assertEquals(EventPhase.ASK_TO_LAND, controller2.phase);
-    }
-
-    @Test
-    void penaltyEffect() throws RemoteException, InterruptedException {
+    void getRewardDecision() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
         LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
         gameManager.getGame().setActiveEventCard(lostShip);
@@ -120,10 +76,10 @@ class LostShipControllerTest {
         gameThread.start();
 
         Thread.sleep(200);
-        assertEquals(EventPhase.REWARD_DECISION, controller.phase);
+        assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         controller.getRewardDecision(p2, "NO", sender);
-        assertEquals(EventPhase.ASK_TO_LAND, controller.phase);
+        assertEquals(EventPhase.ASK_TO_LAND, controller.getPhase());
         Thread.sleep(200);
 
         // p3: Accepts, should go to DISCARD_CREW
@@ -132,7 +88,7 @@ class LostShipControllerTest {
     }
 
     @Test
-    void receiveDiscardedCrew() throws RemoteException {
+    void receiveDiscardedCrew() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 1, 1);
         LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
         gameManager.getGame().setActiveEventCard(lostShip);
@@ -140,14 +96,28 @@ class LostShipControllerTest {
         Player p3 = new Player("alessio", 0, 1);
         gameManager.getGame().addPlayer(p3);
 
+        VirtualClient sender = new VirtualClient() {
+            @Override
+            public void sendMessage(Object message) {
+
+            }
+        };
+
+        gameManager.addRmiClient(p3, sender);
+
+        gameManager.getGame().getBoard().addTraveler(p3);
+
         HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
         HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
         HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
 
         BuildingBoard bb = p3.getSpaceship().getBuildingBoard();
-        bb.setHandComponent(hu1); bb.placeComponent(2, 1, 0);
-        bb.setHandComponent(hu2); bb.placeComponent(1, 1, 0);
-        bb.setHandComponent(hu3); bb.placeComponent(3, 1, 0);
+        bb.setHandComponent(hu1);
+        bb.placeComponent(2, 1, 0);
+        bb.setHandComponent(hu2);
+        bb.placeComponent(1, 1, 0);
+        bb.setHandComponent(hu3);
+        bb.placeComponent(3, 1, 0);
 
         hu1.setCrewCount(2);
         hu2.setCrewCount(2);
@@ -155,45 +125,40 @@ class LostShipControllerTest {
 
         p3.getSpaceship().addCrewCount(6);
 
-        gameManager.getGame().setActivePlayer(p3);
+        // Controller
+        LostShipController controller = new LostShipController(gameManager);
 
-        Sender sender = new Sender() {
+        GameThread gameThread = new GameThread(gameManager) {
+
             @Override
-            public void sendMessage(Object message) {
-
+            public void run(){
+                try {
+                    controller.start();
+                } catch (RemoteException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
 
-        LostShipController controller = new LostShipController(gameManager);
-        controller.phase = EventPhase.ASK_TO_LAND;
+        gameManager.setGameThread(gameThread);
+        gameThread.start();
+
+        Thread.sleep(200);
+        // p3: Accepts, should go to DISCARD_CREW
         controller.getRewardDecision(p3, "YES", sender);
-        controller.phase = EventPhase.PENALTY_EFFECT;
-        controller.penaltyEffect(p3, sender);
-        controller.phase = EventPhase.DISCARDED_CREW;
+        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
 
-
+        Thread.sleep(200);
         // Discarded crew (1 from each housing unit)
         controller.receiveDiscardedCrew(p3, 2, 1, sender);
-        Sender sender1 = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertInstanceOf(CrewToDiscardMessage.class, message);
-            }
-        };
+        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+
+        Thread.sleep(200);
         controller.receiveDiscardedCrew(p3, 3, 1, sender);
-        Sender sender2 = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertInstanceOf(CrewToDiscardMessage.class, message);
-            }
-        };
+        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+
+        Thread.sleep(200);
         controller.receiveDiscardedCrew(p3, 1, 1, sender);
-        Sender sender3 = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("CrewMemberDiscarded", message);
-            }
-        };
 
         // Checks
         assertEquals(3, p3.getSpaceship().getCrewCount());
@@ -201,6 +166,10 @@ class LostShipControllerTest {
         assertEquals(1, hu2.getCrewCount());
         assertEquals(1, hu3.getCrewCount());
 
-        assertEquals(EventPhase.EFFECT, controller.phase);
+        assertEquals(EventPhase.EFFECT, controller.getPhase());
+
+        Thread.sleep(200);
+        assertEquals(-2, p3.getPosition());
+        assertEquals(4, p3.getCredits());
     }
 }

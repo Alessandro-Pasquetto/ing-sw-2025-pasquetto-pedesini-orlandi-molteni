@@ -79,7 +79,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
-
+                System.out.println(player.getName());
                 // Checks if players is able to win without double cannons
                 if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
@@ -89,7 +89,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     // Calculates max number of double cannons usable
                     int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-
+                    System.out.println(player.getName());
                     // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
                     if (maxUsable == 0) {
                         playerFirePower = spaceship.getNormalShootingPower();
@@ -99,7 +99,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     } else {
                         sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
-
+                        System.out.println(player.getName());
                         phase = EventPhase.CANNON_NUMBER;
                     }
                 }
@@ -244,6 +244,7 @@ public class SlaversController extends EventControllerAbstract {
                         break;
 
                     case 0:
+                        phase = EventPhase.ASK_CANNONS;
                         player.setIsReady(true, gameManager.getGame());
                         gameManager.getGameThread().notifyThread();
                         break;
