@@ -189,6 +189,7 @@ class BuildingControllerTest {
 
     @Test
     void placeHandComponentAndPickUpEventCardDeck() throws RemoteException {
+        //todo
     }
 
     @Test

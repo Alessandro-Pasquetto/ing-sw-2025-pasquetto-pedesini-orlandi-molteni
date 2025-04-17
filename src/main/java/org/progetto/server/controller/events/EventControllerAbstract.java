@@ -19,9 +19,16 @@ abstract public class EventControllerAbstract {
     // =======================
     // GETTERS
     // =======================
-
     public EventPhase getPhase() throws RemoteException {
         return phase;
+    }
+
+
+    // =======================
+    // SETTERS
+    // =======================
+    public void setPhase(EventPhase phase) throws RemoteException {
+        this.phase = phase;
     }
 
     // =======================

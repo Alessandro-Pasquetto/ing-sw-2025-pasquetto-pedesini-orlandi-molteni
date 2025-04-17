@@ -78,7 +78,7 @@ public class SpaceshipController {
      */
     public static void updateSpaceship(GameManager gameManager, Player player, Component componentToUpdate, Sender sender) throws RemoteException {
 
-        if ((componentToUpdate instanceof BatteryStorage) || (componentToUpdate instanceof BoxStorage) || (componentToUpdate instanceof HousingUnit)) {
+        if ((componentToUpdate.getType().equals(ComponentType.BATTERY_STORAGE)) || (componentToUpdate.getType().equals(ComponentType.BOX_STORAGE)) || (componentToUpdate.getType().equals(ComponentType.HOUSING_UNIT)) ||(componentToUpdate.getType().equals(ComponentType.RED_BOX_STORAGE))) {
 
             gameManager.broadcastGameMessage(new UpdatedSpaceshipMessage(player, componentToUpdate));
             sender.sendMessage("SpaceshipUpdated");
@@ -128,7 +128,9 @@ public class SpaceshipController {
 
                             if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
                                 if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
-                                    sender.sendMessage("RedBoxMoved");
+                                    sender.sendMessage("RedBoxMoved");  // Spaceship Updates
+                                    updateSpaceship(gameManager, player, startComponent, sender);
+                                    updateSpaceship(gameManager, player, endComponent, sender);
                                 }
 
                             } else {
@@ -144,16 +146,15 @@ public class SpaceshipController {
                         if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
                             if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
                                 sender.sendMessage("BoxMoved");
+                                // Spaceship Updates
+                                updateSpaceship(gameManager, player, startComponent, sender);
+                                updateSpaceship(gameManager, player, endComponent, sender);
                             }
 
                         } else {
                             sender.sendMessage("BoxNotMoved");
                         }
                     }
-
-                    // Spaceship Updates
-                    updateSpaceship(gameManager, player, startComponent, sender);
-                    updateSpaceship(gameManager, player, endComponent, sender);
 
                 } catch (ClassCastException e) {
                     sender.sendMessage("NotAStorageComponent");
@@ -194,13 +195,12 @@ public class SpaceshipController {
                 // Removes selected box
                 if (component.removeBox(player.getSpaceship(), idx)) {
                     sender.sendMessage("BoxRemoved");
+                    // Spaceship Updates
+                    updateSpaceship(gameManager, player, component, sender);
 
                 } else {
                     sender.sendMessage("BoxNotRemoved");
                 }
-
-                // Spaceship Updates
-                updateSpaceship(gameManager, player, component, sender);
 
             } catch (ClassCastException e) {
                 sender.sendMessage("NotAStorageComponent");
