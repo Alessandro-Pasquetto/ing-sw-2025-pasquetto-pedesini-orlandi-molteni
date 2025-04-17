@@ -56,7 +56,11 @@ public interface VirtualServer extends Remote {
 
     void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException, InterruptedException;
 
-    void showSpaceship(VirtualClient virtualClient,int idGame, String owner) throws RemoteException;
+    void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException;
+
+    void spaceshipStats(VirtualClient virtualClient, int idGame) throws RemoteException;
+
+    void showTrack(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
 

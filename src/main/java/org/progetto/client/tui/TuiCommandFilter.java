@@ -5,13 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.model.GameData;
-import org.progetto.server.model.GamePhase;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class TuiCommandFilter {
@@ -22,19 +23,15 @@ public class TuiCommandFilter {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    private static boolean fixing = false;
-
     private final static Object responseLock = new Object();
     private static boolean isWaitingResponse = false;
     private static String response = "";
 
+    private static Map<String, Command> commands = loadCommands();
+
     // =======================
     // GETTERS
     // =======================
-
-    public static boolean getFixing(){
-        return fixing;
-    }
 
     public static Object getResponseLock() {
         return responseLock;
@@ -47,10 +44,6 @@ public class TuiCommandFilter {
     // =======================
     // SETTERS
     // =======================
-
-    public static void setFixing(boolean fixing) {
-        TuiCommandFilter.fixing = fixing;
-    }
 
     public static void setIsWaitingResponse(boolean isWaitingResponse) {
         TuiCommandFilter.isWaitingResponse = isWaitingResponse;
@@ -106,13 +99,13 @@ public class TuiCommandFilter {
 
             if (command.equalsIgnoreCase("exit")) break;
 
-            if(!isWaitingResponse)
+            if (!isWaitingResponse)
                 handleCommand(command);
-            else{
+            else {
                 response = command;
                 isWaitingResponse = false;
 
-                synchronized(responseLock){
+                synchronized(responseLock) {
                     responseLock.notify();
                 }
             }
@@ -132,25 +125,34 @@ public class TuiCommandFilter {
         }
     }
 
-    private static void expectedFormat(String command) {
+    private static Map<String, Command> loadCommands() {
         String path = "src/main/resources/org/progetto/client/commands/commandsList.json";
         Gson gson = new Gson();
 
+        Map<String, Command> commands = new HashMap<>();
+
         try (Reader reader = new FileReader(path)) {
-            Type listType = new TypeToken<List<CommandEntity>>() {}.getType();
-            List<CommandEntity> commands = gson.fromJson(reader, listType);
+            Type listType = new TypeToken<List<Command>>() {}.getType();
+            List<Command> commandList = gson.fromJson(reader, listType);
 
-            for (CommandEntity cmd : commands) {
-                if (cmd.getName().equalsIgnoreCase(command)) {
-                    System.out.println("Expected format: " + cmd.getUsage());
-                    return;
-                }
+            for (Command cmd : commandList) {
+                commands.put(cmd.getName().toLowerCase(), cmd);
             }
-
-            System.out.println("Command not found in command list.");
 
         } catch (IOException e) {
             System.out.println("Error loading command list: " + e.getMessage());
+        }
+
+        return commands;
+    }
+
+    private static void expectedFormat(String command) {
+        Command cmd = commands.get(command.toLowerCase());
+
+        if (cmd != null) {
+            System.out.println("Expected format: " + cmd.getUsage());
+        } else {
+            System.out.println("Command not found");
         }
     }
 
@@ -209,8 +211,15 @@ public class TuiCommandFilter {
                         else
                             expectedFormat(commandType);
                         return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
+                        return;
                 }
-                break;
 
             case "BUILDING":
                 switch (commandType) {
@@ -307,14 +316,30 @@ public class TuiCommandFilter {
                         }
                         return;
 
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
                         return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
+                        return;
                 }
-                break;
 
             case "START_ADJUSTING", "ADJUSTING":
                 switch (commandType) {
@@ -333,8 +358,24 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         }
                         return;
+
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
+                        return;
                 }
-                break;
 
             case "POPULATING":
                 switch (commandType) {
@@ -354,11 +395,104 @@ public class TuiCommandFilter {
                         }
                         return;
 
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
+                        return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
+                        return;
+                }
+
+            case "EVENT":
+                switch (commandType) {
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    case "SHOWTRACK":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.showTrack(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
+                        return;
+                }
+
+            case "TRAVEL":
+                switch (commandType) {
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    case "SHOWTRACK":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.showTrack(commandParts);
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        return;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null) {
+                            System.out.println("Command not found");
+                        } else {
+                            System.out.println("Command not available in that phase");
+                        }
                         return;
                 }
         }

@@ -105,6 +105,16 @@
     "usage": "ShowShip <nickname>"
   },
   {
+    "name": "ShipStats",
+    "description": "Show player's spaceship stats.",
+    "usage": "ShipStats"
+  },
+  {
+    "name": "ShowTrack",
+    "description": "Show current track.",
+    "usage": "ShowTrack"
+  },
+  {
     "name": "Populate",
     "description": "Populate a component.",
     "usage": "Populate <Human/OrangeAlien/PurpleAlien> <x> <y>"

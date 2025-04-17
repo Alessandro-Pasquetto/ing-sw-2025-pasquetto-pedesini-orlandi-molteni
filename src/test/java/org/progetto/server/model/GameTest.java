@@ -1,10 +1,7 @@
 package org.progetto.server.model;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.Epidemic;
 import org.progetto.server.model.events.EventCard;
@@ -470,5 +467,54 @@ class GameTest {
         game.resetReadyPlayers();
 
         assertEquals(0, game.getNumReadyPlayers());
+    }
+
+    @Test
+    void scoreBoard() {
+        Game game = new Game(0,3,2);
+
+        Player p1 = new Player("alice",0,2);
+        Player p2 = new Player("matteo",1,2);
+        Player p3 = new Player("gianfranco",2,2);
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+
+        // Sets for each player his position
+        p1.setPosition(20);
+        p2.setPosition(15);
+        p3.setPosition(10);
+
+        // Sets for each player his exposed connectors
+        p1.getSpaceship().setExposedConnectorsCount(3);
+        p2.getSpaceship().setExposedConnectorsCount(2);
+        p3.getSpaceship().setExposedConnectorsCount(1);
+
+        // p2 left travel
+        p2.setHasLeft(true);
+
+        // Adds for each player his boxes
+        p1.getSpaceship().addBoxCount(1, Box.RED);
+        p1.getSpaceship().addBoxCount(1, Box.YELLOW);
+        p2.getSpaceship().addBoxCount(1, Box.YELLOW);
+        p3.getSpaceship().addBoxCount(1, Box.BLUE);
+
+        // Adds for each player his destroyed components count
+        p1.getSpaceship().addDestroyedCount(2);
+        p2.getSpaceship().addDestroyedCount(1);
+        p3.getSpaceship().addDestroyedCount(3);
+
+        ArrayList<Player> result = game.scoreBoard();
+
+        assertNotNull(result);
+
+        assertEquals(p1, result.get(0));
+        assertEquals(p2, result.get(2));
+        assertEquals(p3, result.get(1));
+
+        assertEquals(9, p1.getCredits());
+        assertEquals(1, p2.getCredits());
+        assertEquals(2, p3.getCredits());
     }
 }

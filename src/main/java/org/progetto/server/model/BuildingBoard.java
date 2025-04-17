@@ -1038,7 +1038,15 @@ public class BuildingBoard implements Serializable {
         deleteDisconnectedComponents(visited);
     }
 
-
+    /**
+     * Handles player decision on how to populate a specific housing unit
+     *
+     * @author Alessandro
+     * @param crewType
+     * @param xComponent
+     * @param yComponent
+     * @throws IllegalStateException
+     */
     public void populateComponent(String crewType, int xComponent, int yComponent) throws IllegalStateException{
 
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)

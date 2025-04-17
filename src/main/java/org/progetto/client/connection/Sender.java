@@ -55,6 +55,10 @@ public interface Sender {
 
     void showSpaceship(String owner);
 
+    void spaceshipStats();
+
+    void showTrack();
+
     void close();
 
     void responseHowManyDoubleCannons(int howManyWantToUse);

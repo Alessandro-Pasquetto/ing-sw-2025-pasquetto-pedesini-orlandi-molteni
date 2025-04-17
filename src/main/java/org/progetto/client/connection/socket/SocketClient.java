@@ -196,6 +196,15 @@ public class SocketClient implements Sender {
         SocketWriter.sendMessage(new RequestSpaceshipMessage(owner));
     }
 
+    @Override
+    public void spaceshipStats() {
+        SocketWriter.sendMessage("SpaceshipStats");
+    }
+
+    @Override
+    public void showTrack() {
+        SocketWriter.sendMessage("ShowTrack");
+    }
 
     @Override
     public void close() {

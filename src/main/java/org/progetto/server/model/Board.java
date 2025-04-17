@@ -74,8 +74,6 @@ public class Board {
      */
     public synchronized void addTraveler(Player player) {
 
-        System.out.println("Adding traveler " + player.getName());
-
         if (travelers.contains(player)){
             throw new IllegalStateException("PlayerIsAlreadyATraveler");
         }

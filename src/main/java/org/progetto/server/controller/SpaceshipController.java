@@ -3,11 +3,13 @@ package org.progetto.server.controller;
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Spaceship.UpdatedSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
@@ -37,6 +39,27 @@ public class SpaceshipController {
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
             sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner.getName()));
+
+        }catch (IllegalStateException e) {
+            if(e.getMessage().equals("PlayerNameNotFound"))
+                sender.sendMessage("PlayerNameNotFound");
+        }
+    }
+
+    /**
+     * Sends the spaceship to the player that request it
+     *
+     * @author Gabriele
+     * @param gameManager of the current game
+     * @param player owner of the spaceship requested
+     * @throws RemoteException
+     */
+    public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        try {
+            Spaceship spaceship = player.getSpaceship();
+            sender.sendMessage(new ResponseSpaceshipStatsMessage(spaceship));
+
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))
                 sender.sendMessage("PlayerNameNotFound");

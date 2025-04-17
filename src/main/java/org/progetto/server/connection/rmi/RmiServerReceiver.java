@@ -1,6 +1,7 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.client.tui.GameCommands;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.GameController;
@@ -452,6 +453,27 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     public void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         SpaceshipController.showSpaceship(gameManager, owner, virtualClient);
+    }
+
+    @Override
+    public void spaceshipStats(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        SpaceshipController.spaceshipStats(gameManager, player, virtualClient);
+    }
+
+    @Override
+    public void showTrack(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        GameController.showTrack(gameManager, virtualClient);
     }
 
     @Override

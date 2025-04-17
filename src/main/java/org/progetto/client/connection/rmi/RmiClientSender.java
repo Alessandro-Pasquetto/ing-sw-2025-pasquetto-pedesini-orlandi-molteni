@@ -292,6 +292,24 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void spaceshipStats() {
+        try{
+            server.spaceshipStats(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void showTrack() {
+        try{
+            server.showTrack(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void close() {
         server = null;
         System.out.println("You have disconnected!");

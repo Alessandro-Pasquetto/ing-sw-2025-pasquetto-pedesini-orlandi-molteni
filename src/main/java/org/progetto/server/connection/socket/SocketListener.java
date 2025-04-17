@@ -243,6 +243,14 @@ public class SocketListener extends Thread {
                             BuildingController.showBookedComponents(gameManager, player, socketWriter);
                             break;
 
+                        case "SpaceshipStats":
+                            SpaceshipController.spaceshipStats(gameManager, player, socketWriter);
+                            break;
+
+                        case "ShowTrack":
+                            GameController.showTrack(gameManager, socketWriter);
+                            break;
+
                         case "ResetTimer":
                             BuildingController.resetTimer(gameManager, socketWriter);
                             break;

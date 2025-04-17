@@ -2,16 +2,15 @@ package org.progetto.client.connection;
 
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
-import org.progetto.client.tui.BuildingCommands;
-import org.progetto.client.tui.EventCommands;
-import org.progetto.client.tui.GameCommands;
-import org.progetto.client.tui.TuiCommandFilter;
+import org.progetto.client.tui.*;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+
 import java.util.ArrayList;
 
 /**
@@ -45,31 +44,44 @@ public class TuiHandlerMessage {
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
         }
 
+        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
+            System.out.println(responseSpaceshipMessage.getOwner() + "'s spaceship:");
+            TuiPrinters.printSpaceship(responseSpaceshipMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {
+            TuiPrinters.printSpaceshipStats(responseSpaceshipStatsMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof ResponseTrackMessage responseTrackMessage) {
+            TuiPrinters.printTrack(responseTrackMessage.getTravelers(), responseTrackMessage.getTrack());
+        }
+
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
             System.out.println("Current Hand Component:");
-            BuildingCommands.printComponent(showHandComponentMessage.getHandComponent());
+            TuiPrinters.printComponent(showHandComponentMessage.getHandComponent());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
             System.out.println("New component picked:");
-            BuildingCommands.printComponent(pickedComponentMessage.getPickedComponent());
+            TuiPrinters.printComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
             System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " );
-            BuildingCommands.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
+            TuiPrinters.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
         }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
-            BuildingCommands.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
+            TuiPrinters.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
         }
 
         else if (messageObj instanceof ShowBookedComponentsMessage pickedBookedComponentsMessage) {
-            BuildingCommands.printBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
+            TuiPrinters.printBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
         else if (messageObj instanceof PickedUpEventCardDeckMessage pickedUpEventCardDeckMessage) {
-            EventCommands.printEventCardDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
+            TuiPrinters.printEventCardDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
         }
 
         else if (messageObj instanceof AnotherPlayerPickedUpEventCardDeck anotherPlayerPickedUpEventCardDeck) {
@@ -90,12 +102,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
-            EventCommands.printEventCard(pickedEventCardMessage.getEventCard());
-        }
-
-        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
-            System.out.println(responseSpaceshipMessage.getOwner() + "'s spaceship:");
-            GameCommands.printSpaceship(responseSpaceshipMessage.getSpaceship());
+            TuiPrinters.printEventCard(pickedEventCardMessage.getEventCard());
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -232,12 +239,10 @@ public class TuiHandlerMessage {
 
                 case "NotValidSpaceShip":
                     System.out.println("Your spaceship is trash, fix it!");
-                    TuiCommandFilter.setFixing(true);
                     break;
 
                 case "ValidSpaceShip":
                     System.out.println("Your spaceship is pretty good, you're ready to go!");
-                    TuiCommandFilter.setFixing(false);
                     break;
 
                 default:
