@@ -293,14 +293,13 @@ public class MeteorsRainController extends EventControllerAbstract {
                 // Asks current player if he wants to use a protection
                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                if (meteors.getFirst().getSize().equals(ProjectileSize.SMALL)) {
+                if (meteors.getFirst().getSize().equals(ProjectileSize.SMALL))
                     sender.sendMessage("AskToUseShield");
-                } else {
+                else
                     sender.sendMessage("AskToUseDoubleCannon");
-                }
-            }
 
-            phase = EventPhase.PROTECTION_DECISION;
+                phase = EventPhase.PROTECTION_DECISION;
+            }
         }
     }
 
@@ -313,6 +312,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
+    @Override
     public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.PROTECTION_DECISION)) {
 
@@ -374,7 +374,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public synchronized void receiveProtectionBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    @Override
+    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (phase.equals( EventPhase.PROTECTION_BATTERY)) {
 
             // Checks if the player that calls the methods has to discard a battery to activate protection

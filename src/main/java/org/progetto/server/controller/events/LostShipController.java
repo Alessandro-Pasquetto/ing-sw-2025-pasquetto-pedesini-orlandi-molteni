@@ -86,7 +86,8 @@ public class LostShipController extends EventControllerAbstract  {
      * @param sender
      * @throws RemoteException
      */
-    public void getRewardDecision(Player player, String response, Sender sender) throws RemoteException {
+    @Override
+    public void receiveRewardAndPenaltiesDecision(Player player, String response, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.REWARD_DECISION)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -156,6 +157,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @param sender
      * @throws RemoteException
      */
+    @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.DISCARDED_CREW)) {
 

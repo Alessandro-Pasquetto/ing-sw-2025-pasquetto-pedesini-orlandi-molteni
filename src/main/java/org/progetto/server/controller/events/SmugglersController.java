@@ -122,6 +122,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
+    @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
@@ -174,7 +175,8 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+    @Override
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -196,6 +198,45 @@ public class SmugglersController extends EventControllerAbstract {
 
                         } else {
                             sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+                        }
+
+                    } else {
+                        sender.sendMessage("NotEnoughBatteries");
+                    }
+
+                } else {
+                    sender.sendMessage("InvalidCoordinates");
+                }
+
+            } else {
+                sender.sendMessage("NotYourTurn");
+            }
+
+        } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+
+            // Checks if the player that calls the methods is also the current one in the controller
+            if (player.equals(gameManager.getGame().getActivePlayer())) {
+
+                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+
+                    // Checks if a battery has been discarded
+                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                        requestedBoxes--;
+                        sender.sendMessage("BatteryDiscarded");
+
+                        if (requestedBoxes == 0) {
+                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
+
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
+
+                        } else {
+                            // Ask for new battery to discard
+                            phase = EventPhase.PENALTY_EFFECT;
+                            penaltyEffect(player, sender);
                         }
 
                     } else {
@@ -306,6 +347,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
+    @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.DISCARDED_BOXES)) {
 
@@ -336,61 +378,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                     } else {
                         sender.sendMessage("NotEnoughBoxes");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
-        }
-    }
-
-    /**
-     * Receives the coordinates of BatteryStorage component from which remove a battery
-     *
-     * @author Stefano
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
-     * @throws RemoteException
-     */
-    public void receiveDiscardedBatteriesForBoxes(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
-
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
-
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-
-                    // Checks if a battery has been discarded
-                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBoxes--;
-                        sender.sendMessage("BatteryDiscarded");
-
-                        if (requestedBoxes == 0) {
-                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
-
-                        } else {
-                            // Ask for new battery to discard
-                            phase = EventPhase.PENALTY_EFFECT;
-                            penaltyEffect(player, sender);
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
                     }
 
                 } else {
@@ -452,11 +439,16 @@ public class SmugglersController extends EventControllerAbstract {
      * Update the player's view with the new list of available boxes
      *
      * @author Gabriele
-     * @param player
+     * @param player that choose the box
+     * @param idxBox chosen
+     * @param y coordinate of the component were the box will be placed
+     * @param x coordinate of the component were the box will be placed
+     * @param idx is where the player want to insert the chosen box
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, int idxBox, int y, int x, int idx, Sender sender) throws RemoteException {
+    @Override
+    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {

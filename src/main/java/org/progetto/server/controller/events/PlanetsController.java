@@ -101,7 +101,8 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDecisionToLand(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException, InterruptedException {
+    @Override
+    public void receiveDecisionToLandPlanet(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException, InterruptedException {
         if (phase.equals(EventPhase.LAND)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -164,7 +165,8 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, int idxBox, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
+    @Override
+    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box

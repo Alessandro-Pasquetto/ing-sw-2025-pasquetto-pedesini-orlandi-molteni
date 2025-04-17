@@ -139,6 +139,7 @@ public class PiratesController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
+    @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CANNON_NUMBER)) {
 
@@ -191,7 +192,8 @@ public class PiratesController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+    @Override
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -487,7 +489,8 @@ public class PiratesController extends EventControllerAbstract {
      * @throws RemoteException
      * @throws InterruptedException
      */
-    public synchronized void receiveShieldDecision(Player player, String response, Sender sender) throws RemoteException, InterruptedException {
+    @Override
+    public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SHIELD_DECISION)) {
 
             // Checks if it is not part of non-protected player, and it is not already contained in protected one list

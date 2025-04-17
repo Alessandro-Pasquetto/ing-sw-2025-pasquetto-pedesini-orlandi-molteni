@@ -101,7 +101,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    public void receiveHowManyDoubleEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
+    @Override
+    public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.ENGINE_NUMBER)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -145,7 +146,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @param sender
      * @throws RemoteException
      */
-    public void receiveDiscardedBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    @Override
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller

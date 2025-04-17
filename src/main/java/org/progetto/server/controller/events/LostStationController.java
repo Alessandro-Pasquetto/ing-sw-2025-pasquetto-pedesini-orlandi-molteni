@@ -89,6 +89,7 @@ public class LostStationController extends EventControllerAbstract {
      * @param decision
      * @throws RemoteException
      */
+    @Override
     public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.LAND)) {
 
@@ -133,13 +134,14 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      * @param player that choose the box
      * @param idxBox chosen
-     * @param y coordinate of the component were the box will be placed
      * @param x coordinate of the component were the box will be placed
+     * @param y coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender
      * @throws RemoteException
      */
-    public void receiveRewardBox(Player player, int idxBox, int y, int x, int idx, Sender sender) throws RemoteException, IllegalStateException {
+    @Override
+    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box

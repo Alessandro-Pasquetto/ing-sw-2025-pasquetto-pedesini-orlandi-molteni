@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.*;
+import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
 import java.io.IOException;
@@ -315,7 +316,208 @@ public class SocketListener extends Thread {
                 break;
 
             case EVENT:
-                if (messageObj instanceof String messageString) {
+
+                if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
+                    int howManyWantToUse = responseHowManyDoubleCannonsMessage.getHowManyWantToUse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseHowManyDoubleEnginesMessage responseHowManyDoubleEnginesMessage) {
+                    int howManyWantToUse = responseHowManyDoubleEnginesMessage.getHowManyWantToUse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseBatteryToDiscardMessage responseBatteryToDiscardMessage) {
+                    int xBatteryStorage = responseBatteryToDiscardMessage.getXBatteryStorage();
+                    int yBatteryStorage = responseBatteryToDiscardMessage.getYBatteryStorage();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseCrewToDiscardMessage responseCrewToDiscardMessage){
+                    int xHousingUnit = responseCrewToDiscardMessage.getXHousingUnit();
+                    int yHousingUnit = responseCrewToDiscardMessage.getYHousingUnit();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseBoxToDiscardMessage responseBoxToDiscardMessage){
+                    int idx = responseBoxToDiscardMessage.getIdx();
+                    int xBoxStorage = responseBoxToDiscardMessage.getXBoxStorage();
+                    int yBoxStorage = responseBoxToDiscardMessage.getYBoxStorage();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseChooseToUseShieldMessage responseChooseToUseShieldMessage){
+                    String response = responseChooseToUseShieldMessage.getResponse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveProtectionDecision(player, response, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseUseDoubleCannonRequestMessage responseUseDoubleCannonRequestMessage){
+                    String response = responseUseDoubleCannonRequestMessage.getResponse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveProtectionDecision(player, response, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltiesMessage responseAcceptRewardCreditsAndPenaltiesMessage){
+                    String response = responseAcceptRewardCreditsAndPenaltiesMessage.getResponse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveRewardAndPenaltiesDecision(player, response, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseLandRequestMessage responseLandRequestMessage){
+                    String response = responseLandRequestMessage.getResponse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveDecisionToLand(player, response, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltyDaysMessage responseAcceptRewardCreditsAndPenaltyDaysMessage){
+                    String response = responseAcceptRewardCreditsAndPenaltyDaysMessage.getResponse();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveRewardDecision(player, response, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
+                    String response = responsePlanetLandRequestMessage.getResponse();
+                    int planetIdx = responsePlanetLandRequestMessage.getIdx();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveDecisionToLandPlanet(player, response, planetIdx, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if(messageObj instanceof ResponseRewardBoxMessage responseRewardBoxMessage){
+                    int idxBox = responseRewardBoxMessage.getIdxBox();
+                    int idx = responseRewardBoxMessage.getIdx();
+                    int xBoxStorage = responseRewardBoxMessage.getXBoxStorage();
+                    int yBoxStorage = responseRewardBoxMessage.getYBoxStorage();
+
+                    EventControllerAbstract eventController = gameManager.getEventController();
+                    if(eventController == null){
+                        socketWriter.sendMessage("EventControllerNull");
+                        return;
+                    }
+
+                    try {
+                        eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                else if (messageObj instanceof String messageString) {
                     switch (messageString){
                         case "RollDice":
                             gameManager.getEventController().rollDice(player, socketWriter);
@@ -325,6 +527,7 @@ public class SocketListener extends Thread {
                             break;
                     }
                 }
+
                 break;
 
             case ENDGAME:

@@ -3,12 +3,10 @@ package org.progetto.server.connection.rmi;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.client.tui.GameCommands;
 import org.progetto.messages.toClient.GameInfoMessage;
-import org.progetto.server.controller.BuildingController;
-import org.progetto.server.controller.GameController;
+import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
-import org.progetto.server.controller.LobbyController;
-import org.progetto.server.controller.SpaceshipController;
+import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
 import java.rmi.RemoteException;
@@ -435,21 +433,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException, InterruptedException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
-            return;
-        }
-
-        gameManager.getEventController().rollDice(player, virtualClient);
-    }
-
-    @Override
     public void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         SpaceshipController.showSpaceship(gameManager, owner, virtualClient);
@@ -477,6 +460,21 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException, InterruptedException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        gameManager.getEventController().rollDice(player, virtualClient);
+    }
+
+    @Override
     public void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
@@ -488,7 +486,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -503,7 +511,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -518,7 +536,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -533,7 +561,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -548,7 +586,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -563,82 +611,17 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
-    }
-
-    @Override
-    public void responseAcceptRewardCreditsAndPenalties(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
             return;
         }
 
-        //todo
-    }
-
-    @Override
-    public void responseLandRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
-            return;
+        try {
+            eventController.receiveProtectionDecision(player, response, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        //todo
-    }
-
-    @Override
-    public void responseAcceptRewardCreditsAndPenaltyDays(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
-            return;
-        }
-
-        //todo
-    }
-
-    @Override
-    public void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, String response, int idx) throws RemoteException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
-            return;
-        }
-
-        //todo
-    }
-
-    @Override
-    public void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
-        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
-        Player player = null;
-        try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("PlayerNotFound"))
-                virtualClient.sendMessage("PlayerNotFound");
-            return;
-        }
-
-        //todo
     }
 
     @Override
@@ -653,7 +636,141 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        //todo
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveProtectionDecision(player, response, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @Override
+    public void responseAcceptRewardCreditsAndPenalties(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responseLandRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveDecisionToLand(player, response, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responseAcceptRewardCreditsAndPenaltyDays(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveRewardDecision(player, response, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, String response, int planetIdx) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveDecisionToLandPlanet(player, response, planetIdx, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
