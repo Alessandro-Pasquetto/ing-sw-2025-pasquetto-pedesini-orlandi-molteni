@@ -50,6 +50,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
@@ -63,6 +65,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Asks current player how many double engines he wants to use
      *
      * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_ENGINES)) {
@@ -100,6 +104,10 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Receives numbers of double engines to use
      *
      * @author Gabriele
+     * @param player current player
+     * @param num number of double engines player want to use
+     * @param sender current sender
+     * @throws RemoteException
      */
     @Override
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
@@ -140,10 +148,10 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Receives the coordinates of BatteryStorage component from which remove a battery
      *
      * @author Gabriele
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
+     * @param player current player
+     * @param xBatteryStorage x coordinate of chosen battery storage
+     * @param yBatteryStorage y coordinate of chosen battery storage
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override

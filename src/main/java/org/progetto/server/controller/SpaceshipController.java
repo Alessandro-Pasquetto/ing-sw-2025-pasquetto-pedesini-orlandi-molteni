@@ -99,7 +99,7 @@ public class SpaceshipController {
      * @param endY coordinate of final component
      * @param endX coordinate of final component
      * @param endIdx box index of final component
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void moveBox(GameManager gameManager, Player player, int startY, int startX, int startIdx, int endY, int endX, int endIdx, Sender sender) throws RemoteException {
@@ -173,12 +173,12 @@ public class SpaceshipController {
      * Handles the player decision to remove a box
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param storageY
-     * @param storageX
-     * @param idx
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param storageY y coordinate of chosen box storage
+     * @param storageX x coordinate of chosen box storage
+     * @param idx idx of chosen box storage
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void removeBox(GameManager gameManager, Player player, int storageY, int storageX, int idx, Sender sender) throws RemoteException {
@@ -222,7 +222,7 @@ public class SpaceshipController {
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
@@ -258,7 +258,7 @@ public class SpaceshipController {
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void destroyComponentWithoutAnyCheck(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
@@ -287,7 +287,9 @@ public class SpaceshipController {
      * @author Alessandro
      * @param gameManager of the current game
      * @param player that needs to fix the spaceship
-     * @param sender
+     * @param xComponent x coordinate of chosen component
+     * @param yComponent y coordinate of chosen component
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {

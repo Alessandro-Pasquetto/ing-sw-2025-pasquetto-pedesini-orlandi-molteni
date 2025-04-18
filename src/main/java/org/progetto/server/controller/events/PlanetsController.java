@@ -58,6 +58,8 @@ public class PlanetsController extends EventControllerAbstract {
      *
      * @author Lorenzo
      * @throws RemoteException
+     * @throws IllegalStateException
+     * @throws InterruptedException
      */
     private void askForLand() throws RemoteException, IllegalStateException, InterruptedException {
         if (phase.equals(EventPhase.ASK_TO_LAND)) {
@@ -95,14 +97,15 @@ public class PlanetsController extends EventControllerAbstract {
      * Send the available boxes to that player
      *
      * @author Gabriele
-     * @param player
-     * @param decision
+     * @param player current player
+     * @param decision player's decision
      * @param planetIdx is the index of the planet chosen
-     * @param sender
+     * @param sender current player
      * @throws RemoteException
+     * @throws IllegalStateException
      */
     @Override
-    public void receiveDecisionToLandPlanet(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException, InterruptedException {
+    public void receiveDecisionToLandPlanet(Player player, String decision, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.LAND)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -162,8 +165,9 @@ public class PlanetsController extends EventControllerAbstract {
      * @param y coordinate of the component were the box will be placed
      * @param x coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
+     * @throws IllegalStateException
      */
     @Override
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
@@ -220,12 +224,11 @@ public class PlanetsController extends EventControllerAbstract {
      * Function called if the player wants to leave
      *
      * @author Gabriele
-     * @param player
-     * @param sender
-     * @throws RemoteException
+     * @param player current player
+     * @param sender current sender
      * @throws IllegalStateException
      */
-    private void leavePlanet(Player player, Sender sender) throws RemoteException,IllegalStateException {
+    private void leavePlanet(Player player, Sender sender) throws IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to leave planet
@@ -243,6 +246,7 @@ public class PlanetsController extends EventControllerAbstract {
      * Calculate the penalty for each landed player
      *
      * @author Lorenzo
+     * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {

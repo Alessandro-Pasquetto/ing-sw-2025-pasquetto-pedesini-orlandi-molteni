@@ -53,6 +53,7 @@ public class SlaversController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
@@ -67,6 +68,7 @@ public class SlaversController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
@@ -124,9 +126,10 @@ public class SlaversController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param num
-     * @param sender
+     * @param num number of double cannons player want to use
+     * @param sender current player
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
@@ -175,11 +178,12 @@ public class SlaversController extends EventControllerAbstract {
      * Receives the coordinates of BatteryStorage component from which remove a battery
      *
      * @author Stefano
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
+     * @param player current player
+     * @param xBatteryStorage x coordinate of chosen battery storage
+     * @param yBatteryStorage y coordinate of chosen battery storage
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
@@ -227,9 +231,10 @@ public class SlaversController extends EventControllerAbstract {
      * Check the result of the battle and goes to a new phase based on the result
      *
      * @author Stefano
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
@@ -270,11 +275,11 @@ public class SlaversController extends EventControllerAbstract {
      * If the player is defeated he suffers the penalty
      *
      * @author Stefano
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException, InterruptedException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             if (player.equals(gameManager.getGame().getActivePlayer())) {
@@ -296,14 +301,14 @@ public class SlaversController extends EventControllerAbstract {
      * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
-     * @param player
-     * @param xHousingUnit
-     * @param yHousingUnit
-     * @param sender
+     * @param player current player
+     * @param xHousingUnit x coordinate of chosen housing unit
+     * @param yHousingUnit y coordinate of chosen housing unit
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.DISCARDED_CREW)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -349,9 +354,9 @@ public class SlaversController extends EventControllerAbstract {
      * Receives response for rewardPenalty
      *
      * @author Stefano
-     * @param player
-     * @param response
-     * @param sender
+     * @param player current player
+     * @param response player's response
+     * @param sender current sender
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {

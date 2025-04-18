@@ -70,6 +70,7 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
@@ -84,6 +85,7 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
@@ -142,9 +144,10 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player current player
-     * @param num
-     * @param sender
+     * @param num number of cannons player want to use
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
@@ -193,11 +196,12 @@ public class PiratesController extends EventControllerAbstract {
      * Receives the coordinates of BatteryStorage component from which remove a battery
      *
      * @author Gabriele
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
+     * @param player current player
+     * @param xBatteryStorage x coordinate of chosen battery storage
+     * @param yBatteryStorage y coordinate of chosen battery storage
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
@@ -245,11 +249,11 @@ public class PiratesController extends EventControllerAbstract {
      * Check the result of the battle and goes to a new phase based on the result
      *
      * @author Gabriele
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
+    private void battleResult(Player player, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -289,9 +293,9 @@ public class PiratesController extends EventControllerAbstract {
      * Receives response for rewardPenalty
      *
      * @author Gabriele
-     * @param player
-     * @param response
-     * @param sender
+     * @param player current player
+     * @param response player's response
+     * @param sender current sender
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
@@ -358,6 +362,7 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void handleDefeatedPlayers() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.HANDLE_DEFEATED_PLAYERS)) {
@@ -415,9 +420,10 @@ public class PiratesController extends EventControllerAbstract {
      * Rolls dice and collects the result
      *
      * @author Gabriele
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException, InterruptedException {
@@ -455,6 +461,8 @@ public class PiratesController extends EventControllerAbstract {
      * Asks defeated players if they want to use shields to protect
      *
      * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askToUseShields() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_SHIELDS)) {
@@ -490,9 +498,9 @@ public class PiratesController extends EventControllerAbstract {
      * Receives player's decision about the usage of a shield
      *
      * @author Gabriele
-     * @param player
-     * @param response
-     * @param sender
+     * @param player current player
+     * @param response player's response
+     * @param sender current sender
      * @throws RemoteException
      * @throws InterruptedException
      */
@@ -553,11 +561,12 @@ public class PiratesController extends EventControllerAbstract {
      * Receives the coordinates of BatteryStorage component from which remove a battery to activate shield
      *
      * @author Gabriele
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
+     * @param player current player
+     * @param xBatteryStorage x coordinate of chosen battery storage
+     * @param yBatteryStorage y coordinate of chosen battery storage
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     public synchronized void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SHIELD_BATTERY)) {
@@ -604,7 +613,7 @@ public class PiratesController extends EventControllerAbstract {
      * @author Gabriele
      * @throws RemoteException
      */
-    private void handleShot() throws RemoteException, InterruptedException {
+    private void handleShot() throws RemoteException {
         if (phase.equals(EventPhase.HANDLE_SHOT)) {
 
             Game game = gameManager.getGame();

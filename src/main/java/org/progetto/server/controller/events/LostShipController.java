@@ -81,9 +81,9 @@ public class LostShipController extends EventControllerAbstract  {
      * Receives response for rewardPenalty
      *
      * @author Stefano
-     * @param player
-     * @param response
-     * @param sender
+     * @param player current player
+     * @param response player's response
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -124,8 +124,8 @@ public class LostShipController extends EventControllerAbstract  {
      * If the player accept, he suffers the penalty
      *
      * @author Stefano
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     public void penaltyEffect(Player player, Sender sender) throws RemoteException {
@@ -151,10 +151,10 @@ public class LostShipController extends EventControllerAbstract  {
      * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
-     * @param player
-     * @param xHousingUnit
-     * @param yHousingUnit
-     * @param sender
+     * @param player current player
+     * @param xHousingUnit x coordinate of chosen housing unit
+     * @param yHousingUnit y coordinate of chosen housing unit
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override

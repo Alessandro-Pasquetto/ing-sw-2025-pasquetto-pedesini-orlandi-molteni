@@ -38,6 +38,7 @@ public class EpidemicController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
+     * @throws RemoteException
      */
     @Override
     public void start() throws RemoteException {
@@ -51,6 +52,7 @@ public class EpidemicController extends EventControllerAbstract {
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
+     * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {

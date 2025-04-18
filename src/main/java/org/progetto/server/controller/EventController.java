@@ -27,6 +27,8 @@ public class EventController {
      * @author Lorenzo
      * @param gameManager is the class that manage the current game
      * @throws RemoteException if the eventCard can't be picked
+     * @throws IllegalStateException
+     * @throws InterruptedException
      */
     public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
 
@@ -39,7 +41,7 @@ public class EventController {
      * Checks if there is any defeated player
      *
      * @author Gabriele
-     * @param gameManager
+     * @param gameManager current gameManager
      * @throws RemoteException
      * @throws IllegalStateException
      * @throws InterruptedException
@@ -83,10 +85,10 @@ public class EventController {
      * Handles player decision to leave travel
      *
      * @author Gabriele
-     * @param gameManager
-     * @param response
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param response player's response
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void chooseToLeaveTravel(GameManager gameManager, String response, Player player, Sender sender) throws RemoteException {

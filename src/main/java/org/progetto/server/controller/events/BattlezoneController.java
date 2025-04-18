@@ -64,6 +64,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
@@ -78,6 +79,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void condition() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CONDITION)) {
@@ -111,6 +113,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void chooseFewerCrew() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CREW_COUNT)) {
@@ -127,6 +130,8 @@ public class BattlezoneController extends EventControllerAbstract {
      * Asks current player how many double engines he wants to use
      *
      * @author Stefano
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_ENGINES)) {
@@ -164,6 +169,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * Receives numbers of double engines to use
      *
      * @author Stefano
+     * @param player current player
+     * @param num number of double engines player want to use
+     * @param sender current sender
+     * @throws RemoteException
      */
     @Override
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
@@ -205,6 +214,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
@@ -243,8 +253,8 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param num
-     * @param sender
+     * @param num number of cannon player want to use
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -293,10 +303,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * Receives the coordinates of BatteryStorage component from which remove a battery
      *
      * @author Stefano
-     * @param player
-     * @param xBatteryStorage
-     * @param yBatteryStorage
-     * @param sender
+     * @param player current player
+     * @param xBatteryStorage x coordinate of chosen battery storage
+     * @param yBatteryStorage y coordinate of chosen battery storage
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -425,6 +435,8 @@ public class BattlezoneController extends EventControllerAbstract {
      * Finds player with less engine power
      *
      * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     private void chooseWeakestEngines() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CHOOSE_WEAKEST_ENGINES)) {
@@ -455,6 +467,8 @@ public class BattlezoneController extends EventControllerAbstract {
      * Finds player with less firepower
      *
      * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
      */
     private void chooseWeakestCannons() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.CHOOSE_WEAKEST_CANNONS)) {
@@ -486,6 +500,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     public void penalty() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY)) {
@@ -533,6 +548,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void penaltyDays() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_DAYS)) {
@@ -563,6 +579,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void penaltyCrew() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_CREW)) {
@@ -594,11 +611,12 @@ public class BattlezoneController extends EventControllerAbstract {
      * Receives the coordinates of HousingUnit component from which remove a crew member
      *
      * @author Stefano
-     * @param player
-     * @param xHousingUnit
-     * @param yHousingUnit
-     * @param sender
+     * @param player current player
+     * @param xHousingUnit x coordinate of chosen housing unit
+     * @param yHousingUnit y coordinate of chosen housing unit
+     * @param sender current sender
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException, InterruptedException {
@@ -648,6 +666,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void penaltyBoxes() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_BOXES)) {
@@ -693,10 +712,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * Receives the coordinates of BoxStorage component from which remove a crew member
      *
      * @author Stefano
-     * @param player
-     * @param xBoxStorage
-     * @param yBoxStorage
-     * @param sender
+     * @param player current player
+     * @param xBoxStorage x coordinate of chosen box storage
+     * @param yBoxStorage y coordinate of chosen box storage
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -769,6 +788,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void penaltyShot() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_SHOTS)) {
@@ -799,6 +819,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void askToRollDice() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
@@ -821,8 +842,8 @@ public class BattlezoneController extends EventControllerAbstract {
      * Rolls dice and collects the result
      *
      * @author Stefano
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -886,9 +907,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Receives shield decision
      *
      * @author Gabriele
-     * @param player
-     * @param response
-     * @param sender
+     * @param player current player
+     * @param response player's response
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override

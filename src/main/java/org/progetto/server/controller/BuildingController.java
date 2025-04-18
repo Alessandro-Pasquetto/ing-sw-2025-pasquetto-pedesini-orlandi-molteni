@@ -27,9 +27,10 @@ public class BuildingController {
      * Handles player decision to show hand component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void showHandComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
@@ -61,9 +62,10 @@ public class BuildingController {
      * Handles player decision to pick a hidden component
      *
      * @author Alessandro
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void pickHiddenComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
@@ -96,9 +98,9 @@ public class BuildingController {
      * Handles player decision to show visible components
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void showVisibleComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
@@ -125,10 +127,11 @@ public class BuildingController {
      * Handles player decision to pick a visible component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param componentIdx
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param componentIdx idx of the visible component's array
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, Sender sender) throws RemoteException{
 
@@ -160,12 +163,13 @@ public class BuildingController {
      * Place component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void placeComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
@@ -201,12 +205,13 @@ public class BuildingController {
      * Place last component
      *
      * @author Alessandro
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void placeLastComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
@@ -235,12 +240,13 @@ public class BuildingController {
      * Handles player decision to pick hidden component, and place current hand component
      *
      * @author Alessandro
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
@@ -286,13 +292,14 @@ public class BuildingController {
      * Handles player decision to pick visible component, and place current hand component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param idxVisibleComponent
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param idxVisibleComponent idx of visible component's array
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
 
@@ -341,13 +348,14 @@ public class BuildingController {
      * Handles player decision to pick-up a specific eventCard deck, and place current hand component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param deckIdx
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param deckIdx idx of event card deck
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
 
@@ -391,13 +399,13 @@ public class BuildingController {
      * Handles player decision to pick a booked component, and place current hand component
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param idx
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param idx idx of booked component's array
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
@@ -449,12 +457,12 @@ public class BuildingController {
      * Try to place component and set player as ready
      *
      * @author Alessandro
-     * @param gameManager
-     * @param player
-     * @param xPlaceComponent
-     * @param yPlaceComponent
-     * @param rPlaceComponent
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param xPlaceComponent x coordinate of the position in the spaceship matrix
+     * @param yPlaceComponent y coordinate of the position in the spaceship matrix
+     * @param rPlaceComponent rotation
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void placeHandComponentAndReady(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
@@ -496,9 +504,9 @@ public class BuildingController {
      * Set player as ready in building
      *
      * @author Alessandro
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException{
@@ -526,7 +534,8 @@ public class BuildingController {
      * @author Lorenzo
      * @param gameManager is the class that manage the current game
      * @param player is the one that want to discard a cart
-     * @param sender
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void discardComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
@@ -562,7 +571,8 @@ public class BuildingController {
      * @param gameManager is the class that manage the current game
      * @param player is the one that want to discard a cart
      * @param idx where the booked component will be inserted
-     * @param sender
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void bookComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
@@ -596,9 +606,9 @@ public class BuildingController {
      * Handles player decision to show booked components
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     public static void showBookedComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
@@ -628,7 +638,8 @@ public class BuildingController {
      * @param gameManager is the class that manage the current game
      * @param player that want to pick a booked component
      * @param idx of the component to pick
-     * @param sender
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void pickBookedComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
@@ -663,10 +674,11 @@ public class BuildingController {
      * Handles player decision to pick-up a specific eventCard deck
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param deckIdx
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param deckIdx idx of event card deck
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, Sender sender) throws RemoteException {
 
@@ -709,9 +721,10 @@ public class BuildingController {
      * Handles player decision to put-down a current eventCard deck
      *
      * @author Gabriele
-     * @param gameManager
-     * @param player
-     * @param sender
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void putDownEventCardDeck(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
@@ -742,8 +755,9 @@ public class BuildingController {
      * Resets timer
      *
      * @author Alessandro
-     * @param gameManager
-     * @param sender
+     * @param gameManager current gameManager
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void resetTimer(GameManager gameManager, Sender sender) throws RemoteException{
         try {
@@ -759,7 +773,7 @@ public class BuildingController {
      * If it's valid, it adds the player to the travelers
      *
      * @author Alessandro
-     * @param gameManager
+     * @param gameManager current gameManager
      * @return areAllValid
      */
     public static boolean checkAllNotReadyStartShipValidity(GameManager gameManager) {
@@ -806,7 +820,7 @@ public class BuildingController {
      * Try to initialize all spaceship
      *
      * @author Alessandro
-     * @param game
+     * @param game current game
      * @return areAllInit
      */
     public static boolean initializeAllSpaceship(Game game){

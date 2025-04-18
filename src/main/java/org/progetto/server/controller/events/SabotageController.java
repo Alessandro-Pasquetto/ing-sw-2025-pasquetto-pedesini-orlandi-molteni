@@ -103,8 +103,8 @@ public class SabotageController extends EventControllerAbstract{
      * Rolls dice and collects the result
      *
      * @author Gabriele
-     * @param player
-     * @param sender
+     * @param player current player
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -148,7 +148,7 @@ public class SabotageController extends EventControllerAbstract{
      * Tries to apply event effect to penalized player
      *
      * @author Gabriele
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     private void eventEffect(Sender sender) throws RemoteException {
@@ -198,7 +198,7 @@ public class SabotageController extends EventControllerAbstract{
      * Send a message of end card to all players
      *
      * @author Gabriele
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     private void end(Sender sender) throws RemoteException {

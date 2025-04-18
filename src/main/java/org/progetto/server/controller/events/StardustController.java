@@ -53,6 +53,7 @@ public class StardustController extends EventControllerAbstract {
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
+     * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {

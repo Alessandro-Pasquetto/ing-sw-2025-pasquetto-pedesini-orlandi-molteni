@@ -63,6 +63,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
@@ -77,6 +78,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
+     * @throws InterruptedException
      */
     private void sendMeteor() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.SEND_METEOR)) {
@@ -131,7 +133,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player is the one that needs to trow the dices
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -284,6 +286,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Asks players if they want to protect (shield or double cannon)
      *
      * @author Gabriele
+     * @throws RemoteException
      */
     private void askToProtect() throws RemoteException {
         if (phase.equals(EventPhase.ASK_TO_PROTECT)) {
@@ -309,7 +312,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @author Gabriele
      * @param player is the one that send the decision
      * @param response is the given decision
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override
@@ -371,7 +374,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @param player that send the decision about the battery position
      * @param xBatteryStorage coordinate of the storage
      * @param yBatteryStorage coordinate of the storage
-     * @param sender
+     * @param sender current sender
      * @throws RemoteException
      */
     @Override

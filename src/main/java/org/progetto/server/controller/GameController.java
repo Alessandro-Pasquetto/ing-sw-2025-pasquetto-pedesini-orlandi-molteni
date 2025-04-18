@@ -39,8 +39,9 @@ public class GameController {
      * Handles player decision to show current track
      *
      * @author Gabriele
-     * @param gameManager
-     * @param sender
+     * @param gameManager current gameManager
+     * @param sender current sender
+     * @throws RemoteException
      */
     public static void showTrack(GameManager gameManager, Sender sender) throws RemoteException {
 
