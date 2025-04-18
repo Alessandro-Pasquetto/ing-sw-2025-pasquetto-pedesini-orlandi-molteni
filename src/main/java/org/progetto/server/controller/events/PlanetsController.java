@@ -24,8 +24,8 @@ public class PlanetsController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
     
-    private Planets planets;
-    private ArrayList<Player> activePlayers;
+    private final Planets planets;
+    private final ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
 
     // =======================

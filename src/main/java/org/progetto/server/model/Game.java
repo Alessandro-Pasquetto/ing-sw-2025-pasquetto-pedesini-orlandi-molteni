@@ -345,10 +345,11 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
+            /*
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
+             */
 
-            /*
             //forzare tipi di carta todo poi da rimuovere
             int randomPos = 0;
             ComponentType type;
@@ -359,7 +360,6 @@ public class Game {
 
             }while(!type.equals(ComponentType.DOUBLE_ENGINE) && !type.equals(ComponentType.BATTERY_STORAGE));
             pickedComponent = componentDeck.remove(randomPos);
-             */
         }
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);

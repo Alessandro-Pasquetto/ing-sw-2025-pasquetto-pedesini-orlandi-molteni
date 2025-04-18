@@ -93,8 +93,9 @@ public class EventCommands {
             String y = TuiCommandFilter.waitResponse();
 
             Sender sender = GameData.getSender();
+            int levelGame = GameData.getLevelGame();
             try{
-                sender.responseBatteryToDiscard(Integer.parseInt(x), Integer.parseInt(y));
+                sender.responseBatteryToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");
@@ -120,8 +121,9 @@ public class EventCommands {
             String y = TuiCommandFilter.waitResponse();
 
             Sender sender = GameData.getSender();
+            int levelGame = GameData.getLevelGame();
             try{
-                sender.responseCrewToDiscard(Integer.parseInt(x), Integer.parseInt(y));
+                sender.responseCrewToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");
@@ -149,8 +151,9 @@ public class EventCommands {
             String idx = TuiCommandFilter.waitResponse();
 
             Sender sender = GameData.getSender();
+            int levelGame = GameData.getLevelGame();
             try{
-                sender.responseBoxToDiscard(Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(idx));
+                sender.responseBoxToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(idx));
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");
             }
@@ -261,7 +264,8 @@ public class EventCommands {
                     String storage_idx = TuiCommandFilter.waitResponse();
 
                     Sender sender = GameData.getSender();
-                    sender.responseRewardBox(box_idx,Integer.parseInt(x),Integer.parseInt(y), Integer.parseInt(storage_idx));
+                    int levelGame = GameData.getLevelGame();
+                    sender.responseRewardBox(box_idx, Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(storage_idx));
                     break;
                 }else{
                     System.out.println("Box index out of bounds!");

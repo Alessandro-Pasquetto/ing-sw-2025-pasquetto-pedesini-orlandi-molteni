@@ -1,9 +1,6 @@
 package org.progetto.server.model.events;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.ComponentType;
 
 public class OpenSpace extends EventCard {
 
@@ -12,7 +9,7 @@ public class OpenSpace extends EventCard {
     // =======================
 
     public OpenSpace(CardType type,int level, String imgSrc) {
-        super(type, level,imgSrc);
+        super(type, level, imgSrc);
     }
 
     // =======================
