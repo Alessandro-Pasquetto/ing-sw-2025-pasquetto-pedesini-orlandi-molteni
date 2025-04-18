@@ -91,8 +91,8 @@ public class OpenSpaceController extends EventControllerAbstract {
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
             else {
                 System.out.println("Waiting for HowManyDoubleEngines");
-                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                 phase = EventPhase.ENGINE_NUMBER;
+                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

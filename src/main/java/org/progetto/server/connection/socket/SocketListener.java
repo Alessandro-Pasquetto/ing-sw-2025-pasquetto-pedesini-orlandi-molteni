@@ -482,7 +482,6 @@ public class SocketListener extends Thread {
                 }
 
                 if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
-                    String response = responsePlanetLandRequestMessage.getResponse();
                     int planetIdx = responsePlanetLandRequestMessage.getIdx();
 
                     EventControllerAbstract eventController = gameManager.getEventController();
@@ -492,7 +491,7 @@ public class SocketListener extends Thread {
                     }
 
                     try {
-                        eventController.receiveDecisionToLandPlanet(player, response, planetIdx, socketWriter);
+                        eventController.receiveDecisionToLandPlanet(player, planetIdx, socketWriter);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

@@ -7,7 +7,7 @@ public class AvailablePlanetsMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    private boolean[] planetsTaken;
+    private final boolean[] planetsTaken;
 
     // =======================
     // CONSTRUCTORS

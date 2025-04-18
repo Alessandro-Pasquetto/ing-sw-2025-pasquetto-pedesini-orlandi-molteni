@@ -250,22 +250,33 @@ public class EventCommands {
                     default -> "?";
                 };
 
-                System.out.printf(" [%2d]  Color: %-10s%n", i, box);
+                System.out.printf(" [%d]  Color: %-10s%n", i, box);
             }
 
-            System.out.println("Select an available box dy index from the list");
+            System.out.println("Select an available box dy index from the list (-1 if you wanna leave the planet)");
             String idx = TuiCommandFilter.waitResponse();
             try{
                 int box_idx = Integer.parseInt(idx);
-                if(box_idx >= 0 && box_idx < availableBoxes.size()){
-                    System.out.println("Select a box storage were you want to insert the box: <X> <Y> <storage_idx>");
-                    String x = TuiCommandFilter.waitResponse();
-                    String y = TuiCommandFilter.waitResponse();
-                    String storage_idx = TuiCommandFilter.waitResponse();
 
-                    Sender sender = GameData.getSender();
+                Sender sender = GameData.getSender();
+
+                if(box_idx == -1){
+                    sender.responseRewardBox(box_idx, -1, -1, -1);
+                    System.out.println("You left the planet");
+                    break;
+                }
+
+                else if(box_idx >= 0 && box_idx < availableBoxes.size()){
+                    System.out.println("Select a box storage were you want to insert the box: ");
+                    System.out.println("X: ");
+                    int x = Integer.parseInt(TuiCommandFilter.waitResponse());
+                    System.out.println("Y: ");
+                    int y = Integer.parseInt(TuiCommandFilter.waitResponse());
+                    System.out.println("Storage_idx: ");
+                    int storage_idx = Integer.parseInt(TuiCommandFilter.waitResponse());
+
                     int levelGame = GameData.getLevelGame();
-                    sender.responseRewardBox(box_idx, Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(storage_idx));
+                    sender.responseRewardBox(box_idx, x - 6 + levelGame, y - 5, storage_idx);
                     break;
                 }else{
                     System.out.println("Box index out of bounds!");
@@ -285,7 +296,7 @@ public class EventCommands {
     public static void responseLandRequest() {
 
         while(true){
-            System.out.println("Do you want to land?");
+            System.out.println("Do you want to land? (YES or NO)");
 
             String response = TuiCommandFilter.waitResponse();
             if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
@@ -300,12 +311,28 @@ public class EventCommands {
     /**
      * Handles player decision to land on a planet
      *
-     * @author Lorenzo
+     * @author Lorenzo, Alessandro
      * @param planetsTaken is the array of available planets
      */
     public static void responsePlanetLandRequest(boolean[] planetsTaken) {
 
         while(true){
+            System.out.println("Do you want to land? (YES or NO)");
+
+            String response = TuiCommandFilter.waitResponse();
+
+            if(!response.equalsIgnoreCase("YES") && !response.equalsIgnoreCase("NO")){
+                System.out.println("Wrong response (YES or NO)");
+                continue;
+            }
+
+            Sender sender = GameData.getSender();
+
+            if(response.equalsIgnoreCase("NO")){
+                sender.responsePlanetLandRequest(-1);
+                return;
+            }
+
             System.out.println("In witch planet do you want to land?");
             for (int i = 0; i < planetsTaken.length; i++){
                 if (!planetsTaken[i]){
@@ -313,20 +340,23 @@ public class EventCommands {
                 }
             }
 
-            System.out.print("Choose a planet: ");
             String idx = TuiCommandFilter.waitResponse();
 
             try {
                 int planet_idx = Integer.parseInt(idx);
-                if ((planet_idx >= 0) && (planet_idx < planetsTaken.length)){
-                    if(!planetsTaken[planet_idx]) {
-                        Sender sender = GameData.getSender();
-                        sender.responsePlanetLandRequest("YES", planet_idx);
-                        break;
-                    } else
-                        System.out.println("Planet already taken");
-                } else
+
+                if(planet_idx < 0 || planet_idx >= planetsTaken.length){
                     System.out.println("Invalid planet index");
+                    continue;
+                }
+
+                if(planetsTaken[planet_idx]){
+                    System.out.println("Planet already taken");
+                    continue;
+                }
+
+                sender.responsePlanetLandRequest(planet_idx);
+                break;
 
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");

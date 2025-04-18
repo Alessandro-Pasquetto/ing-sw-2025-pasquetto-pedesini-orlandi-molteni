@@ -79,7 +79,7 @@ public interface Sender {
 
     void responseAcceptRewardCreditsAndPenaltyDays(String response);
 
-    void responsePlanetLandRequest(String response, int idx);
+    void responsePlanetLandRequest(int idx);
 
     void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
 

@@ -8,23 +8,19 @@ public class ResponsePlanetLandRequestMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String response;
-    private int idx;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ResponsePlanetLandRequestMessage(String response, int idx) {
-        this.response = response;
+    public ResponsePlanetLandRequestMessage(int idx) {
         this.idx = idx;
     }
 
     // =======================
     // GETTERS
     // =======================
-
-    public String getResponse() { return response; }
 
     public int getIdx() { return idx; }
 }

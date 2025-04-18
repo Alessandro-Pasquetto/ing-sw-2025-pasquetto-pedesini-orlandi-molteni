@@ -11,7 +11,7 @@ public class AnotherPlayerLandedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    Player player;
+    private final Player player;
 
 
     // =======================
@@ -36,7 +36,5 @@ public class AnotherPlayerLandedMessage implements Serializable {
     public int getPlayerColor(){
         return player.getColor();
     }
-
-
 
 }

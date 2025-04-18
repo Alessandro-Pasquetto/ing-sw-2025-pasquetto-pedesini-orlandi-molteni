@@ -88,7 +88,7 @@ abstract public class EventControllerAbstract {
     }
 
     //responsePlanetLandRequest
-    public void receiveDecisionToLandPlanet(Player player, String response, int planetIdx, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDecisionToLandPlanet(Player player, int planetIdx, Sender sender) throws RemoteException, InterruptedException {
         sender.sendMessage("FunctionNotAvailable");
     }
 

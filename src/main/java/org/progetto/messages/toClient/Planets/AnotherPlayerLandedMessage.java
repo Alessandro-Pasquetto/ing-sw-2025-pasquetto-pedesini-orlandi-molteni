@@ -2,13 +2,15 @@ package org.progetto.messages.toClient.Planets;
 
 import org.progetto.server.model.Player;
 
-public class AnotherPlayerLandedMessage {
+import java.io.Serializable;
+
+public class AnotherPlayerLandedMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
-    Player player;
-    int planetIdx;
+    private final Player player;
+    private final int planetIdx;
 
 
     // =======================

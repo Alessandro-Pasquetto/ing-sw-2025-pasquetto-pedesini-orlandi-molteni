@@ -404,9 +404,9 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void responsePlanetLandRequest(String response, int idx) {
+    public void responsePlanetLandRequest(int idx) {
         try {
-            server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response, idx);
+            server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

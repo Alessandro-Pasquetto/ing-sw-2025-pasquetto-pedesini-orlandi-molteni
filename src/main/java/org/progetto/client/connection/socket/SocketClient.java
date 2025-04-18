@@ -267,8 +267,8 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void responsePlanetLandRequest(String response, int idx) {
-        SocketWriter.sendMessage(new ResponsePlanetLandRequestMessage(response, idx));
+    public void responsePlanetLandRequest(int idx) {
+        SocketWriter.sendMessage(new ResponsePlanetLandRequestMessage(idx));
     }
 
     @Override

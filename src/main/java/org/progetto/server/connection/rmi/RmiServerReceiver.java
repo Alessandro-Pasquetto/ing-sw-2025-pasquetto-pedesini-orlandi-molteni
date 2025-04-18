@@ -725,7 +725,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, String response, int planetIdx) throws RemoteException {
+    public void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, int planetIdx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
@@ -743,7 +743,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         try {
-            eventController.receiveDecisionToLandPlanet(player, response, planetIdx, virtualClient);
+            eventController.receiveDecisionToLandPlanet(player, planetIdx, virtualClient);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
