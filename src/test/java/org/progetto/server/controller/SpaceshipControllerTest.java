@@ -51,8 +51,6 @@ class SpaceshipControllerTest {
         };
         component = new Component(ComponentType.CANNON,new int[]{1, 1, 2, 1},"imgSrc");
         SpaceshipController.updateSpaceship(gameManager,player,component,sender);
-
-
     }
 
     @Test
@@ -175,7 +173,6 @@ class SpaceshipControllerTest {
                     assertEquals("RedBoxMoved", message);
             }};
         SpaceshipController.moveBox(gameManager,player,2,1,1,3,2,2, sender);
-
     }
 
     @Test
@@ -263,7 +260,6 @@ class SpaceshipControllerTest {
                     assertEquals("BoxRemoved", message);
             }};
         SpaceshipController.removeBox(gameManager,player,2,1,1,sender);
-
     }
 
     @Test
@@ -320,7 +316,6 @@ class SpaceshipControllerTest {
                     assertEquals("SpaceshipNotValidSelectPart", message);
             }};
         SpaceshipController.destroyComponentAndCheckValidity(gameManager,player,2,2,sender);
-
     }
 
     @Test
@@ -368,12 +363,10 @@ class SpaceshipControllerTest {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
             }};
         SpaceshipController.destroyComponentWithoutAnyCheck(gameManager,player,1,2,sender);
-
     }
 
     @Test
     void chooseSpaceshipPartToKeep() {
         //todo as soon as ale finish the method
     }
-
 }

@@ -66,7 +66,7 @@ public class LostStationController extends EventControllerAbstract {
 
                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                if (player.getSpaceship().getCrewCount() >= lostStation.getRequiredCrew()) {
+                if (player.getSpaceship().getTotalCrewCount() >= lostStation.getRequiredCrew()) {
                     sender.sendMessage("LandRequest");
                     phase = EventPhase.LAND;
 
@@ -106,12 +106,14 @@ public class LostStationController extends EventControllerAbstract {
                         gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player));
 
                         sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                        break;
 
                     case "NO":
                         phase = EventPhase.ASK_TO_LAND;
 
                         player.setIsReady(true, gameManager.getGame());
                         gameManager.getGameThread().notifyThread();
+                        break;
 
                     default:
                         sender.sendMessage("IncorrectResponse");
@@ -201,8 +203,6 @@ public class LostStationController extends EventControllerAbstract {
 
             // Checks that current player is trying to leave
             if (player.equals(gameManager.getGame().getActivePlayer())) {
-
-                Board board = gameManager.getGame().getBoard();
 
                 lostStation.penalty(gameManager.getGame().getBoard(), player);
 

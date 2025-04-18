@@ -960,7 +960,6 @@ class BuildingBoardTest {
         //printBoard(buildingBoard2);
     }
 
-
     @Test
     void keepSpaceshipPart() throws RemoteException {
 
@@ -1026,4 +1025,76 @@ class BuildingBoardTest {
         assertEquals(3, spaceship.getExposedConnectorsCount());
     }
 
+    @Test
+    void populateComponent() {
+        Spaceship spaceship = new Spaceship(1, 0);
+        BuildingBoard buildingBoard = new BuildingBoard(spaceship, 0);
+
+        HousingUnit hu = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        hu.setAllowAlienOrange(true);
+        hu.setAllowAlienPurple(true);
+
+        buildingBoard.setHandComponent(hu);
+        buildingBoard.placeComponent(2, 1, 0);
+
+        // Populate with humans
+        buildingBoard.populateComponent("Human", 2, 1);
+        assertEquals(1, hu.getCrewCount());
+
+        buildingBoard.populateComponent("Human", 2, 1);
+        assertEquals(2, hu.getCrewCount());
+
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("Human", 2, 1);
+        });
+        assertEquals("ComponentAlreadyOccupied", exception.getMessage());
+
+        hu.decrementCrewCount(spaceship, 2);
+
+        // Populate with orange alien
+        buildingBoard.populateComponent("OrangeAlien", 2, 1);
+        assertTrue(hu.getHasOrangeAlien());
+
+        hu.setAlienOrange(false);
+
+        // Populate with purple alien
+        buildingBoard.populateComponent("PurpleAlien", 2, 1);
+        assertTrue(hu.getHasPurpleAlien());
+
+        hu.setAlienPurple(false);
+
+        // Alien exceptions
+        hu.setAllowAlienOrange(false);
+        hu.setAllowAlienPurple(false);
+
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("OrangeAlien", 2, 1);
+        });
+        assertEquals("CannotContainOrangeAlien", exception.getMessage());
+
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("PurpleAlien", 2, 1);
+
+        });
+
+        // Not valid coordinates/components
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("Human", -1, 0);
+        });
+        assertEquals("NotValidCoordinates", exception.getMessage());
+
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("Human", 3, 3);
+        });
+        assertEquals("NotValidCoordinates", exception.getMessage());
+
+        Component nonHousing = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1,1,1,1}, "imgSrc");
+        buildingBoard.setHandComponent(nonHousing);
+        buildingBoard.placeComponent(3, 2, 0);
+
+        exception = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.populateComponent("Human", 3, 2);
+        });
+        assertEquals("NotValidCoordinates", exception.getMessage());
+    }
 }

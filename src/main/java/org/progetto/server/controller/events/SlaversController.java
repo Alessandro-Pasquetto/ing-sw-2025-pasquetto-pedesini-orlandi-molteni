@@ -97,13 +97,19 @@ public class SlaversController extends EventControllerAbstract {
                         phase = EventPhase.BATTLE_RESULT;
                         battleResult(player, sender);
 
+                        System.out.println("Max 0: " + player.getName());
+
                     } else {
                         sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
                         phase = EventPhase.CANNON_NUMBER;
                     }
                 }
 
+                System.out.println("Pre Lock: " + player.getName());
+
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
+
+                System.out.println("After Lock: " + player.getName());
 
                 // Checks if card got defeated
                 if (defeated) {

@@ -227,7 +227,7 @@ public class SmugglersController extends EventControllerAbstract {
                         requestedBoxes--;
                         sender.sendMessage("BatteryDiscarded");
 
-                        if (requestedBoxes == 0) {
+                        if (requestedBoxes == 0 || player.getSpaceship().getBatteriesCount() == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
                             player.setIsReady(true, gameManager.getGame());
