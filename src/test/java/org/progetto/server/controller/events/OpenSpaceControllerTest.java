@@ -93,19 +93,19 @@ class OpenSpaceControllerTest {
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyDoubleEnginesToUse(p2, 0, sender);
+        controller.receiveHowManyEnginesToUse(p2, 0, sender);
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyDoubleEnginesToUse(p3, 2, sender);
+        controller.receiveHowManyEnginesToUse(p3, 2, sender);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveDiscardedBattery(p3, 2, 1, sender);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveDiscardedBattery(p3, 2, 1, sender);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.EFFECT, controller.getPhase());

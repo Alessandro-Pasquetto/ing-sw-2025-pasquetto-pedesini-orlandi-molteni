@@ -358,7 +358,6 @@ public class SmugglersController extends EventControllerAbstract {
                 Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
                 if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
-
                     // Checks if a box has been discarded
                     if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
                         requestedBoxes--;
@@ -366,7 +365,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-
                             player.setIsReady(true, gameManager.getGame());
                             gameManager.getGameThread().notifyThread();
 
@@ -506,13 +504,14 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      * @throws IllegalStateException
      */
-    private void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
+    public void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 // Calls penalty function
+                phase = EventPhase.PENALTY_DAYS;
                 penaltyDays();
             }
         }

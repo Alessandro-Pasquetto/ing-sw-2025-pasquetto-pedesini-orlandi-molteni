@@ -7,23 +7,26 @@ import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.Slavers;
+import org.progetto.server.model.events.Smugglers;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SlaversControllerTest {
+class SmugglersControllerTest {
 
     @Test
-    void slaversControllerTest() throws InterruptedException, RemoteException {
+    void smugglersControllerTest() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
-        gameManager.getGame().setActiveEventCard(slavers);
+        ArrayList<Box> rewardBoxes = new ArrayList<>();
+        rewardBoxes.add(Box.RED);
+        rewardBoxes.add(Box.GREEN);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes);
+        gameManager.getGame().setActiveEventCard(smugglers);
 
         Player p1 = new Player("mario", 0, 1);
         Player p2 = new Player("alice", 0, 1);
@@ -48,23 +51,24 @@ class SlaversControllerTest {
         gameManager.getGame().getBoard().addTraveler(p2);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
 
         BuildingBoard bb = p1.getSpaceship().getBuildingBoard();
-        bb.setHandComponent(hu1);
+        bb.setHandComponent(bx1);
         bb.placeComponent(2, 1, 0);
-        bb.setHandComponent(hu2);
+        bb.setHandComponent(bx2);
         bb.placeComponent(1, 1, 0);
-        bb.setHandComponent(hu3);
+        bb.setHandComponent(bx3);
         bb.placeComponent(3, 1, 0);
 
-        hu1.setCrewCount(2);
-        hu2.setCrewCount(2);
-        hu3.setCrewCount(2);
-
-        p1.getSpaceship().addCrewCount(4);
+        bx1.addBox(p1.getSpaceship(), Box.YELLOW , 0);
+        bx1.addBox(p1.getSpaceship(), Box.BLUE, 1);
+        bx2.addBox(p1.getSpaceship(), Box.RED, 0);
+        bx2.addBox(p1.getSpaceship(), Box.GREEN, 1);
+        bx3.addBox(p1.getSpaceship(), Box.YELLOW, 0);
+        bx3.addBox(p1.getSpaceship(), Box.GREEN, 1);
 
         BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
@@ -81,6 +85,13 @@ class SlaversControllerTest {
         batteryStorage.incrementItemsCount(p3.getSpaceship(), 2);
         p3.getSpaceship().addBatteriesCount(2);
 
+        BoxStorage bx4 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx5 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        bb3.setHandComponent(bx4);
+        bb3.placeComponent(1, 1, 0);
+        bb3.setHandComponent(bx5);
+        bb3.placeComponent(3, 1, 0);
+
         p1.getSpaceship().addNormalShootingPower(3);
         p2.getSpaceship().addNormalShootingPower(5);
         p2.getSpaceship().addFullDoubleCannonCount(1);
@@ -88,7 +99,7 @@ class SlaversControllerTest {
         p3.getSpaceship().addFullDoubleCannonCount(2);
 
         // Controller
-        SlaversController controller = new SlaversController(gameManager);
+        SmugglersController controller = new SmugglersController(gameManager);
 
         GameThread gameThread = new GameThread(gameManager) {
 
@@ -106,16 +117,21 @@ class SlaversControllerTest {
         gameThread.start();
 
         Thread.sleep(200);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
-        // Discarded crew
-        controller.receiveDiscardedCrew(p1, 2, 1, sender);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        // Discarded boxes
+        controller.receiveDiscardedBox(p1, 2, 1, 1, sender);
+        assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveDiscardedCrew(p1, 3, 1, sender);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        // Discarded boxes
+        controller.receiveDiscardedBox(p1, 1, 1, 0, sender);
+        assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
+
+        Thread.sleep(200);
+        controller.receiveDiscardedBox(p1, 2, 1, 0, sender);
+        assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
@@ -140,9 +156,21 @@ class SlaversControllerTest {
         controller.receiveRewardDecision(p3, "YES", sender);
 
         Thread.sleep(200);
-        assertEquals(EventPhase.EFFECT, controller.getPhase());
+        assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
-        assertEquals(3, p3.getCredits());
+        Thread.sleep(200);
+        controller.receiveRewardBox(p3, 0, 1, 1, 0, sender);
+        assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
+
+        Thread.sleep(200);
+        controller.receiveRewardBox(p3, 0, 3, 1, 0, sender);
+        assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
+
+        Thread.sleep(200);
+        controller.leaveReward(p3, sender);
+        assertEquals(EventPhase.PENALTY_DAYS, controller.getPhase());
+
+        assertEquals(1, p3.getSpaceship().getBoxCounts()[0]);
         assertEquals(-3, p3.getPosition());
     }
 }
