@@ -99,6 +99,25 @@ public class SmugglersController extends EventControllerAbstract {
                         phase = EventPhase.BATTLE_RESULT;
                         battleResult(player, sender);
 
+                        if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+
+                            // Checks if he has more than a box/battery
+                            int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+
+                            if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
+                                requestedBoxes = smugglers.getPenaltyBoxes();
+
+                                phase = EventPhase.PENALTY_EFFECT;
+                                penaltyEffect(player, sender);
+                            } else {
+                                sender.sendMessage("NotEnoughBoxesAndBatteries");
+                            }
+
+                        } else {
+                            // Skips to next player if player draws
+                            continue;
+                        }
+
                     } else {
                         phase = EventPhase.CANNON_NUMBER;
                         sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
@@ -231,16 +250,17 @@ public class SmugglersController extends EventControllerAbstract {
                         requestedBoxes--;
                         sender.sendMessage("BatteryDiscarded");
 
-                        if (requestedBoxes == 0 || player.getSpaceship().getBatteriesCount() == 0) {
+                        if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
                             player.setIsReady(true, gameManager.getGame());
                             gameManager.getGameThread().notifyThread();
 
-                        } else {
-                            // Ask for new battery to discard
-                            phase = EventPhase.PENALTY_EFFECT;
-                            penaltyEffect(player, sender);
+                        } else if (player.getSpaceship().getBatteriesCount() == 0) {
+                            sender.sendMessage("NotEnoughBatteries");
+
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
                         }
 
                     } else {
@@ -268,7 +288,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender current sender
      * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException {
+    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -282,10 +302,22 @@ public class SmugglersController extends EventControllerAbstract {
                         break;
 
                     case -1:
-                        requestedBoxes = smugglers.getPenaltyBoxes();
+                        // Checks if he has more than a box/battery
+                        int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
 
-                        phase = EventPhase.PENALTY_EFFECT;
-                        penaltyEffect(player, sender);
+                        if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
+                            requestedBoxes = smugglers.getPenaltyBoxes();
+
+                            phase = EventPhase.PENALTY_EFFECT;
+                            penaltyEffect(player, sender);
+
+                        } else {
+                            sender.sendMessage("NotEnoughBoxesAndBatteries");
+
+                            player.setIsReady(true, gameManager.getGame());
+                            gameManager.getGameThread().notifyThread();
+                        }
+
                         break;
 
                     case 0:
@@ -311,32 +343,21 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender current sender
      * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Box currently owned
             int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
 
             // Checks if he has at least a box to discard
-            if (maxBoxCount >= 1) {
+            if (maxBoxCount > 0) {
                 sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
                 phase = EventPhase.DISCARDED_BOXES;
 
             } else {
-
-                // Checks if he has at least a battery to discard
-                if (player.getSpaceship().getBatteriesCount() > 0) {
-                    sender.sendMessage("NotEnoughBoxes");
-                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-
-                } else {
-                    sender.sendMessage("NotEnoughBatteries");
-
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                }
-
+                sender.sendMessage("NotEnoughBoxes");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
             }
         }
     }
@@ -352,7 +373,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.DISCARDED_BOXES)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -369,13 +390,31 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (requestedBoxes == 0) {
                             gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
+
                             player.setIsReady(true, gameManager.getGame());
                             gameManager.getGameThread().notifyThread();
 
                         } else {
-                            // Ask for new box/battery to discard
-                            phase = EventPhase.PENALTY_EFFECT;
-                            penaltyEffect(player, sender);
+
+                            int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+
+                            // Checks if he has at least a box to discard
+                            if (maxBoxCount > 0) {
+                                sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                                phase = EventPhase.DISCARDED_BOXES;
+
+                            // Checks if he has at least a battery to discard
+                            } else if (player.getSpaceship().getBatteriesCount() > 0) {
+                                sender.sendMessage("NotEnoughBoxes");
+                                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+
+                            } else {
+                                sender.sendMessage("NotEnoughBoxesAndBatteries");
+
+                                player.setIsReady(true, gameManager.getGame());
+                                gameManager.getGameThread().notifyThread();
+                            }
                         }
 
                     } else {

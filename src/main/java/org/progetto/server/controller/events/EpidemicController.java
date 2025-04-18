@@ -58,8 +58,6 @@ public class EpidemicController extends EventControllerAbstract {
         if (phase.equals(EventPhase.EFFECT)) {
             ArrayList<Player> players = gameManager.getGame().getBoard().getCopyTravelers();
 
-            System.out.println("Evaluating epidemic consequences");
-
             for (Player player : players) {
 
                 // Calculates amount of crew infected, so removed

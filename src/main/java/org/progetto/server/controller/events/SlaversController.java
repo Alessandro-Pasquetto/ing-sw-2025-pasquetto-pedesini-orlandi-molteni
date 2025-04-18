@@ -96,10 +96,15 @@ public class SlaversController extends EventControllerAbstract {
                     if (maxUsable == 0) {
                         playerFirePower = spaceship.getNormalShootingPower();
 
-                        phase = EventPhase.BATTLE_RESULT;
-                        battleResult(player, sender);
+                        // Checks if player lose
+                        if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+                            phase = EventPhase.PENALTY_EFFECT;
+                            penaltyEffect(player, sender);
 
-                        System.out.println("Max 0: " + player.getName());
+                        } else {
+                            // Skips to next player if player draws
+                            continue;
+                        }
 
                     } else {
                         sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
@@ -107,11 +112,7 @@ public class SlaversController extends EventControllerAbstract {
                     }
                 }
 
-                System.out.println("Pre Lock: " + player.getName());
-
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
-
-                System.out.println("After Lock: " + player.getName());
 
                 // Checks if card got defeated
                 if (defeated) {
@@ -257,6 +258,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     case 0:
                         phase = EventPhase.ASK_CANNONS;
+
                         player.setIsReady(true, gameManager.getGame());
                         gameManager.getGameThread().notifyThread();
                         break;

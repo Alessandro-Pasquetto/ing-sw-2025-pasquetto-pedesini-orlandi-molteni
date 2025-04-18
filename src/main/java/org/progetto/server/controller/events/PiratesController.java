@@ -98,7 +98,7 @@ public class PiratesController extends EventControllerAbstract {
 
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
-                System.out.println("1" + player.getName());
+
                 // Checks if players is able to win without double cannons
                 if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
@@ -108,7 +108,7 @@ public class PiratesController extends EventControllerAbstract {
 
                     // Calculates max number of double cannons usable
                     int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-                    System.out.println("2" + player.getName());
+
                     // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
                     if (maxUsable == 0) {
                         playerFirePower = spaceship.getNormalShootingPower();
@@ -116,18 +116,17 @@ public class PiratesController extends EventControllerAbstract {
                         if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1){
                             defeatedPlayers.add(player);
                         }
+                        continue;
 
                     } else {
-                        System.out.println("3" + player.getName());
                         sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
 
                         phase = EventPhase.CANNON_NUMBER;
-
-                        gameManager.getGameThread().resetAndWaitPlayerReady(player);
                     }
                 }
 
-                System.out.println(player.getName() + "ha finito");
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+
                 // Checks if card got defeated
                 if (defeated) {
                     break;
@@ -625,6 +624,12 @@ public class PiratesController extends EventControllerAbstract {
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                 }
+            }
+
+            // Set as ready protected players
+            for (Player player : protectedPlayers) {
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
             }
 
             // For each non-protected player handles penalty shot

@@ -1,34 +1,50 @@
-package org.progetto.server.model.events;
+package org.progetto.server.controller.events;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.Board;
+import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.events.CardType;
+import org.progetto.server.model.events.Epidemic;
+import org.progetto.server.model.events.OpenSpace;
+
+import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class EpidemicTest {
-
-    @BeforeEach
-    void setUp() {
-    }
+class EpidemicControllerTest {
 
     @Test
-    void epidemicResult() {
-        Board board = new Board(1);
-        Player player = new Player("gino", 0, 1);
+    void epidemicController() throws RemoteException, InterruptedException {
+        GameManager gameManager = new GameManager(0, 1, 1);
+        Epidemic epidemic = new Epidemic(CardType.EPIDEMIC, 2, "imgPath");
+        gameManager.getGame().setActiveEventCard(epidemic);
 
+        Player player = new Player("mario", 0, 1);
+
+        gameManager.getGame().addPlayer(player);
+
+        VirtualClient sender = new VirtualClient() {
+            @Override
+            public void sendMessage(Object message) {
+
+            }
+        };
+
+        gameManager.addRmiClient(player, sender);
+
+        gameManager.getGame().getBoard().addTraveler(player);
+
+        // Added components
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-
-        board.addTraveler(player);
 
         HousingUnit temp;
 
-        // Added components
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 0}, "imgPath", 2));
         buildingBoard.placeComponent(2, 1, 0);
         temp = (HousingUnit) buildingBoard.getCopySpaceshipMatrix()[1][2];
@@ -79,10 +95,25 @@ class EpidemicTest {
         temp = (HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][1];
         temp.setAlienOrange(true);
 
-        Epidemic epidemic = new Epidemic(CardType.EPIDEMIC,2, "imgSrc");
+        // Controller
+        EpidemicController controller = new EpidemicController(gameManager);
 
-        epidemic.epidemicResult(player);
+        GameThread gameThread = new GameThread(gameManager) {
 
+            @Override
+            public void run(){
+                try {
+                    controller.start();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        gameManager.setGameThread(gameThread);
+        gameThread.start();
+
+        Thread.sleep(200);
         assertEquals(1, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[1][2]).getCrewCount());
         assertEquals(1, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[2][4]).getCrewCount());
         assertEquals(0, ((HousingUnit) buildingBoard.getCopySpaceshipMatrix()[3][4]).getCrewCount());
