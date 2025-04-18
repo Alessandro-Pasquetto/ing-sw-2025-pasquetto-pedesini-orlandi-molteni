@@ -11,19 +11,20 @@ import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.CardType;
+import org.progetto.server.model.events.OpenSpace;
 import org.progetto.server.model.events.Slavers;
 
 import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SlaversControllerTest {
+class OpenSpaceControllerTest {
 
     @Test
-    void slaversControllerTest() throws InterruptedException, RemoteException {
+    void openSpaceController() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
-        gameManager.getGame().setActiveEventCard(slavers);
+        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2, "imgPath");
+        gameManager.getGame().setActiveEventCard(openspace);
 
         Player p1 = new Player("mario", 0, 1);
         Player p2 = new Player("alice", 0, 1);
@@ -48,47 +49,30 @@ class SlaversControllerTest {
         gameManager.getGame().getBoard().addTraveler(p2);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-
-        BuildingBoard bb = p1.getSpaceship().getBuildingBoard();
-        bb.setHandComponent(hu1);
-        bb.placeComponent(2, 1, 0);
-        bb.setHandComponent(hu2);
-        bb.placeComponent(1, 1, 0);
-        bb.setHandComponent(hu3);
-        bb.placeComponent(3, 1, 0);
-
-        hu1.setCrewCount(2);
-        hu2.setCrewCount(2);
-        hu3.setCrewCount(2);
-
-        p1.getSpaceship().addCrewCount(4);
-
         BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(batteryStorage2);
         bb2.placeComponent(2, 1, 0);
 
+        batteryStorage2.incrementItemsCount(p2.getSpaceship(), 2);
         p2.getSpaceship().addBatteriesCount(2);
 
-        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
-        bb3.setHandComponent(batteryStorage);
+        bb3.setHandComponent(batteryStorage3);
         bb3.placeComponent(2, 1, 0);
 
-        batteryStorage.incrementItemsCount(p3.getSpaceship(), 2);
+        batteryStorage3.incrementItemsCount(p3.getSpaceship(), 2);
         p3.getSpaceship().addBatteriesCount(2);
 
-        p1.getSpaceship().addNormalShootingPower(3);
-        p2.getSpaceship().addNormalShootingPower(5);
-        p2.getSpaceship().addFullDoubleCannonCount(1);
-        p3.getSpaceship().addNormalShootingPower(5);
-        p3.getSpaceship().addFullDoubleCannonCount(2);
+        p1.getSpaceship().addNormalEnginePower(3);
+        p2.getSpaceship().addNormalEnginePower(5);
+        p2.getSpaceship().addDoubleEngineCount(1);
+        p3.getSpaceship().addNormalEnginePower(5);
+        p3.getSpaceship().addDoubleEngineCount(2);
 
         // Controller
-        SlaversController controller = new SlaversController(gameManager);
+        OpenSpaceController controller = new OpenSpaceController(gameManager);
 
         GameThread gameThread = new GameThread(gameManager) {
 
@@ -106,45 +90,27 @@ class SlaversControllerTest {
         gameThread.start();
 
         Thread.sleep(200);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        // Discarded crew
-        controller.receiveDiscardedCrew(p1, 2, 1, sender);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        controller.receiveHowManyDoubleEnginesToUse(p2, 0, sender);
+        assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveDiscardedCrew(p1, 3, 1, sender);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
-
-        // da rivedere perchè non funziona
-        Thread.sleep(200);
-        assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
+        controller.receiveHowManyDoubleEnginesToUse(p3, 2, sender);
+        assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p2, 0, sender);
-
-        Thread.sleep(500);
-        assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
-
-        Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p3, 1, sender);
+        controller.receiveDiscardedBattery(p3, 2, 1, sender);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
         controller.receiveDiscardedBattery(p3, 2, 1, sender);
 
         Thread.sleep(200);
-        assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
-
-        Thread.sleep(200);
-        controller.receiveRewardDecision(p3, "YES", sender);
-
-        Thread.sleep(200);
         assertEquals(EventPhase.EFFECT, controller.getPhase());
-
-        assertEquals(3, p3.getCredits());
-        assertEquals(-3, p3.getPosition());
-        //
+        assertEquals(3, p1.getPosition());
+        assertEquals(6, p2.getPosition());
+        assertEquals(11, p3.getPosition());
     }
 }

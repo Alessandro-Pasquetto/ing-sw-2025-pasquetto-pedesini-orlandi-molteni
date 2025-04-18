@@ -163,7 +163,6 @@ public class OpenSpaceController extends EventControllerAbstract {
                     if (openSpace.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                         requestedNumber--;
                         sender.sendMessage("BatteryDiscarded");
-
                         if (requestedNumber == 0) {
 
                             player.setIsReady(true, gameManager.getGame());
