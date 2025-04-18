@@ -79,6 +79,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
+
                 // Checks if players is able to win without double cannons
                 if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
@@ -88,6 +89,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     // Calculates max number of double cannons usable
                     int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+
                     // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
                     if (maxUsable == 0) {
                         playerFirePower = spaceship.getNormalShootingPower();
@@ -272,18 +274,8 @@ public class SlaversController extends EventControllerAbstract {
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 requestedCrew = slavers.getPenaltyCrew();
-
-                // Calculates max crew number available to discard
-                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
-
-                if (maxCrewCount > slavers.getPenaltyCrew()) {
-                    sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                    phase = EventPhase.DISCARDED_CREW;
-
-                } else {
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                }
+                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                phase = EventPhase.DISCARDED_CREW;
 
             } else {
                 sender.sendMessage("NotYourTurn");
@@ -321,7 +313,7 @@ public class SlaversController extends EventControllerAbstract {
                         requestedCrew--;
                         sender.sendMessage("CrewMemberDiscarded");
 
-                        if (requestedCrew == 0) {
+                        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
 
                             player.setIsReady(true, gameManager.getGame());
                             gameManager.getGameThread().notifyThread();
