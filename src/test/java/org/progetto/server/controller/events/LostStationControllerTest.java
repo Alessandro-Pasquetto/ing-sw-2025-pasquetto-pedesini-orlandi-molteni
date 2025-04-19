@@ -115,7 +115,7 @@ class LostStationControllerTest {
         assertEquals(Box.GREEN, boxStorage.getBoxStorage()[1]);
 
         Thread.sleep(200);
-        controller.leaveStation(p3, sender);
+        controller.receiveRewardBox(p3, -1, 2, 1, 1, sender);
         assertEquals(-1, p3.getPosition());
     }
 }

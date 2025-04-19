@@ -1,17 +1,17 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.LostStation.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.LostStation.AnotherPlayerLandedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.LostStation;
 
 import java.rmi.RemoteException;
@@ -22,11 +22,12 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
     // ATTRIBUTES
     // =======================
-    
+
+    private final GameManager gameManager;
     private LostStation lostStation;
     private ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
-    
+
     // =======================
     // CONSTRUCTORS
     // =======================
@@ -86,8 +87,8 @@ public class LostStationController extends EventControllerAbstract {
      * Send the available boxes to that player
      *
      * @author Gabriele
-     * @param player current player
-     * @param sender current sender
+     * @param player   current player
+     * @param sender   current sender
      * @param decision player's decision
      * @throws RemoteException
      */
@@ -99,7 +100,7 @@ public class LostStationController extends EventControllerAbstract {
 
                 String upperCaseDecision = decision.toUpperCase();
 
-                switch(upperCaseDecision) {
+                switch (upperCaseDecision) {
                     case "YES":
                         phase = EventPhase.CHOOSE_BOX;
                         rewardBoxes = lostStation.getRewardBoxes();
@@ -133,65 +134,74 @@ public class LostStationController extends EventControllerAbstract {
 
     /**
      * Receive the box that the player choose, and it's placement in the component
-     * Update the player's view with the new list of available boxes
+     * If player wants to leave he selects idxBox = -1
      *
      * @author Lorenzo
      * @param player that choose the box
      * @param idxBox chosen
-     * @param x coordinate of the component were the box will be placed
-     * @param y coordinate of the component were the box will be placed
-     * @param idx is where the player want to insert the chosen box
+     * @param x      coordinate of the component were the box will be placed
+     * @param y      coordinate of the component were the box will be placed
+     * @param idx    is where the player want to insert the chosen box
      * @param sender current sender
      * @throws RemoteException
      */
     @Override
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
-        if (phase.equals(EventPhase.CHOOSE_BOX)) {
+        if (!phase.equals(EventPhase.CHOOSE_BOX)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks that current player is trying to get reward the reward box
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks that current player is trying to get reward the reward box
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                try {
-                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                    BoxStorage storage = (BoxStorage) matrix[y][x];
-                    Box box = rewardBoxes.get(idxBox);
+        // Checks if reward box index is correct
+        if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
+            sender.sendMessage("IncorrectRewardIndex");
+            return;
+        }
 
-                    // Checks box chosen is contained in rewards list
-                    if (rewardBoxes.contains(box)) {
+        // Checks if player wants to leave
+        if (idxBox == -1) {
+            leaveStation(player, sender);
+            return;
+        }
 
-                        // Checks that reward box is placed correctly in given storage
-                        if (lostStation.chooseRewardBox(player.getSpaceship(), storage, idx, box)) {
-                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                            sender.sendMessage("BoxChosen");
+        Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                            rewardBoxes.remove(box);
+        // Checks if component index is correct
+        if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                        } else {
-                            sender.sendMessage("BoxNotChosen");
-                        }
+        Component component = matrix[y][x];
 
-                    } else {
-                        sender.sendMessage("ChosenBoxNotAvailable");
-                    }
+        // Checks if it is a storage component
+        if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                } catch (ClassCastException e) {
-                    throw new IllegalStateException("ComponentIsNotAStorage");
+        Box box = rewardBoxes.get(idxBox);
 
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new IllegalStateException("ComponentIsNotInMatrix");
-                }
+        // Checks that reward box is placed correctly in given storage
+        if (lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, idx, box)) {
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+            sender.sendMessage("BoxChosen");
 
-                // All the boxes are chosen
-                if (rewardBoxes.isEmpty()) {
-                    leaveStation(player, sender);
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
+            rewardBoxes.remove(box);
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("BoxNotChosen");
+        }
+
+        // Checks if all boxes were chosen
+        if (rewardBoxes.isEmpty()) {
+            leaveStation(player, sender);
         }
     }
 
@@ -203,23 +213,21 @@ public class LostStationController extends EventControllerAbstract {
      * @param sender current sender
      * @throws RemoteException
      */
-    public void leaveStation(Player player, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.CHOOSE_BOX)) {
-
-            // Checks that current player is trying to leave
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
-
-                lostStation.penalty(gameManager.getGame().getBoard(), player);
-
-                sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
-                gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
-
-        } else {
+    private void leaveStation(Player player, Sender sender) throws RemoteException {
+        if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             sender.sendMessage("IncorrectPhase");
+            return;
         }
+
+        // Checks that current player is trying to leave
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        lostStation.penalty(gameManager.getGame().getBoard(), player);
+
+        sender.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()));
+        gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()));
     }
 }

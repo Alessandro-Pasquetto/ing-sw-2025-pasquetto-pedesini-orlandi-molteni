@@ -235,11 +235,13 @@ public class SpaceshipController {
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             // Checks ship validity
-            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix())
+            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix()) {
                 sender.sendMessage("SpaceshipNotValidSelectPart");
 
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
+            } else {
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+            }
 
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("EmptyComponentCell"))
@@ -264,6 +266,13 @@ public class SpaceshipController {
     public static void destroyComponentWithoutAnyCheck(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+            // Checks if player is trying to destroy central unit
+            if (buildingBoard.getCopySpaceshipMatrix()[xComponent][yComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
+                sender.sendMessage("ImpossibleToDestroyCentralUnit");
+                return;
+            }
+
             buildingBoard.destroyComponent(xComponent, yComponent);
 
             sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
@@ -299,11 +308,12 @@ public class SpaceshipController {
         try{
             buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
-            // player.setIsReady(true, gameManager.getGame());
-            // gameManager.getGameThread().notifyThread();
+             player.setIsReady(true, gameManager.getGame());
+             gameManager.getGameThread().notifyThread();
 
-            // todo notificare spaceship  // serve updateSpaceship con nome
+            // todo notificare spaceship: serve updateSpaceship con nome
             //gameManager.broadcastGameMessage();
+
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotValidCoordinates"))
                 sender.sendMessage("NotValidCoordinates");

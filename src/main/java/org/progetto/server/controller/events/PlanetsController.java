@@ -126,14 +126,15 @@ public class PlanetsController extends EventControllerAbstract {
             return;
         }
 
-        if(planetIdx == -1){
-            // If does not wanna land
+        if (planetIdx == -1){
+            // If he does not want to land
             phase = EventPhase.ASK_TO_LAND;
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
-        } else{
-            // If wanna land
+
+        } else {
+            // If he wants to land
             planets.choosePlanet(player, planetIdx);
 
             gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));

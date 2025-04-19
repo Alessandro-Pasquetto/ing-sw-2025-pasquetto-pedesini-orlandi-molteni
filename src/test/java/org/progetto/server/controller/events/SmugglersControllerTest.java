@@ -167,7 +167,7 @@ class SmugglersControllerTest {
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         Thread.sleep(200);
-        controller.leaveReward(p3, sender);
+        controller.receiveRewardBox(p3, -1, 3, 1, 0, sender);
         assertEquals(EventPhase.PENALTY_DAYS, controller.getPhase());
 
         assertEquals(1, p3.getSpaceship().getBoxCounts()[0]);

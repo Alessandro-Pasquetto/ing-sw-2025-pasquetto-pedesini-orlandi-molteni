@@ -302,14 +302,9 @@ public class BuildingBoard implements Serializable {
      * @author Lorenzo
      * @return the component matrix for the spaceship initialized with null values
      */
-    private Component[][] createSpaceshipMatrix()
-    {
+    private Component[][] createSpaceshipMatrix() {
         return new Component[boardMask.length][boardMask[0].length];
     }
-
-    // controller will call destroy component for each event were a component needs to be removed, the actions sequence is the following
-    // 1. remove the component from the spaceship matrix, update mask matrix
-    // 2. update spaceship counters
 
     /**
      * Remove a component from the spaceship, update values

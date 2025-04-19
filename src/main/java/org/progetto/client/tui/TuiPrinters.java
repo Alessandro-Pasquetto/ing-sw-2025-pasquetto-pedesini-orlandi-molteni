@@ -308,11 +308,12 @@ public class TuiPrinters {
                 case BATTERY_STORAGE:
                     BatteryStorage batteryStorage = (BatteryStorage) component;
                     itemsCount = batteryStorage.getItemsCount();
+                    capacity = batteryStorage.getCapacity();
 
                     lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
-                    lines[3] = leftConnections[2] + "    (" + itemsCount + ")    " + rightConnections[2];
+                    lines[3] = leftConnections[2] + "    " + itemsCount + "/" + capacity + "    " + rightConnections[2];
                     lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
                     break;
 

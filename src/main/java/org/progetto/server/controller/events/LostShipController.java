@@ -88,35 +88,35 @@ public class LostShipController extends EventControllerAbstract  {
      */
     @Override
     public void receiveRewardAndPenaltiesDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.REWARD_DECISION)) {
+        if (!phase.equals(EventPhase.REWARD_DECISION)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
-                String upperCaseResponse = response.toUpperCase();
+        // Checks if active player is correct
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                switch (upperCaseResponse) {
-                    case "YES":
-                        phase = EventPhase.PENALTY_EFFECT;
-                        penaltyEffect(player, sender);
-                        break;
+        String upperCaseResponse = response.toUpperCase();
 
-                    case "NO":
-                        phase = EventPhase.ASK_TO_LAND;
+        switch (upperCaseResponse) {
+            case "YES":
+                phase = EventPhase.PENALTY_EFFECT;
+                penaltyEffect(player, sender);
+                break;
 
-                        player.setIsReady(true, gameManager.getGame());
-                        gameManager.getGameThread().notifyThread();
-                        break;
+            case "NO":
+                phase = EventPhase.ASK_TO_LAND;
 
-                    default:
-                        sender.sendMessage("IncorrectResponse");
-                        break;
-                }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+                break;
 
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
-
-        } else {
-            sender.sendMessage("IncorrectPhase: " + phase);
+            default:
+                sender.sendMessage("IncorrectResponse");
+                break;
         }
     }
 
@@ -129,22 +129,20 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws RemoteException
      */
     public void penaltyEffect(Player player, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.PENALTY_EFFECT)) {
-
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
-
-                requestedCrew = lostShip.getPenaltyCrew();
-                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                phase = EventPhase.DISCARDED_CREW;
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
-
-        } else {
+        if (!phase.equals(EventPhase.PENALTY_EFFECT)) {
             sender.sendMessage("IncorrectPhase");
+            return;
         }
+
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        requestedCrew = lostShip.getPenaltyCrew();
+        sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+        phase = EventPhase.DISCARDED_CREW;
     }
 
     /**
@@ -159,43 +157,47 @@ public class LostShipController extends EventControllerAbstract  {
      */
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.DISCARDED_CREW)) {
+        if (!phase.equals(EventPhase.DISCARDED_CREW)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
+        // Checks if component index is correct
+        if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                    // Checks if a crew member has been discarded
-                    if (lostShip.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
-                        requestedCrew--;
-                        sender.sendMessage("CrewMemberDiscarded");
+        Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
-                        if (requestedCrew == 0) {
-                            phase = EventPhase.EFFECT;
-                            eventEffect();
+        if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                        } else {
-                            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                        }
+        // Checks if a crew member has been discarded
+        if (lostShip.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
+            requestedCrew--;
+            sender.sendMessage("CrewMemberDiscarded");
 
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+            if (requestedCrew == 0) {
+                phase = EventPhase.EFFECT;
+                eventEffect();
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("NotEnoughCrew");
         }
     }
 

@@ -82,42 +82,41 @@ public class SlaversController extends EventControllerAbstract {
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
 
+                // Checks if card got defeated
+                if (defeated) {
+                    break;
+                }
+
                 // Checks if players is able to win without double cannons
                 if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
 
-                } else {
-
-                    // Calculates max number of double cannons usable
-                    int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-
-                    // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-                    if (maxUsable == 0) {
-                        playerFirePower = spaceship.getNormalShootingPower();
-
-                        // Checks if player lose
-                        if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
-                            phase = EventPhase.PENALTY_EFFECT;
-                            penaltyEffect(player, sender);
-
-                        } else {
-                            // Skips to next player if player draws
-                            continue;
-                        }
-
-                    } else {
-                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
-                        phase = EventPhase.CANNON_NUMBER;
-                    }
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    continue;
                 }
+
+                // Calculates max number of double cannons usable
+                int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+
+                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                if (maxUsable == 0) {
+                    playerFirePower = spaceship.getNormalShootingPower();
+
+                    // Checks if player lose
+                    if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+                        phase = EventPhase.PENALTY_EFFECT;
+                        penaltyEffect(player, sender);
+
+                        gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    }
+                    continue;
+                }
+
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+                phase = EventPhase.CANNON_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
-
-                // Checks if card got defeated
-                if (defeated) {
-                    break;
-                }
             }
         }
     }
@@ -134,44 +133,42 @@ public class SlaversController extends EventControllerAbstract {
      */
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CANNON_NUMBER)) {
+        if (!phase.equals(EventPhase.CANNON_NUMBER)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Spaceship spaceship = player.getSpaceship();
+        Spaceship spaceship = player.getSpaceship();
 
-                // Player doesn't want to use double cannons
-                if (num == 0) {
-                    playerFirePower = player.getSpaceship().getNormalShootingPower();
+        // Player doesn't want to use double cannons
+        if (num == 0) {
+            playerFirePower = player.getSpaceship().getNormalShootingPower();
 
-                    phase = EventPhase.BATTLE_RESULT;
-                    battleResult(player, sender);
+            phase = EventPhase.BATTLE_RESULT;
+            battleResult(player, sender);
 
-                } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
-                    requestedBatteries = num;
+        } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
+            requestedBatteries = num;
 
-                    // Updates player's firepower based on his decision
-                    if (num <= spaceship.getFullDoubleCannonCount()) {
-                        playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
-                    } else {
-                        playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
-                    }
-
-                    sender.sendMessage(new BatteriesToDiscardMessage(num));
-
-                    phase = EventPhase.DISCARDED_BATTERIES;
-
-                } else {
-                    sender.sendMessage("IncorrectNumber");
-                }
-
+            // Updates player's firepower based on his decision
+            if (num <= spaceship.getFullDoubleCannonCount()) {
+                playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
             } else {
-                sender.sendMessage("NotYourTurn");
+                playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
             }
 
+            sender.sendMessage(new BatteriesToDiscardMessage(num));
+
+            phase = EventPhase.DISCARDED_BATTERIES;
+
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("IncorrectNumber");
         }
     }
 
@@ -188,43 +185,48 @@ public class SlaversController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+        if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+        // Checks if component index is correct
+        if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                    // Checks if a battery has been discarded
-                    if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBatteries--;
-                        sender.sendMessage("BatteryDiscarded");
+        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
-                        if (requestedBatteries == 0) {
-                            phase = EventPhase.BATTLE_RESULT;
-                            battleResult(player, sender);
+        // Checks if component is a battery storage
+        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                        } else {
-                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
-                        }
+        // Checks if a battery has been discarded
+        if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+            requestedBatteries--;
+            sender.sendMessage("BatteryDiscarded");
 
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+            if (requestedBatteries == 0) {
+                phase = EventPhase.BATTLE_RESULT;
+                battleResult(player, sender);
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("NotEnoughBatteries");
         }
     }
 
@@ -263,13 +265,7 @@ public class SlaversController extends EventControllerAbstract {
                         gameManager.getGameThread().notifyThread();
                         break;
                 }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -290,12 +286,7 @@ public class SlaversController extends EventControllerAbstract {
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
                 phase = EventPhase.DISCARDED_CREW;
 
-            } else {
-                sender.sendMessage("NotYourTurn");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -311,44 +302,49 @@ public class SlaversController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.DISCARDED_CREW)) {
+        if (!phase.equals(EventPhase.DISCARDED_CREW)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
+        // Checks if component index is correct
+        if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                    // Checks if a crew member has been discarded
-                    if (slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
-                        requestedCrew--;
-                        sender.sendMessage("CrewMemberDiscarded");
+        Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
-                        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
+        // Checks if component is a housing unit
+        if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
+        // Checks if a crew member has been discarded
+        if (slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
+            requestedCrew--;
+            sender.sendMessage("CrewMemberDiscarded");
 
-                        } else {
-                            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                        }
+            if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
 
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("NotEnoughBatteries");
         }
     }
 
@@ -383,13 +379,7 @@ public class SlaversController extends EventControllerAbstract {
                         sender.sendMessage("IncorrectResponse");
                         break;
                 }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 

@@ -82,54 +82,51 @@ public class SmugglersController extends EventControllerAbstract {
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
 
+                // Checks if card got defeated
+                if (defeated) {
+                    break;
+                }
+
                 // Checks if players is able to win without double cannons
                 if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
 
-                } else {
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    continue;
+                }
 
-                    // Calculates max number of double cannons usable
-                    int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+                // Calculates max number of double cannons usable
+                int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
-                    // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-                    if (maxUsable == 0) {
-                        playerFirePower = spaceship.getNormalShootingPower();
+                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+                if (maxUsable == 0) {
+                    playerFirePower = spaceship.getNormalShootingPower();
 
-                        phase = EventPhase.BATTLE_RESULT;
-                        battleResult(player, sender);
+                    if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
 
-                        if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+                        // Checks if he has more than a box/battery
+                        int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
 
-                            // Checks if he has more than a box/battery
-                            int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+                        if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
+                            requestedBoxes = smugglers.getPenaltyBoxes();
 
-                            if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
-                                requestedBoxes = smugglers.getPenaltyBoxes();
+                            phase = EventPhase.PENALTY_EFFECT;
+                            penaltyEffect(player, sender);
 
-                                phase = EventPhase.PENALTY_EFFECT;
-                                penaltyEffect(player, sender);
-                            } else {
-                                sender.sendMessage("NotEnoughBoxesAndBatteries");
-                            }
+                            gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                         } else {
-                            // Skips to next player if player draws
-                            continue;
+                            sender.sendMessage("NotEnoughBoxesAndBatteries");
                         }
-
-                    } else {
-                        phase = EventPhase.CANNON_NUMBER;
-                        sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
                     }
+                    continue;
                 }
+
+                phase = EventPhase.CANNON_NUMBER;
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
-
-                // Checks if card got defeated
-                if (defeated) {
-                    break;
-                }
             }
         }
     }
@@ -146,44 +143,42 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CANNON_NUMBER)) {
+        if (!phase.equals(EventPhase.CANNON_NUMBER)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Spaceship spaceship = player.getSpaceship();
+        Spaceship spaceship = player.getSpaceship();
 
-                // Player doesn't want to use double cannons
-                if (num == 0) {
-                    playerFirePower = player.getSpaceship().getNormalShootingPower();
+        // Player doesn't want to use double cannons
+        if (num == 0) {
+            playerFirePower = player.getSpaceship().getNormalShootingPower();
 
-                    phase = EventPhase.BATTLE_RESULT;
-                    battleResult(player, sender);
+            phase = EventPhase.BATTLE_RESULT;
+            battleResult(player, sender);
 
-                } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
-                    requestedBatteries = num;
+        } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
+            requestedBatteries = num;
 
-                    // Updates player's firepower based on his decision
-                    if (num <= spaceship.getFullDoubleCannonCount()) {
-                        playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
-                    } else {
-                        playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
-                    }
-
-                    sender.sendMessage(new BatteriesToDiscardMessage(num));
-
-                    phase = EventPhase.DISCARDED_BATTERIES;
-
-                } else {
-                    sender.sendMessage("IncorrectNumber");
-                }
-
+            // Updates player's firepower based on his decision
+            if (num <= spaceship.getFullDoubleCannonCount()) {
+                playerFirePower = spaceship.getNormalShootingPower() + 2 * num;
             } else {
-                sender.sendMessage("NotYourTurn");
+                playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
             }
 
+            sender.sendMessage(new BatteriesToDiscardMessage(num));
+
+            phase = EventPhase.DISCARDED_BATTERIES;
+
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("IncorrectNumber");
         }
     }
 
@@ -200,83 +195,75 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+        if (!phase.equals(EventPhase.DISCARDED_BATTERIES) && !phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+
+        // Checks if component index is correct
+        if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
+
+        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+        // Checks if component is a battery storage
+        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
+
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+            // Checks if a battery has been discarded
+            if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                requestedBatteries--;
+                sender.sendMessage("BatteryDiscarded");
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
-
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-
-                    // Checks if a battery has been discarded
-                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBatteries--;
-                        sender.sendMessage("BatteryDiscarded");
-
-                        if (requestedBatteries == 0) {
-                            phase = EventPhase.BATTLE_RESULT;
-                            battleResult(player, sender);
-
-                        } else {
-                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
+                if (requestedBatteries == 0) {
+                    phase = EventPhase.BATTLE_RESULT;
+                    battleResult(player, sender);
 
                 } else {
-                    sender.sendMessage("InvalidCoordinates");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
                 }
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage("NotEnoughBatteries");
             }
 
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+            // Checks if a battery has been discarded
+            if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                requestedBoxes--;
+                sender.sendMessage("BatteryDiscarded");
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+                if (requestedBoxes == 0) {
+                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
 
-                    // Checks if a battery has been discarded
-                    if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBoxes--;
-                        sender.sendMessage("BatteryDiscarded");
+                } else if (player.getSpaceship().getBatteriesCount() == 0) {
+                    sender.sendMessage("NotEnoughBatteries");
 
-                        if (requestedBoxes == 0) {
-                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
-
-                        } else if (player.getSpaceship().getBatteriesCount() == 0) {
-                            sender.sendMessage("NotEnoughBatteries");
-
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
                 }
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage("NotEnoughBatteries");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -325,13 +312,7 @@ public class SmugglersController extends EventControllerAbstract {
                         gameManager.getGameThread().notifyThread();
                         break;
                 }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -374,63 +355,68 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.DISCARDED_BOXES)) {
+        if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
-                    // Checks if a box has been discarded
-                    if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
-                        requestedBoxes--;
-                        sender.sendMessage("BoxDiscarded");
+        // Checks if component index is correct
+        if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= spaceshipMatrix.length || xBoxStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                        if (requestedBoxes == 0) {
-                            gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
+        Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
+        // Checks if component is a box storage
+        if (boxStorage == null || (!boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                        } else {
+        // Checks if a box has been discarded
+        if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
+            requestedBoxes--;
+            sender.sendMessage("BoxDiscarded");
 
-                            int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+            if (requestedBoxes == 0) {
+                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
 
-                            // Checks if he has at least a box to discard
-                            if (maxBoxCount > 0) {
-                                sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                                phase = EventPhase.DISCARDED_BOXES;
-
-                            // Checks if he has at least a battery to discard
-                            } else if (player.getSpaceship().getBatteriesCount() > 0) {
-                                sender.sendMessage("NotEnoughBoxes");
-                                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-
-                            } else {
-                                sender.sendMessage("NotEnoughBoxesAndBatteries");
-
-                                player.setIsReady(true, gameManager.getGame());
-                                gameManager.getGameThread().notifyThread();
-                            }
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBoxes");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
 
             } else {
-                sender.sendMessage("NotYourTurn");
-            }
 
+                int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+
+                // Checks if he has at least a box to discard
+                if (maxBoxCount > 0) {
+                    sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                    phase = EventPhase.DISCARDED_BOXES;
+
+                // Checks if he has at least a battery to discard
+                } else if (player.getSpaceship().getBatteriesCount() > 0) {
+                    sender.sendMessage("NotEnoughBoxes");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+
+                } else {
+                    sender.sendMessage("NotEnoughBoxesAndBatteries");
+
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
+                }
+            }
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("NotEnoughBoxes");
         }
     }
 
@@ -444,40 +430,38 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.REWARD_DECISION)) {
-
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
-
-                String upperCaseResponse = response.toUpperCase();
-
-                switch (upperCaseResponse) {
-                    case "YES":
-                        phase = EventPhase.CHOOSE_BOX;
-                        sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                        break;
-
-                    case "NO":
-                        player.setIsReady(true, gameManager.getGame());
-                        gameManager.getGameThread().notifyThread();
-                        break;
-
-                    default:
-                        sender.sendMessage("IncorrectResponse");
-                        break;
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
-
-        } else {
+        if (!phase.equals(EventPhase.REWARD_DECISION)) {
             sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        String upperCaseResponse = response.toUpperCase();
+
+        switch (upperCaseResponse) {
+            case "YES":
+                phase = EventPhase.CHOOSE_BOX;
+                sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+                break;
+
+            case "NO":
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+                break;
+
+            default:
+                sender.sendMessage("IncorrectResponse");
+                break;
         }
     }
 
     /**
      * Receive the box that the player choose, and it's placement in the component
-     * Update the player's view with the new list of available boxes
+     * If player wants to leave he selects idxBox = -1
      *
      * @author Gabriele
      * @param player that choose the box
@@ -490,51 +474,61 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.CHOOSE_BOX)) {
+        if (!phase.equals(EventPhase.CHOOSE_BOX)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks that current player is trying to get reward the reward box
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                try {
-                    Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                    BoxStorage storage = (BoxStorage) matrix[y][x];
-                    Box box = rewardBoxes.get(idxBox);
+        // Checks if reward box index is correct
+        if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
+            sender.sendMessage("IncorrectRewardIndex");
+            return;
+        }
 
-                    // Checks box chosen is contained in rewards list
-                    if (rewardBoxes.contains(box)) {
+        // Checks if player wants to leave
+        if (idxBox == -1) {
+            leaveReward(player, sender);
+            return;
+        }
 
-                        // Checks that reward box is placed correctly in given storage
-                        if (smugglers.chooseRewardBox(player.getSpaceship(), storage, idx, box)) {
-                            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-                            sender.sendMessage("BoxChosen");
+        Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                            rewardBoxes.remove(box);
+        // Checks if component index is correct
+        if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                        } else {
-                            sender.sendMessage("BoxNotChosen");
-                        }
+        Component component = matrix[y][x];
 
-                    } else {
-                        sender.sendMessage("ChosenBoxNotAvailable");
-                    }
+        // Checks if it is a storage component
+        if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                } catch (ClassCastException e) {
-                    throw new IllegalStateException("ComponentIsNotAStorage");
+        Box box = rewardBoxes.get(idxBox);
 
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    throw new IllegalStateException("ComponentIsNotInMatrix");
-                }
+        // Checks that reward box is placed correctly in given storage
+        if (smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, idx, box)) {
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+            sender.sendMessage("BoxChosen");
 
-                // All the boxes are chosen
-                if (rewardBoxes.isEmpty()) {
-                    leaveReward(gameManager.getGame().getActivePlayer(), sender);
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
+            rewardBoxes.remove(box);
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("BoxNotChosen");
+        }
+
+        // Checks if all boxes were chosen
+        if (rewardBoxes.isEmpty()) {
+            leaveReward(player, sender);
         }
     }
 
@@ -547,7 +541,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      * @throws IllegalStateException
      */
-    public void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
+    private void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box

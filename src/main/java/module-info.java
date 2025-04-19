@@ -44,4 +44,6 @@ module org.progetto{
     exports org.progetto.messages.toClient.OpenSpace;
     exports org.progetto.messages.toClient.Smugglers;
     exports org.progetto.messages.toClient.Sabotage;
+    exports org.progetto.server.controller.events;
+    opens org.progetto.server.controller.events to com.google.gson, javafx.fxml;
 }
