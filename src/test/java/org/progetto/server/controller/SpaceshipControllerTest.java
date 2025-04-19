@@ -271,10 +271,6 @@ class SpaceshipControllerTest {
         Player player = new Player("mario",0,1);
         GameManager gameManager = new GameManager(0, 4, 1);
         gameManager.getGame().addPlayer(player);
-        gameManager.getGame().setActivePlayer(player);
-        gameManager.getGame().setActiveEventCard(new LostShip(CardType.LOSTSHIP,1,"imgSrc",1,1,1));
-        gameManager.createEventController();
-        gameManager.getEventController().start();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         //place red_box storage on the left of central-unit
@@ -327,10 +323,6 @@ class SpaceshipControllerTest {
         Player player = new Player("mario",0,1);
         GameManager gameManager = new GameManager(0, 4, 1);
         gameManager.getGame().addPlayer(player);
-        gameManager.getGame().setActivePlayer(player);
-        gameManager.getGame().setActiveEventCard(new LostShip(CardType.LOSTSHIP,1,"imgSrc",1,1,1));
-        gameManager.createEventController();
-        gameManager.getEventController().start();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         //place red_box storage on the left of central-unit
@@ -366,7 +358,49 @@ class SpaceshipControllerTest {
     }
 
     @Test
-    void chooseSpaceshipPartToKeep() {
-        //todo as soon as ale finish the method
+    void chooseSpaceshipPartToKeep() throws RemoteException {
+
+        //spaceship setup
+        Sender sender = null;
+        Component component = null;
+        BoxStorage storage = null;
+        Player player = new Player("mario",0,1);
+        GameManager gameManager = new GameManager(0, 4, 1);
+        gameManager.getGame().addPlayer(player);
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        //place red_box storage on the left of central-unit
+        storage = new BoxStorage(ComponentType.RED_BOX_STORAGE,new int[]{3, 3, 3, 3},"imgSrc",3);
+        buildingBoard.setHandComponent(storage);
+        buildingBoard.placeComponent(1,2,0);
+
+        //place red_box storage under the central-unit
+        storage = new BoxStorage(ComponentType.RED_BOX_STORAGE,new int[]{3, 3, 3, 3},"imgSrc",3);
+        buildingBoard.setHandComponent(storage);
+        buildingBoard.placeComponent(2,3,0);
+
+        //place red_box storage on the right of central-unit
+        storage = new BoxStorage(ComponentType.RED_BOX_STORAGE,new int[]{3, 3, 3, 3},"imgSrc",3);
+        buildingBoard.setHandComponent(storage);
+        buildingBoard.placeComponent(3,2,0);
+
+        //Test invalid coordinates
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("NotValidCoordinates", message);
+            }};
+
+       SpaceshipController.chooseSpaceshipPartToKeep(gameManager,player,-1,66, sender);
+
+
+        //Test valid coordinates
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {}};
+        Sender finalSender = sender ;
+        assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager,player,2,2,finalSender));
+
+
     }
 }

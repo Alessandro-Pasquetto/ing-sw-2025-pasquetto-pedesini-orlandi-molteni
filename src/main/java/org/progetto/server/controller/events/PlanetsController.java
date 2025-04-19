@@ -69,6 +69,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
+
             Sender sender = gameManager.getSenderByPlayer(player);
 
             System.out.println(player.getName() + "'s turn");
@@ -193,6 +194,14 @@ public class PlanetsController extends EventControllerAbstract {
 
         if (boxStorage == null || !boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE)) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+            return;
+        }
+
+        // Checks that the box index is valid
+        BoxStorage storage = (BoxStorage) boxStorage;
+        if(idxBox>=storage.getCapacity()||idxBox<0){
+            sender.sendMessage("InvalidStorageIndex");
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
