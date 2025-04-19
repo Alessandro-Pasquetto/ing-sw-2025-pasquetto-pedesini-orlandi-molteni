@@ -61,7 +61,6 @@ public class GameThread extends Thread {
                         GameController.startBuilding(gameManager);
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
-                        gameManager.addAllNotCheckReadyPlayers();
                         gameManager.getGame().resetReadyPlayers();
                         synchronized (gameThreadLock) {
                             while (game.getNumReadyPlayers() != game.getMaxNumPlayers() && !gameManager.getTimerExpired())

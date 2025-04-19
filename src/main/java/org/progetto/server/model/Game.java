@@ -350,6 +350,7 @@ public class Game {
             pickedComponent = componentDeck.remove(randomPos);
 
 
+
             /*
             //forzare componente todo poi da rimuovere
             int randomPos = 0;
@@ -362,7 +363,8 @@ public class Game {
             }while(!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE));
 
             pickedComponent = componentDeck.remove(randomPos);
-            */
+
+             */
         }
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
@@ -447,7 +449,7 @@ public class Game {
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
-             */
+            */
         }
 
         setActiveEventCard(pickedEventCard);

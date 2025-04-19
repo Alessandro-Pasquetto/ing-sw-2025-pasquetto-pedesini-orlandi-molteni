@@ -171,21 +171,9 @@ public class GameManager {
         }
     }
 
-    public void addAllNotCheckReadyPlayers(){
-        synchronized (notCheckedReadyPlayers){
-            notCheckedReadyPlayers.addAll(game.getPlayersCopy());
-        }
-    }
-
     public void removeNotCheckedReadyPlayer(Player player){
         synchronized (notCheckedReadyPlayers){
             notCheckedReadyPlayers.remove(player);
-        }
-    }
-
-    public void removeAllNotCheckReadyPlayers(){
-        synchronized (notCheckedReadyPlayers){
-            notCheckedReadyPlayers.clear();
         }
     }
 

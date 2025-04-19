@@ -65,6 +65,11 @@ public class LobbyController {
     public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException{
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
+
+        if(gameManager == null){
+            throw new IllegalStateException("Not valid gameId");
+        }
+
         Game game = gameManager.getGame();
 
         if(!game.checkAvailableName(name))

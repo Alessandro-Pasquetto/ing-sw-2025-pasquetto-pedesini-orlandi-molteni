@@ -525,6 +525,7 @@ public class BuildingController {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
         player.setIsReady(true, gameManager.getGame());
+        gameManager.addNotCheckedReadyPlayer(player);
         gameManager.getGameThread().notifyThread();
     }
 

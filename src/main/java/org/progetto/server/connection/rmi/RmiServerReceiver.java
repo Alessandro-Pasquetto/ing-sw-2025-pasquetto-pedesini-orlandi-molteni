@@ -66,11 +66,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         try {
             internalGameInfo = LobbyController.joinGame(idGame, name);
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("GameFull"))
-                virtualClient.sendMessage("GameFull");
-
-            else if(e.getMessage().equals("NotAvailableName"))
-                virtualClient.sendMessage("NotAvailableName");
+            virtualClient.sendMessage(e.getMessage());
             return;
         }
 

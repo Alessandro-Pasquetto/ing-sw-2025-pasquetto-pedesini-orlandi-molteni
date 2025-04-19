@@ -79,11 +79,7 @@ public class SocketListener extends Thread {
             try {
                 internalGameInfo = LobbyController.joinGame(idGame, name);
             } catch (IllegalStateException e) {
-                if(e.getMessage().equals("GameFull"))
-                    clientHandler.getSocketWriter().sendMessage("GameFull");
-
-                else if(e.getMessage().equals("NotAvailableName"))
-                    clientHandler.getSocketWriter().sendMessage("NotAvailableName");
+                clientHandler.getSocketWriter().sendMessage(e.getMessage());
                 return;
             }
 
