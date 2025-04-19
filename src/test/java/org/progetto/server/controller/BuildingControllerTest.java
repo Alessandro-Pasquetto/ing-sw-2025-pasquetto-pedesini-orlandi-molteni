@@ -189,7 +189,91 @@ class BuildingControllerTest {
 
     @Test
     void placeHandComponentAndPickUpEventCardDeck() throws RemoteException {
-        //todo
+        GameManager gameManager = new GameManager(0, 4, 1);
+
+        Player player = new Player("mario", 0, 1);
+        gameManager.getGame().addPlayer(player);
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+
+        //Test unable to pick for level 1
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("CannotPickUpEventCardDeck", message);
+
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+
+
+        //Test empty hand
+        gameManager = new GameManager(0, 4, 2);
+        gameManager.getGame().addPlayer(player);
+        player.getSpaceship().getBuildingBoard().setHandComponent(null);
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("EmptyHandComponent", message);
+
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+
+
+        //Test deck already taken
+        Player otherPLayer = new Player("Giovanni", 0, 1);
+        gameManager.getGame().addPlayer(otherPLayer);
+
+        BuildingBoard bb1 = player.getSpaceship().getBuildingBoard();
+        BuildingBoard bb2 = otherPLayer.getSpaceship().getBuildingBoard();
+
+        bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+        bb2.setHandComponent(new Component(ComponentType.BOX_STORAGE, new int[]{1, 1, 2, 1}, "imgPath"));
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,otherPLayer,2,3,0,0,sender);
+
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                if(!message.equals("AllowedToPlaceComponent"))
+                    assertEquals("EventCardDeckIsAlreadyTaken", message);
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+
+
+        //Test illegal placement
+        bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg) throws RemoteException {
+                assertEquals("NotAllowedToPlaceComponent", msg);
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,1,sender);
+
+        //Test correct placing and picking
+        bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg) throws RemoteException {
+                if(!msg.equals("AllowedToPlaceComponent"))
+                    assertInstanceOf(PickedUpEventCardDeckMessage.class, msg);
+            }
+        };
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,1,3,0,1,sender);
+
+
+
     }
 
     @Test

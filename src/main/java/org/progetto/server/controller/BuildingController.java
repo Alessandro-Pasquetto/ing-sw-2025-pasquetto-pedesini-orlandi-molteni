@@ -369,6 +369,11 @@ public class BuildingController {
             return;
         }
 
+        if(gameManager.getGame().getLevel() == 1){
+            sender.sendMessage("CannotPickUpEventCardDeck");
+            return;
+        }
+
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
