@@ -125,10 +125,10 @@ public class PiratesController extends EventControllerAbstract {
                         defeatedPlayers.add(player);
                     }
                     continue;
+                } else {
+                    sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
+                    phase = EventPhase.CANNON_NUMBER;
                 }
-
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
-                phase = EventPhase.CANNON_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

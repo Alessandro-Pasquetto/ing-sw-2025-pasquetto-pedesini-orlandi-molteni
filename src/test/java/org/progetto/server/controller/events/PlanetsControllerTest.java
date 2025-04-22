@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlanetsControllerTest {
 
     @Test
-    void PlanetsControllerTest() throws RemoteException, InterruptedException {
+    void planetsControllerTest() throws RemoteException, InterruptedException {
 
         //board setup
         GameManager gameManager = new GameManager(0, 2, 1);
@@ -112,7 +112,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveDecisionToLandPlanet(p2,0,sender);
+        controller.receiveDecisionToLandPlanet(p2, 0, sender);
 
 
         //Test index outOfBound
@@ -123,14 +123,14 @@ class PlanetsControllerTest {
                     assertEquals("PlanetIdxNotValid", message);
             }
         };
-        controller.receiveDecisionToLandPlanet(p1,5,sender);
+        controller.receiveDecisionToLandPlanet(p1, 5, sender);
 
         //Test landing completed
         sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {}
         };
-        controller.receiveDecisionToLandPlanet(p1,0,sender);
+        controller.receiveDecisionToLandPlanet(p1, 0, sender);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
 
@@ -143,7 +143,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p1,0,10,55,0,sender);
+        controller.receiveRewardBox(p1, 0, 10, 55, 0, sender);
 
 
         //Test first box chosen
@@ -155,14 +155,14 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p1,0,3,2,0,sender);
+        controller.receiveRewardBox(p1, 0, 3, 2, 0, sender);
 
         //Test second box chosen
         sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {}
         };
-        controller.receiveRewardBox(p1,0,3,2,1,sender);
+        controller.receiveRewardBox(p1, 0, 3, 2, 1, sender);
         assertEquals(EventPhase.ASK_TO_LAND, controller.getPhase());
 
 
@@ -176,7 +176,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveDecisionToLandPlanet(p1,0,sender);
+        controller.receiveDecisionToLandPlanet(p1, 0, sender);
 
         //Test second land on a taken planet
         sender = new VirtualClient() {
@@ -186,14 +186,14 @@ class PlanetsControllerTest {
                     assertEquals("PlanetAlreadyTaken", message);
             }
         };
-        controller.receiveDecisionToLandPlanet(p2,0,sender);
+        controller.receiveDecisionToLandPlanet(p2, 0, sender);
 
         //Test second land completed
         sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {}
         };
-        controller.receiveDecisionToLandPlanet(p2,1,sender);
+        controller.receiveDecisionToLandPlanet(p2, 1, sender);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
 
@@ -206,7 +206,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p2,0,2,2,0,sender);
+        controller.receiveRewardBox(p2, 0, 2, 2, 0, sender);
 
 
         //Test invalid box index
@@ -218,7 +218,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p2,5,1,2,0,sender);
+        controller.receiveRewardBox(p2, 5, 1, 2, 0, sender);
 
 
         //Test valid selection
@@ -230,7 +230,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p2,0,1,2,0,sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender);
 
 
         //Test wrong storage index
@@ -242,7 +242,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p2,0,1,2,0,sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender);
 
         //save starting position
         p1.setPosition(6);
@@ -257,7 +257,7 @@ class PlanetsControllerTest {
 
             }
         };
-        controller.receiveRewardBox(p2,0,1,2,1,sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 1, sender);
 
 
         //Test unable to select
@@ -267,8 +267,9 @@ class PlanetsControllerTest {
                 assertEquals("IncorrectPhase", message);
             }
         };
-        controller.receiveRewardBox(p2,0,1,2,1,sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 1, sender);
 
+        Thread.sleep(200);
         //Test correct effect application
         assertEquals(4, p1.getPosition());
         assertEquals(0, p2.getPosition());

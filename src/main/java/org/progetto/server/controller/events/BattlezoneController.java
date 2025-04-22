@@ -43,7 +43,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.battlezone = (Battlezone) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.couples = new ArrayList<>();
+        this.couples = new ArrayList<>(this.battlezone.getCouples());
         this.penaltyShots = new ArrayList<>();
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.tempEnginePower = new HashMap<>();
@@ -94,12 +94,12 @@ public class BattlezoneController extends EventControllerAbstract {
                         chooseFewerCrew();
                         break;
 
-                    case ConditionType.FIREPOWERREQUIREMENT:
+                    case ConditionType.ENGINEPOWERREQUIREMENT:
                         phase = EventPhase.ASK_ENGINES;
                         askHowManyEnginesToUse();
                         break;
 
-                    case ConditionType.ENGINEPOWERREQUIREMENT:
+                    case ConditionType.FIREPOWERREQUIREMENT:
                         phase = EventPhase.ASK_CANNONS;
                         askHowManyCannonsToUse();
                         break;
@@ -153,9 +153,9 @@ public class BattlezoneController extends EventControllerAbstract {
                 } else {
                     sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
                     phase = EventPhase.ENGINE_NUMBER;
-                }
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                }
             }
 
             phase = EventPhase.CHOOSE_WEAKEST_ENGINES;
@@ -194,10 +194,10 @@ public class BattlezoneController extends EventControllerAbstract {
 
         } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
             requestedBatteries = num;
+
             tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower() + 2 * num);
 
             sender.sendMessage(new BatteriesToDiscardMessage(num));
-
             phase = EventPhase.DISCARDED_BATTERIES;
 
         } else {
@@ -234,9 +234,9 @@ public class BattlezoneController extends EventControllerAbstract {
                 } else {
                     sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
                     phase = EventPhase.CANNON_NUMBER;
-                }
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                }
             }
 
             phase = EventPhase.CHOOSE_WEAKEST_CANNONS;

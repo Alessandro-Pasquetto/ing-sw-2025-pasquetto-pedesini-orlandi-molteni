@@ -346,7 +346,7 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("EmptyComponentCell", message);
             }};
-        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager,player,0,0,sender);
+        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, 0, 0, sender);
 
         //test correct removal of the component
         sender = new Sender() {
@@ -354,7 +354,7 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
             }};
-        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager,player,1,2,sender);
+        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, 1, 2, sender);
     }
 
     @Test
