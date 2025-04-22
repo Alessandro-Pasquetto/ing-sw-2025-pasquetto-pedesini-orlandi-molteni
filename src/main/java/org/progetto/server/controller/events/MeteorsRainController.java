@@ -138,7 +138,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.ROLL_DICE)) {
+        if (!phase.equals(EventPhase.ROLL_DICE)) {
             sender.sendMessage("IncorrectPhase");
             return;
         }
