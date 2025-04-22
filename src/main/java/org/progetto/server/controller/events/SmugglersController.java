@@ -238,7 +238,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
 
             } else {
-                sender.sendMessage("NotEnoughBatteries");
+                sender.sendMessage("BatteryNotDiscarded");
             }
 
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
@@ -262,7 +262,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
 
             } else {
-                sender.sendMessage("NotEnoughBatteries");
+                sender.sendMessage("BatteryNotDiscarded");
             }
         }
     }
@@ -416,7 +416,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
             }
         } else {
-            sender.sendMessage("NotEnoughBoxes");
+            sender.sendMessage("BoxNotDiscarded");
         }
     }
 
@@ -466,14 +466,14 @@ public class SmugglersController extends EventControllerAbstract {
      * @author Gabriele
      * @param player that choose the box
      * @param idxBox chosen
-     * @param y coordinate of the component were the box will be placed
-     * @param x coordinate of the component were the box will be placed
+     * @param yBoxStorage coordinate of the component were the box will be placed
+     * @param xBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      * @throws RemoteException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException {
+    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -500,12 +500,12 @@ public class SmugglersController extends EventControllerAbstract {
         Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
         // Checks if component index is correct
-        if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
+        if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= matrix.length || xBoxStorage >= matrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
             return;
         }
 
-        Component component = matrix[y][x];
+        Component component = matrix[yBoxStorage][xBoxStorage];
 
         // Checks if it is a storage component
         if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {

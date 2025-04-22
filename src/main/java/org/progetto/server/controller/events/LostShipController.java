@@ -197,7 +197,7 @@ public class LostShipController extends EventControllerAbstract  {
             }
 
         } else {
-            sender.sendMessage("NotEnoughCrew");
+            sender.sendMessage("CrewMemberNotDiscarded");
         }
     }
 

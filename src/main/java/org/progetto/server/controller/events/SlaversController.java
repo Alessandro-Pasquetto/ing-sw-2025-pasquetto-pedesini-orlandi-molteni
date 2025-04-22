@@ -226,7 +226,7 @@ public class SlaversController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("NotEnoughBatteries");
+            sender.sendMessage("BatteryNotDiscarded");
         }
     }
 
@@ -285,7 +285,6 @@ public class SlaversController extends EventControllerAbstract {
                 requestedCrew = slavers.getPenaltyCrew();
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
                 phase = EventPhase.DISCARDED_CREW;
-
             }
         }
     }
@@ -344,7 +343,7 @@ public class SlaversController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("NotEnoughBatteries");
+            sender.sendMessage("CrewMemberNotDiscarded");
         }
     }
 

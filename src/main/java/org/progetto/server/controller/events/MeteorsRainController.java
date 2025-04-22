@@ -420,7 +420,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("NotEnoughBatteries");
+            sender.sendMessage("BatteryNotDiscarded");
         }
     }
 

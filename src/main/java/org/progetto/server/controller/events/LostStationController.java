@@ -87,8 +87,8 @@ public class LostStationController extends EventControllerAbstract {
      * Send the available boxes to that player
      *
      * @author Gabriele
-     * @param player   current player
-     * @param sender   current sender
+     * @param player current player
+     * @param sender current sender
      * @param decision player's decision
      * @throws RemoteException
      */
@@ -139,9 +139,9 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      * @param player that choose the box
      * @param idxBox chosen
-     * @param x      coordinate of the component were the box will be placed
-     * @param y      coordinate of the component were the box will be placed
-     * @param idx    is where the player want to insert the chosen box
+     * @param x coordinate of the component were the box will be placed
+     * @param y coordinate of the component were the box will be placed
+     * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      * @throws RemoteException
      */

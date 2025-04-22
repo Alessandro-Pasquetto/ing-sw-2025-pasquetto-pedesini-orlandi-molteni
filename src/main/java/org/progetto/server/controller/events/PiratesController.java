@@ -243,7 +243,7 @@ public class PiratesController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("NotEnoughBatteries");
+            sender.sendMessage("BatteryNotDiscarded");
         }
     }
 
@@ -587,7 +587,6 @@ public class PiratesController extends EventControllerAbstract {
 
         // Checks if a battery has been discarded
         if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-
             discardedBattery.remove(player);
             sender.sendMessage("BatteryDiscarded");
 
@@ -597,7 +596,7 @@ public class PiratesController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("NotEnoughBatteries");
+            sender.sendMessage("BatteryNotDiscarded");
         }
     }
 

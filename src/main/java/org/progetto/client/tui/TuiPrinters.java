@@ -179,11 +179,11 @@ public class TuiPrinters {
                     down = rotation == 2 ? "↓" : " ";
                     left = rotation == 3 ? "←" : " ";
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "     " + up + "     " + rightConnections[0];
                     lines[2] = leftConnections[1] + "  " + left + "  " + abbreviateType + "  " + right + "  " + rightConnections[1];
                     lines[3] = leftConnections[2] + "     " + down + "     " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case DOUBLE_CANNON:
@@ -192,11 +192,11 @@ public class TuiPrinters {
                     down = rotation == 2 ? "↓" : " ";
                     left = rotation == 3 ? "←" : " ";
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "  " + left + " " + up + " " + up + " " + right + "  " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "  " + left + " " + down + " " + down + " " + right + "  " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case ENGINE:
@@ -205,11 +205,11 @@ public class TuiPrinters {
                     down = rotation == 0 ? "↓" : " ";
                     left = rotation == 1 ? "←" : " ";
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "     " + up + "     " + rightConnections[0];
                     lines[2] = leftConnections[1] + "  " + left + "  " + abbreviateType + "  " + right + "  " + rightConnections[1];
                     lines[3] = leftConnections[2] + "     " + down + "     " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case DOUBLE_ENGINE:
@@ -218,42 +218,42 @@ public class TuiPrinters {
                     down = rotation == 0 ? "↓" : " ";
                     left = rotation == 1 ? "←" : " ";
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "  " + left + " " + up + " " + up + " " + right + "  " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "  " + left + " " + down + " " + down + " " + right + "  " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case SHIELD:
                     switch (rotation) {
                         case 0:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + "════════╗" + RESET + " " + rightConnections[0];
-                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "   ║ " + RESET + rightConnections[1];
-                            lines[3] = leftConnections[2] + "         " + GREEN + "║" + RESET + " " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + "═══════╗" + RESET + "  " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "  ║  " + RESET + rightConnections[1];
+                            lines[3] = leftConnections[2] + "        " + GREEN + "║ " + RESET + " " + rightConnections[2];
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 1:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
-                            lines[1] = leftConnections[0] + "         " + GREEN + "║" + RESET + " " + rightConnections[0];
-                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "   ║ " + RESET + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + "════════╝" + RESET + " " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
+                            lines[1] = leftConnections[0] + "        " + GREEN + "║ " + RESET + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "  ║  " + RESET + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + "═══════╝ " + RESET + " " + rightConnections[2];
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 2:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + "║" + RESET + "         " + rightConnections[0];
-                            lines[2] = leftConnections[1] + GREEN + " ║   " + RESET + abbreviateType + "     " + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + "╚════════" + RESET + " " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + " ║" + RESET + "        " + rightConnections[0];
+                            lines[2] = leftConnections[1] + GREEN + "  ║  " + RESET + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + " ╚═══════" + RESET + " " + rightConnections[2];
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 3:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + "╔════════" + RESET + " " + rightConnections[0];
-                            lines[2] = leftConnections[1] + GREEN + " ║   " + RESET + abbreviateType + "     " + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + "║" + RESET + "         " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
+                            lines[1] = leftConnections[0] + " " + GREEN + " ╔═══════" + RESET + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + GREEN + "  ║  " + RESET + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + GREEN + " ║" + RESET + "        " + rightConnections[2];
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                     }
                     break;
@@ -274,35 +274,35 @@ public class TuiPrinters {
                         color = RESET;
                     }
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "    (" + color + itemsCount + RESET + ")    " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case ORANGE_HOUSING_UNIT:
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "           " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case PURPLE_HOUSING_UNIT:
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "           " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case STRUCTURAL_UNIT:
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "           " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case BATTERY_STORAGE:
@@ -310,11 +310,11 @@ public class TuiPrinters {
                     itemsCount = batteryStorage.getItemsCount();
                     capacity = batteryStorage.getCapacity();
 
-                    lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "    " + itemsCount + "/" + capacity + "    " + rightConnections[2];
-                    lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case RED_BOX_STORAGE:
@@ -329,19 +329,19 @@ public class TuiPrinters {
 
                     switch (capacity) {
                         case 1:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
                             lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                             lines[3] = leftConnections[2] + "    [" + boxesStr[0] + "]    " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
 
                         case 2:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
                             lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
                             lines[3] = leftConnections[2] + "           " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                     }
 
@@ -359,19 +359,19 @@ public class TuiPrinters {
 
                     switch (capacity) {
                         case 2:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
                             lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] "  + rightConnections[1];
                             lines[3] = leftConnections[2] + "           " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
 
                         case 3:
-                            lines[0] = " ┌───" + upConnections[0] + "─" + upConnections[1] + "─" + upConnections[2] + "───┐ ";
+                            lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
                             lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
                             lines[3] = leftConnections[2] + "    [" + boxesStr[2] + "]    " + rightConnections[2];
-                            lines[4] = " └───" + downConnections[0] + "─" + downConnections[1] + "─" + downConnections[2] + "───┘ ";
+                            lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                     }
 

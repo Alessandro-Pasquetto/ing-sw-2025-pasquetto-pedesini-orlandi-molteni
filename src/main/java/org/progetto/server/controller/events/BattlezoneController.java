@@ -140,8 +140,6 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 gameManager.getGame().setActivePlayer(player);
 
-                Spaceship spaceship = player.getSpaceship();
-
                 // Retrieves sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -176,36 +174,34 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.ENGINE_NUMBER)) {
+        if (!phase.equals(EventPhase.ENGINE_NUMBER)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                // Player doesn't want to use double engines
-                if (num == 0) {
-                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
+        // Player doesn't want to use double engines
+        if (num == 0) {
+            tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
 
-                } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
-                    requestedBatteries = num;
-                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower() + 2 * num);
+        } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
+            requestedBatteries = num;
+            tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower() + 2 * num);
 
-                    sender.sendMessage(new BatteriesToDiscardMessage(num));
+            sender.sendMessage(new BatteriesToDiscardMessage(num));
 
-                    phase = EventPhase.DISCARDED_BATTERIES;
-
-                } else {
-                    sender.sendMessage("IncorrectNumber");
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
+            phase = EventPhase.DISCARDED_BATTERIES;
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("IncorrectNumber");
         }
     }
 
@@ -259,43 +255,41 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.CANNON_NUMBER)) {
+        if (!phase.equals(EventPhase.CANNON_NUMBER)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Spaceship spaceship = player.getSpaceship();
+        Spaceship spaceship = player.getSpaceship();
 
-                // Player doesn't want to use double cannons
-                if (num == 0) {
-                    tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
+        // Player doesn't want to use double cannons
+        if (num == 0) {
+            tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
 
-                } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
-                    requestedBatteries = num;
+        } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
+            requestedBatteries = num;
 
-                    // Updates player's firepower based on his decision
-                    if (num <= spaceship.getFullDoubleCannonCount()) {
-                        tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * num);
-                    } else {
-                        tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount()));
-                    }
-
-                    sender.sendMessage(new BatteriesToDiscardMessage(num));
-                    phase = EventPhase.DISCARDED_BATTERIES;
-
-                } else {
-                    sender.sendMessage("IncorrectNumber");
-                }
-
+            // Updates player's firepower based on his decision
+            if (num <= spaceship.getFullDoubleCannonCount()) {
+                tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * num);
             } else {
-                sender.sendMessage("NotYourTurn");
+                tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount()));
             }
 
+            sender.sendMessage(new BatteriesToDiscardMessage(num));
+            phase = EventPhase.DISCARDED_BATTERIES;
+
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("IncorrectNumber");
         }
     }
 
@@ -311,123 +305,114 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+        switch (phase) {
+            case DISCARDED_BATTERIES:
+                if (!player.equals(gameManager.getGame().getActivePlayer())) {
+                    sender.sendMessage("NotYourTurn");
+                    return;
+                }
+                break;
+
+            case DISCARDED_BATTERIES_FOR_BOXES:
+                if (!player.equals(penaltyPlayer)) {
+                    sender.sendMessage("NotYourTurn");
+                    return;
+                }
+                break;
+
+            case SHIELD_BATTERY:
+                if (!player.equals(penaltyPlayer)) {
+                    sender.sendMessage("NotYourTurn");
+                    return;
+                }
+                break;
+
+            default:
+                sender.sendMessage("IncorrectPhase");
+                return;
+        }
+
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+
+        // Checks if component index is correct
+        if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
+
+        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+        // Checks if component is a battery storage
+        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
+
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(gameManager.getGame().getActivePlayer())) {
+            // Checks if a battery has been discarded
+            if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                requestedBatteries--;
+                sender.sendMessage("BatteryDiscarded");
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+                if (requestedBatteries == 0) {
 
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-
-                    // Checks if a battery has been discarded
-                    if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBatteries--;
-                        sender.sendMessage("BatteryDiscarded");
-
-                        if (requestedBatteries == 0) {
-
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
-
-                        } else {
-                            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
 
                 } else {
-                    sender.sendMessage("InvalidCoordinates");
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
                 }
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage("BatteryNotDiscarded");
             }
 
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(penaltyPlayer)) {
+            // Checks if a battery has been discarded
+            if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                requestedBoxes--;
+                sender.sendMessage("BatteryDiscarded");
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+                if (requestedBoxes == 0) {
 
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
 
-                    // Checks if a battery has been discarded
-                    if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                        requestedBoxes--;
-                        sender.sendMessage("BatteryDiscarded");
+                } else {
 
-                        if (requestedBoxes == 0) {
-
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
-
-                        } else {
-
-                            // Checks if he has at least a battery to discard
-                            if (player.getSpaceship().getBatteriesCount() > 0) {
-                                sender.sendMessage("NotEnoughBoxes");
-                                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-
-                            } else {
-                                sender.sendMessage("NotEnoughBatteries");
-
-                                player.setIsReady(true, gameManager.getGame());
-                                gameManager.getGameThread().notifyThread();
-                            }
-
-                        }
+                    // Checks if he has at least a battery to discard
+                    if (player.getSpaceship().getBatteriesCount() > 0) {
+                        sender.sendMessage("NotEnoughBoxes");
+                        sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                        phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
                     } else {
                         sender.sendMessage("NotEnoughBatteries");
-                    }
 
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
+                    }
                 }
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage("BatteryNotDiscarded");
             }
 
         } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
 
-            // Checks if the player that calls the methods has to discard a battery to activate a shield
-            if (player.equals(penaltyPlayer)) {
+            // Checks if a battery has been discarded
+            if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+                sender.sendMessage("BatteryDiscarded");
 
-                if (batteryStorage != null && batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-
-                    // Checks if a battery has been discarded
-                    if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-
-                        sender.sendMessage("BatteryDiscarded");
-
-                        phase = EventPhase.HANDLE_SHOT;
-                        handleShot();
-
-                    } else {
-                        sender.sendMessage("NotEnoughBatteries");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+                phase = EventPhase.HANDLE_SHOT;
+                handleShot();
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage("BatteryNotDiscarded");
             }
-
-        } else {
-            sender.sendMessage("IncorrectPhase");
         }
     }
 
@@ -515,9 +500,9 @@ public class BattlezoneController extends EventControllerAbstract {
                 case PenaltyType.PENALTYCREW:
                     // Request needed amount of crew
                     requestedCrew = couples.getFirst().getPenalty().getNeededAmount();
-                    penaltyCrew();
 
                     phase = EventPhase.PENALTY_CREW;
+                    penaltyCrew();
                     break;
 
                 case PenaltyType.PENALTYSHOTS:
@@ -589,16 +574,11 @@ public class BattlezoneController extends EventControllerAbstract {
             // Gets penalty player sender reference
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            // Calculates max crew number available to discard
-            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+            // Request to discard crew
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+            phase = EventPhase.DISCARDED_CREW;
 
-            if (maxCrewCount > couples.getFirst().getPenalty().getNeededAmount()) {
-                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                phase = EventPhase.DISCARDED_CREW;
-
-                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
-
-            }
+            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
             // Next Couple
             couples.removeFirst();
@@ -620,44 +600,49 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.DISCARDED_CREW)) {
+        if (!phase.equals(EventPhase.DISCARDED_CREW)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(penaltyPlayer)) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(penaltyPlayer)) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (housingUnit != null && housingUnit.getType().equals(ComponentType.HOUSING_UNIT)) {
+        // Checks if component index is correct
+        if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                    // Checks if a crew member has been discarded
-                    if (battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
-                        requestedCrew--;
-                        sender.sendMessage("CrewMemberDiscarded");
+        Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
-                        if (requestedCrew == 0) {
+        // Checks if component is a housing unit
+        if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
+        // Checks if a crew member has been discarded
+        if (battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
+            requestedCrew--;
+            sender.sendMessage("CrewMemberDiscarded");
 
-                        } else {
-                            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-                        }
+            if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
 
-                    } else {
-                        sender.sendMessage("NotEnoughCrew");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
 
             } else {
-                sender.sendMessage("NotYourTurn");
+                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("CrewNotMemberDiscarded");
         }
     }
 
@@ -720,66 +705,70 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.DISCARDED_BOXES)) {
+        if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the current one in the controller
-            if (player.equals(penaltyPlayer)) {
+        // Checks if the player that calls the methods is also the current one in the controller
+        if (!player.equals(penaltyPlayer)) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-                Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
-                if (boxStorage != null && (boxStorage.getType().equals(ComponentType.BOX_STORAGE) || boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
+        // Checks if component index is correct
+        if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= spaceshipMatrix.length || xBoxStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+            return;
+        }
 
-                    // Checks if a box has been discarded
-                    if (battlezone.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
-                        requestedBoxes--;
-                        sender.sendMessage("BoxDiscarded");
+        Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
-                        if (requestedBoxes == 0) {
+        // Checks if component is a box storage
+        if (boxStorage == null || (!boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
+            sender.sendMessage("InvalidComponent");
+            return;
+        }
 
-                            player.setIsReady(true, gameManager.getGame());
-                            gameManager.getGameThread().notifyThread();
+        // Checks if a box has been discarded
+        if (battlezone.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
+            requestedBoxes--;
+            sender.sendMessage("BoxDiscarded");
 
-                        } else {
-
-                            // Box currently owned
-                            int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
-
-                            if (boxCount > 0) {
-                                sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                                phase = EventPhase.DISCARDED_BOXES;
-
-                            } else {
-
-                                // Checks if he has at least a battery to discard
-                                if (player.getSpaceship().getBatteriesCount() > 0) {
-                                    sender.sendMessage("NotEnoughBoxes");
-                                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-
-                                } else {
-                                    sender.sendMessage("NotEnoughBatteries");
-
-                                    player.setIsReady(true, gameManager.getGame());
-                                    gameManager.getGameThread().notifyThread();
-                                }
-                            }
-                        }
-
-                    } else {
-                        sender.sendMessage("NotEnoughBoxes");
-                    }
-
-                } else {
-                    sender.sendMessage("InvalidCoordinates");
-                }
+            if (requestedBoxes == 0) {
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
 
             } else {
-                sender.sendMessage("NotYourTurn");
+
+                // Box currently owned
+                int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+
+                if (boxCount > 0) {
+                    sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+                    phase = EventPhase.DISCARDED_BOXES;
+
+                } else {
+
+                    // Checks if he has at least a battery to discard
+                    if (player.getSpaceship().getBatteriesCount() > 0) {
+                        sender.sendMessage("NotEnoughBoxes");
+                        sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                        phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+
+                    } else {
+                        sender.sendMessage("NotEnoughBatteries");
+
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
+                    }
+                }
             }
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            sender.sendMessage("BoxNotDiscarded");
         }
     }
 
@@ -848,31 +837,29 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void rollDice(Player player, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.ROLL_DICE)) {
+        if (!phase.equals(EventPhase.ROLL_DICE)) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
-            // Checks if the player that calls the methods is also the first defeated player
-            if (player.equals(penaltyPlayer)) {
+        // Checks if the player that calls the methods is also the first defeated player
+        if (!player.equals(penaltyPlayer)) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
 
-                diceResult = player.rollDice();
+        diceResult = player.rollDice();
 
-                sender.sendMessage(new DiceResultMessage(diceResult));
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
+        sender.sendMessage(new DiceResultMessage(diceResult));
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
 
-                if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
-                    phase = EventPhase.ASK_SHIELDS;
-                    askToUseShields();
-
-                } else {
-                    phase = EventPhase.HANDLE_SHOT;
-                    handleShot();
-                }
-
-            } else {
-                sender.sendMessage("NotYourTurn");
-            }
+        if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
+            phase = EventPhase.ASK_SHIELDS;
+            askToUseShields();
 
         } else {
-            sender.sendMessage("IncorrectPhase");
+            phase = EventPhase.HANDLE_SHOT;
+            handleShot();
         }
     }
 
@@ -914,29 +901,33 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (phase.equals(EventPhase.SHIELD_DECISION)) {
-
-            if (player.equals(penaltyPlayer)) {
-                String upperCaseResponse = response.toUpperCase();
-
-                switch (upperCaseResponse) {
-                    case "YES":
-                        phase = EventPhase.SHIELD_BATTERY;
-                        sender.sendMessage(new BatteriesToDiscardMessage(1));
-                        break;
-
-                    case "NO":
-                        phase = EventPhase.HANDLE_SHOT;
-                        handleShot();
-                        break;
-
-                    default:
-                        sender.sendMessage("IncorrectResponse");
-                        break;
-                }
-            }
-        } else {
+        if (!phase.equals(EventPhase.SHIELD_DECISION)) {
             sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+
+        if (!player.equals(penaltyPlayer)) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        String upperCaseResponse = response.toUpperCase();
+
+        switch (upperCaseResponse) {
+            case "YES":
+                phase = EventPhase.SHIELD_BATTERY;
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
+                break;
+
+            case "NO":
+                phase = EventPhase.HANDLE_SHOT;
+                handleShot();
+                break;
+
+            default:
+                sender.sendMessage("IncorrectResponse");
+                break;
         }
     }
 
@@ -959,7 +950,6 @@ public class BattlezoneController extends EventControllerAbstract {
 
             // Sends two types of messages based on the shot's result
             if (destroyedComponent != null) {
-                // TODO: handle waiting in case of needed decision by player on which part of the ship to hold
                 SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
             } else {
