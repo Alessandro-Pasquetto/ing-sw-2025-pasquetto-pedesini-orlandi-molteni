@@ -55,6 +55,14 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     // =======================
+    // SETTERS
+    // =======================
+
+    public void setDiceResult(int diceResult) {
+        this.diceResult = diceResult;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 

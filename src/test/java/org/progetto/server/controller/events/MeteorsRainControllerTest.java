@@ -137,24 +137,5 @@ class MeteorsRainControllerTest {
 
         //Testing first meteor
         //assertEquals(EventPhase.HANDLE_SMALL_METEOR, controller.getPhase());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
 }

@@ -57,8 +57,12 @@ public class PiratesController extends EventControllerAbstract {
         this.discardedBattery = new ArrayList<>();
     }
 
-    public int getDiceResult() {
-        return diceResult;
+    // =======================
+    // SETTERS
+    // =======================
+
+    public void setDiceResult(int diceResult) {
+        this.diceResult = diceResult;
     }
 
     // =======================
