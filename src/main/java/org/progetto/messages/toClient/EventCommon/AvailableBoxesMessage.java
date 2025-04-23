@@ -10,27 +10,21 @@ public class AvailableBoxesMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private final ArrayList<Integer> boxes;
+    private final ArrayList<Box> boxes;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
     public AvailableBoxesMessage(ArrayList<Box> boxes) {
-
-        this.boxes = new ArrayList<>();
-
-        for (Box box : boxes) {
-            this.boxes.add(box.getValue());
-        }
+        this.boxes = new ArrayList<>(boxes);
     }
 
     // =======================
     // GETTERS
     // =======================
 
-
-    public ArrayList<Integer> getBoxes() {
+    public ArrayList<Box> getBoxes() {
         return boxes;
     }
 }

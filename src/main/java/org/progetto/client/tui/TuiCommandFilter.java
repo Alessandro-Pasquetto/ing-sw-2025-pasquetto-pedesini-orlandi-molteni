@@ -99,14 +99,19 @@ public class TuiCommandFilter {
 
             if (command.equalsIgnoreCase("exit")) break;
 
-            if (!isWaitingResponse)
+            if (!isWaitingResponse) {
                 handleCommand(command);
-            else {
-                response = command;
-                isWaitingResponse = false;
 
-                synchronized(responseLock) {
-                    responseLock.notify();
+            } else {
+
+                if (!handleCommand(command)) {
+                    response = command;
+                    isWaitingResponse = false;
+
+                    synchronized(responseLock) {
+                        responseLock.notify();
+                    }
+
                 }
             }
 
@@ -156,9 +161,11 @@ public class TuiCommandFilter {
         }
     }
 
-    public static void handleCommand(String command) {
+    public static boolean handleCommand(String command) {
         String[] commandParts = command.split(" ");
         String commandType = commandParts[0].toUpperCase();
+
+        boolean foundCommand = true;
 
         switch (commandType) {
             case "CLOSE":
@@ -166,11 +173,11 @@ public class TuiCommandFilter {
                     BuildingCommands.close(commandParts);
                 else
                     expectedFormat(commandType);
-                return;
+                break;
 
             case "HELP":
                 GameCommands.showHelp();
-                return;
+                break;
         }
 
         switch (GameData.getPhaseGame()) {
@@ -182,35 +189,35 @@ public class TuiCommandFilter {
                             ConnectionsCommands.connect(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWWAITINGGAMES":
                         if (isValidCommand(commandParts.length, 1))
                             ConnectionsCommands.showWaitingGames();
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "CREATEGAME":
                         if (isValidCommand(commandParts.length, 4))
                             ConnectionsCommands.createGame(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "JOINGAME":
                         if (isValidCommand(commandParts.length, 3))
                             ConnectionsCommands.joinGame(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -218,8 +225,10 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
 
             case "BUILDING":
                 switch (commandType) {
@@ -228,84 +237,84 @@ public class TuiCommandFilter {
                             BuildingCommands.resetTimer(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWHAND":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.showHandComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PICKHIDDEN":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.pickHiddenComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWVISIBLE":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.showVisibleComponents(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PICKVISIBLE":
                         if (isValidCommand(commandParts.length, 2))
                             BuildingCommands.pickVisibleComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PLACE":
                         if (isValidCommand(commandParts.length, 4))
                             BuildingCommands.placeComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "DISCARD":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.discardComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "BOOK":
                         if (isValidCommand(commandParts.length, 2))
                             BuildingCommands.bookComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWBOOKED":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.showBookedComponents(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PICKBOOKED":
                         if (isValidCommand(commandParts.length, 2))
                             BuildingCommands.pickBookedComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PICKUPDECK":
                         if (isValidCommand(commandParts.length, 2))
                             BuildingCommands.pickUpEventCardDeck(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "PUTDOWNDECK":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.putDownEventCardDeck(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWSHIP":
                         if (commandParts.length <= 2)
@@ -314,7 +323,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
@@ -323,14 +332,14 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -338,8 +347,10 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
 
             case "START_ADJUSTING", "ADJUSTING":
                 switch (commandType) {
@@ -348,7 +359,7 @@ public class TuiCommandFilter {
                             BuildingCommands.destroyComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWSHIP":
                         if (commandParts.length <= 2)
@@ -357,7 +368,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
@@ -366,7 +377,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -374,8 +385,10 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
 
             case "POPULATING":
                 switch (commandType) {
@@ -384,7 +397,7 @@ public class TuiCommandFilter {
                             BuildingCommands.populateComponent(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     case "SHOWSHIP":
                         if (commandParts.length <= 2)
@@ -393,7 +406,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
@@ -402,14 +415,14 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -417,8 +430,10 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
 
             case "EVENT":
                 switch (commandType) {
@@ -429,7 +444,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
@@ -438,7 +453,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHOWTRACK":
                         if (isValidCommand(commandParts.length, 1))
@@ -447,7 +462,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -455,8 +470,10 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
 
             case "TRAVEL":
                 switch (commandType) {
@@ -467,7 +484,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
@@ -476,7 +493,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     case "SHOWTRACK":
                         if (isValidCommand(commandParts.length, 1))
@@ -485,7 +502,7 @@ public class TuiCommandFilter {
                             System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
-                        return;
+                        break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
@@ -493,8 +510,12 @@ public class TuiCommandFilter {
                         } else {
                             System.out.println("Command not available in that phase");
                         }
-                        return;
+                        foundCommand = false;
+                        break;
                 }
+                break;
         }
+
+        return foundCommand;
     }
 }

@@ -14,7 +14,7 @@ public class PlayerGetsCreditsMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PlayerGetsCreditsMessage(int stepsCount) {
+    public PlayerGetsCreditsMessage(int credits) {
         this.credits = credits;
     }
 

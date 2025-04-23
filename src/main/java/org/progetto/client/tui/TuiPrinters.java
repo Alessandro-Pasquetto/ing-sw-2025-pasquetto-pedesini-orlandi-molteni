@@ -17,7 +17,6 @@ public class TuiPrinters {
     private static final String RED = "\u001B[31m";
     private static final String PURPLE = "\u001B[35m";
     private static final String ORANGE = "\u001B[38;5;208m";
-    private static final String CYAN = "\u001B[36m";
     private static final String YELLOW = "\u001B[33m";
     private static final String GREEN = "\u001B[32m";
     private static final String WHITE = "\u001B[37m";
@@ -425,7 +424,7 @@ public class TuiPrinters {
             }
 
             for (int i = 0; i < numComponentsInRow; i++) {
-                String indexStr = String.format("     [%d]     ", start + i);
+                String indexStr = String.format("      [%d]      ", start + i);
                 System.out.print(indexStr + "  ");
             }
 
@@ -454,7 +453,7 @@ public class TuiPrinters {
         }
 
         for (int i = 0; i < numComponents; i++) {
-            String indexStr = String.format("     [%d]     ", i);
+            String indexStr = String.format("      [%d]      ", i);
             System.out.print(indexStr + "  ");
         }
         System.out.println();
@@ -471,10 +470,6 @@ public class TuiPrinters {
         int cols = spaceshipMatrix[0].length;
 
         int[][] mask = spaceship.getBuildingBoard().getBoardMask();
-
-        System.out.println("\n🛠  Spaceship Matrix View");
-
-        System.out.println();
 
         String[][][] gridVisual = new String[rows][cols][5];
 

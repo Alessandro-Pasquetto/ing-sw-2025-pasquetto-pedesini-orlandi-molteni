@@ -3,6 +3,7 @@ package org.progetto.client.tui;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.components.Box;
 import org.progetto.server.model.events.*;
 
 import java.util.ArrayList;
@@ -192,8 +193,8 @@ public class EventCommands {
     public static void responseAcceptRewardCreditsAndPenalties(int reward, int penaltyDays, int penaltyCrew) {
 
         while(true){
-            System.out.println("You want to accept the reward and penalties?");
-            System.out.println("Reward: " + reward + " Days of penalty: " + penaltyDays + " Crew to discard: " + penaltyCrew);
+            System.out.println("Do you want to accept the reward and penalties?");
+            System.out.println("Reward credits: " + reward + ", Days of penalty: " + penaltyDays + ", Crew to discard: " + penaltyCrew);
 
             String response = TuiCommandFilter.waitResponse();
             if(response.equalsIgnoreCase("YES") ||response.equalsIgnoreCase("NO")){
@@ -216,10 +217,11 @@ public class EventCommands {
     public static void responseAcceptRewardCreditsAndPenaltyDays(int reward, int penaltyDays){
 
         while(true){
-            System.out.println("You want to accept the reward and the days penalty?");
+            System.out.println("Do you want to accept the reward and the days penalty?");
             System.out.println("Reward: " + reward + " Days of penalty: " + penaltyDays);
 
             String response = TuiCommandFilter.waitResponse();
+
             if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
                 sender.responseAcceptRewardCreditsAndPenaltyDays(response);
@@ -235,22 +237,16 @@ public class EventCommands {
      * @author Lorenzo
      * @param availableBoxes is the list of all available boxes
      */
-    public static void responseRewardBox(ArrayList<Integer> availableBoxes) {
+    public static void responseRewardBox(ArrayList<Box> availableBoxes) {
 
         while(true){
 
             System.out.println("📦 Box list:");
 
             for (int i = 0; i < availableBoxes.size(); i++) {
-                String box = switch (availableBoxes.get(i)) {
-                    case 1 -> "BLUE";
-                    case 2 -> "GREEN";
-                    case 3 -> "YELLOW";
-                    case 4 -> "RED";
-                    default -> "?";
-                };
+                String box = TuiPrinters.drawBox(availableBoxes.get(i));
 
-                System.out.printf(" [%d]  Color: %-10s%n", i, box);
+                System.out.printf(" [%d] %s%n", i, box);
             }
 
             System.out.println("Select an available box dy index from the list (-1 if you wanna leave the planet)");
@@ -299,6 +295,7 @@ public class EventCommands {
             System.out.println("Do you want to land? (YES or NO)");
 
             String response = TuiCommandFilter.waitResponse();
+
             if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
                 sender.responseLandRequest(response);
@@ -311,7 +308,8 @@ public class EventCommands {
     /**
      * Handles player decision to land on a planet
      *
-     * @author Lorenzo, Alessandro
+     * @author Lorenzo
+     * @author Alessandro
      * @param planetsTaken is the array of available planets
      */
     public static void responsePlanetLandRequest(boolean[] planetsTaken) {
@@ -381,16 +379,5 @@ public class EventCommands {
             }else
                 System.out.println("You must choose between YES or NO");
         }
-    }
-
-    /**
-     * Enables to roll the dice
-     * usage : Roll
-     *
-     * @author Lorenzo
-     */
-    public static void rollDice(){
-        Sender sender = GameData.getSender();
-        sender.rollDice();
     }
 }

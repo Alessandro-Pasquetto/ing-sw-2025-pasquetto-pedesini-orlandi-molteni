@@ -24,6 +24,7 @@ public class LostShipController extends EventControllerAbstract  {
     private LostShip lostShip;
     private ArrayList<Player> activePlayers;
     private int requestedCrew;
+    private boolean someoneLanded;
 
     // =======================
     // CONSTRUCTORS
@@ -35,6 +36,7 @@ public class LostShipController extends EventControllerAbstract  {
         this.phase = EventPhase.START;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.requestedCrew = 0;
+        this.someoneLanded = false;
     }
 
     // =======================
@@ -53,6 +55,13 @@ public class LostShipController extends EventControllerAbstract  {
         askToLand();
     }
 
+    /**
+     * Asks to land on the ship
+     *
+     * @author Gabriele
+     * @throws RemoteException
+     * @throws InterruptedException
+     */
     private void askToLand() throws RemoteException, InterruptedException {
         if(phase.equals(EventPhase.ASK_TO_LAND)) {
 
@@ -73,6 +82,9 @@ public class LostShipController extends EventControllerAbstract  {
                 } else {
                     sender.sendMessage("NotEnoughCrew");
                 }
+
+                // Checks if someone landed on the station
+                if (someoneLanded) return;
             }
         }
     }
@@ -104,6 +116,7 @@ public class LostShipController extends EventControllerAbstract  {
         switch (upperCaseResponse) {
             case "YES":
                 phase = EventPhase.PENALTY_EFFECT;
+                someoneLanded = true;
                 penaltyEffect(player, sender);
                 break;
 
@@ -220,8 +233,11 @@ public class LostShipController extends EventControllerAbstract  {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()));
-            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
         }
     }
 }

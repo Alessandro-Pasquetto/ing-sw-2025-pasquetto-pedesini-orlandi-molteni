@@ -151,6 +151,22 @@ public class TuiHandlerMessage {
             EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
         }
 
+        else if(messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
+            System.out.println("You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions");
+        }
+
+        else if(messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
+            System.out.println(anotherPlayerMovedBackwardMessage.getNamePlayer() + " have moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions");
+        }
+
+        else if(messageObj instanceof PlayerGetsCreditsMessage playerGetsCreditsMessage) {
+            System.out.println("You received " + playerGetsCreditsMessage.getCredits() + " credits");
+        }
+
+        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
+            System.out.println(anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits");
+        }
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
