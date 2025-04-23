@@ -49,7 +49,11 @@
     "type": "METEORSRAIN",
     "level": 0,
     "imgSrc": "card12-lvl1.jpg",
-    "meteors": [{"size": "Big", "from": 0}, {"size": "Small", "from": 3}, {"size": "Small", "from": 1}]
+    "meteors": [
+      {"size": "BIG", "from": 0},
+      {"size": "SMALL", "from": 3},
+      {"size": "SMALL", "from": 1}
+    ]
   },
   {
     "type": "OPENSPACE",

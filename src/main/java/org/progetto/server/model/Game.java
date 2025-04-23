@@ -210,7 +210,7 @@ public class Game {
 
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SABOTAGE))
+                while(!lv2Deck.getFirst().getType().equals(CardType.EPIDEMIC))
                     Collections.shuffle(lv2Deck);
 
 
@@ -446,7 +446,7 @@ public class Game {
 
             do{
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SABOTAGE));
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 

@@ -19,7 +19,7 @@ public class StardustController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Stardust stardust;
+    private final Stardust stardust;
 
     // =======================
     // CONSTRUCTORS
@@ -43,10 +43,11 @@ public class StardustController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException {
-        if (phase.equals(EventPhase.START)) {
-            phase = EventPhase.EFFECT;
-            eventEffect();
-        }
+        if (!phase.equals(EventPhase.START))
+            throw new IllegalStateException("IncorrectPhase");
+
+        phase = EventPhase.EFFECT;
+        eventEffect();
     }
 
     /**
@@ -56,23 +57,23 @@ public class StardustController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals(EventPhase.EFFECT)) {
-            ArrayList<Player> reversedPlayers = gameManager.getGame().getBoard().getCopyTravelers();
-            Collections.reverse(reversedPlayers);
-            Board board = gameManager.getGame().getBoard();
+        if (!phase.equals(EventPhase.EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            System.out.println("Evaluating stardust consequences");
+        ArrayList<Player> reversedPlayers = gameManager.getGame().getBoard().getCopyTravelers();
+        Collections.reverse(reversedPlayers);
+        Board board = gameManager.getGame().getBoard();
 
-            for (Player player : reversedPlayers) {
+        System.out.println("Evaluating stardust consequences");
 
-                // Calculates exposed connector count
-                int exposedConnectorsCount = stardust.penalty(board, player);
+        for (Player player : reversedPlayers) {
+            // Calculates exposed connector count
+            int exposedConnectorsCount = stardust.penalty(board, player);
 
-                Sender sender = gameManager.getSenderByPlayer(player);
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
-            }
+            sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
         }
     }
 }

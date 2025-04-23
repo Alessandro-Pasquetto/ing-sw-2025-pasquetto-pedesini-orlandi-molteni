@@ -14,7 +14,7 @@ public class MeteorsRain extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Projectile> meteors;
+    private final ArrayList<Projectile> meteors;
 
     // =======================
     // CONSTRUCTORS

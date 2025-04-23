@@ -19,8 +19,7 @@
     "type": "BATTLEZONE",
     "level": 1,
     "imgSrc": "card5-lvl1.jpg",
-    "couples":
-    [
+    "couples": [
       {
         "type": "CREWREQUIREMENT",
         "penalty": {"type": "PENALTYDAYS", "neededAmount": -3, "shots": []}
@@ -55,8 +54,7 @@
     "type": "METEORSRAIN",
     "level": 1,
     "imgSrc": "card12-lvl1.jpg",
-    "meteors":
-      [
+    "meteors": [
         {"size": "BIG", "from": 0},
         {"size": "SMALL", "from": 3},
         {"size": "SMALL", "from": 1}
@@ -134,8 +132,7 @@
     "type": "METEORSRAIN",
     "level": 1,
     "imgSrc": "card10-lvl1.jpg",
-    "meteors":
-      [
+    "meteors": [
         {"size": "BIG", "from": 0},
         {"size": "SMALL", "from": 0},
         {"size": "BIG", "from": 0}
@@ -145,8 +142,7 @@
     "type": "METEORSRAIN",
     "level": 1,
     "imgSrc": "card11-lvl1.jpg",
-    "meteors":
-    [
+    "meteors": [
       {"size": "SMALL", "from": 0},
       {"size": "SMALL", "from": 0},
       {"size": "SMALL", "from": 1},
@@ -176,8 +172,7 @@
     "firePowerRequired": 5,
     "penaltyDays": -1,
     "rewardCredits": 4,
-    "shots":
-      [
+    "shots": [
         {"size": "SMALL", "from": 0},
         {"size": "BIG", "from": 0},
         {"size": "SMALL", "from": 0}
