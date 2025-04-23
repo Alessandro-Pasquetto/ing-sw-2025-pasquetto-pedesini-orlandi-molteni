@@ -90,7 +90,6 @@ class MeteorsRainControllerTest {
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         bb2.placeComponent(2, 1, 0);
 
-
         //controller
         MeteorsRainController controller = new MeteorsRainController(gameManager);
 
@@ -111,17 +110,15 @@ class MeteorsRainControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        Thread.sleep(200);
 
         //Test not your turn
         sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("NotYourTurn", message);
-
             }
         };
-        controller.rollDice(p2,sender);
+        controller.rollDice(p2, sender);
 
         //Test correct dice trow
         final DiceResultMessage[] result = {null};
@@ -129,10 +126,10 @@ class MeteorsRainControllerTest {
             @Override
             public void sendMessage(Object message) {
                 result[0] = (DiceResultMessage) message;
-
             }
         };
-        controller.rollDice(p1,sender);
+
+        controller.rollDice(p1, sender);
         assertNotNull(result[0]);
         System.out.println(result[0].getDiceResult());
 

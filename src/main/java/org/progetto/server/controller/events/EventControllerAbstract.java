@@ -4,7 +4,6 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
-
 import java.rmi.RemoteException;
 
 abstract public class EventControllerAbstract {
@@ -27,7 +26,8 @@ abstract public class EventControllerAbstract {
     // =======================
     // SETTERS
     // =======================
-    public void setPhase(EventPhase phase) throws RemoteException {
+
+    public void setPhase(EventPhase phase) {
         this.phase = phase;
     }
 
