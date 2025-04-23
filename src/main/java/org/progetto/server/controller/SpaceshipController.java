@@ -268,7 +268,7 @@ public class SpaceshipController {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             // Checks if player is trying to destroy central unit
-            if (buildingBoard.getCopySpaceshipMatrix()[xComponent][yComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
+            if (buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
                 sender.sendMessage("ImpossibleToDestroyCentralUnit");
                 return;
             }
@@ -282,11 +282,7 @@ public class SpaceshipController {
             gameManager.getGameThread().notifyThread();
 
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("EmptyComponentCell"))
-                sender.sendMessage("EmptyComponentCell");
-
-            if (e.getMessage().equals("EmptySpaceship"))
-                sender.sendMessage("EmptySpaceship");
+            sender.sendMessage(e.getMessage());
         }
     }
 

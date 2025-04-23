@@ -2,6 +2,8 @@ package org.progetto.server.model;
 
 import java.io.Serializable;
 import java.util.*;
+
+import javafx.util.Pair;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.loading.MaskMatrix;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -567,21 +569,33 @@ public class BuildingBoard implements Serializable {
      * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship
      *
      * @author Alessandro
-     * @return true if the spaceship is valid, false otherwise
+     * @return a pair of booleans: the first indicates if the spaceship is valid, the second indicates if there were any disconnected components
      */
-    public boolean checkStartShipValidity(){
+    public Pair<Boolean, Boolean> checkStartShipValidity(){
+        boolean disconnectedComponents = false;
 
+        // Check if all components are connected
         boolean[][] visited = new boolean[boardMask.length][boardMask[0].length];
-
         AtomicInteger numComponentsChecked = new AtomicInteger(0);
         AtomicInteger exposedConnectorsCount = new AtomicInteger(0);
 
+        dfsValidity(getCentralUnit().getX(), getCentralUnit().getY(), visited, numComponentsChecked, exposedConnectorsCount);
+
+        if(numComponentsChecked.get() != spaceship.getShipComponentsCount()){
+            deleteDisconnectedComponents(visited);
+            disconnectedComponents = true;
+        }
+
+        // Check components validity
+        visited = new boolean[boardMask.length][boardMask[0].length];
+        numComponentsChecked = new AtomicInteger(0);
+        exposedConnectorsCount = new AtomicInteger(0);
+
         boolean result = dfsStartValidity(getCentralUnit().getX(), getCentralUnit().getY(), visited, numComponentsChecked, exposedConnectorsCount) && numComponentsChecked.get() == spaceship.getShipComponentsCount();
 
-        if(result)
-            spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
+        spaceship.setExposedConnectorsCount(exposedConnectorsCount.get());
 
-        return result;
+        return new Pair<>(result, disconnectedComponents);
     }
 
     /**
@@ -713,17 +727,13 @@ public class BuildingBoard implements Serializable {
 
         dfsValidity(xComponent, yComponent, visited, numComponentsChecked, exposedConnectorsCount);
 
-        if(numComponentsChecked.get() == spaceship.getShipComponentsCount())
-            spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
-
-        else{
-
+        if(numComponentsChecked.get() != spaceship.getShipComponentsCount())
             if(centralUnit != null)
                 deleteDisconnectedComponents(visited);
             else
                 doesNotRequirePlayerAction = false;
-        }
 
+        spaceship.setExposedConnectorsCount(exposedConnectorsCount.get());
         fixAlienPresence();
 
         return doesNotRequirePlayerAction;

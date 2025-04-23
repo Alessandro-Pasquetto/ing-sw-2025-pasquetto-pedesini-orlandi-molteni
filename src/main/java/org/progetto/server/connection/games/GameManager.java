@@ -101,17 +101,17 @@ public class GameManager {
         return timer.getIsTimerExpired();
     }
 
-    public SocketWriter getSocketWriterByPlayer(Player player) {
+    private SocketWriter getSocketWriterByPlayer(Player player) {
         return playerSocketWriters.get(player);
     }
 
-    public VirtualClient getVirtualClientByPlayer(Player player) {
+    private VirtualClient getVirtualClientByPlayer(Player player) {
         return playerRmiClients.get(player);
     }
 
     public Sender getSenderByPlayer(Player player) {
-        SocketWriter socketWriter = this.getSocketWriterByPlayer(player);
-        VirtualClient virtualClient = this.getVirtualClientByPlayer(player);
+        SocketWriter socketWriter = getSocketWriterByPlayer(player);
+        VirtualClient virtualClient = getVirtualClientByPlayer(player);
 
         Sender sender = null;
 

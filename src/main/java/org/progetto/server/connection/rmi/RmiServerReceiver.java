@@ -385,7 +385,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, xComponent, yComponent, virtualClient);
+        if(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))
+            SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, xComponent, yComponent, virtualClient);
+        else
+            SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, xComponent, yComponent, virtualClient);
     }
 
     @Override

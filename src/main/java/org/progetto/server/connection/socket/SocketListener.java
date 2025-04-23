@@ -202,12 +202,6 @@ public class SocketListener extends Thread {
                     BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
                 }
 
-                else if (messageObj instanceof DestroyComponentMessage destroyComponentMessage ) {
-                    int x = destroyComponentMessage.getX();
-                    int y = destroyComponentMessage.getY();
-                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
-                }
-
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
                     SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
@@ -269,6 +263,11 @@ public class SocketListener extends Thread {
                     int y = destroyComponentMessage.getY();
                     SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, x, y, socketWriter);
                 }
+
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
                 break;
 
             case POPULATING:
@@ -279,6 +278,12 @@ public class SocketListener extends Thread {
 
                     SpaceshipController.populateComponent(player, crewType, xComponent, yComponent, socketWriter);
                 }
+
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
+
                 else if(messageObj instanceof String messageString) {
                     switch (messageString){
                         case "Ready":
@@ -298,6 +303,11 @@ public class SocketListener extends Thread {
                     int y = destroyComponentMessage.getY();
                     SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
                 }
+
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
                 break;
 
             case TRAVEL:
@@ -309,11 +319,21 @@ public class SocketListener extends Thread {
                     }
                 }
 
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
+
                 break;
 
             case EVENT:
 
-                if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
+                if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
+
+                else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
                     int howManyWantToUse = responseHowManyDoubleCannonsMessage.getHowManyWantToUse();
 
                     EventControllerAbstract eventController = gameManager.getEventController();

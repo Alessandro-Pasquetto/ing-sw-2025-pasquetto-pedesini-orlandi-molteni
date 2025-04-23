@@ -80,6 +80,7 @@ public class GameThread extends Thread {
                             System.out.println("Adjusting spaceships...");
                             game.setPhase(GamePhase.START_ADJUSTING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
                             // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions after this)
                             waitPlayersReady();
                         }

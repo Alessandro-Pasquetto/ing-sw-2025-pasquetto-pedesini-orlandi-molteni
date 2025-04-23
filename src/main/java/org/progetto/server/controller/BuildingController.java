@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+import javafx.util.Pair;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -788,15 +789,20 @@ public class BuildingController {
 
         for (Player player : gameManager.getCheckedNotReadyPlayersCopy()) {
 
-            if(player.getSpaceship().getBuildingBoard().checkStartShipValidity()){
+            Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
+            Sender sender = gameManager.getSenderByPlayer(player);
 
+            if(result.getValue()){
+                try {
+                    sender.sendMessage("Some components not connected to the central unit have been removed");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if(result.getKey()){
                 gameManager.removeNotCheckedReadyPlayer(player);
                 game.getBoard().addTraveler(player);
-
-                Sender sender = gameManager.getSocketWriterByPlayer(player);
-
-                if(sender == null)
-                    sender = gameManager.getVirtualClientByPlayer(player);
 
                 try {
                     sender.sendMessage("ValidSpaceShip");
@@ -806,11 +812,6 @@ public class BuildingController {
             }else{
                 areAllValid = false;
                 player.setIsReady(false, game);
-
-                Sender sender = gameManager.getSocketWriterByPlayer(player);
-
-                if(sender == null)
-                    sender = gameManager.getVirtualClientByPlayer(player);
 
                 try {
                     sender.sendMessage("NotValidSpaceShip");
