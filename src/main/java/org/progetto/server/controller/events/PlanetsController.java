@@ -27,7 +27,6 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
     
     private final Planets planets;
-    private final ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
 
     // =======================
@@ -37,7 +36,6 @@ public class PlanetsController extends EventControllerAbstract {
     public PlanetsController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
     }
@@ -66,6 +64,8 @@ public class PlanetsController extends EventControllerAbstract {
     private void askForLand() throws RemoteException, IllegalStateException, InterruptedException {
         if (!phase.equals(EventPhase.ASK_TO_LAND))
             throw new IllegalStateException("IncorrectPhase");
+
+        ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);

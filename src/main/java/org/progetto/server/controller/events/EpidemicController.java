@@ -2,13 +2,11 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Epidemic;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -18,7 +16,7 @@ public class EpidemicController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Epidemic epidemic;
+    private final Epidemic epidemic;
 
     // =======================
     // CONSTRUCTORS
@@ -41,11 +39,12 @@ public class EpidemicController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
-        if (phase.equals(EventPhase.START)) {
-            phase = EventPhase.EFFECT;
-            eventEffect();
-        }
+    public void start() throws RemoteException{
+        if (!phase.equals(EventPhase.START))
+            throw new IllegalStateException("IncorrectPhase");
+
+        phase = EventPhase.EFFECT;
+        eventEffect();
     }
 
     /**
@@ -55,19 +54,19 @@ public class EpidemicController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void eventEffect() throws RemoteException {
-        if (phase.equals(EventPhase.EFFECT)) {
-            ArrayList<Player> players = gameManager.getGame().getBoard().getCopyTravelers();
+        if (!phase.equals(EventPhase.EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : players) {
+        ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
-                // Calculates amount of crew infected, so removed
-                int infectedCount = epidemic.epidemicResult(player);
+        for (Player player : activePlayers) {
+            // Calculates amount of crew infected, so removed
+            int infectedCount = epidemic.epidemicResult(player);
 
-                Sender sender = gameManager.getSenderByPlayer(player);
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                sender.sendMessage(new CrewInfectedAmountMessage(infectedCount));
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
-            }
+            sender.sendMessage(new CrewInfectedAmountMessage(infectedCount));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
         }
     }
 }

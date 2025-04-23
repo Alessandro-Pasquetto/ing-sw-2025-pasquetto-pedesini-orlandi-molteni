@@ -97,6 +97,9 @@ public class GameThread extends Thread {
                         // Preparing travelers on the track
                         game.getBoard().addTravelersInTrack(game.getLevel());
 
+                        if(game.getLevel() != 1)
+                            game.composeHiddenEventDeck();
+
                         System.out.println("End building phase...");
                         game.setPhase(GamePhase.EVENT);
                         break;
@@ -136,7 +139,6 @@ public class GameThread extends Thread {
                             EventController.handleDefeatedPlayers(gameManager);
                             game.setPhase(GamePhase.TRAVEL);
                         }
-
                         break;
 
                     case TRAVEL:
@@ -144,7 +146,6 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
                         if(gameManager.getGame().getEventDeckSize() > 0){
-
                             // Asks for each traveler if he wants to continue travel
                             for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);

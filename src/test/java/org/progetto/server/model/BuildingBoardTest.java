@@ -693,13 +693,8 @@ class BuildingBoardTest {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
 
-        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        buildingBoard.getHandComponent().setRotation(0);
-
-//        for (int i = 0; i < 4; i++)
-//            System.out.print(buildingBoard.getHandComponent().getConnections()[i] + " ");
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
 
         buildingBoard.placeComponent(3, 1, 0);
 
@@ -718,11 +713,11 @@ class BuildingBoardTest {
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
         buildingBoard.placeComponent(3, 3, 2);
 
-        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
         buildingBoard.placeComponent(2, 3, 0);
 
-
-        int[][] mask = buildingBoard.getBoardMask();
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 1, 1, 1}, "imgPath", 3));
+        buildingBoard.placeComponent(2, 2, 0);
 
         //printBoard(buildingBoard);
 
@@ -733,10 +728,13 @@ class BuildingBoardTest {
 
         BuildingBoard buildingBoard1 = spaceship1.getBuildingBoard();
 
-        buildingBoard1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard1.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard1.placeComponent(4, 2, 0);
-        buildingBoard1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+
+        buildingBoard1.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard1.placeComponent(4, 1, 0);
+
+        //printBoard(buildingBoard1);
 
         assertFalse(buildingBoard1.checkStartShipValidity().getKey());
 
@@ -745,10 +743,12 @@ class BuildingBoardTest {
 
         BuildingBoard buildingBoard2 = spaceship2.getBuildingBoard();
 
-        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard2.placeComponent(4, 2, 1);
-        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard2.placeComponent(5, 2, 1);
+
+        //printBoard(buildingBoard2);
 
         assertFalse(buildingBoard2.checkStartShipValidity().getKey());
 
@@ -757,10 +757,12 @@ class BuildingBoardTest {
 
         BuildingBoard buildingBoard3 = spaceship3.getBuildingBoard();
 
-        buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard3.placeComponent(4, 2, 2);
-        buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard3.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard3.placeComponent(4, 3, 2);
+
+        //printBoard(buildingBoard3);
 
         assertFalse(buildingBoard3.checkStartShipValidity().getKey());
 
@@ -769,22 +771,35 @@ class BuildingBoardTest {
 
         BuildingBoard buildingBoard4 = spaceship4.getBuildingBoard();
 
-        buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard4.placeComponent(2, 2, 3);
-        buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+        buildingBoard4.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         buildingBoard4.placeComponent(1, 2, 3);
+
+        //printBoard(buildingBoard4);
 
         assertFalse(buildingBoard4.checkStartShipValidity().getKey());
 
         // Case incorrect connection
         Spaceship spaceship5 = new Spaceship(2, 1);
-
         BuildingBoard buildingBoard5 = spaceship5.getBuildingBoard();
 
-        buildingBoard5.setHandComponent(new Component(ComponentType.STRUCTURAL_UNIT, new int[]{0, 0, 0, 0}, "imgPath"));
-        buildingBoard5.placeComponent(2, 2, 0);
+        buildingBoard5.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard5.placeComponent(2, 2, 1);
+
+        //printBoard(buildingBoard5);
 
         assertFalse(buildingBoard5.checkStartShipValidity().getKey());
+
+        Spaceship spaceship6 = new Spaceship(2, 1);
+        BuildingBoard buildingBoard6 = spaceship6.getBuildingBoard();
+
+        buildingBoard6.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard6.placeComponent(2, 2, 0);
+
+        //printBoard(buildingBoard6);
+
+        assertTrue(buildingBoard6.checkStartShipValidity().getKey());
     }
 
     @Test
@@ -1009,7 +1024,7 @@ class BuildingBoardTest {
         // Destroy
         buildingBoard.destroyComponent(3, 2);
         assertFalse(buildingBoard.checkShipValidityAndTryToFix());
-        SpaceshipController.chooseSpaceshipPartToKeep(null, player, 2, 3, null);
+        player.getSpaceship().getBuildingBoard().keepSpaceshipPart(2, 3);
 
         //printBoard(buildingBoard);
 
@@ -1019,7 +1034,7 @@ class BuildingBoardTest {
         assertFalse(buildingBoard.checkShipValidityAndTryToFix());
 
         //printBoard(buildingBoard);
-        SpaceshipController.chooseSpaceshipPartToKeep(null, player, 4, 3, null);
+        player.getSpaceship().getBuildingBoard().keepSpaceshipPart(4, 3);
 
         //printBoard(buildingBoard);
         assertEquals(3, spaceship.getExposedConnectorsCount());

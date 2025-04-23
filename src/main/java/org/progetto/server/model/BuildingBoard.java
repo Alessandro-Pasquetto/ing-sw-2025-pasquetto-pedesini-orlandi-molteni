@@ -1,8 +1,6 @@
 package org.progetto.server.model;
 
 import java.io.Serializable;
-import java.util.*;
-
 import javafx.util.Pair;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.loading.MaskMatrix;
@@ -17,8 +15,8 @@ public class BuildingBoard implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Spaceship spaceship;
-    private Component[][] spaceshipMatrix;  // composition of components
+    private final Spaceship spaceship;
+    private final Component[][] spaceshipMatrix;  // composition of components
     private int[][] boardMask;              // mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
     private final Component[] booked;       // list for booked components storage
     private Component handComponent;
@@ -624,7 +622,7 @@ public class BuildingBoard implements Serializable {
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
             if ((upConnection != 0 && relativeConnection != 0) && (upConnection == 3 || relativeConnection == 3 || upConnection == relativeConnection))
-                dfsStartValidity(x, y - 1, visited, numComponentsChecked, exposedConnectorsCount);
+                dfsValidity(x, y - 1, visited, numComponentsChecked, exposedConnectorsCount);
 
         } else if (y == 0 || boardMask[y - 1][x] != -1) {
             if(currentComponent.getConnections()[0] != 0)
@@ -637,7 +635,7 @@ public class BuildingBoard implements Serializable {
             int rightConnection = currentComponent.getConnections()[1];
             int relativeConnection = rightComponent.getConnections()[3];
             if ((rightConnection != 0 && relativeConnection != 0) && (rightConnection == 3 || relativeConnection == 3 || rightConnection == relativeConnection))
-                dfsStartValidity(x + 1, y, visited, numComponentsChecked, exposedConnectorsCount);
+                dfsValidity(x + 1, y, visited, numComponentsChecked, exposedConnectorsCount);
 
         } else if (x + 1 == spaceshipMatrix[0].length || boardMask[y][x + 1] != -1) {
             if(currentComponent.getConnections()[1] != 0)
@@ -650,7 +648,7 @@ public class BuildingBoard implements Serializable {
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
             if ((bottomConnection != 0 && relativeConnection != 0) && (bottomConnection == 3 || relativeConnection == 3 || bottomConnection == relativeConnection))
-                dfsStartValidity(x, y + 1, visited, numComponentsChecked, exposedConnectorsCount);
+                dfsValidity(x, y + 1, visited, numComponentsChecked, exposedConnectorsCount);
 
         } else if (y + 1 == spaceshipMatrix.length || boardMask[y + 1][x] != -1) {
             if(currentComponent.getConnections()[2] != 0)
@@ -663,7 +661,7 @@ public class BuildingBoard implements Serializable {
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
             if ((leftConnection != 0 && relativeConnection != 0) && (leftConnection == 3 || relativeConnection == 3 || leftConnection == relativeConnection))
-                dfsStartValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
+                dfsValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
 
         } else if (x == 0 || boardMask[y][x - 1] != -1) {
             if(currentComponent.getConnections()[3] != 0)

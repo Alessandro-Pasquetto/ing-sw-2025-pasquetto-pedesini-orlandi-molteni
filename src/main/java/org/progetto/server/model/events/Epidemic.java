@@ -15,7 +15,7 @@ public class Epidemic extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Epidemic(CardType type,int level, String imgSrc) {
+    public Epidemic(CardType type, int level, String imgSrc) {
         super(type, level, imgSrc);
     }
 
@@ -41,26 +41,23 @@ public class Epidemic extends EventCard {
 
         if (!firstIteration) {
             // Checks boundary and if the cell is not Component, already visited, or it's the first iteration of the recursion
-            if (i < 0 || j < 0 || i >= spaceshipMatrix.length || j >= spaceshipMatrix[0].length || spaceshipMatrix[i][j] == null || visitedCells[i][j]) {
+            if (i < 0 || j < 0 || i >= spaceshipMatrix.length || j >= spaceshipMatrix[0].length || spaceshipMatrix[i][j] == null || visitedCells[i][j])
                 return;
-            }
 
             // Checks if the component isn't a housing unit
-            if (!spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT)) {
+            if (!spaceshipMatrix[i][j].getType().equals(ComponentType.HOUSING_UNIT) && !spaceshipMatrix[i][j].getType().equals(ComponentType.CENTRAL_UNIT))
                 return;
-            }
 
             currComponent = (HousingUnit) spaceshipMatrix[i][j];
 
             // Checks if prevComponent and currComponent are connected
-            if (!buildingBoard.areConnected(prevComponent, currComponent)) {
+            if (!buildingBoard.areConnected(prevComponent, currComponent))
                 return;
-            }
 
             // Checks if itemsCount in the components is greater than zero
-            if (currComponent.getCrewCount() == 0 && !currComponent.getHasOrangeAlien() && !currComponent.getHasPurpleAlien()) {
+            if (currComponent.getCrewCount() == 0 && !currComponent.getHasOrangeAlien() && !currComponent.getHasPurpleAlien())
                 return;
-            }
+
 
             // Adds the curr component to the infectedComponents list
             infectedComponents.add(prevComponent);
@@ -120,13 +117,12 @@ public class Epidemic extends EventCard {
                             player.getSpaceship().setAlienPurple(false);
                             component.setAlienPurple(false);
                         } else if (component.getCrewCount() > 0) {
-                            component.decrementCrewCount(player.getSpaceship(),1);
+                            component.decrementCrewCount(player.getSpaceship(), 1);
                         }
                     }
 
                     infectedCrew += infectedComponents.size();
                 }
-
             }
         }
 

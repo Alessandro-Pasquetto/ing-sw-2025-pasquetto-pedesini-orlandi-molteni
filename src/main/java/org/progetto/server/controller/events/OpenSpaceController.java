@@ -25,8 +25,7 @@ public class OpenSpaceController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    OpenSpace openSpace;
-    private final ArrayList<Player> activePlayers;
+    private final OpenSpace openSpace;
     private int playerEnginePower;
     private int requestedNumber;
 
@@ -38,7 +37,6 @@ public class OpenSpaceController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.openSpace = (OpenSpace) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
     }
@@ -55,7 +53,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws RemoteException, InterruptedException{
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -75,6 +73,8 @@ public class OpenSpaceController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         System.out.println("Asking engines");
+
+        ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);

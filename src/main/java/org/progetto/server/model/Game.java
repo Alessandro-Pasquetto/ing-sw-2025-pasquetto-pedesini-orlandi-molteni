@@ -2,6 +2,7 @@ package org.progetto.server.model;
 
 import com.google.gson.reflect.TypeToken;
 import org.progetto.server.connection.games.GameManagerMaps;
+import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
@@ -164,10 +165,9 @@ public class Game {
      * Loading event cards from json file and initialize visibleEventCardDecks
      *
      * @author Lorenzo
-     * @return event card deck (list of event cards)
+     * @return visible event card decks (list of event cards)
      */
     private ArrayList<EventCard>[] loadEvents(){
-
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(EventCard.class, new EventDeserializer());
@@ -192,9 +192,9 @@ public class Game {
                 ArrayList<EventCard> lv1Deck;
                 ArrayList<EventCard> lv2Deck;
 
-                ArrayList<EventCard>[] Deck = (ArrayList<EventCard>[]) new ArrayList[3];
+                ArrayList<EventCard>[] decks = (ArrayList<EventCard>[]) new ArrayList[3];
                 for (int i = 0; i < 3; i++) {
-                    Deck[i] = new ArrayList<>();
+                    decks[i] = new ArrayList<>();
                 }
 
                 FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
@@ -208,16 +208,21 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
+                /*
+                // forzare uscita carta evento, todo da rimuovere
+                while(!lv2Deck.getFirst().getType().equals(CardType.EPIDEMIC))
+                    Collections.shuffle(lv2Deck);
+                 */
+
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
 
-
                 for(int i = 1; i < 4; i++) {
-                    Deck[i - 1].add(lv1Deck.get(i));
-                    Deck[i - 1].addAll(lv2Deck.subList(i*i + 1, i*i + 3));
+                    decks[i - 1].add(lv1Deck.get(i));   //Add 1 lv1 card
+                    decks[i - 1].addAll(lv2Deck.subList(i*2, i*2 + 2)); //Adds 2 lv2 cards
                 }
 
-                return Deck;
+                return decks;
             }
 
         } catch (IOException e) {
@@ -234,7 +239,6 @@ public class Game {
      * @return component deck (list of components)
      */
     private ArrayList<Component> loadComponents(){
-
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
@@ -350,8 +354,7 @@ public class Game {
             pickedComponent = componentDeck.remove(randomPos);
 
             /*
-            // todo poi da rimuovere
-            // forzare componente
+            // forzare componente, todo da rimuovere
             int randomPos = 0;
             ComponentType type;
             do{
@@ -359,10 +362,10 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE));
+            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT));
 
             pickedComponent = componentDeck.remove(randomPos);
-            */
+             */
         }
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
@@ -438,16 +441,15 @@ public class Game {
 
 
             /*
-            // forzare eventCard todo poi da rimuovere
+            // forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
             do{
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.EPIDEMIC));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-
-            */
+             */
         }
 
         setActiveEventCard(pickedEventCard);
@@ -520,22 +522,21 @@ public class Game {
      * Composes the hidden deck after the building phase
      *
      * @author Lorenzo
-     * @return the hiddenDeck composed if all the visible decks where available
      */
-    public ArrayList<EventCard> composeHiddenEventDeck() {
-        ArrayList<EventCard> Deck = new ArrayList<>(hiddenEventDeck);
+    public void composeHiddenEventDeck() {
+        ArrayList<EventCard> deck = new ArrayList<>(hiddenEventDeck);
 
         for(int i = 0; i < 3; i++) {
             if(eventDeckAvailable[i] == null)
-                Deck.addAll(visibleEventCardDecks[i]);
+                deck.addAll(visibleEventCardDecks[i]);
             else
-                return null;
+                return;
         }
 
-        do Collections.shuffle(Deck);
-        while (Deck.getFirst().getLevel() != level);
+        do Collections.shuffle(deck);
+        while (deck.getFirst().getLevel() != level);
 
-        return Deck;
+        hiddenEventDeck = deck;
     }
 
     /**

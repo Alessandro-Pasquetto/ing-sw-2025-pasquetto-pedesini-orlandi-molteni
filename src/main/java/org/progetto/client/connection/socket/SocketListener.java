@@ -1,10 +1,8 @@
 package org.progetto.client.connection.socket;
 
 import org.progetto.client.connection.GuiHandlerMessage;
-
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -38,13 +36,10 @@ public class SocketListener extends Thread {
             while (running) {
                 Object messageObj = in.readObject();
 
-                new Thread(() -> {
-                    if(GameData.getUIType().equals("GUI"))
-                        GuiHandlerMessage.handleMessage(messageObj);
-                    else if(GameData.getUIType().equals("TUI"))
-                        TuiHandlerMessage.handleMessage(messageObj);
-                }).start();
-
+                if(GameData.getUIType().equals("GUI"))
+                    GuiHandlerMessage.handleMessage(messageObj);
+                else if(GameData.getUIType().equals("TUI"))
+                    TuiHandlerMessage.handleMessage(messageObj);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

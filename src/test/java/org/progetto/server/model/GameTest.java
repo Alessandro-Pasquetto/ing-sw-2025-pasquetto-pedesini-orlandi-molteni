@@ -265,10 +265,6 @@ class GameTest {
     }
 
     @Test
-    void saveGame() {
-    }
-
-    @Test
     void addPlayer() {
         Player mario = new Player("mario",1,2);
         Player alice = new Player("alice",1,2);
