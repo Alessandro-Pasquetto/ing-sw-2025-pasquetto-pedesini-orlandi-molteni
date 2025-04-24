@@ -53,6 +53,10 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.discardedBattery = new ArrayList<>();
     }
 
+    public int getDiceResult() {
+        return diceResult;
+    }
+
     // =======================
     // OTHER METHODS
     // =======================
@@ -218,7 +222,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
-        }else
+        } else
             gameManager.getGameThread().notifyThread();
     }
 
@@ -246,7 +250,6 @@ public class MeteorsRainController extends EventControllerAbstract {
                 sender.sendMessage("NoComponentHit");
 
                 player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
                 continue;
             }
 
@@ -255,7 +258,6 @@ public class MeteorsRainController extends EventControllerAbstract {
                 sender.sendMessage("MeteorDestroyed");
 
                 player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
                 continue;
             }
 
@@ -266,8 +268,9 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Notifies component destruction
             } else {
                 sender.sendMessage("NoCannonAvailable");
-
                 SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender);
+
+                player.setIsReady(true, gameManager.getGame());
             }
         }
 
@@ -275,8 +278,8 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
-            gameManager.getGameThread().waitPlayersReady();
-        }
+        } else
+            gameManager.getGameThread().notifyThread();
     }
 
     /**

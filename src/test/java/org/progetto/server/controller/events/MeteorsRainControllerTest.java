@@ -24,22 +24,31 @@ class MeteorsRainControllerTest {
         GameManager gameManager = new GameManager(0,2,1);
 
         ArrayList<Projectile> meteors = new ArrayList<Projectile>();
-        //small meteor from above
+
         meteors.add(new Projectile(ProjectileSize.SMALL,0));
-        //small meteor from the right
         meteors.add(new Projectile(ProjectileSize.SMALL,1));
-        //Big meteor from under
-        meteors.add(new Projectile(ProjectileSize.BIG,2));
-        //Big meteor from the left
-        meteors.add(new Projectile(ProjectileSize.BIG,3));
+        meteors.add(new Projectile(ProjectileSize.BIG,1));
+        meteors.add(new Projectile(ProjectileSize.BIG,0));
 
         MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN,2,"imgSrc",meteors);
         gameManager.getGame().setActiveEventCard(meteorsRain);
 
         Player p1 = new Player("mario", 0, 1) {
+            int count = 0;
+
             @Override
             public int rollDice() {
-                return 7;
+                int result = switch (count) {
+                    case 0 -> 7;
+                    case 1 -> 8;
+                    case 2 -> 7;
+                    case 3 -> 6;
+                    default -> 0;
+                };
+
+                count++;
+
+                return result;
             }
         };
         Player p2 = new Player("alice", 1, 1);
@@ -60,7 +69,7 @@ class MeteorsRainControllerTest {
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
 
-        //player_1 spaceship setup
+        //player 1 spaceship setup
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
 
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
@@ -69,7 +78,7 @@ class MeteorsRainControllerTest {
         bb1.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         bb1.placeComponent(3, 2, 1);
 
-        BatteryStorage storage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",3);
+        BatteryStorage storage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 3}, "imgPath",3);
         storage.incrementItemsCount(p1.getSpaceship(),3);
         bb1.setHandComponent(storage);
         bb1.placeComponent(2, 3, 0);
@@ -77,8 +86,9 @@ class MeteorsRainControllerTest {
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         bb1.placeComponent(2, 1, 0);
 
+        bb1.initSpaceshipParams();
 
-        //player_2 spaceship setup
+        //player 2 spaceship setup
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
 
         bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
@@ -89,6 +99,8 @@ class MeteorsRainControllerTest {
 
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
         bb2.placeComponent(2, 1, 0);
+
+        bb2.initSpaceshipParams();
 
         //controller
         MeteorsRainController controller = new MeteorsRainController(gameManager);
@@ -108,33 +120,50 @@ class MeteorsRainControllerTest {
         gameManager.setGameThread(gameThread);
         gameThread.start();
 
+        // First meteor
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-
-        //Test not your turn
-        sender = new VirtualClient() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("NotYourTurn", message);
-            }
-        };
-        controller.rollDice(p2, sender);
-
-        //Test correct dice trow
-        final DiceResultMessage[] result = {null};
-        sender = new VirtualClient() {
-            @Override
-            public void sendMessage(Object message) {
-                result[0] = (DiceResultMessage) message;
-            }
-        };
-
         controller.rollDice(p1, sender);
-        assertNotNull(result[0]);
-        System.out.println(result[0].getDiceResult());
 
         Thread.sleep(200);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
+        assertNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
+        assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
+        controller.receiveProtectionDecision(p1, "YES", sender);
 
+        Thread.sleep(200);
+        assertEquals(EventPhase.PROTECTION_BATTERY, controller.getPhase());
+        controller.receiveDiscardedBatteries(p1, 2, 3, sender);
 
+        Thread.sleep(200);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
+
+        // Second meteor
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
+
+        Thread.sleep(200);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[3][2]);
+
+        // Third meteor
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
+
+        Thread.sleep(200);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
+        assertNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
+        assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
+        controller.receiveProtectionDecision(p1, "NO", sender);
+
+        Thread.sleep(200);
+        assertNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
+
+        // Fourth meteor
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
+
+        Thread.sleep(200);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][1]);
+        assertNotNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][1]);
     }
 }
