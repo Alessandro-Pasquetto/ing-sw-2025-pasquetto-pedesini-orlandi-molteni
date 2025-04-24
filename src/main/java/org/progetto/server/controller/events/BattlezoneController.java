@@ -27,6 +27,7 @@ public class BattlezoneController extends EventControllerAbstract {
     private ArrayList<Player> activePlayers;
     private ArrayList<ConditionPenalty> couples;
     private ArrayList<Projectile> penaltyShots;
+    private Projectile currentShot;
     private Map<Player, Integer> tempEnginePower;
     private Map<Player, Float> tempFirePower;
     private Player penaltyPlayer;
@@ -45,6 +46,7 @@ public class BattlezoneController extends EventControllerAbstract {
         this.phase = EventPhase.START;
         this.couples = new ArrayList<>(this.battlezone.getCouples());
         this.penaltyShots = new ArrayList<>();
+        this.currentShot = null;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.tempEnginePower = new HashMap<>();
         this.tempFirePower = new HashMap<>();
@@ -785,10 +787,11 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if penalty shots are empty
             for (Projectile shot : penaltyShots) {
 
+                currentShot = shot;
                 // Gets penalty player sender reference
                 Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-                sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst()));
+                sender.sendMessage(new IncomingProjectileMessage(currentShot));
 
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
@@ -816,10 +819,10 @@ public class BattlezoneController extends EventControllerAbstract {
             // Asks penalty player to roll dice
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
+            if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
                 sender.sendMessage("RollDiceToFindColumn");
 
-            } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
+            } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
                 sender.sendMessage("RollDiceToFindRow");
             }
 
@@ -853,7 +856,7 @@ public class BattlezoneController extends EventControllerAbstract {
         sender.sendMessage(new DiceResultMessage(diceResult));
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
 
-        if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
+        if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SHIELDS;
             askToUseShields();
 
@@ -873,7 +876,7 @@ public class BattlezoneController extends EventControllerAbstract {
         if (phase.equals(EventPhase.ASK_SHIELDS)) {
 
             // Checks if penalty player has a shield that covers that direction
-            boolean hasShield = battlezone.checkShields(penaltyPlayer, penaltyShots.getFirst());
+            boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
 
             // Asks penalty player if he wants to use a shield
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
@@ -941,9 +944,8 @@ public class BattlezoneController extends EventControllerAbstract {
         if (phase.equals(EventPhase.HANDLE_SHOT)) {
 
             Game game = gameManager.getGame();
-            Projectile shot = penaltyShots.getFirst();
 
-            Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, shot, diceResult);
+            Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, currentShot, diceResult);
 
             // Gets penalty player sender reference
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);

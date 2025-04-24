@@ -21,11 +21,15 @@ class BattlezoneControllerTest {
     void battlezoneControllerTest() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
 
+        ArrayList<Projectile> projectiles = new ArrayList<>();
+        projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
+        projectiles.add(new Projectile(ProjectileSize.BIG, 3));
+
         ArrayList<ConditionPenalty> conditionPenalties = new ArrayList<ConditionPenalty>() {{
             add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYDAYS, -3, new ArrayList<Projectile>())));
             add(new ConditionPenalty(ConditionType.FIREPOWERREQUIREMENT, new Penalty(PenaltyType.PENALTYCREW, 2, new ArrayList<Projectile>())));
             add(new ConditionPenalty(ConditionType.ENGINEPOWERREQUIREMENT, new Penalty(PenaltyType.PENALTYBOXES, 3, new ArrayList<Projectile>())));
-            add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYSHOTS, 3, new ArrayList<Projectile>())));
+            add(new ConditionPenalty(ConditionType.CREWREQUIREMENT, new Penalty(PenaltyType.PENALTYSHOTS, 3, projectiles)));
 
         }};
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", conditionPenalties);
@@ -34,7 +38,21 @@ class BattlezoneControllerTest {
 
         Player p1 = new Player("mario", 0, 1);
         Player p2 = new Player("alice", 1, 1);
-        Player p3 = new Player("alessio", 2, 1);
+        Player p3 = new Player("alessio", 2, 1) {
+            int count = 0;
+
+            @Override
+            public int rollDice(){
+                int result = switch(count){
+                    case 0 -> 3;
+                    case 1 -> 1;
+                    default -> 2;
+                };
+
+                count++;
+                return result;
+            }
+        };
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
@@ -85,7 +103,6 @@ class BattlezoneControllerTest {
         // p3 will be effect by penalty boxes
         BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
-        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
 
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(bx1);
@@ -187,8 +204,15 @@ class BattlezoneControllerTest {
         assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
-        //TODO: manca l'ultima coppia
-        // (c'è un problema tra il passaggio da penalty boxes a condition perchè si ferma lì)
-        // e la gestione degli shots
+        Thread.sleep(200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p3, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p3, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.CONDITION, controller.getPhase());
     }
 }
