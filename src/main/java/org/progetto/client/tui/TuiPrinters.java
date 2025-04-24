@@ -1,5 +1,6 @@
 package org.progetto.client.tui;
 
+import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
@@ -459,6 +460,22 @@ public class TuiPrinters {
         System.out.println();
     }
 
+    public static void printDestroyedComponent(String player,int x, int y){
+        if(player == null) {
+            System.out.println("💥 You lost a component!");
+            System.out.println("┌────────────────────────────┐");
+            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     │%n", x, y);
+            System.out.println("└────────────────────────────┘");
+        }
+        else {
+            System.out.println("💥"+player+ " lost a component!");
+            System.out.println("┌────────────────────────────┐");
+            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     │%n", x, y);
+            System.out.println("└────────────────────────────┘");
+        }
+
+    }
+
     // =======================
     // SPACESHIP
     // =======================
@@ -696,6 +713,7 @@ public class TuiPrinters {
         }
     }
 
+
     public static void printEventCardDeck(ArrayList<EventCard> eventCardDeck) {
 
         System.out.println("Picked Up Event Card Deck:");
@@ -704,6 +722,19 @@ public class TuiPrinters {
             System.out.println();
             printEventCard(eventCard);
         }
+    }
+
+    public static void printIncomingProjectile(IncomingProjectileMessage msg){
+
+        System.out.println("┌──── Incoming Projectile ─────────────────────┐");
+        System.out.printf ("│ Size     : %-33s │%n", msg.getSize());
+        System.out.printf ("│ From     : %-33d │%n", msg.getFrom());
+        System.out.println("└──────────────────────────────────────────────┘");
+
+    }
+
+    public static void printDiceRoll(int value, String player) {
+        System.out.printf(player+" rolled: %d%n", value);
     }
 
     // =======================

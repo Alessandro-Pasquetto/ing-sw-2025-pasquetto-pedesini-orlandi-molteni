@@ -136,6 +136,6 @@ class MeteorsRainControllerTest {
         Thread.sleep(200);
 
         //Testing first meteor
-        //assertEquals(EventPhase.HANDLE_SMALL_METEOR, controller.getPhase());
+        controller.setDiceResult(0);
     }
 }

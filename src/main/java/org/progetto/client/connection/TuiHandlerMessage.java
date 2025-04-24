@@ -175,6 +175,33 @@ public class TuiHandlerMessage {
             System.out.println(playerLeftMessage.getPlayerName() + " left travel");
         }
 
+        else if (messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
+            TuiPrinters.printIncomingProjectile(incomingProjectileMessage);
+        }
+
+        else if(messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
+            TuiPrinters.printDiceRoll(anotherPlayerDiceResultMessage.getDiceResult(),anotherPlayerDiceResultMessage.getNamePlayer());
+
+        }
+
+        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
+            TuiPrinters.printDestroyedComponent(null,destroyedComponentMessage.getxComponent(),destroyedComponentMessage.getyComponent());
+        }
+
+        else if(messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage){
+            TuiPrinters.printDestroyedComponent(
+                    anotherPlayerDestroyedComponentMessage.getNamePlayer(),
+                    anotherPlayerDestroyedComponentMessage.getxComponent(),
+                    anotherPlayerDestroyedComponentMessage.getyComponent()
+            );
+        }
+
+
+        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
+
+
+        }
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
@@ -257,8 +284,32 @@ public class TuiHandlerMessage {
                     System.out.println("Invalid coordinates!");
                     break;
 
+                case "InvalidComponent":
+                    System.out.println("Invalid component!");
+                    break;
+
                 case "BatteryDiscarded":
                     System.out.println("Battery discarded");
+                    break;
+
+                case "BatteryNotDiscarded":
+                    System.out.println("Unable to discard the battery!");
+                    break;
+
+                case "IncorrectNumber":
+                    System.out.println("Incorrect number!");
+                    break;
+
+                case "NotEnoughBoxes":
+                    System.out.println("Not enough boxes!");
+                    break;
+
+                case "CrewMemberDiscarded":
+                    System.out.println("Crew member discarded");
+                    break;
+
+                case "CrewNotMemberDiscarded":
+                    System.out.println("Unable to discard the crew member!");
                     break;
 
                 case "YouAreSafe":
@@ -284,6 +335,27 @@ public class TuiHandlerMessage {
                 case "YouAreContinuingTravel":
                     System.out.println("You are continuing travel");
                     break;
+
+                case "NoComponentHit":
+                    System.out.println("What a luck!, no component hit!");
+                    break;
+
+                case "NoComponentDamaged":
+                    System.out.println("Close call!, no component damaged!");
+                    break;
+
+                case "NoShieldAvailable":
+                    System.out.println("Oh no, you've no shield available!");
+                    break;
+
+                case "NoCannonAvailable":
+                    System.out.println("Oh no, you've no cannons available!");
+                    break;
+
+                case "MeteorDestroyed":
+                    System.out.println("Out of danger, you've destroyed the meteor!");
+                    break;
+
 
                 default:
                     System.out.println(messageString);
