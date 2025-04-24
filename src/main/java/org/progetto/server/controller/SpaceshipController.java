@@ -8,6 +8,7 @@ import org.progetto.messages.toClient.Spaceship.UpdatedSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
@@ -36,6 +37,11 @@ public class SpaceshipController {
      */
     public static void showSpaceship(GameManager gameManager, String player, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
             sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner.getName()));
@@ -55,6 +61,11 @@ public class SpaceshipController {
      * @throws RemoteException
      */
     public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         try {
             Spaceship spaceship = player.getSpaceship();
@@ -227,6 +238,11 @@ public class SpaceshipController {
      */
     public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
             buildingBoard.destroyComponent(xComponent, yComponent);
@@ -260,6 +276,12 @@ public class SpaceshipController {
      * @throws RemoteException
      */
     public static void destroyComponentWithoutAnyCheck(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -312,7 +334,13 @@ public class SpaceshipController {
         }
     }
 
-    public static void populateComponent(Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void populateComponent(GameManager gameManager, Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         try{
             player.getSpaceship().getBuildingBoard().populateComponent(crewType, xComponent, yComponent);
         } catch (IllegalStateException e) {

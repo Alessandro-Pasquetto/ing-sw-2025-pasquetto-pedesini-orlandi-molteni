@@ -3,6 +3,7 @@ package org.progetto.server.controller.events;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import java.rmi.RemoteException;
 

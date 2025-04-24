@@ -130,6 +130,7 @@ public class SocketListener extends Thread {
                 break;
 
             case BUILDING:
+
                 if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
                     int xPlaceComponent = placeComponentMessage.getX();
                     int yPlaceComponent = placeComponentMessage.getY();
@@ -276,7 +277,7 @@ public class SocketListener extends Thread {
                     int xComponent = populatingMessage.getxComponent();
                     int yComponent = populatingMessage.getyComponent();
 
-                    SpaceshipController.populateComponent(player, crewType, xComponent, yComponent, socketWriter);
+                    SpaceshipController.populateComponent(gameManager, player, crewType, xComponent, yComponent, socketWriter);
                 }
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {

@@ -6,6 +6,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.EventCard;
@@ -34,6 +35,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void showHandComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if (player.getIsReady()) {
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -70,6 +76,11 @@ public class BuildingController {
      */
     public static void pickHiddenComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -105,6 +116,12 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void showVisibleComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -135,6 +152,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, Sender sender) throws RemoteException{
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -173,6 +195,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void placeComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if (player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -216,6 +243,11 @@ public class BuildingController {
      */
     public static void placeLastComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
@@ -250,6 +282,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -303,6 +340,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -416,6 +458,11 @@ public class BuildingController {
      */
     public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -473,6 +520,11 @@ public class BuildingController {
      */
     public static void placeHandComponentAndReady(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -517,6 +569,11 @@ public class BuildingController {
      */
     public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -545,6 +602,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void discardComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -583,6 +645,11 @@ public class BuildingController {
      */
     public static void bookComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -619,6 +686,12 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void showBookedComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -649,6 +722,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void pickBookedComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -688,6 +766,11 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
@@ -735,6 +818,11 @@ public class BuildingController {
      */
     public static void putDownEventCardDeck(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         if(player.getIsReady()){
             sender.sendMessage("ActionNotAllowedInReadyState");
             return;
@@ -767,6 +855,12 @@ public class BuildingController {
      * @throws RemoteException
      */
     public static void resetTimer(GameManager gameManager, Sender sender) throws RemoteException{
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
         try {
             gameManager.getTimerController().resetTimer();
         }catch (IllegalStateException e){

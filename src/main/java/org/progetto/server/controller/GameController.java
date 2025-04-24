@@ -25,6 +25,10 @@ public class GameController {
     }
 
     public static void ready(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         if(!player.getIsReady()){
             player.setIsReady(true, gameManager.getGame());
@@ -44,6 +48,11 @@ public class GameController {
      * @throws RemoteException
      */
     public static void showTrack(GameManager gameManager, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
 
         try {
             ArrayList<Player> travelers = gameManager.getGame().getBoard().getCopyTravelers();
