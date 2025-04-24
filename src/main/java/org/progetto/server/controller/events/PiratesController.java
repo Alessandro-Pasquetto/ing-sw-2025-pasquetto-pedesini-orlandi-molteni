@@ -33,6 +33,7 @@ public class PiratesController extends EventControllerAbstract {
     private int diceResult;
     private boolean defeated;
     private ArrayList<Projectile> penaltyShots;
+    private Projectile currentShot;
     private ArrayList<Player> protectedPlayers;
     private ArrayList<Player> notProtectedPlayers;
     private ArrayList<Player> discardedBattery;
@@ -50,6 +51,7 @@ public class PiratesController extends EventControllerAbstract {
         this.requestedBatteries = 0;
         this.defeatedPlayers = new ArrayList<>();
         this.penaltyShots = new ArrayList<>(pirates.getPenaltyShots());
+        this.currentShot = null;
         this.diceResult = 0;
         this.defeated = false;
         this.protectedPlayers = new ArrayList<>();
@@ -365,8 +367,10 @@ public class PiratesController extends EventControllerAbstract {
                 for (Player defeatedPlayer : defeatedPlayers) {
                     Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
-                    sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst()));
+                    sender.sendMessage(new IncomingProjectileMessage(currentShot));
                 }
+
+                currentShot = shot;
 
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
@@ -393,10 +397,10 @@ public class PiratesController extends EventControllerAbstract {
             // Asks first defeated player to roll dice
             Sender sender = gameManager.getSenderByPlayer(defeatedPlayers.getFirst());
 
-            if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
+            if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
                 sender.sendMessage("RollDiceToFindColumn");
 
-            } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
+            } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
                 sender.sendMessage("RollDiceToFindRow");
             }
 
@@ -432,7 +436,8 @@ public class PiratesController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
 
         // Checks projectile dimensions
-        if (penaltyShots.getFirst().getSize().equals(ProjectileSize.SMALL)) {
+        if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
+
             phase = EventPhase.ASK_SHIELDS;
             askToUseShields();
 
@@ -457,7 +462,7 @@ public class PiratesController extends EventControllerAbstract {
             for (Player defeatedPlayer : defeatedPlayers) {
 
                 // Checks if current player has a shield that covers that direction
-                boolean hasShield = pirates.checkShields(defeatedPlayer, penaltyShots.getFirst());
+                boolean hasShield = pirates.checkShields(defeatedPlayer, currentShot);
 
                 // Asks current defeated player if he wants to use a shield
                 Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
@@ -476,6 +481,7 @@ public class PiratesController extends EventControllerAbstract {
                 handleShot();
 
             } else {
+
                 phase = EventPhase.SHIELD_DECISION;
             }
         }
@@ -554,7 +560,7 @@ public class PiratesController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     public synchronized void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+        if (!phase.equals(EventPhase.SHIELD_BATTERY)) {
             sender.sendMessage("IncorrectPhase");
             return;
         }
@@ -585,7 +591,6 @@ public class PiratesController extends EventControllerAbstract {
         if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
             discardedBattery.remove(player);
             sender.sendMessage("BatteryDiscarded");
-
             if (discardedBattery.isEmpty()) {
                 phase = EventPhase.HANDLE_SHOT;
                 handleShot();
@@ -606,40 +611,42 @@ public class PiratesController extends EventControllerAbstract {
         if (phase.equals(EventPhase.HANDLE_SHOT)) {
 
             Game game = gameManager.getGame();
-            Projectile shot = penaltyShots.getFirst();
+            Projectile shot = currentShot;
 
             // Set as ready not defeated players
             for (Player player : activePlayers) {
                 if (!defeatedPlayers.contains(player)) {
+                    System.out.println(player.getName());
                     player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
                 }
             }
 
             // Set as ready protected players
             for (Player player : protectedPlayers) {
+                System.out.println(player.getName());
                 player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
             }
 
             // For each non-protected player handles penalty shot
-            for (Player notProtectedPlayer : notProtectedPlayers) {
-                Component destroyedComponent = pirates.penaltyShot(game, notProtectedPlayer, shot, diceResult);
-
+            for (Player player : notProtectedPlayers) {
+                Component destroyedComponent = pirates.penaltyShot(game, player, shot, diceResult);
                 // Gets current player sender reference
-                Sender sender = gameManager.getSenderByPlayer(notProtectedPlayer);
+                Sender sender = gameManager.getSenderByPlayer(player);
 
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {
-                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, notProtectedPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
+                    System.out.println("sono qui" + player.getName());
+                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
                 } else {
+                    System.out.println("sono qui" + player.getName());
                     gameManager.broadcastGameMessage("NothingGotDestroyed");
 
-                    notProtectedPlayer.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
+                    player.setIsReady(true, gameManager.getGame());
                 }
             }
+
+            gameManager.getGameThread().notifyThread();
         }
     }
 }

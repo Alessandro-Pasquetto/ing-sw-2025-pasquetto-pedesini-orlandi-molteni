@@ -412,7 +412,7 @@ class BuildingControllerTest {
         assertDoesNotThrow(() -> BuildingController.bookComponent(gameManager, player, 0, sender));
 
         // Check if the component was booked correctly
-        assertEquals(bookedComponent, buildingBoard.getBooked()[0]);
+        assertEquals(bookedComponent, buildingBoard.getBookedCopy()[0]);
     }
 
     @Test

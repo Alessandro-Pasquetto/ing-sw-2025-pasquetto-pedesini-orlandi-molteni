@@ -724,14 +724,14 @@ public class TuiPrinters {
         }
     }
 
-    public static void printIncomingProjectile(IncomingProjectileMessage msg){
+    /*public static void printIncomingProjectile(IncomingProjectileMessage msg){
 
         System.out.println("┌──── Incoming Projectile ─────────────────────┐");
         System.out.printf ("│ Size     : %-33s │%n", msg.getSize());
         System.out.printf ("│ From     : %-33d │%n", msg.getFrom());
         System.out.println("└──────────────────────────────────────────────┘");
 
-    }
+    }*/
 
     public static void printDiceRoll(int value, String player) {
         System.out.printf(player+" rolled: %d%n", value);

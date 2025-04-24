@@ -102,7 +102,7 @@ class BuildingBoardTest {
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
 
         // Test initial state
-        Component[] booked = board.getBooked();
+        Component[] booked = board.getBookedCopy();
         assertNotNull(booked);
         assertEquals(2, booked.length);
 
@@ -116,7 +116,7 @@ class BuildingBoardTest {
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
 
         // Test initial state
-        Component[] booked = board.getBooked();
+        Component[] booked = board.getBookedCopy();
         assertNotNull(booked);
         assertEquals(2, booked.length);
 
@@ -166,7 +166,7 @@ class BuildingBoardTest {
 
         // Verify component was moved correctly
         assertNull(board.getHandComponent());
-        assertSame(component, board.getBooked()[0]);
+        assertSame(component, board.getBookedCopy()[0]);
 
         //Test cell occupied
         board.setHandComponent(component);
@@ -198,7 +198,7 @@ class BuildingBoardTest {
         board.setHandComponent(null);
         board.pickBookedComponent(0);
         assertSame(component,board.getHandComponent());
-        assertNull(board.getBooked()[0]);
+        assertNull(board.getBookedCopy()[0]);
     }
 
 

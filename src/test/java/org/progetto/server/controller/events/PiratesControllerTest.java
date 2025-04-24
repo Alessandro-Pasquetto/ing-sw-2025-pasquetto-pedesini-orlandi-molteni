@@ -29,7 +29,21 @@ class PiratesControllerTest {
         Pirates pirates = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles);
         gameManager.getGame().setActiveEventCard(pirates);
 
-        Player p1 = new Player("mario", 0, 1);
+        Player p1 = new Player("mario", 0, 1) {
+            int count = 0;
+
+            @Override
+            public int rollDice(){
+                int result = switch(count){
+                    case 0 -> 2;
+                    case 1 -> 1;
+                    default -> 2;
+                };
+
+                count++;
+                return result;
+            }
+        };
         Player p2 = new Player("alice", 0, 1);
         Player p3 = new Player("alessio", 0, 1);
 
@@ -59,7 +73,8 @@ class PiratesControllerTest {
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
         bb1.placeComponent(1, 1, 1);
 
-        bb1.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
+        BatteryStorage batteryStorage1 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        bb1.setHandComponent(batteryStorage1);
         bb1.placeComponent(3, 2, 1);
 
         bb1.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
@@ -70,6 +85,8 @@ class PiratesControllerTest {
 
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         bb1.placeComponent(3, 3, 0);
+
+        bb1.initSpaceshipParams();
 
         BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
@@ -136,7 +153,21 @@ class PiratesControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
 
-        //TODO: tutta la logica del penalty_effect
+        Thread.sleep(200);
+        assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
+        controller.receiveProtectionDecision(p1, "YES", sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
+        controller.receiveShieldBattery(p1, 3, 2, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.HANDLE_SHOT, controller.getPhase());
     }
 }
