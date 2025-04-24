@@ -1,7 +1,6 @@
 package org.progetto.messages.toClient.EventCommon;
 
-import org.progetto.server.model.events.ProjectileSize;
-
+import org.progetto.server.model.events.Projectile;
 import java.io.Serializable;
 
 public class IncomingProjectileMessage implements Serializable {
@@ -10,27 +9,21 @@ public class IncomingProjectileMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String size;
-    private int from;
+    private final Projectile projectile;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public IncomingProjectileMessage(ProjectileSize projectileSize, int from) {
-        this.size = projectileSize.toString();
-        this.from = from;
+    public IncomingProjectileMessage(Projectile projectile) {
+        this.projectile = projectile;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public String getSize() {
-        return size;
-    }
-
-    public int getFrom() {
-        return from;
+    public Projectile getProjectile() {
+        return projectile;
     }
 }

@@ -30,7 +30,7 @@ public class MeteorsRain extends EventCard {
     // =======================
 
     public ArrayList<Projectile> getMeteors() {
-        return meteors;
+        return new ArrayList<Projectile>(meteors);
     }
 
     // =======================

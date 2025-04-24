@@ -40,6 +40,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
+            System.out.println();
             System.out.println(newGamePhaseMessage.getPhaseGame() + " phase started...");
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
         }
@@ -171,21 +172,25 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits");
         }
 
-        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
-            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
+        else if(messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
+            System.out.println("A meteor is coming: " + incomingProjectileMessage.getProjectile().toString());
         }
 
-        else if (messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
-            TuiPrinters.printIncomingProjectile(incomingProjectileMessage);
+        else if(messageObj instanceof DiceResultMessage diceResultMessage) {
+            System.out.println("Dice result: " +  diceResultMessage.getDiceResult());
+        }
+
+        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
+            TuiPrinters.printDestroyedComponent(null,destroyedComponentMessage.getxComponent(),destroyedComponentMessage.getyComponent());
+        }
+
+        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
+            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
         }
 
         else if(messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
             TuiPrinters.printDiceRoll(anotherPlayerDiceResultMessage.getDiceResult(),anotherPlayerDiceResultMessage.getNamePlayer());
 
-        }
-
-        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
-            TuiPrinters.printDestroyedComponent(null,destroyedComponentMessage.getxComponent(),destroyedComponentMessage.getyComponent());
         }
 
         else if(messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage){
@@ -194,12 +199,6 @@ public class TuiHandlerMessage {
                     anotherPlayerDestroyedComponentMessage.getxComponent(),
                     anotherPlayerDestroyedComponentMessage.getyComponent()
             );
-        }
-
-
-        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
-
-
         }
 
         else if (messageObj instanceof String messageString) {

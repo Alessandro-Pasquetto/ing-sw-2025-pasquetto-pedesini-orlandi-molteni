@@ -244,11 +244,7 @@ public class SpaceshipController {
             }
 
         } catch (IllegalStateException e) {
-            if (e.getMessage().equals("EmptyComponentCell"))
-                sender.sendMessage("EmptyComponentCell");
-
-            if (e.getMessage().equals("EmptySpaceship"))
-                sender.sendMessage("EmptySpaceship");
+            sender.sendMessage(e.getMessage());
         }
     }
 

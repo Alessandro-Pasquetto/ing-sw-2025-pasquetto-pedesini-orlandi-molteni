@@ -365,7 +365,7 @@ public class PiratesController extends EventControllerAbstract {
                 for (Player defeatedPlayer : defeatedPlayers) {
                     Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
-                    sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
+                    sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst()));
                 }
 
                 phase = EventPhase.ASK_ROLL_DICE;

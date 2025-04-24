@@ -788,7 +788,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 // Gets penalty player sender reference
                 Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-                sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst().getSize(), penaltyShots.getFirst().getFrom()));
+                sender.sendMessage(new IncomingProjectileMessage(penaltyShots.getFirst()));
 
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();

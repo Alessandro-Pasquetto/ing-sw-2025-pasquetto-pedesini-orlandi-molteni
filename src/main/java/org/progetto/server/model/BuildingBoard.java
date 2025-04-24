@@ -62,10 +62,6 @@ public class BuildingBoard implements Serializable {
         return boardMask;
     }
 
-    public Component[] getBooked() {
-        return booked;
-    }
-
     public Component[] getBookedCopy() {
         synchronized (booked) {
             Component[] bookedComponents = new Component[booked.length];

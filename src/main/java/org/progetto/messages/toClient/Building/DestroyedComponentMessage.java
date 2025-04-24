@@ -8,14 +8,14 @@ public class DestroyedComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xComponent;
-    private int yComponent;
+    private final int xComponent;
+    private final int yComponent;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public DestroyedComponentMessage(int xComponent, int yPlaceComponent) {
+    public DestroyedComponentMessage(int xComponent, int yComponent) {
         this.xComponent = xComponent;
         this.yComponent = yComponent;
     }
