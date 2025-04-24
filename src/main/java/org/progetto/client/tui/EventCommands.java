@@ -169,7 +169,7 @@ public class EventCommands {
     public static void responseChooseToUseShield() {
 
         while(true){
-            System.out.println("Do you want to use a shield?");
+            System.out.println("Do you want to use a shield? (YES or NO)");
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -193,7 +193,7 @@ public class EventCommands {
     public static void responseAcceptRewardCreditsAndPenalties(int reward, int penaltyDays, int penaltyCrew) {
 
         while(true){
-            System.out.println("Do you want to accept the reward and penalties?");
+            System.out.println("Do you want to accept the reward and penalties? (YES or NO)");
             System.out.println("Reward credits: " + reward + ", Days of penalty: " + penaltyDays + ", Crew to discard: " + penaltyCrew);
 
             String response = TuiCommandFilter.waitResponse();
@@ -207,7 +207,6 @@ public class EventCommands {
         }
     }
 
-
     /**
      * Handles player decision to accept reward credits and penalty days
      *
@@ -218,7 +217,7 @@ public class EventCommands {
     public static void responseAcceptRewardCreditsAndPenaltyDays(int reward, int penaltyDays){
 
         while(true){
-            System.out.println("Do you want to accept the reward and the days penalty?");
+            System.out.println("Do you want to accept the reward and the days penalty? (YES or NO)");
             System.out.println("Reward credits: " + reward + ", Days of penalty: " + penaltyDays);
 
             String response = TuiCommandFilter.waitResponse();
@@ -247,10 +246,10 @@ public class EventCommands {
             for (int i = 0; i < availableBoxes.size(); i++) {
                 String box = TuiPrinters.drawBox(availableBoxes.get(i));
 
-                System.out.printf(" [%d] %s%n", i, box);
+                System.out.printf("[%d] %s%n", i, box);
             }
 
-            System.out.println("Select an available box dy index from the list (-1 if you wanna leave the planet)");
+            System.out.println("Select an available box by index from the list (-1 if you wanna leave the planet)");
             String idx = TuiCommandFilter.waitResponse();
             try{
                 int box_idx = Integer.parseInt(idx);
@@ -265,11 +264,11 @@ public class EventCommands {
 
                 else if(box_idx >= 0 && box_idx < availableBoxes.size()){
                     System.out.println("Select a box storage were you want to insert the box: ");
-                    System.out.println("X: ");
+                    System.out.print("X: ");
                     int x = Integer.parseInt(TuiCommandFilter.waitResponse());
-                    System.out.println("Y: ");
+                    System.out.print("Y: ");
                     int y = Integer.parseInt(TuiCommandFilter.waitResponse());
-                    System.out.println("Storage_idx: ");
+                    System.out.print("Storage idx: ");
                     int storage_idx = Integer.parseInt(TuiCommandFilter.waitResponse());
 
                     int levelGame = GameData.getLevelGame();
@@ -321,7 +320,7 @@ public class EventCommands {
             String response = TuiCommandFilter.waitResponse();
 
             if(!response.equalsIgnoreCase("YES") && !response.equalsIgnoreCase("NO")){
-                System.out.println("Wrong response (YES or NO)");
+                System.out.println("You must choose between YES or NO");
                 continue;
             }
 
@@ -370,12 +369,33 @@ public class EventCommands {
      */
     public static void responseUseDoubleCannonRequest() {
         while(true){
-            System.out.println("Do you want to use a double cannon?");
+            System.out.println("Do you want to use a double cannon? (YES or NO)");
 
             String response = TuiCommandFilter.waitResponse();
+
             if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
                 sender.responseUseDoubleCannonRequest(response);
+                break;
+            }else
+                System.out.println("You must choose between YES or NO");
+        }
+    }
+
+    /**
+     * Handles player decision to continue travel
+     *
+     * @author Gabriele
+     */
+    public static void responseContinueTravel() {
+        while (true) {
+            System.out.println("Do you want to continue travel? (YES or NO)");
+
+            String response = TuiCommandFilter.waitResponse();
+
+            if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
+                Sender sender = GameData.getSender();
+                sender.responseContinueTravel(response);
                 break;
             }else
                 System.out.println("You must choose between YES or NO");

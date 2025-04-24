@@ -91,4 +91,6 @@ public interface VirtualServer extends Remote {
     void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, int idx) throws RemoteException;
 
     void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException;
+
+    void responseContinueTravel(VirtualClient virtualClient, int idGame, String response) throws RemoteException;
 }

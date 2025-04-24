@@ -772,4 +772,19 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void responseContinueTravel(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventController.chooseToContinueTravel(gameManager, response, player, virtualClient);
+    }
 }

@@ -118,7 +118,7 @@ public class LostStationController extends EventControllerAbstract {
                 rewardBoxes = lostStation.getRewardBoxes();
 
                 sender.sendMessage("LandingCompleted");
-                gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerLandedMessage(player), sender);
 
                 sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
                 break;
@@ -165,6 +165,7 @@ public class LostStationController extends EventControllerAbstract {
         // Checks if reward box index is correct
         if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
             sender.sendMessage("IncorrectRewardIndex");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 
@@ -179,6 +180,7 @@ public class LostStationController extends EventControllerAbstract {
         // Checks if component index is correct
         if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 
@@ -187,6 +189,7 @@ public class LostStationController extends EventControllerAbstract {
         // Checks if it is a storage component
         if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 

@@ -91,7 +91,7 @@ public class EventController {
      * @param sender current sender
      * @throws RemoteException
      */
-    public static void chooseToLeaveTravel(GameManager gameManager, String response, Player player, Sender sender) throws RemoteException {
+    public static void chooseToContinueTravel(GameManager gameManager, String response, Player player, Sender sender) throws RemoteException {
 
         GamePhase gamePhase = gameManager.getGame().getPhase();
         Board board = gameManager.getGame().getBoard();
@@ -103,16 +103,16 @@ public class EventController {
 
             switch (upperCaseResponse) {
                 case "YES":
-                    sender.sendMessage("YouLeftTravel");
-                    gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
-                    board.leaveTravel(player);
+                    sender.sendMessage("YouAreContinuingTravel");
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;
 
                 case "NO":
-                    sender.sendMessage("YouAreContinuingTravel");
+                    sender.sendMessage("YouLeftTravel");
+                    gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
+                    board.leaveTravel(player);
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();

@@ -429,4 +429,13 @@ public class RmiClientSender implements Sender {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void responseContinueTravel(String response) {
+        try {
+            server.responseContinueTravel(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

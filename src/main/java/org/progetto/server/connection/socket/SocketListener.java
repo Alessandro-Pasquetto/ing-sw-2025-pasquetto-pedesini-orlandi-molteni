@@ -324,6 +324,11 @@ public class SocketListener extends Thread {
                     SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
                 }
 
+                else if( messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
+                    String response = responseContinueTravelMessage.getResponse();
+                    EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
+                }
+
                 break;
 
             case EVENT:

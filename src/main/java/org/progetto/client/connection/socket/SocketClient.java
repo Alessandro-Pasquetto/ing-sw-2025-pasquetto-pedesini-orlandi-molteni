@@ -280,4 +280,9 @@ public class SocketClient implements Sender {
     public void responseUseDoubleCannonRequest(String response) {
         SocketWriter.sendMessage(new ResponseUseDoubleCannonRequestMessage(response));
     }
+
+    @Override
+    public void responseContinueTravel(String response) {
+        SocketWriter.sendMessage(new ResponseContinueTravelMessage(response));
+    }
 }

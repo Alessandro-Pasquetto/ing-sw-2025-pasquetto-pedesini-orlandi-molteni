@@ -100,6 +100,10 @@ public class TuiHandlerMessage {
                 System.out.println("Timer is at 0s");
         }
 
+        else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
+            System.out.println(anotherPlayerIsReadyMessage.getNamePlayer() + " is ready");
+        }
+
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             TuiPrinters.printEventCard(pickedEventCardMessage.getEventCard());
@@ -167,8 +171,8 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits");
         }
 
-        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
-
+        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
+            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
         }
 
         else if (messageObj instanceof String messageString) {
@@ -217,6 +221,10 @@ public class TuiHandlerMessage {
                     BuildingData.setIsTimerExpired(true);
                     break;
 
+                case "YouAreReady":
+                    System.out.println("You are ready");
+                    break;
+
                 case "PlayerNameNotFound":
                     System.out.println("Unable to find player");
                     break;
@@ -263,6 +271,18 @@ public class TuiHandlerMessage {
 
                 case "ValidSpaceShip":
                     System.out.println("Your spaceship is pretty good, you're ready to go!");
+                    break;
+
+                case "AskContinueTravel":
+                    EventCommands.responseContinueTravel();
+                    break;
+
+                case "YouLeftTravel":
+                    System.out.println("You left travel");
+                    break;
+
+                case "YouAreContinuingTravel":
+                    System.out.println("You are continuing travel");
                     break;
 
                 default:

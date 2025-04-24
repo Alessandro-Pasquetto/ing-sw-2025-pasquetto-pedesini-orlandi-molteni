@@ -84,4 +84,6 @@ public interface Sender {
     void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
 
     void responseUseDoubleCannonRequest(String response);
+
+    void responseContinueTravel(String response);
 }

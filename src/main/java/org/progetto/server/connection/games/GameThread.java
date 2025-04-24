@@ -149,7 +149,7 @@ public class GameThread extends Thread {
                             // Asks for each traveler if he wants to continue travel
                             for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);
-                                sender.sendMessage("Do you want to continue traveling?");
+                                sender.sendMessage("AskContinueTravel");
                             }
 
                             resetAndWaitTravelersReady();
@@ -157,7 +157,6 @@ public class GameThread extends Thread {
                             // Checks if there is at least a traveler remaining
                             if (gameManager.getGame().getBoard().getNumTravelers() > 0) {
                                 game.setPhase(GamePhase.EVENT);
-                                gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                                 break;
                             }
                         }
@@ -172,7 +171,7 @@ public class GameThread extends Thread {
                         for (Player player : gameManager.getGame().scoreBoard()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
-                            if(player.getCredits() >= 0)
+                            if(player.getCredits() > 0)
                                 sender.sendMessage("You have won");
                             else
                                 sender.sendMessage("You have lost");
