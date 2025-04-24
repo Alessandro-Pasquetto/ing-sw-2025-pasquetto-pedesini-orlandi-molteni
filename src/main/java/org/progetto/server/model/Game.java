@@ -208,11 +208,11 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
-
+                /*
                 // forzare uscita carta evento, todo da rimuovere
                 while(!lv2Deck.getFirst().getType().equals(CardType.EPIDEMIC))
                     Collections.shuffle(lv2Deck);
-
+                 */
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -435,12 +435,12 @@ public class Game {
             if(hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            /*
+
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-             */
 
 
+            /*
             // forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
@@ -449,6 +449,7 @@ public class Game {
             }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
+             */
 
         }
 
