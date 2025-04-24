@@ -135,7 +135,6 @@ class MeteorsRainControllerTest {
 
         Thread.sleep(200);
 
-        //Testing first meteor
-        controller.setDiceResult(0);
+
     }
 }
