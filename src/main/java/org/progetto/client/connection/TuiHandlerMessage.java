@@ -167,6 +167,10 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits");
         }
 
+        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
+
+        }
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
@@ -266,5 +270,8 @@ public class TuiHandlerMessage {
                     break;
             }
         }
+
+        else
+            System.out.println("A message was received but is not handled: " + messageObj.toString());
     }
 }

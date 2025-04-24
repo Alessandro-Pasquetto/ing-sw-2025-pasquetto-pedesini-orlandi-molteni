@@ -466,6 +466,15 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "ROLL":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameData.getSender().rollDice();
+                        else {
+                            System.out.println("Invalid command format");
+                            expectedFormat(commandType);
+                        }
+                        break;
+
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
                             System.out.println("Command not found");

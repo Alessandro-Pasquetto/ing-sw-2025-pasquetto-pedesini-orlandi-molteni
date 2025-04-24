@@ -825,10 +825,10 @@ public class BattlezoneController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
             if (penaltyShots.getFirst().getFrom() == 0 || penaltyShots.getFirst().getFrom() == 2) {
-                sender.sendMessage("ThrowDiceToFindColumn");
+                sender.sendMessage("RollDiceToFindColumn");
 
             } else if (penaltyShots.getFirst().getFrom() == 1 || penaltyShots.getFirst().getFrom() == 3) {
-                sender.sendMessage("ThrowDiceToFindRow");
+                sender.sendMessage("RollDiceToFindRow");
             }
 
             phase = EventPhase.ROLL_DICE;

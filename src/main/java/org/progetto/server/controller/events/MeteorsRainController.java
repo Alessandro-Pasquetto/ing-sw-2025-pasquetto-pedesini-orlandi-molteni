@@ -126,12 +126,11 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         Sender sender = gameManager.getSenderByPlayer(activePlayers.getFirst());
 
-        if (meteors.getFirst().getFrom() == 0 || meteors.getFirst().getFrom() == 2) {
-            sender.sendMessage("ThrowDiceToFindColumn");
+        if (meteors.getFirst().getFrom() == 0 || meteors.getFirst().getFrom() == 2)
+            sender.sendMessage("RollDiceToFindColumn");
 
-        } else if (meteors.getFirst().getFrom() == 1 || meteors.getFirst().getFrom() == 3) {
-            sender.sendMessage("ThrowDiceToFindRow");
-        }
+        else if (meteors.getFirst().getFrom() == 1 || meteors.getFirst().getFrom() == 3)
+            sender.sendMessage("RollDiceToFindRow");
 
         phase = EventPhase.ROLL_DICE;
     }

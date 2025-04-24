@@ -91,9 +91,9 @@ public class SabotageController extends EventControllerAbstract{
         Sender sender = gameManager.getSenderByPlayer(penalizedPlayer);
 
         if (yDiceResult == 0) {
-            sender.sendMessage("ThrowDiceToFindRow");
+            sender.sendMessage("RollDiceToFindRow");
         } else if (xDiceResult == 0) {
-            sender.sendMessage("ThrowDiceToFindColumn");
+            sender.sendMessage("RollDiceToFindColumn");
         }
 
         phase = EventPhase.ROLL_DICE;

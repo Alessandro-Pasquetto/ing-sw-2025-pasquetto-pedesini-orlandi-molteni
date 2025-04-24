@@ -106,5 +106,8 @@ public class GuiHandlerMessage {
                     break;
             }
         }
+
+        else
+            System.out.println("A message was received but is not handled: " + messageObj.toString());
     }
 }
