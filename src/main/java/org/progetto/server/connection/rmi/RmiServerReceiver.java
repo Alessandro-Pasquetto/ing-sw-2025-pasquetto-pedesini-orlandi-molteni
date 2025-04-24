@@ -717,7 +717,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         try {
-            eventController.receiveRewardDecision(player, response, virtualClient);
+            eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

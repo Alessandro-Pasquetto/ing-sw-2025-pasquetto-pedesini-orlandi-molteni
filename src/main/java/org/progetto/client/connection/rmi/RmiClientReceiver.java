@@ -26,9 +26,11 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
      */
     @Override
     public void sendMessage(Object objMessage) throws RemoteException {
-        if(GameData.getUIType().equals("GUI"))
-            GuiHandlerMessage.handleMessage(objMessage);
-        else if (GameData.getUIType().equals("TUI"))
-            TuiHandlerMessage.handleMessage(objMessage);
+        new Thread(() -> {
+            if(GameData.getUIType().equals("GUI"))
+                GuiHandlerMessage.handleMessage(objMessage);
+            else if (GameData.getUIType().equals("TUI"))
+                TuiHandlerMessage.handleMessage(objMessage);
+        }).start();
     }
 }

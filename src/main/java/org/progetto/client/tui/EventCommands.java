@@ -197,7 +197,8 @@ public class EventCommands {
             System.out.println("Reward credits: " + reward + ", Days of penalty: " + penaltyDays + ", Crew to discard: " + penaltyCrew);
 
             String response = TuiCommandFilter.waitResponse();
-            if(response.equalsIgnoreCase("YES") ||response.equalsIgnoreCase("NO")){
+
+            if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
                 sender.responseAcceptRewardCreditsAndPenalties(response);
                 break;
@@ -218,7 +219,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("Do you want to accept the reward and the days penalty?");
-            System.out.println("Reward: " + reward + " Days of penalty: " + penaltyDays);
+            System.out.println("Reward credits: " + reward + ", Days of penalty: " + penaltyDays);
 
             String response = TuiCommandFilter.waitResponse();
 

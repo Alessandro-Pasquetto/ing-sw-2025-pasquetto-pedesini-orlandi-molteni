@@ -57,7 +57,9 @@ public class TuiCommandFilter {
         isWaitingResponse = true;
         synchronized (responseLock) {
             try {
-                responseLock.wait();
+                while (isWaitingResponse) {
+                    responseLock.wait();
+                }
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -95,7 +97,7 @@ public class TuiCommandFilter {
 
             String command = scanner.nextLine();
 
-            if(command.isEmpty()) continue;
+            if (command.isEmpty()) continue;
 
             if (command.equalsIgnoreCase("exit")) break;
 
