@@ -1,14 +1,11 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
-import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerDiceResultMessage;
 import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
 import org.progetto.messages.toClient.EventCommon.DiceResultMessage;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Game;
@@ -406,7 +403,6 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         // Checks if a battery has been discarded
         if (meteorsRain.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-
             discardedBattery.remove(player);
             sender.sendMessage("BatteryDiscarded");
             sender.sendMessage("YouAreSafe");

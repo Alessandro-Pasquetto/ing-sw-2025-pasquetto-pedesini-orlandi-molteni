@@ -5,16 +5,22 @@ import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiClientReceiver extends UnicastRemoteObject implements VirtualClient {
 
+    private final static int NUM_DISPATCHER_THREADS = 2;
+
     private static RmiClientReceiver instance = null;
     private static final LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
 
+    private static final ExecutorService dispatcherPool = Executors.newFixedThreadPool(NUM_DISPATCHER_THREADS);
+
     protected RmiClientReceiver() throws RemoteException {
         super();
-        MessageDispatcher();
+        messageDispatcher();
     }
 
     public static RmiClientReceiver getInstance() throws RemoteException {
@@ -24,18 +30,20 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         return instance;
     }
 
-    public void MessageDispatcher() {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Object message = messageQueue.take();
-                    processMessage(message);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+    public void messageDispatcher() {
+        for (int i = 0; i < NUM_DISPATCHER_THREADS; i++) {
+            dispatcherPool.execute(() -> {
+                while (true) {
+                    try {
+                        Object message = messageQueue.take();
+                        processMessage(message);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
-            }
-        }).start();
+            });
+        }
     }
 
     private void processMessage(Object objMessage) {

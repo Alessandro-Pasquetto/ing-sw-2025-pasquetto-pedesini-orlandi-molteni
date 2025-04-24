@@ -57,7 +57,7 @@ public class Game {
         this.visibleComponentDeck = new ArrayList<>();
         this.hiddenEventDeck = new ArrayList<>();
         this.visibleEventCardDecks = loadEvents();
-        this.eventDeckAvailable = new Player[] {null,null,null};
+        this.eventDeckAvailable = new Player[] {null, null, null};
         this.board = new Board(level);
         this.activeEventCard = null;
         this.activePlayer = null;
@@ -445,7 +445,7 @@ public class Game {
 
             do{
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PIRATES));
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }

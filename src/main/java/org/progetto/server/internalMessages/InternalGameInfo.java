@@ -14,8 +14,8 @@ public class InternalGameInfo {
     // ATTRIBUTES
     // =======================
 
-    private GameManager gameManager;
-    private Player player;
+    private final GameManager gameManager;
+    private final Player player;
 
     // =======================
     // CONSTRUCTORS

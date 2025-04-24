@@ -32,7 +32,7 @@ public class MainClient extends Application {
             if(command.equals("TUI")){
                 GameData.setUIType(command);
                 TuiCommandFilter.setProtocol();
-                TuiCommandFilter.listenCommand();
+                TuiCommandFilter.listenerCommand();
 
                 break;
 

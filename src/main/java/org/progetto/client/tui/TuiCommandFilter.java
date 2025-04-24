@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class TuiCommandFilter {
 
@@ -23,11 +24,12 @@ public class TuiCommandFilter {
 
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static final LinkedBlockingQueue<String> tuiMessageQueue = new LinkedBlockingQueue<>();
     private final static Object responseLock = new Object();
     private static boolean isWaitingResponse = false;
     private static String response = "";
 
-    private static Map<String, Command> commands = loadCommands();
+    private static final Map<String, Command> commands = loadCommands();
 
     // =======================
     // GETTERS
@@ -53,28 +55,6 @@ public class TuiCommandFilter {
     // OTHER METHODS
     // =======================
 
-    public static void setResponse(String input) {
-        synchronized (responseLock) {
-            response = input;
-            isWaitingResponse = false;
-            responseLock.notify();
-        }
-    }
-
-    public static String waitResponse() {
-        synchronized (responseLock) {
-            isWaitingResponse = true;
-            try {
-                while (isWaitingResponse) {
-                    responseLock.wait();
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return response;
-    }
-
     public static void setProtocol(){
         System.out.println();
         System.out.println("Select Socket/Rmi:");
@@ -98,25 +78,67 @@ public class TuiCommandFilter {
         System.out.println();
     }
 
-    public static void listenCommand() {
+    public static void listenerCommand() {
+
+        messageDispatcher();
 
         while (true){
 
             String command = scanner.nextLine();
+            System.out.println();
 
             if (command.isEmpty()) continue;
             if (command.equalsIgnoreCase("exit")) break;
 
-            boolean isCommand = handleCommand(command);
-
-            if (getIsWaitingResponse() && !isCommand) {
-                setResponse(command);
-            }
-
-            System.out.println();
+            tuiMessageQueue.offer(command);
         }
 
         GameData.getSender().close();
+    }
+
+    public static void messageDispatcher() {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    String command = tuiMessageQueue.take();
+
+                    try{
+                        handleCommand(command);
+                    }catch (IllegalStateException e){
+                        if (getIsWaitingResponse())
+                            setResponse(command);
+                        else
+                            System.out.println(e.getMessage());
+                    }
+
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }).start();
+    }
+
+    public static void setResponse(String input) {
+        synchronized (responseLock) {
+            response = input;
+            isWaitingResponse = false;
+            responseLock.notify();
+        }
+    }
+
+    public static String waitResponse() {
+        synchronized (responseLock) {
+            isWaitingResponse = true;
+            try {
+                while (isWaitingResponse) {
+                    responseLock.wait();
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return response;
     }
 
     private static boolean isValidCommand(int commandLength, int l){
@@ -159,13 +181,9 @@ public class TuiCommandFilter {
         }
     }
 
-    public static boolean handleCommand(String command) {
+    public static void handleCommand(String command) throws IllegalStateException{
         String[] commandParts = command.split(" ");
         String commandType = commandParts[0].toUpperCase();
-
-        String response = "";
-
-        boolean foundCommand = true;
 
         switch (commandType) {
             case "CLOSE":
@@ -220,13 +238,10 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
 
@@ -340,13 +355,10 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
 
@@ -376,13 +388,10 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
 
@@ -419,13 +428,10 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
 
@@ -456,13 +462,10 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
 
@@ -493,21 +496,12 @@ public class TuiCommandFilter {
                         break;
 
                     default:
-                        if (commands.get(commandType.toLowerCase()) == null) {
-                            response = "Command not found";
-                        } else {
-                            response = "Command not available in that phase";
-                        }
-                        foundCommand = false;
-                        break;
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
                 }
                 break;
         }
-
-        if (!isWaitingResponse && !foundCommand) {
-            System.out.println(response);
-        }
-
-        return foundCommand;
     }
 }

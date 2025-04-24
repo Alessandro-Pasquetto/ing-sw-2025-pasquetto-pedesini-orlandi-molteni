@@ -327,7 +327,7 @@ public class SpaceshipController {
              player.setIsReady(true, gameManager.getGame());
              gameManager.getGameThread().notifyThread();
 
-            // todo notificare spaceship: serve updateSpaceship con nome
+            // todo notificare spaceship: serve updateSpaceship con nome per GUI
             //gameManager.broadcastGameMessage();
 
         }catch (IllegalStateException e){

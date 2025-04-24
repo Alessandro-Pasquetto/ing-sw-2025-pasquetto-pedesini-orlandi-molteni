@@ -251,9 +251,8 @@ public class GameThread extends Thread {
         }
 
         synchronized (gameThreadLock) {
-            while (!board.allTravelersReady()) {
+            while (!board.allTravelersReady())
                 gameThreadLock.wait();
-            }
         }
     }
 

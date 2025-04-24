@@ -3,7 +3,6 @@ package org.progetto.server.connection.socket;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.internalMessages.InternalGameInfo;
@@ -205,7 +204,7 @@ public class SocketListener extends Thread {
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
 
                 else if (messageObj instanceof String messageString) {
@@ -267,7 +266,7 @@ public class SocketListener extends Thread {
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
                 break;
 
@@ -282,7 +281,7 @@ public class SocketListener extends Thread {
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
 
                 else if(messageObj instanceof String messageString) {
@@ -307,7 +306,7 @@ public class SocketListener extends Thread {
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
                 break;
 
@@ -315,7 +314,7 @@ public class SocketListener extends Thread {
 
                 if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
 
                 else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
@@ -552,7 +551,7 @@ public class SocketListener extends Thread {
 
                 else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
                     String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
 
                 else if( messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {

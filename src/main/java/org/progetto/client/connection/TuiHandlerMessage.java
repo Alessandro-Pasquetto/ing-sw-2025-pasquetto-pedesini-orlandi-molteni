@@ -23,7 +23,7 @@ public class TuiHandlerMessage {
      *
      * @param messageObj the message that has arrived
      */
-    public synchronized static void handleMessage(Object messageObj) {
+    public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
             ArrayList<Integer> idGames = showWaitingGamesMessage.getIdWaitingGames();
@@ -192,7 +192,6 @@ public class TuiHandlerMessage {
 
         else if(messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
             TuiPrinters.printDiceRoll(anotherPlayerDiceResultMessage.getDiceResult(),anotherPlayerDiceResultMessage.getNamePlayer());
-
         }
 
         else if(messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage){
