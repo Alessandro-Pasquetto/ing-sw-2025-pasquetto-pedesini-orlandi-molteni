@@ -204,16 +204,25 @@ public class PiratesController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
-        if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
+    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+        switch (phase) {
+            case DISCARDED_BATTERIES:
+                if (!player.equals(gameManager.getGame().getActivePlayer())) {
+                    sender.sendMessage("NotYourTurn");
+                    return;
+                }
+                break;
 
-        // Checks if the player that calls the methods is also the current one in the controller
-        if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
-            return;
+            case SHIELD_BATTERY:
+                if (!discardedBattery.contains(player)) {
+                    sender.sendMessage("NotYourTurn");
+                    return;
+                }
+                break;
+
+            default:
+                sender.sendMessage("IncorrectPhase");
+                return;
         }
 
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
@@ -232,21 +241,39 @@ public class PiratesController extends EventControllerAbstract {
             return;
         }
 
-        // Checks if a battery has been discarded
-        if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-            requestedBatteries--;
-            sender.sendMessage("BatteryDiscarded");
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+            // Checks if a battery has been discarded
+            if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                requestedBatteries--;
+                sender.sendMessage("BatteryDiscarded");
 
-            if (requestedBatteries == 0) {
-                phase = EventPhase.BATTLE_RESULT;
-                battleResult(player, sender);
+                if (requestedBatteries == 0) {
+                    phase = EventPhase.BATTLE_RESULT;
+                    battleResult(player, sender);
+
+                } else {
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+                }
 
             } else {
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+                sender.sendMessage("BatteryNotDiscarded");
             }
 
-        } else {
-            sender.sendMessage("BatteryNotDiscarded");
+        } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+
+            // Checks if a battery has been discarded
+            if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+                discardedBattery.remove(player);
+                sender.sendMessage("BatteryDiscarded");
+
+                if (discardedBattery.isEmpty()) {
+                    phase = EventPhase.HANDLE_SHOT;
+                    handleShot();
+                }
+
+            } else {
+                sender.sendMessage("BatteryNotDiscarded");
+            }
         }
     }
 
@@ -558,60 +585,6 @@ public class PiratesController extends EventControllerAbstract {
     }
 
     /**
-     * Receives the coordinates of BatteryStorage component from which remove a battery to activate shield
-     *
-     * @author Gabriele
-     * @param player current player
-     * @param xBatteryStorage x coordinate of chosen battery storage
-     * @param yBatteryStorage y coordinate of chosen battery storage
-     * @param sender current sender
-     * @throws RemoteException
-     * @throws InterruptedException
-     */
-    public synchronized void receiveShieldBattery(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
-        if (!phase.equals(EventPhase.SHIELD_BATTERY)) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
-
-        // Checks if the player that calls the methods has to discard a battery to activate a shield
-        if (!discardedBattery.contains(player)) {
-            sender.sendMessage("NotYourTurn");
-            return;
-        }
-
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
-
-        // Checks if component index is correct
-        if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
-            sender.sendMessage("InvalidCoordinates");
-            return;
-        }
-
-        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
-
-        // Checks if component is a battery storage
-        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            sender.sendMessage("InvalidComponent");
-            return;
-        }
-
-        // Checks if a battery has been discarded
-        if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-            discardedBattery.remove(player);
-            sender.sendMessage("BatteryDiscarded");
-
-            if (discardedBattery.isEmpty()) {
-                phase = EventPhase.HANDLE_SHOT;
-                handleShot();
-            }
-
-        } else {
-            sender.sendMessage("BatteryNotDiscarded");
-        }
-    }
-
-    /**
      * Handles current shot
      *
      * @author Gabriele
@@ -647,7 +620,7 @@ public class PiratesController extends EventControllerAbstract {
                     SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
                 } else {
-                    gameManager.broadcastGameMessage("NothingGotDestroyed");
+                    sender.sendMessage("NothingGotDestroyed");
 
                     player.setIsReady(true, gameManager.getGame());
                 }

@@ -224,6 +224,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
         // Checks if player has an engine power greater than zero
         if (playerEnginePower > 0) {
+
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
@@ -232,7 +233,6 @@ public class OpenSpaceController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("NoEnginePower");
-            sender.sendMessage("YouHaveLeftTheFlight");
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
             board.leaveTravel(player);
         }

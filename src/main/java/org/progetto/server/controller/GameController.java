@@ -49,7 +49,7 @@ public class GameController {
      */
     public static void showTrack(GameManager gameManager, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }

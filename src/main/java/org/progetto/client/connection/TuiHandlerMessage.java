@@ -60,7 +60,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
-            System.out.println("Current Hand Component:");
+            System.out.println("Current hand component:");
             TuiPrinters.printComponent(showHandComponentMessage.getHandComponent());
         }
 
@@ -69,10 +69,15 @@ public class TuiHandlerMessage {
             TuiPrinters.printComponent(pickedComponentMessage.getPickedComponent());
         }
 
-        else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
-            System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " );
-            TuiPrinters.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
+        else if (messageObj instanceof AnotherPlayerDiscardComponentMessage anotherPlayerDiscardComponentMessage) {
+            System.out.println(anotherPlayerDiscardComponentMessage.getNamePlayer() + " discarded a component");
         }
+
+        // todo rimuovere: disturba e basta
+//        else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
+//            System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " );
+//            TuiPrinters.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
+//        }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
             TuiPrinters.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
@@ -175,23 +180,19 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
-            System.out.println("A meteor is coming: " + incomingProjectileMessage.getProjectile().toString());
+            System.out.println("A projectile is coming: " + incomingProjectileMessage.getProjectile().toString());
         }
 
         else if(messageObj instanceof DiceResultMessage diceResultMessage) {
             System.out.println("Dice result: " +  diceResultMessage.getDiceResult());
         }
 
-        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
-            TuiPrinters.printDestroyedComponent(null,destroyedComponentMessage.getxComponent(),destroyedComponentMessage.getyComponent());
-        }
-
-        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
-            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
-        }
-
         else if(messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
-            TuiPrinters.printDiceRoll(anotherPlayerDiceResultMessage.getDiceResult(),anotherPlayerDiceResultMessage.getNamePlayer());
+            System.out.println("Dice result: " +  anotherPlayerDiceResultMessage.getDiceResult());
+        }
+
+        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
+            TuiPrinters.printDestroyedComponent(null, destroyedComponentMessage.getxComponent(), destroyedComponentMessage.getyComponent());
         }
 
         else if(messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage){
@@ -200,6 +201,14 @@ public class TuiHandlerMessage {
                     anotherPlayerDestroyedComponentMessage.getxComponent(),
                     anotherPlayerDestroyedComponentMessage.getyComponent()
             );
+        }
+
+        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
+            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
+        }
+
+        else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
+            System.out.println(playerDefeatedMessage.getPlayerName() + " cannot continue travel, so he left!");
         }
 
         else if (messageObj instanceof String messageString) {
@@ -388,6 +397,18 @@ public class TuiHandlerMessage {
 
                 case "RaidersDefeated":
                     System.out.println("Raiders got defeated!");
+                    break;
+
+                case "YouGotLapped":
+                    System.out.println("You got lapped by leader, you cannot continue travel!");
+                    break;
+
+                case "YouHaveNoCrew":
+                    System.out.println("You have no crew left, you cannot continue travel!");
+                    break;
+
+                case "NoEnginePower":
+                    System.out.println("You have zero engine power in OpenSpace, you cannot continue travel!");
                     break;
 
                 default:

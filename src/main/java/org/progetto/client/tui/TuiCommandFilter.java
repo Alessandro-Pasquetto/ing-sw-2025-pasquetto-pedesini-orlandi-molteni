@@ -138,7 +138,8 @@ public class TuiCommandFilter {
                 throw new RuntimeException(e);
             }
         }
-        return response;
+
+        return response.trim();
     }
 
     private static boolean isValidCommand(int commandLength, int l){
@@ -182,7 +183,8 @@ public class TuiCommandFilter {
     }
 
     public static void handleCommand(String command) throws IllegalStateException{
-        String[] commandParts = command.split(" ");
+        command = command.trim();
+        String[] commandParts = command.split("\\s+");
         String commandType = commandParts[0].toUpperCase();
 
         switch (commandType) {
@@ -415,6 +417,14 @@ public class TuiCommandFilter {
                     case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
+                        else {
+                            expectedFormat(commandType);
+                        }
+                        break;
+
+                    case "SHOWTRACK":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.showTrack(commandParts);
                         else {
                             expectedFormat(commandType);
                         }

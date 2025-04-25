@@ -72,7 +72,6 @@ public class PlanetsController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            System.out.println(player.getName() + "'s turn");
             gameManager.broadcastGameMessageToOthers(player.getName() + "'s turn", sender);
 
             if (planets.getLandedPlayers().size() >= planets.getRewardsForPlanets().size()){

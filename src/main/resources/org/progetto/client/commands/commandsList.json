@@ -42,7 +42,7 @@
   {
     "name": "Place",
     "description": "Place the last drawn component on the board.",
-    "usage": "PlaceLast <x> <y> <rotation>"
+    "usage": "Place <x> <y> <rotation>"
   },
   {
     "name": "Discard",

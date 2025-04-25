@@ -1,5 +1,6 @@
 package org.progetto.client.tui;
 
+import org.progetto.client.model.GameData;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
@@ -460,20 +461,17 @@ public class TuiPrinters {
         System.out.println();
     }
 
-    public static void printDestroyedComponent(String player,int x, int y){
-        if(player == null) {
-            System.out.println("You lost a component!");
-            System.out.println("┌────────────────────────────");
-            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     %n", x, y);
-            System.out.println("└────────────────────────────");
-        }
-        else {
-            System.out.println(player + " lost a component!");
-            System.out.println("┌────────────────────────────");
-            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     %n", x, y);
-            System.out.println("└────────────────────────────");
-        }
+    public static void printDestroyedComponent(String player, int x, int y){
+        int levelGame = GameData.getLevelGame();
 
+        int xNormalized = x + 6 - levelGame;
+        int yNormalized = y + 5;
+
+        if (player == null) {
+            System.out.printf("You lost component positioned:  x = %d, y = %d %n", xNormalized, yNormalized);
+        } else {
+            System.out.printf("%s lost component positioned:  x = %d, y = %d %n", player, xNormalized, yNormalized);
+        }
     }
 
     // =======================
@@ -713,7 +711,6 @@ public class TuiPrinters {
         }
     }
 
-
     public static void printEventCardDeck(ArrayList<EventCard> eventCardDeck) {
 
         System.out.println("Picked Up Event Card Deck:");
@@ -726,15 +723,11 @@ public class TuiPrinters {
 
     public static void printIncomingProjectile(IncomingProjectileMessage message){
 
-        System.out.println("┌──── Incoming Projectile ─────────────────────┐");
-        System.out.printf ("│ Size     : %-33s │%n", message.getProjectile().getSize());
-        System.out.printf ("│ From     : %-33d │%n", message.getProjectile().getFrom());
-        System.out.println("└──────────────────────────────────────────────┘");
+        System.out.println("┌─ Incoming Projectile ────────────────");
+        System.out.printf ("│  Size : %-33s %n", message.getProjectile().getSize());
+        System.out.printf ("│  From : %-33d %n", message.getProjectile().getFrom());
+        System.out.println("└──────────────────────────────────────");
 
-    }
-
-    public static void printDiceRoll(int value, String player) {
-        System.out.printf(player+" rolled: %d%n", value);
     }
 
     // =======================

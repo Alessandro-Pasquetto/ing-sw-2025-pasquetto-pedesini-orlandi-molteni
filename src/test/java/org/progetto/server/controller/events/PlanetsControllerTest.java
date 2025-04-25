@@ -169,6 +169,7 @@ class PlanetsControllerTest {
         //Test second player
 
         //Test not your turn
+        Thread.sleep(200);
         sender = new VirtualClient() {
             @Override
             public void sendMessage(Object message) {

@@ -689,7 +689,7 @@ public class BuildingBoard implements Serializable {
      * @author Alessandro
      * @return doesNotRequirePlayerAction: false if the spaceship needs playerAction, true otherwise
      */
-    public boolean checkShipValidityAndTryToFix() throws IllegalStateException{
+    public boolean checkShipValidityAndTryToFix() {
 
         boolean doesNotRequirePlayerAction = true;
 
@@ -704,6 +704,7 @@ public class BuildingBoard implements Serializable {
         if(centralUnit != null){
             xComponent = centralUnit.getX();
             yComponent = centralUnit.getY();
+
         }else{
 
             for(int y = 0; y < spaceshipMatrix.length && xComponent == -1; y++) {
@@ -716,7 +717,7 @@ public class BuildingBoard implements Serializable {
                 }
             }
 
-            if(xComponent == -1) throw new IllegalStateException("EmptySpaceship");
+            if (xComponent == -1) return true;
         }
 
         dfsValidity(xComponent, yComponent, visited, numComponentsChecked, exposedConnectorsCount);

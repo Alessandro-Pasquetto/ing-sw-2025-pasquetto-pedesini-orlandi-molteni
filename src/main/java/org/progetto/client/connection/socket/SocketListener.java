@@ -3,6 +3,8 @@ package org.progetto.client.connection.socket;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
+import org.progetto.client.tui.TuiCommandFilter;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.concurrent.ExecutorService;
@@ -58,19 +60,31 @@ public class SocketListener extends Thread {
 
     public static void messageDispatcher() {
 
-        for (int i = 0; i < NUM_DISPATCHER_THREADS; i++) {
-            dispatcherPool.execute(() -> {
-                while (true) {
-                    try {
+        dispatcherPool.execute(() -> {
+            while (true) {
+                try {
+                    Object message = messageQueue.take();
+                    processMessage(message);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+
+        dispatcherPool.execute(() -> {
+            while (true) {
+                try {
+                    if (TuiCommandFilter.getIsWaitingResponse()) {
                         Object message = messageQueue.take();
                         processMessage(message);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        break;
                     }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
-            });
-        }
+            }
+        });
     }
 
     private static void processMessage(Object objMessage) {

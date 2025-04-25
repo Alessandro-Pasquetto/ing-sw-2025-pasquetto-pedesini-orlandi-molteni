@@ -161,7 +161,7 @@ class PiratesControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
-        controller.receiveShieldBattery(p1, 3, 2, sender);
+        controller.receiveDiscardedBatteries(p1, 3, 2, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
