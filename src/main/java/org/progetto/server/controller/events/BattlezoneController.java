@@ -845,7 +845,7 @@ public class BattlezoneController extends EventControllerAbstract {
             return;
         }
 
-        // Checks if the player that calls the methods is also the first defeated player
+        // Checks if the player that calls the methods is also the defeated player
         if (!player.equals(penaltyPlayer)) {
             sender.sendMessage("NotYourTurn");
             return;

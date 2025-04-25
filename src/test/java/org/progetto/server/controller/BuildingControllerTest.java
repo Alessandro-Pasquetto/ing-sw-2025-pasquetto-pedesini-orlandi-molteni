@@ -6,6 +6,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -23,6 +24,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         game.addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         Sender sender = new Sender() {
             @Override
@@ -47,6 +49,7 @@ class BuildingControllerTest {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         Sender sender = new Sender() {
             @Override
@@ -81,8 +84,10 @@ class BuildingControllerTest {
             }
         };
 
-        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        Component component = buildingBoard.getHandComponent();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
+        Component component = new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath");
+        buildingBoard.setHandComponent(component);
 
         assertDoesNotThrow(() -> BuildingController.placeComponent(gameManager, player, 2, 1, 0, sender));
 
@@ -99,6 +104,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -130,6 +136,7 @@ class BuildingControllerTest {
         Player player = new Player("mario", 0, 1);
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         Sender sender = new Sender() {
             @Override
@@ -161,6 +168,7 @@ class BuildingControllerTest {
         Player player = new Player("mario", 0, 1);
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -193,6 +201,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -282,6 +291,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -312,6 +322,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -344,6 +355,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -368,6 +380,7 @@ class BuildingControllerTest {
         Player player = new Player("mario", 0, 1);
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -395,6 +408,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -421,6 +435,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -449,6 +464,7 @@ class BuildingControllerTest {
 
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
@@ -467,6 +483,8 @@ class BuildingControllerTest {
         //Test unable to pick with hand full
         gameManager = new GameManager(0, 4, 2);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
 
         sender = new Sender() {
@@ -500,6 +518,7 @@ class BuildingControllerTest {
         //Test idxOutOfBound
         gameManager = new GameManager(0, 4, 2);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
             @Override
@@ -516,6 +535,7 @@ class BuildingControllerTest {
         Player otherPLayer = new Player("Giovanni", 0, 1);
         gameManager.getGame().addPlayer(otherPLayer);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
             @Override
@@ -537,6 +557,7 @@ class BuildingControllerTest {
         //Test deck picked
         gameManager = new GameManager(0, 4, 2);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
             @Override
@@ -557,6 +578,8 @@ class BuildingControllerTest {
         GameManager gameManager = new GameManager(0, 4, 2);
         Player player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
         Sender sender = new Sender() {
             @Override
@@ -571,6 +594,7 @@ class BuildingControllerTest {
         gameManager = new GameManager(0, 4, 2);
         player = new Player("mario", 0, 1);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
             @Override
@@ -596,6 +620,7 @@ class BuildingControllerTest {
         Player player_2 = new Player("marco", 1, 1);
         gameManager.getGame().addPlayer(player_1);
         gameManager.getGame().addPlayer(player_2);
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard bb1 = player_1.getSpaceship().getBuildingBoard();
         BuildingBoard bb2 = player_2.getSpaceship().getBuildingBoard();

@@ -23,6 +23,7 @@ class BattlezoneControllerTest {
 
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
+        projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
         projectiles.add(new Projectile(ProjectileSize.BIG, 3));
 
         ArrayList<ConditionPenalty> conditionPenalties = new ArrayList<ConditionPenalty>() {{
@@ -45,7 +46,8 @@ class BattlezoneControllerTest {
             public int rollDice(){
                 int result = switch(count){
                     case 0 -> 3;
-                    case 1 -> 1;
+                    case 1 -> 3;
+                    case 2 -> 1;
                     default -> 2;
                 };
 
@@ -98,29 +100,32 @@ class BattlezoneControllerTest {
         bb2.setHandComponent(batteryStorage);
         bb2.placeComponent(2, 1, 0);
 
-        batteryStorage.incrementItemsCount(p3.getSpaceship(), 3);
+        batteryStorage.incrementItemsCount(p2.getSpaceship(), 3);
 
         // p3 will be effect by penalty boxes
         BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 3);
+        Component shield = new Component(ComponentType.SHIELD, new int[]{1,1,1,1}, "img");
 
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(bx1);
         bb3.placeComponent(2, 1, 0);
         bb3.setHandComponent(bx2);
         bb3.placeComponent(1, 1, 0);
-        bb3.setHandComponent(batteryStorage);
+        bb3.setHandComponent(batteryStorage3);
         bb3.placeComponent(1, 2, 0);
+        bb3.setHandComponent(shield);
+        bb3.placeComponent(3, 1, 0);
 
-        batteryStorage.incrementItemsCount(p3.getSpaceship(), 3);
-        p3.getSpaceship().addBatteriesCount(3);
+        bb3.initSpaceshipParams();
 
         bx1.addBox(p3.getSpaceship(), Box.BLUE, 1);
         bx2.addBox(p3.getSpaceship(), Box.RED, 0);
 
         // crew count
         p2.getSpaceship().addCrewCount(7);
-        p3.getSpaceship().addCrewCount(2);
+        p3.getSpaceship().addCrewCount(1);
 
         // fire/shooting power
         p1.getSpaceship().addNormalShootingPower(3);
@@ -204,9 +209,28 @@ class BattlezoneControllerTest {
         assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
+        batteryStorage3.incrementItemsCount(p3.getSpaceship(), 2);
+        p3.getSpaceship().addBatteriesCount(2);
+
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p3, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
+        controller.receiveProtectionDecision(p3, "YES", sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
+        controller.receiveDiscardedBatteries(p3, 1, 2, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p3, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
+        controller.receiveProtectionDecision(p3, "NO", sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());

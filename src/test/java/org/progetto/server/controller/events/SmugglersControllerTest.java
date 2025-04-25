@@ -21,7 +21,7 @@ class SmugglersControllerTest {
 
     @Test
     void smugglersControllerTest() throws RemoteException, InterruptedException {
-        GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager gameManager = new GameManager(0, 4, 1);
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
@@ -30,10 +30,12 @@ class SmugglersControllerTest {
 
         Player p1 = new Player("mario", 0, 1);
         Player p2 = new Player("alice", 0, 1);
+        Player p4 = new Player("michele", 1, 1);
         Player p3 = new Player("alessio", 0, 1);
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
+        gameManager.getGame().addPlayer(p4);
         gameManager.getGame().addPlayer(p3);
 
         VirtualClient sender = new VirtualClient() {
@@ -45,13 +47,15 @@ class SmugglersControllerTest {
 
         gameManager.addRmiClient(p1, sender);
         gameManager.addRmiClient(p2, sender);
+        gameManager.addRmiClient(p4, sender);
         gameManager.addRmiClient(p3, sender);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
+        gameManager.getGame().getBoard().addTraveler(p4);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 3);
         BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BoxStorage bx3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
 
@@ -77,6 +81,11 @@ class SmugglersControllerTest {
 
         p2.getSpaceship().addBatteriesCount(2);
 
+        BuildingBoard bb4 = p4.getSpaceship().getBuildingBoard();
+        bb4.setHandComponent(batteryStorage2);
+        bb4.placeComponent(2, 1, 0);
+        bb4.initSpaceshipParams();
+
         BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage);
@@ -95,6 +104,7 @@ class SmugglersControllerTest {
         p1.getSpaceship().addNormalShootingPower(3);
         p2.getSpaceship().addNormalShootingPower(5);
         p2.getSpaceship().addFullDoubleCannonCount(1);
+        p4.getSpaceship().addNormalShootingPower(4);
         p3.getSpaceship().addNormalShootingPower(5);
         p3.getSpaceship().addFullDoubleCannonCount(2);
 
@@ -130,16 +140,31 @@ class SmugglersControllerTest {
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
+        controller.receiveDiscardedBox(p1, 0, 0, 2, sender);
+
+        Thread.sleep(200);
+        controller.receiveDiscardedBox(p1, -2, 1, 2, sender);
+
+        Thread.sleep(200);
+        controller.receiveDiscardedBox(p3, 2, 1, 2, sender);
+
+        Thread.sleep(200);
         controller.receiveDiscardedBox(p1, 2, 1, 0, sender);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
-
-        Thread.sleep(200);
         controller.receiveHowManyCannonsToUse(p2, 0, sender);
 
-        Thread.sleep(500);
+        Thread.sleep(200);
+        assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
+
+        Thread.sleep(200);
+        assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
+
+        Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
