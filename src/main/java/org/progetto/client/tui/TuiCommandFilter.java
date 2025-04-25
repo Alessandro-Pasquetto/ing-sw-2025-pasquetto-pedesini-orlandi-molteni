@@ -2,8 +2,10 @@ package org.progetto.client.tui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.client.connection.socket.SocketListener;
 import org.progetto.client.model.GameData;
 
 import java.io.FileReader;
@@ -130,10 +132,14 @@ public class TuiCommandFilter {
     public static String waitResponse() {
         synchronized (responseLock) {
             isWaitingResponse = true;
+            SocketListener.setIsHandling(false);
+            RmiClientReceiver.setIsHandling(false);
+
             try {
                 while (isWaitingResponse) {
                     responseLock.wait();
                 }
+                SocketListener.setIsHandling(true);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -2,27 +2,20 @@ package org.progetto.client.connection.rmi;
 
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
+import org.progetto.client.connection.socket.SocketListener;
 import org.progetto.client.model.GameData;
-import org.progetto.client.tui.TuiCommandFilter;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class RmiClientReceiver extends UnicastRemoteObject implements VirtualClient {
 
-    private final static int NUM_DISPATCHER_THREADS = 2;
-
     private static RmiClientReceiver instance = null;
-    private static final LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
 
-    private static final ExecutorService dispatcherPool = Executors.newFixedThreadPool(NUM_DISPATCHER_THREADS);
+    private static final Object handlerMessageLock = new Object();
+    private static boolean isHandling = false;
 
     protected RmiClientReceiver() throws RemoteException {
         super();
-        messageDispatcher();
     }
 
     public static RmiClientReceiver getInstance() throws RemoteException {
@@ -32,37 +25,40 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         return instance;
     }
 
-    public void messageDispatcher() {
-
-        dispatcherPool.execute(() -> {
-            while (true) {
-                try {
-                    Object message = messageQueue.take();
-                    processMessage(message);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-
-        dispatcherPool.execute(() -> {
-            while (true) {
-                try {
-                    if (TuiCommandFilter.getIsWaitingResponse()) {
-                        Object message = messageQueue.take();
-                        processMessage(message);
-                    }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-
+    public static void setIsHandling(boolean isHandling) {
+        RmiClientReceiver.isHandling = isHandling;
     }
 
-    private void processMessage(Object objMessage) {
+    public static void messageDispatcher(Object messageObj) {
+
+        new Thread(() -> {
+            waitHandler();
+            processMessage(messageObj);
+            isHandling = false;
+            notifyHandler();
+        }).start();
+    }
+
+    private static void waitHandler(){
+        synchronized (handlerMessageLock) {
+            try {
+                while (isHandling)
+                    handlerMessageLock.wait();
+
+                isHandling = true;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static void notifyHandler() {
+        synchronized (handlerMessageLock) {
+            handlerMessageLock.notify();
+        }
+    }
+
+    private static void processMessage(Object objMessage) {
         if (GameData.getUIType().equals("GUI")) {
             GuiHandlerMessage.handleMessage(objMessage);
         } else if (GameData.getUIType().equals("TUI")) {
@@ -75,6 +71,6 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
      */
     @Override
     public synchronized void sendMessage(Object objMessage) throws RemoteException {
-        messageQueue.offer(objMessage);
+        messageDispatcher(objMessage);
     }
 }

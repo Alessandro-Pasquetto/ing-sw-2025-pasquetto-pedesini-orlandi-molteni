@@ -20,14 +20,11 @@ public class SocketListener extends Thread {
     // ATTRIBUTES
     // =======================
 
-    private final static int NUM_DISPATCHER_THREADS = 2;
-
     private static ObjectInputStream in;
     private static boolean running = true;
 
-    private static final LinkedBlockingQueue<Object> messageQueue = new LinkedBlockingQueue<>();
-
-    private static final ExecutorService dispatcherPool = Executors.newFixedThreadPool(NUM_DISPATCHER_THREADS);
+    private static final Object handlerMessageLock = new Object();
+    private static boolean isHandling = false;
 
     // =======================
     // CONSTRUCTORS
@@ -44,12 +41,10 @@ public class SocketListener extends Thread {
     @Override
     public void run() {
 
-        messageDispatcher();
-
         try {
             while (running) {
                 Object messageObj = in.readObject();
-                messageQueue.offer(messageObj);
+                messageDispatcher(messageObj);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -58,33 +53,37 @@ public class SocketListener extends Thread {
         }
     }
 
-    public static void messageDispatcher() {
+    public static void setIsHandling(boolean isHandling) {
+        SocketListener.isHandling = isHandling;
+    }
 
-        dispatcherPool.execute(() -> {
-            while (true) {
-                try {
-                    Object message = messageQueue.take();
-                    processMessage(message);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
+    public static void messageDispatcher(Object messageObj) {
 
-        dispatcherPool.execute(() -> {
-            while (true) {
-                try {
-                    if (TuiCommandFilter.getIsWaitingResponse()) {
-                        Object message = messageQueue.take();
-                        processMessage(message);
-                    }
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
+        new Thread(() -> {
+            waitHandler();
+            processMessage(messageObj);
+            isHandling = false;
+            notifyHandler();
+        }).start();
+    }
+
+    private static void waitHandler(){
+        synchronized (handlerMessageLock) {
+            try {
+                while (isHandling)
+                    handlerMessageLock.wait();
+
+                isHandling = true;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        });
+        }
+    }
+
+    private static void notifyHandler() {
+        synchronized (handlerMessageLock) {
+            handlerMessageLock.notify();
+        }
     }
 
     private static void processMessage(Object objMessage) {

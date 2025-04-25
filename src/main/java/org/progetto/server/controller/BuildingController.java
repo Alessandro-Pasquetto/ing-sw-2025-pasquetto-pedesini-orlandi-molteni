@@ -266,6 +266,7 @@ public class BuildingController {
         }
 
         player.setIsReady(true, gameManager.getGame());
+        gameManager.addNotCheckedReadyPlayer(player);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -542,10 +543,12 @@ public class BuildingController {
             sender.sendMessage("AllowedToPlaceComponent");
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), buildingBoard.getCopySpaceshipMatrix()[yPlaceComponent][xPlaceComponent]), sender);
-            player.setIsReady(true, gameManager.getGame());
 
             sender.sendMessage("YouAreReady");
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.addNotCheckedReadyPlayer(player);
             gameManager.getGameThread().notifyThread();
 
         }catch (IllegalStateException e){
@@ -895,6 +898,7 @@ public class BuildingController {
             }
 
             if(result.getKey()){
+
                 gameManager.removeNotCheckedReadyPlayer(player);
                 game.getBoard().addTraveler(player);
 
