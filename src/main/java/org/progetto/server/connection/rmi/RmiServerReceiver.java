@@ -112,6 +112,24 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.pickHiddenComponent(gameManager, player, virtualClient);
     }
 
+
+    @Override
+    public void buildShip(VirtualClient virtualClient, int idGame, int idShip) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        BuildingController.buildShip(gameManager,player,idShip,virtualClient);
+
+    }
+
+
     @Override
     public void showVisibleComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);

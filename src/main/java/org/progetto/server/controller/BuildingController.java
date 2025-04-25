@@ -2,13 +2,18 @@ package org.progetto.server.controller;
 
 import javafx.util.Pair;
 import org.progetto.messages.toClient.Building.*;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
 import java.rmi.RemoteException;
@@ -105,6 +110,80 @@ public class BuildingController {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * debug method used to build a default spaceship
+     *
+     * @param gameManager is the current gameManager
+     * @param player that required the spaceship to be build
+     * @param idShip type of spaceship to be build
+     * @param sender
+     * @throws RemoteException
+     */
+    public static void buildShip(GameManager gameManager, Player player,int idShip, Sender sender) throws RemoteException {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        if(player.getIsReady()){
+            sender.sendMessage("ActionNotAllowedInReadyState");
+            return;
+        }
+
+        if(gameManager.getTimerExpired()){
+            sender.sendMessage("TimerExpired");
+            return;
+        }
+
+        try{
+
+            BuildingBoard bb = player.getSpaceship().getBuildingBoard();
+
+            switch (idShip){
+
+                //Building first type of spaceship
+                case 1:
+                    bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+                    bb.placeComponent(3,2,1);
+
+                    bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                    bb.placeComponent(1,2,1);
+
+                    //insert here the needed components
+
+
+                    //Send built ship
+                    sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(),player.getName()));
+
+                    break;
+
+                case 2:
+                    bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 2, 1}, "imgPath",3));
+                    bb.placeComponent(3,2,1);
+
+                    bb.setHandComponent(new BoxStorage(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath",3));
+                    bb.placeComponent(1,2,1);
+
+                    //insert here the needed components
+
+
+                    //Send built ship
+                    sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(),player.getName()));
+
+
+                    break;
+
+                default:
+                    sender.sendMessage("IDShipOutOfBounds");
+
+            }
+
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     /**
      * Handles player decision to show visible components

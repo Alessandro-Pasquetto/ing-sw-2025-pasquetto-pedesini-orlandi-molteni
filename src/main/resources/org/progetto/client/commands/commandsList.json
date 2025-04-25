@@ -15,9 +15,19 @@
     "usage": "CreateGame <nickname> <level> <numPlayers>"
   },
   {
+    "name": "autoCreate",
+    "description": "Automatically connect to the correct port and create a new game session.",
+    "usage": "autoCreate"
+  },
+  {
     "name": "JoinGame",
     "description": "Join an existing game session.",
     "usage": "JoinGame <id> <nickname>"
+  },
+  {
+    "name": "autoJoin",
+    "description": "Automatically connect to the correct port and join an existing game session.",
+    "usage": "JoinGame <id>"
   },
   {
     "name": "ShowHand",
@@ -113,5 +123,10 @@
     "name": "Populate",
     "description": "Populate a component.",
     "usage": "Populate <Human/OrangeAlien/PurpleAlien> <x> <y>"
+  },
+  {
+    "name": "buildShip",
+    "description": "Allows to build a ship from a series of configurations",
+    "usage": "buildShip <configurationID> "
   }
 ]

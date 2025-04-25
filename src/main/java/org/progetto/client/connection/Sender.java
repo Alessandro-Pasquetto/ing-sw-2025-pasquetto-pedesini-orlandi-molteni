@@ -11,6 +11,8 @@ public interface Sender {
 
     void showHandComponent();
 
+    void buildShip(int idShip);
+
     void pickHiddenComponent();
 
     void showVisibleComponents();

@@ -106,6 +106,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void buildShip(int idShip){
+        try{
+            server.buildShip(RmiClientReceiver.getInstance(), GameData.getIdGame(), idShip);
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void placeLastComponent(int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) {
         try {
             server.placeLastComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);

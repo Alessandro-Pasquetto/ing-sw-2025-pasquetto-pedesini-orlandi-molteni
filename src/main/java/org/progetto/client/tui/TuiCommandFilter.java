@@ -188,7 +188,7 @@ public class TuiCommandFilter {
         }
     }
 
-    public static void handleCommand(String command) throws IllegalStateException{
+    public static void handleCommand(String command) throws IllegalStateException, InterruptedException {
         command = command.trim();
         String[] commandParts = command.split("\\s+");
         String commandType = commandParts[0].toUpperCase();
@@ -245,6 +245,21 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         break;
 
+                    case "AUTOCREATE":
+                        if (isValidCommand(commandParts.length, 1))
+                            ConnectionsCommands.autoCreate(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+                    case "AUTOJOIN":
+                        if (isValidCommand(commandParts.length, 2))
+                            ConnectionsCommands.autoJoin(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+
                     default:
                         if (commands.get(commandType.toLowerCase()) == null)
                             throw new IllegalStateException("Command not found");
@@ -293,6 +308,13 @@ public class TuiCommandFilter {
                     case "PLACE":
                         if (isValidCommand(commandParts.length, 4))
                             BuildingCommands.placeComponent(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+                    case "BUILDSHIP":
+                        if (isValidCommand(commandParts.length, 2))
+                            TestingCommands.buildShip(commandParts);
                         else
                             expectedFormat(commandType);
                         break;

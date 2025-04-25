@@ -411,6 +411,10 @@ public class TuiHandlerMessage {
                     System.out.println("You have zero engine power in OpenSpace, you cannot continue travel!");
                     break;
 
+                case "IDShipOutOfBounds":
+                    System.out.println("building configuration not present!");
+                    break;
+
                 default:
                     System.out.println(messageString);
                     break;

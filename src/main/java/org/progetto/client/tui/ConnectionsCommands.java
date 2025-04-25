@@ -1,5 +1,9 @@
 package org.progetto.client.tui;
 
+import org.progetto.client.connection.rmi.RmiClientReceiver;
+import org.progetto.client.connection.rmi.RmiClientSender;
+import org.progetto.client.connection.socket.SocketClient;
+import org.progetto.client.connection.socket.SocketWriter;
 import org.progetto.client.model.GameData;
 
 /**
@@ -57,4 +61,53 @@ public class ConnectionsCommands {
         GameData.setNamePlayer(commandParts[2]);
         GameData.getSender().tryJoinToGame(Integer.parseInt(commandParts[1]));
     }
+
+    /**
+     * allows the users to connect and automatically create a game
+     *
+     * @author Lorenzo
+     * @param commandParts are segments of the command
+     * @throws InterruptedException
+     */
+    public static void autoCreate(String[] commandParts) throws InterruptedException {
+
+        if(GameData.getSender() instanceof RmiClientSender)
+            connect(new String[]{"connect","127.0.0.1","1099"});
+        else if (GameData.getSender() instanceof SocketClient)
+            connect(new String[]{"connect","127.0.0.1","8080"});
+
+        Thread.sleep(500);
+
+        createGame(new String[]{"createGame","player_1","1","2"});
+
+        Thread.sleep(500);
+
+        BuildingCommands.readyPlayer(null);
+
+    }
+
+    /**
+     * allows the users to connect and automatically create a game
+     *
+     * @author Lorenzo
+     * @param commandParts are segments of the command
+     * @throws InterruptedException
+     */
+    public static void autoJoin(String[] commandParts) throws InterruptedException {
+
+        if(GameData.getSender() instanceof RmiClientSender)
+            connect(new String[]{"connect","127.0.0.1","1099"});
+        else if (GameData.getSender() instanceof SocketClient)
+            connect(new String[]{"connect","127.0.0.1","8080"});
+
+        Thread.sleep(500);
+
+        joinGame(new String[]{"joinGame",commandParts[1],"player_"+Integer.toString((int) System.currentTimeMillis()/1000).substring(0, 2)});
+
+        Thread.sleep(500);
+
+        BuildingCommands.readyPlayer(null);
+
+    }
+
 }

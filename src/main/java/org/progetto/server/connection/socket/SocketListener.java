@@ -207,6 +207,12 @@ public class SocketListener extends Thread {
                     SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
                 }
 
+                else if(messageObj instanceof buildSpaceshipMessage buildSpaceshipMessage) {
+                    int idShip = buildSpaceshipMessage.getIdShip();
+                    BuildingController.buildShip(gameManager,player,idShip,socketWriter);
+                }
+
+
                 else if (messageObj instanceof String messageString) {
                     switch (messageString){
 
