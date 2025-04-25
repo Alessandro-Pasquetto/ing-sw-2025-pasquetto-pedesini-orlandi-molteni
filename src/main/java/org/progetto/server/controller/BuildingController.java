@@ -149,9 +149,22 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
                         bb.placeComponent(1, 2, 1);
 
-
-
                         sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        break;
+
+                    case 2:
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 1, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 0, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 3, 0);
+
+                        //Send built ship
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+
                         break;
 
                     default:
@@ -235,13 +248,12 @@ public class BuildingController {
                     default:
                         sender.sendMessage("IDShipOutOfBounds");
                 }
-
             }
-
         } catch (IllegalStateException e) {
             System.out.println(e.getMessage());
         }
     }
+
 
     /**
      * Handles player decision to show visible components

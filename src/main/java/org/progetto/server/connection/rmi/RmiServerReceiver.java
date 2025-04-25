@@ -1,7 +1,6 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.client.tui.GameCommands;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
@@ -400,10 +399,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        if(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))
-            SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, xComponent, yComponent, virtualClient);
-        else
-            SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, xComponent, yComponent, virtualClient);
+        SpaceshipController.startDestroyComponent(gameManager, player, xComponent, yComponent, virtualClient);
     }
 
     @Override
@@ -825,6 +821,31 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         try {
             eventController.rollDice(player, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responseSelectSpaceshipPart(VirtualClient virtualClient, int idGame, int x, int y) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.receiveSelectSpaceshipPart(player, x, y, virtualClient);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

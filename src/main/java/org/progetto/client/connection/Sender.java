@@ -88,4 +88,6 @@ public interface Sender {
     void responseContinueTravel(String response);
 
     void responseRollDice();
+
+    void responseSelectSpaceshipPart(int x, int y);
 }

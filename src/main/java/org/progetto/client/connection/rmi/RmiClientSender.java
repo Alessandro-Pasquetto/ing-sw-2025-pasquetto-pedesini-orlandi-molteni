@@ -447,4 +447,13 @@ public class RmiClientSender implements Sender {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void responseSelectSpaceshipPart(int x, int y) {
+        try {
+            server.responseSelectSpaceshipPart(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

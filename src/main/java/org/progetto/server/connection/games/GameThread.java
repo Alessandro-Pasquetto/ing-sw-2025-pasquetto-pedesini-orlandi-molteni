@@ -136,7 +136,6 @@ public class GameThread extends Thread {
                             game.setPhase(GamePhase.ENDGAME);
                         else{
                             gameManager.getGame().getBoard().updateTurnOrder();
-                            EventController.handleDefeatedPlayers(gameManager);
                             game.setPhase(GamePhase.TRAVEL);
                         }
                         break;
@@ -144,6 +143,7 @@ public class GameThread extends Thread {
                     case TRAVEL:
                         System.out.println("Travel phase started...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        EventController.handleDefeatedPlayers(gameManager);
 
                         if(gameManager.getGame().getEventDeckSize() > 0){
                             // Asks for each traveler if he wants to continue travel

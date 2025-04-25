@@ -3,13 +3,8 @@ package org.progetto.client.connection.socket;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
-import org.progetto.client.tui.TuiCommandFilter;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Socket message listener for messages coming from server

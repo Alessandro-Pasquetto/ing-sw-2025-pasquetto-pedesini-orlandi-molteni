@@ -419,4 +419,14 @@ public class EventCommands {
                 System.out.println("You must say ROLL");
         }
     }
+
+    public static void responseSelectSpaceshipPart() {
+        while (true) {
+            //todo
+            System.out.println("todo: responseSelectSpaceshipPart");
+
+            Sender sender = GameData.getSender();
+            sender.responseSelectSpaceshipPart(-1, -1);
+        }
+    }
 }

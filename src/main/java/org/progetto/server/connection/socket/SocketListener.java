@@ -200,7 +200,7 @@ public class SocketListener extends Thread {
         else if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
             int x = destroyComponentMessage.getX();
             int y = destroyComponentMessage.getY();
-            SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, x, y, socketWriter);
+            SpaceshipController.startDestroyComponent(gameManager, player, x, y, socketWriter);
         }
 
         else if(messageObj instanceof PopulatingMessage populatingMessage){
@@ -405,6 +405,23 @@ public class SocketListener extends Thread {
 
             try {
                 eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if (messageObj instanceof ResponseSelectSpaceshipPart responseSelectSpaceshipPart){
+            int x = responseSelectSpaceshipPart.getX();
+            int y = responseSelectSpaceshipPart.getY();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveSelectSpaceshipPart(player, x, y, socketWriter);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

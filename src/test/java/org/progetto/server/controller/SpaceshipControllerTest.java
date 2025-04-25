@@ -1,9 +1,7 @@
 package org.progetto.server.controller;
 
-import jdk.jfr.EventType;
 import org.junit.jupiter.api.Test;
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
-import org.progetto.messages.toClient.Building.PickedUpEventCardDeckMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -13,7 +11,6 @@ import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.CardType;
-import org.progetto.server.model.events.EventCard;
 import org.progetto.server.model.events.LostShip;
 
 import java.rmi.RemoteException;
@@ -315,7 +312,7 @@ class SpaceshipControllerTest {
     }
 
     @Test
-    void destroyComponentWithoutAnyCheck() throws RemoteException, InterruptedException {
+    void startDestroyComponentAndCheckValidity() throws RemoteException, InterruptedException {
         //spaceship setup
         Sender sender = null;
         Component component = null;
@@ -346,7 +343,7 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("EmptyComponentCell", message);
             }};
-        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, 0, 0, sender);
+        SpaceshipController.startDestroyComponent(gameManager, player, 0, 0, sender);
 
         //test correct removal of the component
         sender = new Sender() {
@@ -354,7 +351,7 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
             }};
-        SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, 1, 2, sender);
+        SpaceshipController.startDestroyComponent(gameManager, player, 1, 2, sender);
     }
 
     @Test

@@ -30,6 +30,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     private int diceResult;
     private Projectile comingMeteor;
     private final ArrayList<Player> decisionPlayers;
+    private final ArrayList<Player> fixShipPlayers;
     private final ArrayList<Player> protectedPlayers;
     private final ArrayList<Player> notProtectedPlayers;
     private final ArrayList<Player> discardedBattery;
@@ -45,6 +46,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
+        this.fixShipPlayers = new ArrayList<>();
         this.protectedPlayers = new ArrayList<>();
         this.notProtectedPlayers = new ArrayList<>();
         this.discardedBattery = new ArrayList<>();
@@ -209,18 +211,26 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Notifies component destruction
             } else {
                 sender.sendMessage("NoShieldAvailable");
-                SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender);
 
-                player.setIsReady(true, gameManager.getGame());
+                if(SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender))
+                    player.setIsReady(true, gameManager.getGame());
+                else
+                    fixShipPlayers.add(player);
             }
         }
 
         // Checks if there is at least one player that can decide to use a shield
-        if (!decisionPlayers.isEmpty()) {
-            phase = EventPhase.ASK_TO_PROTECT;
+        if (!decisionPlayers.isEmpty()){
             askToProtect();
-        } else
-            gameManager.getGameThread().notifyThread();
+            return;
+        }
+
+        if(!fixShipPlayers.isEmpty()){
+            askToFix();
+            return;
+        }
+
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -265,18 +275,43 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Notifies component destruction
             } else {
                 sender.sendMessage("NoCannonAvailable");
-                SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender);
 
-                player.setIsReady(true, gameManager.getGame());
+                if(SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender))
+                    player.setIsReady(true, gameManager.getGame());
+                else
+                    fixShipPlayers.add(player);
             }
         }
 
         // Checks if there is at least one player that can decide to use a double cannon
-        if (!decisionPlayers.isEmpty()) {
-            phase = EventPhase.ASK_TO_PROTECT;
+        if (!decisionPlayers.isEmpty()){
             askToProtect();
-        } else
-            gameManager.getGameThread().notifyThread();
+            return;
+        }
+
+        if(!fixShipPlayers.isEmpty()){
+            askToFix();
+            return;
+        }
+
+        gameManager.getGameThread().notifyThread();
+    }
+
+    /**
+     * Asks players to fix their ship
+     *
+     * @author Alessandro
+     * @throws RemoteException
+     */
+    private void askToFix() throws RemoteException {
+
+        for (Player player : fixShipPlayers) {
+
+            // Asks current player if he wants to use a protection
+            Sender sender = gameManager.getSenderByPlayer(player);
+
+            sender.sendMessage("SpaceshipNotValidSelectPart");
+        }
     }
 
     /**
@@ -286,8 +321,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askToProtect() throws RemoteException {
-        if (!phase.equals(EventPhase.ASK_TO_PROTECT))
-            throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : decisionPlayers) {
 
@@ -298,9 +331,24 @@ public class MeteorsRainController extends EventControllerAbstract {
                 sender.sendMessage("AskToUseShield");
             else
                 sender.sendMessage("AskToUseDoubleCannon");
-
-            phase = EventPhase.PROTECTION_DECISION;
         }
+    }
+
+
+    @Override
+    public void receiveSelectSpaceshipPart(Player player, int x, int y, Sender sender) throws RemoteException {
+
+        // Checks if it is part of fixShip player
+        if (!fixShipPlayers.contains(player)) {
+            sender.sendMessage("NotYourTurn");
+            return;
+        }
+
+        //todo
+        System.out.println("Parte da scegliere non implementata");
+
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -314,10 +362,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     @Override
     public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
-        if (!phase.equals(EventPhase.PROTECTION_DECISION)) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
 
         // Checks if it is not part of non-protected player, and it is not already contained in protected one list
         if (!decisionPlayers.contains(player) || protectedPlayers.contains(player) || notProtectedPlayers.contains(player)) {
@@ -352,13 +396,10 @@ public class MeteorsRainController extends EventControllerAbstract {
                     Sender senderProtected = gameManager.getSenderByPlayer(protectedPlayer);
                     senderProtected.sendMessage(new BatteriesToDiscardMessage(1));
                 }
-
-                phase = EventPhase.PROTECTION_BATTERY;
-
-            } else {
-                phase =  EventPhase.HANDLE_CURRENT_METEOR;
-                handleCurrentMeteor();
             }
+            else
+                handleCurrentMeteor();
+
         }
     }
 
@@ -374,10 +415,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     @Override
     public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
-        if (!phase.equals( EventPhase.PROTECTION_BATTERY)) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
 
         // Checks if the player that calls the methods has to discard a battery to activate protection
         if (!discardedBattery.contains(player)) {
@@ -410,10 +447,8 @@ public class MeteorsRainController extends EventControllerAbstract {
             player.setIsReady(true, gameManager.getGame());
 
             // Checks that all protected players had discarded a battery
-            if (discardedBattery.isEmpty()) {
-                phase =  EventPhase.HANDLE_CURRENT_METEOR;
+            if (discardedBattery.isEmpty())
                 handleCurrentMeteor();
-            }
 
         } else {
             sender.sendMessage("BatteryNotDiscarded");
@@ -427,8 +462,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void handleCurrentMeteor() throws RemoteException {
-        if (!phase.equals(EventPhase.HANDLE_CURRENT_METEOR))
-            throw new IllegalStateException("IncorrectPhase");
 
         Game game = gameManager.getGame();
 
@@ -440,7 +473,10 @@ public class MeteorsRainController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(notProtectedPlayer);
 
             // Destroys affected component
-            SpaceshipController.destroyComponentAndCheckValidity(gameManager, notProtectedPlayer, affectedComponent.getX(), affectedComponent.getY(), sender);
+            if(SpaceshipController.destroyComponentAndCheckValidity(gameManager, notProtectedPlayer, affectedComponent.getX(), affectedComponent.getY(), sender))
+                notProtectedPlayer.setIsReady(true, gameManager.getGame());
+            else
+                fixShipPlayers.add(notProtectedPlayer);
         }
 
         gameManager.getGameThread().notifyThread();

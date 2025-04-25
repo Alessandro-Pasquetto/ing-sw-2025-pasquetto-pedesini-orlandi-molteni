@@ -4,7 +4,6 @@ public enum GamePhase {
     INIT,
     BUILDING,
     START_ADJUSTING,
-    ADJUSTING,
     POPULATING,
     TRAVEL,
     EVENT,

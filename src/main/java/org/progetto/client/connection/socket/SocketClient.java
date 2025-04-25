@@ -290,4 +290,9 @@ public class SocketClient implements Sender {
     public void responseRollDice() {
         SocketWriter.sendMessage("RollDice");
     }
+
+    @Override
+    public void responseSelectSpaceshipPart(int x, int y) {
+        SocketWriter.sendMessage(new ResponseSelectSpaceshipPart(x, y));
+    }
 }
