@@ -25,7 +25,7 @@ public class EventCommands {
     public static void responseHowManyDoubleCannons(int required, int max) {
 
         while(true){
-            System.out.println("How many double cannons?");
+            System.out.println("How many double cannons do you want to activate?");
             System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
 
             String response = TuiCommandFilter.waitResponse();
@@ -55,7 +55,7 @@ public class EventCommands {
     public static void responseHowManyDoubleEngines(int max) {
 
         while(true){
-            System.out.println("How many double engines?");
+            System.out.println("How many double engines do you want to activate?");
             System.out.println("You have " + max + " double engines");
 
             String response = TuiCommandFilter.waitResponse();
@@ -399,6 +399,24 @@ public class EventCommands {
                 break;
             }else
                 System.out.println("You must choose between YES or NO");
+        }
+    }
+
+    /**
+     * Handles roll dice by current player
+     *
+     * @author Gabriele
+     */
+    public static void responseRollDice() {
+        while (true) {
+            String response = TuiCommandFilter.waitResponse();
+
+            if (response.equalsIgnoreCase("ROLL")){
+                Sender sender = GameData.getSender();
+                sender.responseRollDice();
+                break;
+            } else
+                System.out.println("You must say ROLL");
         }
     }
 }

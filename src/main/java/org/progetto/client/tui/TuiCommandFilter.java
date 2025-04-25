@@ -53,9 +53,17 @@ public class TuiCommandFilter {
     // OTHER METHODS
     // =======================
 
-    public static String waitResponse() {
-        isWaitingResponse = true;
+    public static void setResponse(String input) {
         synchronized (responseLock) {
+            response = input;
+            isWaitingResponse = false;
+            responseLock.notify();
+        }
+    }
+
+    public static String waitResponse() {
+        synchronized (responseLock) {
+            isWaitingResponse = true;
             try {
                 while (isWaitingResponse) {
                     responseLock.wait();
@@ -64,7 +72,6 @@ public class TuiCommandFilter {
                 throw new RuntimeException(e);
             }
         }
-
         return response;
     }
 
@@ -98,23 +105,12 @@ public class TuiCommandFilter {
             String command = scanner.nextLine();
 
             if (command.isEmpty()) continue;
-
             if (command.equalsIgnoreCase("exit")) break;
 
-            if (!isWaitingResponse) {
-                handleCommand(command);
+            boolean isCommand = handleCommand(command);
 
-            } else {
-
-                if (!handleCommand(command)) {
-                    response = command;
-                    isWaitingResponse = false;
-
-                    synchronized(responseLock) {
-                        responseLock.notify();
-                    }
-
-                }
+            if (getIsWaitingResponse() && !isCommand) {
+                setResponse(command);
             }
 
             System.out.println();
@@ -166,6 +162,8 @@ public class TuiCommandFilter {
     public static boolean handleCommand(String command) {
         String[] commandParts = command.split(" ");
         String commandType = commandParts[0].toUpperCase();
+
+        String response = "";
 
         boolean foundCommand = true;
 
@@ -223,9 +221,9 @@ public class TuiCommandFilter {
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
@@ -322,7 +320,6 @@ public class TuiCommandFilter {
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -331,7 +328,6 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -345,9 +341,9 @@ public class TuiCommandFilter {
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
@@ -367,7 +363,6 @@ public class TuiCommandFilter {
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -376,16 +371,15 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
@@ -405,7 +399,6 @@ public class TuiCommandFilter {
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -414,7 +407,6 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -428,9 +420,9 @@ public class TuiCommandFilter {
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
@@ -443,7 +435,6 @@ public class TuiCommandFilter {
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -452,7 +443,6 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -461,25 +451,15 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.showTrack(commandParts);
                         else {
-                            System.out.println("Invalid command format");
-                            expectedFormat(commandType);
-                        }
-                        break;
-
-                    case "ROLL":
-                        if (isValidCommand(commandParts.length, 1))
-                            GameData.getSender().rollDice();
-                        else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
@@ -492,7 +472,6 @@ public class TuiCommandFilter {
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -501,7 +480,6 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
@@ -510,21 +488,24 @@ public class TuiCommandFilter {
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.showTrack(commandParts);
                         else {
-                            System.out.println("Invalid command format");
                             expectedFormat(commandType);
                         }
                         break;
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null) {
-                            System.out.println("Command not found");
+                            response = "Command not found";
                         } else {
-                            System.out.println("Command not available in that phase");
+                            response = "Command not available in that phase";
                         }
                         foundCommand = false;
                         break;
                 }
                 break;
+        }
+
+        if (!isWaitingResponse && !foundCommand) {
+            System.out.println(response);
         }
 
         return foundCommand;

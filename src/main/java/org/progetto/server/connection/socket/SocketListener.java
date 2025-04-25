@@ -311,27 +311,6 @@ public class SocketListener extends Thread {
                 }
                 break;
 
-            case TRAVEL:
-                if(messageObj instanceof String messageString) {
-                    switch (messageString){
-
-                        default:
-                            break;
-                    }
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
-                }
-
-                else if( messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
-                    String response = responseContinueTravelMessage.getResponse();
-                    EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
-                }
-
-                break;
-
             case EVENT:
 
                 if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
@@ -540,13 +519,45 @@ public class SocketListener extends Thread {
 
                 else if (messageObj instanceof String messageString) {
                     switch (messageString){
+
                         case "RollDice":
-                            gameManager.getEventController().rollDice(player, socketWriter);
+                            EventControllerAbstract eventController = gameManager.getEventController();
+                            if(eventController == null){
+                                socketWriter.sendMessage("EventControllerNull");
+                                return;
+                            }
+
+                            try {
+                                eventController.rollDice(player, socketWriter);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
                             break;
 
                         default:
                             break;
                     }
+                }
+
+                break;
+
+            case TRAVEL:
+                if(messageObj instanceof String messageString) {
+                    switch (messageString){
+
+                        default:
+                            break;
+                    }
+                }
+
+                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+                    String owner = requestSpaceshipMessage.getOwner();
+                    SpaceshipController.showSpaceship(gameManager,owner,socketWriter);
+                }
+
+                else if( messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
+                    String response = responseContinueTravelMessage.getResponse();
+                    EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
                 }
 
                 break;

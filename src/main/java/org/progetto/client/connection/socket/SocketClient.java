@@ -187,11 +187,6 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void rollDice() {
-        SocketWriter.sendMessage("RollDice");
-    }
-
-    @Override
     public void showSpaceship(String owner){
         SocketWriter.sendMessage(new RequestSpaceshipMessage(owner));
     }
@@ -284,5 +279,10 @@ public class SocketClient implements Sender {
     @Override
     public void responseContinueTravel(String response) {
         SocketWriter.sendMessage(new ResponseContinueTravelMessage(response));
+    }
+
+    @Override
+    public void responseRollDice() {
+        SocketWriter.sendMessage("RollDice");
     }
 }

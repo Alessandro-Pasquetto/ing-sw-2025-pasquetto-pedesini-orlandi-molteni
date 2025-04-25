@@ -51,8 +51,6 @@ public interface Sender {
 
     void resetTimer();
 
-    void rollDice();
-
     void showSpaceship(String owner);
 
     void spaceshipStats();
@@ -86,4 +84,6 @@ public interface Sender {
     void responseUseDoubleCannonRequest(String response);
 
     void responseContinueTravel(String response);
+
+    void responseRollDice();
 }

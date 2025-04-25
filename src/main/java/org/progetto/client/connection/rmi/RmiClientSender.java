@@ -274,15 +274,6 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void rollDice() {
-        try {
-            server.rollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
-        } catch (RemoteException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void showSpaceship(String owner){
         try{
             server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(),owner);
@@ -434,6 +425,15 @@ public class RmiClientSender implements Sender {
     public void responseContinueTravel(String response) {
         try {
             server.responseContinueTravel(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void responseRollDice() {
+        try {
+            server.responseRollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

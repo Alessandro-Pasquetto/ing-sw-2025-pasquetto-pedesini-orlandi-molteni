@@ -403,7 +403,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        SpaceshipController.populateComponent(player, crewType, xComponent, yComponent, virtualClient);
+        SpaceshipController.populateComponent(gameManager, player, crewType, xComponent, yComponent, virtualClient);
     }
 
     @Override
@@ -786,5 +786,30 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         }
 
         EventController.chooseToContinueTravel(gameManager, response, player, virtualClient);
+    }
+
+    @Override
+    public void responseRollDice(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        EventControllerAbstract eventController = gameManager.getEventController();
+        if(eventController == null){
+            virtualClient.sendMessage("EventControllerNull");
+            return;
+        }
+
+        try {
+            eventController.rollDice(player, virtualClient);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

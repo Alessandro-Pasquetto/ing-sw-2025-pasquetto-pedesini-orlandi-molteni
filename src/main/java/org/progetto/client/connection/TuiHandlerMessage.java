@@ -47,6 +47,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
             System.out.println(responseSpaceshipMessage.getOwner() + "'s spaceship:");
+            System.out.println();
             TuiPrinters.printSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
@@ -103,6 +104,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
             System.out.println(anotherPlayerIsReadyMessage.getNamePlayer() + " is ready");
+            System.out.println();
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -213,6 +215,10 @@ public class TuiHandlerMessage {
 
                 case "HandComponentDiscarded":
                     System.out.println("Current hand component discarded");
+                    break;
+
+                case "FullHandComponent":
+                    System.out.println("Hand is full!");
                     break;
 
                 case "AllowedToPlaceComponent":
@@ -355,6 +361,35 @@ public class TuiHandlerMessage {
                     System.out.println("Out of danger, you've destroyed the meteor!");
                     break;
 
+                case "RollDiceToFindColumn":
+                    System.out.println("Roll dice to find column (ROLL)");
+                    EventCommands.responseRollDice();
+                    break;
+
+                case "RollDiceToFindRow":
+                    System.out.println("Roll dice to find row (ROLL)");
+                    EventCommands.responseRollDice();
+                    break;
+
+                case "NothingGotDestroyed":
+                    System.out.println("Nothing got destroyed!");
+                    break;
+
+                case "YouWon":
+                    System.out.println("You won against raiders!");
+                    break;
+
+                case "YouLost":
+                    System.out.println("You lost against raiders!");
+                    break;
+
+                case "YouDrew":
+                    System.out.println("You drew against raiders!");
+                    break;
+
+                case "RaidersDefeated":
+                    System.out.println("Raiders got defeated!");
+                    break;
 
                 default:
                     System.out.println(messageString);

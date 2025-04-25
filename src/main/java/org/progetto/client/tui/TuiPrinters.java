@@ -462,16 +462,16 @@ public class TuiPrinters {
 
     public static void printDestroyedComponent(String player,int x, int y){
         if(player == null) {
-            System.out.println("💥 You lost a component!");
-            System.out.println("┌────────────────────────────┐");
-            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     │%n", x, y);
-            System.out.println("└────────────────────────────┘");
+            System.out.println("You lost a component!");
+            System.out.println("┌────────────────────────────");
+            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     %n", x, y);
+            System.out.println("└────────────────────────────");
         }
         else {
-            System.out.println("💥"+player+ " lost a component!");
-            System.out.println("┌────────────────────────────┐");
-            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     │%n", x, y);
-            System.out.println("└────────────────────────────┘");
+            System.out.println(player + " lost a component!");
+            System.out.println("┌────────────────────────────");
+            System.out.printf("│ Position:  (x=%-2d, y=%-2d)     %n", x, y);
+            System.out.println("└────────────────────────────");
         }
 
     }

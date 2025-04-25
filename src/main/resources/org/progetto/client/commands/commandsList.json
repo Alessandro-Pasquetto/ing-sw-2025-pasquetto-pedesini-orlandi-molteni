@@ -90,11 +90,6 @@
     "usage": "TimerReset"
   },
   {
-    "name": "Roll",
-    "description": "Roll the dice.",
-    "usage": "Roll"
-  },
-  {
     "name": "Close",
     "description": "Disconnect and exit the game.",
     "usage": "Close"

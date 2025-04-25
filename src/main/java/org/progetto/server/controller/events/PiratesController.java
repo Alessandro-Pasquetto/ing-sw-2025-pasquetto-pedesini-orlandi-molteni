@@ -99,17 +99,18 @@ public class PiratesController extends EventControllerAbstract {
 
                 // Checks if card got defeated
                 if (defeated) {
+                    gameManager.broadcastGameMessage("RaidersDefeated");
                     break;
                 }
 
                 // Checks if players is able to win without double cannons
                 if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
+                    sender.sendMessage("YouWon");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
 
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
                     continue;
-
                 }
 
                 // Calculates max number of double cannons usable
@@ -119,10 +120,14 @@ public class PiratesController extends EventControllerAbstract {
                 if (maxUsable == 0) {
                     playerFirePower = spaceship.getNormalShootingPower();
 
-                    if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1){
+                    if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+                        sender.sendMessage("YouLost");
                         defeatedPlayers.add(player);
+                    } else {
+                        sender.sendMessage("YouDrew");
                     }
                     continue;
+
                 } else {
                     sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
                     phase = EventPhase.CANNON_NUMBER;
@@ -260,6 +265,7 @@ public class PiratesController extends EventControllerAbstract {
             switch (pirates.battleResult(player, playerFirePower)) {
                 case 1:
                     phase = EventPhase.REWARD_DECISION;
+                    sender.sendMessage("YouWon");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                     defeated = true;
                     break;
@@ -267,11 +273,14 @@ public class PiratesController extends EventControllerAbstract {
                 case -1:
                     defeatedPlayers.add(player);
 
+                    sender.sendMessage("YouLost");
+
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;
 
                 case 0:
+                    sender.sendMessage("YouDrew");
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;
@@ -363,14 +372,14 @@ public class PiratesController extends EventControllerAbstract {
                     break;
                 }
 
+                currentShot = shot;
+
                 // Sends to each defeated player information about incoming shot
                 for (Player defeatedPlayer : defeatedPlayers) {
                     Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
                     sender.sendMessage(new IncomingProjectileMessage(currentShot));
                 }
-
-                currentShot = shot;
 
                 phase = EventPhase.ASK_ROLL_DICE;
                 askToRollDice();
@@ -591,6 +600,7 @@ public class PiratesController extends EventControllerAbstract {
         if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
             discardedBattery.remove(player);
             sender.sendMessage("BatteryDiscarded");
+
             if (discardedBattery.isEmpty()) {
                 phase = EventPhase.HANDLE_SHOT;
                 handleShot();
@@ -616,30 +626,27 @@ public class PiratesController extends EventControllerAbstract {
             // Set as ready not defeated players
             for (Player player : activePlayers) {
                 if (!defeatedPlayers.contains(player)) {
-                    System.out.println(player.getName());
                     player.setIsReady(true, gameManager.getGame());
                 }
             }
 
             // Set as ready protected players
             for (Player player : protectedPlayers) {
-                System.out.println(player.getName());
                 player.setIsReady(true, gameManager.getGame());
             }
 
             // For each non-protected player handles penalty shot
             for (Player player : notProtectedPlayers) {
                 Component destroyedComponent = pirates.penaltyShot(game, player, shot, diceResult);
+
                 // Gets current player sender reference
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 // Sends two types of messages based on the shot's result
                 if (destroyedComponent != null) {
-                    System.out.println("sono qui" + player.getName());
                     SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
                 } else {
-                    System.out.println("sono qui" + player.getName());
                     gameManager.broadcastGameMessage("NothingGotDestroyed");
 
                     player.setIsReady(true, gameManager.getGame());

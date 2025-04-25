@@ -238,10 +238,11 @@ public class SpaceshipController {
      */
     public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
+        // todo da rivedere: viene chiamato anche nelle eventcards
+//        if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
+//            sender.sendMessage("IncorrectPhase");
+//            return;
+//        }
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -277,10 +278,11 @@ public class SpaceshipController {
      */
     public static void destroyComponentWithoutAnyCheck(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
+        // todo da rivedere: viene chiamato anche nelle eventcards
+//        if (!(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))) {
+//            sender.sendMessage("IncorrectPhase");
+//            return;
+//        }
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
