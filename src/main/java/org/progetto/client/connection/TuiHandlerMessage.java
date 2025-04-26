@@ -415,6 +415,10 @@ public class TuiHandlerMessage {
                     System.out.println("Building configuration not present!");
                     break;
 
+                case "ResponseSelectSpaceshipPart":
+                    EventCommands.responseSelectSpaceshipPart();
+                    break;
+
                 default:
                     System.out.println(messageString);
                     break;

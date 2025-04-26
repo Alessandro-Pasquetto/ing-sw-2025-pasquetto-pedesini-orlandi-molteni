@@ -422,11 +422,21 @@ public class EventCommands {
 
     public static void responseSelectSpaceshipPart() {
         while (true) {
-            //todo
-            System.out.println("todo: responseSelectSpaceshipPart");
+
+            System.out.println("Select the component from which that part of the ship will be destroyed: <X> <Y>");
+
+            System.out.print("X: ");
+            String x = TuiCommandFilter.waitResponse();
+            System.out.print("Y: ");
+            String y = TuiCommandFilter.waitResponse();
 
             Sender sender = GameData.getSender();
-            sender.responseSelectSpaceshipPart(-1, -1);
+            int levelGame = GameData.getLevelGame();
+            try{
+                sender.responseSelectSpaceshipPart(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
+            }catch (NumberFormatException e){
+                System.out.println("You must insert a number!");
+            }
         }
     }
 }
