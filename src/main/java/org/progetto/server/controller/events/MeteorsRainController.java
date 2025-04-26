@@ -310,7 +310,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Asks current player if he wants to use a protection
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            sender.sendMessage("SpaceshipNotValidSelectPart");
+            sender.sendMessage("AskSelectSpaceshipPart");
         }
     }
 
@@ -334,9 +334,8 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
-
     @Override
-    public void receiveSelectSpaceshipPart(Player player, int x, int y, Sender sender) throws RemoteException {
+    public synchronized void receiveSelectSpaceshipPart(Player player, int x, int y, Sender sender) throws RemoteException {
 
         // Checks if it is part of fixShip player
         if (!fixShipPlayers.contains(player)) {
@@ -344,8 +343,13 @@ public class MeteorsRainController extends EventControllerAbstract {
             return;
         }
 
-        //todo
-        System.out.println("Parte da scegliere non implementata");
+        try {
+            SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, x, y);
+
+        }catch (IllegalStateException e){
+            sender.sendMessage(e.getMessage());
+            sender.sendMessage("AskSelectSpaceshipPart");
+        }
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
@@ -399,7 +403,6 @@ public class MeteorsRainController extends EventControllerAbstract {
             }
             else
                 handleCurrentMeteor();
-
         }
     }
 

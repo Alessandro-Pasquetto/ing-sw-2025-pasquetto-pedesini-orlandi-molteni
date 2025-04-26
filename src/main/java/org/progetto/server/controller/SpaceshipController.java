@@ -308,26 +308,19 @@ public class SpaceshipController {
      * @param player that needs to fix the spaceship
      * @param xComponent x coordinate of chosen component
      * @param yComponent y coordinate of chosen component
-     * @param sender current sender
      * @throws RemoteException
      */
-    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent) throws RemoteException, IllegalStateException {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
-            buildingBoard.keepSpaceshipPart(xComponent, yComponent);
+        buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
-             player.setIsReady(true, gameManager.getGame());
-             gameManager.getGameThread().notifyThread();
+         player.setIsReady(true, gameManager.getGame());
+         gameManager.getGameThread().notifyThread();
 
-            // todo notificare spaceship: serve updateSpaceship con nome per GUI
-            //gameManager.broadcastGameMessage();
-
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotValidCoordinates"))
-                sender.sendMessage("NotValidCoordinates");
-        }
+        // todo notificare spaceship: serve updateSpaceship con nome per GUI
+        //gameManager.broadcastGameMessage();
     }
 
     public static void populateComponent(GameManager gameManager, Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {

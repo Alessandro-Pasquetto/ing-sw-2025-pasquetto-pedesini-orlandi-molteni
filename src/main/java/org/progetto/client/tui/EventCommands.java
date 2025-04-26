@@ -434,6 +434,7 @@ public class EventCommands {
             int levelGame = GameData.getLevelGame();
             try{
                 sender.responseSelectSpaceshipPart(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
+                break;
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");
             }

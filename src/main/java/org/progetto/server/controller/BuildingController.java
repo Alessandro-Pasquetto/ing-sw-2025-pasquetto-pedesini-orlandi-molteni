@@ -197,6 +197,20 @@ public class BuildingController {
                         sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
                         break;
 
+                    case 2:
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 1, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{0, 0, 3, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 0, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.placeComponent(2, 3, 0);
+
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+
+                        break;
+
                     default:
                         sender.sendMessage("IDShipOutOfBounds");
                 }

@@ -306,7 +306,7 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 if(!(message instanceof DestroyedComponentMessage))
-                    assertEquals("SpaceshipNotValidSelectPart", message);
+                    assertEquals("AskSelectSpaceshipPart", message);
             }};
         SpaceshipController.destroyComponentAndCheckValidity(gameManager,player,2,2,sender);
     }
@@ -386,18 +386,28 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("NotValidCoordinates", message);
-            }};
+            }
+        };
 
-       SpaceshipController.chooseSpaceshipPartToKeep(gameManager,player,-1,66, sender);
+        try{
+            SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, -1, 66);
+        } catch (RemoteException e) {
+            sender.sendMessage(e.getMessage());
+        }
 
 
         //Test valid coordinates
         sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {}};
+            public void sendMessage(Object message) {}
+        };
         Sender finalSender = sender ;
-        assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager,player,2,2,finalSender));
 
+        try {
+            assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, 2, 2));
+        }catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
 
     }
 }

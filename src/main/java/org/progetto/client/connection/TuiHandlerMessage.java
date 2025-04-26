@@ -73,11 +73,8 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerDiscardComponentMessage.getNamePlayer() + " discarded a component");
         }
 
-        // todo rimuovere: disturba e basta
-//        else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
-//            System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " );
-//            TuiPrinters.printComponent(anotherPlayerPlacedComponentMessage.getComponent());
-//        }
+        else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
+        }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
             TuiPrinters.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
@@ -415,7 +412,7 @@ public class TuiHandlerMessage {
                     System.out.println("Building configuration not present!");
                     break;
 
-                case "ResponseSelectSpaceshipPart":
+                case "AskSelectSpaceshipPart":
                     EventCommands.responseSelectSpaceshipPart();
                     break;
 
