@@ -197,7 +197,11 @@ public class BuildingCommands {
         System.out.println("Timer reset");
     }
 
-    //todo comment
+    /**
+     * Allows a player to populate the housing component of the spaceship
+     *
+     * @param commandParts are segments of the command
+     */
     public static void populateComponent(String[] commandParts){
         Sender sender = GameData.getSender();
         int levelGame = GameData.getLevelGame();

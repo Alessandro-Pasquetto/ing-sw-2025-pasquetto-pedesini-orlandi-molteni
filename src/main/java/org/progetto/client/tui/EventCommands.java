@@ -232,6 +232,38 @@ public class EventCommands {
     }
 
     /**
+     * Handles player decision to accept reward boxes and penalty days
+     *
+     * @author Lorenzo
+     * @param reward are the reward boxes
+     * @param penaltyDays are the days of penalty
+     */
+    public static void responseAcceptRewardBoxesAndPenaltyDays(ArrayList<Box> reward, int penaltyDays){
+
+        while(true){
+            System.out.println("Do you want to accept the reward and the days penalty? (YES or NO)");
+            System.out.println(" Days of penalty: "+penaltyDays+" and reward box list:");
+
+            for (int i = 0; i < reward.size(); i++) {
+                String box = TuiPrinters.drawBox(reward.get(i));
+
+                System.out.printf("[%d] %s%n", i, box);
+            }
+
+
+            String response = TuiCommandFilter.waitResponse();
+
+            if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
+                Sender sender = GameData.getSender();
+                sender.responseAcceptRewardCreditsAndPenaltyDays(response);
+                break;
+            }else
+                System.out.println("You must choose between YES or NO");
+        }
+    }
+
+
+    /**
      * Let the player decide from a list of boxes witch one to keep
      *
      * @author Lorenzo

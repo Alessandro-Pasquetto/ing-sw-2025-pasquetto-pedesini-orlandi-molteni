@@ -185,8 +185,7 @@ public class SmugglersController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
-            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
+            sender.sendMessage(new HowManyDoubleCannonsMessage(spaceship.maxNumberOfDoubleCannonsUsable(), smugglers.getFirePowerRequired()));
         }
     }
 
@@ -265,7 +264,12 @@ public class SmugglersController extends EventControllerAbstract {
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
 
-                } else if (player.getSpaceship().getBatteriesCount() == 0) {
+                } else if(requestedBoxes > 0){
+                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                }
+
+                if (player.getSpaceship().getBatteriesCount() == 0) {
                     sender.sendMessage("NotEnoughBatteries");
 
                     player.setIsReady(true, gameManager.getGame());
@@ -274,7 +278,7 @@ public class SmugglersController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
             }
         }
     }
@@ -298,6 +302,7 @@ public class SmugglersController extends EventControllerAbstract {
                     case 1:
                         sender.sendMessage("YouWon");
                         phase = EventPhase.REWARD_DECISION;
+                        defeated = true;
                         sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
                         break;
 
@@ -309,8 +314,8 @@ public class SmugglersController extends EventControllerAbstract {
 
                         if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
                             requestedBoxes = smugglers.getPenaltyBoxes();
-
                             phase = EventPhase.PENALTY_EFFECT;
+                            defeated = false;
                             penaltyEffect(player, sender);
 
                         } else {
@@ -324,7 +329,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                     case 0:
                         sender.sendMessage("YouDrew");
-
+                        defeated = false;
                         player.setIsReady(true, gameManager.getGame());
                         gameManager.getGameThread().notifyThread();
                         break;
@@ -506,6 +511,12 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
+        // Checks if all boxes were chosen
+        if (rewardBoxes.isEmpty()) {
+            leaveReward(player, sender);
+            return;
+        }
+
         // Checks if reward box index is correct
         if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
             sender.sendMessage("IncorrectRewardIndex");
@@ -541,19 +552,13 @@ public class SmugglersController extends EventControllerAbstract {
 
         // Checks that reward box is placed correctly in given storage
         if (smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, idx, box)) {
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             sender.sendMessage("BoxChosen");
-
             rewardBoxes.remove(box);
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
 
         } else {
             sender.sendMessage("BoxNotChosen");
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-        }
-
-        // Checks if all boxes were chosen
-        if (rewardBoxes.isEmpty()) {
-            leaveReward(player, sender);
         }
     }
 

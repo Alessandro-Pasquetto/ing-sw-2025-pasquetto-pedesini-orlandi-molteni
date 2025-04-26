@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -462,6 +463,11 @@ public class Game {
         }
 
         setActiveEventCard(pickedEventCard);
+//        ArrayList<Box> rewardBoxes = new ArrayList<>(
+//                List.of(new Box[]{Box.RED, Box.YELLOW,Box.BLUE})
+//        );
+//        pickedEventCard = new Smugglers(CardType.SMUGGLERS,1,"imgSrc",3,2,1,rewardBoxes);
+//        setActiveEventCard(pickedEventCard);
 
         return pickedEventCard;
     }

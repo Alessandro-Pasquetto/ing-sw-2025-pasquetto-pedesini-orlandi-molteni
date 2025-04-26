@@ -8,6 +8,7 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 
@@ -153,6 +154,14 @@ public class TuiHandlerMessage {
                     acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays()
             );
         }
+
+        else if(messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
+            EventCommands.responseAcceptRewardBoxesAndPenaltyDays(
+                    acceptRewardBoxesAndPenaltyDaysMessage.getRewardBoxes(),
+                    acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()
+            );
+        }
+
 
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
             EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());

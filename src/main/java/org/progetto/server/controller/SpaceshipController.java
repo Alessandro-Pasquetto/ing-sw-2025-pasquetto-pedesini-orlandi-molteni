@@ -332,6 +332,7 @@ public class SpaceshipController {
 
         try{
             player.getSpaceship().getBuildingBoard().populateComponent(crewType, xComponent, yComponent);
+            sender.sendMessage(crewType+" placed at X:"+(xComponent+6-gameManager.getGame().getLevel())+" Y:"+(yComponent+5));
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }

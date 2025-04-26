@@ -78,7 +78,7 @@ public class ConnectionsCommands {
 
         Thread.sleep(500);
 
-        createGame(new String[]{"createGame", "player_1", "1", "2"});
+        createGame(new String[]{"createGame", "player_1", "2", "2"});
 
         Thread.sleep(500);
 
