@@ -2,17 +2,19 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class buildSpaceshipMessage implements Serializable {
+public class BuildSpaceshipMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
+
     int idShip;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public buildSpaceshipMessage(int idShip) {
+
+    public BuildSpaceshipMessage(int idShip) {
         this.idShip = idShip;
     }
 
@@ -23,5 +25,4 @@ public class buildSpaceshipMessage implements Serializable {
     public int getIdShip() {
         return idShip;
     }
-
 }

@@ -12,7 +12,6 @@ public class TestingCommands {
     // COMMANDS
     // =======================
 
-
     /**
      * Enable the user to create a predefined spaceship
      *
@@ -23,8 +22,5 @@ public class TestingCommands {
         Sender sender = GameData.getSender();
         int idShip = Integer.parseInt(commandParts[1]);
         sender.buildShip(idShip);
-
     }
-
-
 }

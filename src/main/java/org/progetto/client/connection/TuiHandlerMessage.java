@@ -412,7 +412,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "IDShipOutOfBounds":
-                    System.out.println("building configuration not present!");
+                    System.out.println("Building configuration not present!");
                     break;
 
                 default:

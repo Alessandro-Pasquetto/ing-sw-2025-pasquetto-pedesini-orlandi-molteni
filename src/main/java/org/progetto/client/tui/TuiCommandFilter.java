@@ -417,6 +417,14 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "SHOWTRACK":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.showTrack(commandParts);
+                        else {
+                            expectedFormat(commandType);
+                        }
+                        break;
+
                     default:
                         if (commands.get(commandType.toLowerCase()) == null)
                             throw new IllegalStateException("Command not found");

@@ -114,218 +114,361 @@ public class SocketListener extends Thread {
         Game game = gameManager.getGame();
         Player player = clientHandler.getPlayer();
 
-        switch (game.getPhase()) {
-            case INIT:
-                if (messageObj instanceof String messageString){
-                    switch (messageString) {
-                        case "Ready":
-                            GameController.ready(gameManager, player, socketWriter);
-                            break;
-                        default:
-                            System.out.println(messageString + " not allowed");
-                            break;
+
+        if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
+            int xPlaceComponent = placeComponentMessage.getX();
+            int yPlaceComponent = placeComponentMessage.getY();
+            int rPlaceComponent = placeComponentMessage.getRotation();
+            BuildingController.placeComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceLastComponentMessage placeLastComponentMessage) {
+            int xPlaceComponent = placeLastComponentMessage.getX();
+            int yPlaceComponent = placeLastComponentMessage.getY();
+            int rPlaceComponent = placeLastComponentMessage.getRotation();
+            BuildingController.placeLastComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
+            int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
+            int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
+            int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
+            BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
+            int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
+            int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
+            int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
+            int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
+            BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, componentIdx, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceHandComponentAndPickUpEventCardDeckMessage placeHandComponentAndPickUpEventCardDeckMessage) {
+            int xPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getX();
+            int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
+            int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
+            int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
+            BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceHandComponentAndPickBookedComponentMessage placeHandComponentAndPickBookedComponentMessage) {
+            int xPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getX();
+            int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
+            int rPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getRotation();
+            int idx = placeHandComponentAndPickBookedComponentMessage.getIdx();
+            BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, socketWriter);
+        }
+
+        else if (messageObj instanceof PlaceHandComponentAndReadyMessage placeHandComponentAndReadyMessageMessage) {
+            int xPlaceComponent = placeHandComponentAndReadyMessageMessage.getX();
+            int yPlaceComponent = placeHandComponentAndReadyMessageMessage.getY();
+            int rPlaceComponent = placeHandComponentAndReadyMessageMessage.getRotation();
+            BuildingController.placeHandComponentAndReady(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
+        }
+
+        else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
+            int componentIdx = pickVisibleComponent.getComponentIdx();
+            BuildingController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter);
+        }
+
+        else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {
+            int deckIdx = pickUpEventCardDeck.getDeckIdx();
+            BuildingController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter);
+        }
+
+        else if (messageObj instanceof BookComponentMessage bookComponentMessage) {
+            int idx = bookComponentMessage.getBookIdx();
+            BuildingController.bookComponent(gameManager, player, idx, socketWriter);
+        }
+
+        else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
+            int idx = bookedComponentMessage.getIdx();
+            BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
+        }
+
+        else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+            String owner = requestSpaceshipMessage.getOwner();
+            SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
+        }
+
+        else if(messageObj instanceof BuildSpaceshipMessage buildSpaceshipMessage) {
+            int idShip = buildSpaceshipMessage.getIdShip();
+            BuildingController.buildShip(gameManager, player, idShip, socketWriter);
+        }
+
+        else if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
+            int x = destroyComponentMessage.getX();
+            int y = destroyComponentMessage.getY();
+            SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, x, y, socketWriter);
+        }
+
+        else if(messageObj instanceof PopulatingMessage populatingMessage){
+            String crewType = populatingMessage.getCrewType();
+            int xComponent = populatingMessage.getxComponent();
+            int yComponent = populatingMessage.getyComponent();
+
+            SpaceshipController.populateComponent(gameManager, player, crewType, xComponent, yComponent, socketWriter);
+        }
+
+        else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
+            int howManyWantToUse = responseHowManyDoubleCannonsMessage.getHowManyWantToUse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseHowManyDoubleEnginesMessage responseHowManyDoubleEnginesMessage) {
+            int howManyWantToUse = responseHowManyDoubleEnginesMessage.getHowManyWantToUse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseBatteryToDiscardMessage responseBatteryToDiscardMessage) {
+            int xBatteryStorage = responseBatteryToDiscardMessage.getXBatteryStorage();
+            int yBatteryStorage = responseBatteryToDiscardMessage.getYBatteryStorage();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseCrewToDiscardMessage responseCrewToDiscardMessage){
+            int xHousingUnit = responseCrewToDiscardMessage.getXHousingUnit();
+            int yHousingUnit = responseCrewToDiscardMessage.getYHousingUnit();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseBoxToDiscardMessage responseBoxToDiscardMessage){
+            int idx = responseBoxToDiscardMessage.getIdx();
+            int xBoxStorage = responseBoxToDiscardMessage.getXBoxStorage();
+            int yBoxStorage = responseBoxToDiscardMessage.getYBoxStorage();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseChooseToUseShieldMessage responseChooseToUseShieldMessage){
+            String response = responseChooseToUseShieldMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveProtectionDecision(player, response, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseUseDoubleCannonRequestMessage responseUseDoubleCannonRequestMessage){
+            String response = responseUseDoubleCannonRequestMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveProtectionDecision(player, response, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltiesMessage responseAcceptRewardCreditsAndPenaltiesMessage){
+            String response = responseAcceptRewardCreditsAndPenaltiesMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveRewardAndPenaltiesDecision(player, response, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseLandRequestMessage responseLandRequestMessage){
+            String response = responseLandRequestMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveDecisionToLand(player, response, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltyDaysMessage responseAcceptRewardCreditsAndPenaltyDaysMessage){
+            String response = responseAcceptRewardCreditsAndPenaltyDaysMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveRewardDecision(player, response, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
+            int planetIdx = responsePlanetLandRequestMessage.getIdx();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveDecisionToLandPlanet(player, planetIdx, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if(messageObj instanceof ResponseRewardBoxMessage responseRewardBoxMessage){
+            int idxBox = responseRewardBoxMessage.getIdxBox();
+            int idx = responseRewardBoxMessage.getIdx();
+            int xBoxStorage = responseRewardBoxMessage.getXBoxStorage();
+            int yBoxStorage = responseRewardBoxMessage.getYBoxStorage();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            try {
+                eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        else if (messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
+            String owner = requestSpaceshipMessage.getOwner();
+            SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
+        }
+
+        else if (messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
+            String response = responseContinueTravelMessage.getResponse();
+            EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
+        }
+
+        else if (messageObj instanceof String messageString){
+
+            switch (messageString) {
+                case "Ready":
+                    if(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) {
+                        BuildingController.readyBuilding(gameManager, player, socketWriter);
+
+                    } else if (gameManager.getGame().getPhase().equals(GamePhase.INIT) || gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) {
+                        GameController.ready(gameManager, player, socketWriter);
                     }
-                }
-                break;
+                    break;
 
-            case BUILDING:
+                case "ShowHandComponent":
+                    BuildingController.showHandComponent(gameManager, player, socketWriter);
+                    break;
 
-                if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
-                    int xPlaceComponent = placeComponentMessage.getX();
-                    int yPlaceComponent = placeComponentMessage.getY();
-                    int rPlaceComponent = placeComponentMessage.getRotation();
-                    BuildingController.placeComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
-                }
+                case "PickHiddenComponent":
+                    BuildingController.pickHiddenComponent(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceLastComponentMessage placeLastComponentMessage) {
-                    int xPlaceComponent = placeLastComponentMessage.getX();
-                    int yPlaceComponent = placeLastComponentMessage.getY();
-                    int rPlaceComponent = placeLastComponentMessage.getRotation();
-                    BuildingController.placeLastComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
-                }
+                case "DiscardComponent":
+                    BuildingController.discardComponent(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceHandComponentAndPickHiddenComponentMessage placeHandComponentAndPickComponentMessage) {
-                    int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
-                    int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
-                    int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
-                    BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
-                }
+                case "PutDownEventCardDeck":
+                    BuildingController.putDownEventCardDeck(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceHandComponentAndPickVisibleComponentMessage placeHandComponentAndPickVisibleComponentMessage) {
-                    int xPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getX();
-                    int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
-                    int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
-                    int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
-                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, componentIdx, socketWriter);
-                }
+                case "ShowVisibleComponents":
+                    BuildingController.showVisibleComponents(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceHandComponentAndPickUpEventCardDeckMessage placeHandComponentAndPickUpEventCardDeckMessage) {
-                    int xPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getX();
-                    int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
-                    int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
-                    int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
-                    BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
-                }
+                case "ShowBookedComponents":
+                    BuildingController.showBookedComponents(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceHandComponentAndPickBookedComponentMessage placeHandComponentAndPickBookedComponentMessage) {
-                    int xPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getX();
-                    int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
-                    int rPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getRotation();
-                    int idx = placeHandComponentAndPickBookedComponentMessage.getIdx();
-                    BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, socketWriter);
-                }
+                case "SpaceshipStats":
+                    SpaceshipController.spaceshipStats(gameManager, player, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PlaceHandComponentAndReadyMessage placeHandComponentAndReadyMessageMessage) {
-                    int xPlaceComponent = placeHandComponentAndReadyMessageMessage.getX();
-                    int yPlaceComponent = placeHandComponentAndReadyMessageMessage.getY();
-                    int rPlaceComponent = placeHandComponentAndReadyMessageMessage.getRotation();
-                    BuildingController.placeHandComponentAndReady(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
-                }
+                case "ShowTrack":
+                    GameController.showTrack(gameManager, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
-                    int componentIdx = pickVisibleComponent.getComponentIdx();
-                    BuildingController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter);
-                }
+                case "ResetTimer":
+                    BuildingController.resetTimer(gameManager, socketWriter);
+                    break;
 
-                else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {
-                    int deckIdx = pickUpEventCardDeck.getDeckIdx();
-                    BuildingController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter);
-                }
-
-                else if (messageObj instanceof BookComponentMessage bookComponentMessage) {
-                    int idx = bookComponentMessage.getBookIdx();
-                    BuildingController.bookComponent(gameManager, player, idx, socketWriter);
-                }
-
-                else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
-                    int idx = bookedComponentMessage.getIdx();
-                    BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-
-                else if(messageObj instanceof buildSpaceshipMessage buildSpaceshipMessage) {
-                    int idShip = buildSpaceshipMessage.getIdShip();
-                    BuildingController.buildShip(gameManager,player,idShip,socketWriter);
-                }
-
-
-                else if (messageObj instanceof String messageString) {
-                    switch (messageString){
-
-                        case "ShowHandComponent":
-                            BuildingController.showHandComponent(gameManager, player, socketWriter);
-                            break;
-
-                        case "PickHiddenComponent":
-                            BuildingController.pickHiddenComponent(gameManager, player, socketWriter);
-                            break;
-
-                        case "DiscardComponent":
-                            BuildingController.discardComponent(gameManager, player, socketWriter);
-                            break;
-
-                        case "PutDownEventCardDeck":
-                            BuildingController.putDownEventCardDeck(gameManager, player, socketWriter);
-                            break;
-
-                        case "ShowVisibleComponents":
-                            BuildingController.showVisibleComponents(gameManager, player, socketWriter);
-                            break;
-
-                        case "ShowBookedComponents":
-                            BuildingController.showBookedComponents(gameManager, player, socketWriter);
-                            break;
-
-                        case "SpaceshipStats":
-                            SpaceshipController.spaceshipStats(gameManager, player, socketWriter);
-                            break;
-
-                        case "ShowTrack":
-                            GameController.showTrack(gameManager, socketWriter);
-                            break;
-
-                        case "ResetTimer":
-                            BuildingController.resetTimer(gameManager, socketWriter);
-                            break;
-
-                        case "Ready":
-                            BuildingController.readyBuilding(gameManager, player, socketWriter);
-                            break;
-
-                        default:
-                            System.out.println(messageString + " not allowed");
-                            break;
-                    }
-                }
-                break;
-
-            case START_ADJUSTING:
-                if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
-                    int x = destroyComponentMessage.getX();
-                    int y = destroyComponentMessage.getY();
-                    SpaceshipController.destroyComponentWithoutAnyCheck(gameManager, player, x, y, socketWriter);
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-                break;
-
-            case POPULATING:
-                if(messageObj instanceof PopulatingMessage populatingMessage){
-                    String crewType = populatingMessage.getCrewType();
-                    int xComponent = populatingMessage.getxComponent();
-                    int yComponent = populatingMessage.getyComponent();
-
-                    SpaceshipController.populateComponent(gameManager, player, crewType, xComponent, yComponent, socketWriter);
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-
-                else if(messageObj instanceof String messageString) {
-                    switch (messageString){
-                        case "Ready":
-                            player.setIsReady(true, game);
-                            gameManager.getGameThread().notifyThread();
-                            break;
-                        default:
-                            System.out.println(messageString + " not allowed");
-                            break;
-                    }
-                }
-                break;
-
-            case ADJUSTING:
-                if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
-                    int x = destroyComponentMessage.getX();
-                    int y = destroyComponentMessage.getY();
-                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, x, y, socketWriter);
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-                break;
-
-            case EVENT:
-
-                if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-
-                else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
-                    int howManyWantToUse = responseHowManyDoubleCannonsMessage.getHowManyWantToUse();
-
+                case "RollDice":
                     EventControllerAbstract eventController = gameManager.getEventController();
                     if(eventController == null){
                         socketWriter.sendMessage("EventControllerNull");
@@ -333,247 +476,16 @@ public class SocketListener extends Thread {
                     }
 
                     try {
-                        eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, socketWriter);
+                        eventController.rollDice(player, socketWriter);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                }
+                    break;
 
-                if(messageObj instanceof ResponseHowManyDoubleEnginesMessage responseHowManyDoubleEnginesMessage) {
-                    int howManyWantToUse = responseHowManyDoubleEnginesMessage.getHowManyWantToUse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseBatteryToDiscardMessage responseBatteryToDiscardMessage) {
-                    int xBatteryStorage = responseBatteryToDiscardMessage.getXBatteryStorage();
-                    int yBatteryStorage = responseBatteryToDiscardMessage.getYBatteryStorage();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseCrewToDiscardMessage responseCrewToDiscardMessage){
-                    int xHousingUnit = responseCrewToDiscardMessage.getXHousingUnit();
-                    int yHousingUnit = responseCrewToDiscardMessage.getYHousingUnit();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseBoxToDiscardMessage responseBoxToDiscardMessage){
-                    int idx = responseBoxToDiscardMessage.getIdx();
-                    int xBoxStorage = responseBoxToDiscardMessage.getXBoxStorage();
-                    int yBoxStorage = responseBoxToDiscardMessage.getYBoxStorage();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseChooseToUseShieldMessage responseChooseToUseShieldMessage){
-                    String response = responseChooseToUseShieldMessage.getResponse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveProtectionDecision(player, response, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseUseDoubleCannonRequestMessage responseUseDoubleCannonRequestMessage){
-                    String response = responseUseDoubleCannonRequestMessage.getResponse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveProtectionDecision(player, response, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltiesMessage responseAcceptRewardCreditsAndPenaltiesMessage){
-                    String response = responseAcceptRewardCreditsAndPenaltiesMessage.getResponse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveRewardAndPenaltiesDecision(player, response, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseLandRequestMessage responseLandRequestMessage){
-                    String response = responseLandRequestMessage.getResponse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveDecisionToLand(player, response, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltyDaysMessage responseAcceptRewardCreditsAndPenaltyDaysMessage){
-                    String response = responseAcceptRewardCreditsAndPenaltyDaysMessage.getResponse();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveRewardDecision(player, response, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
-                    int planetIdx = responsePlanetLandRequestMessage.getIdx();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveDecisionToLandPlanet(player, planetIdx, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                if(messageObj instanceof ResponseRewardBoxMessage responseRewardBoxMessage){
-                    int idxBox = responseRewardBoxMessage.getIdxBox();
-                    int idx = responseRewardBoxMessage.getIdx();
-                    int xBoxStorage = responseRewardBoxMessage.getXBoxStorage();
-                    int yBoxStorage = responseRewardBoxMessage.getYBoxStorage();
-
-                    EventControllerAbstract eventController = gameManager.getEventController();
-                    if(eventController == null){
-                        socketWriter.sendMessage("EventControllerNull");
-                        return;
-                    }
-
-                    try {
-                        eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                else if (messageObj instanceof String messageString) {
-                    switch (messageString){
-
-                        case "RollDice":
-                            EventControllerAbstract eventController = gameManager.getEventController();
-                            if(eventController == null){
-                                socketWriter.sendMessage("EventControllerNull");
-                                return;
-                            }
-
-                            try {
-                                eventController.rollDice(player, socketWriter);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                break;
-
-            case TRAVEL:
-                if(messageObj instanceof String messageString) {
-                    switch (messageString){
-
-                        default:
-                            break;
-                    }
-                }
-
-                else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-                    String owner = requestSpaceshipMessage.getOwner();
-                    SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-                }
-
-                else if( messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
-                    String response = responseContinueTravelMessage.getResponse();
-                    EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
-                }
-
-                break;
-
-            case ENDGAME:
-
-                break;
-
-            default:
-                System.out.println("InvalidGamePhase");
-                break;
+                default:
+                    System.out.println(messageString + " not allowed");
+                    break;
+            }
         }
     }
 

@@ -63,7 +63,7 @@ public class ConnectionsCommands {
     }
 
     /**
-     * allows the users to connect and automatically create a game
+     * Allows the users to connect and automatically create a game
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
@@ -72,22 +72,21 @@ public class ConnectionsCommands {
     public static void autoCreate(String[] commandParts) throws InterruptedException {
 
         if(GameData.getSender() instanceof RmiClientSender)
-            connect(new String[]{"connect","127.0.0.1","1099"});
+            connect(new String[]{"connect", "127.0.0.1", "1099"});
         else if (GameData.getSender() instanceof SocketClient)
-            connect(new String[]{"connect","127.0.0.1","8080"});
+            connect(new String[]{"connect", "127.0.0.1", "8080"});
 
         Thread.sleep(500);
 
-        createGame(new String[]{"createGame","player_1","1","2"});
+        createGame(new String[]{"createGame", "player_1", "1", "2"});
 
         Thread.sleep(500);
 
         BuildingCommands.readyPlayer(null);
-
     }
 
     /**
-     * allows the users to connect and automatically create a game
+     * Allows the users to connect and automatically create a game
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
@@ -96,18 +95,16 @@ public class ConnectionsCommands {
     public static void autoJoin(String[] commandParts) throws InterruptedException {
 
         if(GameData.getSender() instanceof RmiClientSender)
-            connect(new String[]{"connect","127.0.0.1","1099"});
+            connect(new String[]{"connect", "127.0.0.1", "1099"});
         else if (GameData.getSender() instanceof SocketClient)
-            connect(new String[]{"connect","127.0.0.1","8080"});
+            connect(new String[]{"connect", "127.0.0.1", "8080"});
 
         Thread.sleep(500);
 
-        joinGame(new String[]{"joinGame",commandParts[1],"player_"+Integer.toString((int) System.currentTimeMillis()/1000).substring(0, 2)});
+        joinGame(new String[]{"joinGame", commandParts[1], "player_" + Integer.toString((int) System.currentTimeMillis()/1000).substring(0, 2)});
 
         Thread.sleep(500);
 
         BuildingCommands.readyPlayer(null);
-
     }
-
 }

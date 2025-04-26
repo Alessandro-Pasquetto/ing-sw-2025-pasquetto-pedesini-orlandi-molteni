@@ -87,7 +87,9 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void buildShip(int idShip){SocketWriter.sendMessage(new buildSpaceshipMessage(idShip));}
+    public void buildShip(int idShip){
+        SocketWriter.sendMessage(new BuildSpaceshipMessage(idShip));
+    }
 
     @Override
     public void pickHiddenComponent(){

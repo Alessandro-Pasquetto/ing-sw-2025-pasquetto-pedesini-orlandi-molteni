@@ -112,7 +112,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         BuildingController.pickHiddenComponent(gameManager, player, virtualClient);
     }
 
-
     @Override
     public void buildShip(VirtualClient virtualClient, int idGame, int idShip) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
@@ -125,10 +124,8 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.buildShip(gameManager,player,idShip,virtualClient);
-
+        BuildingController.buildShip(gameManager, player, idShip, virtualClient);
     }
-
 
     @Override
     public void showVisibleComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
@@ -436,10 +433,12 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        if(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))
+        if(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) {
             BuildingController.readyBuilding(gameManager, player, virtualClient);
-        else
+
+        } else if (gameManager.getGame().getPhase().equals(GamePhase.INIT) || gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) {
             GameController.ready(gameManager, player, virtualClient);
+        }
     }
 
     @Override

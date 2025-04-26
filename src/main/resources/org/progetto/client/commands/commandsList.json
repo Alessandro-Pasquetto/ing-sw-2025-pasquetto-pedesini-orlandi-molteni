@@ -15,9 +15,9 @@
     "usage": "CreateGame <nickname> <level> <numPlayers>"
   },
   {
-    "name": "autoCreate",
+    "name": "AutoCreate",
     "description": "Automatically connect to the correct port and create a new game session.",
-    "usage": "autoCreate"
+    "usage": "AutoCreate"
   },
   {
     "name": "JoinGame",
@@ -25,9 +25,9 @@
     "usage": "JoinGame <id> <nickname>"
   },
   {
-    "name": "autoJoin",
+    "name": "AutoJoin",
     "description": "Automatically connect to the correct port and join an existing game session.",
-    "usage": "JoinGame <id>"
+    "usage": "AutoJoin <id>"
   },
   {
     "name": "ShowHand",
@@ -122,7 +122,7 @@
   {
     "name": "Populate",
     "description": "Populate a component.",
-    "usage": "Populate <Human/OrangeAlien/PurpleAlien> <x> <y>"
+    "usage": "Populate <human/orangeAlien/purpleAlien> <x> <y>"
   },
   {
     "name": "buildShip",

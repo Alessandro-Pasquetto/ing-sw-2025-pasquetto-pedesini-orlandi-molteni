@@ -25,7 +25,7 @@ public class GameController {
     }
 
     public static void ready(GameManager gameManager, Player player, Sender sender) throws RemoteException {
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }

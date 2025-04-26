@@ -1062,26 +1062,31 @@ public class BuildingBoard implements Serializable {
         if(hu.getCrewCount() == 2 || hu.getHasPurpleAlien() || hu.getHasOrangeAlien())
             throw new IllegalStateException("ComponentAlreadyOccupied");
 
-        switch(crewType){
-            case "OrangeAlien":
-                if(hu.getAllowAlienOrange()){
-                    ((HousingUnit) component).setAlienOrange(true);
+        switch (crewType.toLowerCase()) {
+            case "orangealien":
+                if (hu.getAllowAlienOrange()) {
+                    hu.setAlienOrange(true);
                     hu.setCrewCount(1);
-                }else
+                } else {
                     throw new IllegalStateException("CannotContainOrangeAlien");
+                }
                 break;
 
-            case "PurpleAlien":
-                if(hu.getAllowAlienPurple()){
-                    ((HousingUnit) component).setAlienPurple(true);
+            case "purplealien":
+                if (hu.getAllowAlienPurple()) {
+                    hu.setAlienPurple(true);
                     hu.setCrewCount(1);
-                }else
+                } else {
                     throw new IllegalStateException("CannotContainPurpleAlien");
+                }
                 break;
 
-            case "Human":
+            case "human":
                 hu.setCrewCount(hu.getCrewCount() + 1);
                 break;
+
+            default:
+                throw new IllegalStateException("UnknownCrewType");
         }
     }
 }
