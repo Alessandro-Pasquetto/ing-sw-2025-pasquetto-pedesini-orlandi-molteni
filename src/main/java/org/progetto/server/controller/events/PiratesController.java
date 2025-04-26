@@ -189,6 +189,8 @@ public class PiratesController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
         }
     }
 
@@ -230,6 +232,13 @@ public class PiratesController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
+            }
             return;
         }
 
@@ -238,6 +247,13 @@ public class PiratesController extends EventControllerAbstract {
         // Checks if component is a battery storage
         if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidComponent");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
+            }
             return;
         }
 
@@ -257,6 +273,7 @@ public class PiratesController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
 
         } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
@@ -273,6 +290,7 @@ public class PiratesController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
         }
     }
@@ -351,6 +369,7 @@ public class PiratesController extends EventControllerAbstract {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                 break;
         }
     }
@@ -560,6 +579,7 @@ public class PiratesController extends EventControllerAbstract {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage("AskToUseShield");
                 break;
         }
 

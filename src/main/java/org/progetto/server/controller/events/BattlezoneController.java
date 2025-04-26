@@ -204,6 +204,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
+            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
         }
     }
 
@@ -292,6 +294,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
         }
     }
 
@@ -339,6 +343,16 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+
+            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
+            }
             return;
         }
 
@@ -347,6 +361,16 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component is a battery storage
         if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidComponent");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+
+            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
+            }
             return;
         }
 
@@ -368,6 +392,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
 
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
@@ -400,6 +425,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
             }
 
         } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
@@ -414,6 +440,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(1));
             }
         }
     }
@@ -489,7 +516,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      * @throws InterruptedException
      */
-    public void penalty() throws RemoteException, InterruptedException {
+    private void penalty() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.PENALTY)) {
 
             switch (couples.getFirst().getPenalty().getType()){
@@ -618,6 +645,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -626,6 +654,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component is a housing unit
         if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -644,7 +673,8 @@ public class BattlezoneController extends EventControllerAbstract {
             }
 
         } else {
-            sender.sendMessage("CrewNotMemberDiscarded");
+            sender.sendMessage("CrewMemberNotDiscarded");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         }
     }
 
@@ -723,6 +753,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= spaceshipMatrix.length || xBoxStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
             return;
         }
 
@@ -731,6 +762,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if component is a box storage
         if (boxStorage == null || (!boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
             return;
         }
 
@@ -771,6 +803,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("BoxNotDiscarded");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
         }
     }
 
@@ -909,7 +942,6 @@ public class BattlezoneController extends EventControllerAbstract {
             return;
         }
 
-
         if (!player.equals(penaltyPlayer)) {
             sender.sendMessage("NotYourTurn");
             return;
@@ -930,6 +962,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage("AskToUseShield");
                 break;
         }
     }

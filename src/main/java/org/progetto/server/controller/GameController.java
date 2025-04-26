@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.ResponseTrackMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
@@ -37,6 +38,33 @@ public class GameController {
         }
 
         sender.sendMessage("YouAreReady");
+    }
+
+    /**
+     * Handles player decision to show his current stats
+     *
+     * @author Gabriele
+     * @param gameManager current gameManager
+     * @param sender current sender
+     * @throws RemoteException
+     */
+    public static void playerStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        try {
+            String name = player.getName();
+            int credits = player.getCredits();
+            int position = player.getPosition();
+            boolean hasLeft = player.getHasLeft();
+            sender.sendMessage(new ResponsePlayerStatsMessage(name, credits, position, hasLeft));
+
+        }catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
     }
 
     /**

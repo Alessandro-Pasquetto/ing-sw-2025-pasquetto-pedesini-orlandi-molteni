@@ -62,7 +62,7 @@ public class SpaceshipController {
      */
     public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }

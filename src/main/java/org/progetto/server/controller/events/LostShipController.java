@@ -129,6 +129,7 @@ public class LostShipController extends EventControllerAbstract  {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
                 break;
         }
     }
@@ -141,7 +142,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @param sender current sender
      * @throws RemoteException
      */
-    public void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.PENALTY_EFFECT)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -186,6 +187,7 @@ public class LostShipController extends EventControllerAbstract  {
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -193,6 +195,7 @@ public class LostShipController extends EventControllerAbstract  {
 
         if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -211,6 +214,7 @@ public class LostShipController extends EventControllerAbstract  {
 
         } else {
             sender.sendMessage("CrewMemberNotDiscarded");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         }
     }
 

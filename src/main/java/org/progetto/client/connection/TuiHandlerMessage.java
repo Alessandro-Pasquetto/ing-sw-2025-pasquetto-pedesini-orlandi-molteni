@@ -46,13 +46,15 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
-            System.out.println(responseSpaceshipMessage.getOwner() + "'s spaceship:");
-            System.out.println();
-            TuiPrinters.printSpaceship(responseSpaceshipMessage.getSpaceship());
+            TuiPrinters.printSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
         }
 
         else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {
             TuiPrinters.printSpaceshipStats(responseSpaceshipStatsMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof ResponsePlayerStatsMessage responsePlayerStatsMessage) {
+            TuiPrinters.printPlayerStats(responsePlayerStatsMessage.getPlayerName(), responsePlayerStatsMessage.getCredits(), responsePlayerStatsMessage.getPosition(), responsePlayerStatsMessage.getHasLeft());
         }
 
         else if (messageObj instanceof ResponseTrackMessage responseTrackMessage) {
@@ -318,8 +320,16 @@ public class TuiHandlerMessage {
                     System.out.println("Crew member discarded");
                     break;
 
-                case "CrewNotMemberDiscarded":
+                case "CrewMemberNotDiscarded":
                     System.out.println("Unable to discard the crew member!");
+                    break;
+
+                case "BoxDiscarded":
+                    System.out.println("Box discarded");
+                    break;
+
+                case "BoxNotDiscarded":
+                    System.out.println("Unable to discard the box!");
                     break;
 
                 case "YouAreSafe":

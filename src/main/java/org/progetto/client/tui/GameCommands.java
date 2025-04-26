@@ -23,6 +23,19 @@ public class GameCommands {
     // =======================
 
     /**
+     * Allows a player to get his stats
+     * usage: PlayerStats
+     *
+     * @author Lorenzo
+     * @param commandParts
+     */
+    public static void playerStats(String[] commandParts){
+        Sender sender = GameData.getSender();
+
+        sender.playerStats();
+    }
+
+    /**
      * Allows a player to show a spaceship
      * usage: ShowSpaceship player_name
      *

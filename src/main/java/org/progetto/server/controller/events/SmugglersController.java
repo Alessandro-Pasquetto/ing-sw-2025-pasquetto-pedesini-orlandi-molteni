@@ -185,6 +185,8 @@ public class SmugglersController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
         }
     }
 
@@ -217,6 +219,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             return;
         }
 
@@ -225,6 +228,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if component is a battery storage
         if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             return;
         }
 
@@ -245,6 +249,7 @@ public class SmugglersController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
 
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
@@ -269,6 +274,7 @@ public class SmugglersController extends EventControllerAbstract {
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
         }
     }
@@ -382,6 +388,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= spaceshipMatrix.length || xBoxStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
             return;
         }
 
@@ -390,6 +397,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if component is a box storage
         if (boxStorage == null || (!boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
             return;
         }
 
@@ -428,6 +436,7 @@ public class SmugglersController extends EventControllerAbstract {
             }
         } else {
             sender.sendMessage("BoxNotDiscarded");
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
         }
     }
 
@@ -466,6 +475,7 @@ public class SmugglersController extends EventControllerAbstract {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
                 break;
         }
     }
@@ -499,6 +509,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if reward box index is correct
         if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
             sender.sendMessage("IncorrectRewardIndex");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 
@@ -513,6 +524,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= matrix.length || xBoxStorage >= matrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 
@@ -521,6 +533,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if it is a storage component
         if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
         }
 
@@ -535,6 +548,7 @@ public class SmugglersController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("BoxNotChosen");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }
 
         // Checks if all boxes were chosen

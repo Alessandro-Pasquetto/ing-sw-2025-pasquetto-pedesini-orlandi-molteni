@@ -5,9 +5,9 @@
     "usage": "Connect <ip> <port>"
   },
   {
-    "name": "ShowWaitingGames",
+    "name": "ShowGames",
     "description": "Show the waiting games.",
-    "usage": "ShowWaitingGames"
+    "usage": "ShowGames"
   },
   {
     "name": "CreateGame",
@@ -105,6 +105,11 @@
     "usage": "Close"
   },
   {
+    "name": "PlayerStats",
+    "description": "Show player's stats.",
+    "usage": "PlayerStats"
+  },
+  {
     "name": "ShowShip",
     "description": "Show the structure of a player's spaceship.",
     "usage": "ShowShip <nickname>"
@@ -122,7 +127,7 @@
   {
     "name": "Populate",
     "description": "Populate a component.",
-    "usage": "Populate <human/orangeAlien/purpleAlien> <x> <y>"
+    "usage": "Populate <human/orange/purple> <x> <y>"
   },
   {
     "name": "buildShip",

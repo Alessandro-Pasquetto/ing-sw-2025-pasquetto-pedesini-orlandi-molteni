@@ -174,6 +174,8 @@ public class SlaversController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
         }
     }
 
@@ -206,6 +208,7 @@ public class SlaversController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             return;
         }
 
@@ -214,6 +217,7 @@ public class SlaversController extends EventControllerAbstract {
         // Checks if component is a battery storage
         if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             return;
         }
 
@@ -232,6 +236,7 @@ public class SlaversController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("BatteryNotDiscarded");
+            sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
         }
     }
 
@@ -325,6 +330,7 @@ public class SlaversController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -333,6 +339,7 @@ public class SlaversController extends EventControllerAbstract {
         // Checks if component is a housing unit
         if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
@@ -352,6 +359,7 @@ public class SlaversController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("CrewMemberNotDiscarded");
+            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         }
     }
 
@@ -384,6 +392,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     default:
                         sender.sendMessage("IncorrectResponse");
+                        sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
                         break;
                 }
             }

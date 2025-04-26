@@ -283,6 +283,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void playerStats(){
+        try{
+            server.playerStats(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        }catch (RemoteException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void showSpaceship(String owner){
         try{
             server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(),owner);

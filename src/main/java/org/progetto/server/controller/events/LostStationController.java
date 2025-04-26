@@ -132,6 +132,7 @@ public class LostStationController extends EventControllerAbstract {
 
             default:
                 sender.sendMessage("IncorrectResponse");
+                sender.sendMessage("LandRequest");
                 break;
         }
     }
@@ -204,6 +205,7 @@ public class LostStationController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("BoxNotChosen");
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }
 
         // Checks if all boxes were chosen

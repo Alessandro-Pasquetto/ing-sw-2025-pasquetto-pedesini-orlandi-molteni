@@ -217,7 +217,7 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         break;
 
-                    case "SHOWWAITINGGAMES":
+                    case "SHOWGAMES":
                         if (isValidCommand(commandParts.length, 1))
                             ConnectionsCommands.showWaitingGames();
                         else
@@ -258,7 +258,6 @@ public class TuiCommandFilter {
                         else
                             expectedFormat(commandType);
                         break;
-
 
                     default:
                         if (commands.get(commandType.toLowerCase()) == null)
@@ -377,6 +376,13 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
                             BuildingCommands.readyPlayer(commandParts);
@@ -415,6 +421,13 @@ public class TuiCommandFilter {
                         else {
                             expectedFormat(commandType);
                         }
+                        break;
+
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
                         break;
 
                     case "SHOWTRACK":
@@ -458,6 +471,13 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
                     case "SHOWTRACK":
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.showTrack(commandParts);
@@ -499,6 +519,13 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
                     case "SHOWTRACK":
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.showTrack(commandParts);
@@ -531,6 +558,13 @@ public class TuiCommandFilter {
                         else {
                             expectedFormat(commandType);
                         }
+                        break;
+
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
                         break;
 
                     case "SHOWTRACK":

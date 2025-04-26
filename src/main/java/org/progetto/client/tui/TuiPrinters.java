@@ -25,6 +25,21 @@ public class TuiPrinters {
     private static final String BLUE = "\u001B[34m";
 
     // =======================
+    // PLAYER
+    // =======================
+
+    public static void printPlayerStats(String name, int credits, int position, boolean hasLeft) {
+
+        System.out.println("\uD83E\uDDCD Your Stats:");
+        System.out.println();
+
+        System.out.printf("│ Name     : %s%n", name);
+        System.out.printf("│ Credits  : %d%n", credits);
+        System.out.printf("│ Position : %d%n", position);
+        System.out.printf("│ Has left : %s%n", hasLeft ? "YES" : "NO");
+    }
+
+    // =======================
     // COMPONENTS
     // =======================
 
@@ -478,7 +493,14 @@ public class TuiPrinters {
     // SPACESHIP
     // =======================
 
-    public static void printSpaceship(Spaceship spaceship) {
+    public static void printSpaceship(String owner, Spaceship spaceship) {
+
+        if (GameData.getNamePlayer().equals(owner)) {
+            System.out.println("\uD83D\uDE80 Your Spaceship:");
+        } else {
+            System.out.println("\uD83D\uDE80 " + owner + "'s Spaceship:");
+        }
+        System.out.println();
 
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
         int rows = spaceshipMatrix.length;
@@ -534,9 +556,9 @@ public class TuiPrinters {
 
     public static void printSpaceshipStats(Spaceship spaceship) {
 
-        System.out.println("Your Spaceship Stats:");
+        System.out.println("🚀 Your Spaceship Stats:");
 
-        System.out.println("\n🔧 Attributes");
+        System.out.println("\nAttributes");
         System.out.printf("│ Level                : %d%n", spaceship.getLevelShip());
         System.out.printf("│ Destroyed components : %d%n", spaceship.getDestroyedCount());
         System.out.printf("│ Crew members         : %d%n", spaceship.getCrewCount());
@@ -545,19 +567,19 @@ public class TuiPrinters {
         System.out.printf("│ Purple alien         : %b%n", spaceship.getAlienPurple());
         System.out.printf("│ Orange alien         : %b%n", spaceship.getAlienOrange());
 
-        System.out.println("\n🔫 Cannons");
+        System.out.println("\nCannons");
         System.out.printf("│ Normal power         : %.1f%n", spaceship.getNormalShootingPower());
         System.out.printf("│ Half double cannons  : %d%n", spaceship.getHalfDoubleCannonCount());
         System.out.printf("│ Full double cannons  : %d%n", spaceship.getFullDoubleCannonCount());
 
-        System.out.println("\n🚀 Engines");
+        System.out.println("\nEngines");
         System.out.printf("│ Normal engine power  : %d%n", spaceship.getNormalEnginePower());
         System.out.printf("│ Double engines       : %d%n", spaceship.getDoubleEngineCount());
 
-        System.out.println("\n🛡  Shields (up, right, down, left)");
+        System.out.println("\nShields (up, right, down, left)");
         System.out.printf("│ Shields              : [%d, %d, %d, %d]%n", spaceship.getIdxShieldCount(0), spaceship.getIdxShieldCount(1), spaceship.getIdxShieldCount(2), spaceship.getIdxShieldCount(3));
 
-        System.out.println("\n📦 Storage (red, yellow, green, blue)");
+        System.out.println("\nStorage (red, yellow, green, blue)");
         int[] boxes = spaceship.getBoxCounts();
         System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
     }
@@ -736,7 +758,7 @@ public class TuiPrinters {
 
     public static void printTrack(ArrayList<Player> travelers, Player[] track) {
 
-        System.out.println("Current Track:\n");
+        System.out.println("♟\uFE0F Current Track:\n");
 
         if (!travelers.isEmpty()) {
             for (int i = 0; i < travelers.size(); i++) {
@@ -752,11 +774,11 @@ public class TuiPrinters {
             Player current = track[i];
 
             if (current == null) {
-                System.out.print("[  ]");
+                System.out.print("[  ] ");
 
             } else {
                 int playerIndex = travelers.indexOf(current);
-                System.out.print("[P" + (playerIndex + 1) + "]");
+                System.out.print("[P" + (playerIndex + 1) + "] ");
             }
         }
 

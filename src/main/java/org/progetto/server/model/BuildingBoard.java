@@ -368,11 +368,16 @@ public class BuildingBoard implements Serializable {
 
                 case HOUSING_UNIT:
                     HousingUnit hu = (HousingUnit) destroyedComponent;
-                    if (hu.getHasOrangeAlien())
-                        spaceship.setAlienOrange(false);
 
-                    if (hu.getHasPurpleAlien())
+                    if (hu.getHasOrangeAlien()) {
+                        spaceship.addNormalEnginePower(-2);
+                        spaceship.setAlienOrange(false);
+                    }
+
+                    if (hu.getHasPurpleAlien()) {
+                        spaceship.addNormalShootingPower(-2);
                         spaceship.setAlienPurple(false);
+                    }
 
                     spaceship.addCrewCount(-hu.getCrewCount());
                     break;
@@ -934,7 +939,7 @@ public class BuildingBoard implements Serializable {
 
                     case BATTERY_STORAGE:
                         BatteryStorage bs = (BatteryStorage) component;
-                        bs.incrementItemsCount(spaceship,bs.getCapacity());
+                        bs.incrementItemsCount(spaceship, bs.getCapacity());
                         break;
 
                     default:
@@ -1063,26 +1068,28 @@ public class BuildingBoard implements Serializable {
             throw new IllegalStateException("ComponentAlreadyOccupied");
 
         switch (crewType.toLowerCase()) {
-            case "orangealien":
+            case "orange":
                 if (hu.getAllowAlienOrange()) {
                     hu.setAlienOrange(true);
-                    hu.setCrewCount(1);
+                    hu.incrementCrewCount(spaceship,1);
+                    spaceship.addNormalEnginePower(2);
                 } else {
                     throw new IllegalStateException("CannotContainOrangeAlien");
                 }
                 break;
 
-            case "purplealien":
+            case "purple":
                 if (hu.getAllowAlienPurple()) {
                     hu.setAlienPurple(true);
-                    hu.setCrewCount(1);
+                    hu.incrementCrewCount(spaceship,1);
+                    spaceship.addNormalShootingPower(2);
                 } else {
                     throw new IllegalStateException("CannotContainPurpleAlien");
                 }
                 break;
 
             case "human":
-                hu.setCrewCount(hu.getCrewCount() + 1);
+                hu.incrementCrewCount(spaceship,1);
                 break;
 
             default:

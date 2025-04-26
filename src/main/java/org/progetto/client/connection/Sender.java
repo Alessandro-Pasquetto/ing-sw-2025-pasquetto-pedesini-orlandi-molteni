@@ -53,6 +53,8 @@ public interface Sender {
 
     void resetTimer();
 
+    void playerStats();
+
     void showSpaceship(String owner);
 
     void spaceshipStats();
