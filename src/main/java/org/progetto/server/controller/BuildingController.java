@@ -143,28 +143,58 @@ public class BuildingController {
 
                 switch (idShip) {
                     case 1:
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-                        bb.placeComponent(3, 2, 1);
-
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(1, 2, 1);
-
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
-                        break;
-
-                    case 2:
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 0}, "imgPath", 3));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
                         bb.placeComponent(2, 0, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath", 3));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(1, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(1, 2, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(0, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
                         bb.placeComponent(2, 3, 0);
 
-                        //Send built ship
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(1, 3, 0);
 
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(0, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(0, 4, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(1, 4, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.placeComponent(3, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(3, 3, 2);
+
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(4, 3, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(3, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(4, 4, 0);
+
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
                         break;
 
                     default:
@@ -245,15 +275,80 @@ public class BuildingController {
                         sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
                         break;
 
+                    case 2:
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(4, 1, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.placeComponent(2, 1, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.placeComponent(2, 0, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(1, 1, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(2, 2, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.placeComponent(1, 2, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(3, 3, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(2, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(1, 3, 1);
+
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(0, 3, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(0, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(4, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(4, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(5, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(5, 3, 1);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(5, 4, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 1));
+                        bb.placeComponent(6, 2, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(6, 4, 0);
+
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        break;
+
                     default:
                         sender.sendMessage("IDShipOutOfBounds");
                 }
+
             }
+
         } catch (IllegalStateException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     /**
      * Handles player decision to show visible components
