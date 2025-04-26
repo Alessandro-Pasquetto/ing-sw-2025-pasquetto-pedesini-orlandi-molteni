@@ -78,7 +78,7 @@ public class GameThread extends Thread {
 
                         while(!BuildingController.checkAllNotReadyStartShipValidity(gameManager)){
                             System.out.println("Adjusting spaceships...");
-                            game.setPhase(GamePhase.START_ADJUSTING);
+                            game.setPhase(GamePhase.ADJUSTING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
                             // Waiting for adjusting spaceship (don't do another phase for this, bcs custom actions after this)

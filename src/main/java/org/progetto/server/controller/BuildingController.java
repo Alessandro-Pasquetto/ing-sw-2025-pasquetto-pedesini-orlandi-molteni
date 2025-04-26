@@ -94,7 +94,7 @@ public class BuildingController {
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck.equals(player)) {
+            if(player.equals(playerCheck)) {
                 sender.sendMessage("FullHandEventDeck");
                 return;
             }

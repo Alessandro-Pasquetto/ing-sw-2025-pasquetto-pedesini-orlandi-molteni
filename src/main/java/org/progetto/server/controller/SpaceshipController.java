@@ -37,7 +37,7 @@ public class SpaceshipController {
      */
     public static void showSpaceship(GameManager gameManager, String player, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }
@@ -62,7 +62,7 @@ public class SpaceshipController {
      */
     public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }
@@ -273,7 +273,7 @@ public class SpaceshipController {
      */
     public static void startDestroyComponent(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.START_ADJUSTING))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
             sender.sendMessage("IncorrectPhase");
             return;
         }

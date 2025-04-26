@@ -1089,7 +1089,7 @@ public class BuildingBoard implements Serializable {
                 break;
 
             case "human":
-                hu.incrementCrewCount(spaceship,1);
+                hu.incrementCrewCount(spaceship, 1);
                 break;
 
             default:

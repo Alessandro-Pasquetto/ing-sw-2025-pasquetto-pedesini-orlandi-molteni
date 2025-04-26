@@ -398,7 +398,7 @@ public class TuiCommandFilter {
                 }
                 break;
 
-            case "START_ADJUSTING", "ADJUSTING":
+            case "ADJUSTING":
                 switch (commandType) {
                     case "DESTROY":
                         if (isValidCommand(commandParts.length, 3))
