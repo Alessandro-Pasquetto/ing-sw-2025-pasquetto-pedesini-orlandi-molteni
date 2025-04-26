@@ -157,6 +157,18 @@ public class Game {
         }
     }
 
+    public synchronized Player[] getEventDeckAvailableCopy() {
+        synchronized (eventDeckAvailable) {
+            Player[] eventDeckAvailableCopy = new Player[eventDeckAvailable.length];
+
+            for (int i = 0; i < eventDeckAvailable.length; i++) {
+                eventDeckAvailableCopy[i] = eventDeckAvailable[i];
+            }
+
+            return eventDeckAvailableCopy;
+        }
+    }
+
     // =======================
     // OTHER METHODS
     // =======================

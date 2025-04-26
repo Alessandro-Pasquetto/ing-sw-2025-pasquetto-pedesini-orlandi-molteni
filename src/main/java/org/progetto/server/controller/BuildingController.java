@@ -93,6 +93,13 @@ public class BuildingController {
             return;
         }
 
+        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if(playerCheck.equals(player)) {
+                sender.sendMessage("FullHandEventDeck");
+                return;
+            }
+        }
+
         try{
             Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
             sender.sendMessage(new PickedComponentMessage(pickedComponent));
@@ -424,6 +431,13 @@ public class BuildingController {
         if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;
+        }
+
+        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if(playerCheck.equals(player)) {
+                sender.sendMessage("FullHandEventDeck");
+                return;
+            }
         }
 
         try{
@@ -999,6 +1013,13 @@ public class BuildingController {
             return;
         }
 
+        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if(playerCheck.equals(player)) {
+                sender.sendMessage("FullHandEventDeck");
+                return;
+            }
+        }
+
         try{
             player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
@@ -1046,6 +1067,13 @@ public class BuildingController {
         if(player.getSpaceship().getBuildingBoard().getHandComponent() != null){
             sender.sendMessage("FullHandComponent");
             return;
+        }
+
+        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if(playerCheck.equals(player)) {
+                sender.sendMessage("FullHandEventDeck");
+                return;
+            }
         }
 
         if(gameManager.getGame().getLevel() == 1){
