@@ -39,7 +39,7 @@
 
 
     <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="341.0" preserveRatio="true">
-        <Image url="@img/items/Green.png" />
+        <Image url="@img/items/GreenBox.png" />
     </ImageView>
 
     <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="443.0" preserveRatio="true">
@@ -47,7 +47,7 @@
     </ImageView>
 
     <ImageView fx:id="provaAlienImage" fitHeight="35" fitWidth="35" layoutX="89.0" layoutY="491.0" preserveRatio="true">
-        <Image url="@img/items/Alien.png" />
+        <Image url="@img/items/OrangeAlien.png" />
     </ImageView>
 
     <ImageView fx:id="provaBatteryImage" fitHeight="45" fitWidth="18" layoutX="98.0" layoutY="387.0" preserveRatio="true">
