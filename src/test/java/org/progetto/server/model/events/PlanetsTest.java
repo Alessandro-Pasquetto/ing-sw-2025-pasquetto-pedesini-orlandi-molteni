@@ -39,7 +39,7 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", rewardsForPlanets, -2);
 
         assertArrayEquals(new boolean[]{false, false, false}, planets.getPlanetsTaken());
     }
@@ -65,14 +65,14 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", rewardsForPlanets, -2);
 
         assertEquals(rewardsForPlanets, planets.getRewardsForPlanets());
     }
 
     @Test
     void getPenaltyDays() {
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
         assertEquals(-2, planets.getPenaltyDays());
     }
 
@@ -103,7 +103,7 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", rewardsForPlanets, -2);
 
         // Player 1 chooses planet1
         assertTrue(planets.choosePlanet(p1, 0));
@@ -133,7 +133,7 @@ class PlanetsTest {
         Player[] track;
         track = board.getTrack();
 
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", new ArrayList<ArrayList<Box>>(), -2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         Box boxR = Box.RED;
@@ -201,7 +201,7 @@ class PlanetsTest {
         rewardsForPlanets.add(planet3);
 
         // Card creation
-        Planets planets = new Planets(CardType.PLANETS,2, "imgSrc", rewardsForPlanets, -2);
+        Planets planets = new Planets(CardType.PLANETS, 2, "imgSrc", rewardsForPlanets, -2);
 
         // Player 1 chooses planet2
         planets.choosePlanet(p1, 1);

@@ -101,7 +101,7 @@ public class ConnectionsCommands {
 
         Thread.sleep(500);
 
-        joinGame(new String[]{"joinGame", commandParts[1], "player_" + Long.toString((long)System.currentTimeMillis()/10).substring(10,12)});
+        joinGame(new String[]{"joinGame", commandParts[1], "player_" + Long.toString((long)System.currentTimeMillis()/10).substring(10, 12)});
 
         Thread.sleep(500);
 

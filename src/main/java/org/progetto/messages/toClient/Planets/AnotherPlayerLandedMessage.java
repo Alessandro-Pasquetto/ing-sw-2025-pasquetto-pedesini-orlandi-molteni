@@ -16,7 +16,7 @@ public class AnotherPlayerLandedMessage implements Serializable {
     // =======================
     // CONSTRUCTORS
     // =======================
-    public AnotherPlayerLandedMessage(Player player,int planetIdx) {
+    public AnotherPlayerLandedMessage(Player player, int planetIdx) {
         this.player = player;
         this.planetIdx = planetIdx;
     }

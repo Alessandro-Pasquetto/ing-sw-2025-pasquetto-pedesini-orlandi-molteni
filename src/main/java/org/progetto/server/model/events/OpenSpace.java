@@ -8,7 +8,7 @@ public class OpenSpace extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public OpenSpace(CardType type,int level, String imgSrc) {
+    public OpenSpace(CardType type, int level, String imgSrc) {
         super(type, level, imgSrc);
     }
 

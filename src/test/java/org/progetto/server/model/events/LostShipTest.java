@@ -31,30 +31,30 @@ class LostShipTest {
     @Test
     void chooseDiscardedCrew() {
 
-        Player mario = new Player("mario",0 ,2);
+        Player mario = new Player("mario", 0 , 2);
 
         HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        LostShip lostship = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, 3);
-        crew.incrementCrewCount(mario.getSpaceship(),2);
+        LostShip lostship = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 3, 3);
+        crew.incrementCrewCount(mario.getSpaceship(), 2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(lostship.chooseDiscardedCrew(mario.getSpaceship(),notHouse));
+        assertFalse(lostship.chooseDiscardedCrew(mario.getSpaceship(), notHouse));
 
         //removes one crew member from the Housing Unit
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),crew));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), crew));
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
         orange.setAlienOrange(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),orange));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), orange));
         assertFalse(crew.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(),purple));
+        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), purple));
         assertFalse(crew.getHasPurpleAlien());
     }
 
@@ -67,8 +67,8 @@ class LostShipTest {
         board.addTraveler(player2);
         board.addTravelersInTrack(1);
 
-        LostShip lostShip1 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 3, -3);
-        LostShip lostShip2 = new LostShip(CardType.LOSTSHIP,2, "imgPath", 1, 2, -2);
+        LostShip lostShip1 = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 3, -3);
+        LostShip lostShip2 = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 2, -2);
 
         lostShip1.rewardPenalty(board, player1);
 

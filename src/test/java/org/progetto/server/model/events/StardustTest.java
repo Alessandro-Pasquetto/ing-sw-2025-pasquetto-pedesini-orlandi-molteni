@@ -49,7 +49,7 @@ class StardustTest {
         // Checks spaceship validity
         buildingBoard1.checkStartShipValidity();
 
-        Stardust stardust = new Stardust(CardType.STARDUST,2, "imgSrc");
+        Stardust stardust = new Stardust(CardType.STARDUST, 2, "imgSrc");
 
         // Calls penalty method
         stardust.penalty(board, player1);

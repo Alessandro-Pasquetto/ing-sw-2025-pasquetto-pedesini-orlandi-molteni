@@ -25,7 +25,7 @@ class SmugglersControllerTest {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes);
         gameManager.getGame().setActiveEventCard(smugglers);
 
         Player p1 = new Player("mario", 0, 1);
@@ -55,9 +55,9 @@ class SmugglersControllerTest {
         gameManager.getGame().getBoard().addTraveler(p4);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 3);
-        BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
-        BoxStorage bx3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 3);
+        BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
+        BoxStorage bx3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
 
         BuildingBoard bb = p1.getSpaceship().getBuildingBoard();
         bb.setHandComponent(bx1);
@@ -74,7 +74,7 @@ class SmugglersControllerTest {
         bx3.addBox(p1.getSpaceship(), Box.YELLOW, 0);
         bx3.addBox(p1.getSpaceship(), Box.GREEN, 1);
 
-        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(batteryStorage2);
         bb2.placeComponent(2, 1, 0);
@@ -86,7 +86,7 @@ class SmugglersControllerTest {
         bb4.placeComponent(2, 1, 0);
         bb4.initSpaceshipParams();
 
-        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage);
         bb3.placeComponent(2, 1, 0);
@@ -94,8 +94,8 @@ class SmugglersControllerTest {
         batteryStorage.incrementItemsCount(p3.getSpaceship(), 2);
         p3.getSpaceship().addBatteriesCount(2);
 
-        BoxStorage bx4 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
-        BoxStorage bx5 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BoxStorage bx4 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
+        BoxStorage bx5 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         bb3.setHandComponent(bx4);
         bb3.placeComponent(1, 1, 0);
         bb3.setHandComponent(bx5);

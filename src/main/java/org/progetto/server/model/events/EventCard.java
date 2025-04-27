@@ -16,7 +16,7 @@ public abstract class EventCard implements Serializable {
     // CONSTRUCTOR
     // =======================
 
-    public EventCard(CardType type, int level,String imgSrc) {
+    public EventCard(CardType type, int level, String imgSrc) {
         this.type = type;
         this.level = level;
         this.imgSrc = imgSrc;

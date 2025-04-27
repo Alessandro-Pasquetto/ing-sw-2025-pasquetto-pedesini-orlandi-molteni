@@ -122,7 +122,7 @@ class BattlezoneTest {
 
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
 
-        Player mario = new Player("mario",0,2);
+        Player mario = new Player("mario", 0, 2);
 
         HousingUnit housingUnit0 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
@@ -138,11 +138,11 @@ class BattlezoneTest {
         HousingUnit housingUnitAlienPurple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
         housingUnitAlienPurple.setAlienPurple(true);
 
-        assertFalse(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit0));
-        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit1));
-        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnit2));
-        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnitAlienOrange));
-        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(),housingUnitAlienPurple));
+        assertFalse(battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit0));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit1));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit2));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnitAlienOrange));
+        assertTrue(battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnitAlienPurple));
 
         assertEquals(0, housingUnit1.getCrewCount());
         assertEquals(1, housingUnit2.getCrewCount());
@@ -196,7 +196,7 @@ class BattlezoneTest {
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
         bb1.placeComponent(3, 3, 0);
 
-        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE,2 , "img", new ArrayList<>());
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2 , "img", new ArrayList<>());
 
         Projectile s1 = new Projectile(ProjectileSize.BIG, 0);
         Projectile s2 = new Projectile(ProjectileSize.SMALL, 1);
@@ -313,9 +313,9 @@ class BattlezoneTest {
         Spaceship s = new Spaceship(1, 0);
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 1, "img", new ArrayList<>());
 
-        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
-        bs1.addBox(s, Box.YELLOW,2);
-        bs1.addBox(s, Box.GREEN,1);
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
+        bs1.addBox(s, Box.YELLOW, 2);
+        bs1.addBox(s, Box.GREEN, 1);
 
 //        for (int i = 0; i < bs1.getCapacity(); i++) {
 //            if(bs1.getBoxStorage()[i] == null)
@@ -340,10 +340,10 @@ class BattlezoneTest {
 //        }
 //        System.out.println();
 
-        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
 
-        bs2.addBox(s, Box.GREEN,0);
-        bs2.addBox(s, Box.RED,2);
+        bs2.addBox(s, Box.GREEN, 0);
+        bs2.addBox(s, Box.RED, 2);
 
 //        for (int i = 0; i < bs2.getCapacity(); i++) {
 //            if(bs2.getBoxStorage()[i] == null)
@@ -358,10 +358,10 @@ class BattlezoneTest {
         assertTrue(battlezone.chooseDiscardedBox(s, bs2, 2));
         assertFalse(battlezone.chooseDiscardedBox(s, bs2, 3));
 
-        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
+        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
 
-        bs3.addBox(s, Box.GREEN,0);
-        bs3.addBox(s, Box.BLUE,1);
+        bs3.addBox(s, Box.GREEN, 0);
+        bs3.addBox(s, Box.BLUE, 1);
 
         assertTrue(battlezone.chooseDiscardedBox(s, bs2, 0));
         assertFalse(battlezone.chooseDiscardedBox(s, bs3, 1));
@@ -374,22 +374,22 @@ class BattlezoneTest {
     @Test
     void chooseDiscardedBattery() {
 
-        Player mario = new Player("mario",0,2);
+        Player mario = new Player("mario", 0, 2);
 
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(),2);
+        battery.incrementItemsCount(mario.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(battlezone.chooseDiscardedBattery(mario.getSpaceship(),(BatteryStorage) notBattery));
+        assertFalse(battlezone.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage

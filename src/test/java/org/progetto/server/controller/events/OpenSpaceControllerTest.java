@@ -49,7 +49,7 @@ class OpenSpaceControllerTest {
         gameManager.getGame().getBoard().addTraveler(p2);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(batteryStorage2);
         bb2.placeComponent(2, 1, 0);
@@ -57,7 +57,7 @@ class OpenSpaceControllerTest {
         batteryStorage2.incrementItemsCount(p2.getSpaceship(), 2);
         p2.getSpaceship().addBatteriesCount(2);
 
-        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage3);
         bb3.placeComponent(2, 1, 0);

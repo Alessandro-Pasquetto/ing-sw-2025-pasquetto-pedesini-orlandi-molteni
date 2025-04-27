@@ -13,72 +13,72 @@ class SlaversTest {
 
     @Test
     void getFirePowerRequired() {
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         assertEquals(5, slavers.getFirePowerRequired());
     }
 
     @Test
     void getPenaltyCrew() {
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         assertEquals(2, slavers.getPenaltyCrew());
     }
 
     @Test
     void getPenaltyDays() {
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         assertEquals(-3, slavers.getPenaltyDays());
     }
 
     @Test
     void getRewardCredits() {
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         assertEquals(3, slavers.getRewardCredits());
     }
 
     @Test
     void chooseDiscardedCrew() {
 
-        Player mario = new Player("mario",0,2);
+        Player mario = new Player("mario", 0, 2);
 
         HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit orange = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit purple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        Slavers slavers = new Slavers(CardType.SLAVERS, 2,"imgPath", 5, 2, -3, 3);
-        crew.incrementCrewCount(mario.getSpaceship(),2);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
+        crew.incrementCrewCount(mario.getSpaceship(), 2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedCrew(mario.getSpaceship(),notHouse));
+        assertFalse(slavers.chooseDiscardedCrew(mario.getSpaceship(), notHouse));
 
         //removes one crew member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(),crew));
+        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), crew));
         assertEquals(1, crew.getCrewCount());
         //removes an orange alien
         orange.setAlienOrange(true);
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(),orange));
+        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), orange));
         assertFalse(crew.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(),purple));
+        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), purple));
         assertFalse(crew.getHasPurpleAlien());
     }
 
     @Test
     void chooseDiscardedBattery() {
 
-        Player mario = new Player("mario",0,2);
+        Player mario = new Player("mario", 0, 2);
 
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(),2);
+        battery.incrementItemsCount(mario.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(),(BatteryStorage) notBattery));
+        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertTrue(slavers.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
@@ -86,7 +86,7 @@ class SlaversTest {
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
     }
 
@@ -100,8 +100,8 @@ class SlaversTest {
 
         board.addTravelersInTrack(1);
 
-        Slavers slavers1 = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
-        Slavers slavers2 = new Slavers(CardType.SLAVERS,2, "imgPath", 6, 3, -2, 4);
+        Slavers slavers1 = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers2 = new Slavers(CardType.SLAVERS, 2, "imgPath", 6, 3, -2, 4);
 
         slavers1.rewardPenalty(board, player1);
 
@@ -124,8 +124,8 @@ class SlaversTest {
     void battleResult() {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Slavers slavers1 = new Slavers(CardType.SLAVERS, 2,"imgPath", 5, 2, -3, 3);
-        Slavers slavers2 = new Slavers(CardType.SLAVERS, 2,"imgPath", 6, 3, -2, 4);
+        Slavers slavers1 = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers2 = new Slavers(CardType.SLAVERS, 2, "imgPath", 6, 3, -2, 4);
 
         //compares a power equal to the one required
         assertEquals(0, slavers1.battleResult(player1, 5));

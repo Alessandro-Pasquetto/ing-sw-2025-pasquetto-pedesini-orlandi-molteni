@@ -12,7 +12,7 @@ public class AnotherPlayerBookedComponentMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerBookedComponentMessage(String namePlayer,String imgSrcBookedComponent, int bookedIndex) {
+    public AnotherPlayerBookedComponentMessage(String namePlayer, String imgSrcBookedComponent, int bookedIndex) {
         this.namePlayer = namePlayer;
         this.imgSrcBookedComponent = imgSrcBookedComponent;
         this.bookedIndex = bookedIndex;

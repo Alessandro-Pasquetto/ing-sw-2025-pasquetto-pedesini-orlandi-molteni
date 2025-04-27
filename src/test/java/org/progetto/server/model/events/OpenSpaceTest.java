@@ -15,7 +15,7 @@ class OpenSpaceTest {
         board.addTraveler(player);
         board.addTravelersInTrack(1);
 
-        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE,2 , "imgPath");
+        OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2 , "imgPath");
 
         // Calls moveAhead method
         openspace.moveAhead(board, player, 5);

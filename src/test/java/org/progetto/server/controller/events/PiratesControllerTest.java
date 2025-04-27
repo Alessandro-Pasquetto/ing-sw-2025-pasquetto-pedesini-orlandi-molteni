@@ -73,7 +73,7 @@ class PiratesControllerTest {
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
         bb1.placeComponent(1, 1, 1);
 
-        BatteryStorage batteryStorage1 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage1 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         bb1.setHandComponent(batteryStorage1);
         bb1.placeComponent(3, 2, 1);
 
@@ -88,14 +88,14 @@ class PiratesControllerTest {
 
         bb1.initSpaceshipParams();
 
-        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(batteryStorage2);
         bb2.placeComponent(2, 1, 0);
 
         p2.getSpaceship().addBatteriesCount(2);
 
-        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage);
         bb3.placeComponent(2, 1, 0);

@@ -21,7 +21,7 @@ public class Smugglers extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Smugglers(CardType type, int level,String imgSrc, int firePowerRequired, int penaltyBoxes, int penaltyDays, ArrayList<Box> rewardBoxes) {
+    public Smugglers(CardType type, int level, String imgSrc, int firePowerRequired, int penaltyBoxes, int penaltyDays, ArrayList<Box> rewardBoxes) {
         super(type, level, imgSrc);
         this.firePowerRequired = firePowerRequired;
         this.penaltyBoxes = penaltyBoxes;
@@ -131,9 +131,9 @@ public class Smugglers extends EventCard {
      * @param component StorageComponent from which the battery will be discarded
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
-    public boolean chooseDiscardedBattery(Spaceship spaceship,BatteryStorage component) {
+    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
         if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship,1);
+            return component.decrementItemsCount(spaceship, 1);
         } else return false;
     }
 

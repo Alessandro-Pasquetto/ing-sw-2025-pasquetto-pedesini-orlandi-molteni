@@ -215,7 +215,7 @@ class BuildingControllerTest {
 
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
 
         //Test empty hand
@@ -229,7 +229,7 @@ class BuildingControllerTest {
 
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
 
         //Test deck already taken
@@ -248,7 +248,7 @@ class BuildingControllerTest {
 
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,otherPLayer,2,3,0,0,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, otherPLayer, 2, 3, 0, 0, sender);
 
         sender = new Sender() {
             @Override
@@ -257,7 +257,7 @@ class BuildingControllerTest {
                     assertEquals("EventCardDeckIsAlreadyTaken", message);
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,0,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
 
         //Test illegal placement
@@ -268,7 +268,7 @@ class BuildingControllerTest {
                 assertEquals("NotAllowedToPlaceComponent", msg);
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,2,3,0,1,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 1, sender);
 
         //Test correct placing and picking
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
@@ -279,7 +279,7 @@ class BuildingControllerTest {
                     assertInstanceOf(PickedUpEventCardDeckMessage.class, msg);
             }
         };
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager,player,1,3,0,1,sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 1, 3, 0, 1, sender);
 
 
 
@@ -338,7 +338,7 @@ class BuildingControllerTest {
         Component component = buildingBoard.getHandComponent();
 
         // Simulate the action of placing the hand component and marking it as ready
-        assertDoesNotThrow(() -> BuildingController.placeHandComponentAndReady(gameManager, player,2,1, 0, sender));
+        assertDoesNotThrow(() -> BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender));
 
         // Placed component
         assertEquals(2, component.getX());
@@ -477,7 +477,7 @@ class BuildingControllerTest {
             }
         };
 
-       BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+       BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
         //Test unable to pick with hand full
@@ -495,14 +495,14 @@ class BuildingControllerTest {
             }
         };
 
-        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
         buildingBoard.setHandComponent(null);   //reset hand
 
 
         //Test unable to pick while ready   //todo check why it doesn't set ready the player
 //        gameManager = new GameManager(0, 4, 2);
 //        gameManager.getGame().addPlayer(player);
-//        player.setIsReady(true,gameManager.getGame());
+//        player.setIsReady(true, gameManager.getGame());
 //
 //        sender = new Sender() {
 //            @Override
@@ -512,7 +512,7 @@ class BuildingControllerTest {
 //            }
 //        };
 //
-//        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+//        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
         //Test idxOutOfBound
@@ -528,7 +528,7 @@ class BuildingControllerTest {
             }
         };
 
-        BuildingController.pickUpEventCardDeck(gameManager,player,-1,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player,-1, sender);
 
         //Test deck already taken
         gameManager = new GameManager(0, 4, 2);
@@ -542,7 +542,7 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
             }
         };
-        BuildingController.pickUpEventCardDeck(gameManager,otherPLayer,1,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, otherPLayer, 1, sender);
 
         sender = new Sender() {
             @Override
@@ -551,7 +551,7 @@ class BuildingControllerTest {
 
             }
         };
-        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
         //Test deck picked
@@ -566,7 +566,7 @@ class BuildingControllerTest {
 
             }
         };
-        BuildingController.pickUpEventCardDeck(gameManager,player,1,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
     }
@@ -587,7 +587,7 @@ class BuildingControllerTest {
                 assertEquals("NoEventCardDeckTaken", message);
             }
         };
-        BuildingController.putDownEventCardDeck(gameManager,player,sender);
+        BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
 
         //Test full hand
@@ -600,7 +600,7 @@ class BuildingControllerTest {
             @Override
             public void sendMessage(Object message) {}
         };
-        BuildingController.pickUpEventCardDeck(gameManager,player,2,sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 2, sender);
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
@@ -608,7 +608,7 @@ class BuildingControllerTest {
             }
         };
 
-        BuildingController.putDownEventCardDeck(gameManager,player,sender);
+        BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
     }
 
@@ -628,7 +628,7 @@ class BuildingControllerTest {
 
         //init first spaceship (not valid)
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
-        bb1.placeComponent(1,2,0);
+        bb1.placeComponent(1, 2, 0);
 
         //test validity for first ship
         Sender sender = new Sender() {
@@ -643,7 +643,7 @@ class BuildingControllerTest {
 
         //init second spaceship(valid)
         bb2.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 1}, "imgPath"));
-        bb2.placeComponent(1,2,0);
+        bb2.placeComponent(1, 2, 0);
 
 
         //test validity for first+second ship

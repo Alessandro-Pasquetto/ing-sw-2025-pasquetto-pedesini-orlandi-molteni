@@ -27,7 +27,7 @@ public class ComponentDeserializer implements JsonDeserializer<Component> {
 
             case BOX_STORAGE, RED_BOX_STORAGE:
                 capacity = jsonObject.get("capacity").getAsInt();
-                return new BoxStorage(type,connections,imgSrc,capacity);
+                return new BoxStorage(type, connections, imgSrc, capacity);
 
             default:
                 return new Component(type, connections, imgSrc);

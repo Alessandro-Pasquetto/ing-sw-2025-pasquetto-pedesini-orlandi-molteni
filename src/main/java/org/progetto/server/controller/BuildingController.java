@@ -434,11 +434,9 @@ public class BuildingController {
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck != null) {
-                if (playerCheck.equals(player)) {
-                    sender.sendMessage("FullHandEventDeck");
-                    return;
-                }
+            if (player.equals(playerCheck)) {
+                sender.sendMessage("FullHandEventDeck");
+                return;
             }
         }
 
@@ -761,7 +759,7 @@ public class BuildingController {
                 String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
                 sender.sendMessage("PickedBookedComponent");
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg),sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg), sender);
 
             } catch (IllegalStateException e) {
                 if(e.getMessage().equals("FullHandComponent"))
@@ -941,7 +939,7 @@ public class BuildingController {
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
             player.getSpaceship().getBuildingBoard().setAsBooked(idx);
             sender.sendMessage("ComponentBooked");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(),imgSrc,idx),sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(), imgSrc, idx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
@@ -1029,7 +1027,7 @@ public class BuildingController {
             String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
             sender.sendMessage("PickedBookedComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc),sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))

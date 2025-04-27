@@ -56,7 +56,7 @@ class BuildingBoardTest {
         assertNull(board.getHandComponent());
 
         // Create and set a component
-        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
         board.setHandComponent(component);
 
         // Test that getHandComponent returns component
@@ -148,7 +148,7 @@ class BuildingBoardTest {
     @Test
     void setAsBooked() {
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
-        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
 
         // Test without hand component
         assertThrows(IllegalStateException.class, () -> board.setAsBooked(0));
@@ -176,7 +176,7 @@ class BuildingBoardTest {
     @Test
     void pickBookedComponent(){
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
-        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
 
         // Test empty booked list
         assertThrows(IllegalStateException.class, () -> board.pickBookedComponent(0));
@@ -197,7 +197,7 @@ class BuildingBoardTest {
         // Verify component was moved correctly
         board.setHandComponent(null);
         board.pickBookedComponent(0);
-        assertSame(component,board.getHandComponent());
+        assertSame(component, board.getHandComponent());
         assertNull(board.getBookedCopy()[0]);
     }
 
@@ -211,12 +211,12 @@ class BuildingBoardTest {
         assertNull(board.getHandComponent());
 
         // Test setting a component
-        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
         board.setHandComponent(component);
         assertSame(component, board.getHandComponent());
 
         // Test overwriting existing hand component
-        Component component2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "imgSrc", 2);
+        Component component2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
         board.setHandComponent(component2);
         assertSame(component2, board.getHandComponent());
     }
@@ -277,7 +277,7 @@ class BuildingBoardTest {
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
         // place housing_unit //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));   //housing unit
         Component housing_unit = buildingBoard.getHandComponent();
         HousingUnit housingUnit = (HousingUnit) housing_unit;
         buildingBoard.placeComponent(2, 2, 0);
@@ -297,10 +297,10 @@ class BuildingBoardTest {
         assertFalse(housingUnit.getAllowAlienOrange());
 
         // update orange alien hosting test with another orange_unit //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(1, 2, 0);
 
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -314,7 +314,7 @@ class BuildingBoardTest {
 
 
         // test allow purple alien //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -326,10 +326,10 @@ class BuildingBoardTest {
         assertFalse(housingUnit.getAllowAlienPurple());
 
         // update purple alien hosting test with another orange_unit //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(1, 2, 0);
 
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(2, 1, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -471,7 +471,7 @@ class BuildingBoardTest {
         assertFalse(spaceship.getAlienOrange());
 
         // removing housing unit with alien purple //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));   //housing unit
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));   //housing unit
         housing_unit = buildingBoard.getHandComponent();
         buildingBoard.placeComponent(2, 2, 0);
         housingUnit = (HousingUnit) housing_unit;
@@ -482,7 +482,7 @@ class BuildingBoardTest {
 
 
         // removing central unit //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -502,7 +502,7 @@ class BuildingBoardTest {
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
 
         // removing battery storage //
-        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
         buildingBoard.placeComponent(2, 2, 0);
 
         buildingBoard.initSpaceshipParams();
@@ -515,24 +515,24 @@ class BuildingBoardTest {
 
 
         // removing box storage //
-        buildingBoard.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
         Component box_component = buildingBoard.getHandComponent();
         BoxStorage box_storage = (BoxStorage) box_component;
         buildingBoard.placeComponent(2, 2, 0);
-        box_storage.addBox(spaceship, Box.YELLOW,0);
+        box_storage.addBox(spaceship, Box.YELLOW, 0);
         buildingBoard.initSpaceshipParams();
 
-        assertArrayEquals(new int[]{0,1,0,0}, spaceship.getBoxCounts());
+        assertArrayEquals(new int[]{0, 1, 0, 0}, spaceship.getBoxCounts());
         buildingBoard.destroyComponent(2, 2);
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
-        assertArrayEquals(new int[]{0,0,0,0}, spaceship.getBoxCounts());
+        assertArrayEquals(new int[]{0, 0, 0, 0}, spaceship.getBoxCounts());
 
         // removing redBox storage //
-        buildingBoard.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",2));
+        buildingBoard.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
         box_component = buildingBoard.getHandComponent();
         box_storage = (BoxStorage) box_component;
         buildingBoard.placeComponent(2, 2, 0);
-        box_storage.addBox(spaceship, Box.YELLOW,0);
+        box_storage.addBox(spaceship, Box.YELLOW, 0);
         buildingBoard.initSpaceshipParams();
 
         buildingBoard.initSpaceshipParams();
@@ -542,7 +542,7 @@ class BuildingBoardTest {
 
 
         //  Connectors count update test    //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",0));
+        buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
         buildingBoard.placeComponent(2, 2, 0);
 
 
@@ -804,7 +804,7 @@ class BuildingBoardTest {
 
     @Test
     void initSpaceshipParams(){
-        Spaceship spaceship = new Spaceship(2,1);
+        Spaceship spaceship = new Spaceship(2, 1);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
         // Cannons (x2)
@@ -857,7 +857,7 @@ class BuildingBoardTest {
 
         // TEST DISCONNECTED COMPONENTS
 
-        Spaceship spaceship = new Spaceship(2,1);
+        Spaceship spaceship = new Spaceship(2, 1);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
         // Cannon
@@ -904,7 +904,7 @@ class BuildingBoardTest {
 
         // TEST ALIENS
 
-        Spaceship spaceship2 = new Spaceship(2,1);
+        Spaceship spaceship2 = new Spaceship(2, 1);
         BuildingBoard buildingBoard2 = spaceship2.getBuildingBoard();
 
 
@@ -1103,7 +1103,7 @@ class BuildingBoardTest {
         });
         assertEquals("NotValidCoordinates", exception.getMessage());
 
-        Component nonHousing = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1,1,1,1}, "imgSrc");
+        Component nonHousing = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgSrc");
         buildingBoard.setHandComponent(nonHousing);
         buildingBoard.placeComponent(3, 2, 0);
 

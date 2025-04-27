@@ -124,12 +124,12 @@ public class BuildingBoard implements Serializable {
     private void placeCentralUnit(String imgPathCentralUnit) {
         switch (spaceship.getLevelShip()) {
             case 1:
-                spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
+                spaceshipMatrix[2][2] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3, 3, 3, 3}, imgPathCentralUnit, 2);
                 spaceshipMatrix[2][2].setY(2);
                 spaceshipMatrix[2][2].setX(2);
                 break;
             case 2:
-                spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3,3,3,3}, imgPathCentralUnit, 2);
+                spaceshipMatrix[2][3] = new HousingUnit(ComponentType.CENTRAL_UNIT, new int[]{3, 3, 3, 3}, imgPathCentralUnit, 2);
                 spaceshipMatrix[2][3].setY(2);
                 spaceshipMatrix[2][3].setX(3);
                 break;
@@ -928,13 +928,13 @@ public class BuildingBoard implements Serializable {
                         if(spaceship.getLevelShip() != 1 && (checkAllowPurpleAlien(hu) || checkAllowOrangeAlien(hu)))
                             doesNotRequirePlayerAction = false;
                         else
-                            hu.incrementCrewCount(spaceship,2);
+                            hu.incrementCrewCount(spaceship, 2);
 
                         break;
 
                     case CENTRAL_UNIT:
                         hu = (HousingUnit) component;
-                        hu.incrementCrewCount(spaceship,2);
+                        hu.incrementCrewCount(spaceship, 2);
                         break;
 
                     case BATTERY_STORAGE:
@@ -1071,7 +1071,7 @@ public class BuildingBoard implements Serializable {
             case "orange":
                 if (hu.getAllowAlienOrange()) {
                     hu.setAlienOrange(true);
-                    hu.incrementCrewCount(spaceship,1);
+                    hu.incrementCrewCount(spaceship, 1);
                     spaceship.addNormalEnginePower(2);
                 } else {
                     throw new IllegalStateException("CannotContainOrangeAlien");
@@ -1081,7 +1081,7 @@ public class BuildingBoard implements Serializable {
             case "purple":
                 if (hu.getAllowAlienPurple()) {
                     hu.setAlienPurple(true);
-                    hu.incrementCrewCount(spaceship,1);
+                    hu.incrementCrewCount(spaceship, 1);
                     spaceship.addNormalShootingPower(2);
                 } else {
                     throw new IllegalStateException("CannotContainPurpleAlien");

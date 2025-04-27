@@ -107,9 +107,9 @@ class LostShipControllerTest {
 
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
+        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
         BuildingBoard bb = p3.getSpaceship().getBuildingBoard();
         bb.setHandComponent(hu1);

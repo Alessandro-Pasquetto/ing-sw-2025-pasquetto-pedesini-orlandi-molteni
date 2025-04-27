@@ -61,7 +61,7 @@ public class EventDeserializer implements JsonDeserializer<EventCard> {
                 return new Pirates(type, level, imgSrc, firePowerRequired, penaltyDays, rewardCredits, shots);
 
             case STARDUST:
-                return new Stardust(type,level,imgSrc);
+                return new Stardust(type, level, imgSrc);
 
             case PLANETS:
                 ArrayList<ArrayList<Box>> rewardsForPlanets = context.deserialize(jsonObject.get("rewardsForPlanets"), new TypeToken<ArrayList<ArrayList<Box>>>() {}.getType());
@@ -72,7 +72,7 @@ public class EventDeserializer implements JsonDeserializer<EventCard> {
                 penaltyCrew = jsonObject.get("penaltyCrew").getAsInt();
                 rewardCredits = jsonObject.get("rewardCredits").getAsInt();
                 penaltyDays = jsonObject.get("penaltyDays").getAsInt();
-                return new LostShip(type ,level, imgSrc, penaltyCrew, rewardCredits, penaltyDays);
+                return new LostShip(type, level, imgSrc, penaltyCrew, rewardCredits, penaltyDays);
 
             case BATTLEZONE:
                 ArrayList<ConditionPenalty> couples = deserializeConditionPenalties(jsonObject.get("couples").getAsJsonArray(), context);

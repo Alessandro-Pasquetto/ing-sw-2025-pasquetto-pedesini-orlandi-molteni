@@ -120,29 +120,29 @@ class HousingUnitTest {
     @Test
     void incrementCrewCount() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
-        Spaceship spaceship = new Spaceship(2,1);
+        Spaceship spaceship = new Spaceship(2, 1);
         // Adds crew to the housing unit
-        assertTrue(housingUnit.incrementCrewCount(spaceship,1));
+        assertTrue(housingUnit.incrementCrewCount(spaceship, 1));
         assertEquals(1, housingUnit.getCrewCount());
 
         // Tries to add more crew, but it is full
-        assertFalse(housingUnit.incrementCrewCount(spaceship,2));
+        assertFalse(housingUnit.incrementCrewCount(spaceship, 2));
         assertEquals(1, housingUnit.getCrewCount());
     }
 
     @Test
     void decrementCrewCount() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
-        Spaceship spaceship = new Spaceship(2,1);
+        Spaceship spaceship = new Spaceship(2, 1);
 
         housingUnit.incrementCrewCount(spaceship, 2);
 
         // Removes batteries from the battery storage
-        assertTrue(housingUnit.decrementCrewCount(spaceship,1));
+        assertTrue(housingUnit.decrementCrewCount(spaceship, 1));
         assertEquals(1, housingUnit.getCrewCount());
 
         // Tries to remove batteries, but there aren't enough
-        assertFalse(housingUnit.decrementCrewCount(spaceship,2));
+        assertFalse(housingUnit.decrementCrewCount(spaceship, 2));
         assertEquals(1, housingUnit.getCrewCount());
     }
 }

@@ -15,7 +15,7 @@ class LostStationTest {
 
     @Test
     void getRequiredCrew() {
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, new ArrayList<>(), -3);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 5, new ArrayList<>(), -3);
         assertEquals(5, lostStation1.getRequiredCrew());
     }
 
@@ -24,13 +24,13 @@ class LostStationTest {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
-        LostStation lostStation = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, rewardBoxes, -3);
+        LostStation lostStation = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 5, rewardBoxes, -3);
         assertEquals(rewardBoxes, lostStation.getRewardBoxes());
     }
 
     @Test
     void getPenaltyDays() {
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, new ArrayList<>(), -3);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 5, new ArrayList<>(), -3);
         assertEquals(-3, lostStation1.getPenaltyDays());
     }
 
@@ -49,8 +49,8 @@ class LostStationTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(Box.YELLOW);
         rewardBoxes2.add(Box.BLUE);
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 5, rewardBoxes1, -3);
-        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION,2, "imgPath", 6, rewardBoxes2, -2);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 5, rewardBoxes1, -3);
+        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 6, rewardBoxes2, -2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         Box boxR = Box.RED;
@@ -93,8 +93,8 @@ class LostStationTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(Box.YELLOW);
         rewardBoxes2.add(Box.BLUE);
-        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION,2,"imgPath", 5, rewardBoxes1, -3);
-        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, 2,"imgPath", 6, rewardBoxes2, -2);
+        LostStation lostStation1 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 5, rewardBoxes1, -3);
+        LostStation lostStation2 = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 6, rewardBoxes2, -2);
 
         //moves player1 back
         lostStation1.penalty(board, player1);

@@ -128,21 +128,21 @@ class MeteorsRainTest {
 
         BatteryStorage notBattery = new BatteryStorage(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(),2);
+        battery.incrementItemsCount(mario.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(),(BatteryStorage) notBattery));
+        assertFalse(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertTrue(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertTrue(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(),battery));
+        assertFalse(meteorsRain.chooseDiscardedBattery(mario.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
     }
 }

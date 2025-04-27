@@ -18,7 +18,7 @@ public class LostShip extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public LostShip(CardType type, int level,String imgSrc, int penaltyCrew, int rewardCredits, int penaltyDays) {
+    public LostShip(CardType type, int level, String imgSrc, int penaltyCrew, int rewardCredits, int penaltyDays) {
         super(type, level, imgSrc);
         this.penaltyCrew = penaltyCrew;
         this.rewardCredits = rewardCredits;
@@ -62,7 +62,7 @@ public class LostShip extends EventCard {
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member
-            return component.decrementCrewCount(spaceship,1);
+            return component.decrementCrewCount(spaceship, 1);
         }
         return true;
     }

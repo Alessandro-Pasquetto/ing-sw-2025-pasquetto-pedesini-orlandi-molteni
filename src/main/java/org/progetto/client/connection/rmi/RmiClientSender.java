@@ -215,7 +215,7 @@ public class RmiClientSender implements Sender {
     @Override
     public void pickBookedComponent(int idx){
         try {
-            server.pickBookedComponent(RmiClientReceiver.getInstance(),GameData.getIdGame(),idx);
+            server.pickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }
@@ -294,7 +294,7 @@ public class RmiClientSender implements Sender {
     @Override
     public void showSpaceship(String owner){
         try{
-            server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(),owner);
+            server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(), owner);
         }catch (RemoteException e){
             throw new RuntimeException(e);
         }

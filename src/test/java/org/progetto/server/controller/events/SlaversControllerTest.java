@@ -22,7 +22,7 @@ class SlaversControllerTest {
     @Test
     void slaversControllerTest() throws InterruptedException, RemoteException {
         GameManager gameManager = new GameManager(0, 3, 1);
-        Slavers slavers = new Slavers(CardType.SLAVERS,2, "imgPath", 5, 2, -3, 3);
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         gameManager.getGame().setActiveEventCard(slavers);
 
         Player p1 = new Player("mario", 0, 1);
@@ -48,9 +48,9 @@ class SlaversControllerTest {
         gameManager.getGame().getBoard().addTraveler(p2);
         gameManager.getGame().getBoard().addTraveler(p3);
 
-        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
+        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
         BuildingBoard bb = p1.getSpaceship().getBuildingBoard();
         bb.setHandComponent(hu1);
@@ -66,14 +66,14 @@ class SlaversControllerTest {
 
         p1.getSpaceship().addCrewCount(4);
 
-        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage2 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(batteryStorage2);
         bb2.placeComponent(2, 1, 0);
 
         p2.getSpaceship().addBatteriesCount(2);
 
-        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 2);
+        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage);
         bb3.placeComponent(2, 1, 0);

@@ -14,19 +14,19 @@ class SmugglersTest {
 
     @Test
     void getFirePowerRequired() {
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
         assertEquals(5, smugglers.getFirePowerRequired());
     }
 
     @Test
     void getPenaltyBoxes() {
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
         assertEquals(2, smugglers.getPenaltyBoxes());
     }
 
     @Test
     void getPenaltyDays() {
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
         assertEquals(-3, smugglers.getPenaltyDays());
     }
 
@@ -35,7 +35,7 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes);
         assertEquals(rewardBoxes, smugglers.getRewardBoxes());
     }
 
@@ -54,8 +54,8 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(Box.YELLOW);
         rewardBoxes2.add(Box.BLUE);
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS,2, "imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 6, 2, -2, rewardBoxes2);
         BoxStorage boxStorage1 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BoxStorage boxStorage2 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         Box boxR = Box.RED;
@@ -85,11 +85,11 @@ class SmugglersTest {
     @Test
     void chooseDiscardedBox() {
         Spaceship s = new Spaceship(1, 0);
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, new ArrayList<>());
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
 
-        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
-        bs1.addBox(s, Box.YELLOW,2);
-        bs1.addBox(s, Box.GREEN,1);
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
+        bs1.addBox(s, Box.YELLOW, 2);
+        bs1.addBox(s, Box.GREEN, 1);
 
 //        for (int i = 0; i < bs1.getCapacity(); i++) {
 //            if(bs1.getBoxStorage()[i] == null)
@@ -116,10 +116,10 @@ class SmugglersTest {
 //        System.out.println();
 
 
-        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
+        BoxStorage bs2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
 
-        bs2.addBox(s, Box.GREEN,0);
-        bs2.addBox(s, Box.RED,2);
+        bs2.addBox(s, Box.GREEN, 0);
+        bs2.addBox(s, Box.RED, 2);
 
 //        for (int i = 0; i < bs2.getCapacity(); i++) {
 //            if(bs2.getBoxStorage()[i] == null)
@@ -134,10 +134,10 @@ class SmugglersTest {
         assertTrue(smugglers.chooseDiscardedBox(s, bs2, 2));
         assertFalse(smugglers.chooseDiscardedBox(s, bs2, 3));
 
-        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "", 3);
+        BoxStorage bs3 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
 
-        bs3.addBox(s, Box.GREEN,0);
-        bs3.addBox(s, Box.BLUE,1);
+        bs3.addBox(s, Box.GREEN, 0);
+        bs3.addBox(s, Box.BLUE, 1);
 
         assertTrue(smugglers.chooseDiscardedBox(s, bs2, 0));
         assertFalse(smugglers.chooseDiscardedBox(s, bs3, 1));
@@ -155,24 +155,24 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
-        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes);
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(player1.getSpaceship(),2);
+        battery.incrementItemsCount(player1.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
         assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(),(BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
-        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
+        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(), battery));
         assertEquals(1, battery.getItemsCount());
 
         // Remove another battery from the storage
-        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
+        assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(),battery));
+        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(), battery));
         assertEquals(0, battery.getItemsCount());
     }
 
@@ -192,8 +192,8 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(Box.YELLOW);
         rewardBoxes2.add(Box.BLUE);
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 6, 2, -2, rewardBoxes2);
 
         //moves player1 back 3
         smugglers1.penalty(board, player1);
@@ -214,8 +214,8 @@ class SmugglersTest {
         rewardBoxes2.add(Box.BLUE);
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 5, 2, -3, rewardBoxes1);
-        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2,"imgPath", 6, 2, -2, rewardBoxes2);
+        Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes1);
+        Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 6, 2, -2, rewardBoxes2);
 
         //compares a power equal to the one required
         assertEquals(0, smugglers1.battleResult(player1, 5));

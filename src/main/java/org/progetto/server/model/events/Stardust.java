@@ -10,8 +10,8 @@ public class Stardust extends EventCard {
     // CONSTRUCTORS
     // =======================
 
-    public Stardust(CardType type,int level, String imgSrc) {
-        super(type,level,imgSrc);
+    public Stardust(CardType type, int level, String imgSrc) {
+        super(type, level, imgSrc);
     }
 
     // =======================

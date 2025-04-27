@@ -19,7 +19,7 @@ public class HousingUnit extends Component{
     // CONSTRUCTOR
     // =======================
 
-    public HousingUnit(ComponentType type,int[] connections, String imgSrc, int capacity) {
+    public HousingUnit(ComponentType type, int[] connections, String imgSrc, int capacity) {
         super(type, connections, imgSrc);
         this.capacity = capacity;
         this.crewCount = 0;

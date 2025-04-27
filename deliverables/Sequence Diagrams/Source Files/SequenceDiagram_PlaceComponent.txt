@@ -9,12 +9,12 @@ participant Spaceship
 participant BuildingBoard
 
 alt PlaceHandComponentAndPickHiddenComponent
-  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x,y,r)
+  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x, y, r)
   Server->Player: player
   Player->Spaceship: getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
   
-  BuildingBoard->BuildingBoard: placeComponent(y,x,r)
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
   
   alt PlacedComponent
     BuildingBoard->Component: getImgSrc()
@@ -36,12 +36,12 @@ alt PlaceHandComponentAndPickHiddenComponent
 
 else PlaceHandComponentAndPickVisibleComponent
 
-  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x,y,r)
+  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x, y, r)
   Server->Player: player
   Player->Spaceship: getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
 
-  BuildingBoard->BuildingBoard: placeComponent(y,x,r)
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
 
   alt PlacedComponent
     BuildingBoard->Component: getImgSrc()
@@ -62,12 +62,12 @@ else PlaceHandComponentAndPickVisibleComponent
 
 else PlaceHandComponentAndPickBookedComponent
 
-  Client->Server:PlaceHandComponentAndPickBookedComponentMessage(x,y,r, idx)
+  Client->Server:PlaceHandComponentAndPickBookedComponentMessage(x, y, r, idx)
   Server->Player: player
   Player->Spaceship: getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
 
-  BuildingBoard->BuildingBoard: placeComponent(y,x,r)
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
 
   alt PlacedComponent
     BuildingBoard->Component: getImgSrc()
@@ -87,12 +87,12 @@ end
 
 else PlaceHandComponentAndShowEventCardDeck
 
-  Client->Server:PlaceHandComponentAndShowEventCardDeckMessage(x,y,r,idx)
+  Client->Server:PlaceHandComponentAndShowEventCardDeckMessage(x, y, r, idx)
   Server->Player: player
   Player->Spaceship: getSpaceship()
   Spaceship->BuildingBoard:getBuildingBoard()
 
-  BuildingBoard->BuildingBoard: placeComponent(y,x,r)
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
 
   alt PlacedComponent
     BuildingBoard->Component: getImgSrc()

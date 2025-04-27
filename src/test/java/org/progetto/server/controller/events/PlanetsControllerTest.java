@@ -58,10 +58,10 @@ class PlanetsControllerTest {
         //player_1 spaceship setup
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
 
-        bb1.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",3));
+        bb1.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
         bb1.placeComponent(1, 2, 0);
 
-        bb1.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",3));
+        bb1.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
         bb1.placeComponent(3, 2, 0);
 
 
@@ -69,13 +69,13 @@ class PlanetsControllerTest {
         //player_2 spaceship setup
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
 
-        bb2.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",3));
+        bb2.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
         bb2.placeComponent(1, 2, 0);
 
-        bb2.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath",3));
+        bb2.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
         bb2.placeComponent(3, 2, 0);
 
-        bb2.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath",2));
+        bb2.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
         bb2.placeComponent(2, 1, 0);
 
         // Controller

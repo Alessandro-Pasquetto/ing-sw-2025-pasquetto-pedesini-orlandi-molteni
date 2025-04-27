@@ -464,9 +464,9 @@ public class Game {
         }
 
         ArrayList<Box> rewardBoxes = new ArrayList<>(
-        List.of(new Box[]{Box.RED, Box.YELLOW,Box.BLUE})
+        List.of(new Box[]{Box.RED, Box.YELLOW, Box.BLUE})
         );
-        pickedEventCard = new Smugglers(CardType.SMUGGLERS,1,"imgSrc",3,2,1,rewardBoxes);
+        pickedEventCard = new Smugglers(CardType.SMUGGLERS, 1, "imgSrc", 3, 2, 1, rewardBoxes);
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;

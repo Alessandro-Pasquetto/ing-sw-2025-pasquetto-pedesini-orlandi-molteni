@@ -38,10 +38,10 @@ class GameTest {
     @Test
     void getPlayerByName(){
         Game game = new Game(1, 4, 2);
-        game.addPlayer(new Player("mario",1,2));
-        Player alice = new Player("alice",1,2);
+        game.addPlayer(new Player("mario", 1, 2));
+        Player alice = new Player("alice", 1, 2);
         game.addPlayer(alice);
-        game.addPlayer(new Player("bob",1,2));
+        game.addPlayer(new Player("bob", 1, 2));
 
         assertEquals(alice, game.getPlayerByName("alice"));
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.getPlayerByName("matteo"));
@@ -168,7 +168,7 @@ class GameTest {
 
     @Test
     void getActiveEventCard(){
-        Game game = new Game(0, 3,2);
+        Game game = new Game(0, 3, 2);
 
         game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
         assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
@@ -180,7 +180,7 @@ class GameTest {
 
     @Test
     void getActivePlayer(){
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
         Player player = new Player("tom", 1, 1);
 
         game.setActivePlayer(player);
@@ -188,7 +188,7 @@ class GameTest {
 
     @Test
     void getNumReadyPlayers(){
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
         game.addReadyPlayers(true);
         game.addReadyPlayers(true);
@@ -224,7 +224,7 @@ class GameTest {
 
     @Test
     void setActiveEventCard(){
-        Game game = new Game(0, 3,2);
+        Game game = new Game(0, 3, 2);
 
         game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
         assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
@@ -236,7 +236,7 @@ class GameTest {
 
     @Test
     void setActivePlayer(){
-        Game game = new Game(0, 3,2);
+        Game game = new Game(0, 3, 2);
         Player player = new Player("tom", 1, 1);
 
         game.setActivePlayer(player);
@@ -251,7 +251,7 @@ class GameTest {
 
         game.addPlayer(mario);
 
-        assertNotNull(game.pickUpEventCardDeck(mario,0));
+        assertNotNull(game.pickUpEventCardDeck(mario, 0));
     }
 
     @Test
@@ -266,10 +266,10 @@ class GameTest {
 
     @Test
     void addPlayer() {
-        Player mario = new Player("mario",1,2);
-        Player alice = new Player("alice",1,2);
+        Player mario = new Player("mario", 1, 2);
+        Player alice = new Player("alice", 1, 2);
 
-        Game game = new Game(0, 3,2);
+        Game game = new Game(0, 3, 2);
         game.addPlayer(mario);
         game.addPlayer(alice);
 
@@ -287,7 +287,7 @@ class GameTest {
         game.addPlayer(player);
         game.addPlayer(player2);
 
-        assertNotNull(game.pickUpEventCardDeck(player,0));
+        assertNotNull(game.pickUpEventCardDeck(player, 0));
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             game.pickUpEventCardDeck(player, 6);
@@ -370,7 +370,7 @@ class GameTest {
     void pickVisibleComponent() {
         Player mario = new Player("mario", 1, 2);
         Player teo = new Player("teo", 1, 2);
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
         game.addPlayer(teo);
@@ -394,7 +394,7 @@ class GameTest {
     @Test
     void discardComponent() {
         Player mario = new Player("mario", 1, 2);
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
 
@@ -411,7 +411,7 @@ class GameTest {
     void pickEventCard() {
 
         Player mario = new Player("mario", 1, 2);
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
 
@@ -422,9 +422,9 @@ class GameTest {
 
     @Test
     void checkAvailableName() {
-        Game game = new Game(0,3,2);
-        game.addPlayer(new Player("alice",1,2));
-        game.addPlayer(new Player("matteo",1,2));
+        Game game = new Game(0, 3, 2);
+        game.addPlayer(new Player("alice", 1, 2));
+        game.addPlayer(new Player("matteo", 1, 2));
 
         assertFalse(game.checkAvailableName("alice"));
         assertFalse(game.checkAvailableName("matteo"));
@@ -434,7 +434,7 @@ class GameTest {
 
     @Test
     void addReadyPlayers(){
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
         game.addReadyPlayers(true);
         game.addReadyPlayers(true);
@@ -446,11 +446,11 @@ class GameTest {
 
     @Test
     void resetReadyPlayers(){
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
-        Player p1 = new Player("alice",1,2);
-        Player p2 = new Player("matteo",1,2);
-        Player p3 = new Player("gianfranco",1,2);
+        Player p1 = new Player("alice", 1, 2);
+        Player p2 = new Player("matteo", 1, 2);
+        Player p3 = new Player("gianfranco", 1, 2);
 
         game.addPlayer(p1);
         game.addPlayer(p2);
@@ -467,11 +467,11 @@ class GameTest {
 
     @Test
     void scoreBoard() {
-        Game game = new Game(0,3,2);
+        Game game = new Game(0, 3, 2);
 
-        Player p1 = new Player("alice",0,2);
-        Player p2 = new Player("matteo",1,2);
-        Player p3 = new Player("gianfranco",2,2);
+        Player p1 = new Player("alice", 0, 2);
+        Player p2 = new Player("matteo", 1, 2);
+        Player p3 = new Player("gianfranco", 2, 2);
 
         game.addPlayer(p1);
         game.addPlayer(p2);

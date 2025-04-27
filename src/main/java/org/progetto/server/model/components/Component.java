@@ -9,8 +9,8 @@ public class Component implements Serializable {
     // =======================
 
     protected final ComponentType type;
-    private final int[] connections;   // {0,1,2,3} = {n°up,n°right,n°down,n°left}
-    private int rotation;              // {0,1,2,3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
+    private final int[] connections;   // {0, 1, 2, 3} = {n°up, n°right, n°down, n°left}
+    private int rotation;              // {0, 1, 2, 3} = {up, right, down, left} for shields {left-up, up-right, right-down, down-left}
     private int xCoordinate;           // x coordinate in matrix
     private int yCoordinate;           // y coordinate in matrix
     private final String imgSrc;

@@ -21,16 +21,16 @@ class MeteorsRainControllerTest {
     void MeteorsRainControllerTest() throws InterruptedException, RemoteException {
 
         //board setup
-        GameManager gameManager = new GameManager(0,2,1);
+        GameManager gameManager = new GameManager(0, 2, 1);
 
         ArrayList<Projectile> meteors = new ArrayList<Projectile>();
 
-        meteors.add(new Projectile(ProjectileSize.SMALL,0));
-        meteors.add(new Projectile(ProjectileSize.SMALL,1));
-        meteors.add(new Projectile(ProjectileSize.BIG,1));
-        meteors.add(new Projectile(ProjectileSize.BIG,0));
+        meteors.add(new Projectile(ProjectileSize.SMALL, 0));
+        meteors.add(new Projectile(ProjectileSize.SMALL, 1));
+        meteors.add(new Projectile(ProjectileSize.BIG, 1));
+        meteors.add(new Projectile(ProjectileSize.BIG, 0));
 
-        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN,2,"imgSrc",meteors);
+        MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "imgSrc", meteors);
         gameManager.getGame().setActiveEventCard(meteorsRain);
 
         Player p1 = new Player("mario", 0, 1) {
@@ -78,8 +78,8 @@ class MeteorsRainControllerTest {
         bb1.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
         bb1.placeComponent(3, 2, 1);
 
-        BatteryStorage storage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 3}, "imgPath",3);
-        storage.incrementItemsCount(p1.getSpaceship(),3);
+        BatteryStorage storage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 3}, "imgPath", 3);
+        storage.incrementItemsCount(p1.getSpaceship(), 3);
         bb1.setHandComponent(storage);
         bb1.placeComponent(2, 3, 0);
 

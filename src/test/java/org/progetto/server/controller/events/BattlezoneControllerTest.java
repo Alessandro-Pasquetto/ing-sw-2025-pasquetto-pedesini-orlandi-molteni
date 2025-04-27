@@ -76,9 +76,9 @@ class BattlezoneControllerTest {
         gameManager.getGame().getBoard().addTraveler(p3);
 
         // p1 will be effect by penalty crew
-        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
-        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1,1,1,1}, "img", 2);
+        HousingUnit hu1 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        HousingUnit hu3 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
         bb1.setHandComponent(hu1);
@@ -96,17 +96,17 @@ class BattlezoneControllerTest {
 
         // p2 spaceship
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
-        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 3);
+        BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 3);
         bb2.setHandComponent(batteryStorage);
         bb2.placeComponent(2, 1, 0);
 
         batteryStorage.incrementItemsCount(p2.getSpaceship(), 3);
 
         // p3 will be effect by penalty boxes
-        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
-        BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1,1,1,1}, "img", 2);
-        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1,1,1,1}, "img", 3);
-        Component shield = new Component(ComponentType.SHIELD, new int[]{1,1,1,1}, "img");
+        BoxStorage bx1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
+        BoxStorage bx2 = new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
+        BatteryStorage batteryStorage3 = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 3);
+        Component shield = new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "img");
 
         BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(bx1);
