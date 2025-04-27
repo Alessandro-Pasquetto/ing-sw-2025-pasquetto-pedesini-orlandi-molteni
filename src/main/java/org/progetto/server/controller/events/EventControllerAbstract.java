@@ -97,9 +97,4 @@ abstract public class EventControllerAbstract {
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, InterruptedException {
         sender.sendMessage("FunctionNotAvailable");
     }
-
-    //responseSelectSpaceshipPart
-    public void receiveSelectSpaceshipPart(Player player, int x, int y, Sender sender) throws RemoteException, InterruptedException {
-        sender.sendMessage("FunctionNotAvailable");
-    }
 }

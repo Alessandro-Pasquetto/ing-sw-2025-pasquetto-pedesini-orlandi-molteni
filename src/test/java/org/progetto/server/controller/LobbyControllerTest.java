@@ -67,7 +67,7 @@ class LobbyControllerTest {
         Player player_2 = new Player("Ciro", 1, 1);
 
         //Test incorrect game_id
-        assertThrows(IllegalStateException.class,()->LobbyController.joinGame(game.getId() + 2, player_2.getName()));
+        assertThrows(IllegalStateException.class, ()->LobbyController.joinGame(game.getId() + 2, player_2.getName()));
 
         //Test correct joining
         assertDoesNotThrow(()->LobbyController.joinGame(game.getId(), player_2.getName()));

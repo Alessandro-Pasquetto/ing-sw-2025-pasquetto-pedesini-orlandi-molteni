@@ -161,7 +161,7 @@ class SmugglersTest {
         battery.incrementItemsCount(player1.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(),(BatteryStorage) notBattery));
+        assertFalse(smugglers.chooseDiscardedBattery(player1.getSpaceship(), (BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
         assertTrue(smugglers.chooseDiscardedBattery(player1.getSpaceship(), battery));

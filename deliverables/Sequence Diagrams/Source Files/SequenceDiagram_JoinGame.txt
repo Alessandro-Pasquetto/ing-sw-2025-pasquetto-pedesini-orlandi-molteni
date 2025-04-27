@@ -56,4 +56,4 @@ else JoinGame
 end
 
 space
-note over Client, server: Client connects to server.\nThen, server sends to player a list that contains all the available games to join.\nPlayer has two options: create his own game, or join an already created one, picked from the previous list.\nIn the first case, he selects game level, maximum number of players and his name: so game is initialized.\nIn the second case, he tries to join the game by using its id and giving his name. He will receive success/fail response based on name chosen.\nIf name is available, he joins the game, otherwise he isn't allowed to do it.
+note over Client, Server: Client connects to server.\nThen, server sends to player a list that contains all the available games to join.\nPlayer has two options: create his own game, or join an already created one, picked from the previous list.\nIn the first case, he selects game level, maximum number of players and his name: so game is initialized.\nIn the second case, he tries to join the game by using its id and giving his name. He will receive success/fail response based on name chosen.\nIf name is available, he joins the game, otherwise he isn't allowed to do it.

@@ -72,7 +72,7 @@ class PiratesTest {
         battery.incrementItemsCount(mario.getSpaceship(), 2);
 
         // Returns false if component is not a Housing Unit
-        assertFalse(pirates.chooseDiscardedBattery(mario.getSpaceship(),(BatteryStorage) notBattery));
+        assertFalse(pirates.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
 
         // Removes one battery member from the Housing Unit
         assertTrue(pirates.chooseDiscardedBattery(mario.getSpaceship(), battery));

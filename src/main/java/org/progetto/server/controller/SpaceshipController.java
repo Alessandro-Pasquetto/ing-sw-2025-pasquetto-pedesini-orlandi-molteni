@@ -228,15 +228,15 @@ public class SpaceshipController {
     /**
      * Called after a component is destroyed by an event if it's possible auto adjustSpaceship otherwise send message to player to choose a spaceship part to keep
      *
-     * @author Lorenzo, Alessandro
      * @param gameManager of the current game
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
      * @param sender current sender
      * @throws RemoteException
+     * @author Lorenzo, Alessandro
      */
-    public static boolean destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -257,7 +257,6 @@ public class SpaceshipController {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     /**

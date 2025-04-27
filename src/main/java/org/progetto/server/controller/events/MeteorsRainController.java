@@ -30,9 +30,6 @@ public class MeteorsRainController extends EventControllerAbstract {
     private int diceResult;
     private Projectile comingMeteor;
     private final ArrayList<Player> decisionPlayers;
-    private final ArrayList<Player> protectedPlayers;
-    private final ArrayList<Player> notProtectedPlayers;
-    private final ArrayList<Player> noProtectionAvailablePlayers;
     private final ArrayList<Player> discardedBattery;
 
     // =======================
@@ -46,9 +43,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
-        this.protectedPlayers = new ArrayList<>();
-        this.notProtectedPlayers = new ArrayList<>();
-        this.noProtectionAvailablePlayers = new ArrayList<>();
         this.discardedBattery = new ArrayList<>();
     }
 
@@ -103,13 +97,6 @@ public class MeteorsRainController extends EventControllerAbstract {
             askToRollDice();
 
             gameManager.getGameThread().resetAndWaitTravelersReady();
-
-            // Resets elaboration attributes
-            decisionPlayers.clear();
-            protectedPlayers.clear();
-            notProtectedPlayers.clear();
-            noProtectionAvailablePlayers.clear();
-            discardedBattery.clear();
         }
     }
 
@@ -163,7 +150,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.HANDLE_SMALL_METEOR;
             handleSmallMeteor();
-
         } else {
             phase = EventPhase.HANDLE_BIG_METEOR;
             handleBigMeteor();
@@ -220,6 +206,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
+            return;
         }
 
         gameManager.getGameThread().notifyThread();
@@ -275,6 +262,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
+            return;
         }
 
         gameManager.getGameThread().notifyThread();
@@ -410,7 +398,5 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         // Destroys affected component
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender);
-
-        gameManager.getGameThread().notifyThread();
     }
 }

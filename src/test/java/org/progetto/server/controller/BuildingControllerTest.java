@@ -646,7 +646,7 @@ class BuildingControllerTest {
         bb2.placeComponent(1, 2, 0);
 
 
-        //test validity for first+second ship
+        //test validity for first + second ship
        sender = new Sender() {
             @Override
             public void sendMessage(Object message) {

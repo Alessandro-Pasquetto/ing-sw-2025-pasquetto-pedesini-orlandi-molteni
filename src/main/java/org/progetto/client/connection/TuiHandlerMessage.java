@@ -102,7 +102,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AnotherPlayerBookedComponentMessage anotherPlayerBookedComponentMessage){
-            System.out.println(anotherPlayerBookedComponentMessage.getNamePlayer()+ " booked a component at "+anotherPlayerBookedComponentMessage.getBookedIndex());
+            System.out.println(anotherPlayerBookedComponentMessage.getNamePlayer() + " booked a component at " + anotherPlayerBookedComponentMessage.getBookedIndex());
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
