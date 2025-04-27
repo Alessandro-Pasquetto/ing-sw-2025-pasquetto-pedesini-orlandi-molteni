@@ -215,23 +215,35 @@ public class SmugglersController extends EventControllerAbstract {
 
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
 
+        // Checks if component index is correct
+        if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
+            sender.sendMessage("InvalidCoordinates");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+            }
+            return;
+        }
+
+        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+
+        // Checks if component is a battery storage
+        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            sender.sendMessage("InvalidComponent");
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
+
+            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+            }
+            return;
+        }
 
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-
-            // Checks if component index is correct
-            if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
-                sender.sendMessage("InvalidCoordinates");
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
-                return;
-            }
-            Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
-
-            // Checks if component is a battery storage
-            if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-                sender.sendMessage("InvalidComponent");
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
-                return;
-            }
 
             // Checks if a battery has been discarded
             if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
@@ -251,25 +263,7 @@ public class SmugglersController extends EventControllerAbstract {
                 sender.sendMessage(new BatteriesToDiscardMessage(requestedBatteries));
             }
 
-
         } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-
-
-            // Checks if component index is correct
-            if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
-                sender.sendMessage("InvalidCoordinates");
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                return;
-            }
-            Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
-
-            // Checks if component is a battery storage
-            if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-                sender.sendMessage("InvalidComponent");
-                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                return;
-            }
-
 
             // Checks if a battery has been discarded
             if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
@@ -430,8 +424,6 @@ public class SmugglersController extends EventControllerAbstract {
             sender.sendMessage("BoxDiscarded");
 
             if (requestedBoxes == 0) {
-                gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
 
@@ -529,12 +521,6 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
-        // Checks if all boxes were chosen
-        if (rewardBoxes.isEmpty()) {
-            leaveReward(player, sender);
-            return;
-        }
-
         // Checks if reward box index is correct
         if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
             sender.sendMessage("IncorrectRewardIndex");
@@ -572,10 +558,17 @@ public class SmugglersController extends EventControllerAbstract {
         if (smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, idx, box)) {
             sender.sendMessage("BoxChosen");
             rewardBoxes.remove(box);
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
 
         } else {
             sender.sendMessage("BoxNotChosen");
+        }
+
+        // Checks if all boxes were chosen
+        if (rewardBoxes.isEmpty()) {
+            sender.sendMessage("EmptyReward");
+            leaveReward(player, sender);
+
+        } else {
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }
     }

@@ -201,16 +201,18 @@ public class LostStationController extends EventControllerAbstract {
             sender.sendMessage("BoxChosen");
 
             rewardBoxes.remove(box);
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
 
         } else {
             sender.sendMessage("BoxNotChosen");
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }
 
         // Checks if all boxes were chosen
         if (rewardBoxes.isEmpty()) {
+            sender.sendMessage("EmptyReward");
             leaveStation(player, sender);
+
+        } else {
+            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }
     }
 

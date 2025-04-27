@@ -218,10 +218,13 @@ public class PlanetsController extends EventControllerAbstract {
         sender.sendMessage("BoxChosen");
 
         // All the boxes are chosen
-        if (rewardBoxes.isEmpty())
+        if (rewardBoxes.isEmpty()) {
+            sender.sendMessage("EmptyReward");
             leavePlanet(player, sender);
-        else
+
+        } else {
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
+        }
     }
 
     /**
