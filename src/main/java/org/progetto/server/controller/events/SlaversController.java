@@ -419,8 +419,8 @@ public class SlaversController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()));
-            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()), sender);
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();

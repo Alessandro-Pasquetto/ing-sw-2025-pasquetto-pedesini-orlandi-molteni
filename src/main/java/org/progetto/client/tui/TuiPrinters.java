@@ -385,8 +385,8 @@ public class TuiPrinters {
                         case 3:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
-                            lines[3] = leftConnections[2] + "    [" + boxesStr[2] + "]    " + rightConnections[2];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[2] + "] " + rightConnections[1];
+                            lines[3] = leftConnections[2] + "    [" + boxesStr[1] + "]    " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                     }

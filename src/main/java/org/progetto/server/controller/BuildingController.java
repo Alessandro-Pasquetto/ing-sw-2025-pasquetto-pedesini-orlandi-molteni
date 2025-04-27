@@ -181,10 +181,10 @@ public class BuildingController {
                         bb.placeComponent(1, 4, 0);
 
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(3, 1, 0);
-
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
                         bb.placeComponent(3, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(3, 1, 0);
 
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
                         bb.placeComponent(3, 3, 2);

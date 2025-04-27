@@ -369,6 +369,18 @@ public class TuiHandlerMessage {
                     System.out.println("Unable to discard the box!");
                     break;
 
+                case "BoxChosen":
+                    System.out.println("Box placed correctly");
+                    break;
+
+                case "BoxNotChosen":
+                    System.out.println("Unable to place selected box in that position!");
+                    break;
+
+                case "EmptyReward":
+                    System.out.println("No reward boxes left!");
+                    break;
+
                 case "YouAreSafe":
                     System.out.println("You are safe");
                     break;

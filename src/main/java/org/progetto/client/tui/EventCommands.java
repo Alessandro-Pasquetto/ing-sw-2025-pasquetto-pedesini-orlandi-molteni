@@ -242,14 +242,14 @@ public class EventCommands {
 
         while(true){
             System.out.println("Do you want to accept the reward and the days penalty? (YES or NO)");
-            System.out.println(" Days of penalty: "+penaltyDays+" and reward box list:");
+            System.out.print("Days of penalty: " + penaltyDays + ", Reward boxes: ");
 
             for (int i = 0; i < reward.size(); i++) {
                 String box = TuiPrinters.drawBox(reward.get(i));
-
-                System.out.printf("[%d] %s%n", i, box);
+                System.out.printf("%s ", box);
             }
 
+            System.out.println();
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -273,7 +273,7 @@ public class EventCommands {
 
         while(true){
 
-            System.out.println("📦 Box list:");
+            System.out.println("Box list:");
 
             for (int i = 0; i < availableBoxes.size(); i++) {
                 String box = TuiPrinters.drawBox(availableBoxes.get(i));
@@ -281,7 +281,7 @@ public class EventCommands {
                 System.out.printf("[%d] %s%n", i, box);
             }
 
-            System.out.println("Select an available box by index from the list (-1 if you wanna leave the planet)");
+            System.out.println("Select an available box by index from the list (-1 if you wanna leave)");
             String idx = TuiCommandFilter.waitResponse();
             try{
                 int box_idx = Integer.parseInt(idx);
@@ -453,8 +453,8 @@ public class EventCommands {
     }
 
     public static void responseSelectSpaceshipPart() {
-        while (true) {
 
+        while (true) {
             System.out.println("Select the component from which that part of the ship will be destroyed: <X> <Y>");
 
             System.out.print("X: ");

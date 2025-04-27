@@ -199,7 +199,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         // Checks that the box index is valid
         BoxStorage storage = (BoxStorage) boxStorage;
-        if(idxBox>=storage.getCapacity()||idxBox<0){
+        if(idxBox >= storage.getCapacity() || idxBox<0){
             sender.sendMessage("InvalidStorageIndex");
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
             return;
@@ -265,7 +265,7 @@ public class PlanetsController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()), sender);
         }
 
         // Penalty applied

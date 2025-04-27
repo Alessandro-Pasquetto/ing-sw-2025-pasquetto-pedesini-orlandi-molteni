@@ -614,7 +614,7 @@ public class SmugglersController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             sender.sendMessage(new PlayerMovedBackwardMessage(smugglers.getPenaltyDays()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()), sender);
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();

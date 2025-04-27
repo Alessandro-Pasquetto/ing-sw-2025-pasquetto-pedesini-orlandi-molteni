@@ -576,7 +576,7 @@ public class BattlezoneController extends EventControllerAbstract {
             battlezone.penaltyDays(gameManager.getGame().getBoard(), penaltyPlayer, couples.getFirst().getPenalty().getNeededAmount());
 
             sender.sendMessage(new PlayerMovedBackwardMessage(couples.getFirst().getPenalty().getNeededAmount()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(penaltyPlayer.getName(), couples.getFirst().getPenalty().getNeededAmount()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(penaltyPlayer.getName(), couples.getFirst().getPenalty().getNeededAmount()), sender);
 
             // Updates turn order
             board.updateTurnOrder();

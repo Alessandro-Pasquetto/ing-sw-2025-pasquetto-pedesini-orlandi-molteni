@@ -394,8 +394,8 @@ public class PiratesController extends EventControllerAbstract {
 
             sender.sendMessage(new PlayerMovedBackwardMessage(pirates.getPenaltyDays()));
             sender.sendMessage(new PlayerGetsCreditsMessage(pirates.getRewardCredits()));
-            gameManager.broadcastGameMessage(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()));
-            gameManager.broadcastGameMessage(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()), sender);
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
