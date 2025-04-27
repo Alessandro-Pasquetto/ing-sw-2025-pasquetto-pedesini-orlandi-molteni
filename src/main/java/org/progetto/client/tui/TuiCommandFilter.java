@@ -158,7 +158,7 @@ public class TuiCommandFilter {
     }
 
     private static Map<String, Command> loadCommands() {
-        String path = "src/main/resources/org/progetto/client/commands/commandsList.json";
+        String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
         Gson gson = new Gson();
 
         Map<String, Command> commands = new HashMap<>();
@@ -199,11 +199,11 @@ public class TuiCommandFilter {
                     BuildingCommands.close(commandParts);
                 else
                     expectedFormat(commandType);
-                break;
+                return;
 
             case "HELP":
                 GameCommands.showHelp();
-                break;
+                return;
         }
 
         switch (GameData.getPhaseGame()) {

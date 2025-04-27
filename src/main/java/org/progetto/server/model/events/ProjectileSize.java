@@ -1,6 +1,8 @@
 package org.progetto.server.model.events;
 
-public enum ProjectileSize {
+import java.io.Serializable;
+
+public enum ProjectileSize implements Serializable {
     BIG,
     SMALL
 }

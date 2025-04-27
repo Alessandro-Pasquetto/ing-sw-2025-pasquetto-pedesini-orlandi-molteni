@@ -1,137 +1,137 @@
 [
   {
     "name": "Connect",
-    "description": "Connect to the server.",
+    "description": "Connect to the server",
     "usage": "Connect <ip> <port>"
   },
   {
     "name": "ShowGames",
-    "description": "Show the waiting games.",
+    "description": "Show the waiting games",
     "usage": "ShowGames"
   },
   {
     "name": "CreateGame",
-    "description": "Create a new game session.",
+    "description": "Create a new game session",
     "usage": "CreateGame <nickname> <level> <numPlayers>"
   },
   {
     "name": "AutoCreate",
-    "description": "Automatically connect to the correct port and create a new game session.",
+    "description": "Auto connects and creates a new game",
     "usage": "AutoCreate"
   },
   {
     "name": "JoinGame",
-    "description": "Join an existing game session.",
+    "description": "Join an existing game session",
     "usage": "JoinGame <id> <nickname>"
   },
   {
     "name": "AutoJoin",
-    "description": "Automatically connect to the correct port and join an existing game session.",
+    "description": "Auto connects and joins an existing game",
     "usage": "AutoJoin <id>"
   },
   {
     "name": "ShowHand",
-    "description": "Show hand components.",
+    "description": "Show hand components",
     "usage": "ShowHand"
   },
   {
     "name": "PickHidden",
-    "description": "Pick a hidden component from the deck.",
+    "description": "Pick a hidden component from the deck",
     "usage": "PickHidden"
   },
   {
     "name": "ShowVisible",
-    "description": "Show visible components.",
+    "description": "Show visible components",
     "usage": "ShowVisible"
   },
   {
     "name": "PickVisible",
-    "description": "Pick a visible component by index.",
+    "description": "Pick a visible component by index",
     "usage": "PickVisible <index>"
   },
   {
     "name": "Place",
-    "description": "Place the last drawn component on the board.",
+    "description": "Place the last drawn component on the board",
     "usage": "Place <x> <y> <rotation>"
   },
   {
     "name": "Discard",
-    "description": "Discard the component in hand.",
+    "description": "Discard the component in hand",
     "usage": "Discard"
   },
   {
     "name": "Book",
-    "description": "Book a visible component.",
+    "description": "Book a visible component",
     "usage": "Book <index>"
   },
   {
     "name": "ShowBooked",
-    "description": "Show booked components.",
+    "description": "Show booked components",
     "usage": "ShowBooked"
   },
   {
     "name": "PickBooked",
-    "description": "Pick a previously booked component.",
+    "description": "Pick a previously booked component",
     "usage": "PickBooked <index>"
   },
   {
     "name": "PickUpDeck",
-    "description": "Pick up an event card deck.",
+    "description": "Pick up an event card deck",
     "usage": "PickUpDeck <deckIndex>"
   },
   {
     "name": "PutDownDeck",
-    "description": "Put down an event card deck.",
+    "description": "Put down an event card deck",
     "usage": "PutDownDeck"
   },
   {
     "name": "Destroy",
-    "description": "Destroy a component at given coordinates.",
+    "description": "Destroy a component at given coordinates",
     "usage": "Destroy <x> <y>"
   },
   {
     "name": "Ready",
-    "description": "Declare you are ready.",
+    "description": "Declare you are ready",
     "usage": "Ready"
   },
   {
     "name": "TimerReset",
-    "description": "Reset the building timer.",
+    "description": "Reset the building timer",
     "usage": "TimerReset"
   },
   {
     "name": "Close",
-    "description": "Disconnect and exit the game.",
+    "description": "Disconnect and exit the game",
     "usage": "Close"
   },
   {
     "name": "PlayerStats",
-    "description": "Show player's stats.",
+    "description": "Show player's stats",
     "usage": "PlayerStats"
   },
   {
     "name": "ShowShip",
-    "description": "Show the structure of a player's spaceship.",
+    "description": "Show the structure of a player's spaceship",
     "usage": "ShowShip <nickname>"
   },
   {
     "name": "ShipStats",
-    "description": "Show player's spaceship stats.",
+    "description": "Show player's spaceship stats",
     "usage": "ShipStats"
   },
   {
     "name": "ShowTrack",
-    "description": "Show current track.",
+    "description": "Show current track",
     "usage": "ShowTrack"
   },
   {
     "name": "Populate",
-    "description": "Populate a component.",
+    "description": "Populate a component",
     "usage": "Populate <human/orange/purple> <x> <y>"
   },
   {
-    "name": "buildShip",
-    "description": "Allows to build a ship from a series of configurations",
-    "usage": "buildShip <configurationID> "
+    "name": "BuildShip",
+    "description": "Allows to build a ship template",
+    "usage": "BuildShip <id> "
   }
 ]

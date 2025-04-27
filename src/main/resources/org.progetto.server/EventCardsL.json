@@ -30,7 +30,7 @@
       },
       {
         "type": "FIREPOWERREQUIREMENT",
-        "penalty": {"type": "PENALTYSHOTS", "neededAmount": 0, "shots": [{"size": "Small", "from": 2}, {"size": "Big", "from": 2}]}
+        "penalty": {"type": "PENALTYSHOTS", "neededAmount": 0, "shots": [{"size": "SMALL", "from": 2}, {"size": "BIG", "from": 2}]}
       }
     ]
   },

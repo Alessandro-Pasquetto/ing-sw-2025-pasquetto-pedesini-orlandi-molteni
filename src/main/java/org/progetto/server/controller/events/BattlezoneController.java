@@ -821,6 +821,7 @@ public class BattlezoneController extends EventControllerAbstract {
             for (Projectile shot : penaltyShots) {
 
                 currentShot = shot;
+
                 // Gets penalty player sender reference
                 Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 

@@ -81,19 +81,41 @@ public class GameCommands {
      * @author Lorenzo
      */
     public static void showHelp() {
-        String path = "src/main/resources/org/progetto/client/commands/commandsList.json";
+        String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
         Gson gson = new Gson();
         try (Reader reader = new FileReader(path)) {
             Type listType = new TypeToken<List<Command>>() {}.getType();
             List<Command> commands = gson.fromJson(reader, listType);
 
+            int nameWidth = 15;
+            int descWidth = 45;
+            int usageWidth = 45;
+
+            String topBorder = "┌" + "─".repeat(nameWidth + 2) + "┬" + "─".repeat(descWidth + 2) + "┬" + "─".repeat(usageWidth + 2) + "┐";
+            String headerSeparator = "├" + "─".repeat(nameWidth + 2) + "┼" + "─".repeat(descWidth + 2) + "┼" + "─".repeat(usageWidth + 2) + "┤";
+            String bottomBorder = "└" + "─".repeat(nameWidth + 2) + "┴" + "─".repeat(descWidth + 2) + "┴" + "─".repeat(usageWidth + 2) + "┘";
+
             System.out.println("\n📖 Available Commands:\n");
+
+            System.out.println(topBorder);
+
+            System.out.printf("│ %-"+nameWidth+"s │ %-"+descWidth+"s │ %-"+usageWidth+"s │%n", "Name", "Description", "Usage");
+
+            System.out.println(headerSeparator);
+
             for (Command cmd : commands) {
-                System.out.printf("%-20s : %s%n", cmd.getName(), cmd.getDescription());
-                System.out.printf("Usage                : %s%n%n", cmd.getUsage());
+                System.out.printf("│ %-"+nameWidth+"s │ %-"+descWidth+"s │ %-"+usageWidth+"s │%n",
+                        cmd.getName(),
+                        cmd.getDescription(),
+                        cmd.getUsage()
+                );
             }
+
+            System.out.println(bottomBorder);
+
         } catch (IOException e) {
             System.out.println("Error loading command list: " + e.getMessage());
         }
     }
+
 }

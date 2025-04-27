@@ -223,8 +223,8 @@ public class Game {
 
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS))
-                    Collections.shuffle(lv2Deck);
+//                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS))
+//                    Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -447,10 +447,8 @@ public class Game {
             if(hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            /*
-            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
-             */
+//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
 
             // forzare eventCard, todo da rimuovere
@@ -458,15 +456,15 @@ public class Game {
 
             do{
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SMUGGLERS));
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
-        ArrayList<Box> rewardBoxes = new ArrayList<>(
-        List.of(new Box[]{Box.RED, Box.YELLOW, Box.BLUE})
-        );
-        pickedEventCard = new Smugglers(CardType.SMUGGLERS, 1, "imgSrc", 3, 2, 1, rewardBoxes);
+//        ArrayList<Box> rewardBoxes = new ArrayList<>(
+//        List.of(new Box[]{Box.RED, Box.YELLOW, Box.BLUE})
+//        );
+//        pickedEventCard = new Smugglers(CardType.SMUGGLERS, 1, "imgSrc", 3, 2, 1, rewardBoxes);
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;

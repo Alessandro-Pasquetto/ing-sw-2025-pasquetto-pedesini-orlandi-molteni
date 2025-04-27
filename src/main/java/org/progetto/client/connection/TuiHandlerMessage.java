@@ -7,6 +7,8 @@ import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
+import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
+import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -173,6 +175,14 @@ public class TuiHandlerMessage {
 
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
             EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
+        }
+
+        else if(messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {
+            System.out.println("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions");
+        }
+
+        else if(messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
+            System.out.println(anotherPlayerMovedAheadMessage.getNamePlayer() + " have moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions");
         }
 
         else if(messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
