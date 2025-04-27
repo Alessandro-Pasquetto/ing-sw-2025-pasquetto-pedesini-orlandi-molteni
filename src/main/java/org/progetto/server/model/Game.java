@@ -223,7 +223,7 @@ public class Game {
 
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SLAVERS))
+                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS))
                     Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -379,6 +379,7 @@ public class Game {
             pickedComponent = componentDeck.remove(randomPos);
         }
 
+
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
 
         return pickedComponent;
@@ -457,18 +458,17 @@ public class Game {
 
             do{
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SLAVERS));
+            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SMUGGLERS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
-        setActiveEventCard(pickedEventCard);
-//        ArrayList<Box> rewardBoxes = new ArrayList<>(
-//                List.of(new Box[]{Box.RED, Box.YELLOW,Box.BLUE})
-//        );
-//        pickedEventCard = new Smugglers(CardType.SMUGGLERS,1,"imgSrc",3,2,1,rewardBoxes);
-//        setActiveEventCard(pickedEventCard);
+        ArrayList<Box> rewardBoxes = new ArrayList<>(
+        List.of(new Box[]{Box.RED, Box.YELLOW,Box.BLUE})
+        );
+        pickedEventCard = new Smugglers(CardType.SMUGGLERS,1,"imgSrc",3,2,1,rewardBoxes);
 
+        setActiveEventCard(pickedEventCard);
         return pickedEventCard;
     }
 

@@ -99,6 +99,10 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerPutDownEventCardDeckMessage.getNamePlayer() + " put down event card deck " + anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
         }
 
+        else if(messageObj instanceof AnotherPlayerBookedComponentMessage anotherPlayerBookedComponentMessage){
+            System.out.println(anotherPlayerBookedComponentMessage.getNamePlayer()+ " booked a component at "+anotherPlayerBookedComponentMessage.getBookedIndex());
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             if (timer == 10)
@@ -297,8 +301,24 @@ public class TuiHandlerMessage {
                     System.out.println("Can't use that, incorrect phase!");
                     break;
 
+                case "NotValidCoordinates":
+                    System.out.println("Invalid coordinates!");
+                    break;
+
+                case "EmptyHandComponent":
+                    System.out.println("You can't place with an empty hand, draw first!");
+                    break;
+
+                case "IllegalIndexEventCardDeck":
+                    System.out.println("You have only 3 decks, choose a valid index!");
+                    break;
+
                 case "NotEnoughBatteries":
                     System.out.println("Not enough batteries!");
+                    break;
+
+                case "FullHandEventDeck":
+                    System.out.println("You first need to put down the deck you are looking at! ");
                     break;
 
                 case "InvalidCoordinates":
@@ -307,6 +327,14 @@ public class TuiHandlerMessage {
 
                 case "InvalidComponent":
                     System.out.println("Invalid component!");
+                    break;
+
+                case "BookedCellOccupied":
+                    System.out.println("You have already a component in that cell!");
+                    break;
+
+                case "IllegalBookIndex":
+                    System.out.println("You only have 2 cells, choose a valid index!");
                     break;
 
                 case "BatteryDiscarded":

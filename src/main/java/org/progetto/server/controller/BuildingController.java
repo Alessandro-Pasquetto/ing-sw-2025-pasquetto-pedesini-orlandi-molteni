@@ -434,9 +434,11 @@ public class BuildingController {
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck.equals(player)) {
-                sender.sendMessage("FullHandEventDeck");
-                return;
+            if(playerCheck != null) {
+                if (playerCheck.equals(player)) {
+                    sender.sendMessage("FullHandEventDeck");
+                    return;
+                }
             }
         }
 
@@ -944,8 +946,8 @@ public class BuildingController {
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
                 sender.sendMessage("EmptyHandComponent");
-            else if (e.getMessage().equals("IllegalIndex"))
-                sender.sendMessage("IllegalIndex");
+            else if (e.getMessage().equals("IllegalBookIndex"))
+                sender.sendMessage("IllegalBookIndex");
             else if (e.getMessage().equals("BookedCellOccupied"))
                 sender.sendMessage("BookedCellOccupied");
         }
@@ -1014,9 +1016,11 @@ public class BuildingController {
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck.equals(player)) {
-                sender.sendMessage("FullHandEventDeck");
-                return;
+            if(playerCheck != null) {
+                if (playerCheck.equals(player)) {
+                    sender.sendMessage("FullHandEventDeck");
+                    return;
+                }
             }
         }
 
@@ -1070,9 +1074,11 @@ public class BuildingController {
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck.equals(player)) {
-                sender.sendMessage("FullHandEventDeck");
-                return;
+            if(playerCheck != null) {
+                if (playerCheck.equals(player)) {
+                    sender.sendMessage("FullHandEventDeck");
+                    return;
+                }
             }
         }
 

@@ -3,6 +3,8 @@ package org.progetto.server.controller;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;
@@ -33,6 +35,13 @@ public class EventController {
     public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
 
         EventCard card = gameManager.getGame().pickEventCard();
+
+        for(Player player : gameManager.getGame().getPlayersCopy()){
+
+            Sender sender = gameManager.getSenderByPlayer(player);
+            sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(),player.getName()));
+            sender.sendMessage(new ResponseSpaceshipStatsMessage(player.getSpaceship()));
+        }
 
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
     }

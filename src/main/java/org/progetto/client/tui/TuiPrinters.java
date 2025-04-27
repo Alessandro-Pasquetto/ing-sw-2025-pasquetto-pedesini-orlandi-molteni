@@ -582,6 +582,7 @@ public class TuiPrinters {
         System.out.println("\nStorage (red, yellow, green, blue)");
         int[] boxes = spaceship.getBoxCounts();
         System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
+        System.out.println();
     }
 
     // =======================

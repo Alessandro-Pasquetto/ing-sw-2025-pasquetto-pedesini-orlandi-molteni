@@ -147,14 +147,14 @@ public class BuildingBoard implements Serializable {
      */
     public void placeComponent(int x, int y, int r) {
 
+        if(handComponent == null)
+            throw new IllegalStateException("EmptyHandComponent");
+
         if(x < 0 || y < 0 || x >= boardMask[0].length || y >= boardMask.length)
             throw new IllegalStateException("NotValidCoordinates");
 
         if(boardMask[y][x] != 1)
             throw new IllegalStateException("NotAllowedToPlaceComponent");
-
-        if(handComponent == null)
-            throw new IllegalStateException("EmptyHandComponent");
 
         // If it's not connected to at least one component returns false
         if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1))
@@ -183,7 +183,7 @@ public class BuildingBoard implements Serializable {
         if(handComponent == null)
             throw new IllegalStateException("EmptyHandComponent");
         if(idx < 0 || idx > 1)
-            throw new IllegalStateException("IllegalIndex");
+            throw new IllegalStateException("IllegalBookIndex");
         if(booked[idx] != null)
             throw new IllegalStateException("BookedCellOccupied");
 
