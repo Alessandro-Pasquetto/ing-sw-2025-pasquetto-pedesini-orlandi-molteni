@@ -423,6 +423,11 @@ public class TuiPrinters {
         int totalComponents = visibleComponents.size();
         int maxPerRow = 5;
 
+        if (totalComponents == 0) {
+            System.out.println("Empty visible components...");
+            return;
+        }
+
         for (int start = 0; start < totalComponents; start += maxPerRow) {
             int end = Math.min(start + maxPerRow, totalComponents);
             int numComponentsInRow = end - start;
@@ -588,150 +593,133 @@ public class TuiPrinters {
     // =======================
     // EVENT CARDS
     // =======================
-
+    
     public static void printEventCard(EventCard card) {
+        int width = 50;
 
-        switch (card.getType()){
+        String topBorder = "┌" + "─".repeat(width) + "┐";
+        String middleBorder = "├" + "─".repeat(width) + "┤";
+        String bottomBorder = "└" + "─".repeat(width) + "┘";
+
+        System.out.println(topBorder);
+
+        String title = switch (card.getType()) {
+            case METEORSRAIN -> "Meteor Rain";
+            case SLAVERS -> "Slavers";
+            case SMUGGLERS -> "Smugglers";
+            case LOSTSTATION -> "Lost Station";
+            case BATTLEZONE -> "Battlezone";
+            case PIRATES -> "Pirates";
+            case PLANETS -> "Planets";
+            case LOSTSHIP -> "Lost Ship";
+            case STARDUST -> "Stardust";
+            case EPIDEMIC -> "Epidemic";
+            case OPENSPACE -> "Open Space";
+            default -> "Card Not Found";
+        };
+
+        printLine(title);
+
+        System.out.println(middleBorder);
+
+        switch (card.getType()) {
             case METEORSRAIN -> {
                 MeteorsRain meteorsRain = (MeteorsRain) card;
-                System.out.println ("┌─ Meteor Rain ───────");
-                System.out.println ("│  Meteors : ");
-
+                printLine("Meteors:");
                 for (int i = 0; i < meteorsRain.getMeteors().size(); i++) {
-                    System.out.printf("│    Meteor %d :  ", i);
-                    System.out.print(meteorsRain.getMeteors().get(i).toString());
-                    System.out.println();
+                    printLine(String.format("  Meteor %d: %s", i, meteorsRain.getMeteors().get(i).toString()));
                 }
-                System.out.println("└─────────────────────");
             }
-
             case SLAVERS -> {
                 Slavers slavers = (Slavers) card;
-                System.out.println("┌─ Slavers ───────────");
-                System.out.printf ("│  Strength : %d %n", slavers.getFirePowerRequired());
-                System.out.printf ("│  Penalty crew : %d %n", slavers.getPenaltyCrew());
-                System.out.printf ("│  Penalty days : %d %n", slavers.getPenaltyDays());
-                System.out.printf ("│  Credits reward : %d %n", slavers.getRewardCredits());
-                System.out.println("└─────────────────────");
+                printLine(String.format("Strength: %d", slavers.getFirePowerRequired()));
+                printLine(String.format("Penalty crew: %d", slavers.getPenaltyCrew()));
+                printLine(String.format("Penalty days: %d", slavers.getPenaltyDays()));
+                printLine(String.format("Credits reward: %d", slavers.getRewardCredits()));
             }
-
             case SMUGGLERS -> {
                 Smugglers smugglers = (Smugglers) card;
-                System.out.println("┌─ Smugglers ─────────");
-                System.out.printf ("│  Strength : %d %n", smugglers.getFirePowerRequired());
-                System.out.printf ("│  Penalty boxes : %d %n", smugglers.getPenaltyBoxes());
-                System.out.printf ("│  Penalty days : %d %n", smugglers.getPenaltyDays());
-
-                System.out.printf("│  Rewards :  ");
-                for (int i = 0; i < smugglers.getRewardBoxes().size(); i++) {
-                    System.out.print(TuiPrinters.drawBox(smugglers.getRewardBoxes().get(i)) + " ");
+                printLine(String.format("Strength: %d", smugglers.getFirePowerRequired()));
+                printLine(String.format("Penalty boxes: %d", smugglers.getPenaltyBoxes()));
+                printLine(String.format("Penalty days: %d", smugglers.getPenaltyDays()));
+                String line = "Rewards: ";
+                for (var box : smugglers.getRewardBoxes()) {
+                    line += TuiPrinters.drawBox(box) + " ";
                 }
-                System.out.println();
-
-                System.out.println("└─────────────────────");
+                printLine(line);
             }
-
             case LOSTSTATION -> {
                 LostStation station = (LostStation) card;
-                System.out.println("┌─ Lost Station ──────");
-
-                System.out.printf("│  Rewards :  ");
-                for (int i = 0; i < station.getRewardBoxes().size(); i++) {
-                    System.out.print(TuiPrinters.drawBox(station.getRewardBoxes().get(i)) + " ");
+                String line = "Rewards: ";
+                for (var box : station.getRewardBoxes()) {
+                    line += TuiPrinters.drawBox(box) + " ";
                 }
-                System.out.println();
-
-                System.out.printf ("│  Penalty days : %d %n", station.getPenaltyDays());
-                System.out.printf ("│  Required crew : %d %n", station.getRequiredCrew());
-                System.out.println("└─────────────────────");
+                printLine(line);
+                printLine(String.format("Penalty days: %d", station.getPenaltyDays()));
+                printLine(String.format("Required crew: %d", station.getRequiredCrew()));
             }
-
             case BATTLEZONE -> {
                 Battlezone battlezone = (Battlezone) card;
-                ArrayList<ConditionPenalty> couples = battlezone.getCouples();
-                System.out.println("┌─ Battlezone ────────");
-
-                for (ConditionPenalty couple : couples) {
-                    System.out.println("├─────────────────────");
-
-                    System.out.printf ("│  Condition type : %s %n", couple.getCondition().toString());
-                    System.out.printf ("│  Penalty type : %s %n", couple.getPenalty().getType().toString());
-
+                for (ConditionPenalty couple : battlezone.getCouples()) {
+                    String line = "Condition: " + couple.getCondition();
+                    printLine(line);
+                    line = "Penalty: " + couple.getPenalty().getType();
+                    printLine(line);
                     if (couple.getPenalty().getType().toString().equals("PENALTYSHOTS")) {
                         for (int i = 0; i < couple.getPenalty().getShots().size(); i++) {
-                            System.out.printf("│    Shot %d :  ", i);
-                            System.out.print(couple.getPenalty().getShots().get(i).toString());
-                            System.out.println();
+                            printLine(String.format("  Shot %d: %s", i, couple.getPenalty().getShots().get(i)));
                         }
                     } else {
-                        System.out.printf ("│    Amount to discard : %d %n", couple.getPenalty().getNeededAmount());
+                        printLine(String.format("  Amount discard: %d", couple.getPenalty().getNeededAmount()));
                     }
                 }
-
-                System.out.println("└─────────────────────");
             }
-
             case PIRATES -> {
                 Pirates pirates = (Pirates) card;
-                System.out.println("┌─ Pirates ───────────");
-                System.out.printf ("│  Strength : %d %n", pirates.getFirePowerRequired());
-                System.out.println ("│  Shots : ");
-
+                printLine(String.format("Strength: %d", pirates.getFirePowerRequired()));
+                printLine("Shots:");
                 for (int i = 0; i < pirates.getPenaltyShots().size(); i++) {
-                    System.out.printf("│    Shot %d :  ", i);
-                    System.out.print(pirates.getPenaltyShots().get(i).toString());
-                    System.out.println();
+                    printLine(String.format("  Shot %d: %s", i, pirates.getPenaltyShots().get(i)));
                 }
-
-                System.out.printf ("│  Penalty days : %d %n", pirates.getPenaltyDays());
-                System.out.printf ("│  Credits reward : %d %n", pirates.getRewardCredits());
-                System.out.println("└─────────────────────");
+                printLine(String.format("Penalty days: %d", pirates.getPenaltyDays()));
+                printLine(String.format("Credits reward: %d", pirates.getRewardCredits()));
             }
-
             case PLANETS -> {
                 Planets planets = (Planets) card;
-                System.out.println("┌─ Planets ───────────");
-                System.out.println("│  Rewards per planet :");
-
+                printLine("Rewards per planet:");
                 for (int i = 0; i < planets.getRewardsForPlanets().size(); i++) {
-                    System.out.printf("│    Planet %d :  ", i);
-                    for (int j = 0; j < planets.getRewardsForPlanets().get(i).size(); j++) {
-                        System.out.print(TuiPrinters.drawBox(planets.getRewardsForPlanets().get(i).get(j)) + " ");
+                    StringBuilder sb = new StringBuilder();
+                    for (var box : planets.getRewardsForPlanets().get(i)) {
+                        sb.append(TuiPrinters.drawBox(box)).append(" ");
                     }
-                    System.out.println();
+                    printLine(String.format("  Planet %d: %s", i, sb));
                 }
-
-                System.out.printf("│  Penalty days : %d%n", planets.getPenaltyDays());
-                System.out.println("└─────────────────────");
+                printLine(String.format("Penalty days: %d", planets.getPenaltyDays()));
             }
-
             case LOSTSHIP -> {
                 LostShip lostShip = (LostShip) card;
-                System.out.println("┌─ Lost Ship ─────────");
-                System.out.printf ("│  Penalty crew : %d %n", lostShip.getPenaltyCrew());
-                System.out.printf ("│  Penalty days : %d %n", lostShip.getPenaltyDays());
-                System.out.printf ("│  Reward credits : %d %n", lostShip.getRewardCredits());
-                System.out.println("└─────────────────────");
+                printLine(String.format("Penalty crew: %d", lostShip.getPenaltyCrew()));
+                printLine(String.format("Penalty days: %d", lostShip.getPenaltyDays()));
+                printLine(String.format("Reward credits: %d", lostShip.getRewardCredits()));
             }
-
-            case STARDUST -> {
-                Stardust stardust = (Stardust) card;
-                System.out.println("┌─ Stardust ──────────");
-                System.out.println("└─────────────────────");
-            }
-
-            case EPIDEMIC -> {
-                Epidemic epidemic = (Epidemic) card;
-                System.out.println("┌─ Epidemic ──────────");
-                System.out.println("└─────────────────────");
-            }
-
-            case OPENSPACE -> {
-                OpenSpace openSpace = (OpenSpace) card;
-                System.out.println("┌─ OpenSpace ─────────");
-                System.out.println("└─────────────────────");
+            case STARDUST, EPIDEMIC, OPENSPACE -> {
+                printLine("No special data");
             }
         }
+
+        System.out.println(bottomBorder);
+    }
+
+    private static void printLine(String text) {
+        int width = 48;
+
+        String plainText = text.replaceAll("\u001B\\[[;\\d]*m", "");
+
+        int colorCodeLength = text.length() - plainText.length();
+
+        int totalWidth = width + colorCodeLength;
+
+        System.out.printf("│ %-"+totalWidth+"s │%n", text);
     }
 
     public static void printEventCardDeck(ArrayList<EventCard> eventCardDeck) {
@@ -750,7 +738,6 @@ public class TuiPrinters {
         System.out.printf ("│  Size : %-33s %n", message.getProjectile().getSize());
         System.out.printf ("│  From : %-33d %n", message.getProjectile().getFrom());
         System.out.println("└──────────────────────────────────────");
-
     }
 
     // =======================

@@ -117,5 +117,4 @@ public class GameCommands {
             System.out.println("Error loading command list: " + e.getMessage());
         }
     }
-
 }
