@@ -275,7 +275,6 @@ public class BattlezoneController extends EventControllerAbstract {
         // Player doesn't want to use double cannons
         if (num == 0) {
             tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -976,7 +975,7 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     private void handleShot() throws RemoteException {
         if (phase.equals(EventPhase.HANDLE_SHOT)) {
-
+            //todo gestire correttamente l'effetto dello scudo
             Game game = gameManager.getGame();
 
             Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, currentShot, diceResult);

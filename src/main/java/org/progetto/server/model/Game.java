@@ -222,8 +222,8 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-//                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS))
-//                    Collections.shuffle(lv2Deck);
+                while(!lv2Deck.getFirst().getType().equals(CardType.BATTLEZONE))
+                   Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));

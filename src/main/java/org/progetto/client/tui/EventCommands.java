@@ -26,7 +26,10 @@ public class EventCommands {
 
         while(true){
             System.out.println("How many double cannons do you want to activate?");
-            System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
+            if(required == 0)
+                System.out.println("You have to maximise your power");
+            else
+                System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
 
             String response = TuiCommandFilter.waitResponse();
 
