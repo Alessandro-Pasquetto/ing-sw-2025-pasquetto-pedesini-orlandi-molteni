@@ -435,7 +435,10 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage("BatteryDiscarded");
 
                 phase = EventPhase.HANDLE_SHOT;
-                handleShot();
+                gameManager.broadcastGameMessage("NothingGotDestroyed");
+
+                penaltyPlayer.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
 
             } else {
                 sender.sendMessage("BatteryNotDiscarded");
@@ -975,7 +978,6 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     private void handleShot() throws RemoteException {
         if (phase.equals(EventPhase.HANDLE_SHOT)) {
-            //todo gestire correttamente l'effetto dello scudo
             Game game = gameManager.getGame();
 
             Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, currentShot, diceResult);
@@ -986,13 +988,14 @@ public class BattlezoneController extends EventControllerAbstract {
             // Sends two types of messages based on the shot's result
             if (destroyedComponent != null) {
                 SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
-
-            } else {
+            }
+            else
                 gameManager.broadcastGameMessage("NothingGotDestroyed");
 
-                penaltyPlayer.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-            }
+
+            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
         }
     }
 }

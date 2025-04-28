@@ -451,13 +451,12 @@ public class Game {
 
 
             // forzare eventCard, todo da rimuovere
-//            int randomPos = 0;
-//
-//            do{
-//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
-//
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
+
+           do{
+               randomPos = (int) (Math.random() * hiddenEventDeck.size());
+           }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
+
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
 //        ArrayList<Box> rewardBoxes = new ArrayList<>(
