@@ -641,7 +641,6 @@ public class PiratesController extends EventControllerAbstract {
 
                 } else {
                     sender.sendMessage("NothingGotDestroyed");
-
                     player.setIsReady(true, gameManager.getGame());
                 }
             }

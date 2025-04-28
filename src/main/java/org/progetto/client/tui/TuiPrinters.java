@@ -488,9 +488,13 @@ public class TuiPrinters {
         int yNormalized = y + 5;
 
         if (player == null) {
-            System.out.printf("You lost component positioned:  x = %d, y = %d %n", xNormalized, yNormalized);
+            System.out.println("You lost component positioned:");
+            System.out.printf ("│ X: %d %n", xNormalized);
+            System.out.printf ("│ Y: %d %n", yNormalized);
         } else {
-            System.out.printf("%s lost component positioned:  x = %d, y = %d %n", player, xNormalized, yNormalized);
+            System.out.printf("%s lost component positioned: %n", player);
+            System.out.printf ("│ X: %d %n", xNormalized);
+            System.out.printf ("│ Y: %d %n", yNormalized);
         }
     }
 
@@ -618,35 +622,35 @@ public class TuiPrinters {
             default -> "Card Not Found";
         };
 
-        printLine(title);
+        printEventCardLine(title);
 
         System.out.println(middleBorder);
 
         switch (card.getType()) {
             case METEORSRAIN -> {
                 MeteorsRain meteorsRain = (MeteorsRain) card;
-                printLine("Meteors:");
+                printEventCardLine("Meteors:");
                 for (int i = 0; i < meteorsRain.getMeteors().size(); i++) {
-                    printLine(String.format("  Meteor %d: %s", i, meteorsRain.getMeteors().get(i).toString()));
+                    printEventCardLine(String.format("  Meteor %d: %s", i, meteorsRain.getMeteors().get(i).toString()));
                 }
             }
             case SLAVERS -> {
                 Slavers slavers = (Slavers) card;
-                printLine(String.format("Strength: %d", slavers.getFirePowerRequired()));
-                printLine(String.format("Penalty crew: %d", slavers.getPenaltyCrew()));
-                printLine(String.format("Penalty days: %d", slavers.getPenaltyDays()));
-                printLine(String.format("Credits reward: %d", slavers.getRewardCredits()));
+                printEventCardLine(String.format("Strength: %d", slavers.getFirePowerRequired()));
+                printEventCardLine(String.format("Penalty crew: %d", slavers.getPenaltyCrew()));
+                printEventCardLine(String.format("Penalty days: %d", slavers.getPenaltyDays()));
+                printEventCardLine(String.format("Credits reward: %d", slavers.getRewardCredits()));
             }
             case SMUGGLERS -> {
                 Smugglers smugglers = (Smugglers) card;
-                printLine(String.format("Strength: %d", smugglers.getFirePowerRequired()));
-                printLine(String.format("Penalty boxes: %d", smugglers.getPenaltyBoxes()));
-                printLine(String.format("Penalty days: %d", smugglers.getPenaltyDays()));
+                printEventCardLine(String.format("Strength: %d", smugglers.getFirePowerRequired()));
+                printEventCardLine(String.format("Penalty boxes: %d", smugglers.getPenaltyBoxes()));
+                printEventCardLine(String.format("Penalty days: %d", smugglers.getPenaltyDays()));
                 String line = "Rewards: ";
                 for (var box : smugglers.getRewardBoxes()) {
                     line += TuiPrinters.drawBox(box) + " ";
                 }
-                printLine(line);
+                printEventCardLine(line);
             }
             case LOSTSTATION -> {
                 LostStation station = (LostStation) card;
@@ -654,63 +658,71 @@ public class TuiPrinters {
                 for (var box : station.getRewardBoxes()) {
                     line += TuiPrinters.drawBox(box) + " ";
                 }
-                printLine(line);
-                printLine(String.format("Penalty days: %d", station.getPenaltyDays()));
-                printLine(String.format("Required crew: %d", station.getRequiredCrew()));
+                printEventCardLine(line);
+                printEventCardLine(String.format("Penalty days: %d", station.getPenaltyDays()));
+                printEventCardLine(String.format("Required crew: %d", station.getRequiredCrew()));
             }
             case BATTLEZONE -> {
                 Battlezone battlezone = (Battlezone) card;
+                int count = 0;
+
                 for (ConditionPenalty couple : battlezone.getCouples()) {
                     String line = "Condition: " + couple.getCondition();
-                    printLine(line);
+                    printEventCardLine(line);
                     line = "Penalty: " + couple.getPenalty().getType();
-                    printLine(line);
+                    printEventCardLine(line);
                     if (couple.getPenalty().getType().toString().equals("PENALTYSHOTS")) {
                         for (int i = 0; i < couple.getPenalty().getShots().size(); i++) {
-                            printLine(String.format("  Shot %d: %s", i, couple.getPenalty().getShots().get(i)));
+                            printEventCardLine(String.format("  Shot %d: %s", i, couple.getPenalty().getShots().get(i)));
                         }
                     } else {
-                        printLine(String.format("  Amount discard: %d", couple.getPenalty().getNeededAmount()));
+                        printEventCardLine(String.format("  Amount discard: %d", couple.getPenalty().getNeededAmount()));
+                    }
+
+                    count++;
+
+                    if (count < battlezone.getCouples().size()) {
+                        System.out.println(middleBorder);
                     }
                 }
             }
             case PIRATES -> {
                 Pirates pirates = (Pirates) card;
-                printLine(String.format("Strength: %d", pirates.getFirePowerRequired()));
-                printLine("Shots:");
+                printEventCardLine(String.format("Strength: %d", pirates.getFirePowerRequired()));
+                printEventCardLine("Shots:");
                 for (int i = 0; i < pirates.getPenaltyShots().size(); i++) {
-                    printLine(String.format("  Shot %d: %s", i, pirates.getPenaltyShots().get(i)));
+                    printEventCardLine(String.format("  Shot %d: %s", i, pirates.getPenaltyShots().get(i)));
                 }
-                printLine(String.format("Penalty days: %d", pirates.getPenaltyDays()));
-                printLine(String.format("Credits reward: %d", pirates.getRewardCredits()));
+                printEventCardLine(String.format("Penalty days: %d", pirates.getPenaltyDays()));
+                printEventCardLine(String.format("Credits reward: %d", pirates.getRewardCredits()));
             }
             case PLANETS -> {
                 Planets planets = (Planets) card;
-                printLine("Rewards per planet:");
+                printEventCardLine("Rewards per planet:");
                 for (int i = 0; i < planets.getRewardsForPlanets().size(); i++) {
                     StringBuilder sb = new StringBuilder();
                     for (var box : planets.getRewardsForPlanets().get(i)) {
                         sb.append(TuiPrinters.drawBox(box)).append(" ");
                     }
-                    printLine(String.format("  Planet %d: %s", i, sb));
+                    printEventCardLine(String.format("  Planet %d: %s", i, sb));
                 }
-                printLine(String.format("Penalty days: %d", planets.getPenaltyDays()));
+                printEventCardLine(String.format("Penalty days: %d", planets.getPenaltyDays()));
             }
             case LOSTSHIP -> {
                 LostShip lostShip = (LostShip) card;
-                printLine(String.format("Penalty crew: %d", lostShip.getPenaltyCrew()));
-                printLine(String.format("Penalty days: %d", lostShip.getPenaltyDays()));
-                printLine(String.format("Reward credits: %d", lostShip.getRewardCredits()));
+                printEventCardLine(String.format("Penalty crew: %d", lostShip.getPenaltyCrew()));
+                printEventCardLine(String.format("Penalty days: %d", lostShip.getPenaltyDays()));
+                printEventCardLine(String.format("Reward credits: %d", lostShip.getRewardCredits()));
             }
             case STARDUST, EPIDEMIC, OPENSPACE -> {
-                printLine("No special data");
+                printEventCardLine("No special data");
             }
         }
 
         System.out.println(bottomBorder);
     }
 
-    private static void printLine(String text) {
+    private static void printEventCardLine(String text) {
         int width = 48;
 
         String plainText = text.replaceAll("\u001B\\[[;\\d]*m", "");
@@ -734,10 +746,13 @@ public class TuiPrinters {
 
     public static void printIncomingProjectile(IncomingProjectileMessage message){
 
-        System.out.println("┌─ Incoming Projectile ────────────────");
-        System.out.printf ("│  Size : %-33s %n", message.getProjectile().getSize());
-        System.out.printf ("│  From : %-33d %n", message.getProjectile().getFrom());
-        System.out.println("└──────────────────────────────────────");
+        int from = message.getProjectile().getFrom();
+        String[] directions = {"TOP", "RIGHT", "BOTTOM", "LEFT"};
+        String direction = (from >= 0 && from < directions.length) ? directions[from] : "unknown";
+
+        System.out.println("Incoming Projectile:");
+        System.out.printf ("│ Size: %s %n", message.getProjectile().getSize());
+        System.out.printf ("│ From: %s %n", direction);
     }
 
     // =======================

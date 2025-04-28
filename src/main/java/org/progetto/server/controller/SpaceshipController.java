@@ -238,12 +238,6 @@ public class SpaceshipController {
      */
     public static boolean destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
-        // todo da rivedere: viene chiamato anche nelle eventcards
-//        if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
-//            sender.sendMessage("IncorrectPhase");
-//            return;
-//        }
-
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
             buildingBoard.destroyComponent(xComponent, yComponent);
@@ -252,7 +246,13 @@ public class SpaceshipController {
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             // Checks ship validity
-            return player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix();
+            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix()) {
+                sender.sendMessage("AskSelectSpaceshipPart");
+
+            } else {
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+            }
 
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -310,17 +310,23 @@ public class SpaceshipController {
      * @param yComponent y coordinate of chosen component
      * @throws RemoteException
      */
-    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent) throws RemoteException, IllegalStateException {
+    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException, IllegalStateException {
 
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        try {
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        buildingBoard.keepSpaceshipPart(xComponent, yComponent);
+            buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
-         player.setIsReady(true, gameManager.getGame());
-         gameManager.getGameThread().notifyThread();
+            sender.sendMessage("SpaceshipPartKept");
 
-        // todo notificare spaceship: serve updateSpaceship con nome per GUI
-        //gameManager.broadcastGameMessage();
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
+            // todo notificare spaceship: serve updateSpaceship con nome per GUI
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
     }
 
     public static void populateComponent(GameManager gameManager, Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {

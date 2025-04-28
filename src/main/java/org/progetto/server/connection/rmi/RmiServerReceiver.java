@@ -853,16 +853,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        EventControllerAbstract eventController = gameManager.getEventController();
-        if(eventController == null){
-            virtualClient.sendMessage("EventControllerNull");
-            return;
-        }
-
-        try {
-            eventController.receiveSelectSpaceshipPart(player, x, y, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, x, y, virtualClient);
     }
 }

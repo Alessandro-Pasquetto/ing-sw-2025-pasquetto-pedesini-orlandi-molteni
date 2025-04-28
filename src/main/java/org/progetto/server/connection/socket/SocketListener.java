@@ -414,17 +414,7 @@ public class SocketListener extends Thread {
             int x = responseSelectSpaceshipPart.getX();
             int y = responseSelectSpaceshipPart.getY();
 
-            EventControllerAbstract eventController = gameManager.getEventController();
-            if(eventController == null){
-                socketWriter.sendMessage("EventControllerNull");
-                return;
-            }
-
-            try {
-                eventController.receiveSelectSpaceshipPart(player, x, y, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, x, y, socketWriter);
         }
 
         else if (messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {

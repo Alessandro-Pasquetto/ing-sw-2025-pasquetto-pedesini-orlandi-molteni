@@ -890,7 +890,6 @@ public class BattlezoneController extends EventControllerAbstract {
         diceResult = player.rollDice();
 
         sender.sendMessage(new DiceResultMessage(diceResult));
-        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penaltyPlayer.getName(), diceResult), sender);
 
         if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SHIELDS;
@@ -988,14 +987,13 @@ public class BattlezoneController extends EventControllerAbstract {
             // Sends two types of messages based on the shot's result
             if (destroyedComponent != null) {
                 SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
+
+            } else {
+                sender.sendMessage("NothingGotDestroyed");
+                penaltyPlayer.setIsReady(true, gameManager.getGame());
             }
-            else
-                gameManager.broadcastGameMessage("NothingGotDestroyed");
 
-
-            penaltyPlayer.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
-
         }
     }
 }

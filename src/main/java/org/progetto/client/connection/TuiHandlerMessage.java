@@ -168,7 +168,6 @@ public class TuiHandlerMessage {
             );
         }
 
-
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
             EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());
         }
@@ -202,7 +201,8 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
-            System.out.println("A projectile is coming: " + incomingProjectileMessage.getProjectile().toString());
+            System.out.println();
+            TuiPrinters.printIncomingProjectile(incomingProjectileMessage);
         }
 
         else if(messageObj instanceof DiceResultMessage diceResultMessage) {
@@ -416,11 +416,11 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NoComponentHit":
-                    System.out.println("What a luck!, no component hit!");
+                    System.out.println("What a luck, no component hit!");
                     break;
 
                 case "NoComponentDamaged":
-                    System.out.println("Close call!, no component damaged!");
+                    System.out.println("Close call, no component damaged!");
                     break;
 
                 case "NoShieldAvailable":
@@ -484,6 +484,9 @@ public class TuiHandlerMessage {
                 case "AskSelectSpaceshipPart":
                     EventCommands.responseSelectSpaceshipPart();
                     break;
+
+                case "SpaceshipPartKept":
+                    System.out.println("Spaceship part kept successfully!");
 
                 default:
                     System.out.println(messageString);

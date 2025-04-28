@@ -27,7 +27,7 @@ public class EventCommands {
         while(true){
             System.out.println("How many double cannons do you want to activate?");
             if(required == 0)
-                System.out.println("You have to maximise your power");
+                System.out.println("You have " + max + " double cannons");
             else
                 System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
 
@@ -458,7 +458,7 @@ public class EventCommands {
     public static void responseSelectSpaceshipPart() {
 
         while (true) {
-            System.out.println("Select the component from which that part of the ship will be destroyed: <X> <Y>");
+            System.out.println("Select the component located in the part of the ship to be maintained");
 
             System.out.print("X: ");
             String x = TuiCommandFilter.waitResponse();
