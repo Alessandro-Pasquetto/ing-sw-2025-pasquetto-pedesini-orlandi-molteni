@@ -281,6 +281,11 @@ public class SpaceshipController {
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
+            if (buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent] == null){
+                sender.sendMessage("EmptyComponentCell");
+                return;
+            }
+
             // Checks if player is trying to destroy central unit
             if (buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
                 sender.sendMessage("ImpossibleToDestroyCentralUnit");

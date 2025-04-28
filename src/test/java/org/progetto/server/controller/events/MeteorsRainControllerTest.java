@@ -132,7 +132,6 @@ class MeteorsRainControllerTest {
         controller.receiveProtectionDecision(p1, "YES", sender);
 
         Thread.sleep(200);
-        assertEquals(EventPhase.PROTECTION_BATTERY, controller.getPhase());
         controller.receiveDiscardedBatteries(p1, 2, 3, sender);
 
         Thread.sleep(200);

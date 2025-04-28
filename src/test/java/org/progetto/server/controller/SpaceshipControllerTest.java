@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -337,6 +338,8 @@ class SpaceshipControllerTest {
         buildingBoard.setHandComponent(storage);
         buildingBoard.placeComponent(3, 2, 0);
 
+        gameManager.getGame().setPhase(GamePhase.ADJUSTING);
+
         //test empty component cell
         sender = new Sender() {
             @Override
@@ -404,7 +407,7 @@ class SpaceshipControllerTest {
         Sender finalSender = sender ;
 
         try {
-            assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, 2, 2, sender));
+            assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, 2, 2, finalSender));
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }
