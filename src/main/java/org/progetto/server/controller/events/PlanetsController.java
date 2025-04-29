@@ -141,7 +141,6 @@ public class PlanetsController extends EventControllerAbstract {
             sender.sendMessage("LandingCompleted");
 
             rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
-            sender.sendMessage("AvailableBoxes");
             phase = EventPhase.CHOOSE_BOX;
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
         }

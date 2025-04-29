@@ -11,7 +11,6 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,13 +22,13 @@ public class BattlezoneController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Battlezone battlezone;
-    private ArrayList<Player> activePlayers;
-    private ArrayList<ConditionPenalty> couples;
+    private final Battlezone battlezone;
+    private final ArrayList<Player> activePlayers;
+    private final ArrayList<ConditionPenalty> couples;
     private ArrayList<Projectile> penaltyShots;
     private Projectile currentShot;
-    private Map<Player, Integer> tempEnginePower;
-    private Map<Player, Float> tempFirePower;
+    private final Map<Player, Integer> tempEnginePower;
+    private final Map<Player, Float> tempFirePower;
     private Player penaltyPlayer;
     private int requestedBatteries;
     private int requestedCrew;
@@ -70,10 +69,11 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void start() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.START)) {
-            phase = EventPhase.CONDITION;
-            condition();
-        }
+        if (!phase.equals(EventPhase.START))
+            throw new IllegalStateException("IncorrectPhase");
+
+        phase = EventPhase.CONDITION;
+        condition();
     }
 
     /**
@@ -84,28 +84,28 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void condition() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CONDITION)) {
+        if (!phase.equals(EventPhase.CONDITION))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Checks if all the couples were evaluated
-            if (!couples.isEmpty()) {
+        // Checks if all the couples were evaluated
+        if (!couples.isEmpty()) {
 
-                switch (couples.getFirst().getCondition()){
+            switch (couples.getFirst().getCondition()){
 
-                    case ConditionType.CREWREQUIREMENT:
-                        phase = EventPhase.CREW_COUNT;
-                        chooseFewerCrew();
-                        break;
+                case ConditionType.CREWREQUIREMENT:
+                    phase = EventPhase.CREW_COUNT;
+                    chooseFewerCrew();
+                    break;
 
-                    case ConditionType.ENGINEPOWERREQUIREMENT:
-                        phase = EventPhase.ASK_ENGINES;
-                        askHowManyEnginesToUse();
-                        break;
+                case ConditionType.ENGINEPOWERREQUIREMENT:
+                    phase = EventPhase.ASK_ENGINES;
+                    askHowManyEnginesToUse();
+                    break;
 
-                    case ConditionType.FIREPOWERREQUIREMENT:
-                        phase = EventPhase.ASK_CANNONS;
-                        askHowManyCannonsToUse();
-                        break;
-                }
+                case ConditionType.FIREPOWERREQUIREMENT:
+                    phase = EventPhase.ASK_CANNONS;
+                    askHowManyCannonsToUse();
+                    break;
             }
         }
     }
@@ -118,14 +118,14 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void chooseFewerCrew() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CREW_COUNT)) {
+        if (!phase.equals(EventPhase.CREW_COUNT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Finds player with fewer crew
-            penaltyPlayer = battlezone.lessPopulatedSpaceship(activePlayers);
+        // Finds player with fewer crew
+        penaltyPlayer = battlezone.lessPopulatedSpaceship(activePlayers);
 
-            phase = EventPhase.PENALTY;
-            penalty();
-        }
+        phase = EventPhase.PENALTY;
+        penalty();
     }
 
     /**
@@ -136,33 +136,33 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.ASK_ENGINES)) {
+        if (!phase.equals(EventPhase.ASK_ENGINES))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
+        for (Player player : activePlayers) {
 
-                gameManager.getGame().setActivePlayer(player);
+            gameManager.getGame().setActivePlayer(player);
 
-                // Retrieves sender reference
-                Sender sender = gameManager.getSenderByPlayer(player);
+            // Retrieves sender reference
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                // Calculates max number of double engine usable
-                int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
+            // Calculates max number of double engine usable
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
-                // If he can't use any double engine, apply event effect; otherwise, ask how many he wants to use
-                if (maxUsable == 0) {
-                    tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
+            // If he can't use any double engine, apply event effect; otherwise, ask how many he wants to use
+            if (maxUsable == 0) {
+                tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
-                } else {
-                    sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
-                    phase = EventPhase.ENGINE_NUMBER;
+            } else {
+                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+                phase = EventPhase.ENGINE_NUMBER;
 
-                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
-                }
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
-
-            phase = EventPhase.CHOOSE_WEAKEST_ENGINES;
-            chooseWeakestEngines();
         }
+
+        phase = EventPhase.CHOOSE_WEAKEST_ENGINES;
+        chooseWeakestEngines();
     }
 
     /**
@@ -217,35 +217,35 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.ASK_CANNONS)) {
+        if (!phase.equals(EventPhase.ASK_CANNONS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
+        for (Player player : activePlayers) {
 
-                gameManager.getGame().setActivePlayer(player);
+            gameManager.getGame().setActivePlayer(player);
 
-                Spaceship spaceship = player.getSpaceship();
+            Spaceship spaceship = player.getSpaceship();
 
-                // Retrieves sender reference
-                Sender sender = gameManager.getSenderByPlayer(player);
+            // Retrieves sender reference
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                // Calculates max number of double cannons usable
-                int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+            // Calculates max number of double cannons usable
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
-                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-                if (maxUsable == 0) {
-                    tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
+            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+            if (maxUsable == 0) {
+                tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
-                } else {
-                    sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
-                    phase = EventPhase.CANNON_NUMBER;
+            } else {
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
+                phase = EventPhase.CANNON_NUMBER;
 
-                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
-                }
+                gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
-
-            phase = EventPhase.CHOOSE_WEAKEST_CANNONS;
-            chooseWeakestCannons();
         }
+
+        phase = EventPhase.CHOOSE_WEAKEST_CANNONS;
+        chooseWeakestCannons();
     }
 
     /**
@@ -455,28 +455,29 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void chooseWeakestEngines() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CHOOSE_WEAKEST_ENGINES)) {
-            int minEnginePower = Integer.MAX_VALUE;
+        if (!phase.equals(EventPhase.CHOOSE_WEAKEST_ENGINES))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
-                // Calculates the current player engine power
-                int currEnginePower = tempEnginePower.get(player);
+        int minEnginePower = Integer.MAX_VALUE;
 
-                if (currEnginePower < minEnginePower) {
-                    minEnginePower = currEnginePower;
+        for (Player player : activePlayers) {
+            // Calculates the current player engine power
+            int currEnginePower = tempEnginePower.get(player);
+
+            if (currEnginePower < minEnginePower) {
+                minEnginePower = currEnginePower;
+                penaltyPlayer = player;
+            }
+            else if (currEnginePower == minEnginePower) {
+                // In case of tie, picks farthest player on the route
+                if (player.getPosition() > penaltyPlayer.getPosition()) {
                     penaltyPlayer = player;
                 }
-                else if (currEnginePower == minEnginePower) {
-                    // In case of tie, picks farthest player on the route
-                    if (player.getPosition() > penaltyPlayer.getPosition()) {
-                        penaltyPlayer = player;
-                    }
-                }
             }
-
-            phase = EventPhase.PENALTY;
-            penalty();
         }
+
+        phase = EventPhase.PENALTY;
+        penalty();
     }
 
     /**
@@ -487,28 +488,29 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void chooseWeakestCannons() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.CHOOSE_WEAKEST_CANNONS)) {
-            float minFirePower = Float.MAX_VALUE;
+        if (!phase.equals(EventPhase.CHOOSE_WEAKEST_CANNONS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
-                // Calculates the current player firepower
-                float currFirePower = tempFirePower.get(player);
+        float minFirePower = Float.MAX_VALUE;
 
-                if (currFirePower < minFirePower) {
-                    minFirePower = currFirePower;
+        for (Player player : activePlayers) {
+            // Calculates the current player firepower
+            float currFirePower = tempFirePower.get(player);
+
+            if (currFirePower < minFirePower) {
+                minFirePower = currFirePower;
+                penaltyPlayer = player;
+            }
+            else if (currFirePower == minFirePower) {
+                // In case of tie, picks farthest player on the route
+                if (player.getPosition() > penaltyPlayer.getPosition()) {
                     penaltyPlayer = player;
                 }
-                else if (currFirePower == minFirePower) {
-                    // In case of tie, picks farthest player on the route
-                    if (player.getPosition() > penaltyPlayer.getPosition()) {
-                        penaltyPlayer = player;
-                    }
-                }
             }
-
-            phase = EventPhase.PENALTY;
-            penalty();
         }
+
+        phase = EventPhase.PENALTY;
+        penalty();
     }
 
     /**
@@ -519,39 +521,39 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void penalty() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.PENALTY)) {
+        if (!phase.equals(EventPhase.PENALTY))
+            throw new IllegalStateException("IncorrectPhase");
 
-            switch (couples.getFirst().getPenalty().getType()){
+        switch (couples.getFirst().getPenalty().getType()){
 
-                case PenaltyType.PENALTYDAYS:
-                    phase = EventPhase.PENALTY_DAYS;
-                    penaltyDays();
-                    break;
+            case PenaltyType.PENALTYDAYS:
+                phase = EventPhase.PENALTY_DAYS;
+                penaltyDays();
+                break;
 
-                case PenaltyType.PENALTYCREW:
-                    // Request needed amount of crew
-                    requestedCrew = couples.getFirst().getPenalty().getNeededAmount();
+            case PenaltyType.PENALTYCREW:
+                // Request needed amount of crew
+                requestedCrew = couples.getFirst().getPenalty().getNeededAmount();
 
-                    phase = EventPhase.PENALTY_CREW;
-                    penaltyCrew();
-                    break;
+                phase = EventPhase.PENALTY_CREW;
+                penaltyCrew();
+                break;
 
-                case PenaltyType.PENALTYSHOTS:
-                    // Penalty shots
-                    penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
+            case PenaltyType.PENALTYSHOTS:
+                // Penalty shots
+                penaltyShots = new ArrayList<>(couples.getFirst().getPenalty().getShots());
 
-                    phase = EventPhase.PENALTY_SHOTS;
-                    penaltyShot();
-                    break;
+                phase = EventPhase.PENALTY_SHOTS;
+                penaltyShot();
+                break;
 
-                case PenaltyType.PENALTYBOXES:
-                    // Number of requested boxes
-                    requestedBoxes =  couples.getFirst().getPenalty().getNeededAmount();
+            case PenaltyType.PENALTYBOXES:
+                // Number of requested boxes
+                requestedBoxes =  couples.getFirst().getPenalty().getNeededAmount();
 
-                    phase = EventPhase.PENALTY_BOXES;
-                    penaltyBoxes();
-                    break;
-            }
+                phase = EventPhase.PENALTY_BOXES;
+                penaltyBoxes();
+                break;
         }
 
         // Reset controller temp values
@@ -567,27 +569,27 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void penaltyDays() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.PENALTY_DAYS)) {
+        if (!phase.equals(EventPhase.PENALTY_DAYS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Board board = gameManager.getGame().getBoard();
+        Board board = gameManager.getGame().getBoard();
 
-            // Gets sender reference related to current player
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        // Gets sender reference related to current player
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            // Event effect applied for single player
-            battlezone.penaltyDays(gameManager.getGame().getBoard(), penaltyPlayer, couples.getFirst().getPenalty().getNeededAmount());
+        // Event effect applied for single player
+        battlezone.penaltyDays(gameManager.getGame().getBoard(), penaltyPlayer, couples.getFirst().getPenalty().getNeededAmount());
 
-            sender.sendMessage(new PlayerMovedBackwardMessage(couples.getFirst().getPenalty().getNeededAmount()));
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(penaltyPlayer.getName(), couples.getFirst().getPenalty().getNeededAmount()), sender);
+        sender.sendMessage(new PlayerMovedBackwardMessage(couples.getFirst().getPenalty().getNeededAmount()));
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(penaltyPlayer.getName(), couples.getFirst().getPenalty().getNeededAmount()), sender);
 
-            // Updates turn order
-            board.updateTurnOrder();
+        // Updates turn order
+        board.updateTurnOrder();
 
-            // Next Couple
-            couples.removeFirst();
-            phase = EventPhase.CONDITION;
-            condition();
-        }
+        // Next Couple
+        couples.removeFirst();
+        phase = EventPhase.CONDITION;
+        condition();
     }
 
     /**
@@ -598,24 +600,22 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void penaltyCrew() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.PENALTY_CREW)) {
+        if (!phase.equals(EventPhase.PENALTY_CREW))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Player player = penaltyPlayer;
+        // Gets penalty player sender reference
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            // Gets penalty player sender reference
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        // Request to discard crew
+        sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+        phase = EventPhase.DISCARDED_CREW;
 
-            // Request to discard crew
-            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-            phase = EventPhase.DISCARDED_CREW;
+        gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
-            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
-
-            // Next Couple
-            couples.removeFirst();
-            phase = EventPhase.CONDITION;
-            condition();
-        }
+        // Next Couple
+        couples.removeFirst();
+        phase = EventPhase.CONDITION;
+        condition();
     }
 
     /**
@@ -688,43 +688,43 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void penaltyBoxes() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.PENALTY_BOXES)) {
+        if (!phase.equals(EventPhase.PENALTY_BOXES))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Player player = penaltyPlayer;
+        Player player = penaltyPlayer;
 
-            // Gets penalty player sender reference
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        // Gets penalty player sender reference
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            // Box currently owned
-            int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+        // Box currently owned
+        int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
 
-            // Checks if he has at least a box to discard
-            if (boxCount > 0) {
-                sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
-                phase = EventPhase.DISCARDED_BOXES;
+        // Checks if he has at least a box to discard
+        if (boxCount > 0) {
+            sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
+            phase = EventPhase.DISCARDED_BOXES;
+
+            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
+
+        } else {
+
+            // Checks if he has at least a battery to discard
+            if (player.getSpaceship().getBatteriesCount() > 0) {
+                sender.sendMessage("NotEnoughBoxes");
+                sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
+                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
 
             } else {
-
-                // Checks if he has at least a battery to discard
-                if (player.getSpaceship().getBatteriesCount() > 0) {
-                    sender.sendMessage("NotEnoughBoxes");
-                    sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
-                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-
-                    gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
-
-                } else {
-                    sender.sendMessage("NotEnoughBatteries");
-                }
+                sender.sendMessage("NotEnoughBatteries");
             }
-
-            // Next Couple
-            couples.removeFirst();
-            phase = EventPhase.CONDITION;
-            condition();
         }
+
+        // Next Couple
+        couples.removeFirst();
+        phase = EventPhase.CONDITION;
+        condition();
     }
 
     /**
@@ -817,29 +817,29 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void penaltyShot() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.PENALTY_SHOTS)) {
+        if (!phase.equals(EventPhase.PENALTY_SHOTS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Checks if penalty shots are empty
-            for (Projectile shot : penaltyShots) {
+        // Checks if penalty shots are empty
+        for (Projectile shot : penaltyShots) {
 
-                currentShot = shot;
+            currentShot = shot;
 
-                // Gets penalty player sender reference
-                Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+            // Gets penalty player sender reference
+            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-                sender.sendMessage(new IncomingProjectileMessage(currentShot));
+            sender.sendMessage(new IncomingProjectileMessage(currentShot));
 
-                phase = EventPhase.ASK_ROLL_DICE;
-                askToRollDice();
+            phase = EventPhase.ASK_ROLL_DICE;
+            askToRollDice();
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
-            }
-
-            // Next Couple
-            couples.removeFirst();
-            phase = EventPhase.CONDITION;
-            condition();
+            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
         }
+
+        // Next Couple
+        couples.removeFirst();
+        phase = EventPhase.CONDITION;
+        condition();
     }
 
     /**
@@ -850,20 +850,20 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void askToRollDice() throws RemoteException, InterruptedException {
-        if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
+        if (!phase.equals(EventPhase.ASK_ROLL_DICE))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Asks penalty player to roll dice
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        // Asks penalty player to roll dice
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
-                sender.sendMessage("RollDiceToFindColumn");
+        if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
+            sender.sendMessage("RollDiceToFindColumn");
 
-            } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
-                sender.sendMessage("RollDiceToFindRow");
-            }
-
-            phase = EventPhase.ROLL_DICE;
+        } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
+            sender.sendMessage("RollDiceToFindRow");
         }
+
+        phase = EventPhase.ROLL_DICE;
     }
 
     /**
@@ -908,23 +908,23 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void askToUseShields() throws RemoteException {
-        if (phase.equals(EventPhase.ASK_SHIELDS)) {
+        if (!phase.equals(EventPhase.ASK_SHIELDS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Checks if penalty player has a shield that covers that direction
-            boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
+        // Checks if penalty player has a shield that covers that direction
+        boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
 
-            // Asks penalty player if he wants to use a shield
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        // Asks penalty player if he wants to use a shield
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
-                sender.sendMessage("AskToUseShield");
-                phase = EventPhase.SHIELD_DECISION;
+        if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
+            sender.sendMessage("AskToUseShield");
+            phase = EventPhase.SHIELD_DECISION;
 
-            } else {
-                sender.sendMessage("NoShieldAvailable");
-                phase = EventPhase.HANDLE_SHOT;
-                handleShot();
-            }
+        } else {
+            sender.sendMessage("NoShieldAvailable");
+            phase = EventPhase.HANDLE_SHOT;
+            handleShot();
         }
     }
 
@@ -976,24 +976,25 @@ public class BattlezoneController extends EventControllerAbstract {
      * @throws RemoteException
      */
     private void handleShot() throws RemoteException {
-        if (phase.equals(EventPhase.HANDLE_SHOT)) {
-            Game game = gameManager.getGame();
+        if (!phase.equals(EventPhase.HANDLE_SHOT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, currentShot, diceResult);
+        Game game = gameManager.getGame();
 
-            // Gets penalty player sender reference
-            Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        Component destroyedComponent = battlezone.penaltyShot(game, penaltyPlayer, currentShot, diceResult);
 
-            // Sends two types of messages based on the shot's result
-            if (destroyedComponent != null) {
-                SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
+        // Gets penalty player sender reference
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-            } else {
-                sender.sendMessage("NothingGotDestroyed");
-                penaltyPlayer.setIsReady(true, gameManager.getGame());
-            }
+        // Sends two types of messages based on the shot's result
+        if (destroyedComponent != null) {
+            SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
 
-            gameManager.getGameThread().notifyThread();
+        } else {
+            sender.sendMessage("NothingGotDestroyed");
+            penaltyPlayer.setIsReady(true, gameManager.getGame());
         }
+
+        gameManager.getGameThread().notifyThread();
     }
 }

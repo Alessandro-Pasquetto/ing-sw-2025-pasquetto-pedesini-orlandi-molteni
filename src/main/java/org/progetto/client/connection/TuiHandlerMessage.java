@@ -9,6 +9,7 @@ import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -176,6 +177,13 @@ public class TuiHandlerMessage {
             EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
         }
 
+        else if (messageObj instanceof AnotherPlayerLandedMessage anotherPlayerLandedMessage){
+            String name = anotherPlayerLandedMessage.getPlayer().getName();
+            int idxPlanet = anotherPlayerLandedMessage.getPlanetIdx();
+
+            System.out.println(name + " landed on planet: " + idxPlanet);
+        }
+
         else if(messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {
             System.out.println("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions");
         }
@@ -301,6 +309,10 @@ public class TuiHandlerMessage {
 
                 case "LandRequest":
                     EventCommands.responseLandRequest();
+                    break;
+
+                case "LandingCompleted":
+                    System.out.println("Landing completed!");
                     break;
 
                 case "NotYourTurn":

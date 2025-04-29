@@ -97,6 +97,10 @@ public class MeteorsRainController extends EventControllerAbstract {
             askToRollDice();
 
             gameManager.getGameThread().resetAndWaitTravelersReady();
+
+            // Resets elaboration attributes
+            decisionPlayers.clear();
+            discardedBattery.clear();
         }
     }
 
