@@ -9,7 +9,7 @@ import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
-import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
+import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -127,12 +127,13 @@ public class TuiHandlerMessage {
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
             EventCommands.responseHowManyDoubleCannons(
                     howManyDoubleCannonsMessage.getFirePowerRequired(),
-                    howManyDoubleCannonsMessage.getMaxUsable()
+                    howManyDoubleCannonsMessage.getMaxUsable(),
+                    howManyDoubleCannonsMessage.getShootingPower()
                     );
         }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
-            EventCommands.responseHowManyDoubleEngines(howManyDoubleEnginesMessage.getMaxUsable());
+            EventCommands.responseHowManyDoubleEngines(howManyDoubleEnginesMessage.getMaxUsable(), howManyDoubleEnginesMessage.getEnginePower());
         }
 
         else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
@@ -177,11 +178,17 @@ public class TuiHandlerMessage {
             EventCommands.responseRewardBox(availableBoxesMessage.getBoxes());
         }
 
-        else if (messageObj instanceof AnotherPlayerLandedMessage anotherPlayerLandedMessage){
-            String name = anotherPlayerLandedMessage.getPlayer().getName();
-            int idxPlanet = anotherPlayerLandedMessage.getPlanetIdx();
+        else if (messageObj instanceof AnotherPlayerLandedPlanetMessage anotherPlayerLandedPlanetMessage){
+            String name = anotherPlayerLandedPlanetMessage.getPlayer().getName();
+            int idxPlanet = anotherPlayerLandedPlanetMessage.getPlanetIdx();
 
             System.out.println(name + " landed on planet: " + idxPlanet);
+        }
+
+        else if (messageObj instanceof AnotherPlayerLandedMessage anotherPlayerLandedMessage){
+            String name = anotherPlayerLandedMessage.getPlayer().getName();
+
+            System.out.println(name + "landed");
         }
 
         else if(messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {

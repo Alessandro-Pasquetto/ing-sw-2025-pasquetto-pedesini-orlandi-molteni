@@ -10,14 +10,16 @@ public class HowManyDoubleCannonsMessage implements Serializable {
 
     int maxUsable;
     int firePowerRequired;
+    float shootingPower;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public HowManyDoubleCannonsMessage(int maxUsable, int firePowerRequired) {
+    public HowManyDoubleCannonsMessage(int maxUsable, int firePowerRequired, float shootingPower) {
         this.maxUsable = maxUsable;
         this.firePowerRequired = firePowerRequired;
+        this.shootingPower = shootingPower;
     }
 
     // =======================
@@ -28,4 +30,5 @@ public class HowManyDoubleCannonsMessage implements Serializable {
         return maxUsable;
     }
     public int getFirePowerRequired() {return firePowerRequired;}
+    public float getShootingPower() {return shootingPower;}
 }

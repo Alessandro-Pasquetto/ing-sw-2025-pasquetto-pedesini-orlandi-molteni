@@ -154,7 +154,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
             } else {
-                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
                 phase = EventPhase.ENGINE_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
@@ -205,7 +205,7 @@ public class BattlezoneController extends EventControllerAbstract {
         } else {
             sender.sendMessage("IncorrectNumber");
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
-            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
         }
     }
 
@@ -237,7 +237,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
             } else {
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()));
                 phase = EventPhase.CANNON_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
@@ -294,7 +294,7 @@ public class BattlezoneController extends EventControllerAbstract {
         } else {
             sender.sendMessage("IncorrectNumber");
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0));
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()));
         }
     }
 

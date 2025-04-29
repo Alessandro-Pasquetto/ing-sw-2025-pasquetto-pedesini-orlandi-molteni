@@ -129,7 +129,7 @@ public class PiratesController extends EventControllerAbstract {
                     continue;
 
                 } else {
-                    sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
+                    sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
                     phase = EventPhase.CANNON_NUMBER;
                 }
 
@@ -190,7 +190,7 @@ public class PiratesController extends EventControllerAbstract {
         } else {
             sender.sendMessage("IncorrectNumber");
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired()));
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
         }
     }
 

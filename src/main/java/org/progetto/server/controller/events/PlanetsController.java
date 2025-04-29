@@ -2,14 +2,12 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
-import org.progetto.messages.toClient.Planets.AnotherPlayerLandedMessage;
+import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -137,7 +135,7 @@ public class PlanetsController extends EventControllerAbstract {
             // If he wants to land
             planets.choosePlanet(player, planetIdx);
 
-            gameManager.broadcastGameMessage(new AnotherPlayerLandedMessage(player, planetIdx));
+            gameManager.broadcastGameMessage(new AnotherPlayerLandedPlanetMessage(player, planetIdx));
             sender.sendMessage("LandingCompleted");
 
             rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);

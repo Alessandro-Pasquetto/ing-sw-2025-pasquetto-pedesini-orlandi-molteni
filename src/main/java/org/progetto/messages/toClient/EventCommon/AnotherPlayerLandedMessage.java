@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient.Planets;
+package org.progetto.messages.toClient.EventCommon;
 
 import org.progetto.server.model.Player;
 
@@ -9,16 +9,15 @@ public class AnotherPlayerLandedMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    private final Player player;
-    private final int planetIdx;
 
+    private final Player player;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public AnotherPlayerLandedMessage(Player player, int planetIdx) {
+
+    public AnotherPlayerLandedMessage(Player player) {
         this.player = player;
-        this.planetIdx = planetIdx;
     }
 
     // =======================
@@ -28,6 +27,7 @@ public class AnotherPlayerLandedMessage implements Serializable {
     public Player getPlayer() {
         return player;
     }
+
     public String getPlayerName() {
         return player.getName();
     }
@@ -35,12 +35,4 @@ public class AnotherPlayerLandedMessage implements Serializable {
     public int getPlayerColor(){
         return player.getColor();
     }
-
-    public int getPlanetIdx() {
-        return planetIdx;
-    }
-
-
-
-
 }

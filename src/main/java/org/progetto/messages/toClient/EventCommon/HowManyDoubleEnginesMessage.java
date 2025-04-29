@@ -9,13 +9,15 @@ public class HowManyDoubleEnginesMessage implements Serializable {
     // =======================
 
     int maxUsable;
+    int enginePower;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public HowManyDoubleEnginesMessage(int maxUsable) {
+    public HowManyDoubleEnginesMessage(int maxUsable, int enginePower) {
         this.maxUsable = maxUsable;
+        this.enginePower = enginePower;
     }
 
     // =======================
@@ -25,4 +27,5 @@ public class HowManyDoubleEnginesMessage implements Serializable {
     public int getMaxUsable() {
         return maxUsable;
     }
+    public int getEnginePower() {return enginePower; }
 }

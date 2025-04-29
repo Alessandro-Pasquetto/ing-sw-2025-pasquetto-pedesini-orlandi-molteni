@@ -130,7 +130,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
 
                 phase = EventPhase.CANNON_NUMBER;
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired()));
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
@@ -185,7 +185,7 @@ public class SmugglersController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("IncorrectNumber");
-            sender.sendMessage(new HowManyDoubleCannonsMessage(spaceship.maxNumberOfDoubleCannonsUsable(), smugglers.getFirePowerRequired()));
+            sender.sendMessage(new HowManyDoubleCannonsMessage(spaceship.maxNumberOfDoubleCannonsUsable(), smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
         }
     }
 

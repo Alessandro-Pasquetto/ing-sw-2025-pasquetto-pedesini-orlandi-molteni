@@ -1,24 +1,25 @@
-package org.progetto.messages.toClient.LostStation;
+package org.progetto.messages.toClient.Planets;
 
 import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 
-public class AnotherPlayerLandedMessage implements Serializable {
-
+public class AnotherPlayerLandedPlanetMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
     private final Player player;
-
+    private final int planetIdx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public AnotherPlayerLandedMessage(Player player) {
+
+    public AnotherPlayerLandedPlanetMessage(Player player, int planetIdx) {
         this.player = player;
+        this.planetIdx = planetIdx;
     }
 
     // =======================
@@ -37,4 +38,7 @@ public class AnotherPlayerLandedMessage implements Serializable {
         return player.getColor();
     }
 
+    public int getPlanetIdx() {
+        return planetIdx;
+    }
 }

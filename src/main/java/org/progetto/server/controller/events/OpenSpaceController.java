@@ -90,7 +90,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             else {
                 System.out.println("Waiting for HowManyDoubleEngines");
                 phase = EventPhase.ENGINE_NUMBER;
-                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
@@ -126,7 +126,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         if(num < 0 || num > spaceship.getDoubleEngineCount() || num > spaceship.getBatteriesCount()){
             sender.sendMessage("IncorrectNumber");
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
-            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable));
+            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
             return;
         }
 

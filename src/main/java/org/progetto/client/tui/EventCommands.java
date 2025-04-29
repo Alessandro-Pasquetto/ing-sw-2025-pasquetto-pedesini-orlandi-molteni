@@ -22,14 +22,14 @@ public class EventCommands {
      * @param required is the firepower required
      * @param max is the total amount of usable double cannons
      */
-    public static void responseHowManyDoubleCannons(int required, int max) {
+    public static void responseHowManyDoubleCannons(int required, int max, float shootingPower) {
 
         while(true){
             System.out.println("How many double cannons do you want to activate?");
             if(required == 0)
                 System.out.println("You have " + max + " double cannons");
             else
-                System.out.println("Firepower required is " + required + " and you have " + max + " double cannons");
+                System.out.println("Firepower required is " + required + ", you have " + shootingPower + " shootingPower and " + max + " double cannons");
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -55,11 +55,11 @@ public class EventCommands {
      * @author Lorenzo, Alessandro
      * @param max is the total amount of usable double engines
      */
-    public static void responseHowManyDoubleEngines(int max) {
+    public static void responseHowManyDoubleEngines(int max, int enginePower) {
 
         while(true){
             System.out.println("How many double engines do you want to activate?");
-            System.out.println("You have " + max + " double engines");
+            System.out.println("You have " + enginePower + " enginePower and " + max + " double engines");
 
             String response = TuiCommandFilter.waitResponse();
 

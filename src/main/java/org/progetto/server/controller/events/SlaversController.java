@@ -118,7 +118,7 @@ public class SlaversController extends EventControllerAbstract {
                     continue;
                 }
 
-                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+                sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
                 phase = EventPhase.CANNON_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
@@ -175,7 +175,7 @@ public class SlaversController extends EventControllerAbstract {
         } else {
             sender.sendMessage("IncorrectNumber");
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired()));
+            sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
         }
     }
 
