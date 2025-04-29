@@ -57,6 +57,11 @@ public class TuiCommandFilter {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Let the player decide the communication protocol between RMI and Socket
+     *
+     * @author Alessandro
+     */
     public static void setProtocol(){
         System.out.println();
         System.out.println("Select Socket/Rmi:");
@@ -80,6 +85,11 @@ public class TuiCommandFilter {
         System.out.println();
     }
 
+    /**
+     * Handles command input
+     *
+     * @author Alessandro
+     */
     public static void listenerCommand() {
 
         messageDispatcher();
@@ -148,6 +158,14 @@ public class TuiCommandFilter {
         return response.trim();
     }
 
+    /**
+     * Verify if an input command is valid
+     *
+     * @author Alessandro
+     * @param commandLength is the number of strings that compose the command
+     * @param l expected length value
+     * @return true if the command is valid
+     */
     private static boolean isValidCommand(int commandLength, int l){
         if (commandLength == l)
             return true;
@@ -157,6 +175,12 @@ public class TuiCommandFilter {
         }
     }
 
+    /**
+     * Load all the command available from a .json file
+     *
+     * @author Lorenzo
+     * @return a map of String with command name with its object reference
+     */
     private static Map<String, Command> loadCommands() {
         String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
         Gson gson = new Gson();
@@ -178,6 +202,12 @@ public class TuiCommandFilter {
         return commands;
     }
 
+    /**
+     * Print the expected format of a command
+     *
+     * @author Gabriele
+     * @param command is the command to print
+     */
     private static void expectedFormat(String command) {
         Command cmd = commands.get(command.toLowerCase());
 
@@ -188,6 +218,15 @@ public class TuiCommandFilter {
         }
     }
 
+
+    /**
+     * Handles all the commands in input subdivided by phases
+     *
+     * @author Alessandro
+     * @param command is the command name red in input
+     * @throws IllegalStateException
+     * @throws InterruptedException
+     */
     public static void handleCommand(String command) throws IllegalStateException, InterruptedException {
         command = command.trim();
         String[] commandParts = command.split("\\s+");
