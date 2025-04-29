@@ -6,6 +6,9 @@ import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.socket.SocketWriter;
 import org.progetto.client.model.GameData;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+
 /**
  * Contains commands relating to the lobby phase
  */
@@ -14,20 +17,6 @@ public class ConnectionsCommands {
     // =======================
     // OTHER METHODS
     // =======================
-
-    /**
-     * Enable connection to a game, usage : Connect IP port
-     *
-     * @author Alessandro
-     * @param commandParts are segments of the command
-     */
-    public static void connect(String[] commandParts){
-
-        String ip = commandParts[1];
-        int port = Integer.parseInt(commandParts[2]);
-
-        GameData.getSender().connect(ip, port);
-    }
 
     /**
      * Shows the waiting games
@@ -71,10 +60,10 @@ public class ConnectionsCommands {
      */
     public static void autoCreate(String[] commandParts) throws InterruptedException {
 
-        if(GameData.getSender() instanceof RmiClientSender)
-            connect(new String[]{"connect", "127.0.0.1", "1099"});
-        else if (GameData.getSender() instanceof SocketClient)
-            connect(new String[]{"connect", "127.0.0.1", "8080"});
+//        if(GameData.getSender() instanceof RmiClientSender)
+//            connect(new String[]{"connect", "127.0.0.1", "1099"});
+//        else if (GameData.getSender() instanceof SocketClient)
+//            connect(new String[]{"connect", "127.0.0.1", "8080"});
 
         Thread.sleep(500);
 
@@ -94,10 +83,10 @@ public class ConnectionsCommands {
      */
     public static void autoJoin(String[] commandParts) throws InterruptedException {
 
-        if(GameData.getSender() instanceof RmiClientSender)
-            connect(new String[]{"connect", "127.0.0.1", "1099"});
-        else if (GameData.getSender() instanceof SocketClient)
-            connect(new String[]{"connect", "127.0.0.1", "8080"});
+//        if(GameData.getSender() instanceof RmiClientSender)
+//            connect(new String[]{"connect", "127.0.0.1", "1099"});
+//        else if (GameData.getSender() instanceof SocketClient)
+//            connect(new String[]{"connect", "127.0.0.1", "8080"});
 
         Thread.sleep(500);
 

@@ -63,11 +63,12 @@ public class TuiCommandFilter {
      * @author Alessandro
      */
     public static void setProtocol(){
-        System.out.println();
-        System.out.println("Select Socket/Rmi:");
 
         while(true){
-            String protocol = scanner.nextLine().toUpperCase();
+            System.out.println();
+            System.out.println("Select Socket/Rmi:");
+
+            String protocol = scanner.nextLine().toUpperCase().trim();
 
             if (protocol.equals("SOCKET")) {
                 GameData.setSender(new SocketClient());
@@ -79,6 +80,44 @@ public class TuiCommandFilter {
                 break;
             } else {
                 System.out.println("Command not found");
+            }
+        }
+
+        while(true){
+            System.out.println();
+            System.out.println("What ip do you want to connect to?");
+
+            String ip = scanner.nextLine().toUpperCase().trim();
+
+            if (ip.isEmpty()) {
+                System.out.println("Empty response!");
+                continue;
+            }
+
+            System.out.println("");
+            System.out.println("What port do you want to connect to?");
+
+            int port;
+
+            try{
+                port = Integer.parseInt(scanner.nextLine().toUpperCase().trim());
+
+            }catch (NumberFormatException e){
+                System.out.println("You must insert a number!");
+                continue;
+            }
+
+            if (port < 0) {
+                System.out.println("Port cannot be negative!");
+                continue;
+            }
+
+            try {
+                GameData.getSender().connect(ip, port);
+                break;
+
+            } catch (Exception e) {
+                System.out.println("Error connecting to " + ip + ":" + port);
             }
         }
 
@@ -248,13 +287,6 @@ public class TuiCommandFilter {
         switch (GameData.getPhaseGame()) {
             case "LOBBY":
                 switch (commandType) {
-
-                    case "CONNECT":
-                        if (isValidCommand(commandParts.length, 3))
-                            ConnectionsCommands.connect(commandParts);
-                        else
-                            expectedFormat(commandType);
-                        break;
 
                     case "SHOWGAMES":
                         if (isValidCommand(commandParts.length, 1))

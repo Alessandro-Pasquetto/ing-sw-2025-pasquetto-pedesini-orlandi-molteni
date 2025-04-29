@@ -1,7 +1,10 @@
 package org.progetto.client.connection;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
+
 public interface Sender {
-    void connect(String serverIp, int serverPort);
+    void connect(String serverIp, int serverPort) throws IOException, NotBoundException;
 
     void updateGameList();
 

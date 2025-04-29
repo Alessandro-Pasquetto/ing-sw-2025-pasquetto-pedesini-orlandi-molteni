@@ -99,12 +99,15 @@ public class GameCommands {
 
             System.out.println(topBorder);
 
-            System.out.printf("│ %-"+nameWidth+"s │ %-"+descWidth+"s │ %-"+usageWidth+"s │%n", "Name", "Description", "Usage");
+            System.out.printf("│ %-" + nameWidth + "s │ %-" + descWidth + "s │ %-" + usageWidth + "s │%n", "Name", "Description", "Usage");
 
             System.out.println(headerSeparator);
 
             for (Command cmd : commands) {
-                System.out.printf("│ %-"+nameWidth+"s │ %-"+descWidth+"s │ %-"+usageWidth+"s │%n",
+                if (cmd.get) {
+
+                }
+                System.out.printf("│ %-" + nameWidth + "s │ %-" + descWidth + "s │ %-" + usageWidth + "s │%n",
                         cmd.getName(),
                         cmd.getDescription(),
                         cmd.getUsage()

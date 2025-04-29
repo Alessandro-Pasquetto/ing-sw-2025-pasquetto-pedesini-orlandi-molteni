@@ -31,23 +31,18 @@ public class SocketClient implements Sender {
      * Method to connect to the socket server
      */
     @Override
-    public void connect(String serverIp, int port) {
-        try{
-            if (!isSocketServerReachable(serverIp, port)) {
-                System.out.println("Error: The port " + port + " is not available for socket connection");
-                return;
-            }
-
-            socket = new Socket(serverIp, port);
-
-            System.out.println("Connected to the socketServer!");
-
-            new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
-            new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
-
-        }catch(IOException e){
-            System.out.println("Error connecting to the socket server");
+    public void connect(String serverIp, int port) throws IOException {
+        if (!isSocketServerReachable(serverIp, port)) {
+            System.out.println("Error: The port " + port + " is not available for socket connection");
+            return;
         }
+
+        socket = new Socket(serverIp, port);
+
+        System.out.println("Connected to the socketServer!");
+
+        new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
+        new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
     }
 
     /**

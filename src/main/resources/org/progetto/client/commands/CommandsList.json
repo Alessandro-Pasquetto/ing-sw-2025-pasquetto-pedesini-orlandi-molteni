@@ -1,18 +1,19 @@
 [
   {
-    "name": "Connect",
-    "description": "Connect to the server",
-    "usage": "Connect <ip> <port>"
-  },
-  {
     "name": "ShowGames",
     "description": "Show the waiting games",
-    "usage": "ShowGames"
+    "usage": "ShowGames",
+    "phases": [
+      "LOBBY"
+    ]
   },
   {
     "name": "CreateGame",
     "description": "Create a new game session",
-    "usage": "CreateGame <nickname> <level> <numPlayers>"
+    "usage": "CreateGame <nickname> <level> <numPlayers>",
+    "phases": [
+      "LOBBY"
+    ]
   },
   {
     "name": "AutoCreate",
@@ -22,7 +23,10 @@
   {
     "name": "JoinGame",
     "description": "Join an existing game session",
-    "usage": "JoinGame <id> <nickname>"
+    "usage": "JoinGame <id> <nickname>",
+    "phases": [
+      "LOBBY"
+    ]
   },
   {
     "name": "AutoJoin",
@@ -32,102 +36,179 @@
   {
     "name": "ShowHand",
     "description": "Show hand components",
-    "usage": "ShowHand"
+    "usage": "ShowHand",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "PickHidden",
     "description": "Pick a hidden component from the deck",
-    "usage": "PickHidden"
+    "usage": "PickHidden",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "ShowVisible",
     "description": "Show visible components",
-    "usage": "ShowVisible"
+    "usage": "ShowVisible",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "PickVisible",
     "description": "Pick a visible component by index",
-    "usage": "PickVisible <index>"
+    "usage": "PickVisible <index>",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "Place",
     "description": "Place the last drawn component on the board",
-    "usage": "Place <x> <y> <rotation>"
+    "usage": "Place <x> <y> <rotation>",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "Discard",
     "description": "Discard the component in hand",
-    "usage": "Discard"
+    "usage": "Discard",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "Book",
     "description": "Book a visible component",
-    "usage": "Book <index>"
+    "usage": "Book <index>",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "ShowBooked",
     "description": "Show booked components",
-    "usage": "ShowBooked"
+    "usage": "ShowBooked",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "PickBooked",
     "description": "Pick a previously booked component",
-    "usage": "PickBooked <index>"
+    "usage": "PickBooked <index>",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "PickUpDeck",
     "description": "Pick up an event card deck",
-    "usage": "PickUpDeck <deckIndex>"
+    "usage": "PickUpDeck <deckIndex>",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "PutDownDeck",
     "description": "Put down an event card deck",
-    "usage": "PutDownDeck"
+    "usage": "PutDownDeck",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "Destroy",
     "description": "Destroy a component at given coordinates",
-    "usage": "Destroy <x> <y>"
+    "usage": "Destroy <x> <y>",
+    "phases": [
+      "BUILDING",
+      "ADJUSTING"
+    ]
   },
   {
     "name": "Ready",
     "description": "Declare you are ready",
-    "usage": "Ready"
+    "usage": "Ready",
+    "phases": [
+      "INIT",
+      "BUILDING"
+    ]
   },
   {
     "name": "TimerReset",
     "description": "Reset the building timer",
-    "usage": "TimerReset"
+    "usage": "TimerReset",
+    "phases": [
+      "BUILDING"
+    ]
   },
   {
     "name": "Close",
     "description": "Disconnect and exit the game",
-    "usage": "Close"
+    "usage": "Close",
+    "phases": [
+      "LOBBY",
+      "INIT",
+      "BUILDING",
+      "ADJUSTING",
+      "POPULATING",
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   },
   {
     "name": "PlayerStats",
     "description": "Show player's stats",
-    "usage": "PlayerStats"
+    "usage": "PlayerStats",
+    "phases": [
+      "BUILDING",
+      "ADJUSTING",
+      "POPULATING",
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   },
   {
     "name": "ShowShip",
     "description": "Show the structure of a player's spaceship",
-    "usage": "ShowShip <nickname>"
+    "usage": "ShowShip <nickname>",
+    "phases": [
+      "BUILDING",
+      "ADJUSTING",
+      "POPULATING",
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   },
   {
     "name": "ShipStats",
     "description": "Show player's spaceship stats",
-    "usage": "ShipStats"
+    "usage": "ShipStats",
+    "phases": [
+      "ADJUSTING",
+      "POPULATING",
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   },
   {
     "name": "ShowTrack",
     "description": "Show current track",
-    "usage": "ShowTrack"
-  },
-  {
-    "name": "Populate",
-    "description": "Populate a component",
-    "usage": "Populate <human/orange/purple> <x> <y>"
+    "usage": "ShowTrack",
+    "phases": [
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   },
   {
     "name": "BuildShip",

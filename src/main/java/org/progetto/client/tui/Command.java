@@ -9,6 +9,7 @@ public class Command {
     private String name;
     private String description;
     private String usage;
+    private String[] phases;
 
     // =======================
     // CONSTRUCTOR

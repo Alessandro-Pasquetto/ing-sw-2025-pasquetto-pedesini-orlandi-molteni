@@ -5,7 +5,9 @@ import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.server.connection.rmi.VirtualServer;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class RmiClientSender implements Sender {
@@ -18,17 +20,12 @@ public class RmiClientSender implements Sender {
      * Method to connect to the RMI server
      */
     @Override
-    public void connect(String serverIp, int serverPort) {
-        try {
-            server = (VirtualServer) Naming.lookup("//" + serverIp + ":" + serverPort + "/VirtualServer");
+    public void connect(String serverIp, int serverPort) throws MalformedURLException, NotBoundException, RemoteException {
+        server = (VirtualServer) Naming.lookup("//" + serverIp + ":" + serverPort + "/VirtualServer");
 
-            server.connect(RmiClientReceiver.getInstance());
+        server.connect(RmiClientReceiver.getInstance());
 
-            System.out.println("Connected to the RMIServer");
-
-        } catch (Exception e) {
-            System.out.println("Error connecting to the RMI server");
-        }
+        System.out.println("Connected to the RMIServer");
     }
 
     // The following methods call functions implemented in the RmiServerReceiver

@@ -9,6 +9,7 @@ import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.model.GameData;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 
 public class ConnectionView {
 
@@ -59,7 +60,11 @@ public class ConnectionView {
 
         }catch (NumberFormatException e) {
             System.out.println("Errore: Porta non valida.");
+
         } catch (IOException e) {
+            throw new RuntimeException(e);
+
+        } catch (NotBoundException e) {
             throw new RuntimeException(e);
         }
     }
