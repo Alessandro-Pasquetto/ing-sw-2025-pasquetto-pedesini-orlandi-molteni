@@ -15,10 +15,11 @@ public class Command {
     // CONSTRUCTOR
     // =======================
 
-    public Command(String name, String description, String usage) {
+    public Command(String name, String description, String usage, String[] phases) {
         this.name = name;
         this.description = description;
         this.usage = usage;
+        this.phases = phases;
     }
 
     // =======================
@@ -35,5 +36,9 @@ public class Command {
 
     public String getUsage() {
         return usage;
+    }
+
+    public String[] getPhases() {
+        return phases;
     }
 }

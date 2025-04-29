@@ -135,7 +135,7 @@ public class TuiCommandFilter {
 
         while (true){
 
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
             System.out.println();
 
             if (command.isEmpty()) continue;
@@ -220,22 +220,29 @@ public class TuiCommandFilter {
      * @author Lorenzo
      * @return a map of String with command name with its object reference
      */
-    private static Map<String, Command> loadCommands() {
+    public static Map<String, Command> loadCommands() {
         String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
-        Gson gson = new Gson();
-
         Map<String, Command> commands = new HashMap<>();
+        Gson gson = new Gson();
 
         try (Reader reader = new FileReader(path)) {
             Type listType = new TypeToken<List<Command>>() {}.getType();
             List<Command> commandList = gson.fromJson(reader, listType);
 
             for (Command cmd : commandList) {
+                if (cmd.getPhases() == null) {
+                    cmd = new Command(
+                            cmd.getName(),
+                            cmd.getDescription(),
+                            cmd.getUsage(),
+                            new String[0]
+                    );
+                }
                 commands.put(cmd.getName().toLowerCase(), cmd);
             }
 
         } catch (IOException e) {
-            System.out.println("Error loading command list: " + e.getMessage());
+            System.err.println("Error loading command list: " + e.getMessage());
         }
 
         return commands;
@@ -256,7 +263,6 @@ public class TuiCommandFilter {
             System.out.println("Command not found");
         }
     }
-
 
     /**
      * Handles all the commands in input subdivided by phases

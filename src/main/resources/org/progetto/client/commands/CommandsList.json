@@ -18,7 +18,8 @@
   {
     "name": "AutoCreate",
     "description": "Auto connects and creates a new game",
-    "usage": "AutoCreate"
+    "usage": "AutoCreate",
+    "phases": []
   },
   {
     "name": "JoinGame",
@@ -31,7 +32,8 @@
   {
     "name": "AutoJoin",
     "description": "Auto connects and joins an existing game",
-    "usage": "AutoJoin <id>"
+    "usage": "AutoJoin <id>",
+    "phases": []
   },
   {
     "name": "ShowHand",
@@ -213,6 +215,7 @@
   {
     "name": "BuildShip",
     "description": "Allows to build a ship template",
-    "usage": "BuildShip <id> "
+    "usage": "BuildShip <id>",
+    "phases": []
   }
 ]

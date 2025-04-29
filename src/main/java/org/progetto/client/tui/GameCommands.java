@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -104,9 +105,10 @@ public class GameCommands {
             System.out.println(headerSeparator);
 
             for (Command cmd : commands) {
-                if (cmd.get) {
-
+                if (!Arrays.asList(cmd.getPhases()).contains(GameData.getPhaseGame())) {
+                    continue;
                 }
+
                 System.out.printf("│ %-" + nameWidth + "s │ %-" + descWidth + "s │ %-" + usageWidth + "s │%n",
                         cmd.getName(),
                         cmd.getDescription(),
