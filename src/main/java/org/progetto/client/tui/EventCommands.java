@@ -297,7 +297,7 @@ public class EventCommands {
                     break;
                 }
 
-                else if(box_idx >= 0 && box_idx < availableBoxes.size()){
+                else if (box_idx >= 0 && box_idx < availableBoxes.size()){
                     System.out.println("Select a box storage were you want to insert the box: ");
                     System.out.print("X: ");
                     int x = Integer.parseInt(TuiCommandFilter.waitResponse());
@@ -347,7 +347,7 @@ public class EventCommands {
      * @author Alessandro
      * @param planetsTaken is the array of available planets
      */
-    public static void responsePlanetLandRequest(boolean[] planetsTaken) {
+    public static void responsePlanetLandRequest(ArrayList<ArrayList<Box>> planets, boolean[] planetsTaken) {
 
         while(true){
             System.out.println("Do you want to land? (YES or NO)");
@@ -366,11 +366,23 @@ public class EventCommands {
                 return;
             }
 
-            System.out.println("In witch planet do you want to land?");
-            for (int i = 0; i < planetsTaken.length; i++){
-                if (!planetsTaken[i]){
-                    System.out.println("Planet " + i);
+            System.out.println("In which planet do you want to land?");
+
+            int currentPlanet = 0;
+
+            for (int i = 0; i < planetsTaken.length; i++) {
+                if (planetsTaken[i]) {
+                    System.out.println(String.format("[%d] Planet: TAKEN", i));
+
+                } else {
+                    StringBuilder sb = new StringBuilder();
+                    for (var box : planets.get(currentPlanet)) {
+                        sb.append(TuiPrinters.drawBox(box)).append(" ");
+                    }
+                    System.out.println(String.format("[%d] Planet: %s", i, sb));
                 }
+
+                currentPlanet++;
             }
 
             String idx = TuiCommandFilter.waitResponse();

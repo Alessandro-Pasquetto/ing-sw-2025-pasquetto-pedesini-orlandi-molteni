@@ -72,8 +72,6 @@ public class PlanetsController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            gameManager.broadcastGameMessageToOthers(player.getName() + "'s turn", sender);
-
             if (planets.getLandedPlayers().size() >= planets.getRewardsForPlanets().size()){
                 sender.sendMessage("AllPlanetsAlreadyTaken");
                 return;
@@ -81,7 +79,7 @@ public class PlanetsController extends EventControllerAbstract {
 
             // If there is at least a free planet
             phase = EventPhase.LAND;
-            sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
+            sender.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()));
 
             gameManager.getGameThread().resetAndWaitPlayerReady(player);
         }
@@ -118,13 +116,13 @@ public class PlanetsController extends EventControllerAbstract {
 
         if(planetIdx < -1 || planetIdx >= planets.getRewardsForPlanets().size()){
             sender.sendMessage("PlanetIdxNotValid");
-            sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
+            sender.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()));
             return;
         }
 
         if (planetIdx > -1 && planets.getPlanetsTaken()[planetIdx]) {
             sender.sendMessage("PlanetAlreadyTaken");
-            sender.sendMessage(new AvailablePlanetsMessage(planets.getPlanetsTaken()));
+            sender.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()));
             return;
         }
 

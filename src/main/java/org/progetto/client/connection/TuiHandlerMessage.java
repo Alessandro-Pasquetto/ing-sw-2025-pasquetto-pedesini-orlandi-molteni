@@ -169,7 +169,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
-            EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getPlanetsTaken());
+            EventCommands.responsePlanetLandRequest(availablePlanetsMessage.getRewardsForPlanets(), availablePlanetsMessage.getPlanetsTaken());
         }
 
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
@@ -363,6 +363,10 @@ public class TuiHandlerMessage {
                     System.out.println("Not enough boxes!");
                     break;
 
+                case "NotEnoughCrew":
+                    System.out.println("Not enough crew!");
+                    break;
+
                 case "CrewMemberDiscarded":
                     System.out.println("Crew member discarded");
                     break;
@@ -385,6 +389,10 @@ public class TuiHandlerMessage {
 
                 case "BoxNotChosen":
                     System.out.println("Unable to place selected box in that position!");
+                    break;
+
+                case "NotValidBoxContainer":
+                    System.out.println("The box storage is not correct for that type of box!");
                     break;
 
                 case "EmptyReward":
@@ -474,7 +482,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NoEnginePower":
-                    System.out.println("You have zero engine power in OpenSpace, you cannot continue travel!");
+                    System.out.println("You have zero engine power in Open Space, you cannot continue travel!");
                     break;
 
                 case "IDShipOutOfBounds":

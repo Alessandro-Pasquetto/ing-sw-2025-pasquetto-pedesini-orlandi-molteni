@@ -81,9 +81,6 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Gets the sender reference to send a message to player
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            System.out.println(player.getName() + "'s turn");
-            gameManager.broadcastGameMessageToOthers(player.getName() + "'s turn", sender);
-
             // Calculates max number of double engine usable
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
