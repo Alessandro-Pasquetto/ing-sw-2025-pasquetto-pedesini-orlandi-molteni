@@ -333,7 +333,7 @@ public class SpaceshipController {
         }
     }
 
-    public static void populateComponent(GameManager gameManager, Player player, String crewType, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void populateAlienComponent(GameManager gameManager, Player player, String alienColor, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
             sender.sendMessage("IncorrectPhase");
@@ -341,8 +341,8 @@ public class SpaceshipController {
         }
 
         try{
-            player.getSpaceship().getBuildingBoard().populateComponent(crewType, xComponent, yComponent);
-            sender.sendMessage(crewType+" placed at X:"+(xComponent+6-gameManager.getGame().getLevel())+" Y:"+(yComponent+5));
+            player.getSpaceship().getBuildingBoard().populateComponent(alienColor, xComponent, yComponent);
+            sender.sendMessage(alienColor + " placed at X: " + (xComponent + 6 - gameManager.getGame().getLevel()) + " Y: " + (yComponent + 5));
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }

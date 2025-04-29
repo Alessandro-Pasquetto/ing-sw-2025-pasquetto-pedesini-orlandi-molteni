@@ -12,8 +12,8 @@ public class HousingUnit extends Component{
     private int crewCount;
     private boolean hasAlienOrange;
     private boolean hasAlienPurple;
-    private boolean allowAlienOrange;
-    private boolean allowAlienPurple;
+    private boolean allowOrangeAlien;
+    private boolean allowPurpleAlien;
 
     // =======================
     // CONSTRUCTOR
@@ -25,8 +25,8 @@ public class HousingUnit extends Component{
         this.crewCount = 0;
         this.hasAlienOrange = false;
         this.hasAlienPurple = false;
-        this.allowAlienOrange = false;
-        this.allowAlienPurple = false;
+        this.allowOrangeAlien = false;
+        this.allowPurpleAlien = false;
     }
 
     // =======================
@@ -49,12 +49,12 @@ public class HousingUnit extends Component{
         return hasAlienPurple;
     }
 
-    public boolean getAllowAlienOrange() {
-        return allowAlienOrange;
+    public boolean getAllowOrangeAlien() {
+        return allowOrangeAlien;
     }
 
-    public boolean getAllowAlienPurple() {
-        return allowAlienPurple;
+    public boolean getAllowPurpleAlien() {
+        return allowPurpleAlien;
     }
 
     // =======================
@@ -73,12 +73,12 @@ public class HousingUnit extends Component{
         this.hasAlienPurple = hasAlienPurple;
     }
 
-    public void setAllowAlienOrange(boolean allowAlienOrange) {
-        this.allowAlienOrange = allowAlienOrange;
+    public void setAllowOrangeAlien(boolean allowOrangeAlien) {
+        this.allowOrangeAlien = allowOrangeAlien;
     }
 
-    public void setAllowAlienPurple(boolean allowAlienPurple) {
-        this.allowAlienPurple = allowAlienPurple;
+    public void setAllowPurpleAlien(boolean allowPurpleAlien) {
+        this.allowPurpleAlien = allowPurpleAlien;
     }
 
     // =======================

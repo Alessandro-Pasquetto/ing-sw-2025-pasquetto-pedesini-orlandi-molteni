@@ -278,5 +278,32 @@ public class Spaceship implements Serializable {
         int doubleCannonCount = halfDoubleCannonCount + fullDoubleCannonCount;
         return Math.min(doubleCannonCount, batteriesCount);
     }
-}
 
+    public boolean checkShipAllowPurpleAlien() {
+
+        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+
+                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowPurpleAlien())
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkShipAllowOrangeAlien() {
+
+        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+
+                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowPurpleAlien())
+                    return true;
+            }
+        }
+        return false;
+    }
+}

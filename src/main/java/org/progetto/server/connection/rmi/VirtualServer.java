@@ -1,6 +1,5 @@
 package org.progetto.server.connection.rmi;
 
-import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.VirtualClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -49,8 +48,6 @@ public interface VirtualServer extends Remote {
     void putDownEventCardDeck(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void destroyComponent(VirtualClient virtualClient, int idGame, int xComponent, int yComponent) throws RemoteException;
-
-    void populateComponent(VirtualClient virtualClient, int idGame, String crewType, int xComponent, int yComponent) throws RemoteException;
 
     void playerReady(VirtualClient virtualClient, int idGame) throws RemoteException;
 

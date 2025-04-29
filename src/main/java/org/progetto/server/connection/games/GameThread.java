@@ -5,6 +5,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
 import org.progetto.server.controller.GameController;
+import org.progetto.server.controller.PopulateController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -89,6 +90,10 @@ public class GameThread extends Thread {
                             game.setPhase(GamePhase.POPULATING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                             System.out.println("Waiting for the players to populate their ships...");
+
+                            PopulateController.askAliens(gameManager);
+
+                            //todo: chiedere a che coordinata vogliono mettere l'alieno (-1 se no)
 
                             // Waiting to populate the spaceship (don't do another phase for this, bcs custom actions after this)
                             waitPlayersReady();

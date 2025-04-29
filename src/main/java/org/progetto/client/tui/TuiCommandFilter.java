@@ -87,7 +87,7 @@ public class TuiCommandFilter {
             System.out.println();
             System.out.println("What ip do you want to connect to?");
 
-            String ip = scanner.nextLine().toUpperCase().trim();
+            String ip = scanner.nextLine().trim();
 
             if (ip.isEmpty()) {
                 System.out.println("Empty response!");
@@ -97,27 +97,27 @@ public class TuiCommandFilter {
             System.out.println("");
             System.out.println("What port do you want to connect to?");
 
-            int port;
+            int serverPort;
 
             try{
-                port = Integer.parseInt(scanner.nextLine().toUpperCase().trim());
+                serverPort = Integer.parseInt(scanner.nextLine().trim());
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.out.println("serverPort must be a number!");
                 continue;
             }
 
-            if (port < 0) {
+            if (serverPort < 0) {
                 System.out.println("Port cannot be negative!");
                 continue;
             }
 
             try {
-                GameData.getSender().connect(ip, port);
+                GameData.getSender().connect(ip, serverPort);
                 break;
 
             } catch (Exception e) {
-                System.out.println("Error connecting to " + ip + ":" + port);
+                System.out.println("Error connecting to " + ip + ":" + serverPort);
             }
         }
 
@@ -445,7 +445,7 @@ public class TuiCommandFilter {
                         }
                         break;
 
-                    case "SHIPSTATS":
+                    case "SHIPSTATS":// todo: serve?
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {
@@ -525,13 +525,6 @@ public class TuiCommandFilter {
 
             case "POPULATING":
                 switch (commandType) {
-                    case "POPULATE":
-                        if (isValidCommand(commandParts.length, 4))
-                            BuildingCommands.populateComponent(commandParts);
-                        else
-                            expectedFormat(commandType);
-                        break;
-
                     case "SHOWSHIP":
                         if (commandParts.length <= 2)
                             GameCommands.showSpaceship(commandParts);

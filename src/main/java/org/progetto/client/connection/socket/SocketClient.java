@@ -31,13 +31,12 @@ public class SocketClient implements Sender {
      * Method to connect to the socket server
      */
     @Override
-    public void connect(String serverIp, int port) throws IOException {
-        if (!isSocketServerReachable(serverIp, port)) {
-            System.out.println("Error: The port " + port + " is not available for socket connection");
-            return;
-        }
+    public void connect(String serverIp, int serverPort) throws IOException {
+        // If the port is not available for socket connection
+        if (!isSocketServerReachable(serverIp, serverPort))
+            throw new IOException();
 
-        socket = new Socket(serverIp, port);
+        socket = new Socket(serverIp, serverPort);
 
         System.out.println("Connected to the socketServer!");
 
@@ -48,9 +47,9 @@ public class SocketClient implements Sender {
     /**
      * Check if the port is open for a socket communication
      */
-    public boolean isSocketServerReachable(String serverIp, int port) {
+    public boolean isSocketServerReachable(String serverIp, int serverPort) {
         try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(serverIp, port), 200);
+            socket.connect(new InetSocketAddress(serverIp, serverPort), 200);
             socket.setSoTimeout(200);
 
             int testByte = socket.getInputStream().read();
@@ -154,11 +153,6 @@ public class SocketClient implements Sender {
     @Override
     public void destroyComponent(int xComponent, int yComponent) {
         SocketWriter.sendMessage(new DestroyComponentMessage(xComponent, yComponent));
-    }
-
-    @Override
-    public void populateComponent(String crewType, int xComponent, int yComponent) {
-        SocketWriter.sendMessage(new PopulatingMessage(crewType, xComponent, yComponent));
     }
 
     @Override

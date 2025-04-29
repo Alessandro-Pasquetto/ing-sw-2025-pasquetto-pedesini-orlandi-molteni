@@ -253,15 +253,6 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void populateComponent(String crewType, int xComponent, int yComponent){
-        try {
-            server.populateComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), crewType, xComponent, yComponent);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void readyPlayer() {
         try {
             server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame());

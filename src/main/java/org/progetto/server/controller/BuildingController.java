@@ -1232,6 +1232,7 @@ public class BuildingController {
 
                 try {
                     sender.sendMessage("NotValidSpaceShip");
+                    SpaceshipController.showSpaceship(gameManager, player.getName(), sender);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }

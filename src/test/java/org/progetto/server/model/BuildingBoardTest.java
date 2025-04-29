@@ -2,11 +2,9 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.components.*;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BuildingBoardTest {
@@ -289,12 +287,12 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-        assertTrue(housingUnit.getAllowAlienOrange());
+        assertTrue(housingUnit.getAllowOrangeAlien());
 
         //  update orange alien hosting test   //
         buildingBoard.destroyComponent(1, 2); // Removes the orange alien unit, so it can't host alien anymore
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
-        assertFalse(housingUnit.getAllowAlienOrange());
+        assertFalse(housingUnit.getAllowOrangeAlien());
 
         // update orange alien hosting test with another orange_unit //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
@@ -306,7 +304,7 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         buildingBoard.destroyComponent(2, 1);
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the orange alien unit, another unit is present
-        assertTrue(housingUnit.getAllowAlienOrange());
+        assertTrue(housingUnit.getAllowOrangeAlien());
 
         // reset spaceship //
         buildingBoard.destroyComponent(1, 2);
@@ -318,12 +316,12 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(1, 2, 0);
 
         buildingBoard.initSpaceshipParams();
-        assertTrue(housingUnit.getAllowAlienPurple());
+        assertTrue(housingUnit.getAllowPurpleAlien());
 
         //  update purple alien hosting test   //
         buildingBoard.destroyComponent(1, 2);
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the purple alien unit, so it can't host alien anymore
-        assertFalse(housingUnit.getAllowAlienPurple());
+        assertFalse(housingUnit.getAllowPurpleAlien());
 
         // update purple alien hosting test with another orange_unit //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 0));
@@ -335,7 +333,7 @@ class BuildingBoardTest {
         buildingBoard.initSpaceshipParams();
         buildingBoard.destroyComponent(2, 1);
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());// Removes the purple alien unit, another unit is present
-        assertTrue(housingUnit.getAllowAlienPurple());
+        assertTrue(housingUnit.getAllowPurpleAlien());
 
         // reset spaceship //
         buildingBoard.destroyComponent(1, 2);
@@ -1046,8 +1044,8 @@ class BuildingBoardTest {
         BuildingBoard buildingBoard = new BuildingBoard(spaceship, 0);
 
         HousingUnit hu = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
-        hu.setAllowAlienOrange(true);
-        hu.setAllowAlienPurple(true);
+        hu.setAllowOrangeAlien(true);
+        hu.setAllowPurpleAlien(true);
 
         buildingBoard.setHandComponent(hu);
         buildingBoard.placeComponent(2, 1, 0);
@@ -1079,8 +1077,8 @@ class BuildingBoardTest {
         hu.setAlienPurple(false);
 
         // Alien exceptions
-        hu.setAllowAlienOrange(false);
-        hu.setAllowAlienPurple(false);
+        hu.setAllowOrangeAlien(false);
+        hu.setAllowPurpleAlien(false);
 
         exception = assertThrows(IllegalStateException.class, () -> {
             buildingBoard.populateComponent("orange", 2, 1);

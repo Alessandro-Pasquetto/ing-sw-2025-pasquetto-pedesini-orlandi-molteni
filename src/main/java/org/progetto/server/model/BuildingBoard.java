@@ -473,6 +473,8 @@ public class BuildingBoard implements Serializable {
         if(visited[y][x])
             return true;
 
+        boolean currentResult = true;
+
         numComponentsChecked.getAndIncrement();
         visited[y][x] = true;
 
@@ -482,11 +484,11 @@ public class BuildingBoard implements Serializable {
 
         if (currentType == ComponentType.CANNON || currentType == ComponentType.DOUBLE_CANNON) {
             if (!checkCannonValidity(currentComponent, x, y))
-                return false;
+                currentResult = false;
 
         } else if (currentType == ComponentType.ENGINE || currentType == ComponentType.DOUBLE_ENGINE) {
             if (currentRotation != 0 || (y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null))
-                return false;
+                currentResult = false;
         }
 
         boolean up = false, right = false, bottom = false, left = false;
@@ -496,8 +498,10 @@ public class BuildingBoard implements Serializable {
             Component upComponent = spaceshipMatrix[y - 1][x];
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
-            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0))
-                return false;
+            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)){
+                currentResult = false;
+                upComponent.setIncorrectlyPlaced(true);
+            }
             if (upConnection != 0)
                 up = true;
 
@@ -511,8 +515,10 @@ public class BuildingBoard implements Serializable {
             Component rightComponent = spaceshipMatrix[y][x + 1];
             int rightConnection = currentComponent.getConnections()[1];
             int relativeConnection = rightComponent.getConnections()[3];
-            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0))
-                return false;
+            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)){
+                currentResult = false;
+                rightComponent.setIncorrectlyPlaced(true);
+            }
             if (rightConnection != 0)
                 right = true;
 
@@ -526,8 +532,10 @@ public class BuildingBoard implements Serializable {
             Component bottomComponent = spaceshipMatrix[y + 1][x];
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
-            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0) )
-                return false;
+            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0) ){
+                currentResult = false;
+                bottomComponent.setIncorrectlyPlaced(true);
+            }
             if (bottomConnection != 0)
                 bottom = true;
 
@@ -541,8 +549,10 @@ public class BuildingBoard implements Serializable {
             Component leftComponent = spaceshipMatrix[y][x - 1];
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
-            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0))
-                return false;
+            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)){
+                currentResult = false;
+                leftComponent.setIncorrectlyPlaced(true);
+            }
             if (leftConnection != 0)
                 left = true;
 
@@ -551,21 +561,28 @@ public class BuildingBoard implements Serializable {
                 exposedConnectorsCount.getAndIncrement();
         }
 
-        boolean result = true;
-        if (up)
-            result = dfsStartValidity(x, y - 1, visited, numComponentsChecked, exposedConnectorsCount);
-        if (result && right)
-            result = dfsStartValidity(x + 1, y, visited, numComponentsChecked, exposedConnectorsCount);
-        if (result && bottom)
-            result = dfsStartValidity(x, y + 1, visited, numComponentsChecked, exposedConnectorsCount);
-        if (result && left)
-            result = dfsStartValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
+        if(!currentResult)
+            currentComponent.setIncorrectlyPlaced(true);
 
-        return result;
+        boolean resultUp = true;
+        boolean resultRight = true;
+        boolean resultDown = true;
+        boolean resultLeft = true;
+        if (up)
+            resultUp = dfsStartValidity(x, y - 1, visited, numComponentsChecked, exposedConnectorsCount);
+        if (right)
+            resultRight = dfsStartValidity(x + 1, y, visited, numComponentsChecked, exposedConnectorsCount);
+        if (bottom)
+            resultDown = dfsStartValidity(x, y + 1, visited, numComponentsChecked, exposedConnectorsCount);
+        if (left)
+            resultLeft = dfsStartValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
+
+        return resultUp && resultRight && resultDown && resultLeft && currentResult;
     }
 
     /**
-     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship
+     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship,
+     * visits the entire spaceship and set badlyPlaced if the component is placed incorrectly
      *
      * @author Alessandro
      * @return a pair of booleans: the first indicates if the spaceship is valid, the second indicates if there were any disconnected components
@@ -792,29 +809,29 @@ public class BuildingBoard implements Serializable {
 
         // up
         if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.PURPLE_HOUSING_UNIT){
-            hu.setAllowAlienPurple(true);
+            hu.setAllowPurpleAlien(true);
             return true;
         }
 
         // right
         if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && spaceshipMatrix[y][x + 1].getType() == ComponentType.PURPLE_HOUSING_UNIT){
-            hu.setAllowAlienPurple(true);
+            hu.setAllowPurpleAlien(true);
             return true;
         }
 
         // bottom
         if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && spaceshipMatrix[y + 1][x].getType() == ComponentType.PURPLE_HOUSING_UNIT){
-            hu.setAllowAlienPurple(true);
+            hu.setAllowPurpleAlien(true);
             return true;
         }
 
         // left
         if (x > 0 && boardMask[y][x - 1] == -1 && spaceshipMatrix[y][x - 1].getType() == ComponentType.PURPLE_HOUSING_UNIT){
-            hu.setAllowAlienPurple(true);
+            hu.setAllowPurpleAlien(true);
             return true;
         }
 
-        hu.setAllowAlienPurple(false);
+        hu.setAllowPurpleAlien(false);
         return false;
     }
 
@@ -832,29 +849,29 @@ public class BuildingBoard implements Serializable {
 
         // up
         if (y > 0 && boardMask[y - 1][x] == -1 && spaceshipMatrix[y - 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
-            hu.setAllowAlienOrange(true);
+            hu.setAllowOrangeAlien(true);
             return true;
         }
 
         // right
         if (x + 1 < spaceshipMatrix[0].length && boardMask[y][x + 1] == -1 && spaceshipMatrix[y][x + 1].getType() == ComponentType.ORANGE_HOUSING_UNIT){
-            hu.setAllowAlienOrange(true);
+            hu.setAllowOrangeAlien(true);
             return true;
         }
 
         // bottom
         if (y + 1 < spaceshipMatrix.length && boardMask[y + 1][x] == -1 && spaceshipMatrix[y + 1][x].getType() == ComponentType.ORANGE_HOUSING_UNIT){
-            hu.setAllowAlienOrange(true);
+            hu.setAllowOrangeAlien(true);
             return true;
         }
 
         // left
         if (x > 0 && boardMask[y][x - 1] == -1 && spaceshipMatrix[y][x - 1].getType() == ComponentType.ORANGE_HOUSING_UNIT){
-            hu.setAllowAlienOrange(true);
+            hu.setAllowOrangeAlien(true);
             return true;
         }
 
-        hu.setAllowAlienOrange(false);
+        hu.setAllowOrangeAlien(false);
         return false;
     }
 
@@ -1047,12 +1064,12 @@ public class BuildingBoard implements Serializable {
      * Handles player decision on how to populate a specific housing unit
      *
      * @author Alessandro
-     * @param crewType
+     * @param alienColor
      * @param xComponent
      * @param yComponent
      * @throws IllegalStateException
      */
-    public void populateComponent(String crewType, int xComponent, int yComponent) throws IllegalStateException{
+    public void populateComponent(String alienColor, int xComponent, int yComponent) throws IllegalStateException{
 
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
             throw new IllegalStateException("NotValidCoordinates");
@@ -1064,13 +1081,14 @@ public class BuildingBoard implements Serializable {
 
         HousingUnit hu = (HousingUnit) component;
 
-        if(hu.getCrewCount() == 2 || hu.getHasPurpleAlien() || hu.getHasOrangeAlien())
+        if(hu.getCrewCount() > 0 || hu.getHasPurpleAlien() || hu.getHasOrangeAlien())
             throw new IllegalStateException("ComponentAlreadyOccupied");
 
-        switch (crewType.toLowerCase()) {
+        switch (alienColor.toLowerCase()) {
             case "orange":
-                if (hu.getAllowAlienOrange()) {
+                if (hu.getAllowOrangeAlien()) {
                     hu.setAlienOrange(true);
+                    hu.setAllowPurpleAlien(false);
                     hu.incrementCrewCount(spaceship, 1);
                     spaceship.addNormalEnginePower(2);
                 } else {
@@ -1079,17 +1097,14 @@ public class BuildingBoard implements Serializable {
                 break;
 
             case "purple":
-                if (hu.getAllowAlienPurple()) {
+                if (hu.getAllowPurpleAlien()) {
                     hu.setAlienPurple(true);
+                    hu.setAllowOrangeAlien(false);
                     hu.incrementCrewCount(spaceship, 1);
                     spaceship.addNormalShootingPower(2);
                 } else {
                     throw new IllegalStateException("CannotContainPurpleAlien");
                 }
-                break;
-
-            case "human":
-                hu.incrementCrewCount(spaceship, 1);
                 break;
 
             default:

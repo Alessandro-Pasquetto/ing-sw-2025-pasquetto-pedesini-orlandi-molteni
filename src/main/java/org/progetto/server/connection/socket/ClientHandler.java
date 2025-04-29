@@ -30,7 +30,6 @@ public class ClientHandler {
 
         SocketServer.addSocketWriter(socketWriter);
 
-        socketWriter.start();
         socketListener.start();
     }
 

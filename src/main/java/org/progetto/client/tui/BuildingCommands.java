@@ -198,21 +198,6 @@ public class BuildingCommands {
     }
 
     /**
-     * Allows a player to populate the housing component of the spaceship
-     *
-     * @param commandParts are segments of the command
-     */
-    public static void populateComponent(String[] commandParts){
-        Sender sender = GameData.getSender();
-        int levelGame = GameData.getLevelGame();
-
-        String crewType = commandParts[1];
-        int x = Integer.parseInt(commandParts[2]) - 6 + levelGame;
-        int y = Integer.parseInt(commandParts[3]) - 5;
-        sender.populateComponent(crewType, x, y);
-    }
-
-    /**
      * Enables to close the connection with the server
      * usage : Close
      *

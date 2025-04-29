@@ -50,23 +50,23 @@ class HousingUnitTest {
     }
 
     @Test
-    void getAllowAlienOrange() {
+    void getAllowOrangeAlien() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        assertFalse(housingUnit.getAllowAlienOrange());
+        assertFalse(housingUnit.getAllowOrangeAlien());
 
-        housingUnit.setAllowAlienOrange(true);
-        assertTrue(housingUnit.getAllowAlienOrange());
+        housingUnit.setAllowOrangeAlien(true);
+        assertTrue(housingUnit.getAllowOrangeAlien());
     }
 
     @Test
-    void getAllowAlienPurple() {
+    void getAllowPurpleAlien() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        assertFalse(housingUnit.getAllowAlienPurple());
+        assertFalse(housingUnit.getAllowPurpleAlien());
 
-        housingUnit.setAllowAlienPurple(true);
-        assertTrue(housingUnit.getAllowAlienPurple());
+        housingUnit.setAllowPurpleAlien(true);
+        assertTrue(housingUnit.getAllowPurpleAlien());
     }
 
     @Test
@@ -101,20 +101,20 @@ class HousingUnitTest {
     void setAllowAlienOrange() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        housingUnit.setAllowAlienOrange(true);
-        assertTrue(housingUnit.getAllowAlienOrange());
-        housingUnit.setAllowAlienOrange(false);
-        assertFalse(housingUnit.getAllowAlienOrange());
+        housingUnit.setAllowOrangeAlien(true);
+        assertTrue(housingUnit.getAllowOrangeAlien());
+        housingUnit.setAllowOrangeAlien(false);
+        assertFalse(housingUnit.getAllowOrangeAlien());
     }
 
     @Test
     void setAllowAlienPurple() {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 0, 1, 0}, "imgSrc", 3);
 
-        housingUnit.setAllowAlienPurple(true);
-        assertTrue(housingUnit.getAllowAlienPurple());
-        housingUnit.setAllowAlienPurple(false);
-        assertFalse(housingUnit.getAllowAlienPurple());
+        housingUnit.setAllowPurpleAlien(true);
+        assertTrue(housingUnit.getAllowPurpleAlien());
+        housingUnit.setAllowPurpleAlien(false);
+        assertFalse(housingUnit.getAllowPurpleAlien());
     }
 
     @Test

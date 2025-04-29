@@ -50,8 +50,6 @@ public interface Sender {
 
     void destroyComponent(int xComponent, int yComponent);
 
-    void populateComponent(String crewType, int xComponent, int yComponent);
-
     void readyPlayer();
 
     void resetTimer();

@@ -7,7 +7,6 @@ import javafx.scene.control.ToggleGroup;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.model.GameData;
-
 import java.io.IOException;
 import java.rmi.NotBoundException;
 
@@ -45,9 +44,21 @@ public class ConnectionView {
             return;
         }
 
-        try {
-            int serverPort = Integer.parseInt(serverPortString);
+        int serverPort;
+        try{
+            serverPort = Integer.parseInt(serverPortString);
 
+        }catch (NumberFormatException e){
+            System.out.println("serverPort must be a number!");
+            return;
+        }
+
+        if (serverPort < 0) {
+            System.out.println("Port cannot be negative!");
+            return;
+        }
+
+        try {
             if (socketOption.isSelected())
                 GameData.setSender(new SocketClient());
             else if (rmiOption.isSelected())
@@ -58,14 +69,8 @@ public class ConnectionView {
             PageController.switchScene("chooseGame.fxml", "ChooseGame");
             GameData.getSender().updateGameList();
 
-        }catch (NumberFormatException e) {
-            System.out.println("Errore: Porta non valida.");
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | NotBoundException e) {
+            System.out.println("Error connecting to " + serverIp + ":" + serverPort);
         }
     }
 }

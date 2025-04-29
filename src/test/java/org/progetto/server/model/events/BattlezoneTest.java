@@ -146,8 +146,8 @@ class BattlezoneTest {
 
         assertEquals(0, housingUnit1.getCrewCount());
         assertEquals(1, housingUnit2.getCrewCount());
-        assertFalse(housingUnitAlienOrange.getAllowAlienOrange());
-        assertFalse(housingUnitAlienOrange.getAllowAlienPurple());
+        assertFalse(housingUnitAlienOrange.getAllowOrangeAlien());
+        assertFalse(housingUnitAlienOrange.getAllowPurpleAlien());
     }
 
     @Test
