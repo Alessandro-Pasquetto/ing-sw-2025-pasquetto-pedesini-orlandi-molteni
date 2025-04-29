@@ -238,7 +238,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
-            System.out.println(playerDefeatedMessage.getPlayerName() + " cannot continue travel, so he left!");
+            System.out.println(playerDefeatedMessage.getPlayerName() + " was defeated by !");
         }
 
         else if (messageObj instanceof String messageString) {

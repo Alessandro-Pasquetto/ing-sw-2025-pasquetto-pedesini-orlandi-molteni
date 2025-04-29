@@ -271,8 +271,6 @@ public class SmugglersController extends EventControllerAbstract {
                 sender.sendMessage("BatteryDiscarded");
 
                 if (requestedBoxes == 0) {
-                    gameManager.broadcastGameMessage(new PlayerDefeatedMessage(player.getName()));
-
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
 
