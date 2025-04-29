@@ -205,17 +205,46 @@ public class BuildingController {
                         break;
 
                     case 2:
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{0, 0, 3, 0}, "imgPath", 3));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
                         bb.placeComponent(2, 0, 0);
 
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 3, 0}, "imgPath", 3));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(1, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(1, 2, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.placeComponent(1, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(3, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(3, 3, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.placeComponent(0, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
                         bb.placeComponent(2, 3, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(0, 3, 0);
 
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.placeComponent(4, 3, 0);
+
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
                         break;
 
                     default:
