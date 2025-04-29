@@ -158,6 +158,7 @@ public class EventCommands {
             int levelGame = GameData.getLevelGame();
             try{
                 sender.responseBoxToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(idx));
+                break;
             }catch (NumberFormatException e){
                 System.out.println("You must insert a number!");
             }
