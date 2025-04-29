@@ -364,6 +364,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             sender.sendMessage("InvalidCoordinates");
+            sender.sendMessage(new BatteriesToDiscardMessage(1));
             return;
         }
 
@@ -372,6 +373,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         // Checks if component is a battery storage
         if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidComponent");
+            sender.sendMessage(new BatteriesToDiscardMessage(1));
             return;
         }
 
@@ -386,6 +388,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         } else {
             sender.sendMessage("BatteryNotDiscarded");
+            sender.sendMessage(new BatteriesToDiscardMessage(1));
         }
     }
 

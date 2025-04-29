@@ -221,9 +221,9 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
-                // forzare uscita carta evento, todo da rimuovere
+                /* forzare uscita carta evento, todo da rimuovere
                 while(!lv2Deck.getFirst().getType().equals(CardType.BATTLEZONE))
-                   Collections.shuffle(lv2Deck);
+                   Collections.shuffle(lv2Deck); */
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -361,11 +361,11 @@ public class Game {
                 throw new IllegalStateException("EmptyComponentDeck");
 
 
-//            int randomPos = (int) (Math.random() * componentDeck.size());
-//            pickedComponent = componentDeck.remove(randomPos);
+            int randomPos = (int) (Math.random() * componentDeck.size());
+            pickedComponent = componentDeck.remove(randomPos);
 
 
-            // forzare componente, todo da rimuovere
+            /* forzare componente, todo da rimuovere
             int randomPos = 0;
             ComponentType type;
             do{
@@ -375,7 +375,7 @@ public class Game {
 
             } while (!type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.CANNON) && !type.equals(ComponentType.BATTERY_STORAGE) && !type.equals(ComponentType.SHIELD));
 
-            pickedComponent = componentDeck.remove(randomPos);
+            pickedComponent = componentDeck.remove(randomPos); */
         }
 
 
@@ -450,13 +450,13 @@ public class Game {
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
 
-            // forzare eventCard, todo da rimuovere
+            /* forzare eventCard, todo da rimuovere
 
            do{
                randomPos = (int) (Math.random() * hiddenEventDeck.size());
            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
 
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
+            pickedEventCard = hiddenEventDeck.remove(randomPos); */
         }
 
 //        ArrayList<Box> rewardBoxes = new ArrayList<>(
