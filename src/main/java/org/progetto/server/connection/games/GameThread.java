@@ -94,8 +94,6 @@ public class GameThread extends Thread {
 
                             PopulateController.askAliens(gameManager);
 
-                            //todo: chiedere a che coordinata vogliono mettere l'alieno (-1 se no)
-
                             // Waiting to populate the spaceship (don't do another phase for this, bcs custom actions after this)
                             waitPlayersReady();
                         }

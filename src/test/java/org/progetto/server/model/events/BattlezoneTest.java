@@ -138,7 +138,8 @@ class BattlezoneTest {
         HousingUnit housingUnitAlienPurple = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
         housingUnitAlienPurple.setAlienPurple(true);
 
-        battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit0);
+        assertThrows(IllegalStateException.class, () -> battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit0));
+
         battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit1);
         battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnit2);
         battlezone.chooseDiscardedCrew(mario.getSpaceship(), housingUnitAlienOrange);

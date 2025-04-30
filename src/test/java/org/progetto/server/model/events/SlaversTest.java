@@ -48,7 +48,7 @@ class SlaversTest {
         crew.incrementCrewCount(mario.getSpaceship(), 2);
 
         //returns false if component is not a Housing Unit
-        slavers.chooseDiscardedCrew(mario.getSpaceship(), notHouse);
+        assertThrows(IllegalStateException.class, () -> slavers.chooseDiscardedCrew(mario.getSpaceship(), notHouse));
 
         //removes one crew member from the Housing Unit
         slavers.chooseDiscardedCrew(mario.getSpaceship(), crew);
