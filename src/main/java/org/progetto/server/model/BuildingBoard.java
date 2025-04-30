@@ -268,7 +268,7 @@ public class BuildingBoard implements Serializable {
     {
         try{
             ObjectMapper objectMapper = new ObjectMapper();
-            MaskMatrix data = objectMapper.readValue(new File("src/main/resources/org.progetto.server/Masks.json"), MaskMatrix.class);
+            MaskMatrix data = objectMapper.readValue(new File("src/main/resources/org/progetto/server/Masks.json"), MaskMatrix.class);
 
             switch (spaceship.getLevelShip())
             {

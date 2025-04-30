@@ -190,7 +190,7 @@ public class Game {
 
             if(level == 1) {
                 ArrayList<EventCard> demoDeck;
-                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCardsL.json");
+                FileReader reader = new FileReader("src/main/resources/org/progetto/server/EventCardsL.json");
                 demoDeck = gson.fromJson(reader, listType);
                 reader.close();
 
@@ -210,7 +210,7 @@ public class Game {
                     decks[i] = new ArrayList<>();
                 }
 
-                FileReader reader = new FileReader("src/main/resources/org.progetto.server/EventCards1.json");
+                FileReader reader = new FileReader("src/main/resources/org/progetto/server/EventCards1.json");
                 lv1Deck = gson.fromJson(reader, listType);
                 reader.close();
 
@@ -257,7 +257,7 @@ public class Game {
 
             Type listType = new TypeToken<ArrayList<Component>>() {}.getType();
 
-            FileReader reader = new FileReader("src/main/resources/org.progetto.server/Components.json");
+            FileReader reader = new FileReader("src/main/resources/org/progetto/server/Components.json");
             ArrayList<Component> components = gson.fromJson(reader, listType);
             reader.close();
 
