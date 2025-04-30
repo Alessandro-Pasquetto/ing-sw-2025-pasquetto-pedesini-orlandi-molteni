@@ -1,6 +1,7 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.messages.toClient.NewGamePhaseMessage;
+import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.EventController;
@@ -172,6 +173,8 @@ public class GameThread extends Thread {
                     case ENDGAME:
                         System.out.println("Game over");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        gameManager.broadcastGameMessage(new ScoreBoardMessage(gameManager.getGame().scoreBoard()));
 
                         for (Player player : gameManager.getGame().scoreBoard()) {
                             Sender sender = gameManager.getSenderByPlayer(player);

@@ -9,6 +9,7 @@ import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;

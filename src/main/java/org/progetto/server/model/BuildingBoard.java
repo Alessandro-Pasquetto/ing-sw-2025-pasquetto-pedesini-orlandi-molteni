@@ -17,8 +17,8 @@ public class BuildingBoard implements Serializable {
 
     private final Spaceship spaceship;
     private final Component[][] spaceshipMatrix;  // composition of components
-    private int[][] boardMask;              // mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
-    private final Component[] booked;       // list for booked components storage
+    private int[][] boardMask;                    // mask layer for building clearance (0 = buildable, -1 = built, 1 = notBuildable)
+    private final Component[] booked;             // list for booked components storage
     private Component handComponent;
     private final String imgSrc;
 

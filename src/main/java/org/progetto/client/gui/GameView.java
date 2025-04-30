@@ -204,7 +204,7 @@ public class GameView {
     }
 
     /**
-     * Disables drag&drop for bookComponents
+     * Disables drag and drop for bookComponents
      *
      * @author Alessandro
      */

@@ -1,16 +1,16 @@
 [
   {
-    "name": "ShowGames",
-    "description": "Show the waiting games",
-    "usage": "ShowGames",
+    "name": "CreateGame",
+    "description": "Create a new game session",
+    "usage": "CreateGame <nickname> <level> <numPlayers>",
     "phases": [
       "LOBBY"
     ]
   },
   {
-    "name": "CreateGame",
-    "description": "Create a new game session",
-    "usage": "CreateGame <nickname> <level> <numPlayers>",
+    "name": "ShowGames",
+    "description": "Show the waiting games",
+    "usage": "ShowGames",
     "phases": [
       "LOBBY"
     ]
@@ -52,6 +52,14 @@
     ]
   },
   {
+    "name": "Discard",
+    "description": "Discard the component in hand",
+    "usage": "Discard",
+    "phases": [
+      "BUILDING"
+    ]
+  },
+  {
     "name": "ShowVisible",
     "description": "Show visible components",
     "usage": "ShowVisible",
@@ -63,22 +71,6 @@
     "name": "PickVisible",
     "description": "Pick a visible component by index",
     "usage": "PickVisible <index>",
-    "phases": [
-      "BUILDING"
-    ]
-  },
-  {
-    "name": "Place",
-    "description": "Place the last drawn component on the board",
-    "usage": "Place <x> <y> <rotation>",
-    "phases": [
-      "BUILDING"
-    ]
-  },
-  {
-    "name": "Discard",
-    "description": "Discard the component in hand",
-    "usage": "Discard",
     "phases": [
       "BUILDING"
     ]
@@ -108,6 +100,14 @@
     ]
   },
   {
+    "name": "Place",
+    "description": "Place the last drawn component on the board",
+    "usage": "Place <x> <y> <rotation>",
+    "phases": [
+      "BUILDING"
+    ]
+  },
+  {
     "name": "PickUpDeck",
     "description": "Pick up an event card deck",
     "usage": "PickUpDeck <deckIndex>",
@@ -124,15 +124,6 @@
     ]
   },
   {
-    "name": "Destroy",
-    "description": "Destroy a component at given coordinates",
-    "usage": "Destroy <x> <y>",
-    "phases": [
-      "BUILDING",
-      "ADJUSTING"
-    ]
-  },
-  {
     "name": "Ready",
     "description": "Declare you are ready",
     "usage": "Ready",
@@ -142,26 +133,19 @@
     ]
   },
   {
+    "name": "Destroy",
+    "description": "Destroy a component at given coordinates",
+    "usage": "Destroy <x> <y>",
+    "phases": [
+      "ADJUSTING"
+    ]
+  },
+  {
     "name": "TimerReset",
     "description": "Reset the building timer",
     "usage": "TimerReset",
     "phases": [
       "BUILDING"
-    ]
-  },
-  {
-    "name": "Close",
-    "description": "Disconnect and exit the game",
-    "usage": "Close",
-    "phases": [
-      "LOBBY",
-      "INIT",
-      "BUILDING",
-      "ADJUSTING",
-      "POPULATING",
-      "TRAVEL",
-      "EVENT",
-      "ENDGAME"
     ]
   },
   {
@@ -217,5 +201,20 @@
     "description": "Allows to build a ship template",
     "usage": "BuildShip <id>",
     "phases": []
+  },
+  {
+    "name": "Close",
+    "description": "Disconnect and exit the game",
+    "usage": "Close",
+    "phases": [
+      "LOBBY",
+      "INIT",
+      "BUILDING",
+      "ADJUSTING",
+      "POPULATING",
+      "TRAVEL",
+      "EVENT",
+      "ENDGAME"
+    ]
   }
 ]

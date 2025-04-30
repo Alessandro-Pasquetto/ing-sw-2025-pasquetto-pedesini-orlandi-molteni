@@ -49,6 +49,10 @@ public class GameManagerMaps {
         return idWaitingGames;
     }
 
+    public static HashMap<Integer, GameManager> getWaitingGamesMap() {
+        return new HashMap(waitingGamesManager);
+    }
+
     // =======================
     // OTHER METHODS
     // =======================

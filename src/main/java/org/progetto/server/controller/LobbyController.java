@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.ShowWaitingGamesMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
+import org.progetto.server.connection.games.WaitingGameInfo;
 import org.progetto.server.connection.rmi.RmiServer;
 import org.progetto.server.connection.socket.SocketServer;
 import org.progetto.server.connection.socket.SocketWriter;
@@ -12,6 +13,7 @@ import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -47,7 +49,18 @@ public class LobbyController {
     }
 
     public static void showWaitingGames(Sender sender) throws RemoteException {
-        sender.sendMessage(new ShowWaitingGamesMessage(GameManagerMaps.getIdWaitingGames()));
+
+        ArrayList<Integer> gameIds = new ArrayList<>(GameManagerMaps.getWaitingGamesMap().keySet());
+        ArrayList<WaitingGameInfo> waitingGameInfos = new ArrayList<>();
+
+        for (Integer gameId : gameIds) {
+            Game game = GameManagerMaps.getGameManager(gameId).getGame();
+
+            WaitingGameInfo waitingGameInfo = new WaitingGameInfo(gameId, game.getLevel(), game.getMaxNumPlayers(), game.getPlayersCopy());
+            waitingGameInfos.add(waitingGameInfo);
+        }
+
+        sender.sendMessage(new ShowWaitingGamesMessage(waitingGameInfos));
     }
 
     // Create game objects and player, add player to the game

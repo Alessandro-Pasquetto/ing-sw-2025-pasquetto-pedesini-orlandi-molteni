@@ -1,14 +1,15 @@
 package org.progetto.client.tui;
 
-import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
+import org.progetto.server.connection.games.WaitingGameInfo;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TuiPrinters {
 
@@ -30,6 +31,55 @@ public class TuiPrinters {
     private static final String GREEN = "\u001B[32m";
     private static final String WHITE = "\u001B[37m";
     private static final String BLUE = "\u001B[34m";
+
+    // =======================
+    // LOBBY
+    // =======================
+
+    public static void printWaitingGames(ArrayList<WaitingGameInfo> waitingGameInfos) {
+        int idWidth = 5;
+        int levelWidth = 5;
+        int maxPlayersWidth = 12;
+        int currentPlayersWidth = 40;
+
+        String topBorder = "┌" + "─".repeat(idWidth + 2) + "┬" +
+                "─".repeat(levelWidth + 2) + "┬" +
+                "─".repeat(maxPlayersWidth + 2) + "┬" +
+                "─".repeat(currentPlayersWidth + 2) + "┐";
+
+        String headerSeparator = "├" + "─".repeat(idWidth + 2) + "┼" +
+                "─".repeat(levelWidth + 2) + "┼" +
+                "─".repeat(maxPlayersWidth + 2) + "┼" +
+                "─".repeat(currentPlayersWidth + 2) + "┤";
+
+        String bottomBorder = "└" + "─".repeat(idWidth + 2) + "┴" +
+                "─".repeat(levelWidth + 2) + "┴" +
+                "─".repeat(maxPlayersWidth + 2) + "┴" +
+                "─".repeat(currentPlayersWidth + 2) + "┘";
+
+        System.out.println("\n⏳ Waiting Games:\n");
+
+        System.out.println(topBorder);
+        System.out.printf("│ %-" + idWidth + "s │ %-" + levelWidth + "s │ %-" + maxPlayersWidth + "s │ %-" + currentPlayersWidth + "s │%n",
+                "ID", "Level", "Max Players", "Current Players");
+        System.out.println(headerSeparator);
+
+        for (WaitingGameInfo info : waitingGameInfos) {
+            Integer id = info.getId();
+            int level = info.getLevel();
+            int maxPlayers = info.getMaxPlayers();
+            ArrayList<Player> players = info.getPlayers();
+            String playerNames = players.stream()
+                    .map(Player::getName)
+                    .collect(Collectors.joining(", "));
+
+            System.out.printf("│ %-" + idWidth + "d │ %-" + levelWidth + "s │ %-" + maxPlayersWidth + "d │ %-" + currentPlayersWidth + "s │%n",
+                    id, level, maxPlayers, playerNames);
+        }
+
+        System.out.println(bottomBorder);
+        System.out.println();
+    }
 
     // =======================
     // PLAYER
@@ -831,6 +881,32 @@ public class TuiPrinters {
             }
         }
 
+        System.out.println();
+    }
+
+    // =======================
+    // SCOREBOARD
+    // =======================
+
+    public static void printScoreBoard(ArrayList<Player> scoreBoard) {
+        int nameWidth = 15;
+        int creditWidth = 10;
+
+        String topBorder = "┌" + "─".repeat(nameWidth + 2) + "┬" + "─".repeat(creditWidth + 2) + "┐";
+        String headerSeparator = "├" + "─".repeat(nameWidth + 2) + "┼" + "─".repeat(creditWidth + 2) + "┤";
+        String bottomBorder = "└" + "─".repeat(nameWidth + 2) + "┴" + "─".repeat(creditWidth + 2) + "┘";
+
+        System.out.println("\n🏆 Scoreboard:\n");
+
+        System.out.println(topBorder);
+        System.out.printf("│ %-" + nameWidth + "s │ %-" + creditWidth + "s │%n", "Name", "Credits");
+        System.out.println(headerSeparator);
+
+        for (Player player : scoreBoard) {
+            System.out.printf("│ %-" + nameWidth + "s │ %-" + creditWidth + "d │%n", player.getName(), player.getCredits());
+        }
+
+        System.out.println(bottomBorder);
         System.out.println();
     }
 }

@@ -32,15 +32,14 @@ public class TuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            ArrayList<Integer> idGames = showWaitingGamesMessage.getIdWaitingGames();
-
-            for (Integer idGame : idGames) {
-                System.out.println("New Game: " + idGame);
-            }
+            TuiPrinters.printWaitingGames(showWaitingGamesMessage.getWaitingGames());
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-            System.out.println("You joined a game with ID: " + initGameMessage.getIdGame());
+            System.out.println("You joined a game:");
+            System.out.printf ("│ ID: %d %n",initGameMessage.getIdGame());
+            System.out.printf ("│ Level: %d %n", initGameMessage.getLevelGame());
+
             GameData.setIdGame(initGameMessage.getIdGame());
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
@@ -53,7 +52,6 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
             TuiPrinters.printSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
-            TuiPrinters.highlightComponent = null;
         }
 
         else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {
@@ -261,6 +259,11 @@ public class TuiHandlerMessage {
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
             System.out.println(playerDefeatedMessage.getPlayerName() + " was defeated by !");
         }
+
+        else if(messageObj instanceof ScoreBoardMessage scoreBoardMessage) {
+            TuiPrinters.printScoreBoard(scoreBoardMessage.getScoreBoard());
+        }
+
 
         else if (messageObj instanceof String messageString) {
 

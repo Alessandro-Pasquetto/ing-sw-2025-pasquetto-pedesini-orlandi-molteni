@@ -6,6 +6,8 @@ import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
+
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import com.google.gson.Gson;

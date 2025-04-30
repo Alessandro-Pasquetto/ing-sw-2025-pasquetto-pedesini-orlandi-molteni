@@ -8,7 +8,10 @@ import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessa
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.server.connection.games.WaitingGameInfo;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Handles messages coming from server
@@ -23,7 +26,13 @@ public class GuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            PageController.generateGameList(showWaitingGamesMessage.getIdWaitingGames());
+            ArrayList<Integer> gameIds = new ArrayList<>();
+
+            for (WaitingGameInfo info : showWaitingGamesMessage.getWaitingGames()) {
+                gameIds.add(info.getId());
+            }
+
+            PageController.generateGameList(gameIds);
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
