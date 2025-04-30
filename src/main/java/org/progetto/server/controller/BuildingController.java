@@ -356,8 +356,8 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
                         bb.placeComponent(1, 3, 1);
 
-//                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-//                        bb.placeComponent(0, 3, 0);
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.placeComponent(0, 3, 0);
 
                         bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
                         bb.placeComponent(0, 2, 0);

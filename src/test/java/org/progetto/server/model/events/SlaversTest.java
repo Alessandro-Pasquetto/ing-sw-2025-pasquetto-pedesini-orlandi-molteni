@@ -48,19 +48,19 @@ class SlaversTest {
         crew.incrementCrewCount(mario.getSpaceship(), 2);
 
         //returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedCrew(mario.getSpaceship(), notHouse));
+        slavers.chooseDiscardedCrew(mario.getSpaceship(), notHouse);
 
         //removes one crew member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), crew));
+        slavers.chooseDiscardedCrew(mario.getSpaceship(), crew);
         assertEquals(1, crew.getCrewCount());
         //removes an orange alien
         orange.setAlienOrange(true);
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), orange));
+        slavers.chooseDiscardedCrew(mario.getSpaceship(), orange);
         assertFalse(crew.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
-        assertTrue(slavers.chooseDiscardedCrew(mario.getSpaceship(), purple));
+        slavers.chooseDiscardedCrew(mario.getSpaceship(), purple);
         assertFalse(crew.getHasPurpleAlien());
     }
 
