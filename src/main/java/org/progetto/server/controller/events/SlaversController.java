@@ -344,7 +344,9 @@ public class SlaversController extends EventControllerAbstract {
         }
 
         // Checks if a crew member has been discarded
-        if (slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
+
+        try{
+            slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;
             sender.sendMessage("CrewMemberDiscarded");
 
@@ -356,8 +358,7 @@ public class SlaversController extends EventControllerAbstract {
             } else {
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             }
-
-        } else {
+        }catch (IllegalStateException e){
             sender.sendMessage("CrewMemberNotDiscarded");
             sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         }

@@ -87,9 +87,8 @@ public class Battlezone extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param component StorageComponent from which the crew will be discarded
-     * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) {
+    public void chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) throws IllegalStateException {
         if (component.getHasOrangeAlien()) {  // if it contains an orange alien
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
@@ -99,7 +98,6 @@ public class Battlezone extends EventCard {
         } else {  // if it has more than one crew member
             component.decrementCrewCount(spaceship, 1);
         }
-        return true;
     }
 
     /**

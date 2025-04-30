@@ -60,19 +60,16 @@ public class Slavers extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param component StorageComponent from which the crew will be discarded
-     * @return true if the crew member was successfully discarded, false if the housing unit is empty
      */
-    public boolean chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) {
+    public void chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) throws IllegalStateException {
         if (component.getHasOrangeAlien()) {  // if it contains an orange alien
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
         } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
-        } else {  // if it has more than one crew member
+        } else   // if it has more than one crew member
             component.decrementCrewCount(spaceship, 1);
-        }
-        return true;
     }
 
     /**

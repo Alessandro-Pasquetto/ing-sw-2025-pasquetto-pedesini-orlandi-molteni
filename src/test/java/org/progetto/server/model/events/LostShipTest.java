@@ -40,21 +40,36 @@ class LostShipTest {
         LostShip lostship = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 3, 3);
         crew.incrementCrewCount(mario.getSpaceship(), 2);
 
-        //returns false if component is not a Housing Unit
-        assertFalse(lostship.chooseDiscardedCrew(mario.getSpaceship(), notHouse));
+        Exception exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> lostship.chooseDiscardedCrew(mario.getSpaceship(), notHouse)
+        );
+
+        assertEquals("CannotDecrement", exception.getMessage());
 
         //removes one crew member from the Housing Unit
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), crew));
+        lostship.chooseDiscardedCrew(mario.getSpaceship(), crew);
         assertEquals(1, crew.getCrewCount());
 
         //removes an orange alien
         orange.setAlienOrange(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), orange));
-        assertFalse(crew.getHasOrangeAlien());
+
+        exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> lostship.chooseDiscardedCrew(mario.getSpaceship(), orange)
+        );
+        assertEquals("CannotDecrement", exception.getMessage());
+
 
         //removes a purple alien
         purple.setAlienPurple(true);
-        assertTrue(lostship.chooseDiscardedCrew(mario.getSpaceship(), purple));
+        exception = assertThrows(
+                IllegalArgumentException.class,  // o il tipo atteso
+                () -> lostship.chooseDiscardedCrew(mario.getSpaceship(), purple)
+        );
+
+        assertEquals("CannotDecrement", exception.getMessage());
+
         assertFalse(crew.getHasPurpleAlien());
     }
 

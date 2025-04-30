@@ -1,6 +1,5 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -18,25 +17,22 @@ public class PopulateController {
 
     public static void askAliens(GameManager gameManager) throws InterruptedException, RemoteException {
 
-        askPurpleAlien(gameManager);
-    }
-
-    private static void askPurpleAlien(GameManager gameManager) throws RemoteException {
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
             if (!player.getIsReady() && player.getSpaceship().checkShipAllowPurpleAlien()){
 
                 Sender sender = gameManager.getSenderByPlayer(player);
                 sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
             }
-        }
-    }
 
-    private static void askOrangeAlien(GameManager gameManager) throws RemoteException {
-        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
-            if (!player.getIsReady() && player.getSpaceship().checkShipAllowOrangeAlien()){
+            else if (!player.getIsReady() && player.getSpaceship().checkShipAllowOrangeAlien()){
 
                 Sender sender = gameManager.getSenderByPlayer(player);
                 sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+            }
+
+            else {
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
             }
         }
     }
@@ -51,23 +47,26 @@ public class PopulateController {
     private static void receivePurpleAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
         Sender sender = gameManager.getSenderByPlayer(player);
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)))
             sender.sendMessage("IncorrectPhase");
+
+        if(x != -1 || y != -1){
+            try{
+                player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
+                sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+
+            } catch (IllegalStateException e) {
+                sender.sendMessage(e.getMessage());
+                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+                return;
+            }
         }
 
-        if(x == -1 && y == -1){
-            askOrangeAlien(gameManager);
-            return;
-        }
-
-        try{
-            player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
-            sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
-
-            askOrangeAlien(gameManager);
-        } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
-            sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+        if (player.getSpaceship().checkShipAllowOrangeAlien())
+            sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+        else{
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
         }
     }
 
@@ -76,27 +75,23 @@ public class PopulateController {
 
         Sender sender = gameManager.getSenderByPlayer(player);
 
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)))
             sender.sendMessage("IncorrectPhase");
+
+        if(x != -1 || y != -1){
+            try{
+                player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
+                sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+
+            } catch (IllegalStateException e) {
+                sender.sendMessage(e.getMessage());
+                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+                return;
+            }
         }
 
-        if(x == -1 && y == -1){
-            player.getSpaceship().getBuildingBoard().fillHuman();
-            player.setIsReady(true, game);
-            gameManager.getGameThread().notifyThread();
-            return;
-        }
-
-        try{
-            player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
-            sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
-
-            player.getSpaceship().getBuildingBoard().fillHuman();
-            player.setIsReady(true, game);
-            gameManager.getGameThread().notifyThread();
-        } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
-            sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
-        }
+        player.getSpaceship().getBuildingBoard().fillHuman();
+        player.setIsReady(true, game);
+        gameManager.getGameThread().notifyThread();
     }
 }

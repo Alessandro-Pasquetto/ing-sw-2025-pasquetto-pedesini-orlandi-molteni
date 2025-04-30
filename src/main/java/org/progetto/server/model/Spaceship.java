@@ -283,7 +283,7 @@ public class Spaceship implements Serializable {
      * Checks if there is at least a housing unit that can host a purple alien
      *
      * @author Alessandro
-     * @return
+     * @return true if the spaceship allows purple alien
      */
     public boolean checkShipAllowPurpleAlien() {
 
@@ -308,7 +308,7 @@ public class Spaceship implements Serializable {
      * Checks if there is at least a housing unit that can host an orange alien
      *
      * @author Alessandro
-     * @return
+     * @return true if the spaceship allows orange alien
      */
     public boolean checkShipAllowOrangeAlien() {
 
@@ -322,7 +322,7 @@ public class Spaceship implements Serializable {
                 if(component == null)
                     continue;
 
-                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowOrangeAlien())
+                if(component instanceof HousingUnit hu && hu.getAllowOrangeAlien())
                     return true;
             }
         }

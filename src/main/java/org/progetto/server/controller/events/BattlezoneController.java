@@ -661,7 +661,9 @@ public class BattlezoneController extends EventControllerAbstract {
         }
 
         // Checks if a crew member has been discarded
-        if (battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit)) {
+
+        try {
+            battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;
             sender.sendMessage("CrewMemberDiscarded");
 
@@ -669,12 +671,10 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
-
-            } else {
+            } else
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
-            }
 
-        } else {
+        }catch (IllegalStateException e) {
             sender.sendMessage("CrewMemberNotDiscarded");
             sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         }
