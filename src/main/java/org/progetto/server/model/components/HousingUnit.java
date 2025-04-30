@@ -91,16 +91,14 @@ public class HousingUnit extends Component{
      * @author Lorenzo
      * @param spaceship spaceship where we want to update parameters
      * @param num is the number of crew member to add
-     * @return true if the crew can be added
      */
-    public boolean incrementCrewCount(Spaceship spaceship, int num) {
+    public void incrementCrewCount(Spaceship spaceship, int num) throws IllegalStateException {
 
         if(crewCount + num > capacity)
-            return false;
+            throw new IllegalStateException("CapacityExceeded");
 
         spaceship.addCrewCount(num);
         crewCount += num;
-        return true;
     }
 
     /**
@@ -109,15 +107,13 @@ public class HousingUnit extends Component{
      * @author Lorenzo
      * @param spaceship spaceship where we want to update parameters
      * @param num is the number of crew member to remove
-     * @return true if the crew has been removed
      */
-    public boolean decrementCrewCount(Spaceship spaceship, int num) {
+    public void decrementCrewCount(Spaceship spaceship, int num) throws IllegalStateException {
 
         if(crewCount - num < 0)
-            return false;
+            throw new IllegalStateException("CannotDecrement");
 
         spaceship.addCrewCount(-num);
         crewCount -= num;
-        return true;
     }
 }

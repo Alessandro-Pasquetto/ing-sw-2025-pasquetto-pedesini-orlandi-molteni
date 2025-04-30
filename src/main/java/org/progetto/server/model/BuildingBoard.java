@@ -1069,7 +1069,7 @@ public class BuildingBoard implements Serializable {
      * @param yComponent
      * @throws IllegalStateException
      */
-    public void populateComponent(String alienColor, int xComponent, int yComponent) throws IllegalStateException{
+    public void placeAlienComponent(String alienColor, int xComponent, int yComponent) throws IllegalStateException{
 
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
             throw new IllegalStateException("NotValidCoordinates");
@@ -1109,6 +1109,21 @@ public class BuildingBoard implements Serializable {
 
             default:
                 throw new IllegalStateException("UnknownCrewType");
+        }
+    }
+
+    public void fillHuman(){
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+
+                Component component = spaceshipMatrix[y][x];
+
+                if(component == null)
+                    continue;
+
+                if(component instanceof HousingUnit hu && hu.getCrewCount() == 0)
+                    hu.incrementCrewCount(spaceship, 2);
+            }
         }
     }
 }

@@ -1039,7 +1039,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void populateComponent() {
+    void placeAlienComponent() {
         Spaceship spaceship = new Spaceship(1, 0);
         BuildingBoard buildingBoard = new BuildingBoard(spaceship, 0);
 
@@ -1051,27 +1051,27 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 1, 0);
 
         // Populate with humans
-        buildingBoard.populateComponent("human", 2, 1);
+        buildingBoard.placeAlienComponent("human", 2, 1);
         assertEquals(1, hu.getCrewCount());
 
-        buildingBoard.populateComponent("human", 2, 1);
+        buildingBoard.placeAlienComponent("human", 2, 1);
         assertEquals(2, hu.getCrewCount());
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("human", 2, 1);
+            buildingBoard.placeAlienComponent("human", 2, 1);
         });
         assertEquals("ComponentAlreadyOccupied", exception.getMessage());
 
         hu.decrementCrewCount(spaceship, 2);
 
         // Populate with orange alien
-        buildingBoard.populateComponent("orange", 2, 1);
+        buildingBoard.placeAlienComponent("orange", 2, 1);
         assertTrue(hu.getHasOrangeAlien());
 
         hu.setAlienOrange(false);
 
         // Populate with purple alien
-        buildingBoard.populateComponent("purple", 2, 1);
+        buildingBoard.placeAlienComponent("purple", 2, 1);
         assertTrue(hu.getHasPurpleAlien());
 
         hu.setAlienPurple(false);
@@ -1081,23 +1081,23 @@ class BuildingBoardTest {
         hu.setAllowPurpleAlien(false);
 
         exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("orange", 2, 1);
+            buildingBoard.placeAlienComponent("orange", 2, 1);
         });
         assertEquals("CannotContainOrangeAlien", exception.getMessage());
 
         exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("purple", 2, 1);
+            buildingBoard.placeAlienComponent("purple", 2, 1);
 
         });
 
         // Not valid coordinates/components
         exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("human", -1, 0);
+            buildingBoard.placeAlienComponent("human", -1, 0);
         });
         assertEquals("NotValidCoordinates", exception.getMessage());
 
         exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("human", 3, 3);
+            buildingBoard.placeAlienComponent("human", 3, 3);
         });
         assertEquals("NotValidCoordinates", exception.getMessage());
 
@@ -1106,7 +1106,7 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(3, 2, 0);
 
         exception = assertThrows(IllegalStateException.class, () -> {
-            buildingBoard.populateComponent("human", 3, 2);
+            buildingBoard.placeAlienComponent("human", 3, 2);
         });
         assertEquals("NotValidCoordinates", exception.getMessage());
     }

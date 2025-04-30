@@ -286,7 +286,12 @@ public class Spaceship implements Serializable {
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 
-                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowPurpleAlien())
+                Component component = spaceshipMatrix[y][x];
+
+                if(component == null)
+                    continue;
+
+                if(component instanceof HousingUnit hu && hu.getAllowPurpleAlien())
                     return true;
             }
         }

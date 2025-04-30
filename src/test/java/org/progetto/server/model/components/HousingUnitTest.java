@@ -122,11 +122,16 @@ class HousingUnitTest {
         HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
         Spaceship spaceship = new Spaceship(2, 1);
         // Adds crew to the housing unit
-        assertTrue(housingUnit.incrementCrewCount(spaceship, 1));
+        housingUnit.incrementCrewCount(spaceship, 1);
         assertEquals(1, housingUnit.getCrewCount());
 
         // Tries to add more crew, but it is full
-        assertFalse(housingUnit.incrementCrewCount(spaceship, 2));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            housingUnit.incrementCrewCount(spaceship, 2);
+        });
+
+        assertEquals("CapacityExceeded", exception.getMessage());
         assertEquals(1, housingUnit.getCrewCount());
     }
 
@@ -138,11 +143,16 @@ class HousingUnitTest {
         housingUnit.incrementCrewCount(spaceship, 2);
 
         // Removes batteries from the battery storage
-        assertTrue(housingUnit.decrementCrewCount(spaceship, 1));
+        housingUnit.decrementCrewCount(spaceship, 1);
         assertEquals(1, housingUnit.getCrewCount());
 
         // Tries to remove batteries, but there aren't enough
-        assertFalse(housingUnit.decrementCrewCount(spaceship, 2));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            housingUnit.decrementCrewCount(spaceship, 2);
+        });
+
+        assertEquals("CannotDecrement", exception.getMessage());
         assertEquals(1, housingUnit.getCrewCount());
     }
 }

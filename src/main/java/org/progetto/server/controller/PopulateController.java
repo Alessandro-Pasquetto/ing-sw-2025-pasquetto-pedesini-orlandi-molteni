@@ -60,7 +60,7 @@ public class PopulateController {
         }
 
         try{
-            player.getSpaceship().getBuildingBoard().populateComponent("purple", x, y);
+            player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
             sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
 
             askOrangeAlien(gameManager);
@@ -80,15 +80,17 @@ public class PopulateController {
         }
 
         if(x == -1 && y == -1){
+            player.getSpaceship().getBuildingBoard().fillHuman();
             player.setIsReady(true, game);
             gameManager.getGameThread().notifyThread();
             return;
         }
 
         try{
-            player.getSpaceship().getBuildingBoard().populateComponent("orange", x, y);
+            player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
             sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
 
+            player.getSpaceship().getBuildingBoard().fillHuman();
             player.setIsReady(true, game);
             gameManager.getGameThread().notifyThread();
         } catch (IllegalStateException e) {
