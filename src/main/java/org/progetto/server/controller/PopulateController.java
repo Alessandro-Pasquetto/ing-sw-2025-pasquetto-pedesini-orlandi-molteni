@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.AskAlien;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 
 import java.rmi.RemoteException;
@@ -15,8 +16,6 @@ public class PopulateController {
     // =======================
 
     public static void askAliens(GameManager gameManager) throws InterruptedException, RemoteException {
-
-        Game game = gameManager.getGame();
 
         askPurpleAlien(gameManager);
     }
@@ -49,20 +48,39 @@ public class PopulateController {
     }
 
     private static void receivePurpleAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
-        Game game = gameManager.getGame();
+        Sender sender = gameManager.getSenderByPlayer(player);
 
-        SpaceshipController.populateAlienComponent(gameManager, player, "purple", x, y, gameManager.getSenderByPlayer(player));
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
+            sender.sendMessage("IncorrectPhase");
+        }
 
-        player.setIsReady(true, game);
-        gameManager.getGameThread().notifyThread();
+        try{
+            player.getSpaceship().getBuildingBoard().populateComponent("purple", x, y);
+            sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+
+            askOrangeAlien(gameManager);
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
     }
 
     private static void receiveOrangeAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
         Game game = gameManager.getGame();
 
-        SpaceshipController.populateAlienComponent(gameManager, player, "orange", x, y, gameManager.getSenderByPlayer(player));
+        Sender sender = gameManager.getSenderByPlayer(player);
 
-        player.setIsReady(true, game);
-        gameManager.getGameThread().notifyThread();
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
+            sender.sendMessage("IncorrectPhase");
+        }
+
+        try{
+            player.getSpaceship().getBuildingBoard().populateComponent("orange", x, y);
+            sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+
+            player.setIsReady(true, game);
+            gameManager.getGameThread().notifyThread();
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
     }
 }
