@@ -54,6 +54,11 @@ public class PopulateController {
             sender.sendMessage("IncorrectPhase");
         }
 
+        if(x == -1 && y == -1){
+            askOrangeAlien(gameManager);
+            return;
+        }
+
         try{
             player.getSpaceship().getBuildingBoard().populateComponent("purple", x, y);
             sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
@@ -61,6 +66,7 @@ public class PopulateController {
             askOrangeAlien(gameManager);
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
+            sender.sendMessage(new AskAlien("purple", player.getSpaceship()));
         }
     }
 
@@ -73,6 +79,12 @@ public class PopulateController {
             sender.sendMessage("IncorrectPhase");
         }
 
+        if(x == -1 && y == -1){
+            player.setIsReady(true, game);
+            gameManager.getGameThread().notifyThread();
+            return;
+        }
+
         try{
             player.getSpaceship().getBuildingBoard().populateComponent("orange", x, y);
             sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
@@ -81,6 +93,7 @@ public class PopulateController {
             gameManager.getGameThread().notifyThread();
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
+            sender.sendMessage(new AskAlien("orange", player.getSpaceship()));
         }
     }
 }

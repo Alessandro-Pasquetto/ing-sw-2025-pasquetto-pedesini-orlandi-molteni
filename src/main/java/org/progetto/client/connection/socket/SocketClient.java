@@ -216,6 +216,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void responsePlaceAlien(int x, int y, String color) {
+        SocketWriter.sendMessage(new ResponsePlaceAlien(x, y, color));
+    }
+
+    @Override
     public void responseHowManyDoubleCannons(int howManyWantToUse) {
         SocketWriter.sendMessage(new ResponseHowManyDoubleCannonsMessage(howManyWantToUse));
     }

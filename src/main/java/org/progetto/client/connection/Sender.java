@@ -64,6 +64,8 @@ public interface Sender {
 
     void close();
 
+    void responsePlaceAlien(int x, int y, String color);
+
     void responseHowManyDoubleCannons(int howManyWantToUse);
 
     void responseHowManyDoubleEngines(int howManyWantToUse);

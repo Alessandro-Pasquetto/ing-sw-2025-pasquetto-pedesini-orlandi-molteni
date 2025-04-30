@@ -487,6 +487,22 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void responsePlaceAlien(VirtualClient virtualClient, int idGame, int x, int y, String color) throws RemoteException {
+
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerByVirtualClient(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        PopulateController.receivePlaceAlien(gameManager, player, x, y, color);
+    }
+
+    @Override
     public void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;

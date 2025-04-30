@@ -1,5 +1,6 @@
 package org.progetto.client.tui;
 
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
 import org.progetto.server.model.Player;
@@ -592,6 +593,43 @@ public class TuiPrinters {
         int[] boxes = spaceship.getBoxCounts();
         System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
         System.out.println();
+    }
+
+    public static void responsePlaceAlien(String alienColor, Spaceship spaceship) {
+
+        //todo print spaceship with colored housingUnit
+
+        while(true) {
+            System.out.println("Do you wanna place " + alienColor + " alien? (Yes/No)");
+            String response = TuiCommandFilter.waitResponse();
+
+            if(response.equalsIgnoreCase("NO")){
+                GameData.getSender().responsePlaceAlien(-1, -1, alienColor);
+                break;
+            }
+
+            else if (response.equalsIgnoreCase("YES")){
+                System.out.print("X: ");
+                String x = TuiCommandFilter.waitResponse();
+
+                System.out.print("Y: ");
+                String y = TuiCommandFilter.waitResponse();
+
+
+                Sender sender = GameData.getSender();
+                int levelShip = spaceship.getLevelShip();
+
+                try{
+                    sender.responsePlaceAlien(Integer.parseInt(x) - 6 + levelShip, Integer.parseInt(y) - 5, alienColor);
+                    break;
+                }catch (NumberFormatException e){
+                    System.out.println("You must insert a number!");
+                }
+            }
+
+            else
+                System.out.println("You must choose between YES or NO");
+        }
     }
 
     // =======================

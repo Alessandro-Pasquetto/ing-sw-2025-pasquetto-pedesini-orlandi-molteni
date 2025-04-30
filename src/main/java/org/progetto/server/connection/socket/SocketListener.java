@@ -203,6 +203,14 @@ public class SocketListener extends Thread {
             SpaceshipController.startDestroyComponent(gameManager, player, x, y, socketWriter);
         }
 
+        else if (messageObj instanceof ResponsePlaceAlien responsePlaceAlien) {
+            String color = responsePlaceAlien.getColor();
+            int x = responsePlaceAlien.getX();
+            int y = responsePlaceAlien.getY();
+
+            PopulateController.receivePlaceAlien(gameManager, player, x, y, color);
+        }
+
         else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
             int howManyWantToUse = responseHowManyDoubleCannonsMessage.getHowManyWantToUse();
 

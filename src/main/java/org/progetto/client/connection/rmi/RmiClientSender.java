@@ -320,6 +320,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void responsePlaceAlien(int x, int y, String color) {
+        try {
+            server.responsePlaceAlien(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y, color);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void responseHowManyDoubleCannons(int howManyWantToUse) {
         try {
             server.responseHowManyDoubleCannons(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);

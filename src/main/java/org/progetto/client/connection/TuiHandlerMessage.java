@@ -124,6 +124,10 @@ public class TuiHandlerMessage {
             TuiPrinters.printEventCard(pickedEventCardMessage.getEventCard());
         }
 
+        else if(messageObj instanceof AskAlien askAlien) {
+            TuiPrinters.responsePlaceAlien(askAlien.getColor(), askAlien.getSpaceship());
+        }
+
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
             EventCommands.responseHowManyDoubleCannons(
                     howManyDoubleCannonsMessage.getFirePowerRequired(),
