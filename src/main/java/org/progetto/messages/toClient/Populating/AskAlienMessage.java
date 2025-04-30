@@ -1,9 +1,9 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Populating;
 
 import org.progetto.server.model.Spaceship;
 import java.io.Serializable;
 
-public class AskAlien implements Serializable {
+public class AskAlienMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -16,7 +16,7 @@ public class AskAlien implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AskAlien(String color, Spaceship spaceship) {
+    public AskAlienMessage(String color, Spaceship spaceship) {
         this.color = color;
         this.spaceship = spaceship;
     }

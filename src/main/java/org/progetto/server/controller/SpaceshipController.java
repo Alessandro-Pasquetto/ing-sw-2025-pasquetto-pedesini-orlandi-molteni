@@ -291,6 +291,12 @@ public class SpaceshipController {
                 return;
             }
 
+            // Checks if player is trying to destroy a correct component
+            if (!buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent].getIncorrectlyPlaced()) {
+                sender.sendMessage("ImpossibleToDestroyCorrectlyPlaced");
+                return;
+            }
+
             buildingBoard.destroyComponent(xComponent, yComponent);
 
             sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));

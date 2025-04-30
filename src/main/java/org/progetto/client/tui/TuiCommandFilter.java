@@ -7,6 +7,7 @@ import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.socket.SocketListener;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.Game;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -280,7 +281,7 @@ public class TuiCommandFilter {
         switch (commandType) {
             case "CLOSE":
                 if (isValidCommand(commandParts.length, 1))
-                    BuildingCommands.close(commandParts);
+                    GameCommands.close(commandParts);
                 else
                     expectedFormat(commandType);
                 return;
@@ -317,7 +318,7 @@ public class TuiCommandFilter {
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
-                            BuildingCommands.readyPlayer(commandParts);
+                            GameCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
                         break;
@@ -462,7 +463,7 @@ public class TuiCommandFilter {
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
-                            BuildingCommands.readyPlayer(commandParts);
+                            GameCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
                         break;
@@ -558,7 +559,7 @@ public class TuiCommandFilter {
 
                     case "READY":
                         if (isValidCommand(commandParts.length, 1))
-                            BuildingCommands.readyPlayer(commandParts);
+                            GameCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
                         break;

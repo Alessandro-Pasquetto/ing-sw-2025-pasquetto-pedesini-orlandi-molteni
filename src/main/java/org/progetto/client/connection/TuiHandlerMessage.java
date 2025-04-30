@@ -11,6 +11,8 @@ import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
+import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
@@ -51,6 +53,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
             TuiPrinters.printSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+            TuiPrinters.highlightComponent = null;
         }
 
         else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {
@@ -124,8 +127,15 @@ public class TuiHandlerMessage {
             TuiPrinters.printEventCard(pickedEventCardMessage.getEventCard());
         }
 
-        else if(messageObj instanceof AskAlien askAlien) {
-            TuiPrinters.responsePlaceAlien(askAlien.getColor(), askAlien.getSpaceship());
+        else if(messageObj instanceof AskAlienMessage askAlien) {
+            BuildingCommands.responsePlaceAlien(askAlien.getColor(), askAlien.getSpaceship());
+        }
+
+        else if(messageObj instanceof AlienPlacedMessage alienPlacedMessage) {
+            System.out.println("Alien successfully placed at:");
+            System.out.printf ("│ X: %d %n", alienPlacedMessage.getX());
+            System.out.printf ("│ Y: %d %n", alienPlacedMessage.getY());
+            System.out.println();
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -368,6 +378,14 @@ public class TuiHandlerMessage {
 
                 case "IllegalBookIndex":
                     System.out.println("You only have 2 cells, choose a valid index!");
+                    break;
+
+                case "ImpossibleToDestroyCentralUnit":
+                    System.out.println("Impossible to destroy central unit!");
+                    break;
+
+                case "ImpossibleToDestroyCorrectlyPlaced":
+                    System.out.println("Impossible to destroy a correctly placed component!");
                     break;
 
                 case "BatteryDiscarded":

@@ -71,7 +71,7 @@ public class ConnectionsCommands {
 
         Thread.sleep(500);
 
-        BuildingCommands.readyPlayer(null);
+        GameCommands.readyPlayer(null);
     }
 
     /**
@@ -94,6 +94,6 @@ public class ConnectionsCommands {
 
         Thread.sleep(500);
 
-        BuildingCommands.readyPlayer(null);
+        GameCommands.readyPlayer(null);
     }
 }

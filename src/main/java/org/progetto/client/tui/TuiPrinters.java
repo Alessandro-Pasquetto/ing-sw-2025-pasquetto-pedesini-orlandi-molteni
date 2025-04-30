@@ -13,6 +13,12 @@ import java.util.ArrayList;
 public class TuiPrinters {
 
     // =======================
+    // ATTRIBUTES
+    // =======================
+
+    public static String highlightComponent;
+
+    // =======================
     // COLORS
     // =======================
 
@@ -189,6 +195,10 @@ public class TuiPrinters {
             Box[] boxes;
             String[] boxesStr;
 
+            // Colors
+            String color;
+            String stopColor;
+
             switch (type) {
                 case CANNON:
                     up = rotation == 0 ? "↑" : " ";
@@ -243,33 +253,36 @@ public class TuiPrinters {
                     break;
 
                 case SHIELD:
+                    color = !component.getIncorrectlyPlaced() ? GREEN : "";
+                    stopColor = !component.getIncorrectlyPlaced() ? RESET : "";
+
                     switch (rotation) {
                         case 0:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + "═══════╗" + RESET + "  " + rightConnections[0];
-                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "  ║  " + RESET + rightConnections[1];
-                            lines[3] = leftConnections[2] + "        " + GREEN + "║ " + RESET + " " + rightConnections[2];
+                            lines[1] = leftConnections[0] + " " + color + "═══════╗" + stopColor + "  " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + color + "  ║  " + stopColor + rightConnections[1];
+                            lines[3] = leftConnections[2] + "        " + color + "║ " + stopColor + " " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 1:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
-                            lines[1] = leftConnections[0] + "        " + GREEN + "║ " + RESET + " " + rightConnections[0];
-                            lines[2] = leftConnections[1] + "     " + abbreviateType + GREEN + "  ║  " + RESET + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + "═══════╝ " + RESET + " " + rightConnections[2];
+                            lines[1] = leftConnections[0] + "        " + color + "║ " + stopColor + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + "     " + abbreviateType + color + "  ║  " + stopColor + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + color + "═══════╝ " + stopColor + " " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 2:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + " ║" + RESET + "        " + rightConnections[0];
-                            lines[2] = leftConnections[1] + GREEN + "  ║  " + RESET + abbreviateType + "     " + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + " ╚═══════" + RESET + " " + rightConnections[2];
+                            lines[1] = leftConnections[0] + " " + color + " ║" + stopColor + "        " + rightConnections[0];
+                            lines[2] = leftConnections[1] + color + "  ║  " + stopColor + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + color + " ╚═══════" + stopColor + " " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                         case 3:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
-                            lines[1] = leftConnections[0] + " " + GREEN + " ╔═══════" + RESET + " " + rightConnections[0];
-                            lines[2] = leftConnections[1] + GREEN + "  ║  " + RESET + abbreviateType + "     " + rightConnections[1];
-                            lines[3] = leftConnections[2] + " " + GREEN + " ║" + RESET + "        " + rightConnections[2];
+                            lines[1] = leftConnections[0] + " " + color + " ╔═══════" + stopColor + " " + rightConnections[0];
+                            lines[2] = leftConnections[1] + color + "  ║  " + stopColor + abbreviateType + "     " + rightConnections[1];
+                            lines[3] = leftConnections[2] + " " + color + " ║" + stopColor + "        " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
                     }
@@ -281,20 +294,22 @@ public class TuiPrinters {
 
                     HousingUnit housingUnit = (HousingUnit) component;
                     itemsCount = housingUnit.getCrewCount();
-                    String color;
 
                     if (housingUnit.getHasPurpleAlien()) {
                         color = PURPLE;
+                        stopColor = RESET;
                     } else if (housingUnit.getHasOrangeAlien()) {
                         color = ORANGE;
+                        stopColor = RESET;
                     } else {
-                        color = RESET;
+                        color = "";
+                        stopColor = "";
                     }
 
                     lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
-                    lines[3] = leftConnections[2] + "    (" + color + itemsCount + RESET + ")    " + rightConnections[2];
+                    lines[3] = leftConnections[2] + "    (" + color + itemsCount + stopColor + ")    " + rightConnections[2];
                     lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
@@ -401,6 +416,36 @@ public class TuiPrinters {
             lines[2] = " │           │ ";
             lines[3] = " │           │ ";
             lines[4] = " └───────────┘ ";
+        }
+
+        // Logic to highlight components that are incorrectly placed
+        if (component != null && component.getIncorrectlyPlaced()) {
+            lines[0] = RED + lines[0] + RESET;
+            lines[1] = RED + lines[1] + RESET;
+            lines[2] = RED + lines[2] + RESET;
+            lines[3] = RED + lines[3] + RESET;
+            lines[4] = RED + lines[4] + RESET;
+            return lines;
+        }
+
+        // Logic to highlight components that can host an alien
+        if (highlightComponent != null && component != null) {
+
+            if (highlightComponent.equalsIgnoreCase("purple") && component.getType().equals(ComponentType.HOUSING_UNIT) && ((HousingUnit) component).getAllowPurpleAlien()) {
+                lines[0] = PURPLE + lines[0] + RESET;
+                lines[1] = PURPLE + lines[1] + RESET;
+                lines[2] = PURPLE + lines[2] + RESET;
+                lines[3] = PURPLE + lines[3] + RESET;
+                lines[4] = PURPLE + lines[4] + RESET;
+            }
+
+            if (highlightComponent.equalsIgnoreCase("orange") && component.getType().equals(ComponentType.HOUSING_UNIT) && ((HousingUnit) component).getAllowOrangeAlien()) {
+                lines[0] = ORANGE + lines[0] + RESET;
+                lines[1] = ORANGE + lines[1] + RESET;
+                lines[2] = ORANGE + lines[2] + RESET;
+                lines[3] = ORANGE + lines[3] + RESET;
+                lines[4] = ORANGE + lines[4] + RESET;
+            }
         }
 
         return lines;
@@ -593,43 +638,6 @@ public class TuiPrinters {
         int[] boxes = spaceship.getBoxCounts();
         System.out.printf("│ Boxes                : [%d, %d, %d, %d]%n", boxes[0], boxes[1], boxes[2], boxes[3]);
         System.out.println();
-    }
-
-    public static void responsePlaceAlien(String alienColor, Spaceship spaceship) {
-
-        //todo print spaceship with colored housingUnit
-
-        while(true) {
-            System.out.println("Do you wanna place " + alienColor + " alien? (Yes/No)");
-            String response = TuiCommandFilter.waitResponse();
-
-            if(response.equalsIgnoreCase("NO")){
-                GameData.getSender().responsePlaceAlien(-1, -1, alienColor);
-                break;
-            }
-
-            else if (response.equalsIgnoreCase("YES")){
-                System.out.print("X: ");
-                String x = TuiCommandFilter.waitResponse();
-
-                System.out.print("Y: ");
-                String y = TuiCommandFilter.waitResponse();
-
-
-                Sender sender = GameData.getSender();
-                int levelShip = spaceship.getLevelShip();
-
-                try{
-                    sender.responsePlaceAlien(Integer.parseInt(x) - 6 + levelShip, Integer.parseInt(y) - 5, alienColor);
-                    break;
-                }catch (NumberFormatException e){
-                    System.out.println("You must insert a number!");
-                }
-            }
-
-            else
-                System.out.println("You must choose between YES or NO");
-        }
     }
 
     // =======================

@@ -70,7 +70,7 @@ public class Slavers extends EventCard {
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
         } else {  // if it has more than one crew member
-            return component.decrementCrewCount(spaceship, 1);
+            component.decrementCrewCount(spaceship, 1);
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.toClient.AskAlien;
+import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
+import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Game;
@@ -25,7 +26,7 @@ public class PopulateController {
             if (!player.getIsReady() && player.getSpaceship().checkShipAllowPurpleAlien()){
 
                 Sender sender = gameManager.getSenderByPlayer(player);
-                sender.sendMessage(new AskAlien("purple", player.getSpaceship()));
+                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
             }
         }
     }
@@ -35,7 +36,7 @@ public class PopulateController {
             if (!player.getIsReady() && player.getSpaceship().checkShipAllowOrangeAlien()){
 
                 Sender sender = gameManager.getSenderByPlayer(player);
-                sender.sendMessage(new AskAlien("orange", player.getSpaceship()));
+                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
             }
         }
     }
@@ -61,12 +62,12 @@ public class PopulateController {
 
         try{
             player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
-            sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+            sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             askOrangeAlien(gameManager);
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
-            sender.sendMessage(new AskAlien("purple", player.getSpaceship()));
+            sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
         }
     }
 
@@ -88,14 +89,14 @@ public class PopulateController {
 
         try{
             player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
-            sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+            sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             player.getSpaceship().getBuildingBoard().fillHuman();
             player.setIsReady(true, game);
             gameManager.getGameThread().notifyThread();
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
-            sender.sendMessage(new AskAlien("orange", player.getSpaceship()));
+            sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
         }
     }
 }

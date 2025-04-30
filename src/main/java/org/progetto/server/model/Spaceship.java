@@ -279,6 +279,12 @@ public class Spaceship implements Serializable {
         return Math.min(doubleCannonCount, batteriesCount);
     }
 
+    /**
+     * Checks if there is at least a housing unit that can host a purple alien
+     *
+     * @author Alessandro
+     * @return
+     */
     public boolean checkShipAllowPurpleAlien() {
 
         Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
@@ -298,6 +304,12 @@ public class Spaceship implements Serializable {
         return false;
     }
 
+    /**
+     * Checks if there is at least a housing unit that can host an orange alien
+     *
+     * @author Alessandro
+     * @return
+     */
     public boolean checkShipAllowOrangeAlien() {
 
         Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
@@ -305,7 +317,12 @@ public class Spaceship implements Serializable {
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 
-                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowPurpleAlien())
+                Component component = spaceshipMatrix[y][x];
+
+                if(component == null)
+                    continue;
+
+                if(spaceshipMatrix[y][x] instanceof HousingUnit hu && hu.getAllowOrangeAlien())
                     return true;
             }
         }

@@ -2,6 +2,7 @@ package org.progetto.client.tui;
 
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -173,18 +174,6 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to set a player as ready
-     * usage : Ready
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     */
-    public static void readyPlayer(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.readyPlayer();
-    }
-
-    /**
      * Enables to reset the timer
      * usage : TimerReset
      *
@@ -198,14 +187,50 @@ public class BuildingCommands {
     }
 
     /**
-     * Enables to close the connection with the server
-     * usage : Close
+     * Handles player response to place an alien
      *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
+     * @author Alessandro
+     * @param alienColor
+     * @param spaceship
      */
-    public static void close(String[] commandParts){
-        Sender sender = GameData.getSender();
-        sender.close();
+    public static void responsePlaceAlien(String alienColor, Spaceship spaceship) {
+
+        //todo print spaceship with colored housingUnit
+
+        while(true) {
+            System.out.println("Do you want to place " + alienColor + " alien? (YES or NO)");
+            String response = TuiCommandFilter.waitResponse();
+
+            if(response.equalsIgnoreCase("NO")){
+                GameData.getSender().responsePlaceAlien(-1, -1, alienColor);
+                break;
+            }
+
+            else if (response.equalsIgnoreCase("YES")){
+                Sender sender = GameData.getSender();
+                TuiPrinters.highlightComponent = alienColor;
+                TuiPrinters.printSpaceship(GameData.getNamePlayer(), spaceship);
+                TuiPrinters.highlightComponent = null;
+
+                System.out.println("Choose where to place " + alienColor + " alien:");
+                System.out.print("X: ");
+                String x = TuiCommandFilter.waitResponse();
+
+                System.out.print("Y: ");
+                String y = TuiCommandFilter.waitResponse();
+
+                int levelShip = spaceship.getLevelShip();
+
+                try{
+                    sender.responsePlaceAlien(Integer.parseInt(x) - 6 + levelShip, Integer.parseInt(y) - 5, alienColor);
+                    break;
+                }catch (NumberFormatException e){
+                    System.out.println("You must insert a number!");
+                }
+            }
+
+            else
+                System.out.println("You must choose between YES or NO");
+        }
     }
 }

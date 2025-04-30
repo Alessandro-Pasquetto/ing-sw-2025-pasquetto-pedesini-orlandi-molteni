@@ -46,4 +46,5 @@ module org.progetto{
     exports org.progetto.messages.toClient.Sabotage;
     exports org.progetto.server.controller.events;
     opens org.progetto.server.controller.events to com.google.gson, javafx.fxml;
+    exports org.progetto.messages.toClient.Populating;
 }

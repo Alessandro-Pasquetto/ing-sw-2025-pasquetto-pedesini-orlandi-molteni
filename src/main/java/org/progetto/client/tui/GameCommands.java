@@ -122,4 +122,28 @@ public class GameCommands {
             System.out.println("Error loading command list: " + e.getMessage());
         }
     }
+
+    /**
+     * Enables to set a player as ready
+     * usage : Ready
+     *
+     * @author Lorenzo
+     * @param commandParts are segments of the command
+     */
+    public static void readyPlayer(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.readyPlayer();
+    }
+
+    /**
+     * Enables to close the connection with the server
+     * usage : Close
+     *
+     * @author Lorenzo
+     * @param commandParts are segments of the command
+     */
+    public static void close(String[] commandParts){
+        Sender sender = GameData.getSender();
+        sender.close();
+    }
 }

@@ -500,7 +500,6 @@ public class BuildingBoard implements Serializable {
             int relativeConnection = upComponent.getConnections()[2];
             if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)){
                 currentResult = false;
-                upComponent.setIncorrectlyPlaced(true);
             }
             if (upConnection != 0)
                 up = true;
@@ -517,7 +516,6 @@ public class BuildingBoard implements Serializable {
             int relativeConnection = rightComponent.getConnections()[3];
             if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)){
                 currentResult = false;
-                rightComponent.setIncorrectlyPlaced(true);
             }
             if (rightConnection != 0)
                 right = true;
@@ -534,7 +532,6 @@ public class BuildingBoard implements Serializable {
             int relativeConnection = bottomComponent.getConnections()[0];
             if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0) ){
                 currentResult = false;
-                bottomComponent.setIncorrectlyPlaced(true);
             }
             if (bottomConnection != 0)
                 bottom = true;
@@ -551,7 +548,6 @@ public class BuildingBoard implements Serializable {
             int relativeConnection = leftComponent.getConnections()[1];
             if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)){
                 currentResult = false;
-                leftComponent.setIncorrectlyPlaced(true);
             }
             if (leftConnection != 0)
                 left = true;
@@ -561,8 +557,7 @@ public class BuildingBoard implements Serializable {
                 exposedConnectorsCount.getAndIncrement();
         }
 
-        if(!currentResult)
-            currentComponent.setIncorrectlyPlaced(true);
+        currentComponent.setIncorrectlyPlaced(!currentResult);
 
         boolean resultUp = true;
         boolean resultRight = true;
@@ -581,8 +576,7 @@ public class BuildingBoard implements Serializable {
     }
 
     /**
-     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship,
-     * visits the entire spaceship and set badlyPlaced if the component is placed incorrectly
+     * Checks if the spaceship is valid, also counting and updating the exposedConnectorsCount value of the spaceship, visits the entire spaceship and set badlyPlaced if the component is placed incorrectly
      *
      * @author Alessandro
      * @return a pair of booleans: the first indicates if the spaceship is valid, the second indicates if there were any disconnected components
@@ -697,8 +691,13 @@ public class BuildingBoard implements Serializable {
 
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
-                if(spaceshipMatrix[y][x] != null && !visited[y][x])
+
+                if (spaceshipMatrix[y][x] == null)
+                    continue;
+
+                if(!visited[y][x]) {
                     destroyComponent(x, y);
+                }
             }
         }
     }
@@ -1112,6 +1111,11 @@ public class BuildingBoard implements Serializable {
         }
     }
 
+    /**
+     * Fills all housing units that doesn't need a choice with humans
+     *
+     * @author Alessandro
+     */
     public void fillHuman(){
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
