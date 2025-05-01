@@ -291,15 +291,18 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("EmptyComponentCell", message);
-            }};
+            }
+        };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 0, 0, sender);
+
 
         //test correct removal of the component and spaceship validity
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
-            }};
+            }
+        };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 1, 2, sender);
 
         //test correct removal and spaceship not valid

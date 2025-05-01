@@ -255,7 +255,7 @@ public class SpaceshipController {
             }
 
         } catch (IllegalStateException e) {
-            e.printStackTrace();
+            sender.sendMessage(e.getMessage());
         }
     }
 

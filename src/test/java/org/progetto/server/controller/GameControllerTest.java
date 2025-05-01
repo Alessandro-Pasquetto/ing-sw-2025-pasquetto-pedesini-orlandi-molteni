@@ -3,7 +3,6 @@ package org.progetto.server.controller;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameControllerTest {
 
     @Test
-    void ready() throws RemoteException {
+    void ready() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 1, 1);
 
         Player player = new Player("mario", 0, 1);
@@ -29,12 +28,10 @@ class GameControllerTest {
             }
         };
 
-        gameManager.getGame().setPhase(GamePhase.INIT);
-
+        assertEquals(GamePhase.INIT, gameManager.getGame().getPhase());
         // Call the ready method and ensure no exceptions are thrown
-        assertDoesNotThrow(() -> GameController.ready(gameManager, player, sender));
+        GameController.ready(gameManager, player, sender);
 
-        // Verify that the player is now marked as ready
-        assertTrue(player.getIsReady());
+        assertEquals(GamePhase.BUILDING, gameManager.getGame().getPhase());
     }
 }
