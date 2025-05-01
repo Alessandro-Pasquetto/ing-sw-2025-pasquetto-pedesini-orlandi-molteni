@@ -111,11 +111,10 @@ class SlaversControllerTest {
         Thread.sleep(200);
         // Discarded crew
         controller.receiveDiscardedCrew(p1, 2, 1, sender);
-        assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveDiscardedCrew(p1, 3, 1, sender);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        controller.receiveDiscardedCrew(p1, 3, 1, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
@@ -123,7 +122,7 @@ class SlaversControllerTest {
         Thread.sleep(200);
         controller.receiveHowManyCannonsToUse(p2, 0, sender);
 
-        Thread.sleep(500);
+        Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);

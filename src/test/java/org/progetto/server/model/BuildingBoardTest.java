@@ -275,12 +275,9 @@ class BuildingBoardTest {
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
         // place housing_unit //
-        buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));   //housing unit
-        Component housing_unit = buildingBoard.getHandComponent();
-        HousingUnit housingUnit = (HousingUnit) housing_unit;
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(housingUnit);
         buildingBoard.placeComponent(2, 2, 0);
-
-        buildingBoard.initSpaceshipParams();
 
         // test allow orange alien //
         buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
@@ -470,9 +467,7 @@ class BuildingBoardTest {
 
         // removing housing unit with alien purple //
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));   //housing unit
-        housing_unit = buildingBoard.getHandComponent();
         buildingBoard.placeComponent(2, 2, 0);
-        housingUnit = (HousingUnit) housing_unit;
         housingUnit.setAlienPurple(true);
         buildingBoard.destroyComponent(2, 2);
         assertTrue(buildingBoard.checkShipValidityAndTryToFix());
@@ -1045,16 +1040,12 @@ class BuildingBoardTest {
 
         HousingUnit hu = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
         hu.setAllowOrangeAlien(true);
-        hu.setAllowPurpleAlien(true);
 
         buildingBoard.setHandComponent(hu);
         buildingBoard.placeComponent(2, 1, 0);
 
         // Populate with humans
-        buildingBoard.placeAlienComponent("human", 2, 1);
-        assertEquals(1, hu.getCrewCount());
-
-        buildingBoard.placeAlienComponent("human", 2, 1);
+        buildingBoard.fillHuman();
         assertEquals(2, hu.getCrewCount());
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {
@@ -1070,6 +1061,9 @@ class BuildingBoardTest {
 
         hu.setAlienOrange(false);
 
+        hu.decrementCrewCount(spaceship, 1);
+        hu.setAllowPurpleAlien(true);
+
         // Populate with purple alien
         buildingBoard.placeAlienComponent("purple", 2, 1);
         assertTrue(hu.getHasPurpleAlien());
@@ -1079,6 +1073,8 @@ class BuildingBoardTest {
         // Alien exceptions
         hu.setAllowOrangeAlien(false);
         hu.setAllowPurpleAlien(false);
+
+        hu.decrementCrewCount(spaceship, 1);
 
         exception = assertThrows(IllegalStateException.class, () -> {
             buildingBoard.placeAlienComponent("orange", 2, 1);

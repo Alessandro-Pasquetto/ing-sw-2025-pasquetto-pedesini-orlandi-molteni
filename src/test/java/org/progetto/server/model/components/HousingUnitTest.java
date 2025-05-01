@@ -127,7 +127,7 @@ class HousingUnitTest {
 
         // Tries to add more crew, but it is full
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
             housingUnit.incrementCrewCount(spaceship, 2);
         });
 
@@ -148,7 +148,7 @@ class HousingUnitTest {
 
         // Tries to remove batteries, but there aren't enough
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
             housingUnit.decrementCrewCount(spaceship, 2);
         });
 

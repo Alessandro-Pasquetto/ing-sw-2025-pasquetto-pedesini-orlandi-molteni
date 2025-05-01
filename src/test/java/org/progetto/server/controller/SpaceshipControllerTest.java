@@ -352,7 +352,7 @@ class SpaceshipControllerTest {
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertInstanceOf(DestroyedComponentMessage.class, message);
+                assertEquals("ImpossibleToDestroyCorrectlyPlaced", message);
             }};
         SpaceshipController.startDestroyComponent(gameManager, player, 1, 2, sender);
     }

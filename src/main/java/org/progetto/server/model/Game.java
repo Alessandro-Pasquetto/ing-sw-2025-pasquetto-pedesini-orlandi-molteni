@@ -216,7 +216,7 @@ public class Game {
                 lv1Deck = gson.fromJson(reader, listType);
                 reader.close();
 
-                reader = new FileReader("src/main/resources/org.progetto.server/EventCards2.json");
+                reader = new FileReader("src/main/resources/org/progetto/server/EventCards2.json");
                 lv2Deck = gson.fromJson(reader, listType);
                 reader.close();
 
