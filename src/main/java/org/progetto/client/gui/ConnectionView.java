@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.model.GameData;
@@ -14,10 +16,13 @@ public class ConnectionView {
 
     @FXML
     private TextField serverIpTextField;
+
     @FXML
     private TextField serverPortTextField;
+
     @FXML
     private RadioButton rmiOption;
+
     @FXML
     private RadioButton socketOption;
 
@@ -29,7 +34,7 @@ public class ConnectionView {
         rmiOption.setToggleGroup(toggleGroup);
         socketOption.setToggleGroup(toggleGroup);
 
-        serverIpTextField.setText("127.0.0.1");
+        serverIpTextField.setText("localhost");
         serverPortTextField.setText("8080");
         socketOption.setSelected(true);
     }

@@ -105,6 +105,7 @@ public class PageController {
         Platform.runLater(() -> {
             stage.setScene(scene);
             stage.setTitle(title);
+            stage.setMaximized(true);
         });
     }
 

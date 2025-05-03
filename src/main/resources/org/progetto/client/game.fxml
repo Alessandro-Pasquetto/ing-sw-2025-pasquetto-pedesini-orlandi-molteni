@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="824.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.GameView">
-    <stylesheets><URL value="@style/game_style.css" /></stylesheets>
+    <stylesheets><URL value="@style/style.css" /></stylesheets>
 
     <ImageView fx:id="spaceShipImage" fitHeight="554.0" fitWidth="757.0" layoutX="164.0" layoutY="138.0" preserveRatio="true" />
 
