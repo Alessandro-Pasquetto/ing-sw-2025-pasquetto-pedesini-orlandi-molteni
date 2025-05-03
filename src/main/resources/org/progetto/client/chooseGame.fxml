@@ -1,21 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.ChooseGameView">
+<HBox fx:id="lobbyPane" alignment="CENTER" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.ChooseGameView">
 
-    <Button layoutX="410.0" layoutY="26.0" onAction="#createNewGame" prefHeight="42.0" prefWidth="149.0" text="Crea nuova partita" />
+   <stylesheets>
+      <URL value="@style/style.css" />
+   </stylesheets>
 
-    <TextField fx:id="usernameTextField" layoutX="53.0" layoutY="34.0" promptText="Username" />
+   <children>
+      <BorderPane fx:id="lobbyPaneWrapper" prefWidth="800.0">
+         <center>
+            <HBox alignment="CENTER" prefHeight="400.0" prefWidth="959.0" spacing="10.0">
 
-    <ComboBox fx:id="boxGameLevel" layoutX="250.0" layoutY="34.0" />
-    
-    <ComboBox fx:id="boxNumMaxPlayers" layoutX="330.0" layoutY="34.0" />
-
-    <VBox fx:id="chooseGameLayout" alignment="CENTER" layoutX="210.0" layoutY="110.0" />
-
-</AnchorPane>
+               <children>
+                  <VBox alignment="CENTER" fillWidth="false" prefHeight="360.0" prefWidth="295.0" spacing="15.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create Game" wrappingWidth="259.94012451171875">
+                           <font>
+                              <Font name="Dubai Regular" size="36.0" />
+                           </font>
+                           <fill>
+                              <RadialGradient centerX="0.4613259668508287" centerY="0.47630331753554506" focusAngle="-50.71" focusDistance="0.02298850574712641" radius="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.01904761977493763" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.18120805369127516">
+                                       <color>
+                                          <Color red="0.01904761977493763" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.9275249631690947">
+                                       <color>
+                                          <Color />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </RadialGradient>
+                           </fill>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="259.5078125">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                        <TextField fx:id="usernameTextField" prefHeight="25.0" prefWidth="265.0">
+                           <VBox.margin>
+                              <Insets top="-8.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Level" wrappingWidth="256.5078125">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                        <ComboBox fx:id="boxGameLevel" prefHeight="25.0" prefWidth="257.0">
+                           <VBox.margin>
+                              <Insets top="-8.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Max Players" wrappingWidth="254.5078125">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                        <ComboBox fx:id="boxNumMaxPlayers" prefHeight="25.0" prefWidth="253.0">
+                           <VBox.margin>
+                              <Insets top="-8.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <Button mnemonicParsing="false" onAction="#createNewGame" prefHeight="25.0" prefWidth="257.0" stylesheets="@style/style.css" text="Create">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="button" />
+                              <String fx:value="text-field" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <Line endX="100.00253295898438" endY="20.6495361328125" startX="100.00267028808594" startY="-403.64337158203125" />
+                  <VBox alignment="CENTER" fillWidth="false" prefHeight="360.0" prefWidth="438.0" spacing="15.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JoinGame" wrappingWidth="378.9609375">
+                           <font>
+                              <Font name="Dubai Regular" size="36.0" />
+                           </font>
+                           <fill>
+                              <RadialGradient centerX="0.367403314917127" centerY="0.42890995260663506" focusAngle="-151.5" focusDistance="-0.29885057471264376" radius="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.05068226158618927" green="0.12459389120340347" blue="0.6842105388641357" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.3255033557046979">
+                                       <color>
+                                          <Color red="0.05068226158618927" green="0.12459389120340347" blue="0.6842105388641357" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.8927402193485021">
+                                       <color>
+                                          <Color green="0.012280701659619808" blue="0.10526315867900848" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color green="0.012280701659619808" blue="0.10526315867900848" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </RadialGradient>
+                           </fill>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="382.5078125">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Text>
+                        <TextField fx:id="joinUsernameTextField" prefHeight="25.0" prefWidth="386.0">
+                           <VBox.margin>
+                              <Insets top="-8.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <HBox prefHeight="19.0" prefWidth="385.0" spacing="40.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Game">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Level">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Max Players">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Players">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <ListView fx:id="gamesVisual" prefHeight="184.0" prefWidth="387.0" style="-fx-background-color: #D9D9D9;">
+                           <VBox.margin>
+                              <Insets top="-15.0" />
+                           </VBox.margin>
+                        </ListView>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </center>
+         <HBox.margin>
+            <Insets bottom="300.0" top="300.0" />
+         </HBox.margin>
+      </BorderPane>
+   </children>
+</HBox>
