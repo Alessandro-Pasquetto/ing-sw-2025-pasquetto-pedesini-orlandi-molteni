@@ -1,6 +1,7 @@
 package org.progetto.server.connection.socket;
 
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Player;
 import java.io.*;
 
@@ -28,7 +29,7 @@ public class ClientHandler {
         socketWriter = new SocketWriter(out);
         socketListener = new SocketListener(this, in);
 
-        SocketServer.addSocketWriter(socketWriter);
+        LobbyController.addSender(socketWriter);
 
         socketListener.start();
     }
@@ -58,7 +59,7 @@ public class ClientHandler {
         this.gameManager = gameManager;
         this.player = player;
 
-        SocketServer.removeSocketWriter(socketWriter);
+        LobbyController.removeSender(socketWriter);
         gameManager.addSocketWriter(player, socketWriter);
     }
 }

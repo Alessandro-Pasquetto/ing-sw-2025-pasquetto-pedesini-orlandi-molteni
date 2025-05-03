@@ -9,6 +9,7 @@ import org.progetto.server.model.events.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -340,7 +341,11 @@ public class Game {
 
             if(players.size() == maxNumPlayers){
                 GameManagerMaps.removeWaitingGameManager(id);
-                LobbyController.broadcastLobbyMessage("UpdateGameList");
+                try {
+                    LobbyController.broadcastLobbyMessage("UpdateGameList");
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

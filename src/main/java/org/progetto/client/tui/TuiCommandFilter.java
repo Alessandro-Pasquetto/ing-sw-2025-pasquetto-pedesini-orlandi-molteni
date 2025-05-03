@@ -115,6 +115,8 @@ public class TuiCommandFilter {
 
             try {
                 GameData.getSender().connect(ip, serverPort);
+                System.out.println();
+                System.out.println("Type 'help' to see the available commands");
                 break;
 
             } catch (Exception e) {

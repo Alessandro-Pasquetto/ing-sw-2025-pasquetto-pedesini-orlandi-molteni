@@ -5,13 +5,9 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.connection.games.WaitingGameInfo;
-import org.progetto.server.connection.rmi.RmiServer;
-import org.progetto.server.connection.socket.SocketServer;
-import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,25 +22,50 @@ public class LobbyController {
     // =======================
 
     private static final AtomicInteger currentIdGame = new AtomicInteger(0);
+    private static final ArrayList<Sender> senders = new ArrayList<>();
 
     // =======================
     // OTHER METHODS
     // =======================
 
-    // Send message to all clients in lobby
-    public static void broadcastLobbyMessage(Object messageObj) {
-        SocketServer.broadcastLobbyMessage(messageObj);
-        RmiServer.broadcastLobbyMessage(messageObj);
+    public static void addSender(Sender sender) {
+        synchronized(currentIdGame){
+            senders.add(sender);
+        }
     }
 
-    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
+    public static void removeSender(Sender sender) {
+        synchronized(currentIdGame){
+            senders.remove(sender);
+        }
+    }
 
-        if(sender instanceof SocketWriter){
-            SocketServer.broadcastLobbyMessageToOthers(sender, messageObj);
-            RmiServer.broadcastLobbyMessage(messageObj);
-        }else{
-            RmiServer.broadcastLobbyMessageToOthers(sender, messageObj);
-            SocketServer.broadcastLobbyMessage(messageObj);
+    // Send message to all clients in lobby
+    public static void broadcastLobbyMessage(Object messageObj) throws RemoteException {
+
+        ArrayList<Sender> sendersCopy;
+
+        synchronized (senders) {
+            sendersCopy = new ArrayList<>(senders);
+        }
+
+        for (Sender sender : sendersCopy) {
+            sender.sendMessage(messageObj);
+        }
+    }
+
+    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) throws RemoteException {
+
+        ArrayList<Sender> sendersCopy;
+
+        synchronized (senders) {
+            sendersCopy = new ArrayList<>(senders);
+        }
+
+        for (Sender s : sendersCopy) {
+            if(!s.equals(sender)) {
+                s.sendMessage(messageObj);
+            }
         }
     }
 
@@ -64,7 +85,7 @@ public class LobbyController {
     }
 
     // Create game objects and player, add player to the game
-    public static InternalGameInfo createGame(String name, int levelGame, int numPlayers){
+    public static InternalGameInfo createGame(String name, int levelGame, int numPlayers) {
         int idGame = currentIdGame.getAndIncrement();
 
         GameManager gameManager = new GameManager(idGame, numPlayers, levelGame);
@@ -75,7 +96,7 @@ public class LobbyController {
         return new InternalGameInfo(gameManager, player);
     }
 
-    public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException{
+    public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException {
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
 

@@ -1,5 +1,6 @@
 package org.progetto.server.connection.socket;
 
+import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
@@ -69,6 +70,7 @@ public class SocketListener extends Thread {
 
             LobbyController.broadcastLobbyMessageToOthers("UpdateGameList", clientHandler.getSocketWriter());
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
             int idGame = joinGameMessage.getIdGame();
@@ -90,6 +92,7 @@ public class SocketListener extends Thread {
 
             clientHandler.initPlayerConnection(gameManager, player);
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
         }
 
         else if (messageObj instanceof String messageString) {

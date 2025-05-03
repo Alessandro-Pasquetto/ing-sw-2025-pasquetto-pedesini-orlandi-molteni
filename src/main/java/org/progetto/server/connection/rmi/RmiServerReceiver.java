@@ -2,6 +2,7 @@ package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
+import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
@@ -33,7 +34,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
      */
     @Override
     public void connect(VirtualClient rmiClient) throws RemoteException {
-        RmiServer.addLobbyRmiClient(rmiClient);
+        LobbyController.addSender(rmiClient);
     }
 
     @Override
@@ -52,11 +53,12 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         Player player = internalGameInfo.getPlayer();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        RmiServer.removeLobbyRmiClient(virtualClient);
+        LobbyController.removeSender(virtualClient);
         gameManager.addRmiClient(player, virtualClient);
         GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
     @Override
@@ -75,10 +77,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         Player player = internalGameInfo.getPlayer();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        RmiServer.removeLobbyRmiClient(virtualClient);
+        LobbyController.removeSender(virtualClient);
         gameManager.addRmiClient(player, virtualClient);
 
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
     @Override

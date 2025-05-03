@@ -3,7 +3,6 @@ package org.progetto.server.model.events;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.*;
 import org.progetto.server.model.components.*;
-
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;

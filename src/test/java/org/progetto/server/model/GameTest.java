@@ -36,7 +36,7 @@ class GameTest {
     }
 
     @Test
-    void getPlayerByName(){
+    void getPlayerByName() {
         Game game = new Game(1, 4, 2);
         game.addPlayer(new Player("mario", 1, 2));
         Player alice = new Player("alice", 1, 2);
@@ -245,7 +245,7 @@ class GameTest {
     }
 
     @Test
-    void loadEvents(){
+    void loadEvents() {
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
 
@@ -255,7 +255,7 @@ class GameTest {
     }
 
     @Test
-    void loadComponents(){
+    void loadComponents() {
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
 
@@ -279,7 +279,7 @@ class GameTest {
     }
 
     @Test
-    void pickUpEventCardDeck(){
+    void pickUpEventCardDeck() {
         Player player = new Player("mario", 1, 2);
         Player player2 = new Player("anna", 3, 2);
         Game game = new Game(0, 3, 2);
@@ -306,7 +306,7 @@ class GameTest {
     }
 
     @Test
-    void putDownEventCardDeck(){
+    void putDownEventCardDeck() {
         Player player = new Player("mario", 1, 2);
         Player player2 = new Player("anna", 3, 2);
         Game game = new Game(0, 3, 2);
@@ -331,7 +331,7 @@ class GameTest {
     }
 
     @Test
-    void composeHiddenEventDeck(){
+    void composeHiddenEventDeck() {
         Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
         game.addPlayer(mario);

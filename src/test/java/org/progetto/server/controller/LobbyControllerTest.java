@@ -5,7 +5,6 @@ import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyControllerTest {

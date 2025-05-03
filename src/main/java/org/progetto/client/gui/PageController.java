@@ -106,6 +106,7 @@ public class PageController {
             stage.setScene(scene);
             stage.setTitle(title);
             stage.setMaximized(true);
+            //stage.setFullScreen(true);
         });
     }
 

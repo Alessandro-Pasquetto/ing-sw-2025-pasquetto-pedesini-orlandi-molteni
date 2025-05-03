@@ -25,6 +25,10 @@
     -fx-background-radius: 8;
 }
 
+.button:hover {
+    -fx-cursor: hand;
+}
+
 .radio-button {
     -fx-text-fill: #242424;
     -fx-font-size: 14;
@@ -58,9 +62,6 @@
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
-
-
-
 
 #spaceshipCell {
     -fx-border-color: black;

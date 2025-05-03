@@ -1,21 +1,12 @@
 package org.progetto.server.connection.socket;
 
-import org.progetto.server.connection.Sender;
-
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 /**
  * Handles socket clients connection and messages
  */
 public class SocketServer extends Thread {
-
-    // =======================
-    // ATTRIBUTES
-    // =======================
-
-    private static final List<SocketWriter> socketWriters = new ArrayList<>();
 
     // =======================
     // MAIN
@@ -40,47 +31,6 @@ public class SocketServer extends Thread {
             }
         } catch (IOException e) {
             System.out.println("Error starting the server: " + e.getMessage());
-        }
-    }
-
-    // =======================
-    // OTHER METHODS
-    // =======================
-
-    public static void addSocketWriter(SocketWriter socketWriter){
-        synchronized (socketWriters){
-            socketWriters.add(socketWriter);
-        }
-    }
-
-    public static void removeSocketWriter(SocketWriter socketWriter){
-        synchronized (socketWriters){
-            socketWriters.remove(socketWriter);
-        }
-    }
-
-    public static void broadcastLobbyMessage(Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy;
-
-        synchronized (socketWriters) {
-            socketWritersCopy = new ArrayList<>(socketWriters);
-        }
-
-        for (SocketWriter sw : socketWritersCopy) {
-            sw.sendMessage(messageObj);
-        }
-    }
-
-    public static void broadcastLobbyMessageToOthers(Sender sender, Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy;
-
-        synchronized (socketWriters) {
-            socketWritersCopy = new ArrayList<>(socketWriters);
-        }
-
-        for (SocketWriter sw : socketWritersCopy) {
-            if(!sw.equals(sender))
-                sw.sendMessage(messageObj);
         }
     }
 }
