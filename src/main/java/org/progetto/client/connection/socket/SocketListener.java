@@ -52,6 +52,7 @@ public class SocketListener extends Thread {
         SocketListener.isHandling = isHandling;
     }
 
+    // It allows executing an handleMessage one at a time, except when a thread goes into wait inside the handleMessage method
     public static void messageDispatcher(Object messageObj) {
 
         new Thread(() -> {

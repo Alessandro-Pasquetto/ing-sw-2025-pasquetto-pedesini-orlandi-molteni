@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
 import org.progetto.messages.toClient.ShowWaitingGamesMessage;
+import org.progetto.server.connection.games.WaitingGameInfo;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
@@ -24,12 +25,16 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
+    // Roots oif the scenes
+    private static Parent connectionRoot, chooseGameRoot, createGameRoot, waitingRoomRoot, gameRoot;
+
     private static Stage stage;
     private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
     private static CreateGameView createGameView;
     private static WaitingRoomView waitingRoomView;
     private static GameView gameView;
+
 
     // =======================
     // GETTERS
@@ -70,53 +75,61 @@ public class PageController {
     public static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/icon.png")));
         stage.getIcons().add(icon);
+
+        loadControllers();
+
         switchScene("connection.fxml", "Connection");
         stage.show();
     }
 
+    private static void loadControllers() throws IOException {
+        FXMLLoader loader;
+
+        loader = new FXMLLoader(MainClient.class.getResource("connection.fxml"));
+        connectionRoot = loader.load();
+        connectionView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("chooseGame.fxml"));
+        chooseGameRoot = loader.load();
+        chooseGameView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("createGame.fxml"));
+        createGameRoot = loader.load();
+        createGameView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("waitingRoom.fxml"));
+        waitingRoomRoot = loader.load();
+        waitingRoomView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("game.fxml"));
+        gameRoot = loader.load();
+        gameView = loader.getController();
+    }
+
     public static void switchScene(String fxmlFile, String title) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(MainClient.class.getResource(fxmlFile));
-
-        Parent root = null;
-        if(fxmlLoader.getController() == null){
-            root = fxmlLoader.load();
-
-            // Save the controller
-            switch (fxmlFile){
-                case "connection.fxml":
-                    connectionView = fxmlLoader.getController();
-                    break;
-                case "chooseGame.fxml":
-                    chooseGameView = fxmlLoader.getController();
-                    break;
-                case "createGame.fxml":
-                    createGameView = fxmlLoader.getController();
-                    break;
-                case "waitingRoom.fxml":
-                    waitingRoomView = fxmlLoader.getController();
-                    break;
-                case "game.fxml":
-                    gameView = fxmlLoader.getController();
-                    break;
-            }
-        } else {
-            root = fxmlLoader.getRoot();
-        }
-
-        Scene scene = new Scene(root);
+        Parent root = switch (fxmlFile) {
+            case "connection.fxml" -> connectionRoot;
+            case "chooseGame.fxml" -> chooseGameRoot;
+            case "createGame.fxml" -> createGameRoot;
+            case "waitingRoom.fxml" -> waitingRoomRoot;
+            case "game.fxml" -> gameRoot;
+            default -> null;
+        };
 
         // Execute this when the GUI thread is ready
         Platform.runLater(() -> {
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.setTitle(title);
             stage.setMaximized(true);
             //stage.setFullScreen(true);
         });
     }
 
-    public static void generateGameList(ShowWaitingGamesMessage games){
-        chooseGameView.generateGameRecordList(games);
+    public static void generateGameList(ShowWaitingGamesMessage showWaitingGamesMessage){
+        ArrayList<WaitingGameInfo> gamesInfo = showWaitingGamesMessage.getWaitingGames();
+
+        chooseGameView.generateGameRecordList(gamesInfo);
     }
 
     public static void generateComponent(Component component){

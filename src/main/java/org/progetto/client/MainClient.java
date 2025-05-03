@@ -40,7 +40,6 @@ public class MainClient extends Application {
                 GameData.setUIType(command);
                 PageController.setStage(stage);
                 PageController.start();
-
                 break;
 
             }else

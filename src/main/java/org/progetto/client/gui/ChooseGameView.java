@@ -4,15 +4,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import org.progetto.client.model.GameData;
-import org.progetto.messages.toClient.ShowWaitingGamesMessage;
 import org.progetto.server.connection.games.WaitingGameInfo;
 import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ChooseGameView {
 
@@ -31,8 +27,8 @@ public class ChooseGameView {
     @FXML
     public ComboBox boxNumMaxPlayers;
 
-    int gameLevel = 1;
-    int numMaxPlayers = 1;
+    private int gameLevel = 1;
+    private int numMaxPlayers = 1;
 
     @FXML
     public void initialize() {
@@ -42,7 +38,6 @@ public class ChooseGameView {
         boxGameLevel.setOnAction(event -> {
             gameLevel = (int) boxGameLevel.getValue();
         });
-
 
         boxNumMaxPlayers.setValue(1);
         boxNumMaxPlayers.setItems(FXCollections.observableArrayList(1, 2, 3, 4));
@@ -60,7 +55,6 @@ public class ChooseGameView {
                 }
             }
         });
-
     }
 
     public void createNewGame() {
@@ -82,22 +76,23 @@ public class ChooseGameView {
         }
     }
 
-    public void generateGameRecordList(ShowWaitingGamesMessage games){
+    public void generateGameRecordList(ArrayList<WaitingGameInfo> gamesInfo){
 
         Platform.runLater(() -> {
             gamesVisual.getItems().clear();
         });
 
-        for(WaitingGameInfo info : games.getWaitingGames()){
+        for(WaitingGameInfo gameInfo : gamesInfo){
             ArrayList<String> players = new ArrayList<>();
-            for(Player player : info.getPlayers()){
+
+            for(Player player : gameInfo.getPlayers()){
                 players.add(player.getName());
             }
 
-            String line = "  "+info.getId() +"                        "+
-                          info.getLevel()+"                         "+
-                          info.getMaxPlayers()+"                         "+
-                          " "+players;
+            String line = "  " + gameInfo.getId() + "                        "+
+                          gameInfo.getLevel() + "                         "+
+                          gameInfo.getMaxPlayers() + "                         "+
+                          " " + players;
 
             Platform.runLater(() -> {
                 gamesVisual.getItems().add(line);

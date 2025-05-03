@@ -41,7 +41,6 @@ public class GuiHandlerMessage {
             }
 
             GameData.setIdGame(initGameMessage.getIdGame());
-
             PageController.initGame(initGameMessage.getLevelGame(), initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
         }
 
