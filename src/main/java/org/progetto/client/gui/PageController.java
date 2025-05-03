@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
+import org.progetto.messages.toClient.ShowWaitingGamesMessage;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
@@ -114,8 +115,8 @@ public class PageController {
         });
     }
 
-    public static void generateGameList(ArrayList<Integer> idGames){
-        chooseGameView.generateGameRecordList(idGames);
+    public static void generateGameList(ShowWaitingGamesMessage games){
+        chooseGameView.generateGameRecordList(games);
     }
 
     public static void generateComponent(Component component){

@@ -6,14 +6,21 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.progetto.client.model.GameData;
+import org.progetto.messages.toClient.ShowWaitingGamesMessage;
+import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChooseGameView {
 
     @FXML
     private TextField usernameTextField;
+
+    @FXML
+    private TextField joinUsernameTextField;
 
     @FXML
     private ListView<String> gamesVisual;;
@@ -43,6 +50,17 @@ public class ChooseGameView {
         boxNumMaxPlayers.setOnAction(event -> {
             numMaxPlayers = (int) boxNumMaxPlayers.getValue();
         });
+
+        gamesVisual.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // doppio click
+                String selectedItem = gamesVisual.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    String[] game = selectedItem.split(" ");
+                    joinToGame(Integer.parseInt(game[2]));
+                }
+            }
+        });
+
     }
 
     public void createNewGame() {
@@ -56,7 +74,7 @@ public class ChooseGameView {
     }
 
     public void joinToGame(int idGame) {
-        String username = usernameTextField.getText();
+        String username = joinUsernameTextField.getText();
         if(!username.isEmpty()) {
             GameData.setNamePlayer(username);
 
@@ -64,31 +82,26 @@ public class ChooseGameView {
         }
     }
 
-    public void generateGameRecordList(ArrayList<Integer> idGames){
+    public void generateGameRecordList(ShowWaitingGamesMessage games){
 
         Platform.runLater(() -> {
             gamesVisual.getItems().clear();
         });
 
-        for(Integer idGame : idGames){
-            gamesVisual.getItems().add(idGame.toString());
-            gamesVisual.refresh();
+        for(WaitingGameInfo info : games.getWaitingGames()){
+            ArrayList<String> players = new ArrayList<>();
+            for(Player player : info.getPlayers()){
+                players.add(player.getName());
+            }
+
+            String line = "  "+info.getId() +"                        "+
+                          info.getLevel()+"                         "+
+                          info.getMaxPlayers()+"                         "+
+                          " "+players;
+
+            Platform.runLater(() -> {
+                gamesVisual.getItems().add(line);
+            });
         }
-
-
-
-//        for(Integer idGame : idGames){
-//            Label messageLabel = new Label("Game " + idGame);
-//
-//            Button button = new Button("Entra");
-//
-//            button.setOnAction(e -> {
-//                joinToGame(idGame);
-//            });
-//
-//            Platform.runLater(() -> {
-//                gamesVisual.getChildren().addAll(messageLabel, button);
-//            });
-//        }
     }
 }
