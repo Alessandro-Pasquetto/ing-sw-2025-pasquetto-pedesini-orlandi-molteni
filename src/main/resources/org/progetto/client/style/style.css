@@ -63,6 +63,26 @@
     -fx-border-radius: 8;
 }
 
+/* ============================
+   chooseGame VIEW
+   ============================ */
+#lobbyPane {
+    -fx-background-image: url("../img/space-background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+#lobbyPaneWrapper{
+    -fx-padding: 25;
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
 #spaceshipCell {
     -fx-border-color: black;
     -fx-background-color: rgba(255, 255, 255, 0.3);

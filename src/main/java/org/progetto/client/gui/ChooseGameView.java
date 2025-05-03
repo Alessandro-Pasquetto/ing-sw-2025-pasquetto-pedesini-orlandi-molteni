@@ -3,14 +3,12 @@ package org.progetto.client.gui;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.progetto.client.model.GameData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChooseGameView {
 
@@ -18,7 +16,7 @@ public class ChooseGameView {
     private TextField usernameTextField;
 
     @FXML
-    private VBox chooseGameLayout;
+    private ListView<String> gamesVisual;;
 
     @FXML
     public ComboBox boxGameLevel;
@@ -69,21 +67,28 @@ public class ChooseGameView {
     public void generateGameRecordList(ArrayList<Integer> idGames){
 
         Platform.runLater(() -> {
-            chooseGameLayout.getChildren().clear();
+            gamesVisual.getItems().clear();
         });
 
         for(Integer idGame : idGames){
-            Label messageLabel = new Label("Game " + idGame);
-
-            Button button = new Button("Entra");
-
-            button.setOnAction(e -> {
-                joinToGame(idGame);
-            });
-
-            Platform.runLater(() -> {
-                chooseGameLayout.getChildren().addAll(messageLabel, button);
-            });
+            gamesVisual.getItems().add(idGame.toString());
+            gamesVisual.refresh();
         }
+
+
+
+//        for(Integer idGame : idGames){
+//            Label messageLabel = new Label("Game " + idGame);
+//
+//            Button button = new Button("Entra");
+//
+//            button.setOnAction(e -> {
+//                joinToGame(idGame);
+//            });
+//
+//            Platform.runLater(() -> {
+//                gamesVisual.getChildren().addAll(messageLabel, button);
+//            });
+//        }
     }
 }
