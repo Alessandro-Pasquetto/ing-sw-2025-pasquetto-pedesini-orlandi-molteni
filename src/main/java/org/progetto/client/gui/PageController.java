@@ -27,6 +27,7 @@ public class PageController {
     private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
     private static CreateGameView createGameView;
+    private static WaitingRoomView waitingRoomView;
     private static GameView gameView;
 
     // =======================
@@ -90,6 +91,9 @@ public class PageController {
                     break;
                 case "createGame.fxml":
                     createGameView = fxmlLoader.getController();
+                    break;
+                case "waitingRoom.fxml":
+                    waitingRoomView = fxmlLoader.getController();
                     break;
                 case "game.fxml":
                     gameView = fxmlLoader.getController();

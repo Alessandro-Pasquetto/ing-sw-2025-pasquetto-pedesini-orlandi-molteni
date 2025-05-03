@@ -40,7 +40,7 @@ public class GuiHandlerMessage {
             System.out.println("You joined a game");
 
             try {
-                PageController.switchScene("game.fxml", "Game");
+                PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
             } catch (IOException e) {
                 System.out.println("Error loading the page");
             }
