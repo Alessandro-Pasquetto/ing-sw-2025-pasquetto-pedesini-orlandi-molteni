@@ -28,19 +28,37 @@ public class LobbyController {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Add sender to the list
+     *
+     * @author Alessandro
+     * @param sender
+     */
     public static void addSender(Sender sender) {
         synchronized(currentIdGame){
             senders.add(sender);
         }
     }
 
+    /**
+     * Remove sender from the list
+     *
+     * @author Alessandro
+     * @param sender
+     */
     public static void removeSender(Sender sender) {
         synchronized(currentIdGame){
             senders.remove(sender);
         }
     }
 
-    // Send message to all clients in lobby
+    /**
+     * Send message to all clients in lobby
+     *
+     * @author Alessandro
+     * @param messageObj
+     * @throws RemoteException
+     */
     public static void broadcastLobbyMessage(Object messageObj) throws RemoteException {
 
         ArrayList<Sender> sendersCopy;
@@ -54,6 +72,14 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Send message to all clients in lobby except the sender
+     *
+     * @author Alessandro
+     * @param messageObj
+     * @param sender
+     * @throws RemoteException
+     */
     public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) throws RemoteException {
 
         ArrayList<Sender> sendersCopy;
@@ -69,6 +95,13 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Show all waiting games
+     *
+     * @author Gabriele
+     * @param sender
+     * @throws RemoteException
+     */
     public static void showWaitingGames(Sender sender) throws RemoteException {
 
         ArrayList<Integer> gameIds = new ArrayList<>(GameManagerMaps.getWaitingGamesMap().keySet());
@@ -84,9 +117,25 @@ public class LobbyController {
         sender.sendMessage(new ShowWaitingGamesMessage(waitingGameInfos));
     }
 
-    // Create game objects and player, add player to the game
-    public static InternalGameInfo createGame(String name, int levelGame, int numPlayers) {
+    /**
+     * Create game objects and player, add player to the game
+     *
+     * @author Alessandro
+     * @param name
+     * @param levelGame
+     * @param numPlayers
+     * @return
+     */
+    public static InternalGameInfo createGame(String name, int levelGame, int numPlayers) throws IllegalStateException {
         int idGame = currentIdGame.getAndIncrement();
+
+        if (numPlayers <= 0 || numPlayers > 4) {
+            throw new IllegalStateException("NotValidPlayerNumber");
+        }
+
+        if (levelGame <= 0 || levelGame > 2) {
+            throw new IllegalStateException("NotValidLevel");
+        }
 
         GameManager gameManager = new GameManager(idGame, numPlayers, levelGame);
         Player player = new Player(name, 0, levelGame);
@@ -96,12 +145,20 @@ public class LobbyController {
         return new InternalGameInfo(gameManager, player);
     }
 
+    /**
+     * Join game objects and player, add player to the game
+     *
+     * @author Alessandro
+     * @param idGame
+     * @param name
+     * @return
+     */
     public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException {
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
 
         if(gameManager == null){
-            throw new IllegalStateException("Not valid gameId");
+            throw new IllegalStateException("NotValidGameId");
         }
 
         Game game = gameManager.getGame();

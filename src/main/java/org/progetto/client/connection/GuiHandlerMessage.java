@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.Alerts;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -69,8 +70,12 @@ public class GuiHandlerMessage {
                     GameData.getSender().updateGameList();
                     break;
 
+                case "NotValidGameId":
+                    Alerts.showWarning("Not valid game ID");
+                    break;
+
                 case "NotAvailableName":
-                    System.out.println("Username not available");
+                    Alerts.showWarning("Username not available for this game");
                     break;
 
                 case "AllowedToPlaceComponent":

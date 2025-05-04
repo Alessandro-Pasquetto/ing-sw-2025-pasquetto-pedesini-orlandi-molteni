@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
 import org.progetto.messages.toClient.ShowWaitingGamesMessage;
@@ -25,16 +27,13 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
-    // Roots oif the scenes
-    private static Parent connectionRoot, chooseGameRoot, createGameRoot, waitingRoomRoot, gameRoot;
+    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, gameRoot;
 
     private static Stage stage;
     private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
-    private static CreateGameView createGameView;
     private static WaitingRoomView waitingRoomView;
     private static GameView gameView;
-
 
     // =======================
     // GETTERS
@@ -50,10 +49,6 @@ public class PageController {
 
     public static ChooseGameView getChooseGameView() {
         return chooseGameView;
-    }
-
-    public static CreateGameView getCreateGameView() {
-        return createGameView;
     }
 
     public static GameView getGameView() {
@@ -78,13 +73,19 @@ public class PageController {
 
         loadControllers();
 
-        switchScene("connection.fxml", "Connection");
-        stage.show();
+        // Execute this when the GUI thread is ready
+        Platform.runLater(() -> {
+            stage.setScene(new Scene(connectionRoot));
+            stage.setTitle("Connection");
+            stage.setMaximized(true);
+            stage.show();
+        });
     }
 
     private static void loadControllers() throws IOException {
         FXMLLoader loader;
 
+        // Load the controllers for each FXML view
         loader = new FXMLLoader(MainClient.class.getResource("connection.fxml"));
         connectionRoot = loader.load();
         connectionView = loader.getController();
@@ -92,10 +93,6 @@ public class PageController {
         loader = new FXMLLoader(MainClient.class.getResource("chooseGame.fxml"));
         chooseGameRoot = loader.load();
         chooseGameView = loader.getController();
-
-        loader = new FXMLLoader(MainClient.class.getResource("createGame.fxml"));
-        createGameRoot = loader.load();
-        createGameView = loader.getController();
 
         loader = new FXMLLoader(MainClient.class.getResource("waitingRoom.fxml"));
         waitingRoomRoot = loader.load();
@@ -107,28 +104,33 @@ public class PageController {
     }
 
     public static void switchScene(String fxmlFile, String title) throws IOException {
-
         Parent root = switch (fxmlFile) {
             case "connection.fxml" -> connectionRoot;
             case "chooseGame.fxml" -> chooseGameRoot;
-            case "createGame.fxml" -> createGameRoot;
             case "waitingRoom.fxml" -> waitingRoomRoot;
             case "game.fxml" -> gameRoot;
             default -> null;
         };
 
+        if (root == null) return;
+
         // Execute this when the GUI thread is ready
         Platform.runLater(() -> {
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.setTitle(title);
-            stage.setMaximized(true);
-            //stage.setFullScreen(true);
+            stage.show();
+
+            // Maximize the window when switching scenes
+            double screenWidth = javafx.stage.Screen.getPrimary().getVisualBounds().getWidth();
+            double screenHeight = javafx.stage.Screen.getPrimary().getVisualBounds().getHeight();
+            stage.setWidth(screenWidth);
+            stage.setHeight(screenHeight);
         });
     }
 
     public static void generateGameList(ShowWaitingGamesMessage showWaitingGamesMessage){
         ArrayList<WaitingGameInfo> gamesInfo = showWaitingGamesMessage.getWaitingGames();
-
         chooseGameView.generateGameRecordList(gamesInfo);
     }
 
@@ -140,9 +142,9 @@ public class PageController {
         Platform.runLater(() -> {
             BuildingData.initMask(levelGame);
             gameView.initSpaceship(levelGame, imgSrcCentralUnit);
-            //todo
-            //gameView.loadBoardImg(imgSrcBoard);
-            //gameView.loadShipImg(imgSrcSpaceship);
+            // todo
+            // gameView.loadBoardImg(imgSrcBoard);
+            // gameView.loadShipImg(imgSrcSpaceship);
         });
     }
 

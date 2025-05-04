@@ -57,7 +57,13 @@ public class SocketListener extends Thread {
             int numPlayers = createGameMessage.getNumPlayers();
             String name = createGameMessage.getName();
 
-            InternalGameInfo internalGameInfo = LobbyController.createGame(name, levelGame, numPlayers);
+            InternalGameInfo internalGameInfo = null;
+            try {
+                internalGameInfo = LobbyController.createGame(name, levelGame, numPlayers);
+            } catch (IllegalStateException e) {
+                clientHandler.getSocketWriter().sendMessage(e.getMessage());
+                return;
+            }
 
             GameManager gameManager = internalGameInfo.getGameManager();
             Game game = gameManager.getGame();

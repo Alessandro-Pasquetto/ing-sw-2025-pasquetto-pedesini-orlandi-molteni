@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.Alerts;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -271,8 +272,12 @@ public class TuiHandlerMessage {
                 case "UpdateGameList":
                     break;
 
+                case "NotValidGameId":
+                    System.out.println("Not valid game ID!");
+                    break;
+
                 case "NotAvailableName":
-                    System.out.println("Username not available");
+                    System.out.println("Username not available!");
                     break;
 
                 case "HandComponentDiscarded":

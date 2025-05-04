@@ -11,7 +11,7 @@
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-text-fill: black;
-    -fx-prompt-text-fill: #626262;
+    -fx-prompt-text-fill: #353535;
 }
 
 .button {
@@ -64,17 +64,18 @@
 }
 
 /* ============================
-   chooseGame VIEW
+   CHOSEGAME VIEW
    ============================ */
-#lobbyPane {
+
+#chooseGamePane {
     -fx-background-image: url("../img/space-background.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
 }
 
-#lobbyPaneWrapper{
-    -fx-padding: 25;
+#chooseGamePaneWrapper {
+    -fx-padding: 10;
     -fx-alignment: center;
     -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
     -fx-border-color: rgba(43, 50, 57, 0.5);
@@ -82,6 +83,112 @@
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
+
+#createGamePane,
+#joinGamePane {
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-padding: 25;
+    -fx-background-radius: 8;
+}
+
+#createGamePane .sectionTitle,
+#joinGamePane .sectionTitle {
+    -fx-text-fill: #202020;
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+}
+
+#gamesTable {
+    -fx-background-color: #c0c4c0;
+    -fx-padding: 0;
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-max-height: Infinity;
+    -fx-vgrow: ALWAYS;
+}
+
+#gamesTable .column-header-background {
+    -fx-background-color: rgba(43, 50, 57, 0.5);
+    -fx-background-radius: 5 5 0 0;
+}
+
+#gamesTable .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+    -fx-border-width: 0;
+}
+
+#gamesTable .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+    -fx-padding: 5;
+    -fx-alignment: CENTER-LEFT;
+}
+
+#gamesTable .table-cell {
+    -fx-text-fill: black;
+    -fx-padding: 5 10 5 10;
+    -fx-alignment: CENTER-LEFT;
+    -fx-cell-size: 36px;
+}
+
+#gamesTable .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(93, 93, 93, 0.2);
+    -fx-border-width: 0 0 1 0;
+}
+
+#gamesTable .table-column {
+    -fx-border-width: 0;
+}
+
+#gamesTable .table-row-cell:odd {
+    -fx-background-color: transparent;
+}
+
+#gamesTable .table-row-cell:selected {
+    -fx-background-color: rgba(255, 213, 0, 0.3);
+    -fx-text-fill: white;
+}
+
+#gamesTable .scroll-bar:vertical,
+#gamesTable .scroll-bar:horizontal {
+    -fx-background-color: rgba(60, 77, 86, 0.8);
+}
+
+#gamesTable .scroll-bar:vertical .thumb,
+#gamesTable .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(200, 200, 200, 0.5);
+    -fx-background-radius: 5;
+}
+
+#gamesTable .placeholder .label {
+    -fx-text-fill: rgba(80, 80, 80, 0.7);
+    -fx-font-style: italic;
+}
+
+#gamesTable .button {
+    -fx-background-color: linear-gradient(to bottom right, #facd0b, #ed881a);
+    -fx-text-fill: #491f06;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-border-color: rgb(223, 154, 0);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0 8 0 8;
+    -fx-alignment: CENTER;
+}
+
+#gamesTable .table-column:last-child .table-cell {
+    -fx-alignment: CENTER;
+}
+
+
+
+
 
 #spaceshipCell {
     -fx-border-color: black;
