@@ -43,16 +43,14 @@ public class WaitingRoomView {
 
     private final ObservableList<String[]> playersList = FXCollections.observableArrayList();
 
-    /**
-     * Metodo chiamato al caricamento della view.
-     */
     public void initialize() {
-
         playersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         playerCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
         readyCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
         playersTable.setItems(playersList);
+
+        readyButton.setDisable(true);
     }
 
     public void init(int gameId, int gameLevel, int numMaxPlayersParam) {
@@ -65,8 +63,10 @@ public class WaitingRoomView {
 
     @FXML
     private void onReadyPressed() {
-        //todo maybe add a feature to remove ready state
         GameData.getSender().readyPlayer();
+        readyButton.setDisable(true);
+
+        //TODO: maybe add a feature to remove ready state
     }
 
     public void updatePlayersList(ArrayList<Player> players) {
@@ -77,24 +77,28 @@ public class WaitingRoomView {
 
         for (Player player : players) {
 
+            String name = player.getName();
+            if (name.equals(GameData.getNamePlayer())) {
+                name = name + " (You)";
+            }
+
             String status;
-            if(player.getIsReady()){
+            if (player.getIsReady()){
                 status = "Ready";
                 numReadyPlayers++;
-            }else
+            } else
                 status = "Not Ready";
 
-            playersList.add(new String[]{player.getName(), status});
+            playersList.add(new String[]{name, status});
         }
 
         playersTable.setItems(playersList);
 
-
-        if(players.size() == numMaxPlayers){
-
-            waitingStatusLabel.setText(String.format("%d/%d Waiting for readys...", numReadyPlayers, numMaxPlayers));
+        if (players.size() == numMaxPlayers) {
+            waitingStatusLabel.setText(String.format("%d/%d players are ready. Waiting for others to get ready...", numReadyPlayers, numMaxPlayers));
+            readyButton.setDisable(false);
+        } else {
+            waitingStatusLabel.setText(String.format("%d/%d players joined. Waiting for more players to join...", players.size(), numMaxPlayers));
         }
-        else
-            waitingStatusLabel.setText(String.format("%d/%d Waiting for players...", players.size(), numMaxPlayers));
     }
 }

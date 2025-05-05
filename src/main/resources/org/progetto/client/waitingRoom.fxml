@@ -48,7 +48,7 @@
 
         <TableView fx:id="playersTable">
             <columns>
-                <TableColumn fx:id="playerCol" text="PlayerName" minWidth="130" styleClass="table-column"/>
+                <TableColumn fx:id="playerCol" text="Player Name" minWidth="130" styleClass="table-column"/>
                 <TableColumn fx:id="readyCol" text="Status" minWidth="70" styleClass="table-column"/>
             </columns>
         </TableView>

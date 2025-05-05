@@ -67,14 +67,14 @@
    CHOSEGAME VIEW
    ============================ */
 
-#chooseGamePane{
+#chooseGamePane {
     -fx-background-image: url("../img/space-background.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
 }
 
-#chooseGamePaneWrapper{
+#chooseGamePaneWrapper {
     -fx-padding: 10;
     -fx-alignment: center;
     -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
@@ -83,6 +83,7 @@
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
+
 #createGamePane,
 #joinGamePane {
     -fx-background-color: rgba(255,255,255,0.1);
@@ -223,6 +224,19 @@
     -fx-background-radius: 8;
 }
 
+#waitingRoomContainer .button:disabled {
+    -fx-opacity: 1;
+    -fx-background-color: linear-gradient(to bottom right, #ababab, #828282);
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-border-color: rgb(86, 86, 86);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-cursor: default;
+}
+
 #waitingRoomContainer .labelText {
     -fx-text-fill: #353535;
     -fx-font-size: 14;
@@ -230,7 +244,7 @@
 }
 
 #waitingRoomContainer .valueText {
-    -fx-text-fill: #171717;
+    -fx-text-fill: #222222;
     -fx-font-size: 14;
     -fx-font-weight: 700;
 }
