@@ -1,48 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
 <?import java.net.URL?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.progetto.client.gui.WaitingRoomView"
            fx:id="waitingRoomPane">
 
-    <!-- Sfondo -->
     <stylesheets>
         <URL value="@style/style.css"/>
     </stylesheets>
 
-    <StackPane style="-fx-background-image: url('img/space-background.png'); -fx-background-size: cover;">
+    <VBox spacing="10"
+          maxWidth="450"
+          maxHeight="500"
+          fx:id="waitingRoomContainer">
 
-        <!-- Layout principale centrato -->
-        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: rgba(0, 0, 0, 0.8); -fx-padding: 20; -fx-background-radius: 10;" maxWidth="400">
+        <Label text="Current Game" styleClass="sectionTitle" />
 
-            <!-- Titolo -->
-            <Label text="GALAXY TRUCKER" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: yellow;" />
+        <VBox spacing="5" alignment="CENTER_LEFT">
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Game ID:" styleClass="labelText"/>
+                <Label fx:id="gameId" styleClass="valueText" text="3"/>
+            </HBox>
 
-            <!-- Game Info -->
-            <VBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="GameID: 0" fx:id="gameIdLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" />
-                <Label text="Level: 2" fx:id="levelLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" />
-            </VBox>
+            <!-- Level Row -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Level:" styleClass="labelText"/>
+                <Label fx:id="gameLevel" styleClass="valueText" text="2"/>
+            </HBox>
 
-            <!-- Current Players -->
-            <VBox spacing="5" alignment="CENTER_LEFT">
-                <Label text="CurrentPlayers:" style="-fx-text-fill: white; -fx-font-size: 14px;" />
-                <ListView fx:id="playersListView" prefHeight="120" style="-fx-background-color: transparent; -fx-border-color: white;" />
-            </VBox>
-
-            <!-- Ready Button -->
-            <Button text="READY" fx:id="readyButton" style="-fx-background-color: white; -fx-font-size: 16px;" onAction="#onReadyPressed" />
+            <!-- Max Players Row -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Label text="Max Players:" styleClass="labelText"/>
+                <Label fx:id="gameMaxPlayers" styleClass="valueText" text="4"/>
+            </HBox>
         </VBox>
 
-        <!-- Waiting Info -->
-        <Label text="3/4 Waiting for players..." fx:id="waitingStatusLabel" style="-fx-text-fill: yellow; -fx-font-size: 14px;" StackPane.alignment="BOTTOM_RIGHT" />
-    </StackPane>
+        <Region prefHeight="15"/>
+
+        <TableView fx:id="playersTable">
+            <columns>
+                <TableColumn fx:id="playerCol" text="Player Name" minWidth="130" styleClass="table-column"/>
+                <TableColumn fx:id="readyCol" text="Status" minWidth="70" styleClass="table-column"/>
+            </columns>
+        </TableView>
+
+        <Region prefHeight="15"/>
+
+        <Button prefWidth="150" prefHeight="35" text="Ready" fx:id="readyButton" />
+    </VBox>
+
+    <Label text="Waiting for players..."
+           fx:id="waitingStatusLabel"
+           styleClass="waitingStatusLabel"
+           StackPane.alignment="BOTTOM_RIGHT">
+
+        <StackPane.margin>
+            <Insets bottom="25" right="40"/>
+        </StackPane.margin>
+    </Label>
 </StackPane>

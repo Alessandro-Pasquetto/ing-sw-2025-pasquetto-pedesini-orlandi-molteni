@@ -94,7 +94,7 @@
 #createGamePane .sectionTitle,
 #joinGamePane .sectionTitle {
     -fx-text-fill: #202020;
-    -fx-font-size: 20;
+    -fx-font-size: 24;
     -fx-font-weight: 700;
 }
 
@@ -184,6 +184,133 @@
 
 #gamesTable .table-column:last-child .table-cell {
     -fx-alignment: CENTER;
+}
+
+/* ============================
+   WAITINGROOM VIEW
+   ============================ */
+
+#waitingRoomPane {
+    -fx-background-image: url("../img/space-background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+#waitingRoomContainer {
+    -fx-padding: 25;
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#waitingRoomContainer .sectionTitle {
+    -fx-text-fill: #202020;
+    -fx-font-size: 24;
+    -fx-font-weight: 700;
+}
+
+#waitingRoomContainer .button {
+    -fx-background-color: linear-gradient(to bottom right, #facd0b, #ed881a);
+    -fx-text-fill: #491f06;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-border-color: rgb(223, 154, 0);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+#waitingRoomContainer .labelText {
+    -fx-text-fill: #353535;
+    -fx-font-size: 14;
+    -fx-font-weight: 500;
+}
+
+#waitingRoomContainer .valueText {
+    -fx-text-fill: #171717;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+}
+
+#waitingRoomContainer #playersTable {
+    -fx-background-color: #c0c4c0;
+    -fx-padding: 0;
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-max-height: Infinity;
+    -fx-vgrow: ALWAYS;
+}
+
+#playersTable .column-header-background {
+    -fx-background-color: rgba(43, 50, 57, 0.5);
+    -fx-background-radius: 5 5 0 0;
+}
+
+#playersTable .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+    -fx-border-width: 0;
+}
+
+#playersTable .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+    -fx-padding: 5;
+    -fx-alignment: CENTER-LEFT;
+}
+
+#playersTable .table-cell {
+    -fx-text-fill: black;
+    -fx-padding: 5 10 5 10;
+    -fx-alignment: CENTER-LEFT;
+    -fx-cell-size: 36px;
+}
+
+#playersTable .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(93, 93, 93, 0.2);
+    -fx-border-width: 0 0 1 0;
+}
+
+#playersTable .table-column {
+    -fx-border-width: 0;
+}
+
+#playersTable .table-row-cell:odd {
+    -fx-background-color: transparent;
+}
+
+#playersTable .table-row-cell:selected {
+    -fx-background-color: rgba(255, 213, 0, 0.3);
+    -fx-text-fill: white;
+}
+
+#playersTable .scroll-bar:vertical,
+#playersTable .scroll-bar:horizontal {
+    -fx-background-color: rgba(60, 77, 86, 0.8);
+}
+
+#playersTable .scroll-bar:vertical .thumb,
+#playersTable .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(200, 200, 200, 0.5);
+    -fx-background-radius: 5;
+}
+
+#playersTable .placeholder .label {
+    -fx-text-fill: rgba(80, 80, 80, 0.7);
+    -fx-font-style: italic;
+}
+
+#waitingRoomPane .waitingStatusLabel {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
 }
 
 
