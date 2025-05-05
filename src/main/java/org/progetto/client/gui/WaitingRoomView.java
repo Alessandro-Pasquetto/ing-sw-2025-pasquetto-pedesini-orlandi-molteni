@@ -65,7 +65,7 @@ public class WaitingRoomView {
 
     @FXML
     private void onReadyPressed() {
-
+        //todo maybe add a feature to remove ready state
         GameData.getSender().readyPlayer();
     }
 

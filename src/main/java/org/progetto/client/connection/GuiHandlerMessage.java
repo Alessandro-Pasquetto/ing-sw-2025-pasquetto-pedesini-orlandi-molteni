@@ -129,6 +129,10 @@ public class GuiHandlerMessage {
                     BuildingData.setIsTimerExpired(true);
                     break;
 
+                case "YouAreReady":
+                    System.out.println("You are ready");
+                    break;
+
                 default:
                     System.out.println(messageString);
                     break;
