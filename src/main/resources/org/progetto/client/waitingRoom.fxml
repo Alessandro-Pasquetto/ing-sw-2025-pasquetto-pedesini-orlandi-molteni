@@ -30,19 +30,17 @@
         <VBox spacing="5" alignment="CENTER_LEFT">
             <HBox spacing="5" alignment="CENTER_LEFT">
                 <Label text="Game ID:" styleClass="labelText"/>
-                <Label fx:id="gameId" styleClass="valueText" text="3"/>
+                <Label fx:id="gameIdLabel" styleClass="valueText" text="3"/>
             </HBox>
 
-            <!-- Level Row -->
             <HBox spacing="5" alignment="CENTER_LEFT">
                 <Label text="Level:" styleClass="labelText"/>
-                <Label fx:id="gameLevel" styleClass="valueText" text="2"/>
+                <Label fx:id="gameLevelLabel" styleClass="valueText" text="2"/>
             </HBox>
 
-            <!-- Max Players Row -->
             <HBox spacing="5" alignment="CENTER_LEFT">
                 <Label text="Max Players:" styleClass="labelText"/>
-                <Label fx:id="gameMaxPlayers" styleClass="valueText" text="4"/>
+                <Label fx:id="gameMaxPlayersLabel" styleClass="valueText" text="4"/>
             </HBox>
         </VBox>
 
@@ -50,14 +48,14 @@
 
         <TableView fx:id="playersTable">
             <columns>
-                <TableColumn fx:id="playerCol" text="Player Name" minWidth="130" styleClass="table-column"/>
+                <TableColumn fx:id="playerCol" text="PlayerName" minWidth="130" styleClass="table-column"/>
                 <TableColumn fx:id="readyCol" text="Status" minWidth="70" styleClass="table-column"/>
             </columns>
         </TableView>
 
         <Region prefHeight="15"/>
 
-        <Button prefWidth="150" prefHeight="35" text="Ready" fx:id="readyButton" />
+        <Button prefWidth="150" onAction="#onReadyPressed" prefHeight="35" text="Ready" fx:id="readyButton" />
     </VBox>
 
     <Label text="Waiting for players..."

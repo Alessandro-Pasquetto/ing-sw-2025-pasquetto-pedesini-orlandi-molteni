@@ -51,6 +51,10 @@ public class PageController {
         return chooseGameView;
     }
 
+    public static WaitingRoomView getWaitingRoomView() {
+        return waitingRoomView;
+    }
+
     public static GameView getGameView() {
         return gameView;
     }
@@ -74,12 +78,10 @@ public class PageController {
         loadControllers();
 
         // Execute this when the GUI thread is ready
-        Platform.runLater(() -> {
-            stage.setScene(new Scene(connectionRoot));
-            stage.setTitle("Connection");
-            stage.setMaximized(true);
-            stage.show();
-        });
+        stage.setScene(new Scene(connectionRoot));
+        stage.setTitle("Connection");
+        stage.setMaximized(true);
+        stage.show();
     }
 
     private static void loadControllers() throws IOException {
@@ -115,18 +117,18 @@ public class PageController {
         if (root == null) return;
 
         // Execute this when the GUI thread is ready
-        Platform.runLater(() -> {
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle(title);
-            stage.show();
+        Scene scene = new Scene(root);
 
-            // Maximize the window when switching scenes
-            double screenWidth = javafx.stage.Screen.getPrimary().getVisualBounds().getWidth();
-            double screenHeight = javafx.stage.Screen.getPrimary().getVisualBounds().getHeight();
-            stage.setWidth(screenWidth);
-            stage.setHeight(screenHeight);
-        });
+        // Maximize the window when switching scenes
+        double screenWidth = javafx.stage.Screen.getPrimary().getVisualBounds().getWidth();
+        double screenHeight = javafx.stage.Screen.getPrimary().getVisualBounds().getHeight();
+        stage.setWidth(screenWidth);
+        stage.setHeight(screenHeight);
+
+        stage.setScene(scene);
+        stage.setTitle(title);
+
+        stage.show();
     }
 
     public static void generateGameList(ShowWaitingGamesMessage showWaitingGamesMessage){
@@ -138,37 +140,27 @@ public class PageController {
         gameView.generateComponent(component);
     }
 
-    public static void initGame(int levelGame, String imgSrcBoard, String imgSrcSpaceship, String imgSrcCentralUnit) {
-        Platform.runLater(() -> {
-            BuildingData.initMask(levelGame);
-            gameView.initSpaceship(levelGame, imgSrcCentralUnit);
-            // todo
-            // gameView.loadBoardImg(imgSrcBoard);
-            // gameView.loadShipImg(imgSrcSpaceship);
-        });
+    public static void initGame(int levelGame, int color) {
+        BuildingData.initMask(levelGame);
+        gameView.initSpaceship(levelGame, color);
+        // todo
+        // gameView.loadBoardImg(imgSrcBoard);
+        // gameView.loadShipImg(imgSrcSpaceship);
     }
 
     public static void updateTimer(int timer) {
-        Platform.runLater(() -> {
-            gameView.updateTimer(timer);
-        });
+        gameView.updateTimer(timer);
     }
 
     public static void removeHandComponent(){
-        Platform.runLater(() -> {
-            gameView.removeHandComponent();
-        });
+        gameView.removeHandComponent();
     }
 
     public static void placeLastComponent(){
-        Platform.runLater(() -> {
-            gameView.placeLastComponent();
-        });
+        gameView.placeLastComponent();
     }
 
     public static void disableDraggableBookedComponents(){
-        Platform.runLater(() -> {
-            gameView.disableDraggableBookedComponents();
-        });
+        gameView.disableDraggableBookedComponents();
     }
 }

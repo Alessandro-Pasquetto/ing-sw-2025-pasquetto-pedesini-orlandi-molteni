@@ -3,6 +3,7 @@ package org.progetto.server.connection.rmi;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
+import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
@@ -55,15 +56,14 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = internalGameInfo.getGameManager();
         Game game = gameManager.getGame();
         int idGame = game.getId();
-        Board board = game.getBoard();
         Player player = internalGameInfo.getPlayer();
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         LobbyController.removeSender(virtualClient);
         gameManager.addRmiClient(player, virtualClient);
         GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
-        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
+        virtualClient.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
         virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
@@ -79,14 +79,13 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         GameManager gameManager = internalGameInfo.getGameManager();
         Game game = gameManager.getGame();
-        Board board = game.getBoard();
         Player player = internalGameInfo.getPlayer();
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         LobbyController.removeSender(virtualClient);
         gameManager.addRmiClient(player, virtualClient);
 
-        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
+        gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
         virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 

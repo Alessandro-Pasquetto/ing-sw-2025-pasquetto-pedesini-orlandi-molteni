@@ -10,20 +10,18 @@ public class GameInfoMessage implements Serializable {
 
     private int idGame;
     private int levelGame;
-    private String imgPathBoard;
-    private String imgPathSpaceship;
-    private String imgPathCentralUnit;
+    private int color;
+    private int numMaxPlayers;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public GameInfoMessage(int idGame, int levelGame, String imgPathBoard, String imgPathSpaceship, String imgPathCentralUnit) {
+    public GameInfoMessage(int idGame, int levelGame, int numMaxPlayers, int color) {
         this.idGame = idGame;
         this.levelGame = levelGame;
-        this.imgPathBoard = imgPathBoard;
-        this.imgPathSpaceship = imgPathSpaceship;
-        this.imgPathCentralUnit = imgPathCentralUnit;
+        this.numMaxPlayers = numMaxPlayers;
+        this.color = color;
     }
 
     // =======================
@@ -38,15 +36,11 @@ public class GameInfoMessage implements Serializable {
         return levelGame;
     }
 
-    public String getImgPathBoard() {
-        return imgPathBoard;
+    public int getNumMaxPlayers() {
+        return numMaxPlayers;
     }
 
-    public String getImgPathSpaceship() {
-        return imgPathSpaceship;
-    }
-
-    public String getImgPathCentralUnit() {
-        return imgPathCentralUnit;
+    public int getColor() {
+        return color;
     }
 }

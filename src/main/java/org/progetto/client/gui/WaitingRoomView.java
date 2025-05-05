@@ -1,25 +1,47 @@
 package org.progetto.client.gui;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Pair;
+import org.progetto.client.model.GameData;
+import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.server.model.Player;
+
+import java.util.ArrayList;
 
 public class WaitingRoomView {
 
     @FXML
-    public TableColumn readyCol;
+    private TableView<String[]> playersTable;
 
     @FXML
-    public TableColumn playerCol;
+    public TableColumn<String[], String> readyCol;
 
     @FXML
-    private TableView playersTable;
+    public TableColumn<String[], String> playerCol;
+
+    @FXML
+    public Label gameIdLabel;
+
+    @FXML
+    public Label gameLevelLabel;
+
+    @FXML
+    public Label gameMaxPlayersLabel;
 
     @FXML
     private Button readyButton;
 
     @FXML
     private Label waitingStatusLabel;
+
+    int numMaxPlayers = 0;
+
+    private final ObservableList<String[]> playersList = FXCollections.observableArrayList();
 
     /**
      * Metodo chiamato al caricamento della view.
@@ -28,34 +50,36 @@ public class WaitingRoomView {
 
         playersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // Imposta lo stato iniziale di attesa
-        updateWaitingStatus(3, 4);
+        playerCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+        readyCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+        playersTable.setItems(playersList);
     }
 
-    /**
-     * Metodo chiamato quando il pulsante READY viene premuto.
-     */
+    public void init(int gameId, int gameLevel, int numMaxPlayersParam) {
+
+        gameIdLabel.setText(String.valueOf(gameId));
+        gameLevelLabel.setText(String.valueOf(gameLevel));
+        gameMaxPlayersLabel.setText(String.valueOf(numMaxPlayersParam));
+        numMaxPlayers = numMaxPlayersParam;
+    }
+
     @FXML
-    private void onReadyPressed(MouseEvent event) {
-        System.out.println("READY pressed!");
-        // Aggiorna lo stato del giocatore come "ready"
+    private void onReadyPressed() {
 
-        // Controlla se tutti i giocatori sono pronti
-        updateWaitingStatus(4, 4);
+        GameData.getSender().readyPlayer();
     }
 
-    /**
-     * Aggiorna lo stato di attesa.
-     *
-     * @param currentPlayers Numero di giocatori attuali.
-     * @param maxPlayers     Numero massimo di giocatori.
-     */
-    private void updateWaitingStatus(int currentPlayers, int maxPlayers) {
-        waitingStatusLabel.setText(String.format("Waiting for players...", currentPlayers, maxPlayers));
+    public void updatePlayersList(ArrayList<Player> players) {
 
-        // Se tutti i giocatori sono pronti
-        if (currentPlayers == maxPlayers) {
-            waitingStatusLabel.setText("All players are ready!");
+        waitingStatusLabel.setText(String.format("%d/%d Waiting for players...", players.size(), numMaxPlayers));
+        playersList.clear();
+
+        for (Player player : players) {
+            String status = player.getIsReady() ? "Ready" : "Not Ready";
+
+            playersList.add(new String[]{player.getName(), status});
         }
+
+        playersTable.setItems(playersList);
     }
 }

@@ -1,6 +1,8 @@
 package org.progetto.client.connection;
 
+import javafx.application.Platform;
 import org.progetto.client.gui.Alerts;
+import org.progetto.client.gui.WaitingRoomView;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -9,11 +11,7 @@ import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessa
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
-import org.progetto.server.connection.games.WaitingGameInfo;
-import org.progetto.server.model.Game;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Handles messages coming from server
@@ -35,14 +33,36 @@ public class GuiHandlerMessage {
 
             System.out.println("You joined a game");
 
+            int gameId = initGameMessage.getIdGame();
+            int levelGame = initGameMessage.getLevelGame();
+            int numMaxPlayer = initGameMessage.getNumMaxPlayers();
+            int color = initGameMessage.getColor();
+
             try {
+                // todo: se i game possono essere da 1 persona controllare per non mandarlo in waiting room??
                 PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
+                PageController.getWaitingRoomView().init(gameId, levelGame, numMaxPlayer);
             } catch (IOException e) {
                 System.out.println("Error loading the page");
             }
 
-            GameData.setIdGame(initGameMessage.getIdGame());
-            PageController.initGame(initGameMessage.getLevelGame(), initGameMessage.getImgPathBoard(), initGameMessage.getImgPathSpaceship(), initGameMessage.getImgPathCentralUnit());
+            GameData.setIdGame(gameId);
+            PageController.initGame(levelGame, color);
+        } else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
+
+            PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
+
+        } else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
+            System.out.println();
+            GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
+
+            if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
+                try {
+                    PageController.switchScene("game.fxml", "Game");
+                } catch (IOException e) {
+                    System.out.println("Error loading the page");
+                }
+            }
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {

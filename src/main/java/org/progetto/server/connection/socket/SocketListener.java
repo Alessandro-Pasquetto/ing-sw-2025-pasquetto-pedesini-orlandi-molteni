@@ -1,6 +1,7 @@
 package org.progetto.server.connection.socket;
 
 import org.progetto.messages.toClient.NewGamePhaseMessage;
+import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.messages.toServer.*;
 import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
@@ -68,14 +69,13 @@ public class SocketListener extends Thread {
             GameManager gameManager = internalGameInfo.getGameManager();
             Game game = gameManager.getGame();
             int idGame = game.getId();
-            Board board = game.getBoard();
             Player player = internalGameInfo.getPlayer();
-            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             clientHandler.initPlayerConnection(gameManager, player);
 
             LobbyController.broadcastLobbyMessageToOthers("UpdateGameList", clientHandler.getSocketWriter());
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
+            clientHandler.getSocketWriter().sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
             clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
@@ -92,12 +92,11 @@ public class SocketListener extends Thread {
 
             GameManager gameManager = internalGameInfo.getGameManager();
             Game game = gameManager.getGame();
-            Board board = game.getBoard();
             Player player = internalGameInfo.getPlayer();
-            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             clientHandler.initPlayerConnection(gameManager, player);
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), board.getImgSrc(), buildingBoard.getImgSrc(), buildingBoard.getImgSrcCentralUnitFromColor(player.getColor())));
+            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
+            gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
             clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
         }
 

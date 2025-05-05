@@ -1,5 +1,6 @@
 package org.progetto.client.connection.socket;
 
+import javafx.application.Platform;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
@@ -85,7 +86,9 @@ public class SocketListener extends Thread {
     private static void processMessage(Object objMessage) {
 
         if (GameData.getUIType().equals("GUI")) {
-            GuiHandlerMessage.handleMessage(objMessage);
+            Platform.runLater(() -> {
+                GuiHandlerMessage.handleMessage(objMessage);
+            });
         } else if (GameData.getUIType().equals("TUI")) {
             TuiHandlerMessage.handleMessage(objMessage);
         }

@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.ResponseTrackMessage;
+import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -35,6 +36,7 @@ public class GameController {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
             gameManager.broadcastGameMessageToOthers(player.getName() + " is ready", sender);
+            gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(gameManager.getGame().getPlayersCopy()));
         }
 
         sender.sendMessage("YouAreReady");

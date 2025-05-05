@@ -1,6 +1,5 @@
 package org.progetto.client.gui;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -128,9 +127,7 @@ public class ChooseGameView {
     }
 
     public void generateGameRecordList(ArrayList<WaitingGameInfo> gamesInfo) {
-        Platform.runLater(() -> {
-            gameData.clear();
-            gameData.addAll(gamesInfo);
-        });
+        gameData.clear();
+        gameData.addAll(gamesInfo);
     }
 }

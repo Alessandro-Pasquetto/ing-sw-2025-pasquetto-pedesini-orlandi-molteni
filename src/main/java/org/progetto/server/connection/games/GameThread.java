@@ -51,7 +51,7 @@ public class GameThread extends Thread {
                 switch (gameManager.getGame().getPhase()) {
 
                     case INIT:
-                        System.out.println("Waiting ready players...");
+                        System.out.println("Waiting for players...");
 
                         resetAndWaitPlayersReady();
 

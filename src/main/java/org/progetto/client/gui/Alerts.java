@@ -11,9 +11,7 @@ public class Alerts {
     // =======================
 
     public static void showWarning(String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
-            alert.showAndWait();
-        });
+        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+        alert.showAndWait();
     }
 }

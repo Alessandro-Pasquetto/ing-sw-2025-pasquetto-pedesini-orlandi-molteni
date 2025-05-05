@@ -59,7 +59,7 @@ public class GameView {
     }
 
     // Setup a grid with a given size
-    public void initSpaceship(int levelShip, String imgSrcCentralUnit) {
+    public void initSpaceship(int levelShip, int color) {
 
         int sizeX = 5;
         int sizeY = 5;
@@ -82,9 +82,19 @@ public class GameView {
             }
         }
 
-        insertCentralUnitComponent(levelShip, imgSrcCentralUnit);
+        insertCentralUnitComponent(levelShip, getImgSrcCentralUnitFromColor(color));
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
+    }
+
+    public String getImgSrcCentralUnitFromColor(int color) {
+        return switch (color) {
+            case 0 -> "base-unit-blue.jpg";
+            case 1 -> "base-unit-green.jpg";
+            case 2 -> "base-unit-red.jpg";
+            case 3 -> "base-unit-yellow.jpg";
+            default -> throw new IllegalStateException("Unexpected value: " + color);
+        };
     }
 
     public void insertCentralUnitComponent(int levelShip, String imgSrcCentralUnit) {
@@ -432,10 +442,7 @@ public class GameView {
         }
 
         BuildingData.setNewHandComponent(componentPane);
-
-        Platform.runLater(() -> {
-            handComponentBox.getChildren().add(BuildingData.getHandComponent());
-        });
+        handComponentBox.getChildren().add(BuildingData.getHandComponent());
     }
 
     /**

@@ -5,6 +5,9 @@ import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
+
+import java.rmi.RemoteException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyControllerTest {
@@ -56,7 +59,7 @@ class LobbyControllerTest {
     }
 
     @Test
-    void joinGame() {
+    void joinGame(){
 
         InternalGameInfo internalGameInfo  = LobbyController.createGame("Mario", 1, 4);
         Player player_1 = internalGameInfo.getPlayer();
