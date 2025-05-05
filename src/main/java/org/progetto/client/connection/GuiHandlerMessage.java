@@ -1,8 +1,6 @@
 package org.progetto.client.connection;
 
-import javafx.application.Platform;
 import org.progetto.client.gui.Alerts;
-import org.progetto.client.gui.WaitingRoomView;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -11,7 +9,9 @@ import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessa
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.server.connection.games.WaitingGameInfo;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Handles messages coming from server
@@ -26,7 +26,8 @@ public class GuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            PageController.generateGameList(showWaitingGamesMessage);
+            ArrayList<WaitingGameInfo> gamesInfo = showWaitingGamesMessage.getWaitingGames();
+            PageController.getChooseGameView().generateGameRecordList(gamesInfo);
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
@@ -66,7 +67,7 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
-            PageController.generateComponent(pickedComponentMessage.getPickedComponent());
+            PageController.getGameView().generateComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
@@ -75,7 +76,7 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
-            PageController.updateTimer(timer);
+            PageController.getGameView().updateTimer(timer);
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -104,14 +105,14 @@ public class GuiHandlerMessage {
 
                 case "NotAllowedToPlaceComponent":
                     if(BuildingData.getIsTimerExpired())
-                        PageController.removeHandComponent();
+                        PageController.getGameView().removeHandComponent();
                     break;
 
                 case "ComponentBooked":
                     break;
 
                 case "HandComponentDiscarded":
-                    PageController.removeHandComponent();
+                    PageController.getGameView().removeHandComponent();
                     break;
 
                 case "HasBeenBooked":
@@ -124,8 +125,8 @@ public class GuiHandlerMessage {
 
                 case "TimerExpired":
                     System.out.println("TimerExpired");
-                    PageController.disableDraggableBookedComponents();
-                    PageController.placeLastComponent();
+                    PageController.getGameView().disableDraggableBookedComponents();
+                    PageController.getGameView().placeLastComponent();
                     BuildingData.setIsTimerExpired(true);
                     break;
 

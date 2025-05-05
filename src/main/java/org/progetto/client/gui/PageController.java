@@ -1,21 +1,13 @@
 package org.progetto.client.gui;
 
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.animation.PauseTransition;
-import javafx.util.Duration;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
-import org.progetto.messages.toClient.ShowWaitingGamesMessage;
-import org.progetto.server.connection.games.WaitingGameInfo;
-import org.progetto.server.model.components.Component;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -131,36 +123,11 @@ public class PageController {
         stage.show();
     }
 
-    public static void generateGameList(ShowWaitingGamesMessage showWaitingGamesMessage){
-        ArrayList<WaitingGameInfo> gamesInfo = showWaitingGamesMessage.getWaitingGames();
-        chooseGameView.generateGameRecordList(gamesInfo);
-    }
-
-    public static void generateComponent(Component component){
-        gameView.generateComponent(component);
-    }
-
     public static void initGame(int levelGame, int color) {
         BuildingData.initMask(levelGame);
         gameView.initSpaceship(levelGame, color);
         // todo
         // gameView.loadBoardImg(imgSrcBoard);
         // gameView.loadShipImg(imgSrcSpaceship);
-    }
-
-    public static void updateTimer(int timer) {
-        gameView.updateTimer(timer);
-    }
-
-    public static void removeHandComponent(){
-        gameView.removeHandComponent();
-    }
-
-    public static void placeLastComponent(){
-        gameView.placeLastComponent();
-    }
-
-    public static void disableDraggableBookedComponents(){
-        gameView.disableDraggableBookedComponents();
     }
 }
