@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Pair;
 import org.progetto.client.model.GameData;
-import org.progetto.server.connection.games.WaitingGameInfo;
 import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
@@ -72,6 +69,10 @@ public class WaitingRoomView {
         //TODO: maybe add a feature to remove ready state
     }
 
+    public void activateReadyBtn() {
+        readyButton.setDisable(false);
+    }
+
     public void updatePlayersList(ArrayList<Player> players) {
 
         playersList.clear();
@@ -100,7 +101,6 @@ public class WaitingRoomView {
         if (players.size() == numMaxPlayers) {
             valueStatusLabel.setText(String.format("%d/%d players are ready.", numReadyPlayers, numMaxPlayers));
             phraseStatusLabel.setText(String.format("Waiting for others to get ready..."));
-            readyButton.setDisable(false);
         } else {
             valueStatusLabel.setText(String.format("%d/%d players joined.", players.size(), numMaxPlayers));
             phraseStatusLabel.setText(String.format("Waiting for more players to join..."));

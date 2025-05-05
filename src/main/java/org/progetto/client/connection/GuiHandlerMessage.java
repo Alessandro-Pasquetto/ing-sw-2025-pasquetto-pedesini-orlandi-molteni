@@ -58,7 +58,10 @@ public class GuiHandlerMessage {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
 
-            if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
+            if(GameData.getPhaseGame().equalsIgnoreCase("INIT"))
+                PageController.getWaitingRoomView().activateReadyBtn();
+
+            else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                 try {
                     PageController.switchScene("game.fxml", "Game");
                 } catch (IOException e) {
