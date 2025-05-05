@@ -71,15 +71,30 @@ public class WaitingRoomView {
 
     public void updatePlayersList(ArrayList<Player> players) {
 
-        waitingStatusLabel.setText(String.format("%d/%d Waiting for players...", players.size(), numMaxPlayers));
         playersList.clear();
 
+        int numReadyPlayers = 0;
+
         for (Player player : players) {
-            String status = player.getIsReady() ? "Ready" : "Not Ready";
+
+            String status;
+            if(player.getIsReady()){
+                status = "Ready";
+                numReadyPlayers++;
+            }else
+                status = "Not Ready";
 
             playersList.add(new String[]{player.getName(), status});
         }
 
         playersTable.setItems(playersList);
+
+
+        if(players.size() == numMaxPlayers){
+
+            waitingStatusLabel.setText(String.format("%d/%d Waiting for readys...", numReadyPlayers, numMaxPlayers));
+        }
+        else
+            waitingStatusLabel.setText(String.format("%d/%d Waiting for players...", players.size(), numMaxPlayers));
     }
 }

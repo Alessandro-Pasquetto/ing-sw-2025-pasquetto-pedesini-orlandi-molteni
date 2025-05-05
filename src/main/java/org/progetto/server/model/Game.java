@@ -56,7 +56,7 @@ public class Game {
         this.maxNumPlayers = maxNumPlayers;
         this.players = new ArrayList<Player>();
         this.level = level;
-        this.phase = GamePhase.INIT;
+        this.phase = GamePhase.WAITING;
         this.componentDeck = loadComponents();
         this.visibleComponentDeck = new ArrayList<>();
         this.hiddenEventDeck = new ArrayList<>();

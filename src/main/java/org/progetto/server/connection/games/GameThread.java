@@ -50,8 +50,16 @@ public class GameThread extends Thread {
             while (isRunning) {
                 switch (gameManager.getGame().getPhase()) {
 
-                    case INIT:
+                    case WAITING:
                         System.out.println("Waiting for players...");
+
+                        waitPlayers();
+
+                        gameManager.getGame().setPhase(GamePhase.INIT);
+                        break;
+
+                    case INIT:
+                        System.out.println("Waiting for ready players...");
 
                         resetAndWaitPlayersReady();
 
@@ -194,9 +202,12 @@ public class GameThread extends Thread {
     // OTHER METHODS
     // =======================
 
-    public void waitFirstNotify() throws InterruptedException {
+    public void waitPlayers() throws InterruptedException {
+        Game game = gameManager.getGame();
+
         synchronized (gameThreadLock) {
-            gameThreadLock.wait();
+            while (game.getPlayersSize() != game.getMaxNumPlayers())
+                gameThreadLock.wait();
         }
     }
 

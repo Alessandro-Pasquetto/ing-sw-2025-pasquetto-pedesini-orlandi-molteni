@@ -141,6 +141,7 @@ public class LobbyController {
         Player player = new Player(name, 0, levelGame);
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGameThread().notifyThread();// todo se non può esserci un game con max 1 persona da togliere
 
         return new InternalGameInfo(gameManager, player);
     }
@@ -169,6 +170,7 @@ public class LobbyController {
         Player player = new Player(name, game.getPlayersSize(), game.getLevel());
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGameThread().notifyThread();
 
         return new InternalGameInfo(gameManager, player);
     }

@@ -36,7 +36,9 @@ public class GameController {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
             gameManager.broadcastGameMessageToOthers(player.getName() + " is ready", sender);
-            gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(gameManager.getGame().getPlayersCopy()));
+
+            if(gameManager.getGame().getPhase().equals(GamePhase.INIT))
+                gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(gameManager.getGame().getPlayersCopy()));
         }
 
         sender.sendMessage("YouAreReady");
