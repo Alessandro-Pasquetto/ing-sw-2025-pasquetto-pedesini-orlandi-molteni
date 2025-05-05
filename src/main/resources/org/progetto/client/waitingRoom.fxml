@@ -9,8 +9,9 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.HBox?>
-
 <?import javafx.geometry.Insets?>
+
+<?import javafx.scene.layout.AnchorPane?>
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.progetto.client.gui.WaitingRoomView"
@@ -20,10 +21,18 @@
         <URL value="@style/style.css"/>
     </stylesheets>
 
+    <AnchorPane fx:id="fullScreenPane" style="-fx-background-color: transparent;">
+        <VBox spacing="3" fx:id="statusLabelBox" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="40.0">
+            <Label fx:id="valueStatusLabel" text="" styleClass="waitingStatusLabel"/>
+            <Label fx:id="phraseStatusLabel" text="" styleClass="waitingStatusLabel"/>
+        </VBox>
+    </AnchorPane>
+
     <VBox spacing="10"
           maxWidth="450"
           maxHeight="500"
-          fx:id="waitingRoomContainer">
+          fx:id="waitingRoomContainer"
+          StackPane.alignment="CENTER">
 
         <Label text="Current Game" styleClass="sectionTitle" />
 
@@ -44,7 +53,7 @@
             </HBox>
         </VBox>
 
-        <Region prefHeight="15"/>
+        <Region prefHeight="20"/>
 
         <TableView fx:id="playersTable">
             <columns>
@@ -57,14 +66,4 @@
 
         <Button prefWidth="150" onAction="#onReadyPressed" prefHeight="35" text="Ready" fx:id="readyButton" />
     </VBox>
-
-    <Label text="Waiting for players..."
-           fx:id="waitingStatusLabel"
-           styleClass="waitingStatusLabel"
-           StackPane.alignment="BOTTOM_RIGHT">
-
-        <StackPane.margin>
-            <Insets bottom="25" right="40"/>
-        </StackPane.margin>
-    </Label>
 </StackPane>

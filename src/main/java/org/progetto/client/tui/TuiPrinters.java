@@ -130,7 +130,7 @@ public class TuiPrinters {
         };
     }
 
-    public static String[] drawComponent(Component component) {
+    public static String[] drawComponent(Component component, int playerColor) {
 
         String[] lines = new String[5];
 
@@ -338,12 +338,11 @@ public class TuiPrinters {
                     }
                     break;
 
-
-                case HOUSING_UNIT, CENTRAL_UNIT:
+                case CENTRAL_UNIT:
                     HousingUnit housingUnit = (HousingUnit) component;
                     itemsCount = housingUnit.getCrewCount();
 
-                    String temp = switch (GameData.getColor()) {
+                    String temp = switch (playerColor) {
                         case 0 -> BLUE;
                         case 1 -> GREEN;
                         case 2 -> RED;
@@ -368,6 +367,28 @@ public class TuiPrinters {
                     lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
                     lines[2] = leftConnections[1] + "     " + housingColor + abbreviateType + housingStopColor + "     " + rightConnections[1];
+                    lines[3] = leftConnections[2] + "    (" + color + itemsCount + stopColor + ")    " + rightConnections[2];
+                    lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
+                    break;
+
+                case HOUSING_UNIT:
+                    housingUnit = (HousingUnit) component;
+                    itemsCount = housingUnit.getCrewCount();
+
+                    if (housingUnit.getHasPurpleAlien()) {
+                        color = PURPLE;
+                        stopColor = RESET;
+                    } else if (housingUnit.getHasOrangeAlien()) {
+                        color = ORANGE;
+                        stopColor = RESET;
+                    } else {
+                        color = "";
+                        stopColor = "";
+                    }
+
+                    lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
+                    lines[1] = leftConnections[0] + "           " + rightConnections[0];
+                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "    (" + color + itemsCount + stopColor + ")    " + rightConnections[2];
                     lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
@@ -512,7 +533,7 @@ public class TuiPrinters {
 
     public static void printComponent(Component component) {
 
-        String[] lines = TuiPrinters.drawComponent(component);
+        String[] lines = TuiPrinters.drawComponent(component, GameData.getColor());
 
         for (int row = 0; row < 5; row++) {
             System.out.print(lines[row]);
@@ -540,7 +561,7 @@ public class TuiPrinters {
             String[][] componentLines = new String[numComponentsInRow][5];
 
             for (int i = 0; i < numComponentsInRow; i++) {
-                componentLines[i] = TuiPrinters.drawComponent(visibleComponents.get(start + i));
+                componentLines[i] = TuiPrinters.drawComponent(visibleComponents.get(start + i), GameData.getColor());
             }
 
             for (int row = 0; row < 5; row++) {
@@ -569,7 +590,7 @@ public class TuiPrinters {
         String[][] componentLines = new String[numComponents][5];
 
         for (int i = 0; i < numComponents; i++) {
-            componentLines[i] = TuiPrinters.drawComponent(bookedComponents[i]);
+            componentLines[i] = TuiPrinters.drawComponent(bookedComponents[i], GameData.getColor());
         }
 
         for (int row = 0; row < 5; row++) {
@@ -607,7 +628,7 @@ public class TuiPrinters {
     // SPACESHIP
     // =======================
 
-    public static void printSpaceship(String owner, Spaceship spaceship) {
+    public static void printSpaceship(String owner, Spaceship spaceship, int playerColor) {
 
         if (GameData.getNamePlayer().equals(owner)) {
             System.out.println("\uD83D\uDE80 Your Spaceship:");
@@ -629,7 +650,7 @@ public class TuiPrinters {
 
                 // Checks current cell could be occupied
                 if (mask[i][j] != 0) {
-                    gridVisual[i][j] = drawComponent(spaceshipMatrix[i][j]);
+                    gridVisual[i][j] = drawComponent(spaceshipMatrix[i][j], playerColor);
 
                 } else {
                     gridVisual[i][j][0] = "               ";

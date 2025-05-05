@@ -195,8 +195,6 @@ public class BuildingCommands {
      */
     public static void responsePlaceAlien(String alienColor, Spaceship spaceship) {
 
-        //todo print spaceship with colored housingUnit
-
         while(true) {
             System.out.println("Do you want to place " + alienColor + " alien? (YES or NO)");
             String response = TuiCommandFilter.waitResponse();
@@ -209,7 +207,7 @@ public class BuildingCommands {
             else if (response.equalsIgnoreCase("YES")){
                 Sender sender = GameData.getSender();
                 TuiPrinters.highlightComponent = alienColor;
-                TuiPrinters.printSpaceship(GameData.getNamePlayer(), spaceship);
+                TuiPrinters.printSpaceship(GameData.getNamePlayer(), spaceship, GameData.getColor());
                 TuiPrinters.highlightComponent = null;
 
                 System.out.println("Choose where to place " + alienColor + " alien:");

@@ -44,7 +44,7 @@ public class SpaceshipController {
 
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
-            sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner.getName()));
+            sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner));
 
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))

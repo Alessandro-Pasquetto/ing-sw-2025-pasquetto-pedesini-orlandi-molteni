@@ -38,7 +38,7 @@ public class EventController {
         for(Player player : gameManager.getGame().getPlayersCopy()){
 
             Sender sender = gameManager.getSenderByPlayer(player);
-            sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+            sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
         }
         
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));

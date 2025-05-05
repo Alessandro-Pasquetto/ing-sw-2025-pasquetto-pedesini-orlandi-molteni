@@ -53,7 +53,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
-            TuiPrinters.printSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+            TuiPrinters.printSpaceship(responseSpaceshipMessage.getOwner().getName(), responseSpaceshipMessage.getSpaceship(), responseSpaceshipMessage.getOwner().getColor());
         }
 
         else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {

@@ -37,7 +37,10 @@ public class WaitingRoomView {
     private Button readyButton;
 
     @FXML
-    private Label waitingStatusLabel;
+    public Label valueStatusLabel;
+
+    @FXML
+    public Label phraseStatusLabel;
 
     int numMaxPlayers = 0;
 
@@ -95,10 +98,12 @@ public class WaitingRoomView {
         playersTable.setItems(playersList);
 
         if (players.size() == numMaxPlayers) {
-            waitingStatusLabel.setText(String.format("%d/%d players are ready. Waiting for others to get ready...", numReadyPlayers, numMaxPlayers));
+            valueStatusLabel.setText(String.format("%d/%d players are ready.", numReadyPlayers, numMaxPlayers));
+            phraseStatusLabel.setText(String.format("Waiting for others to get ready..."));
             readyButton.setDisable(false);
         } else {
-            waitingStatusLabel.setText(String.format("%d/%d players joined. Waiting for more players to join...", players.size(), numMaxPlayers));
+            valueStatusLabel.setText(String.format("%d/%d players joined.", players.size(), numMaxPlayers));
+            phraseStatusLabel.setText(String.format("Waiting for more players to join..."));
         }
     }
 }

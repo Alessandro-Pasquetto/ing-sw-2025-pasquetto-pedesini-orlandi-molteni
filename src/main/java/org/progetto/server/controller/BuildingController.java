@@ -201,7 +201,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
                         bb.placeComponent(4, 4, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     case 2:
@@ -244,7 +244,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
                         bb.placeComponent(4, 3, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     default:
@@ -322,7 +322,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 1));
                         bb.placeComponent(6, 3, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     case 2:
@@ -386,7 +386,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
                         bb.placeComponent(6, 4, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player.getName()));
+                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     default:
