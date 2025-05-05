@@ -17,6 +17,7 @@ public class GameData {
     private static int levelGame;
     private static String phaseGame = "LOBBY";
     private static String namePlayer;
+    private static int color;
     private static String UIType;
 
     // =======================
@@ -47,6 +48,10 @@ public class GameData {
         return UIType;
     }
 
+    public static int getColor() {
+        return color;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -73,5 +78,9 @@ public class GameData {
 
     public static void setUIType(String UIType){
         GameData.UIType = UIType;
+    }
+
+    public static void setColor(int color) {
+        GameData.color = color;
     }
 }

@@ -48,7 +48,9 @@ public class GuiHandlerMessage {
             }
 
             GameData.setIdGame(gameId);
+            GameData.setColor(color);
             PageController.initGame(levelGame, color);
+
         } else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
             PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
 

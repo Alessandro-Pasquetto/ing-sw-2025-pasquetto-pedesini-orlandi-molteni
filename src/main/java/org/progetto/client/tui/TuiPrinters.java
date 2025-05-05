@@ -340,10 +340,19 @@ public class TuiPrinters {
 
 
                 case HOUSING_UNIT, CENTRAL_UNIT:
-                    // TODO: print "H" of the same color of the player, need to get player's color
-
                     HousingUnit housingUnit = (HousingUnit) component;
                     itemsCount = housingUnit.getCrewCount();
+
+                    String temp = switch (GameData.getColor()) {
+                        case 0 -> BLUE;
+                        case 1 -> GREEN;
+                        case 2 -> RED;
+                        case 3 -> YELLOW;
+                        default -> "";
+                    };
+
+                    String housingColor = !component.getIncorrectlyPlaced() ? temp : "";
+                    String housingStopColor = !component.getIncorrectlyPlaced() ? RESET : "";
 
                     if (housingUnit.getHasPurpleAlien()) {
                         color = PURPLE;
@@ -358,7 +367,7 @@ public class TuiPrinters {
 
                     lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[2] = leftConnections[1] + "     " + housingColor + abbreviateType + housingStopColor + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "    (" + color + itemsCount + stopColor + ")    " + rightConnections[2];
                     lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;

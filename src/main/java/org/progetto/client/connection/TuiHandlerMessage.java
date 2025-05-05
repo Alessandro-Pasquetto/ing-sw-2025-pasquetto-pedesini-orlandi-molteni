@@ -43,6 +43,7 @@ public class TuiHandlerMessage {
 
             GameData.setIdGame(initGameMessage.getIdGame());
             GameData.setLevelGame(initGameMessage.getLevelGame());
+            GameData.setColor(initGameMessage.getColor());
         }
 
         else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
