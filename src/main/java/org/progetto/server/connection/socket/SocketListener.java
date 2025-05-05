@@ -97,7 +97,9 @@ public class SocketListener extends Thread {
             clientHandler.initPlayerConnection(gameManager, player);
             clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
             gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-            clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+            if(gameManager.getGame().getPhase() == GamePhase.WAITING)
+                clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
         }
 
         else if (messageObj instanceof String messageString) {
@@ -119,9 +121,7 @@ public class SocketListener extends Thread {
     private void handlerGameMessages(Object messageObj) throws RemoteException, InterruptedException {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
         GameManager gameManager = clientHandler.getGameManager();
-        Game game = gameManager.getGame();
         Player player = clientHandler.getPlayer();
-
 
         if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
             int xPlaceComponent = placeComponentMessage.getX();

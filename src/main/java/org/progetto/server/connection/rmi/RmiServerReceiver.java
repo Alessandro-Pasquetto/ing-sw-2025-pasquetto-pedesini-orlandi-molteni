@@ -86,7 +86,9 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
         gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-        virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+        if(gameManager.getGame().getPhase() == GamePhase.WAITING)
+            virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
     @Override

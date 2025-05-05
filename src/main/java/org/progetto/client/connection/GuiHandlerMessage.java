@@ -50,7 +50,6 @@ public class GuiHandlerMessage {
             GameData.setIdGame(gameId);
             PageController.initGame(levelGame, color);
         } else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
-
             PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
 
         } else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {

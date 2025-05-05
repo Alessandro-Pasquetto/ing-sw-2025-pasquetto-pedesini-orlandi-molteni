@@ -60,6 +60,7 @@ public class GameThread extends Thread {
 
                     case INIT:
                         System.out.println("Waiting for ready players...");
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
                         resetAndWaitPlayersReady();
 
@@ -206,7 +207,7 @@ public class GameThread extends Thread {
         Game game = gameManager.getGame();
 
         synchronized (gameThreadLock) {
-            while (game.getPlayersSize() != game.getMaxNumPlayers())
+            while (game.getPlayersSize() < game.getMaxNumPlayers())
                 gameThreadLock.wait();
         }
     }

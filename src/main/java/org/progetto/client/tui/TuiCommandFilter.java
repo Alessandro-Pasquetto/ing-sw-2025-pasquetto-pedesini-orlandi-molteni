@@ -318,13 +318,6 @@ public class TuiCommandFilter {
                             expectedFormat(commandType);
                         break;
 
-                    case "READY":
-                        if (isValidCommand(commandParts.length, 1))
-                            GameCommands.readyPlayer(commandParts);
-                        else
-                            expectedFormat(commandType);
-                        break;
-
                     case "AUTOCREATE":
                         if (isValidCommand(commandParts.length, 1))
                             ConnectionsCommands.autoCreate(commandParts);
@@ -335,6 +328,32 @@ public class TuiCommandFilter {
                     case "AUTOJOIN":
                         if (isValidCommand(commandParts.length, 2))
                             ConnectionsCommands.autoJoin(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
+                }
+                break;
+
+            case "WAITING":
+                switch (commandType) {
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
+                }
+
+            case "INIT":
+                switch (commandType) {
+                    case "READY":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
                         break;
