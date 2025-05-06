@@ -45,6 +45,7 @@ public class ConnectionView {
         String serverPortString = serverPortTextField.getText();
 
         if (serverIp.isEmpty() || serverPortString.isEmpty()) {
+            Alerts.showPopUp("Errore: Tutti i campi devono essere compilati.",true);
             System.out.println("Errore: Tutti i campi devono essere compilati.");
             return;
         }

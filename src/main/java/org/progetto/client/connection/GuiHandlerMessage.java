@@ -46,6 +46,7 @@ public class GuiHandlerMessage {
                 PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
                 PageController.getWaitingRoomView().init(gameId, levelGame, numMaxPlayer);
             } catch (IOException e) {
+                Alerts.showWarning("Error loading the page");
                 System.out.println("Error loading the page");
             }
 
@@ -67,6 +68,7 @@ public class GuiHandlerMessage {
                 try {
                     PageController.switchScene("game.fxml", "Game");
                 } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
                     System.out.println("Error loading the page");
                 }
             }
@@ -102,11 +104,11 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotValidGameId":
-                    Alerts.showWarning("Not valid game ID");
+                    Alerts.showPopUp("That game does not exist",false);
                     break;
 
                 case "NotAvailableName":
-                    Alerts.showWarning("Username not available for this game");
+                    Alerts.showPopUp("Username already taken for this game",false);
                     break;
 
                 case "AllowedToPlaceComponent":
