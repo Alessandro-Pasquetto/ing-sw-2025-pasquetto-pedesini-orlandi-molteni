@@ -84,7 +84,7 @@ public class ChooseGameView {
 
                     // Check if the username is empty
                     if (username.isEmpty()) {
-                        Alerts.showPopUp("Please enter your name before joining a game",true);
+                        Alerts.showPopUp("Please enter your name before joining a game", true);
                         return;
                     }
 
@@ -106,19 +106,19 @@ public class ChooseGameView {
 
         // Check if the username is empty
         if (username.isEmpty()) {
-            Alerts.showPopUp("Enter your name before joining a game",true);
+            Alerts.showPopUp("Enter your name before joining a game", true);
             return;
         }
 
         // Check if the game level is valid
         if (gameLevel == 0) {
-            Alerts.showPopUp("Select a game level",true);
+            Alerts.showPopUp("Select a game level", true);
             return;
         }
 
         // Check if the number of players is valid
         if (numMaxPlayers == 0) {
-            Alerts.showPopUp("Select the number of players",true);
+            Alerts.showPopUp("Select the number of players", true);
             return;
         }
 

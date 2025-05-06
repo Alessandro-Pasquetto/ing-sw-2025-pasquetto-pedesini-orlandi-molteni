@@ -31,7 +31,7 @@ public class Alerts {
      * @param onMouseEvent allows to display the message on the mouse pointer position
      */
 
-    public static void showPopUp(String message,Boolean onMouseEvent) {
+    public static void showPopUp(String message, Boolean onMouseEvent) {
         Label messageLabel = new Label(message);
         messageLabel.setStyle("""
             -fx-background-color: rgba(0, 0, 0, 0.8);

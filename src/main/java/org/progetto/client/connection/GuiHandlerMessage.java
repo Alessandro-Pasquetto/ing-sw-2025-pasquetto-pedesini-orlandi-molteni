@@ -104,11 +104,11 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotValidGameId":
-                    Alerts.showPopUp("That game does not exist",false);
+                    Alerts.showPopUp("That game does not exist", false);
                     break;
 
                 case "NotAvailableName":
-                    Alerts.showPopUp("Username already taken for this game",false);
+                    Alerts.showPopUp("Username already taken for this game", false);
                     break;
 
                 case "AllowedToPlaceComponent":

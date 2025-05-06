@@ -38,7 +38,7 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
             System.out.println("You joined a game:");
-            System.out.printf ("│ ID: %d %n",initGameMessage.getIdGame());
+            System.out.printf ("│ ID: %d %n", initGameMessage.getIdGame());
             System.out.printf ("│ Level: %d %n", initGameMessage.getLevelGame());
 
             GameData.setIdGame(initGameMessage.getIdGame());
