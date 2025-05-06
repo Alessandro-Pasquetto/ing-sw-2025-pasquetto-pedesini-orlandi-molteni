@@ -29,7 +29,7 @@ public class EventCommands {
             if(required == 0)
                 System.out.println("You have " + max + " double cannons");
             else
-                System.out.println("Firepower required is " + required + ", you have " + shootingPower + " shootingPower and " + max + " double cannons");
+                System.out.println("Firepower required is " + required + ", you have " + shootingPower + " shooting power and " + max + " double cannons");
 
             String response = TuiCommandFilter.waitResponse();
 
@@ -59,7 +59,7 @@ public class EventCommands {
 
         while(true){
             System.out.println("How many double engines do you want to activate?");
-            System.out.println("You have " + enginePower + " enginePower and " + max + " double engines");
+            System.out.println("You have " + enginePower + " engine power and " + max + " double engines");
 
             String response = TuiCommandFilter.waitResponse();
 
