@@ -60,6 +60,6 @@ public class ClientHandler {
         this.player = player;
 
         LobbyController.removeSender(socketWriter);
-        gameManager.addSocketWriter(player, socketWriter);
+        gameManager.addSender(player, socketWriter);
     }
 }

@@ -1,10 +1,11 @@
 package org.progetto.server.controller;
 
+import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.ShowWaitingGamesMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
-import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -24,9 +25,66 @@ public class LobbyController {
     private static final AtomicInteger currentIdGame = new AtomicInteger(0);
     private static final ArrayList<Sender> senders = new ArrayList<>();
 
+    private static int lobbyDisconnectionDetectionInterval = 5000;
+
+    // =======================
+    // GETTERS
+    // =======================
+
+    public static ArrayList<Sender> getSendersCopy() {
+        ArrayList<Sender> socketWritersCopy;
+
+        synchronized (senders) {
+            socketWritersCopy = new ArrayList<>(senders);
+        }
+
+        return socketWritersCopy;
+    }
+
+    // =======================
+    // SETTERS
+    // =======================
+
+    public static void setLobbyDisconnectionDetectionInterval(int lobbyDisconnectionDetectionInterval) {
+        LobbyController.lobbyDisconnectionDetectionInterval = lobbyDisconnectionDetectionInterval;
+    }
+
+
     // =======================
     // OTHER METHODS
     // =======================
+
+    public static void startLobbyPinger(){
+
+        Thread pingThread = new Thread(() -> {
+            while (true) {
+                try {
+                    lobbyPinger();
+                    Thread.sleep(lobbyDisconnectionDetectionInterval);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
+    }
+
+    private static void lobbyPinger(){
+
+        ArrayList<Sender> sendersCopy = getSendersCopy();
+
+        for (Sender sender : sendersCopy) {
+            if (sender instanceof VirtualClient vc) {
+                try{
+                    vc.ping();
+                } catch (RemoteException e) {
+                    removeSender(sender);
+                }
+            }
+        }
+    }
 
     /**
      * Add sender to the list
@@ -59,7 +117,7 @@ public class LobbyController {
      * @param messageObj
      * @throws RemoteException
      */
-    public static void broadcastLobbyMessage(Object messageObj) throws RemoteException {
+    public static void broadcastLobbyMessage(Object messageObj) {
 
         ArrayList<Sender> sendersCopy;
 
@@ -68,7 +126,11 @@ public class LobbyController {
         }
 
         for (Sender sender : sendersCopy) {
-            sender.sendMessage(messageObj);
+            try {
+                sender.sendMessage(messageObj);
+            } catch (RemoteException e) {
+                System.out.println("RMI client unreachable");
+            }
         }
     }
 
@@ -80,7 +142,7 @@ public class LobbyController {
      * @param sender
      * @throws RemoteException
      */
-    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) throws RemoteException {
+    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
 
         ArrayList<Sender> sendersCopy;
 
@@ -90,7 +152,11 @@ public class LobbyController {
 
         for (Sender s : sendersCopy) {
             if(!s.equals(sender)) {
-                s.sendMessage(messageObj);
+                try {
+                    s.sendMessage(messageObj);
+                } catch (RemoteException e) {
+                    System.out.println("RMI client unreachable");
+                }
             }
         }
     }
@@ -105,16 +171,16 @@ public class LobbyController {
     public static void showWaitingGames(Sender sender) throws RemoteException {
 
         ArrayList<Integer> gameIds = new ArrayList<>(GameManagerMaps.getWaitingGamesMap().keySet());
-        ArrayList<WaitingGameInfo> waitingGameInfos = new ArrayList<>();
+        ArrayList<WaitingGameInfoMessage> waitingGameInfoMessages = new ArrayList<>();
 
         for (Integer gameId : gameIds) {
             Game game = GameManagerMaps.getGameManager(gameId).getGame();
 
-            WaitingGameInfo waitingGameInfo = new WaitingGameInfo(gameId, game.getLevel(), game.getMaxNumPlayers(), game.getPlayersCopy());
-            waitingGameInfos.add(waitingGameInfo);
+            WaitingGameInfoMessage waitingGameInfoMessage = new WaitingGameInfoMessage(gameId, game.getLevel(), game.getMaxNumPlayers(), game.getPlayersCopy());
+            waitingGameInfoMessages.add(waitingGameInfoMessage);
         }
 
-        sender.sendMessage(new ShowWaitingGamesMessage(waitingGameInfos));
+        sender.sendMessage(new ShowWaitingGamesMessage(waitingGameInfoMessages));
     }
 
     /**

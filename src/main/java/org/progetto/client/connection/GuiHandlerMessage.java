@@ -4,14 +4,13 @@ import org.progetto.client.gui.Alerts;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
-import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -28,7 +27,7 @@ public class GuiHandlerMessage {
     public static void handleMessage(Object messageObj) {
 
         if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            ArrayList<WaitingGameInfo> gamesInfo = showWaitingGamesMessage.getWaitingGames();
+            ArrayList<WaitingGameInfoMessage> gamesInfo = showWaitingGamesMessage.getWaitingGames();
             PageController.getChooseGameView().generateGameRecordList(gamesInfo);
         }
 

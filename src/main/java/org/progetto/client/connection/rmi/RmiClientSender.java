@@ -35,7 +35,7 @@ public class RmiClientSender implements Sender {
         try{
             server.showWaitingGames(RmiClientReceiver.getInstance());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -44,7 +44,7 @@ public class RmiClientSender implements Sender {
         try{
             server.createGame(RmiClientReceiver.getInstance(), GameData.getNamePlayer(), levelGame, numMaxPlayers);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -53,7 +53,7 @@ public class RmiClientSender implements Sender {
         try {
             server.joinGame(RmiClientReceiver.getInstance(), idGame, GameData.getNamePlayer());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -62,7 +62,7 @@ public class RmiClientSender implements Sender {
         try {
             server.showHandComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -71,7 +71,7 @@ public class RmiClientSender implements Sender {
         try {
             server.pickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -80,7 +80,7 @@ public class RmiClientSender implements Sender {
         try {
             server.showVisibleComponents(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -89,7 +89,7 @@ public class RmiClientSender implements Sender {
         try {
             server.pickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -98,7 +98,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -107,7 +107,7 @@ public class RmiClientSender implements Sender {
         try{
             server.buildShip(RmiClientReceiver.getInstance(), GameData.getIdGame(), idShip);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -116,7 +116,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeLastComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -125,7 +125,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeHandComponentAndPickHiddenComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -134,7 +134,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeHandComponentAndPickVisibleComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, idxVisibleComponent);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -143,7 +143,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeHandComponentAndPickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -152,7 +152,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeHandComponentAndPickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xPlaceComponent, yPlaceComponent, rPlaceComponent, idxBookedComponent);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -161,7 +161,7 @@ public class RmiClientSender implements Sender {
         try {
             server.placeHandComponentAndReady(RmiClientReceiver.getInstance(), GameData.getIdGame(), xHandComponent, yHandComponent, rHandComponent);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -175,7 +175,7 @@ public class RmiClientSender implements Sender {
         try {
             server.discardComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -190,7 +190,7 @@ public class RmiClientSender implements Sender {
         try {
             server.bookComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -199,7 +199,7 @@ public class RmiClientSender implements Sender {
         try {
             server.showBookedComponents(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -214,7 +214,7 @@ public class RmiClientSender implements Sender {
         try {
             server.pickBookedComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -223,7 +223,7 @@ public class RmiClientSender implements Sender {
         try {
             server.pickUpEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame(), deckIdx);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -232,7 +232,7 @@ public class RmiClientSender implements Sender {
         try {
             server.putDownEventCardDeck(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -248,7 +248,7 @@ public class RmiClientSender implements Sender {
         try {
             server.destroyComponent(RmiClientReceiver.getInstance(), GameData.getIdGame(), xComponent, yComponent);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -257,7 +257,7 @@ public class RmiClientSender implements Sender {
         try {
             server.playerReady(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -266,7 +266,7 @@ public class RmiClientSender implements Sender {
         try {
             server.resetTimer(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -275,7 +275,7 @@ public class RmiClientSender implements Sender {
         try{
             server.playerStats(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -284,7 +284,7 @@ public class RmiClientSender implements Sender {
         try{
             server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(), owner);
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -293,7 +293,7 @@ public class RmiClientSender implements Sender {
         try{
             server.spaceshipStats(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -302,7 +302,7 @@ public class RmiClientSender implements Sender {
         try{
             server.showTrack(RmiClientReceiver.getInstance(), GameData.getIdGame());
         }catch (RemoteException e){
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -315,7 +315,7 @@ public class RmiClientSender implements Sender {
             if(GameData.getUIType().equals("GUI"))
                 PageController.switchScene("connection.fxml", "Page1");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -324,7 +324,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responsePlaceAlien(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y, color);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -333,7 +333,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseHowManyDoubleCannons(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -342,7 +342,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseHowManyDoubleEngines(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -351,7 +351,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseBatteryToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBatteryStorage, yBatteryStorage);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -360,7 +360,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseCrewToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xHousingUnit, yHousingUnit);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -369,7 +369,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseBoxToDiscard(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBoxStorage, yBoxStorage, idx);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -378,7 +378,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseChooseToUseShield(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -387,7 +387,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseAcceptRewardCreditsAndPenalties(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -396,7 +396,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -405,7 +405,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseAcceptRewardCreditsAndPenaltyDays(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -414,7 +414,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -423,7 +423,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), idxBox, xBoxStorage, yBoxStorage, idx);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -432,7 +432,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseUseDoubleCannonRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -441,7 +441,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseContinueTravel(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -450,7 +450,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseRollDice(RmiClientReceiver.getInstance(), GameData.getIdGame());
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 
@@ -459,7 +459,7 @@ public class RmiClientSender implements Sender {
         try {
             server.responseSelectSpaceshipPart(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            System.out.println("RMI client unreachable");
         }
     }
 }

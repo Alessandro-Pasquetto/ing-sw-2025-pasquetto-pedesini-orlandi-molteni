@@ -59,7 +59,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         Player player = internalGameInfo.getPlayer();
 
         LobbyController.removeSender(virtualClient);
-        gameManager.addRmiClient(player, virtualClient);
+        gameManager.addSender(player, virtualClient);
         GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
@@ -82,7 +82,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         Player player = internalGameInfo.getPlayer();
 
         LobbyController.removeSender(virtualClient);
-        gameManager.addRmiClient(player, virtualClient);
+        gameManager.addSender(player, virtualClient);
 
         virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
         gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));

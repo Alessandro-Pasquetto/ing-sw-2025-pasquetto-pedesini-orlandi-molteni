@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.progetto.client.model.GameData;
-import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
@@ -28,27 +28,27 @@ public class ChooseGameView {
     private ComboBox<Integer> boxNumMaxPlayers;
 
     @FXML
-    private TableView<WaitingGameInfo> gamesTable;
+    private TableView<WaitingGameInfoMessage> gamesTable;
 
     @FXML
-    private TableColumn<WaitingGameInfo, Integer> gameIdCol;
+    private TableColumn<WaitingGameInfoMessage, Integer> gameIdCol;
 
     @FXML
-    private TableColumn<WaitingGameInfo, Integer> levelCol;
+    private TableColumn<WaitingGameInfoMessage, Integer> levelCol;
 
     @FXML
-    private TableColumn<WaitingGameInfo, Integer> maxPlayersCol;
+    private TableColumn<WaitingGameInfoMessage, Integer> maxPlayersCol;
 
     @FXML
-    private TableColumn<WaitingGameInfo, String> playersCol;
+    private TableColumn<WaitingGameInfoMessage, String> playersCol;
 
     @FXML
-    private TableColumn<WaitingGameInfo, Void> joinCol;
+    private TableColumn<WaitingGameInfoMessage, Void> joinCol;
 
     private int gameLevel = 0;
     private int numMaxPlayers = 0;
 
-    private final ObservableList<WaitingGameInfo> gameData = FXCollections.observableArrayList();
+    private final ObservableList<WaitingGameInfoMessage> gameData = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -79,7 +79,7 @@ public class ChooseGameView {
 
             {
                 joinButton.setOnAction(event -> {
-                    WaitingGameInfo game = getTableView().getItems().get(getIndex());
+                    WaitingGameInfoMessage game = getTableView().getItems().get(getIndex());
                     String username = joinUsernameTextField.getText().trim();
 
                     // Check if the username is empty
@@ -126,7 +126,7 @@ public class ChooseGameView {
         GameData.getSender().createGame(gameLevel, numMaxPlayers);
     }
 
-    public void generateGameRecordList(ArrayList<WaitingGameInfo> gamesInfo) {
+    public void generateGameRecordList(ArrayList<WaitingGameInfoMessage> gamesInfo) {
         gameData.clear();
         gameData.addAll(gamesInfo);
     }

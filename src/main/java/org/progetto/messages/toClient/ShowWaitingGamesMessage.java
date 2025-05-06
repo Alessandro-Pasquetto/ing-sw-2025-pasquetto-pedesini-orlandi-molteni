@@ -1,6 +1,5 @@
 package org.progetto.messages.toClient;
 
-import org.progetto.server.connection.games.WaitingGameInfo;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,13 +9,13 @@ public class ShowWaitingGamesMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private final ArrayList<WaitingGameInfo> waitingGames;
+    private final ArrayList<WaitingGameInfoMessage> waitingGames;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ShowWaitingGamesMessage(ArrayList<WaitingGameInfo> waitingGames) {
+    public ShowWaitingGamesMessage(ArrayList<WaitingGameInfoMessage> waitingGames) {
         this.waitingGames = waitingGames;
     }
 
@@ -24,7 +23,7 @@ public class ShowWaitingGamesMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public ArrayList<WaitingGameInfo> getWaitingGames() {
+    public ArrayList<WaitingGameInfoMessage> getWaitingGames() {
         return waitingGames;
     }
 }

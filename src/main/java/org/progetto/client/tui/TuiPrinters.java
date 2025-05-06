@@ -2,7 +2,7 @@ package org.progetto.client.tui;
 
 import org.progetto.client.model.GameData;
 import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
-import org.progetto.server.connection.games.WaitingGameInfo;
+import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
@@ -36,7 +36,7 @@ public class TuiPrinters {
     // LOBBY
     // =======================
 
-    public static void printWaitingGames(ArrayList<WaitingGameInfo> waitingGameInfos) {
+    public static void printWaitingGames(ArrayList<WaitingGameInfoMessage> waitingGameInfoMessages) {
         int idWidth = 5;
         int levelWidth = 5;
         int maxPlayersWidth = 12;
@@ -64,7 +64,7 @@ public class TuiPrinters {
                 "ID", "Level", "Max Players", "Current Players");
         System.out.println(headerSeparator);
 
-        for (WaitingGameInfo info : waitingGameInfos) {
+        for (WaitingGameInfoMessage info : waitingGameInfoMessages) {
             Integer id = info.getId();
             int level = info.getLevel();
             int maxPlayers = info.getMaxPlayers();

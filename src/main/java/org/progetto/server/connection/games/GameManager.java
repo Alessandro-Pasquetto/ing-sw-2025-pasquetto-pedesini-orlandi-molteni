@@ -2,14 +2,11 @@ package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.Sender;
-import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
-
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +21,7 @@ public class GameManager {
     // ATTRIBUTES
     // =======================
 
-    private final HashMap<Player, SocketWriter> playerSocketWriters = new HashMap<>();
-    private final HashMap<Player, VirtualClient> playerRmiClients = new HashMap<>();
+    private final HashMap<Player, Sender> playerSenders = new HashMap<>();
 
     private final ArrayList<Player> notCheckedReadyPlayers = new ArrayList<>();
 
@@ -33,6 +29,8 @@ public class GameManager {
     private final Game game;
     private EventControllerAbstract eventController;
     private final TimerController timer;
+
+    private static int gameDisconnectionDetectionInterval = 5000;
 
     // =======================
     // CONSTRUCTORS
@@ -46,30 +44,22 @@ public class GameManager {
 
         gameThread = new GameThread(this);
         gameThread.start();
+
+        startGamePinger();
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public ArrayList<SocketWriter> getSocketWritersCopy() {
-        ArrayList<SocketWriter> socketWritersCopy;
+    public ArrayList<Sender> getSendersCopy() {
+        ArrayList<Sender> socketWritersCopy;
 
-        synchronized (playerSocketWriters) {
-            socketWritersCopy = new ArrayList<>(playerSocketWriters.values());
+        synchronized (playerSenders) {
+            socketWritersCopy = new ArrayList<>(playerSenders.values());
         }
 
         return socketWritersCopy;
-    }
-
-    public ArrayList<VirtualClient> getRmiClientsCopy() {
-        ArrayList<VirtualClient> rmiClientsCopy;
-
-        synchronized (playerRmiClients) {
-            rmiClientsCopy = new ArrayList<>(playerRmiClients.values());
-        }
-
-        return rmiClientsCopy;
     }
 
     public ArrayList<Player> getCheckedNotReadyPlayersCopy() {
@@ -102,32 +92,13 @@ public class GameManager {
         return timer.getIsTimerExpired();
     }
 
-    private SocketWriter getSocketWriterByPlayer(Player player) {
-        return playerSocketWriters.get(player);
-    }
-
-    private VirtualClient getVirtualClientByPlayer(Player player) {
-        return playerRmiClients.get(player);
-    }
-
     public Sender getSenderByPlayer(Player player) {
-        SocketWriter socketWriter = getSocketWriterByPlayer(player);
-        VirtualClient virtualClient = getVirtualClientByPlayer(player);
-
-        Sender sender = null;
-
-        if (socketWriter != null) {
-            sender = socketWriter;
-        } else if (virtualClient != null) {
-            sender = virtualClient;
-        }
-
-        return sender;
+        return playerSenders.get(player);
     }
 
     public Player getPlayerByVirtualClient(VirtualClient virtualClient) throws IllegalStateException {
 
-        for (Map.Entry<Player, VirtualClient> entry : playerRmiClients.entrySet()) {
+        for (Map.Entry<Player, Sender> entry : playerSenders.entrySet()) {
             if(entry.getValue().equals(virtualClient))
                 return entry.getKey();
         }
@@ -139,30 +110,66 @@ public class GameManager {
     }
 
     // =======================
+    // SETTERS
+    // =======================
+
+    public static void setGameDisconnectionDetectionInterval(int gameDisconnectionDetectionInterval) {
+        GameManager.gameDisconnectionDetectionInterval = gameDisconnectionDetectionInterval;
+    }
+
+    // =======================
     // OTHER METHODS
     // =======================
 
-    public void addSocketWriter(Player player, SocketWriter socketWriter){
-        synchronized (playerSocketWriters){
-            playerSocketWriters.put(player, socketWriter);
+    private void startGamePinger() {
+
+        Thread pingThread = new Thread(() -> {
+            while (true) {
+                try {
+                    gamePinger();
+                    Thread.sleep(gameDisconnectionDetectionInterval);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
+    }
+
+    private void gamePinger() {
+
+        ArrayList<Sender> sendersCopy = getSendersCopy();
+
+        for (Sender sender : sendersCopy) {
+            if (sender instanceof VirtualClient vc) {
+                try{
+                    vc.ping();
+                } catch (RemoteException e) {
+                    disconnectPlayer(getPlayerByVirtualClient(vc));
+                }
+            }
         }
     }
 
-    public void removeSocketWriter(Player player){
-        synchronized (playerSocketWriters){
-            playerSocketWriters.remove(player);
+    public void disconnectPlayer(Player player) {
+        System.out.println(player.getName() + " has disconnected");
+
+        // getGame().getBoard().removeTraveler(player);
+
+        //todo gestire il resto
+    }
+
+    public void addSender(Player player, Sender socketWriter){
+        synchronized (playerSenders){
+            playerSenders.put(player, socketWriter);
         }
     }
 
-    public void addRmiClient(Player player, VirtualClient rmiClient){
-        synchronized (playerRmiClients){
-            playerRmiClients.put(player, rmiClient);
-        }
-    }
-
-    public void removeRmiClient(Player player){
-        synchronized (playerRmiClients){
-            playerRmiClients.remove(player);
+    public void removeSender(Player player){
+        synchronized (playerSenders){
+            playerSenders.remove(player);
         }
     }
 
@@ -179,20 +186,14 @@ public class GameManager {
     }
 
     public void broadcastGameMessage(Object messageObj) {
-        ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
+        ArrayList<Sender> socketWritersCopy = getSendersCopy();
 
-        for (SocketWriter sw : socketWritersCopy) {
-            sw.sendMessage(messageObj);
-        }
-
-        ArrayList<VirtualClient> rmiClientsCopy = getRmiClientsCopy();
-
-        try{
-            for (VirtualClient vc : rmiClientsCopy) {
-                vc.sendMessage(messageObj);
+        for (Sender sender : socketWritersCopy) {
+            try{
+                sender.sendMessage(messageObj);
+            } catch (RemoteException e) {
+                System.out.println("RMI client unreachable");
             }
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -203,28 +204,22 @@ public class GameManager {
             try{
                 getSenderByPlayer(p).sendMessage(messageObj);
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.out.println("RMI client unreachable");
             }
         }
     }
 
     public void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
-        ArrayList<SocketWriter> socketWritersCopy = getSocketWritersCopy();
+        ArrayList<Sender> socketWritersCopy = getSendersCopy();
 
-        for (SocketWriter sw : socketWritersCopy) {
-            if(!sw.equals(sender))
-                sw.sendMessage(messageObj);
-        }
-
-        ArrayList<VirtualClient> rmiClientsCopy = getRmiClientsCopy();
-
-        try{
-            for (VirtualClient vc : rmiClientsCopy) {
-                if(!vc.equals(sender))
-                    vc.sendMessage(messageObj);
+        for (Sender s : socketWritersCopy) {
+            if (!s.equals(sender)) {
+                try {
+                    s.sendMessage(messageObj);
+                } catch (RemoteException e) {
+                    System.out.println("RMI client unreachable");
+                }
             }
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
         }
     }
 

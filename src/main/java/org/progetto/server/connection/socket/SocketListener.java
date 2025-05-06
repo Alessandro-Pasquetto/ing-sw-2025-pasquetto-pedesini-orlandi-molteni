@@ -41,7 +41,11 @@ public class SocketListener extends Thread {
                     handlerGameMessages(messageObj);
             }
         } catch (IOException | ClassNotFoundException | InterruptedException e) {
-            e.printStackTrace();
+
+            if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
+                clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
+            else
+                LobbyController.removeSender(clientHandler.getSocketWriter());
         }
     }
 

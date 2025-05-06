@@ -58,7 +58,7 @@ class StardustControllerTest {
                 try {
                     controller.start();
                 } catch (RemoteException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("RMI client unreachable");
                 }
             }
         };

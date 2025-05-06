@@ -75,4 +75,9 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
     public synchronized void sendMessage(Object objMessage) throws RemoteException {
         messageDispatcher(objMessage);
     }
+
+    @Override
+    public void ping() throws RemoteException {
+
+    }
 }

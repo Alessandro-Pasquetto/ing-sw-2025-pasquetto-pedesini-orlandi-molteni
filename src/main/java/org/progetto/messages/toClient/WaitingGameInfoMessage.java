@@ -1,11 +1,11 @@
-package org.progetto.server.connection.games;
+package org.progetto.messages.toClient;
 
 import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class WaitingGameInfo implements Serializable {
+public class WaitingGameInfoMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -20,7 +20,7 @@ public class WaitingGameInfo implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public WaitingGameInfo(int id, int level, int maxPlayers, ArrayList<Player> players) {
+    public WaitingGameInfoMessage(int id, int level, int maxPlayers, ArrayList<Player> players) {
         this.id = id;
         this.level = level;
         this.maxPlayers = maxPlayers;

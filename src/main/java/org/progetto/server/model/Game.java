@@ -341,11 +341,7 @@ public class Game {
 
             if(players.size() == maxNumPlayers){
                 GameManagerMaps.removeWaitingGameManager(id);
-                try {
-                    LobbyController.broadcastLobbyMessage("UpdateGameList");
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
+                LobbyController.broadcastLobbyMessage("UpdateGameList");
             }
         }
     }
