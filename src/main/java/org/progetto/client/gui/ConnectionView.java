@@ -1,10 +1,12 @@
 package org.progetto.client.gui;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
@@ -26,6 +28,9 @@ public class ConnectionView {
     @FXML
     private RadioButton socketOption;
 
+    @FXML
+    public Button connectBtn;
+
     private ToggleGroup toggleGroup;
 
     @FXML
@@ -37,6 +42,20 @@ public class ConnectionView {
         serverIpTextField.setText("localhost");
         serverPortTextField.setText("8080");
         socketOption.setSelected(true);
+
+        connectBtn.setDefaultButton(true);
+
+        socketOption.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                connectBtn.fire();
+            }
+        });
+
+        rmiOption.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                connectBtn.fire();
+            }
+        });
     }
 
     @FXML
@@ -55,7 +74,7 @@ public class ConnectionView {
             serverPort = Integer.parseInt(serverPortString);
 
         }catch (NumberFormatException e){
-            System.out.println("serverPort must be a number!");
+            System.out.println("Server port must be a number!");
             return;
         }
 

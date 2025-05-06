@@ -54,11 +54,12 @@ public class WaitingRoomView {
     }
 
     public void init(int gameId, int gameLevel, int numMaxPlayersParam) {
-
         gameIdLabel.setText(String.valueOf(gameId));
         gameLevelLabel.setText(String.valueOf(gameLevel));
         gameMaxPlayersLabel.setText(String.valueOf(numMaxPlayersParam));
         numMaxPlayers = numMaxPlayersParam;
+
+        readyButton.setDefaultButton(true);
     }
 
     @FXML

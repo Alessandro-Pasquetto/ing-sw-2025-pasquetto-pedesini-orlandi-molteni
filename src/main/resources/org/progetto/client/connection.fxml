@@ -50,7 +50,7 @@
                 </VBox.margin>
             </HBox>
 
-            <Button prefWidth="150" prefHeight="35" text="Connect" onAction="#connectToServer" />
+            <Button prefWidth="150" prefHeight="35" text="Connect" onAction="#connectToServer" fx:id="connectBtn" />
         </VBox>
     </VBox>
 </StackPane>

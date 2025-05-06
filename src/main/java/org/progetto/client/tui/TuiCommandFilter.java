@@ -467,7 +467,7 @@ public class TuiCommandFilter {
                         }
                         break;
 
-                    case "SHIPSTATS":// todo: serve?
+                    case "SHIPSTATS":
                         if (isValidCommand(commandParts.length, 1))
                             GameCommands.spaceshipStats(commandParts);
                         else {

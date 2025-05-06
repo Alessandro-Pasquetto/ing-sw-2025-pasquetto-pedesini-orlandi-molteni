@@ -11,7 +11,6 @@ public class GameData {
     // ATTRIBUTES
     // =======================
 
-    // Client data that I want to store
     private static Sender sender;
     private static int idGame;
     private static int levelGame;

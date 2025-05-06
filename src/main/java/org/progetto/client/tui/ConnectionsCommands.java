@@ -34,9 +34,13 @@ public class ConnectionsCommands {
      * @param commandParts are segments of the command
      */
     public static void createGame(String[] commandParts){
-
         GameData.setNamePlayer(commandParts[1]);
-        GameData.getSender().createGame(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[3]));
+
+        try {
+            GameData.getSender().createGame(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[3]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**
@@ -46,9 +50,13 @@ public class ConnectionsCommands {
      * @param commandParts are segments of the command
      */
     public static void joinGame(String[] commandParts){
-
         GameData.setNamePlayer(commandParts[2]);
-        GameData.getSender().tryJoinToGame(Integer.parseInt(commandParts[1]));
+
+        try {
+            GameData.getSender().tryJoinToGame(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**

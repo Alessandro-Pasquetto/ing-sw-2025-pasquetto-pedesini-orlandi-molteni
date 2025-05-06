@@ -4,7 +4,7 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 
 /**
- * this class contains all the methods needed to test the TUI
+ * This class contains all the methods needed to test the TUI
  */
 public class TestingCommands {
 
@@ -20,7 +20,11 @@ public class TestingCommands {
      */
     public static void buildShip(String[] commandParts){
         Sender sender = GameData.getSender();
-        int idShip = Integer.parseInt(commandParts[1]);
-        sender.buildShip(idShip);
+
+        try {
+            sender.buildShip(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 }

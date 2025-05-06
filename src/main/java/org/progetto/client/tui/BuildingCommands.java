@@ -63,7 +63,12 @@ public class BuildingCommands {
      */
     public static void pickVisibleComponent(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.pickVisibleComponent(Integer.parseInt(commandParts[1]));
+
+        try {
+            sender.pickVisibleComponent(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**
@@ -77,9 +82,17 @@ public class BuildingCommands {
         Sender sender = GameData.getSender();
         int levelGame = GameData.getLevelGame();
 
-        int x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
-        int y = Integer.parseInt(commandParts[2]) - 5;
-        int rot = Integer.parseInt(commandParts[3]);
+        int x = 0;
+        int y = 0;
+        int rot = 0;
+
+        try {
+            x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+            y = Integer.parseInt(commandParts[2]) - 5;
+            rot = Integer.parseInt(commandParts[3]);
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
 
         sender.placeComponent(x, y, rot);
     }
@@ -105,7 +118,12 @@ public class BuildingCommands {
      */
     public static void bookComponent(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.bookComponent(Integer.parseInt(commandParts[1]));
+
+        try {
+            sender.bookComponent(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**
@@ -129,7 +147,12 @@ public class BuildingCommands {
      */
     public static void pickBookedComponent(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.pickBookedComponent(Integer.parseInt(commandParts[1]));
+
+        try {
+            sender.pickBookedComponent(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**
@@ -141,7 +164,12 @@ public class BuildingCommands {
      */
     public static void pickUpEventCardDeck(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.pickUpEventCardDeck(Integer.parseInt(commandParts[1]));
+
+        try {
+            sender.pickUpEventCardDeck(Integer.parseInt(commandParts[1]));
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
     }
 
     /**
@@ -167,8 +195,15 @@ public class BuildingCommands {
         Sender sender = GameData.getSender();
         int levelGame = GameData.getLevelGame();
 
-        int x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
-        int y = Integer.parseInt(commandParts[2]) - 5;
+        int x = 0;
+        int y = 0;
+
+        try {
+            x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+            y = Integer.parseInt(commandParts[2]) - 5;
+        } catch (NumberFormatException e){
+            System.out.println("You must insert a number!");
+        }
 
         sender.destroyComponent(x, y);
     }
@@ -219,10 +254,10 @@ public class BuildingCommands {
 
                 int levelShip = spaceship.getLevelShip();
 
-                try{
+                try {
                     sender.responsePlaceAlien(Integer.parseInt(x) - 6 + levelShip, Integer.parseInt(y) - 5, alienColor);
                     break;
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     System.out.println("You must insert a number!");
                 }
             }

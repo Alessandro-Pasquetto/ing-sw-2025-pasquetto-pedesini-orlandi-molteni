@@ -39,6 +39,12 @@ public class MainClient extends Application {
             }else if(command.equals("GUI")){
                 GameData.setUIType(command);
                 PageController.setStage(stage);
+
+                stage.setOnCloseRequest(event -> {
+                    System.out.println("Closing GUI...");
+                    System.exit(0);
+                });
+
                 PageController.start();
                 break;
 
