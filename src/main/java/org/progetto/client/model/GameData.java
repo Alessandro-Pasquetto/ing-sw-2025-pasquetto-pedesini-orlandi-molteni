@@ -2,6 +2,9 @@ package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Client data useful to track game evolution
  */
@@ -10,6 +13,9 @@ public class GameData {
     // =======================
     // ATTRIBUTES
     // =======================
+
+    private static String clientId;
+    private static File saveFile;
 
     private static Sender sender;
     private static int idGame;
@@ -22,6 +28,10 @@ public class GameData {
     // =======================
     // GETTERS
     // =======================
+
+    public static String getClientId() {
+        return clientId;
+    }
 
     public static Sender getSender() {
         return sender;
@@ -55,6 +65,10 @@ public class GameData {
     // SETTERS
     // =======================
 
+    public static void setClientId(String clientId) {
+        GameData.clientId = clientId;
+    }
+
     public static void setSender(Sender sender) {
         GameData.sender = sender;
     }
@@ -81,5 +95,25 @@ public class GameData {
 
     public static void setColor(int color) {
         GameData.color = color;
+    }
+
+    // =======================
+    // OTHER METHODS
+    // =======================
+
+    public static void createSaveFile() {
+
+        File saveDir = new File("saves");
+        if (!saveDir.exists()) {
+            saveDir.mkdirs();
+        }
+
+        saveFile = new File("saves/" + clientId + ".save");
+
+        try {
+            saveFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

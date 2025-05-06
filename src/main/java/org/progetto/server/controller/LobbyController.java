@@ -48,8 +48,7 @@ public class LobbyController {
     public static void setLobbyDisconnectionDetectionInterval(int lobbyDisconnectionDetectionInterval) {
         LobbyController.lobbyDisconnectionDetectionInterval = lobbyDisconnectionDetectionInterval;
     }
-
-
+    
     // =======================
     // OTHER METHODS
     // =======================
@@ -129,7 +128,7 @@ public class LobbyController {
             try {
                 sender.sendMessage(messageObj);
             } catch (RemoteException e) {
-                System.out.println("RMI client unreachable");
+                System.err.println("RMI client unreachable");
             }
         }
     }
@@ -155,7 +154,7 @@ public class LobbyController {
                 try {
                     s.sendMessage(messageObj);
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }
         }

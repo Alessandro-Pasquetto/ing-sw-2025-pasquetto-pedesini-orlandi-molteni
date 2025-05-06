@@ -192,7 +192,7 @@ public class GameManager {
             try{
                 sender.sendMessage(messageObj);
             } catch (RemoteException e) {
-                System.out.println("RMI client unreachable");
+                System.err.println("RMI client unreachable");
             }
         }
     }
@@ -204,7 +204,7 @@ public class GameManager {
             try{
                 getSenderByPlayer(p).sendMessage(messageObj);
             } catch (RemoteException e) {
-                System.out.println("RMI client unreachable");
+                System.err.println("RMI client unreachable");
             }
         }
     }
@@ -217,7 +217,7 @@ public class GameManager {
                 try {
                     s.sendMessage(messageObj);
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }
         }

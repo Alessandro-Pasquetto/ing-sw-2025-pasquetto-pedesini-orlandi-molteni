@@ -44,7 +44,7 @@ public class EventCommands {
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -74,7 +74,7 @@ public class EventCommands {
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -102,7 +102,7 @@ public class EventCommands {
                 sender.responseBatteryToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -130,7 +130,7 @@ public class EventCommands {
                 sender.responseCrewToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -160,7 +160,7 @@ public class EventCommands {
                 sender.responseBoxToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(idx));
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -315,7 +315,7 @@ public class EventCommands {
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -405,7 +405,7 @@ public class EventCommands {
                 break;
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -484,7 +484,7 @@ public class EventCommands {
                 sender.responseSelectSpaceshipPart(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }

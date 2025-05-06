@@ -105,7 +105,7 @@ class EpidemicControllerTest {
                 try {
                     controller.start();
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }
         };

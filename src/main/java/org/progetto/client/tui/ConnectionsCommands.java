@@ -39,7 +39,7 @@ public class ConnectionsCommands {
         try {
             GameData.getSender().createGame(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[3]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 
@@ -55,7 +55,7 @@ public class ConnectionsCommands {
         try {
             GameData.getSender().tryJoinToGame(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 

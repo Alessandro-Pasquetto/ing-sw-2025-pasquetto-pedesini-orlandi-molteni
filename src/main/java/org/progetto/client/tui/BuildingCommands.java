@@ -67,7 +67,7 @@ public class BuildingCommands {
         try {
             sender.pickVisibleComponent(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 
@@ -91,7 +91,7 @@ public class BuildingCommands {
             y = Integer.parseInt(commandParts[2]) - 5;
             rot = Integer.parseInt(commandParts[3]);
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
 
         sender.placeComponent(x, y, rot);
@@ -122,7 +122,7 @@ public class BuildingCommands {
         try {
             sender.bookComponent(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 
@@ -151,7 +151,7 @@ public class BuildingCommands {
         try {
             sender.pickBookedComponent(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 
@@ -168,7 +168,7 @@ public class BuildingCommands {
         try {
             sender.pickUpEventCardDeck(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 
@@ -202,7 +202,7 @@ public class BuildingCommands {
             x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
             y = Integer.parseInt(commandParts[2]) - 5;
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
 
         sender.destroyComponent(x, y);
@@ -258,7 +258,7 @@ public class BuildingCommands {
                     sender.responsePlaceAlien(Integer.parseInt(x) - 6 + levelShip, Integer.parseInt(y) - 5, alienColor);
                     break;
                 } catch (NumberFormatException e) {
-                    System.out.println("You must insert a number!");
+                    System.err.println("You must insert a number!");
                 }
             }
 

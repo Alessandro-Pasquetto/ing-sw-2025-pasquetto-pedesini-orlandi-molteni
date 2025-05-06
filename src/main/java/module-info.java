@@ -41,6 +41,7 @@ module org.progetto{
     exports org.progetto.messages.toClient.EventCommon;
     exports org.progetto.messages.toClient.Building;
     exports org.progetto.client.tui;
+    exports org.progetto.client.connection;
     exports org.progetto.server;
     exports org.progetto.messages.toClient.OpenSpace;
     exports org.progetto.messages.toClient.Smugglers;

@@ -1212,7 +1212,7 @@ public class BuildingController {
                 try {
                     sender.sendMessage("Some components not connected to the central unit have been removed");
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }
 
@@ -1224,7 +1224,7 @@ public class BuildingController {
                 try {
                     sender.sendMessage("ValidSpaceShip");
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }else{
                 areAllValid = false;
@@ -1234,7 +1234,7 @@ public class BuildingController {
                     sender.sendMessage("NotValidSpaceShip");
                     SpaceshipController.showSpaceship(gameManager, player.getName(), sender);
                 } catch (RemoteException e) {
-                    System.out.println("RMI client unreachable");
+                    System.err.println("RMI client unreachable");
                 }
             }
         }

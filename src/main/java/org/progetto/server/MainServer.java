@@ -15,7 +15,7 @@ public class MainServer {
         socketServer.start();
         rmiServer.start();
 
-        // Set disconnection detection interval
+        // Set disconnection detection intervals
         LobbyController.setLobbyDisconnectionDetectionInterval(5000);
         GameManager.setGameDisconnectionDetectionInterval(5000);
 

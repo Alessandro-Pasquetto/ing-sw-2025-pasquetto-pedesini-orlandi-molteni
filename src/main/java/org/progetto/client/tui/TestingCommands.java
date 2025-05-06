@@ -24,7 +24,7 @@ public class TestingCommands {
         try {
             sender.buildShip(Integer.parseInt(commandParts[1]));
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
     }
 }

@@ -80,7 +80,7 @@ public class TuiCommandFilter {
                 System.out.println("RMI selected");
                 break;
             } else {
-                System.out.println("Command not found");
+                System.err.println("Command not found");
             }
         }
 
@@ -263,7 +263,7 @@ public class TuiCommandFilter {
         if (cmd != null) {
             System.out.println("Expected format: " + cmd.getUsage());
         } else {
-            System.out.println("Command not found");
+            System.err.println("Command not found");
         }
     }
 

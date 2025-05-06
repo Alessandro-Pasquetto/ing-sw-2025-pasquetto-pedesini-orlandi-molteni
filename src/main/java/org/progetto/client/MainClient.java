@@ -6,6 +6,7 @@ import org.progetto.client.gui.PageController;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.TuiCommandFilter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -49,11 +50,27 @@ public class MainClient extends Application {
                 break;
 
             }else
-                System.out.println("Command not found");
+                System.err.println("Command not found");
         }
     }
 
     public static void main(String[] args) {
+
+        String clientId;
+
+        if (args.length == 0) {
+            System.out.println("Default client ID: 0");
+            clientId = "0";
+        }
+        else{
+            clientId = args[0];
+            System.out.println("Client ID: " + clientId);
+        }
+
+        GameData.setClientId(clientId);
+
+        GameData.createSaveFile();
+
         launch();
     }
 }

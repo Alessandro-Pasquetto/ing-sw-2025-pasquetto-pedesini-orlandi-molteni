@@ -41,16 +41,16 @@ public class GameManagerMaps {
 
     public static ArrayList<Integer> getIdWaitingGames(){
 
-        ArrayList<Integer> idWaitingGames = new ArrayList<Integer>();
+        ArrayList<Integer> idWaitingGames;
 
         synchronized (waitingGamesManager) {
-            idWaitingGames.addAll(waitingGamesManager.keySet());
+            idWaitingGames = new ArrayList<>(waitingGamesManager.keySet());
         }
         return idWaitingGames;
     }
 
     public static HashMap<Integer, GameManager> getWaitingGamesMap() {
-        return new HashMap(waitingGamesManager);
+        return new HashMap<>(waitingGamesManager);
     }
 
     // =======================
