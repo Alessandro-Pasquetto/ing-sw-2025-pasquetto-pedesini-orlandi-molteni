@@ -425,11 +425,6 @@ public class SocketListener extends Thread {
             SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, x, y, socketWriter);
         }
 
-        else if (messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
-            String owner = requestSpaceshipMessage.getOwner();
-            SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
-        }
-
         else if (messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
             String response = responseContinueTravelMessage.getResponse();
             EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);

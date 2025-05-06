@@ -3,6 +3,7 @@ package org.progetto.client.gui;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +13,7 @@ import javafx.scene.layout.*;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
@@ -152,11 +154,6 @@ public class GameView {
 
     public GridPane getBookedArray() {
         return bookedArray;
-    }
-
-    // Method to start the game
-    public void ready() {
-        GameData.getSender().readyPlayer();
     }
 
     public void pickHiddenComponent() {
@@ -457,6 +454,22 @@ public class GameView {
         String timeText = String.format("%02d:%02d", minutes, seconds);
 
         timerLabel.setText(timeText);
+    }
+
+    public void updateSpaceship(Spaceship spaceship) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
+
+        for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
+            if (node instanceof Pane cell) {
+                // Check if the cell is already occupied by an Pane (component)
+                Integer rowIndex = GridPane.getRowIndex(cell);
+                Integer colIndex = GridPane.getColumnIndex(cell);
+
+                // If the cell contains a component and the spaceshipCell is empty
+                if (!cell.getChildren().isEmpty() && spaceshipMatrix[rowIndex][colIndex] == null)
+                    cell.getChildren().clear();
+            }
+        }
     }
 
     /**

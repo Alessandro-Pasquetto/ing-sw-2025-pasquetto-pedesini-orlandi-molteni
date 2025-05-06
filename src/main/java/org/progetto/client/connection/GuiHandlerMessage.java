@@ -4,11 +4,13 @@ import org.progetto.client.gui.Alerts;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.games.WaitingGameInfo;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,6 +70,10 @@ public class GuiHandlerMessage {
                     System.out.println("Error loading the page");
                 }
             }
+        }
+
+        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
+            PageController.getGameView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
