@@ -793,10 +793,23 @@ public class TuiPrinters {
                 int count = 0;
 
                 for (ConditionPenalty couple : battlezone.getCouples()) {
-                    String line = "Condition: " + couple.getCondition();
+                    String condition = switch (couple.getCondition()) {
+                        case CREWREQUIREMENT -> "LESS CREW";
+                        case FIREPOWERREQUIREMENT -> "LESS FIREPOWER";
+                        case ENGINEPOWERREQUIREMENT -> "LESS ENGINEPOWER";
+                    };
+                    String line = "Condition: " + condition;
                     printEventCardLine(line);
-                    line = "Penalty: " + couple.getPenalty().getType();
+
+                    String penalty = switch (couple.getPenalty().getType()) {
+                        case PENALTYDAYS -> "DAYS";
+                        case PENALTYCREW -> "CREW";
+                        case PENALTYSHOTS -> "SHOTS";
+                        case PENALTYBOXES -> "BOXES";
+                    };
+                    line = "Penalty: " + penalty;
                     printEventCardLine(line);
+
                     if (couple.getPenalty().getType().toString().equals("PENALTYSHOTS")) {
                         for (int i = 0; i < couple.getPenalty().getShots().size(); i++) {
                             printEventCardLine(String.format("  Shot %d: %s", i, couple.getPenalty().getShots().get(i)));
