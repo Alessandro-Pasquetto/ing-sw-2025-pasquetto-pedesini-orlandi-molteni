@@ -25,7 +25,7 @@ public class PageController {
     private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
     private static WaitingRoomView waitingRoomView;
-    private static GameView gameView;
+    private static BuildingView buildingView;
 
     // =======================
     // GETTERS
@@ -47,8 +47,8 @@ public class PageController {
         return waitingRoomView;
     }
 
-    public static GameView getGameView() {
-        return gameView;
+    public static BuildingView getGameView() {
+        return buildingView;
     }
 
     // =======================
@@ -92,9 +92,9 @@ public class PageController {
         waitingRoomRoot = loader.load();
         waitingRoomView = loader.getController();
 
-        loader = new FXMLLoader(MainClient.class.getResource("game.fxml"));
+        loader = new FXMLLoader(MainClient.class.getResource("buildingPage.fxml"));
         gameRoot = loader.load();
-        gameView = loader.getController();
+        buildingView = loader.getController();
     }
 
     public static void switchScene(String fxmlFile, String title) throws IOException {
@@ -102,7 +102,7 @@ public class PageController {
             case "connection.fxml" -> connectionRoot;
             case "chooseGame.fxml" -> chooseGameRoot;
             case "waitingRoom.fxml" -> waitingRoomRoot;
-            case "game.fxml" -> gameRoot;
+            case "buildingPage.fxml" -> gameRoot;
             default -> null;
         };
 
@@ -126,7 +126,7 @@ public class PageController {
 
     public static void initGame(int levelGame, int color) {
         BuildingData.initMask(levelGame);
-        gameView.initSpaceship(levelGame, color);
+        buildingView.initSpaceship(levelGame, color);
         // todo
         // gameView.loadBoardImg(imgSrcBoard);
         // gameView.loadShipImg(imgSrcSpaceship);

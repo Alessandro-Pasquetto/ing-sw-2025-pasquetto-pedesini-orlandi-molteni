@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
@@ -31,7 +32,7 @@ public class DragAndDrop {
         // Calculate the position in the scene's coordinate system
         Bounds boundsInScene = componentPane.localToScene(componentPane.getBoundsInLocal());
 
-        AnchorPane root = (AnchorPane) componentPane.getScene().getRoot();
+        BorderPane root = (BorderPane) componentPane.getScene().getRoot();
 
         // If the node is not already in the root, move it there
         if (componentPane.getParent() != root) {
@@ -71,7 +72,7 @@ public class DragAndDrop {
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        AnchorPane root = (AnchorPane) componentPane.getScene().getRoot();
+        BorderPane root = (BorderPane) componentPane.getScene().getRoot();
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
@@ -249,7 +250,7 @@ public class DragAndDrop {
         // Calculate the position in the scene's coordinate system
         Bounds boundsInScene = itemImage.localToScene(itemImage.getBoundsInLocal());
 
-        AnchorPane root = (AnchorPane) itemImage.getScene().getRoot();
+        BorderPane root = (BorderPane) itemImage.getScene().getRoot();
 
         // If the node is not already in the root, move it there
         if (itemImage.getParent() != root) {
@@ -289,7 +290,7 @@ public class DragAndDrop {
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        AnchorPane root = (AnchorPane) itemImage.getScene().getRoot();
+        BorderPane root = (BorderPane) itemImage.getScene().getRoot();
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {

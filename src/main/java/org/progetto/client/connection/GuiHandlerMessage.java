@@ -5,10 +5,8 @@ import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
-import org.progetto.messages.toClient.Building.AnotherPlayerPlacedComponentMessage;
-import org.progetto.messages.toClient.Building.PickedComponentMessage;
-import org.progetto.messages.toClient.Building.PickedEventCardMessage;
-import org.progetto.messages.toClient.Building.TimerMessage;
+import org.progetto.messages.toClient.Building.*;
+import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import java.io.IOException;
@@ -65,6 +63,8 @@ public class GuiHandlerMessage {
                 try {
                     PageController.initGame(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("game.fxml", "Game");
+                    PageController.switchScene("buildingPage.fxml", "Game");
+
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
                     System.out.println("Error loading the page");
@@ -78,6 +78,15 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
             PageController.getGameView().generateComponent(pickedComponentMessage.getPickedComponent());
+        }
+
+        else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
+            PageController.getGameView().loadVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
+        }
+
+        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
+            PageController.getGameView().updatePlayersView();
+            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {

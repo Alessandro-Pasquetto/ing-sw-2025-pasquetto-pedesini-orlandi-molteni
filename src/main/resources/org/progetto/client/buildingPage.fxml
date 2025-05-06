@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.BuildingView">
+
+                <stylesheets>
+        <URL value="@style/style.css" />
+    </stylesheets>
+
+                <!-- Left controls (hand + pulsanti) -->
+    <left>
+        <VBox alignment="TOP_CENTER" minWidth="200.0" spacing="15" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_LEFT" spacing="10">
+                <Label text="Giocatori attivi:" />
+                <ListView fx:id="playerListView" prefWidth="180" />
+            </VBox>
+            <Pane fx:id="handComponentBox" prefHeight="100.0" prefWidth="100.0">
+            <VBox.margin>
+               <Insets left="20.0" right="20.0" />
+            </VBox.margin>
+         </Pane>
+            <Button onAction="#pickHiddenComponent" text="Pick Component" />
+            <Button onAction="#discardComponent" text="Discard Component" />
+        </VBox>
+    </left>
+
+                <!-- Right controls -->
+    <right>
+        <VBox alignment="TOP_CENTER" minWidth="200.0" spacing="10" BorderPane.alignment="CENTER">
+             <Label fx:id="timerLabel" text="00:00" />
+             <Button onAction="#resetTimer" text="Reset Timer" />
+            <Button onAction="#rotateComponent" text="Rotate" />
+            <Button fx:id="deck0" onAction="#showEventCardDeck" text="Show Event Deck 0" />
+            <Button fx:id="deck1" onAction="#showEventCardDeck" text="Show Event Deck 1" />
+             <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35">
+                 <image>
+               <Image url="@img/items/GreenBox.png" />
+            </image>
+             </ImageView>
+             <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35">
+                 <image>
+               <Image url="@img/items/CrewXD.png" />
+            </image>
+             </ImageView>
+             <ImageView fx:id="provaAlienImage" fitHeight="35" fitWidth="35">
+                 <image>
+               <Image url="@img/items/OrangeAlien.png" />
+            </image>
+             </ImageView>
+             <ImageView fx:id="provaBatteryImage" fitHeight="45" fitWidth="18">
+                 <image>
+               <Image url="@img/items/Battery.png" />
+            </image>
+             </ImageView>
+        </VBox>
+    </right>
+
+                <!-- Center spaceship matrix on background -->
+    <center>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+             <ScrollPane fx:id="componentSlider" fitToHeight="true" hbarPolicy="ALWAYS" minHeight="120.0" vbarPolicy="NEVER">
+                 <HBox fx:id="sliderContent" alignment="CENTER_LEFT" spacing="10" />
+             </ScrollPane>
+             <StackPane alignment="CENTER">
+                 <ImageView fx:id="spaceShipImage"
+                            fitHeight="554.0"
+                            fitWidth="757.0"
+                            preserveRatio="true"/>
+                 <GridPane fx:id="spaceshipMatrix"
+                           alignment="CENTER"
+                           hgap="1.0"
+                           vgap="1.0"/>
+             </StackPane>
+             <GridPane fx:id="bookedArray" layoutX="702.0" layoutY="160.0">
+                 <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
+                 <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+             </GridPane>
+         </children>
+      </VBox>
+    </center>
+   <bottom>
+          <Button minWidth="100.0" onAction="#placeHandComponentAndReady" text="Ready" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="50.0" top="100.0" />
+         </BorderPane.margin>
+      </Button>
+   </bottom>
+
+            </BorderPane>
