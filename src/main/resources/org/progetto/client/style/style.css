@@ -35,6 +35,10 @@
     -fx-font-weight: 500;
 }
 
+.draggable {
+    -fx-cursor: move;
+}
+
 /* ============================
    CONNECTION VIEW
    ============================ */
@@ -334,17 +338,21 @@
 
 #spaceshipCell {
     -fx-border-color: black;
-    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-color: rgba(255, 255, 255, 0.25);
 }
 
 #handComponentBox {
     -fx-border-color: black;
-    -fx-background-color: rgba(0, 0, 0, 0.29);
+    -fx-background-color: rgba(0, 0, 0, 0.25);
+}
+
+#bookedArray {
+    -fx-background-color: rgba(0, 0, 0, 0.25) !important;
 }
 
 #bookedArray Pane {
-    -fx-border-color: black;
-    -fx-background-color: rgba(0, 0, 0, 0.24);
+    -fx-border-color: black !important;
+    -fx-background-color: rgba(0, 0, 0, 0.25) !important;
 }
 
 #timerLabel {

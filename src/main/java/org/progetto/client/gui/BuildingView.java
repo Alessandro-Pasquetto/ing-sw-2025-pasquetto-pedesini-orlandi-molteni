@@ -36,10 +36,13 @@ public class BuildingView {
 
     @FXML
     public ImageView spaceShipImage;
+
     @FXML
     public ImageView provaCrewImage;
+
     @FXML
     public ImageView provaAlienImage;
+
     @FXML
     public ImageView provaBatteryImage;
 
@@ -73,7 +76,6 @@ public class BuildingView {
 
         updatePlayersView();
     }
-
 
     /**
      * Allows to setup the building matrix with a given size
@@ -110,12 +112,11 @@ public class BuildingView {
         spaceShipImage.setImage(image);
 
         setupBookedArray();
-
     }
 
     //test
     public void setupBookedArray() {
-        bookedArray.getChildren().clear(); // Pulisce celle precedenti
+        bookedArray.getChildren().clear();
 
         for (int i = 0; i < 2; i++) {
             Pane cell = new Pane();
@@ -150,7 +151,6 @@ public class BuildingView {
             sliderContent.getChildren().add(imageView);
         }
     }
-
 
     /**
      * Populate the list of active players
@@ -191,9 +191,7 @@ public class BuildingView {
     private void showPlayerSpaceship(Player player) {
         // Cambia immagine e matrice nave con i dati del giocatore
         System.out.println("Mostro la nave del giocatore: " + player.getName());
-
     }
-
 
     public String getImgSrcCentralUnitFromColor(int color) {
         return switch (color) {
@@ -291,6 +289,7 @@ public class BuildingView {
     }
 
     public void placeHandComponentAndReady(){
+
         if(BuildingData.getHandComponent() == null)
             GameData.getSender().readyPlayer();
 
@@ -350,7 +349,6 @@ public class BuildingView {
             GameData.getSender().discardComponent();
             GameData.getSender().showVisibleComponents();
         }
-
     }
 
     /**
@@ -410,6 +408,7 @@ public class BuildingView {
         imageView.setFitHeight(COMPONENT_SIZE);
 
         Pane componentPane = new Pane();
+        componentPane.getStyleClass().add("draggable");
         componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
 
         componentPane.getChildren().add(imageView);
@@ -703,11 +702,7 @@ public class BuildingView {
         }
 
         BuildingData.setNewHandComponent(componentPane);
-
-
     }
-
-
 
     /**
      * Updates timer

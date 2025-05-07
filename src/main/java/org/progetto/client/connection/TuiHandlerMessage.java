@@ -1,7 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.Alerts;
-import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -19,8 +17,6 @@ import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysM
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.server.model.Player;
-
-import java.util.ArrayList;
 
 /**
  * Handles messages coming from server
@@ -323,6 +319,10 @@ public class TuiHandlerMessage {
 
                 case "EventCardDeckPutDown":
                     System.out.println("Event card deck put down!");
+                    break;
+
+                case "CannotPickUpEventCardDeck":
+                    System.out.println("You cannot pick up the event card deck!");
                     break;
 
                 case "TimerExpired":

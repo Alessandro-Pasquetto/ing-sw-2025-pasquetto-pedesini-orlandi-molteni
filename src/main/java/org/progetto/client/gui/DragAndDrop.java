@@ -5,8 +5,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
@@ -32,7 +30,7 @@ public class DragAndDrop {
         // Calculate the position in the scene's coordinate system
         Bounds boundsInScene = componentPane.localToScene(componentPane.getBoundsInLocal());
 
-        BorderPane root = (BorderPane) componentPane.getScene().getRoot();
+        Pane root = (Pane) componentPane.getScene().getRoot();
 
         // If the node is not already in the root, move it there
         if (componentPane.getParent() != root) {
@@ -53,6 +51,7 @@ public class DragAndDrop {
     }
 
     private static void onMouseDraggedFunctionComponent(Pane componentPane, MouseEvent event){
+
         // Get the initial offset saved during MousePressed
         double offsetX = (double) componentPane.getProperties().get("dragOffsetX");
         double offsetY = (double) componentPane.getProperties().get("dragOffsetY");
@@ -72,14 +71,14 @@ public class DragAndDrop {
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        BorderPane root = (BorderPane) componentPane.getScene().getRoot();
+        Pane root = (Pane) componentPane.getScene().getRoot();
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
-                    // Check if the cell is already occupied by an Pane (component)
+                    // Check if the cell is already occupied by a Pane (component)
                     Integer rowIndex = GridPane.getRowIndex(cell);
                     Integer colIndex = GridPane.getColumnIndex(cell);
 
@@ -224,13 +223,12 @@ public class DragAndDrop {
         });
     }
 
-    // Method to disable drag-and-drop for an Pane
+    // Method to disable drag-and-drop for a Pane
     public static void disableDragAndDropComponent(Pane componentPane) {
         componentPane.setOnMousePressed(null);
         componentPane.setOnMouseDragged(null);
         componentPane.setOnMouseReleased(null);
     }
-
 
     // =======================
     // BOXES
@@ -250,7 +248,7 @@ public class DragAndDrop {
         // Calculate the position in the scene's coordinate system
         Bounds boundsInScene = itemImage.localToScene(itemImage.getBoundsInLocal());
 
-        BorderPane root = (BorderPane) itemImage.getScene().getRoot();
+        Pane root = (Pane) itemImage.getScene().getRoot();
 
         // If the node is not already in the root, move it there
         if (itemImage.getParent() != root) {
@@ -290,7 +288,7 @@ public class DragAndDrop {
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        BorderPane root = (BorderPane) itemImage.getScene().getRoot();
+        Pane root = (Pane) itemImage.getScene().getRoot();
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
@@ -406,7 +404,7 @@ public class DragAndDrop {
         });
     }
 
-    // Method to disable drag-and-drop for an Pane
+    // Method to disable drag-and-drop for a Pane
     public static void disableDragAndDropBoxes(ImageView itemImage) {
         itemImage.setOnMousePressed(null);
         itemImage.setOnMouseDragged(null);

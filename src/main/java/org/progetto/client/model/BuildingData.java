@@ -112,8 +112,10 @@ public class BuildingData {
 
     public static void resetHandComponent(){
         if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired())){
-            if(GameData.getUIType().equals("GUI"))
+            if(GameData.getUIType().equals("GUI")) {
                 DragAndDrop.disableDragAndDropComponent(BuildingData.handComponent);
+                handComponent.getStyleClass().remove("draggable");
+            }
         }
 
         handComponent = null;
