@@ -184,7 +184,6 @@ public class GameManager {
         }
 
         if(game.getPhase().equals(GamePhase.WAITING)){
-
             if(game.getPlayersSize() == 0)
                 GameManagerMaps.removeGameManager(game.getId());
             else
@@ -236,7 +235,7 @@ public class GameManager {
         }
     }
 
-    public void broadcastGameMessage(Object messageObj) {
+    public synchronized void broadcastGameMessage(Object messageObj) {
         ArrayList<Sender> socketWritersCopy = getSendersCopy();
 
         for (Sender sender : socketWritersCopy) {
@@ -248,7 +247,7 @@ public class GameManager {
         }
     }
 
-    public void broadcastGameToNotReadyPlayersMessage(Object messageObj) {
+    public synchronized void broadcastGameToNotReadyPlayersMessage(Object messageObj) {
         ArrayList<Player> playersCopy = game.getPlayersCopy();
 
         for (Player p : playersCopy) {
@@ -260,7 +259,7 @@ public class GameManager {
         }
     }
 
-    public void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
+    public synchronized void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
         ArrayList<Sender> socketWritersCopy = getSendersCopy();
 
         for (Sender s : socketWritersCopy) {

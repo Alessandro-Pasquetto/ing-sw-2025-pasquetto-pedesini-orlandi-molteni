@@ -2,8 +2,7 @@ package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Client data useful to track game evolution
@@ -31,6 +30,10 @@ public class GameData {
 
     public static String getClientId() {
         return clientId;
+    }
+
+    public static boolean hasSavedGameData(){
+        return saveFile.length() != 0;
     }
 
     public static Sender getSender() {
@@ -114,6 +117,26 @@ public class GameData {
             saveFile.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void saveGameData() {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(saveFile))) {
+            dos.writeInt(idGame);
+            dos.writeUTF(namePlayer);
+
+        } catch (IOException e) {
+            System.err.println("Error saving data");
+        }
+    }
+
+    public static void restoreSavedGameData(){
+        try (DataInputStream dis = new DataInputStream(new FileInputStream(saveFile))) {
+            idGame = dis.readInt();
+            namePlayer = dis.readUTF();
+
+        } catch (IOException e) {
+            System.err.println("Error reading data");
         }
     }
 }

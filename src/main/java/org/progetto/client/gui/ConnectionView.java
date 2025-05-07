@@ -91,8 +91,19 @@ public class ConnectionView {
 
             GameData.getSender().connect(serverIp, serverPort);
 
-            PageController.switchScene("chooseGame.fxml", "ChooseGame");
-            GameData.getSender().updateGameList();
+            if(!GameData.hasSavedGameData()){
+                PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                GameData.getSender().updateGameList();
+            }else{
+                GameData.restoreSavedGameData();
+                System.out.println("A saved game was found and the data has been restored.");
+
+                System.out.println("Id: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
+
+                //todo inviare richiesta riconnessione (per ora lascio che fa come se non ci fosse)
+                PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                GameData.getSender().updateGameList();
+            }
 
         } catch (IOException | NotBoundException e) {
             System.out.println("Error connecting to " + serverIp + ":" + serverPort);

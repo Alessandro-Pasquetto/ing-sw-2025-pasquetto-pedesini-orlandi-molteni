@@ -114,7 +114,7 @@ public class LobbyController {
      * @param messageObj
      * @throws RemoteException
      */
-    public static void broadcastLobbyMessage(Object messageObj) {
+    public synchronized static void broadcastLobbyMessage(Object messageObj) {
 
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
@@ -135,13 +135,9 @@ public class LobbyController {
      * @param sender
      * @throws RemoteException
      */
-    public static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
+    public synchronized static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
 
-        ArrayList<Sender> sendersCopy;
-
-        synchronized (senders) {
-            sendersCopy = new ArrayList<>(senders);
-        }
+        ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender s : sendersCopy) {
             if(!s.equals(sender)) {

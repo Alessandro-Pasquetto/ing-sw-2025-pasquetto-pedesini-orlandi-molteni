@@ -61,8 +61,10 @@ public class GuiHandlerMessage {
 
             else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                 try {
+
+                    GameData.saveGameData();
+
                     PageController.initGame(GameData.getLevelGame(), GameData.getColor());
-                    PageController.switchScene("game.fxml", "Game");
                     PageController.switchScene("buildingPage.fxml", "Game");
 
                 } catch (IOException e) {
