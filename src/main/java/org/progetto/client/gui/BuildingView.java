@@ -4,7 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -12,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
@@ -22,6 +26,7 @@ import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +79,6 @@ public class BuildingView {
         DragAndDrop.enableDragAndDropItems(provaAlienImage, "crewSlot");
         DragAndDrop.enableDragAndDropItems(provaBatteryImage, "batterySlot");
 
-        updatePlayersView();
     }
 
     /**
@@ -127,6 +131,7 @@ public class BuildingView {
         }
     }
 
+
     /**
      * Load in the slider all the visible components discarded by players
      *
@@ -136,16 +141,21 @@ public class BuildingView {
     public void loadVisibleComponents(ArrayList<Component> visibleComponents) {
         sliderContent.getChildren().clear();
 
-        for (Component component : visibleComponents) {
-            Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" +component.getImgSrc())));
+        for (int i = 0; i < visibleComponents.size(); i++) {
+            Component component = visibleComponents.get(i);
+            final int idx = i;
+
+            Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(80);
             imageView.setFitHeight(80);
             imageView.setPreserveRatio(true);
-            imageView.setPickOnBounds(true); // opzionale, per clic
+            imageView.setPickOnBounds(true);
 
             imageView.setOnMouseClicked(event -> {
-                generateDiscardedComponent(component);
+                if (event.getClickCount() == 2) {
+                    pickVisibleComponent(idx);
+                }
             });
 
             sliderContent.getChildren().add(imageView);
@@ -153,18 +163,25 @@ public class BuildingView {
     }
 
     /**
+     * First call to server for players list
+     *
+     * @author Lorenzo
+     */
+    public void initPlayersView() {
+        GameData.getSender().showPlayers();
+    }
+
+    /**
      * Populate the list of active players
      *
      * @author Lorenzo
      */
-    //todo capire come ottenere i giocatori attivi dal server
-    public void updatePlayersView() {
-        ObservableList<Player> players = FXCollections.observableArrayList(
-                new Player("Alice", 1, 1),
-                new Player("Bob", 2, 1),
-                new Player("Carol", 3, 1)
-        );
-        playerListView.setItems(players);
+    public void updatePlayersView(ArrayList<Player> players) {
+
+        players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
+
+        ObservableList<Player> players_list = FXCollections.observableArrayList(players);
+        playerListView.setItems(players_list);
 
         playerListView.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -176,8 +193,8 @@ public class BuildingView {
 
         playerListView.setOnMouseClicked(event -> {
             Player selected = playerListView.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                showPlayerSpaceship(selected);
+            if (selected != null && event.getClickCount() == 2) {
+                GameData.getSender().showSpaceship(selected.getName());
             }
         });
     }
@@ -188,9 +205,22 @@ public class BuildingView {
      * @author Lorenzo
      * @param player is the clicked player
      */
-    private void showPlayerSpaceship(Player player) {
-        // Cambia immagine e matrice nave con i dati del giocatore
-        System.out.println("Mostro la nave del giocatore: " + player.getName());
+    public void showPlayerSpaceship(Player player,Spaceship ship) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainClient.class.getResource("otherPlayerPage.fxml"));
+            Parent root = loader.load();
+
+            otherPlayerSpaceshipView controller = loader.getController();
+            controller.drawShip(ship.getBuildingBoard().getCopySpaceshipMatrix());
+
+            Stage stage = new Stage();
+            stage.setTitle("Nave di " + player.getName());
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getImgSrcCentralUnitFromColor(int color) {
@@ -274,7 +304,9 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
     }
 
-    public void pickVisibleComponent() {
+    public void pickVisibleComponent(int idx) {
+
+        System.out.println(idx);
 
         if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
@@ -282,10 +314,13 @@ public class BuildingView {
         }
 
         if (BuildingData.getHandComponent() == null)
-            GameData.getSender().pickHiddenComponent();
+            GameData.getSender().pickVisibleComponent(idx);
 
         else if(BuildingData.getXHandComponent() != -1)
-            GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), -1);
+            GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idx);
+
+        GameData.getSender().showVisibleComponents();
+
     }
 
     public void placeHandComponentAndReady(){
@@ -550,159 +585,6 @@ public class BuildingView {
         handComponentBox.getChildren().add(BuildingData.getHandComponent());
     }
 
-
-    /**
-     * Generates a draggable paneComponent from the discarded list
-     *
-     * @author Lorenzo
-     */
-    public void generateDiscardedComponent(Component component) {
-
-        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(COMPONENT_SIZE);
-        imageView.setFitHeight(COMPONENT_SIZE);
-
-        Pane componentPane = new Pane();
-        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-
-        componentPane.getChildren().add(imageView);
-
-        switch (component) {
-            case BoxStorage boxStorage -> {
-
-                switch (boxStorage.getCapacity()) {
-                    case 1:
-                        Pane slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        componentPane.getChildren().add(slot1);
-                        break;
-
-                    case 2:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(10.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(30.0);
-                        slot2.setLayoutY(50.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        break;
-
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(10.0);
-                        slot1.setLayoutY(30.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(10.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("boxSlot");
-                        slot3.setLayoutX(50.0);
-                        slot3.setLayoutY(50.0);
-                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            case HousingUnit housingUnit -> {
-                Pane slot1 = new Pane();
-                slot1.setId("crewSlot");
-                slot1.setLayoutX(10.0);
-                slot1.setLayoutY(30.0);
-                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot1.getProperties().put("idx", 0);
-
-                Pane slot2 = new Pane();
-                slot2.setId("crewSlot");
-                slot2.setLayoutX(50.0);
-                slot2.setLayoutY(30.0);
-                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot2.getProperties().put("idx", 1);
-
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
-            }
-            case BatteryStorage batteryStorage -> {
-                switch (batteryStorage.getCapacity()) {
-                    case 2:
-                        Pane slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(30.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-
-                        break;
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(20.0);
-                        slot1.setLayoutY(30.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(30.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("batterySlot");
-                        slot3.setLayoutX(60.0);
-                        slot3.setLayoutY(30.0);
-                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            default -> {
-            }
-        }
-
-        BuildingData.setNewHandComponent(componentPane);
-    }
 
     /**
      * Updates timer

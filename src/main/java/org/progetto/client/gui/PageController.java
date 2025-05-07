@@ -127,6 +127,7 @@ public class PageController {
     public static void initGame(int levelGame, int color) {
         BuildingData.initMask(levelGame);
         buildingView.initSpaceship(levelGame, color);
+        buildingView.initPlayersView();
         // todo
         // gameView.loadBoardImg(imgSrcBoard);
         // gameView.loadShipImg(imgSrcSpaceship);

@@ -56,6 +56,8 @@ public interface Sender {
 
     void playerStats();
 
+    void showPlayers();
+
     void showSpaceship(String owner);
 
     void spaceshipStats();

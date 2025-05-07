@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.ResponseTrackMessage;
+import org.progetto.messages.toClient.ShowPlayersMessage;
 import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -68,6 +69,30 @@ public class GameController {
             sender.sendMessage(e.getMessage());
         }
     }
+
+
+    /**
+     * Allows a client to obtain all the active players
+     *
+     * @author Lorenzo
+     * @param gameManager current gameManager
+     * @param sender current sender
+     * @throws RemoteException
+     */
+    public static void showPlayers(GameManager gameManager, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+        try {
+            sender.sendMessage(new ShowPlayersMessage(gameManager.getGame().getPlayersCopy()));
+        }catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
+
+    }
+
 
     /**
      * Handles player decision to show current track

@@ -280,6 +280,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void showPlayers(){
+        try{
+            server.showPlayers(RmiClientReceiver.getInstance(),GameData.getIdGame());
+        }catch (RemoteException e){
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
     public void showSpaceship(String owner){
         try{
             server.showSpaceship(RmiClientReceiver.getInstance(), GameData.getIdGame(), owner);

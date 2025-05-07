@@ -449,6 +449,10 @@ public class SocketListener extends Thread {
                     GameController.playerStats(gameManager, player, socketWriter);
                     break;
 
+                case "ShowPlayers":
+                    GameController.showPlayers(gameManager,socketWriter);
+                    break;
+
                 case "SpaceshipStats":
                     SpaceshipController.spaceshipStats(gameManager, player, socketWriter);
                     break;

@@ -55,6 +55,8 @@ public interface VirtualServer extends Remote {
 
     void playerStats(VirtualClient virtualClient, int idGame) throws RemoteException;
 
+    void showPlayers(VirtualClient virtualClient,int idGame) throws RemoteException;
+
     void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException;
 
     void spaceshipStats(VirtualClient virtualClient, int idGame) throws RemoteException;

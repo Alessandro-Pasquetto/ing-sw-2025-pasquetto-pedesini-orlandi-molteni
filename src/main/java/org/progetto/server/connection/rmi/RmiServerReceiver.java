@@ -421,6 +421,22 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void showPlayers(VirtualClient virtualClient,int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerBySender(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        GameController.showPlayers(gameManager,virtualClient);
+    }
+
+
+    @Override
     public void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         SpaceshipController.showSpaceship(gameManager, owner, virtualClient);
