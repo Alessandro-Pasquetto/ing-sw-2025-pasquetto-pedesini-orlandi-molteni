@@ -1,13 +1,9 @@
 package org.progetto.server.connection.socket;
 
-import org.progetto.messages.toClient.NewGamePhaseMessage;
-import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.messages.toServer.*;
-import org.progetto.messages.toClient.GameInfoMessage;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.EventControllerAbstract;
-import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -56,54 +52,33 @@ public class SocketListener extends Thread {
     /**
      * Method that handle lobby requests
      */
-    private void handlerLobbyMessages(Object messageObj) throws RemoteException {
+    private synchronized void handlerLobbyMessages(Object messageObj) throws RemoteException {
+
         if (messageObj instanceof CreateGameMessage createGameMessage) {
             int levelGame = createGameMessage.getLevelGame();
             int numPlayers = createGameMessage.getNumPlayers();
             String name = createGameMessage.getName();
 
-            InternalGameInfo internalGameInfo = null;
             try {
-                internalGameInfo = LobbyController.createGame(name, levelGame, numPlayers);
+                GameManager gameManager = LobbyController.createGame(name, levelGame, numPlayers, clientHandler.getSocketWriter());
+                clientHandler.setGameManager(gameManager);
+                clientHandler.setPlayer(gameManager.getPlayerBySender(clientHandler.getSocketWriter()));
+
             } catch (IllegalStateException e) {
                 clientHandler.getSocketWriter().sendMessage(e.getMessage());
-                return;
             }
-
-            GameManager gameManager = internalGameInfo.getGameManager();
-            Game game = gameManager.getGame();
-            int idGame = game.getId();
-            Player player = internalGameInfo.getPlayer();
-
-            clientHandler.initPlayerConnection(gameManager, player);
-
-            LobbyController.broadcastLobbyMessageToOthers("UpdateGameList", clientHandler.getSocketWriter());
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
-            clientHandler.getSocketWriter().sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-            clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
         } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
             int idGame = joinGameMessage.getIdGame();
             String name = joinGameMessage.getName();
 
-            InternalGameInfo internalGameInfo = null;
             try {
-                internalGameInfo = LobbyController.joinGame(idGame, name);
+                GameManager gameManager = LobbyController.joinGame(idGame, name, clientHandler.getSocketWriter());
+                clientHandler.setGameManager(gameManager);
+                clientHandler.setPlayer(gameManager.getPlayerBySender(clientHandler.getSocketWriter()));
             } catch (IllegalStateException e) {
                 clientHandler.getSocketWriter().sendMessage(e.getMessage());
-                return;
             }
-
-            GameManager gameManager = internalGameInfo.getGameManager();
-            Game game = gameManager.getGame();
-            Player player = internalGameInfo.getPlayer();
-
-            clientHandler.initPlayerConnection(gameManager, player);
-            clientHandler.getSocketWriter().sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
-            gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-
-            if(gameManager.getGame().getPhase() == GamePhase.WAITING)
-                clientHandler.getSocketWriter().sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
         }
 
         else if (messageObj instanceof String messageString) {

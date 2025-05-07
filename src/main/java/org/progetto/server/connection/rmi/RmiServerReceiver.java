@@ -1,14 +1,10 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.GameInfoMessage;
-import org.progetto.messages.toClient.NewGamePhaseMessage;
-import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.events.EventControllerAbstract;
-import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -45,50 +41,20 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void createGame(VirtualClient virtualClient, String name, int gameLevel, int numPlayers) throws RemoteException {
-        InternalGameInfo internalGameInfo = null;
         try {
-            internalGameInfo = LobbyController.createGame(name, gameLevel, numPlayers);
+            LobbyController.createGame(name, gameLevel, numPlayers, virtualClient);
         } catch (IllegalStateException e) {
             virtualClient.sendMessage(e.getMessage());
-            return;
         }
-
-        GameManager gameManager = internalGameInfo.getGameManager();
-        Game game = gameManager.getGame();
-        int idGame = game.getId();
-        Player player = internalGameInfo.getPlayer();
-
-        LobbyController.removeSender(virtualClient);
-        gameManager.addSender(player, virtualClient);
-        GameManagerMaps.addWaitingGameManager(idGame, gameManager);
-
-        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
-        virtualClient.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-        virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
     @Override
     public void joinGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
-        InternalGameInfo internalGameInfo = null;
         try {
-            internalGameInfo = LobbyController.joinGame(idGame, name);
+            LobbyController.joinGame(idGame, name, virtualClient);
         } catch (IllegalStateException e) {
             virtualClient.sendMessage(e.getMessage());
-            return;
         }
-
-        GameManager gameManager = internalGameInfo.getGameManager();
-        Game game = gameManager.getGame();
-        Player player = internalGameInfo.getPlayer();
-
-        LobbyController.removeSender(virtualClient);
-        gameManager.addSender(player, virtualClient);
-
-        virtualClient.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers(), player.getColor()));
-        gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
-
-        if(gameManager.getGame().getPhase() == GamePhase.WAITING)
-            virtualClient.sendMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
     }
 
     @Override
@@ -96,7 +62,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -111,7 +77,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -126,7 +92,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -141,7 +107,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -156,7 +122,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -171,7 +137,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -186,7 +152,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -201,7 +167,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -216,7 +182,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -231,7 +197,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -246,7 +212,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -261,7 +227,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -284,7 +250,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -308,7 +274,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -323,7 +289,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -347,7 +313,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -362,7 +328,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -377,7 +343,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try {
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -402,7 +368,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -417,7 +383,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -444,7 +410,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -465,7 +431,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -486,7 +452,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -502,7 +468,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -517,7 +483,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -542,7 +508,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -567,7 +533,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -592,7 +558,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -617,7 +583,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -642,7 +608,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -667,7 +633,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -692,7 +658,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -717,7 +683,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -742,7 +708,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -767,7 +733,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -792,7 +758,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -817,7 +783,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -832,7 +798,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");
@@ -857,7 +823,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
-            player = gameManager.getPlayerByVirtualClient(virtualClient);
+            player = gameManager.getPlayerBySender(virtualClient);
         }catch (IllegalStateException e){
             if(e.getMessage().equals("PlayerNotFound"))
                 virtualClient.sendMessage("PlayerNotFound");

@@ -38,20 +38,18 @@ public class GuiHandlerMessage {
             int gameId = initGameMessage.getIdGame();
             int levelGame = initGameMessage.getLevelGame();
             int numMaxPlayer = initGameMessage.getNumMaxPlayers();
-            int color = initGameMessage.getColor();
 
             try {
-                // todo: se i game possono essere da 1 persona controllare per non mandarlo in waiting room??
                 PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
                 PageController.getWaitingRoomView().init(gameId, levelGame, numMaxPlayer);
+
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");
                 System.out.println("Error loading the page");
             }
 
             GameData.setIdGame(gameId);
-            GameData.setColor(color);
-            PageController.initGame(levelGame, color);
+            GameData.setLevelGame(levelGame);
 
         } else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
             PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
@@ -65,6 +63,7 @@ public class GuiHandlerMessage {
 
             else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                 try {
+                    PageController.initGame(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("game.fxml", "Game");
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");

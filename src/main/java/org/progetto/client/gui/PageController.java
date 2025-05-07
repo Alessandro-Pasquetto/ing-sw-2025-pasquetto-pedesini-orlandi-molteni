@@ -106,7 +106,8 @@ public class PageController {
             default -> null;
         };
 
-        if (root == null) return;
+        if (stage.getScene() != null && stage.getScene().getRoot() == root)
+            return;
 
         // Execute this when the GUI thread is ready
         Scene scene = new Scene(root);

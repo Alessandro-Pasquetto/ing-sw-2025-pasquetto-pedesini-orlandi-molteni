@@ -1,12 +1,10 @@
 package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.ShowWaitingGamesMessage;
+import org.progetto.messages.toClient.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
-import org.progetto.messages.toClient.WaitingGameInfoMessage;
-import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import java.rmi.RemoteException;
@@ -191,7 +189,7 @@ public class LobbyController {
      * @param numPlayers
      * @return
      */
-    public static InternalGameInfo createGame(String name, int levelGame, int numPlayers) throws IllegalStateException {
+    public static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException, RemoteException {
         int idGame = currentIdGame.getAndIncrement();
 
         if (numPlayers <= 0 || numPlayers > 4) {
@@ -205,10 +203,25 @@ public class LobbyController {
         GameManager gameManager = new GameManager(idGame, numPlayers, levelGame);
         Player player = new Player(name, 0, levelGame);
 
-        gameManager.getGame().addPlayer(player);
-        gameManager.getGameThread().notifyThread();// todo se non può esserci un game con max 1 persona da togliere
+        Game game = gameManager.getGame();
 
-        return new InternalGameInfo(gameManager, player);
+        game.addPlayer(player);
+
+        LobbyController.removeSender(sender);
+        gameManager.addSender(player, sender);
+        GameManagerMaps.addWaitingGameManager(idGame, gameManager);
+
+        // Messages
+        sender.sendMessage(new GameInfoMessage(idGame, levelGame, numPlayers));
+        sender.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        sender.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()));
+
+        if(numPlayers != 1)
+            broadcastLobbyMessage("UpdateGameList");
+        else
+            gameManager.getGameThread().notifyThread();
+
+        return gameManager;
     }
 
     /**
@@ -219,7 +232,7 @@ public class LobbyController {
      * @param name
      * @return
      */
-    public static InternalGameInfo joinGame(int idGame, String name) throws IllegalStateException {
+    public static GameManager joinGame(int idGame, String name, Sender sender) throws IllegalStateException, RemoteException {
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
 
@@ -235,8 +248,16 @@ public class LobbyController {
         Player player = new Player(name, game.getPlayersSize(), game.getLevel());
 
         gameManager.getGame().addPlayer(player);
+
+        LobbyController.removeSender(sender);
+        gameManager.addSender(player, sender);
+
+        broadcastLobbyMessageToOthers("UpdateGameList", sender);
+        sender.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()));
+        sender.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+
         gameManager.getGameThread().notifyThread();
 
-        return new InternalGameInfo(gameManager, player);
+        return gameManager;
     }
 }

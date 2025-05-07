@@ -51,15 +51,14 @@ public class ClientHandler {
     }
 
     // =======================
-    // OTHER METHODS
+    // SETTERS
     // =======================
 
-    // Save gameManager and player to clientHandler and add socketWriter to the game
-    public void initPlayerConnection(GameManager gameManager, Player player) {
+    public void setGameManager(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.player = player;
+    }
 
-        LobbyController.removeSender(socketWriter);
-        gameManager.addSender(player, socketWriter);
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

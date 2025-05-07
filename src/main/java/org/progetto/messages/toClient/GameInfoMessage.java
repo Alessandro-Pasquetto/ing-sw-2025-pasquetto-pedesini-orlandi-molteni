@@ -10,18 +10,16 @@ public class GameInfoMessage implements Serializable {
 
     private int idGame;
     private int levelGame;
-    private int color;
     private int numMaxPlayers;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public GameInfoMessage(int idGame, int levelGame, int numMaxPlayers, int color) {
+    public GameInfoMessage(int idGame, int levelGame, int numMaxPlayers) {
         this.idGame = idGame;
         this.levelGame = levelGame;
         this.numMaxPlayers = numMaxPlayers;
-        this.color = color;
     }
 
     // =======================
@@ -38,9 +36,5 @@ public class GameInfoMessage implements Serializable {
 
     public int getNumMaxPlayers() {
         return numMaxPlayers;
-    }
-
-    public int getColor() {
-        return color;
     }
 }

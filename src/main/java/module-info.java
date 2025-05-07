@@ -32,7 +32,6 @@ module org.progetto{
     exports org.progetto.server.connection.socket;
     exports org.progetto.server.connection.rmi;
     exports org.progetto.messages.toClient;
-    exports org.progetto.server.internalMessages;
     exports org.progetto.client.gui;
     exports org.progetto.server.connection;
     exports org.progetto.server.connection.games;

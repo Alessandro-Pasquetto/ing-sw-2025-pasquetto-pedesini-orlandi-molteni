@@ -85,6 +85,7 @@ public class WaitingRoomView {
             String name = player.getName();
             if (name.equals(GameData.getNamePlayer())) {
                 name = name + " (You)";
+                GameData.setColor(player.getColor());
             }
 
             String status;

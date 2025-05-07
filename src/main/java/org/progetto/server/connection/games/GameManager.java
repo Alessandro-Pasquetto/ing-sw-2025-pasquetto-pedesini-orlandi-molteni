@@ -1,10 +1,12 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
 import java.rmi.RemoteException;
@@ -96,10 +98,10 @@ public class GameManager {
         return playerSenders.get(player);
     }
 
-    public Player getPlayerByVirtualClient(VirtualClient virtualClient) throws IllegalStateException {
+    public Player getPlayerBySender(Sender sender) throws IllegalStateException {
 
         for (Map.Entry<Player, Sender> entry : playerSenders.entrySet()) {
-            if(entry.getValue().equals(virtualClient))
+            if(entry.getValue().equals(sender))
                 return entry.getKey();
         }
         throw new IllegalStateException("PlayerNotFound");
@@ -147,7 +149,7 @@ public class GameManager {
                 try{
                     vc.ping();
                 } catch (RemoteException e) {
-                    disconnectPlayer(getPlayerByVirtualClient(vc));
+                    disconnectPlayer(getPlayerBySender(vc));
                 }
             }
         }
@@ -156,7 +158,9 @@ public class GameManager {
     public void disconnectPlayer(Player player) {
         System.out.println(player.getName() + " has disconnected");
 
-        // getGame().getBoard().removeTraveler(player);
+        if(game.getPhase().equals(GamePhase.WAITING) || game.getPhase().equals(GamePhase.INIT)){
+            broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        }
 
         //todo gestire il resto
     }
