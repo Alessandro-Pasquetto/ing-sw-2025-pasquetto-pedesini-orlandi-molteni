@@ -1,8 +1,10 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.controller.LobbyController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
@@ -25,6 +27,9 @@ public class GameManager {
 
     private final HashMap<Player, Sender> playerSenders = new HashMap<>();
 
+    private final ArrayList<Player> disconnectedPlayers = new ArrayList<>();
+
+    // List to save playersOrder after building
     private final ArrayList<Player> notCheckedReadyPlayers = new ArrayList<>();
 
     GameThread gameThread;
@@ -107,13 +112,19 @@ public class GameManager {
         throw new IllegalStateException("PlayerNotFound");
     }
 
-    public void setGameThread(GameThread gameThread) {
-        this.gameThread = gameThread;
+    public int getSizeDisconnectedPlayers() {
+        synchronized (disconnectedPlayers) {
+            return disconnectedPlayers.size();
+        }
     }
 
     // =======================
     // SETTERS
     // =======================
+
+    public void setGameThread(GameThread gameThread) {
+        this.gameThread = gameThread;
+    }
 
     public static void setGameDisconnectionDetectionInterval(int gameDisconnectionDetectionInterval) {
         GameManager.gameDisconnectionDetectionInterval = gameDisconnectionDetectionInterval;
@@ -158,9 +169,33 @@ public class GameManager {
     public void disconnectPlayer(Player player) {
         System.out.println(player.getName() + " has disconnected");
 
-        if(game.getPhase().equals(GamePhase.WAITING) || game.getPhase().equals(GamePhase.INIT)){
-            broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        Game game = getGame();
+
+        game.removePlayer(player);
+        removeSender(player);
+
+        if(game.getPhase().equals(GamePhase.INIT)){
+            game.setPhase(GamePhase.WAITING);
+            broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
+
+            gameThread.notifyThread();
+
+            GameManagerMaps.addWaitingGameManager(game.getId(), this);
         }
+
+        if(game.getPhase().equals(GamePhase.WAITING)){
+
+            if(game.getPlayersSize() == 0)
+                GameManagerMaps.removeGameManager(game.getId());
+            else
+                broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+
+            LobbyController.broadcastLobbyMessage("UpdateGameList");
+
+            return;
+        }
+
+        addDisconnectedPlayers(player);
 
         //todo gestire il resto
     }
@@ -174,6 +209,18 @@ public class GameManager {
     public void removeSender(Player player){
         synchronized (playerSenders){
             playerSenders.remove(player);
+        }
+    }
+
+    public void addDisconnectedPlayers(Player player){
+        synchronized (disconnectedPlayers){
+            disconnectedPlayers.add(player);
+        }
+    }
+
+    public void removeDisconnectedPlayer(Player player){
+        synchronized (disconnectedPlayers){
+            disconnectedPlayers.remove(player);
         }
     }
 

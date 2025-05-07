@@ -346,6 +346,16 @@ public class Game {
         }
     }
 
+    public void removePlayer(Player player) throws IllegalStateException {
+        synchronized (players) {
+            players.remove(player);
+
+            if (players.isEmpty()) {
+                //todo da fare
+            }
+        }
+    }
+
     /**
      * Randomly draws a component from the covered componentsDeck and assigns it to handComponent
      *

@@ -53,7 +53,7 @@ public class GameThread extends Thread {
                     case WAITING:
                         System.out.println("Waiting for players...");
 
-                        waitPlayers();
+                        resetReadyAndWaitPlayers();
 
                         gameManager.getGame().setPhase(GamePhase.INIT);
                         break;
@@ -62,7 +62,10 @@ public class GameThread extends Thread {
                         System.out.println("Waiting for ready players...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
-                        resetAndWaitPlayersReady();
+                        resetAndWaitWaitingPlayersReady();
+
+                        if(gameManager.getGame().getPhase().equals(GamePhase.WAITING))
+                            continue;
 
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
                         break;
@@ -203,12 +206,27 @@ public class GameThread extends Thread {
     // OTHER METHODS
     // =======================
 
-    public void waitPlayers() throws InterruptedException {
+    public void resetReadyAndWaitPlayers() throws InterruptedException {
         Game game = gameManager.getGame();
+        game.resetReadyPlayers();
 
         synchronized (gameThreadLock) {
             while (game.getPlayersSize() < game.getMaxNumPlayers())
                 gameThreadLock.wait();
+        }
+    }
+
+    public void resetAndWaitWaitingPlayersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        game.resetReadyPlayers();
+
+        synchronized (gameThreadLock) {
+            while (game.getNumReadyPlayers() < game.getMaxNumPlayers()){
+                if(gameManager.getGame().getPhase() == GamePhase.WAITING)
+                    return;
+
+                gameThreadLock.wait();
+            }
         }
     }
 
@@ -227,21 +245,6 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Reset players ready and pauses the game thread until all players are ready to continue
-     *
-     * @author Alessandro
-     */
-    public void resetAndWaitPlayersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
-        game.resetReadyPlayers();
-
-        synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
-                gameThreadLock.wait();
-        }
-    }
-
-    /**
      * Pauses the game thread until all players are ready to continue
      *
      * @author Alessandro
@@ -250,7 +253,7 @@ public class GameThread extends Thread {
         Game game = gameManager.getGame();
 
         synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() != game.getMaxNumPlayers())
+            while (game.getNumReadyPlayers() < game.getMaxNumPlayers())
                 gameThreadLock.wait();
         }
     }

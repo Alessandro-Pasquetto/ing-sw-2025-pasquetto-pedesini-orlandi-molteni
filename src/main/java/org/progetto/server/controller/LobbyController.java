@@ -116,11 +116,7 @@ public class LobbyController {
      */
     public static void broadcastLobbyMessage(Object messageObj) {
 
-        ArrayList<Sender> sendersCopy;
-
-        synchronized (senders) {
-            sendersCopy = new ArrayList<>(senders);
-        }
+        ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
             try {
@@ -165,15 +161,15 @@ public class LobbyController {
      * @param sender
      * @throws RemoteException
      */
-    public static void showWaitingGames(Sender sender) throws RemoteException {
+    public synchronized static void showWaitingGames(Sender sender) throws RemoteException {
 
-        ArrayList<Integer> gameIds = new ArrayList<>(GameManagerMaps.getWaitingGamesMap().keySet());
+        ArrayList<GameManager> waitingGameManagers = new ArrayList<>(GameManagerMaps.getWaitingGamesMapCopy().values());
         ArrayList<WaitingGameInfoMessage> waitingGameInfoMessages = new ArrayList<>();
 
-        for (Integer gameId : gameIds) {
-            Game game = GameManagerMaps.getGameManager(gameId).getGame();
+        for (GameManager gameManager : waitingGameManagers) {
+            Game game = gameManager.getGame();
 
-            WaitingGameInfoMessage waitingGameInfoMessage = new WaitingGameInfoMessage(gameId, game.getLevel(), game.getMaxNumPlayers(), game.getPlayersCopy());
+            WaitingGameInfoMessage waitingGameInfoMessage = new WaitingGameInfoMessage(game.getId(), game.getLevel(), game.getMaxNumPlayers(), game.getPlayersCopy());
             waitingGameInfoMessages.add(waitingGameInfoMessage);
         }
 
@@ -189,7 +185,7 @@ public class LobbyController {
      * @param numPlayers
      * @return
      */
-    public static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException, RemoteException {
+    public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException, RemoteException {
         int idGame = currentIdGame.getAndIncrement();
 
         if (numPlayers <= 0 || numPlayers > 4) {
@@ -236,9 +232,8 @@ public class LobbyController {
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
 
-        if(gameManager == null){
+        if(gameManager == null)
             throw new IllegalStateException("NotValidGameId");
-        }
 
         Game game = gameManager.getGame();
 
@@ -252,9 +247,9 @@ public class LobbyController {
         LobbyController.removeSender(sender);
         gameManager.addSender(player, sender);
 
-        broadcastLobbyMessageToOthers("UpdateGameList", sender);
+        broadcastLobbyMessage("UpdateGameList");
         sender.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()));
-        sender.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
 
         gameManager.getGameThread().notifyThread();
 

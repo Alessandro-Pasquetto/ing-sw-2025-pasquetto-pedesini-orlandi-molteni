@@ -39,18 +39,20 @@ public class GameManagerMaps {
         }
     }
 
-    public static ArrayList<Integer> getIdWaitingGames(){
+    public static ArrayList<Integer> getIdWaitingGamesCopy(){
 
-        ArrayList<Integer> idWaitingGames;
+        ArrayList<Integer> getIdWaitingGamesCopy;
 
         synchronized (waitingGamesManager) {
-            idWaitingGames = new ArrayList<>(waitingGamesManager.keySet());
+            getIdWaitingGamesCopy = new ArrayList<>(waitingGamesManager.keySet());
         }
-        return idWaitingGames;
+        return getIdWaitingGamesCopy;
     }
 
-    public static HashMap<Integer, GameManager> getWaitingGamesMap() {
-        return new HashMap<>(waitingGamesManager);
+    public static HashMap<Integer, GameManager> getWaitingGamesMapCopy() {
+        synchronized (waitingGamesManager) {
+            return new HashMap<>(waitingGamesManager);
+        }
     }
 
     // =======================
@@ -62,7 +64,9 @@ public class GameManagerMaps {
             waitingGamesManager.put(idGame, gameManager);
         }
         synchronized (allGamesManager) {
-            allGamesManager.put(idGame, gameManager);
+            if (!allGamesManager.containsKey(idGame)) {
+                allGamesManager.put(idGame, gameManager);
+            }
         }
     }
 

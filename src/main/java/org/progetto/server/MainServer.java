@@ -16,8 +16,8 @@ public class MainServer {
         rmiServer.start();
 
         // Set disconnection detection intervals
-        LobbyController.setLobbyDisconnectionDetectionInterval(5000);
-        GameManager.setGameDisconnectionDetectionInterval(5000);
+        LobbyController.setLobbyDisconnectionDetectionInterval(1000);
+        GameManager.setGameDisconnectionDetectionInterval(1000);
 
         LobbyController.startLobbyPinger();
     }
