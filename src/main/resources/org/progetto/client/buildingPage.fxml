@@ -40,8 +40,6 @@
              <Label fx:id="timerLabel" text="00:00" />
              <Button onAction="#resetTimer" text="Reset Timer" />
             <Button onAction="#rotateComponent" text="Rotate" />
-            <Button fx:id="deck0" onAction="#showEventCardDeck" text="Show Event Deck 0" />
-            <Button fx:id="deck1" onAction="#showEventCardDeck" text="Show Event Deck 1" />
              <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35">
                  <image>
                <Image url="@img/items/GreenBox.png" />
@@ -90,16 +88,29 @@
                         <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
                         <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
                     </GridPane>
+
+                    <HBox fx:id="eventCardDisplay" spacing="10" alignment="CENTER" visible="false" mouseTransparent="true">
+
+                    </HBox>
+
                 </StackPane>
             </children>
         </VBox>
     </center>
 
-   <bottom>
-       <Button minWidth="100.0" onAction="#placeHandComponentAndReady" text="Ready" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="50.0" top="100.0" />
-         </BorderPane.margin>
-      </Button>
-   </bottom>
+    <!-- Bottom controls and cards visual -->
+    <bottom>
+        <VBox alignment="CENTER">
+
+            <HBox fx:id="eventCardBox" alignment="CENTER" spacing="30" >
+                <ImageView fx:id="deck0Image" fitHeight="200" fitWidth="130"/>
+                <ImageView fx:id="deck1Image" fitHeight="200" fitWidth="130"/>
+                <ImageView fx:id="deck2Image" fitHeight="200" fitWidth="130"/>
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="10">
+                <Button text="Ready" onAction="#placeHandComponentAndReady"/>
+            </HBox>
+        </VBox>
+    </bottom>
 </BorderPane>

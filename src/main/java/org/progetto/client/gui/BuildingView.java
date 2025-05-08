@@ -24,6 +24,7 @@ import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.events.EventCard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class BuildingView {
     final int CREW_SLOT_SIZE = 35;
     final int BATTERY_SLOT_WIDTH = 18;
     final int BATTERY_SLOT_HEIGHT = 45;
+    private boolean deckToggle = true;
 
     @FXML
     public ImageView spaceShipImage;
@@ -72,6 +74,23 @@ public class BuildingView {
     @FXML
     private ListView<Player> playerListView;
 
+    @FXML
+    private HBox eventCardDisplay;
+
+    @FXML
+    private StackPane centerPane;
+
+    @FXML
+    private ImageView deck0Image;
+
+    @FXML
+    private ImageView deck1Image;
+
+    @FXML
+    private ImageView deck2Image;
+
+
+
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
     public static void registerPlayerShipGrid(String playerName, GridPane grid) {
@@ -91,7 +110,7 @@ public class BuildingView {
     }
 
     /**
-     * Allows to setup the building matrix with a given size
+     * Allows to set_up the building matrix with a given size
      *
      * @author Alessandro,Lorenzo
      * @param levelShip is the game level
@@ -123,6 +142,30 @@ public class BuildingView {
         insertCentralUnitComponent(levelShip, getImgSrcCentralUnitFromColor(color));
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
+
+        //init carte evento
+        if(levelShip == 2){
+            deck0Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
+            deck0Image.setOnMouseClicked(event -> {
+                ImageView clickedImage = (ImageView) event.getSource();
+                String imageId = clickedImage.getId();
+                toggleDeck(imageId);
+            });
+            deck1Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
+            deck1Image.setOnMouseClicked(event -> {
+                ImageView clickedImage = (ImageView) event.getSource();
+                String imageId = clickedImage.getId();
+                toggleDeck(imageId);
+            });
+            deck2Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv1.jpg"))));
+            deck2Image.setOnMouseClicked(event -> {
+                ImageView clickedImage = (ImageView) event.getSource();
+                String imageId = clickedImage.getId();
+                toggleDeck(imageId);
+            });
+        }
+
+
     }
 
     /**
@@ -306,6 +349,70 @@ public class BuildingView {
         }
     }
 
+    /**
+     * update the eventDeck visual
+     *
+     * @param deck is the list of cards chosen
+     */
+    public void showEventDeck(ArrayList<EventCard> deck) {
+        eventCardDisplay.getChildren().clear();
+        for (EventCard card : deck) {
+            ImageView cardView = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/cards/" + card.getImgSrc()))));
+            cardView.setFitHeight(300);
+            cardView.setPreserveRatio(true);
+            eventCardDisplay.getChildren().add(cardView);
+        }
+        eventCardDisplay.setVisible(true);
+        eventCardDisplay.setMouseTransparent(false);
+    }
+
+    @FXML
+    private void toggleDeck(String id) {
+
+        if(BuildingData.getIsTimerExpired()){
+            System.out.println("Timer expired");
+            return;
+        }
+
+        int idxDeck = 0;
+
+        idxDeck = switch (id) {
+            case "deck0Image" -> 0;
+            case "deck1Image" -> 1;
+            case "deck2Image" -> 2;
+            default -> -1;
+        };
+
+        System.out.println(idxDeck);
+        System.out.println(deckToggle);
+
+        if (deckToggle) {
+            if(BuildingData.getHandComponent() == null)
+                GameData.getSender().pickUpEventCardDeck(idxDeck);
+
+            else if(BuildingData.getXHandComponent() != -1)
+                GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
+
+            deckToggle = false;
+
+        } else {
+            GameData.getSender().putDownEventCardDeck();
+            deckToggle = true;
+        }
+    }
+
+    /**
+     * Allows to hide the deck after it was put down
+     *
+     * @author Lorenzo
+     */
+    public void hideEventDeck() {
+        eventCardDisplay.setVisible(false);
+        eventCardDisplay.setMouseTransparent(true);
+
+    }
+
+
     public String getImgSrcCentralUnitFromColor(int color) {
         return switch (color) {
             case 0 -> "base-unit-blue.jpg";
@@ -483,35 +590,6 @@ public class BuildingView {
         BuildingData.resetHandComponent();
     }
 
-    /**
-     * Shows an event card deck
-     *
-     * @author Alessandro
-     */
-    public void showEventCardDeck(ActionEvent event) {
-
-        if(BuildingData.getIsTimerExpired()){
-            System.out.println("Timer expired");
-            return;
-        }
-
-        int idxDeck = 0;
-        Button clickedButton = (Button) event.getSource();
-
-        idxDeck = switch (clickedButton.getId()) {
-            case "deck0" -> 0;
-            case "deck1" -> 1;
-            case "deck2" -> 2;
-            case "deck3" -> 3;
-            default -> -1;
-        };
-
-        if(BuildingData.getHandComponent() == null)
-            GameData.getSender().pickUpEventCardDeck(idxDeck);
-
-        else if(BuildingData.getXHandComponent() != -1)
-            GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
-    }
 
     /**
      * Generates a draggable paneComponent

@@ -109,6 +109,13 @@ public class GuiHandlerMessage {
             GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
         }
 
+        else if(messageObj instanceof PickedUpEventCardDeckMessage pickedUpEventCardDeckMessage) {
+            PageController.getGameView().showEventDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
+        }
+
+        else if(messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             PageController.getGameView().updateTimer(timer);
@@ -157,6 +164,10 @@ public class GuiHandlerMessage {
 
                 case "PickedBookedComponent":
                     BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
+                    break;
+
+                case "EventCardDeckPutDown":
+                    PageController.getGameView().hideEventDeck();
                     break;
 
                 case "TimerExpired":
