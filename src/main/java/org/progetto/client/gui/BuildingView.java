@@ -260,6 +260,21 @@ public class BuildingView {
                     iv.setFitHeight(43);
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
+                    switch (comp.getRotation()){
+                        case 0:
+                            cell.setRotate(0);
+                            break;
+                        case 1:
+                            cell.setRotate(90);
+                            break;
+                        case 2:
+                            cell.setRotate(180);
+                            break;
+                        case 3:
+                            cell.setRotate(270);
+                            break;
+                    }
+
                 }
 
                 shipGrid.add(cell, col, row);
