@@ -13,11 +13,12 @@ public class otherPlayerSpaceshipView {
 
     @FXML
     private GridPane shipGrid;
+
     @FXML
     private HBox bookedComponentsBox;
+
     @FXML
     private HBox handBox;
-
 
     public void drawShip(Component[][] shipMatrix) {
         shipGrid.getChildren().clear();
@@ -40,7 +41,4 @@ public class otherPlayerSpaceshipView {
             }
         }
     }
-
 }
-
-

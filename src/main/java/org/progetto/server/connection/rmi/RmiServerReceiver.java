@@ -421,7 +421,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void showPlayers(VirtualClient virtualClient,int idGame) throws RemoteException {
+    public void showPlayers(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{

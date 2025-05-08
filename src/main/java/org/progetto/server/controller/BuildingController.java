@@ -660,7 +660,6 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-
         try{
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);

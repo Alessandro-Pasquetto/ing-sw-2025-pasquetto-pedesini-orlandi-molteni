@@ -90,9 +90,7 @@ public class GameController {
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }
-
     }
-
 
     /**
      * Handles player decision to show current track

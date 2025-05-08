@@ -4,7 +4,6 @@ import org.progetto.client.gui.Alerts;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
@@ -78,15 +77,18 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
 
             if(!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
-                PageController.getGameView().showPlayerSpaceship(responseSpaceshipMessage.getOwner(),responseSpaceshipMessage.getSpaceship());
-            }
-            else {
+
+                if (GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
+                    PageController.getGameView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                }
+
+            } else {
                 PageController.getGameView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
             }
         }
 
         else if(messageObj instanceof ShowPlayersMessage showPlayersMessage) {
-            PageController.getGameView().updatePlayersView(showPlayersMessage.getPlayers());
+            PageController.getGameView().initPlayersList(showPlayersMessage.getPlayers());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
@@ -104,6 +106,7 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
             System.out.println(anotherPlayerPlacedComponentMessage.getNamePlayer() + " has placed: " + anotherPlayerPlacedComponentMessage.getImgSrcPlacedComponent());
+            GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
@@ -133,6 +136,7 @@ public class GuiHandlerMessage {
 
                 case "AllowedToPlaceComponent":
                     BuildingData.resetHandComponent();
+
                     break;
 
                 case "NotAllowedToPlaceComponent":

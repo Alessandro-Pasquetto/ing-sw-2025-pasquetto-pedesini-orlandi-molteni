@@ -1,5 +1,6 @@
 package org.progetto.client.gui;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,14 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
@@ -28,7 +27,8 @@ import org.progetto.server.model.components.HousingUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BuildingView {
@@ -72,13 +72,22 @@ public class BuildingView {
     @FXML
     private ListView<Player> playerListView;
 
+    private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
+
+    public static void registerPlayerShipGrid(String playerName, GridPane grid) {
+        shipGridsByPlayer.put(playerName, grid);
+    }
+
+    public static GridPane getShipGridByPlayer(String playerName) {
+        return shipGridsByPlayer.get(playerName);
+    }
+
     // Initialize the grid when the view is loaded
     public void initialize() {
         DragAndDrop.enableDragAndDropItems(provaBoxImage, "boxSlot");
         DragAndDrop.enableDragAndDropItems(provaCrewImage, "crewSlot");
         DragAndDrop.enableDragAndDropItems(provaAlienImage, "crewSlot");
         DragAndDrop.enableDragAndDropItems(provaBatteryImage, "batterySlot");
-
     }
 
     /**
@@ -114,23 +123,7 @@ public class BuildingView {
         insertCentralUnitComponent(levelShip, getImgSrcCentralUnitFromColor(color));
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
-
-        setupBookedArray();
     }
-
-    //test
-    public void setupBookedArray() {
-        bookedArray.getChildren().clear();
-
-        for (int i = 0; i < 2; i++) {
-            Pane cell = new Pane();
-            cell.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-            cell.setStyle("-fx-border-color: black; -fx-background-color: #f0f0f0;");
-
-            bookedArray.add(cell, i, 0); // aggiunge nella riga 0, colonna i
-        }
-    }
-
 
     /**
      * Load in the slider all the visible components discarded by players
@@ -167,7 +160,7 @@ public class BuildingView {
      *
      * @author Lorenzo
      */
-    public void initPlayersView() {
+    public void initPlayersList() {
         GameData.getSender().showPlayers();
     }
 
@@ -176,27 +169,102 @@ public class BuildingView {
      *
      * @author Lorenzo
      */
-    public void updatePlayersView(ArrayList<Player> players) {
-
+    public void initPlayersList(ArrayList<Player> players) {
         players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
         ObservableList<Player> players_list = FXCollections.observableArrayList(players);
         playerListView.setItems(players_list);
 
-        playerListView.setCellFactory(param -> new ListCell<>() {
+        playerListView.setCellFactory(listView -> new ListCell<>() {
+            private final VBox content = new VBox(5);
+            private final Label nameLabel = new Label();
+            private final GridPane shipGrid = new GridPane();
+            private final ImageView shipBackgroundImage = new ImageView();
+            private final StackPane shipDisplay = new StackPane();
+            private final Pane overlayPane = new Pane();
+
+            // To store whether we've already rendered the spaceship for this player
+            private boolean isShipRendered = false;
+
+            {
+                shipBackgroundImage.setFitWidth(330);
+                shipBackgroundImage.setPreserveRatio(true);
+
+                shipGrid.setStyle("-fx-background-color: transparent;");
+                shipGrid.setLayoutX(GameData.getLevelGame() == 1 ? 59.0 : 16.0);
+                shipGrid.setLayoutY(12.0);
+
+                overlayPane.setPrefSize(330, 240);
+                overlayPane.getChildren().add(shipGrid);
+
+                shipDisplay.getChildren().addAll(shipBackgroundImage, overlayPane);
+                content.getChildren().addAll(nameLabel, shipDisplay);
+            }
+
             @Override
             protected void updateItem(Player player, boolean empty) {
                 super.updateItem(player, empty);
-                setText(empty || player == null ? null : player.getName());
+
+                if (empty || player == null) {
+                    setGraphic(null);
+                } else {
+                    nameLabel.setText(player.getName());
+
+                    // Only clear the grid if it's the first time rendering or new data is needed
+                    if (!isShipRendered) {
+                        shipGrid.getChildren().clear();  // Clear only the first time or when necessary
+
+                        int level = GameData.getLevelGame();
+                        String imgPath = "img/cardboard/spaceship" + level + ".jpg";
+                        Image image = new Image(String.valueOf(MainClient.class.getResource(imgPath)));
+                        shipBackgroundImage.setImage(image);
+
+                        // Mark the ship as rendered
+                        isShipRendered = true;
+                    }
+
+                    setGraphic(content);
+                    registerPlayerShipGrid(player.getName(), shipGrid);  // Register the grid for later use
+                }
             }
         });
 
-        playerListView.setOnMouseClicked(event -> {
-            Player selected = playerListView.getSelectionModel().getSelectedItem();
-            if (selected != null && event.getClickCount() == 2) {
-                GameData.getSender().showSpaceship(selected.getName());
+        // Add a delay to show the spaceship
+        PauseTransition delay = new PauseTransition(Duration.millis(250));
+        delay.setOnFinished(event -> {
+            for (Player player : players) {
+                GameData.getSender().showSpaceship(player.getName());
             }
         });
+        delay.play();
+    }
+
+
+    public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
+        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+
+        GridPane shipGrid = getShipGridByPlayer(player.getName());
+        if (shipGrid == null) return;
+
+        shipGrid.getChildren().clear();
+        for (int row = 0; row < shipMatrix.length; row++) {
+            for (int col = 0; col < shipMatrix[row].length; col++) {
+                Component comp = shipMatrix[row][col];
+                Pane cell = new Pane();
+                cell.setPrefSize(43, 43);
+
+                if (comp != null) {
+                    Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
+                    ImageView iv = new ImageView(img);
+                    iv.setFitWidth(43);
+                    iv.setFitHeight(43);
+                    iv.setPreserveRatio(true);
+                    cell.getChildren().add(iv);
+                }
+
+                shipGrid.add(cell, col, row);
+            }
+        }
     }
 
     /**
@@ -205,7 +273,7 @@ public class BuildingView {
      * @author Lorenzo
      * @param player is the clicked player
      */
-    public void showPlayerSpaceship(Player player,Spaceship ship) {
+    public void showPlayerSpaceship(Player player, Spaceship ship) {
         try {
             FXMLLoader loader = new FXMLLoader(MainClient.class.getResource("otherPlayerPage.fxml"));
             Parent root = loader.load();
@@ -584,7 +652,6 @@ public class BuildingView {
         BuildingData.setNewHandComponent(componentPane);
         handComponentBox.getChildren().add(BuildingData.getHandComponent());
     }
-
 
     /**
      * Updates timer

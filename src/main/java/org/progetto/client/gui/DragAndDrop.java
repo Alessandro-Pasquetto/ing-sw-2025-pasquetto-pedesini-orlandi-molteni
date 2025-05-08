@@ -115,7 +115,7 @@ public class DragAndDrop {
             if (node instanceof Pane cell) {
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
-                    // Check if the cell is already occupied by an Pane (component)
+                    // Check if the cell is already occupied by a Pane (component)
                     Integer colIndex = GridPane.getColumnIndex(cell);
 
                     // Check if the cell already has a child (component)

@@ -23,10 +23,10 @@
 
     <!-- Left controls -->
     <left>
-        <VBox alignment="TOP_CENTER" minWidth="200.0" spacing="15" BorderPane.alignment="CENTER">
-            <VBox alignment="TOP_LEFT" spacing="10">
+        <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_LEFT" spacing="10" >
                 <Label text="Giocatori attivi:" />
-                <ListView fx:id="playerListView" prefWidth="180" />
+                <ListView fx:id="playerListView" prefWidth="180" minHeight="400.0" />
             </VBox>
             <Pane fx:id="handComponentBox" prefHeight="100.0" prefWidth="100.0" maxWidth="100.0"></Pane>
             <Button onAction="#pickHiddenComponent" text="Pick Component" />
@@ -36,7 +36,7 @@
 
     <!-- Right controls -->
     <right>
-        <VBox alignment="TOP_CENTER" minWidth="200.0" spacing="10" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" BorderPane.alignment="CENTER">
              <Label fx:id="timerLabel" text="00:00" />
              <Button onAction="#resetTimer" text="Reset Timer" />
             <Button onAction="#rotateComponent" text="Rotate" />
@@ -67,40 +67,39 @@
 
     <!-- Center spaceship matrix on background -->
     <center>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
-             <ScrollPane fx:id="componentSlider" fitToHeight="true" hbarPolicy="ALWAYS" minHeight="120.0" vbarPolicy="NEVER">
-                 <HBox fx:id="sliderContent" alignment="CENTER_LEFT" spacing="10" />
-             </ScrollPane>
-             <StackPane alignment="CENTER">
-                 <ImageView fx:id="spaceShipImage"
+        <VBox BorderPane.alignment="CENTER">
+            <children>
+                <ScrollPane fx:id="componentSlider" fitToHeight="true" hbarPolicy="ALWAYS" minHeight="120.0" vbarPolicy="NEVER">
+                    <HBox fx:id="sliderContent" alignment="CENTER_LEFT" spacing="10" />
+                </ScrollPane>
+                <StackPane alignment="CENTER">
+                    <ImageView fx:id="spaceShipImage"
                             fitHeight="554.0"
                             fitWidth="757.0"
                             preserveRatio="true"/>
-                 <GridPane fx:id="spaceshipMatrix"
+                    <GridPane fx:id="spaceshipMatrix"
                            alignment="CENTER"
                            hgap="1.0"
                            vgap="1.0"/>
-                 <GridPane fx:id="bookedArray"
+                    <GridPane fx:id="bookedArray"
                            alignment="CENTER"
                            translateX="265"
                            translateY="-209"
                            maxWidth="200.0"
                            maxHeight="100.0">
-                     <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
-                     <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
-                 </GridPane>
-             </StackPane>
-         </children>
-      </VBox>
+                        <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
+                        <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+                    </GridPane>
+                </StackPane>
+            </children>
+        </VBox>
     </center>
 
    <bottom>
-          <Button minWidth="100.0" onAction="#placeHandComponentAndReady" text="Ready" BorderPane.alignment="CENTER">
+       <Button minWidth="100.0" onAction="#placeHandComponentAndReady" text="Ready" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="50.0" top="100.0" />
          </BorderPane.margin>
       </Button>
-
    </bottom>
 </BorderPane>
