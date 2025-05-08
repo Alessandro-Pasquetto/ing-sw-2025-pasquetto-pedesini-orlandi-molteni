@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import org.progetto.client.MainClient;
 import org.progetto.server.model.components.Component;
 
-public class otherPlayerSpaceshipView {
+public class OtherPlayerSpaceshipView {
 
     @FXML
     private GridPane shipGrid;

@@ -173,6 +173,22 @@ public class BuildingBoard implements Serializable {
         handComponent = null;
     }
 
+    public void tryToPlaceComponent(int x, int y) {
+
+        if(handComponent == null)
+            throw new IllegalStateException("EmptyHandComponent");
+
+        if(x < 0 || y < 0 || x >= boardMask[0].length || y >= boardMask.length)
+            throw new IllegalStateException("NotValidCoordinates");
+
+        if(boardMask[y][x] != 1)
+            throw new IllegalStateException("NotAllowedToPlaceComponent");
+
+        // If it's not connected to at least one component returns false
+        if((y == 0 || boardMask[y - 1][x] != -1) && (x == spaceshipMatrix[0].length - 1 || boardMask[y][x + 1] != -1) && (y == spaceshipMatrix.length - 1 || boardMask[y + 1][x] != -1) && (x == 0 || boardMask[y][x - 1] != -1))
+            throw new IllegalStateException("NotAllowedToPlaceComponent");
+    }
+
     /**
      * Move the handComponent to position idx in the booked array
      *

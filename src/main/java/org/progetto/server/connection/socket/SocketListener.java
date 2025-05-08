@@ -136,7 +136,7 @@ public class SocketListener extends Thread {
             int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
             int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
             int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
-            BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
+            BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
         }
 
         else if (messageObj instanceof PlaceHandComponentAndPickBookedComponentMessage placeHandComponentAndPickBookedComponentMessage) {

@@ -16,6 +16,7 @@ public class BuildingData {
     private static int yHandComponent = 0;
     private static boolean isTimerExpired;
     private static int[][] shipMask;
+    private static boolean isDeckVisible = false;
 
     // =======================
     // GETTERS
@@ -49,6 +50,10 @@ public class BuildingData {
         return shipMask[y][x] == 1;
     }
 
+    public static boolean getIsDeckVisible() {
+        return isDeckVisible;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -75,6 +80,10 @@ public class BuildingData {
 
     public static void setIsTimerExpired(boolean isTimerExpired){
         BuildingData.isTimerExpired = isTimerExpired;
+    }
+
+    public static void setIsDeckVisible(boolean isDeckVisible) {
+        BuildingData.isDeckVisible = isDeckVisible;
     }
 
     // =======================

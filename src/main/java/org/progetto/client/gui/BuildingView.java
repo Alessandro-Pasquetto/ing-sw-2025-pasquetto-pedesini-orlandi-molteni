@@ -3,7 +3,6 @@ package org.progetto.client.gui;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -39,7 +38,6 @@ public class BuildingView {
     final int CREW_SLOT_SIZE = 35;
     final int BATTERY_SLOT_WIDTH = 18;
     final int BATTERY_SLOT_HEIGHT = 45;
-    private boolean deckToggle = true;
 
     @FXML
     public ImageView spaceShipImage;
@@ -336,7 +334,7 @@ public class BuildingView {
             FXMLLoader loader = new FXMLLoader(MainClient.class.getResource("otherPlayerPage.fxml"));
             Parent root = loader.load();
 
-            otherPlayerSpaceshipView controller = loader.getController();
+            OtherPlayerSpaceshipView controller = loader.getController();
             controller.drawShip(ship.getBuildingBoard().getCopySpaceshipMatrix());
 
             Stage stage = new Stage();
@@ -355,6 +353,8 @@ public class BuildingView {
      * @param deck is the list of cards chosen
      */
     public void showEventDeck(ArrayList<EventCard> deck) {
+        BuildingData.setIsDeckVisible(true);
+
         eventCardDisplay.getChildren().clear();
         for (EventCard card : deck) {
             ImageView cardView = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/cards/" + card.getImgSrc()))));
@@ -365,6 +365,20 @@ public class BuildingView {
         eventCardDisplay.setVisible(true);
         eventCardDisplay.setMouseTransparent(false);
     }
+
+    /**
+     * Allows to hide the deck after it was put down
+     *
+     * @author Lorenzo
+     */
+    public void hideEventDeck() {
+
+        BuildingData.setIsDeckVisible(false);
+
+        eventCardDisplay.setVisible(false);
+        eventCardDisplay.setMouseTransparent(true);
+    }
+
 
     @FXML
     private void toggleDeck(String id) {
@@ -384,34 +398,19 @@ public class BuildingView {
         };
 
         System.out.println(idxDeck);
-        System.out.println(deckToggle);
+        System.out.println(BuildingData.getIsDeckVisible());
 
-        if (deckToggle) {
+        if (!BuildingData.getIsDeckVisible()) {
             if(BuildingData.getHandComponent() == null)
                 GameData.getSender().pickUpEventCardDeck(idxDeck);
 
             else if(BuildingData.getXHandComponent() != -1)
                 GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
 
-            deckToggle = false;
-
         } else {
             GameData.getSender().putDownEventCardDeck();
-            deckToggle = true;
         }
     }
-
-    /**
-     * Allows to hide the deck after it was put down
-     *
-     * @author Lorenzo
-     */
-    public void hideEventDeck() {
-        eventCardDisplay.setVisible(false);
-        eventCardDisplay.setMouseTransparent(true);
-
-    }
-
 
     public String getImgSrcCentralUnitFromColor(int color) {
         return switch (color) {

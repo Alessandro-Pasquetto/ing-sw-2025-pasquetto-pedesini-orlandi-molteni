@@ -10,15 +10,13 @@ public class AnotherPlayerPlacedComponentMessage implements Serializable {
     // =======================
 
     private final String namePlayer;
-    private final Component component;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerPlacedComponentMessage(String namePlayer, Component component) {
+    public AnotherPlayerPlacedComponentMessage(String namePlayer) {
         this.namePlayer = namePlayer;
-        this.component = component;
     }
 
 
@@ -28,13 +26,5 @@ public class AnotherPlayerPlacedComponentMessage implements Serializable {
 
     public String getNamePlayer() {
         return namePlayer;
-    }
-
-    public Component getComponent() {
-        return component;
-    }
-
-    public String getImgSrcPlacedComponent() {
-        return component.getImgSrc();
     }
 }

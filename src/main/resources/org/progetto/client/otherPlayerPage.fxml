@@ -4,7 +4,7 @@
 
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.progetto.client.gui.otherPlayerSpaceshipView"
+            fx:controller="org.progetto.client.gui.OtherPlayerSpaceshipView"
             prefWidth="600" prefHeight="600">
     <children>
         <GridPane fx:id="shipGrid" layoutX="20" layoutY="20" />

@@ -201,15 +201,16 @@ public class LobbyController {
 
         LobbyController.removeSender(sender);
         gameManager.addSender(player, sender);
-        GameManagerMaps.addWaitingGameManager(idGame, gameManager);
 
         // Messages
         sender.sendMessage(new GameInfoMessage(idGame, levelGame, numPlayers));
         sender.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
         sender.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
-        if(numPlayers != 1)
+        if(numPlayers != 1){
+            GameManagerMaps.addWaitingGameManager(idGame, gameManager);
             broadcastLobbyMessage("UpdateGameList");
+        }
         else
             gameManager.getGameThread().notifyThread();
 
