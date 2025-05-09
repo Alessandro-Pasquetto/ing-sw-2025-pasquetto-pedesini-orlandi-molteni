@@ -11,19 +11,25 @@ public class PickedUpEventCardDeckMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
+    private int deckIdx;
     private ArrayList<EventCard> eventCardsDeck;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PickedUpEventCardDeckMessage(ArrayList<EventCard> eventCardsDeck) {
+    public PickedUpEventCardDeckMessage(int deckIdx, ArrayList<EventCard> eventCardsDeck) {
+        this.deckIdx = deckIdx;
         this.eventCardsDeck = new ArrayList<>(eventCardsDeck);
     }
 
     // =======================
     // GETTERS
     // =======================
+
+    public int getDeckIdx() {
+        return deckIdx;
+    }
 
     public ArrayList<EventCard> getEventCardsDeck() {
         return eventCardsDeck;

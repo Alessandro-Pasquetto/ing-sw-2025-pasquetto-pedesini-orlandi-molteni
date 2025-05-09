@@ -64,8 +64,7 @@ public class ConnectionView {
         String serverPortString = serverPortTextField.getText();
 
         if (serverIp.isEmpty() || serverPortString.isEmpty()) {
-            Alerts.showPopUp("Errore: Tutti i campi devono essere compilati.", true);
-            System.out.println("Errore: Tutti i campi devono essere compilati.");
+            Alerts.showPopUp("All fields should be compiled!", true);
             return;
         }
 
@@ -73,13 +72,13 @@ public class ConnectionView {
         try{
             serverPort = Integer.parseInt(serverPortString);
 
-        }catch (NumberFormatException e){
-            System.out.println("Server port must be a number!");
+        } catch (NumberFormatException e){
+            Alerts.showPopUp("Server port must be a number!", true);
             return;
         }
 
         if (serverPort < 0) {
-            System.out.println("Port cannot be negative!");
+            Alerts.showPopUp("Port cannot be negative!", true);
             return;
         }
 
@@ -100,13 +99,13 @@ public class ConnectionView {
 
                 System.out.println("Id: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
 
-                //todo inviare richiesta riconnessione (per ora lascio che fa come se non ci fosse)
+                //TODO: inviare richiesta riconnessione (per ora lascio che fa come se non ci fosse)
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
                 GameData.getSender().updateGameList();
             }
 
         } catch (IOException | NotBoundException e) {
-            System.out.println("Error connecting to " + serverIp + ":" + serverPort);
+            Alerts.showPopUp("Error connecting to " + serverIp + ":" + serverPort, true);
         }
     }
 }

@@ -32,6 +32,8 @@ public class DragAndDrop {
 
         Pane root = (Pane) componentPane.getScene().getRoot();
 
+        componentPane.setManaged(false);
+
         // If the node is not already in the root, move it there
         if (componentPane.getParent() != root) {
             ((Pane) componentPane.getParent()).getChildren().remove(componentPane);
@@ -72,6 +74,8 @@ public class DragAndDrop {
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
         Pane root = (Pane) componentPane.getScene().getRoot();
+
+        componentPane.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
@@ -115,6 +119,7 @@ public class DragAndDrop {
             if (node instanceof Pane cell) {
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
+
                     // Check if the cell is already occupied by a Pane (component)
                     Integer colIndex = GridPane.getColumnIndex(cell);
 
@@ -250,6 +255,8 @@ public class DragAndDrop {
 
         Pane root = (Pane) itemImage.getScene().getRoot();
 
+        itemImage.setManaged(false);
+
         // If the node is not already in the root, move it there
         if (itemImage.getParent() != root) {
             ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
@@ -289,6 +296,8 @@ public class DragAndDrop {
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
         Pane root = (Pane) itemImage.getScene().getRoot();
+
+        itemImage.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {

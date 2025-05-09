@@ -76,6 +76,9 @@ public class BuildingView {
     private HBox eventCardDisplay;
 
     @FXML
+    public HBox eventCardContainer;
+
+    @FXML
     private StackPane centerPane;
 
     @FXML
@@ -86,8 +89,6 @@ public class BuildingView {
 
     @FXML
     private ImageView deck2Image;
-
-
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
@@ -141,29 +142,27 @@ public class BuildingView {
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
 
-        //init carte evento
+        // Init event card decks
         if(levelShip == 2){
             deck0Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
             deck0Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
                 String imageId = clickedImage.getId();
-                toggleDeck(imageId);
+                pickUpDeck(imageId);
             });
             deck1Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
             deck1Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
                 String imageId = clickedImage.getId();
-                toggleDeck(imageId);
+                pickUpDeck(imageId);
             });
             deck2Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv1.jpg"))));
             deck2Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
                 String imageId = clickedImage.getId();
-                toggleDeck(imageId);
+                pickUpDeck(imageId);
             });
         }
-
-
     }
 
     /**
@@ -187,7 +186,7 @@ public class BuildingView {
             imageView.setPickOnBounds(true);
 
             imageView.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2) {
+                if (event.getClickCount() == 1) {
                     pickVisibleComponent(idx);
                 }
             });
@@ -280,7 +279,6 @@ public class BuildingView {
         delay.play();
     }
 
-
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
 
@@ -315,7 +313,6 @@ public class BuildingView {
                             cell.setRotate(270);
                             break;
                     }
-
                 }
 
                 shipGrid.add(cell, col, row);
@@ -348,20 +345,22 @@ public class BuildingView {
     }
 
     /**
-     * update the eventDeck visual
+     * Update the eventDeck visual
      *
      * @param deck is the list of cards chosen
      */
     public void showEventDeck(ArrayList<EventCard> deck) {
         BuildingData.setIsDeckVisible(true);
 
-        eventCardDisplay.getChildren().clear();
+        eventCardContainer.getChildren().clear();
+
         for (EventCard card : deck) {
             ImageView cardView = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/cards/" + card.getImgSrc()))));
             cardView.setFitHeight(300);
             cardView.setPreserveRatio(true);
-            eventCardDisplay.getChildren().add(cardView);
+            eventCardContainer.getChildren().add(cardView);
         }
+
         eventCardDisplay.setVisible(true);
         eventCardDisplay.setMouseTransparent(false);
     }
@@ -379,36 +378,49 @@ public class BuildingView {
         eventCardDisplay.setMouseTransparent(true);
     }
 
-
     @FXML
-    private void toggleDeck(String id) {
+    private void pickUpDeck(String id) {
 
-        if(BuildingData.getIsTimerExpired()){
+        if (BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
             return;
         }
 
-        int idxDeck = 0;
-
-        idxDeck = switch (id) {
+        int idxDeck = switch (id) {
             case "deck0Image" -> 0;
             case "deck1Image" -> 1;
             case "deck2Image" -> 2;
             default -> -1;
         };
 
-        System.out.println(idxDeck);
-        System.out.println(BuildingData.getIsDeckVisible());
-
         if (!BuildingData.getIsDeckVisible()) {
-            if(BuildingData.getHandComponent() == null)
+            if (BuildingData.getHandComponent() == null)
                 GameData.getSender().pickUpEventCardDeck(idxDeck);
 
-            else if(BuildingData.getXHandComponent() != -1)
+            else if (BuildingData.getXHandComponent() != -1)
                 GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
+        }
+    }
 
-        } else {
+    @FXML
+    private void putDownDeck() {
+        if (BuildingData.getIsDeckVisible())
             GameData.getSender().putDownEventCardDeck();
+    }
+
+    public void updateEventDecksAvailability(int deckIdx) {
+        switch (deckIdx) {
+            case 0:
+                deck0Image.setVisible(!deck0Image.isVisible());  // Toggle visibility
+                break;
+
+            case 1:
+                deck1Image.setVisible(!deck1Image.isVisible());  // Toggle visibility
+                break;
+
+            case 2:
+                deck2Image.setVisible(!deck2Image.isVisible());  // Toggle visibility
+                break;
         }
     }
 
@@ -509,7 +521,6 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idx);
 
         GameData.getSender().showVisibleComponents();
-
     }
 
     public void placeHandComponentAndReady(){
@@ -588,7 +599,6 @@ public class BuildingView {
 
         BuildingData.resetHandComponent();
     }
-
 
     /**
      * Generates a draggable paneComponent
@@ -737,8 +747,7 @@ public class BuildingView {
                         break;
                 }
             }
-            default -> {
-            }
+            default -> {}
         }
 
         BuildingData.setNewHandComponent(componentPane);
@@ -764,7 +773,7 @@ public class BuildingView {
 
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
-                // Check if the cell is already occupied by an Pane (component)
+                // Check if the cell is already occupied by a Pane (component)
                 Integer rowIndex = GridPane.getRowIndex(cell);
                 Integer colIndex = GridPane.getColumnIndex(cell);
 

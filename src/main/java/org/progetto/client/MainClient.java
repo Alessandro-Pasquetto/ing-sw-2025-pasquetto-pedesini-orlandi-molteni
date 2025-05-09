@@ -65,6 +65,7 @@ public class MainClient extends Application {
         else{
             clientId = args[0];
             System.out.println("Client ID: " + clientId);
+            System.out.println();
         }
 
         GameData.setClientId(clientId);

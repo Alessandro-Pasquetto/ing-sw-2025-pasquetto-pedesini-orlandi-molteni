@@ -3,7 +3,6 @@ package org.progetto.server.controller;
 import javafx.util.Pair;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
-import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -473,6 +472,7 @@ public class BuildingController {
             gameManager.getGame().pickVisibleComponent(componentIdx, player);
             Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
             sender.sendMessage(new PickedComponentMessage(pickedComponent));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedVisibleComponentMessage(player.getName(), pickedComponent), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
@@ -670,6 +670,7 @@ public class BuildingController {
                 gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
                 sender.sendMessage(new PickedComponentMessage(pickedComponent));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedVisibleComponentMessage(player.getName(), pickedComponent), sender);
 
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("IllegalIndexComponent"))
@@ -727,7 +728,7 @@ public class BuildingController {
                 sender.sendMessage("AllowedToPlaceComponent");
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
 
-                sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));
+                sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
                 gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
             } catch (IllegalStateException e) {
@@ -1115,7 +1116,7 @@ public class BuildingController {
 
         try{
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
-            sender.sendMessage(new PickedUpEventCardDeckMessage(eventCardsDeck));
+            sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){

@@ -332,6 +332,24 @@
     -fx-text-alignment: right;
 }
 
+/* ============================
+   BUILDING VIEW
+   ============================ */
+
+#buildingPane {
+    -fx-background-image: url("../img/space-background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+#eventCardDisplay {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-padding: 0;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
 
 
 

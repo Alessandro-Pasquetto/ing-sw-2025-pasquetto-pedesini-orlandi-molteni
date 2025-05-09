@@ -30,7 +30,6 @@ public class Alerts {
      * @param message is the String to display
      * @param onMouseEvent allows to display the message on the mouse pointer position
      */
-
     public static void showPopUp(String message, Boolean onMouseEvent) {
         Label messageLabel = new Label(message);
         messageLabel.setStyle("""
@@ -38,7 +37,7 @@ public class Alerts {
             -fx-text-fill: white;
             -fx-padding: 15px;
             -fx-background-radius: 10;
-            -fx-font-size: 16px;
+            -fx-font-size: 14px;
         """);
         messageLabel.setFont(Font.font("Arial"));
 
@@ -67,13 +66,12 @@ public class Alerts {
 
         popup.show(stage, centerX , centerY );
 
-        FadeTransition ft = new FadeTransition(Duration.seconds(4), content);
+        FadeTransition ft = new FadeTransition(Duration.seconds(3), content);
         ft.setFromValue(1.0);
         ft.setToValue(0.0);
         ft.setOnFinished(e -> popup.hide());
         ft.play();
     }
-
 }
 
 

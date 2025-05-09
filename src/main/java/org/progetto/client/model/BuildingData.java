@@ -17,6 +17,7 @@ public class BuildingData {
     private static boolean isTimerExpired;
     private static int[][] shipMask;
     private static boolean isDeckVisible = false;
+    private static int currentDeckIdx = -1;
 
     // =======================
     // GETTERS
@@ -54,6 +55,10 @@ public class BuildingData {
         return isDeckVisible;
     }
 
+    public static int getCurrentDeckIdx() {
+        return currentDeckIdx;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -84,6 +89,10 @@ public class BuildingData {
 
     public static void setIsDeckVisible(boolean isDeckVisible) {
         BuildingData.isDeckVisible = isDeckVisible;
+    }
+
+    public static void setCurrentDeckIdx(int currentDeckIdx) {
+        BuildingData.currentDeckIdx = currentDeckIdx;
     }
 
     // =======================

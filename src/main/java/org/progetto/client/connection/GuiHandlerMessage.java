@@ -1,6 +1,7 @@
 package org.progetto.client.connection;
 
 import org.progetto.client.gui.Alerts;
+import org.progetto.client.gui.BuildingView;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -103,11 +104,26 @@ public class GuiHandlerMessage {
             GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
         }
 
+        else if (messageObj instanceof AnotherPlayerDiscardComponentMessage anotherPlayerDiscardComponentMessage) {
+            GameData.getSender().showVisibleComponents();
+        }
+
+        else if (messageObj instanceof AnotherPlayerPickedVisibleComponentMessage anotherPlayerDiscardComponentMessage) {
+            GameData.getSender().showVisibleComponents();
+        }
+
         else if(messageObj instanceof PickedUpEventCardDeckMessage pickedUpEventCardDeckMessage) {
             PageController.getGameView().showEventDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
+            PageController.getGameView().updateEventDecksAvailability(pickedUpEventCardDeckMessage.getDeckIdx());
+            BuildingData.setCurrentDeckIdx(pickedUpEventCardDeckMessage.getDeckIdx());
+        }
+
+        else if(messageObj instanceof AnotherPlayerPickedUpEventCardDeck anotherPlayerPickedUpEventCardDeck) {
+            PageController.getGameView().updateEventDecksAvailability(anotherPlayerPickedUpEventCardDeck.getDeckIdx());
         }
 
         else if(messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
+            PageController.getGameView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
@@ -161,6 +177,8 @@ public class GuiHandlerMessage {
 
                 case "EventCardDeckPutDown":
                     PageController.getGameView().hideEventDeck();
+                    PageController.getGameView().updateEventDecksAvailability(BuildingData.getCurrentDeckIdx());
+                    BuildingData.setCurrentDeckIdx(-1);
                     break;
 
                 case "TimerExpired":
