@@ -9,9 +9,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -24,13 +26,14 @@
     <!-- Left controls -->
     <left>
         <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" BorderPane.alignment="CENTER">
-            <VBox alignment="TOP_LEFT" spacing="10" >
+            <VBox alignment="TOP_LEFT" spacing="10">
                 <Label text="Giocatori attivi:" />
-                <ListView fx:id="playerListView" prefWidth="180" minHeight="400.0" />
+                <ListView fx:id="playerListView" minHeight="400.0" prefWidth="180" />
             </VBox>
-            <Pane fx:id="handComponentBox" prefHeight="100.0" prefWidth="100.0" maxWidth="100.0"></Pane>
+            <Pane fx:id="handComponentBox" maxWidth="100.0" prefHeight="100.0" prefWidth="100.0" />
             <Button onAction="#pickHiddenComponent" text="Pick Component" />
             <Button onAction="#discardComponent" text="Discard Component" />
+            <Button onAction="#rotateComponent" text="Rotate" />
         </VBox>
     </left>
 
@@ -39,7 +42,6 @@
         <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" BorderPane.alignment="CENTER">
              <Label fx:id="timerLabel" text="00:00" />
              <Button onAction="#resetTimer" text="Reset Timer" />
-            <Button onAction="#rotateComponent" text="Rotate" />
              <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35">
                  <image>
                <Image url="@img/items/GreenBox.png" />
@@ -71,25 +73,21 @@
                     <HBox fx:id="sliderContent" alignment="CENTER_LEFT" spacing="10" />
                 </ScrollPane>
                 <StackPane alignment="CENTER">
-                    <ImageView fx:id="spaceShipImage"
-                            fitHeight="554.0"
-                            fitWidth="757.0"
-                            preserveRatio="true"/>
-                    <GridPane fx:id="spaceshipMatrix"
-                           alignment="CENTER"
-                           hgap="1.0"
-                           vgap="1.0"/>
-                    <GridPane fx:id="bookedArray"
-                           alignment="CENTER"
-                           translateX="265"
-                           translateY="-209"
-                           maxWidth="200.0"
-                           maxHeight="100.0">
+                    <ImageView fx:id="spaceShipImage" fitHeight="554.0" fitWidth="757.0" preserveRatio="true" />
+                    <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
+                    <GridPane fx:id="bookedArray" alignment="CENTER" maxHeight="100.0" maxWidth="200.0" translateX="265" translateY="-209">
                         <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
                         <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+                  <columnConstraints>
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
                     </GridPane>
 
-                    <HBox fx:id="eventCardDisplay" spacing="10" alignment="CENTER" visible="false" mouseTransparent="true">
+                    <HBox fx:id="eventCardDisplay" alignment="CENTER" mouseTransparent="true" spacing="10" visible="false">
 
                     </HBox>
 
@@ -102,14 +100,20 @@
     <bottom>
         <VBox alignment="CENTER">
 
-            <HBox fx:id="eventCardBox" alignment="CENTER" spacing="30" >
-                <ImageView fx:id="deck0Image" fitHeight="200" fitWidth="130"/>
-                <ImageView fx:id="deck1Image" fitHeight="200" fitWidth="130"/>
-                <ImageView fx:id="deck2Image" fitHeight="200" fitWidth="130"/>
+            <HBox fx:id="eventCardBox" alignment="CENTER" spacing="30">
+                <ImageView fx:id="deck0Image" fitHeight="200" fitWidth="130" />
+                <ImageView fx:id="deck1Image" fitHeight="200" fitWidth="130" />
+                <ImageView fx:id="deck2Image" fitHeight="200" fitWidth="130" />
             </HBox>
 
             <HBox alignment="CENTER" spacing="10">
-                <Button text="Ready" onAction="#placeHandComponentAndReady"/>
+                <Button minHeight="34.0" minWidth="157.0" onAction="#placeHandComponentAndReady" text="Ready">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
+            <VBox.margin>
+               <Insets bottom="30.0" top="30.0" />
+            </VBox.margin>
             </HBox>
         </VBox>
     </bottom>
