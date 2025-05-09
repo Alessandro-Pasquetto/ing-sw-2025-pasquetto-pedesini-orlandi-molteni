@@ -76,6 +76,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void reconnectToGame(){
+        SocketWriter.sendMessage(new ReconnectMessage(GameData.getIdGame(), GameData.getNamePlayer()));
+    }
+
+    @Override
     public void showHandComponent() {
         SocketWriter.sendMessage("ShowHandComponent");
     }

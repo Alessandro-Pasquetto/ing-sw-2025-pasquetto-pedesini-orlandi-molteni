@@ -1199,7 +1199,7 @@ public class BuildingController {
      * @param gameManager current gameManager
      * @return areAllValid
      */
-    public static boolean checkAllNotReadyStartShipValidity(GameManager gameManager) {
+    public static boolean checkAllNotReadyStartShipValidityAndAddToTravelers(GameManager gameManager) {
         Game game = gameManager.getGame();
         boolean areAllValid = true;
 
@@ -1261,5 +1261,28 @@ public class BuildingController {
         }
 
         return areAllInit;
+    }
+
+    public static void autoReadyBuildingForDisconnectedPlayers(GameManager gameManager){
+
+        for(Player player : gameManager.getDisconnectedPlayersCopy()){
+
+            if(!player.getIsReady()){
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.addNotCheckedReadyPlayer(player);
+            }
+        }
+    }
+
+    public static void kickOutDisconnectedPlayersWithIllegalSpaceship(GameManager gameManager){
+
+        for(Player player : gameManager.getDisconnectedPlayersCopy()){
+
+            Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
+
+            if(!result.getKey()) {
+                gameManager.kickOutPlayer(player);
+            }
+        }
     }
 }

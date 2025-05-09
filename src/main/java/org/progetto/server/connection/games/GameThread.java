@@ -77,7 +77,7 @@ public class GameThread extends Thread {
 
                         gameManager.getGame().resetReadyPlayers();
                         synchronized (gameThreadLock) {
-                            while (game.getNumReadyPlayers() != game.getMaxNumPlayers() && !gameManager.getTimerExpired())
+                            while (game.getNumReadyPlayers() != game.getPlayersSize() && !gameManager.getTimerExpired())
                                 gameThreadLock.wait();
                         }
 
@@ -89,8 +89,9 @@ public class GameThread extends Thread {
 
                         // Waiting for placing the last component
                         waitPlayersReady();
+                        BuildingController.autoReadyBuildingForDisconnectedPlayers(gameManager);
 
-                        while(!BuildingController.checkAllNotReadyStartShipValidity(gameManager)){
+                        while(!BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             game.setPhase(GamePhase.ADJUSTING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
@@ -98,6 +99,7 @@ public class GameThread extends Thread {
                             // Waiting for adjusting spaceship
                             waitPlayersReady();
                         }
+                        BuildingController.kickOutDisconnectedPlayersWithIllegalSpaceship(gameManager);
 
                         if(!BuildingController.initializeAllSpaceship(game)){
                             game.setPhase(GamePhase.POPULATING);
@@ -109,9 +111,11 @@ public class GameThread extends Thread {
                             // Waiting to populate the spaceship (don't do another phase for this, bcs custom actions after this)
                             waitPlayersReady();
                         }
+                        PopulateController.fillHumansDisconnectedPlayers(gameManager);
 
                         // Preparing travelers on the track
                         game.getBoard().addTravelersInTrack(game.getLevel());
+                        GameController.removeDisconnectedPlayersFromTravelers(gameManager);
 
                         if(game.getLevel() != 1)
                             game.composeHiddenEventDeck();
@@ -253,7 +257,7 @@ public class GameThread extends Thread {
         Game game = gameManager.getGame();
 
         synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() < game.getMaxNumPlayers())
+            while (game.getNumReadyPlayers() < game.getPlayersSize())
                 gameThreadLock.wait();
         }
     }

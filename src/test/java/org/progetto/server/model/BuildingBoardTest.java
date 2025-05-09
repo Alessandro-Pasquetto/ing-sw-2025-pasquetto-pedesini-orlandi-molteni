@@ -1132,7 +1132,7 @@ class BuildingBoardTest {
         buildingBoard.placeComponent(2, 1, 0);
 
         // Populate with humans
-        buildingBoard.fillHuman();
+        buildingBoard.fillHumans();
         assertEquals(2, hu.getCrewCount());
 
         Exception exception = assertThrows(IllegalStateException.class, () -> {

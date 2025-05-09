@@ -68,7 +68,9 @@ public class SocketListener extends Thread {
                 clientHandler.getSocketWriter().sendMessage(e.getMessage());
             }
 
-        } else if (messageObj instanceof JoinGameMessage joinGameMessage) {
+        }
+
+        else if (messageObj instanceof JoinGameMessage joinGameMessage) {
             int idGame = joinGameMessage.getIdGame();
             String name = joinGameMessage.getName();
 
@@ -79,6 +81,13 @@ public class SocketListener extends Thread {
             } catch (IllegalStateException e) {
                 clientHandler.getSocketWriter().sendMessage(e.getMessage());
             }
+        }
+
+        else if (messageObj instanceof ReconnectMessage reconnectMessage) {
+            int gameId = reconnectMessage.getGameId();
+            String playerName = reconnectMessage.getNamePlayer();
+
+            LobbyController.reconnectToGame(gameId, playerName, clientHandler.getSocketWriter());
         }
 
         else if (messageObj instanceof String messageString) {

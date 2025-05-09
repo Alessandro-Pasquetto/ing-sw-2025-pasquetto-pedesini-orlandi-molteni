@@ -1132,7 +1132,7 @@ public class BuildingBoard implements Serializable {
      *
      * @author Alessandro
      */
-    public void fillHuman(){
+    public void fillHumans(){
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 

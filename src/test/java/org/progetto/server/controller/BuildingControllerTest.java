@@ -613,7 +613,7 @@ class BuildingControllerTest {
     }
 
     @Test
-    void checkAllNotReadyStartShipValidity() throws RemoteException {
+    void checkAllNotReadyStartShipValidityAndAddToTravelers() throws RemoteException {
         //setup
         GameManager gameManager = new GameManager(0, 4, 2);
         Player player_1 = new Player("mario", 0, 1);
@@ -638,7 +638,7 @@ class BuildingControllerTest {
             }
         };
 
-        BuildingController.checkAllNotReadyStartShipValidity(gameManager);
+        BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
 
 
         //init second spaceship(valid)
@@ -654,7 +654,7 @@ class BuildingControllerTest {
             }
        };
 
-       BuildingController.checkAllNotReadyStartShipValidity(gameManager);
+       BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
 
 
     }

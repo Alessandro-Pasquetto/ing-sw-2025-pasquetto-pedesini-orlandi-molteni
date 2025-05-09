@@ -76,10 +76,9 @@ public class Player implements Serializable {
 
     public void setIsReady(boolean isReady, Game game) {
 
-        if(this.isReady != isReady){
+        if(this.isReady != isReady)
             this.isReady = isReady;
-            game.addReadyPlayers(isReady);
-        }
+
     }
 
     // =======================

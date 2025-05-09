@@ -116,4 +116,12 @@ public class GameController {
             sender.sendMessage(e.getMessage());
         }
     }
+
+    public static void removeDisconnectedPlayersFromTravelers(GameManager gameManager){
+
+        for(Player player : gameManager.getDisconnectedPlayersCopy()){
+
+            gameManager.getGame().getBoard().removeTraveler(player);
+        }
+    }
 }

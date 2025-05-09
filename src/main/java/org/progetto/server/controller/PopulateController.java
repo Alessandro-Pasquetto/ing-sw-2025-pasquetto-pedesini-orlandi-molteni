@@ -65,6 +65,7 @@ public class PopulateController {
         if (player.getSpaceship().checkShipAllowOrangeAlien())
             sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
         else{
+            player.getSpaceship().getBuildingBoard().fillHumans();
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         }
@@ -90,8 +91,18 @@ public class PopulateController {
             }
         }
 
-        player.getSpaceship().getBuildingBoard().fillHuman();
+        player.getSpaceship().getBuildingBoard().fillHumans();
         player.setIsReady(true, game);
         gameManager.getGameThread().notifyThread();
+    }
+
+    public static void fillHumansDisconnectedPlayers(GameManager gameManager){
+
+        for (Player player : gameManager.getDisconnectedPlayersCopy()){
+
+            if(!player.getIsReady())
+                player.getSpaceship().getBuildingBoard().fillHumans();
+        }
+
     }
 }

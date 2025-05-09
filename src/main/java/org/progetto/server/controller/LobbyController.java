@@ -252,4 +252,13 @@ public class LobbyController {
 
         return gameManager;
     }
+
+
+    public static void reconnectToGame(int idGame, String name, Sender sender) throws IllegalStateException, RemoteException {
+
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        gameManager.reconnectPlayer(name, sender);
+
+    }
 }

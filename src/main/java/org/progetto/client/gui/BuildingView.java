@@ -350,7 +350,6 @@ public class BuildingView {
      * @param deck is the list of cards chosen
      */
     public void showEventDeck(ArrayList<EventCard> deck) {
-        BuildingData.setIsDeckVisible(true);
 
         eventCardContainer.getChildren().clear();
 
@@ -372,8 +371,6 @@ public class BuildingView {
      */
     public void hideEventDeck() {
 
-        BuildingData.setIsDeckVisible(false);
-
         eventCardDisplay.setVisible(false);
         eventCardDisplay.setMouseTransparent(true);
     }
@@ -393,19 +390,16 @@ public class BuildingView {
             default -> -1;
         };
 
-        if (!BuildingData.getIsDeckVisible()) {
-            if (BuildingData.getHandComponent() == null)
-                GameData.getSender().pickUpEventCardDeck(idxDeck);
+        if (BuildingData.getHandComponent() == null)
+            GameData.getSender().pickUpEventCardDeck(idxDeck);
 
-            else if (BuildingData.getXHandComponent() != -1)
-                GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
-        }
+        else if (BuildingData.getXHandComponent() != -1)
+            GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
     }
 
     @FXML
     private void putDownDeck() {
-        if (BuildingData.getIsDeckVisible())
-            GameData.getSender().putDownEventCardDeck();
+        GameData.getSender().putDownEventCardDeck();
     }
 
     public void updateEventDecksAvailability(int deckIdx) {

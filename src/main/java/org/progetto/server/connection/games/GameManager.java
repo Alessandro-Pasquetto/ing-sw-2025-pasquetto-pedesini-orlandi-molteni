@@ -2,6 +2,7 @@ package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
+import org.progetto.messages.toClient.ReconnectionGameData;
 import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.LobbyController;
@@ -112,10 +113,26 @@ public class GameManager {
         throw new IllegalStateException("PlayerNotFound");
     }
 
+    public ArrayList<Player> getDisconnectedPlayersCopy() {
+        synchronized (disconnectedPlayers) {
+            return new ArrayList<>(disconnectedPlayers);
+        }
+    }
+
     public int getSizeDisconnectedPlayers() {
         synchronized (disconnectedPlayers) {
             return disconnectedPlayers.size();
         }
+    }
+
+    public Player getDisconnectedPlayerByName(String playerName) {
+        synchronized (disconnectedPlayers) {
+            for (Player player : disconnectedPlayers) {
+                if(player.getName().equals(playerName))
+                    return player;
+            }
+        }
+        return null;
     }
 
     // =======================
@@ -194,9 +211,50 @@ public class GameManager {
             return;
         }
 
+
+        game.removePlayer(player);
         addDisconnectedPlayers(player);
+        // todo notificare la disconnessione del player agli altri
+
+        if(game.getPhase().equals(GamePhase.EVENT)){
+
+            //todo
+
+        }
 
         //todo gestire il resto
+
+        addDisconnectedPlayers(player);
+        gameThread.notifyThread();
+    }
+
+    public void reconnectPlayer(String namePlayer, Sender sender) {
+
+        Player player = getDisconnectedPlayerByName(namePlayer);
+        addSender(player, sender);
+
+        System.out.println(player.getName() + " has reconnected");
+
+        Game game = getGame();
+
+        try{
+            sender.sendMessage(new ReconnectionGameData(game.getLevel(), player.getColor()));
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+            return;
+        }
+
+        if(!game.getPhase().equals(GamePhase.EVENT)){
+            game.addPlayer(player);
+        }
+        else{
+            //todo
+        }
+    }
+
+    public void kickOutPlayer(Player player) {
+        removeDisconnectedPlayer(player);
+        removeSender(player);
     }
 
     public void addSender(Player player, Sender socketWriter){

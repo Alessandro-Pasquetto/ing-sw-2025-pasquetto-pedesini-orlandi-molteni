@@ -17,6 +17,8 @@ public interface VirtualServer extends Remote {
 
     void joinGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
 
+    void reconnectToGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException;
+
     void pickHiddenComponent(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void pickVisibleComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException;

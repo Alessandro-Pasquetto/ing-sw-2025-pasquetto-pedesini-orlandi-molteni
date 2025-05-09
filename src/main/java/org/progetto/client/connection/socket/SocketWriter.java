@@ -35,6 +35,7 @@ public class SocketWriter extends Thread {
         while (running) {
             try {
                 Object messageObj = messageQueue.take();
+
                 out.writeObject(messageObj);
                 out.flush();
 

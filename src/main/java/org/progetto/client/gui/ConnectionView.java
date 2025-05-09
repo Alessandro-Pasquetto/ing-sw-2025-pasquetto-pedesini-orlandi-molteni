@@ -96,10 +96,11 @@ public class ConnectionView {
             }else{
                 GameData.restoreSavedGameData();
                 System.out.println("A saved game was found and the data has been restored.");
-
                 System.out.println("Id: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
 
-                //TODO: inviare richiesta riconnessione (per ora lascio che fa come se non ci fosse)
+                //GameData.getSender().reconnectToGame();
+
+                // se abiliti la reconnectToGame elimina le righe qua sotto.. //todo poi eliminare
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
                 GameData.getSender().updateGameList();
             }

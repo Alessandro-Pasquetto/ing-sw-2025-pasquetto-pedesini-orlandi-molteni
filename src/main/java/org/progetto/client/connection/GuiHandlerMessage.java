@@ -49,11 +49,30 @@ public class GuiHandlerMessage {
 
             GameData.setIdGame(gameId);
             GameData.setLevelGame(levelGame);
+        }
 
-        } else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
+        else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
+            try {
+
+                GameData.setLevelGame(reconnectionGameData.getLevelGame());
+                GameData.setColor(reconnectionGameData.getPlayerColor());
+
+                GameData.getSender().showSpaceship(GameData.getNamePlayer());
+
+                PageController.initGame(GameData.getLevelGame(), GameData.getColor());
+                PageController.switchScene("buildingPage.fxml", "Game");
+
+            } catch (IOException e) {
+                Alerts.showWarning("Error loading the page");
+                System.out.println("Error loading the page");
+            }
+        }
+
+        else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
             PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
+        }
 
-        } else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
+        else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
 

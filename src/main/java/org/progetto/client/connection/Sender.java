@@ -12,6 +12,8 @@ public interface Sender {
 
     void tryJoinToGame(int idGame);
 
+    void reconnectToGame();
+
     void showHandComponent();
 
     void buildShip(int idShip);

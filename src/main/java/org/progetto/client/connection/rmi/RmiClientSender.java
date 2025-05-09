@@ -58,6 +58,16 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void reconnectToGame(){
+
+        try {
+            server.reconnectToGame(RmiClientReceiver.getInstance(), GameData.getIdGame(), GameData.getNamePlayer());
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
     public void showHandComponent(){
         try {
             server.showHandComponent(RmiClientReceiver.getInstance(), GameData.getIdGame());

@@ -45,7 +45,6 @@ public class Game {
     private final Board board;
     private EventCard activeEventCard;
     private Player activePlayer;
-    private final AtomicInteger numReadyPlayers;
 
     // =======================
     // CONSTRUCTORS
@@ -54,7 +53,7 @@ public class Game {
     public Game(int idGame, int maxNumPlayers, int level) {
         this.id = idGame;
         this.maxNumPlayers = maxNumPlayers;
-        this.players = new ArrayList<Player>();
+        this.players = new ArrayList<>();
         this.level = level;
         this.phase = GamePhase.WAITING;
         this.componentDeck = loadComponents();
@@ -65,7 +64,6 @@ public class Game {
         this.board = new Board(level);
         this.activeEventCard = null;
         this.activePlayer = null;
-        this.numReadyPlayers = new AtomicInteger(0);
     }
 
     // =======================
@@ -136,7 +134,16 @@ public class Game {
     }
 
     public int getNumReadyPlayers() {
-        return numReadyPlayers.get();
+        int readyPlayers = 0;
+
+        synchronized (players) {
+            for (Player player : players) {
+                if(player.getIsReady())
+                    readyPlayers++;
+            }
+        }
+
+        return readyPlayers;
     }
 
     // =======================
@@ -560,19 +567,6 @@ public class Game {
         while (deck.getFirst().getLevel() != level);
 
         hiddenEventDeck = deck;
-    }
-
-    /**
-     * Changes numReadyPlayer value
-     *
-     * @author Alessandro
-     * @param isToAdd Defines increment/decrement
-     */
-    public void addReadyPlayers(boolean isToAdd) {
-        if(isToAdd)
-            numReadyPlayers.getAndIncrement();
-        else
-            numReadyPlayers.getAndDecrement();
     }
 
     /**
