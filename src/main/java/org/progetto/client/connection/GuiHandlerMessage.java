@@ -1,7 +1,7 @@
 package org.progetto.client.connection;
 
 import org.progetto.client.gui.Alerts;
-import org.progetto.client.gui.BuildingView;
+import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -66,9 +66,12 @@ public class GuiHandlerMessage {
                 PageController.switchScene("buildingPage.fxml", "Game");
 
                 Sender sender = GameData.getSender();
-                sender.showPlayers();
-                sender.showSpaceship(GameData.getNamePlayer());
 
+                sender.showHandComponent();
+                sender.showBookedComponents();
+                sender.showSpaceship(GameData.getNamePlayer());
+                sender.showPlayers();
+                sender.showVisibleComponents();
 
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");
@@ -110,12 +113,20 @@ public class GuiHandlerMessage {
                 PageController.getGameView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
+        else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
+            PageController.getGameView().generateHandComponent(showHandComponentMessage.getHandComponent());
+        }
+
+        else if (messageObj instanceof ShowBookedComponentsMessage pickedBookedComponentsMessage) {
+            PageController.getGameView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
+        }
+
         else if(messageObj instanceof ShowPlayersMessage showPlayersMessage) {
             PageController.getGameView().initPlayersList(showPlayersMessage.getPlayers());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
-            PageController.getGameView().generateComponent(pickedComponentMessage.getPickedComponent());
+            PageController.getGameView().generateHandComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
@@ -188,6 +199,8 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ComponentBooked":
+                    DragAndDrop.setOnMousePressedForBookedComponent(BuildingData.getHandComponent());
+                    BuildingData.resetHandComponent();
                     break;
 
                 case "HandComponentDiscarded":
@@ -199,7 +212,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "PickedBookedComponent":
-                    BuildingData.setNewHandComponent(BuildingData.getTempBookedComponent());
+                    BuildingData.setNewHandComponent(BuildingData.getTempPickingBookedComponent());
                     break;
 
                 case "EventCardDeckPutDown":

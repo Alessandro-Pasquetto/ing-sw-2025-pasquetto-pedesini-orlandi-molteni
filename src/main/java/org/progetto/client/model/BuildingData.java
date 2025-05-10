@@ -10,7 +10,7 @@ public class BuildingData {
     // =======================
 
     private static Pane handComponent = null;
-    private static Pane tempBookedComponent = null;
+    private static Pane tempPickingBookedComponent = null;
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
@@ -26,8 +26,8 @@ public class BuildingData {
         return handComponent;
     }
 
-    public static Pane getTempBookedComponent() {
-        return tempBookedComponent;
+    public static Pane getTempPickingBookedComponent() {
+        return tempPickingBookedComponent;
     }
 
     public static int getXHandComponent(){
@@ -66,8 +66,8 @@ public class BuildingData {
             DragAndDrop.enableDragAndDropComponent(BuildingData.handComponent);
     }
 
-    public static void setTempBookedComponent(Pane tempBookedComponent) {
-        BuildingData.tempBookedComponent = tempBookedComponent;
+    public static void setTempPickingBookedComponent(Pane tempPickingBookedComponent) {
+        BuildingData.tempPickingBookedComponent = tempPickingBookedComponent;
     }
 
     public static void setXHandComponent(int xHandComponent){
@@ -123,7 +123,6 @@ public class BuildingData {
         if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired())){
             if(GameData.getUIType().equals("GUI")) {
                 DragAndDrop.disableDragAndDropComponent(BuildingData.handComponent);
-                handComponent.getStyleClass().remove("draggable");
             }
         }
 

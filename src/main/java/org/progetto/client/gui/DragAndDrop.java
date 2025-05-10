@@ -156,43 +156,6 @@ public class DragAndDrop {
                 componentPane.setRotate(componentPane.getRotate() - 90 * BuildingData.getRHandComponent());
 
                 GameData.getSender().bookComponent(BuildingData.getXHandComponent());
-
-                // Set his pressFunction
-                componentPane.setOnMousePressed(event2 -> {
-
-                    BuildingData.setTempBookedComponent(componentPane);
-                    onMousePressedFunctionComponent(componentPane, event2);
-
-                    double sceneX2 = event2.getSceneX();
-                    double sceneY2 = event2.getSceneY();
-
-                    // Check if the drop is inside any cell of the grid
-                    for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
-                        if (node instanceof Pane cell) {
-                            Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
-                            if (cellBounds.contains(sceneX2, sceneY2)) {
-
-                                Integer colIndex = GridPane.getColumnIndex(cell);
-
-                                if(BuildingData.getHandComponent() == null){
-                                    GameData.getSender().pickBookedComponent(colIndex);
-
-                                }else if(BuildingData.getXHandComponent() != -1) {
-                                    GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), colIndex);
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    event2.consume();  // Consume the event to prevent default behavior
-                });
-
-                // Disable dragged and released
-                componentPane.setOnMouseDragged(null);
-                componentPane.setOnMouseReleased(null);
-                BuildingData.resetHandComponent();
             }
         }else{
             // If the drop was not inside any cell, return the image to its original position
@@ -205,6 +168,44 @@ public class DragAndDrop {
             componentPane.setLayoutY((double) componentPane.getProperties().get("originalLayoutY"));
         }
         event.consume();  // Consume the event to prevent default behavior
+    }
+
+    public static void setOnMousePressedForBookedComponent(Pane componentPane) {
+        // Set his pressFunction
+        componentPane.setOnMousePressed(event2 -> {
+
+            BuildingData.setTempPickingBookedComponent(componentPane);
+            onMousePressedFunctionComponent(componentPane, event2);
+
+            double sceneX2 = event2.getSceneX();
+            double sceneY2 = event2.getSceneY();
+
+            // Check if the drop is inside any cell of the grid
+            for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
+                if (node instanceof Pane cell) {
+                    Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
+                    if (cellBounds.contains(sceneX2, sceneY2)) {
+
+                        Integer colIndex = GridPane.getColumnIndex(cell);
+
+                        if(BuildingData.getHandComponent() == null){
+                            GameData.getSender().pickBookedComponent(colIndex);
+
+                        }else if(BuildingData.getXHandComponent() != -1) {
+                            GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), colIndex);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            event2.consume();  // Consume the event to prevent default behavior
+        });
+
+        // Disable dragged and released
+        componentPane.setOnMouseDragged(null);
+        componentPane.setOnMouseReleased(null);
     }
 
     // Make draggable
@@ -226,6 +227,8 @@ public class DragAndDrop {
         componentPane.setOnMouseReleased(event -> {
             onMouseReleasedFunctionComponent(componentPane, event);
         });
+
+        componentPane.getStyleClass().add("draggable");
     }
 
     // Method to disable drag-and-drop for a Pane
@@ -233,6 +236,7 @@ public class DragAndDrop {
         componentPane.setOnMousePressed(null);
         componentPane.setOnMouseDragged(null);
         componentPane.setOnMouseReleased(null);
+        componentPane.getStyleClass().remove("draggable");
     }
 
     // =======================
@@ -411,12 +415,16 @@ public class DragAndDrop {
         itemImage.setOnMouseReleased(event -> {
             onMouseReleasedFunctionItems(itemImage, event, targetId);
         });
+
+        itemImage.getStyleClass().add("draggable");
     }
 
     // Method to disable drag-and-drop for a Pane
-    public static void disableDragAndDropBoxes(ImageView itemImage) {
+    public static void disableDragAndDropItems(ImageView itemImage) {
         itemImage.setOnMousePressed(null);
         itemImage.setOnMouseDragged(null);
         itemImage.setOnMouseReleased(null);
+
+        itemImage.getStyleClass().remove("draggable");
     }
 }

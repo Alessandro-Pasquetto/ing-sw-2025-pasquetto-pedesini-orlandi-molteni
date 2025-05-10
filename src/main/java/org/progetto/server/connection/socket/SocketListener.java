@@ -492,6 +492,7 @@ public class SocketListener extends Thread {
                     break;
 
                 default:
+
                     System.out.println(messageString + " not allowed");
                     break;
             }

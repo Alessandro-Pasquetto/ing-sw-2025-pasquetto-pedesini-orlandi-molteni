@@ -594,12 +594,158 @@ public class BuildingView {
         BuildingData.resetHandComponent();
     }
 
+    private Pane generateComponentPane(Component component) {
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(COMPONENT_SIZE);
+        imageView.setFitHeight(COMPONENT_SIZE);
+
+        Pane componentPane = new Pane();
+        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
+
+        componentPane.getChildren().add(imageView);
+
+        switch (component) {
+            case BoxStorage boxStorage -> {
+
+                switch (boxStorage.getCapacity()) {
+                    case 1:
+                        Pane slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        componentPane.getChildren().add(slot1);
+                        break;
+
+                    case 2:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(10.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        Pane slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(30.0);
+                        slot2.setLayoutY(50.0);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        break;
+
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(10.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(50.0);
+                        slot2.setLayoutY(10.0);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
+
+                        Pane slot3 = new Pane();
+                        slot3.setId("boxSlot");
+                        slot3.setLayoutX(50.0);
+                        slot3.setLayoutY(50.0);
+                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot3.getProperties().put("idx", 2);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
+            }
+            case HousingUnit housingUnit -> {
+                Pane slot1 = new Pane();
+                slot1.setId("crewSlot");
+                slot1.setLayoutX(10.0);
+                slot1.setLayoutY(30.0);
+                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                Pane slot2 = new Pane();
+                slot2.setId("crewSlot");
+                slot2.setLayoutX(50.0);
+                slot2.setLayoutY(30.0);
+                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+            }
+            case BatteryStorage batteryStorage -> {
+                switch (batteryStorage.getCapacity()) {
+                    case 2:
+                        Pane slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(30.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        Pane slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(50.0);
+                        slot2.setLayoutY(30.0);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+
+                        break;
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(20.0);
+                        slot1.setLayoutY(30.0);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(30.0);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        Pane slot3 = new Pane();
+                        slot3.setId("batterySlot");
+                        slot3.setLayoutX(60.0);
+                        slot3.setLayoutY(30.0);
+                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot3.getProperties().put("idx", 2);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
+            }
+            default -> {}
+        }
+
+        return componentPane;
+    }
+
     /**
      * Generates a draggable paneComponent
      *
      * @author Alessandro
      */
-    public void generateComponent(Component component) {
+    public void generateHandComponent(Component component) {
 
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
         ImageView imageView = new ImageView(image);
@@ -607,7 +753,6 @@ public class BuildingView {
         imageView.setFitHeight(COMPONENT_SIZE);
 
         Pane componentPane = new Pane();
-        componentPane.getStyleClass().add("draggable");
         componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
 
         componentPane.getChildren().add(imageView);
@@ -763,6 +908,7 @@ public class BuildingView {
     }
 
     public void updateSpaceship(Spaceship spaceship) {
+
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
 
         for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
@@ -774,7 +920,29 @@ public class BuildingView {
                 // If the cell contains a component and the spaceshipCell is empty
                 if (!cell.getChildren().isEmpty() && spaceshipMatrix[rowIndex][colIndex] == null)
                     cell.getChildren().clear();
+
+                if (spaceshipMatrix[rowIndex][colIndex] != null){
+                    Pane componentPane = generateComponentPane(spaceshipMatrix[rowIndex][colIndex]);
+                    cell.getChildren().add(componentPane);
+                }
             }
+        }
+    }
+
+    public void updateBookedComponents(Component[] bookedComponents) {
+
+        for (int i = 0; i < 2; i++) {
+            Component component = bookedComponents[i];
+
+            if(component == null)
+                continue;
+
+            Pane componentPane = generateComponentPane(component);
+            DragAndDrop.enableDragAndDropComponent(componentPane);
+            DragAndDrop.setOnMousePressedForBookedComponent(componentPane);
+
+            Pane bookedCell = (Pane) bookedArray.getChildren().get(i);
+            bookedCell.getChildren().add(componentPane);
         }
     }
 

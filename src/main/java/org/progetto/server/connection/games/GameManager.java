@@ -6,6 +6,7 @@ import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ReconnectionGameData;
 import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
@@ -240,7 +241,7 @@ public class GameManager {
 
         try{
             sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor()));
-            sender.sendMessage(new PickedComponentMessage(player.getSpaceship().getBuildingBoard().getHandComponent()));
+
         } catch (RemoteException e) {
             System.err.println("RMI client unreachable");
             return;

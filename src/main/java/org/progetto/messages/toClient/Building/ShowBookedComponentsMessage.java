@@ -10,7 +10,7 @@ public class ShowBookedComponentsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Component[] bookedComponents;
+    private final Component[] bookedComponents;
 
     // =======================
     // CONSTRUCTORS
