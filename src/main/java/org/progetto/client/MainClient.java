@@ -2,6 +2,7 @@ package org.progetto.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.TuiCommandFilter;
@@ -71,6 +72,8 @@ public class MainClient extends Application {
         GameData.setClientId(clientId);
 
         GameData.createSaveFile();
+
+        RmiClientSender.setRmiServerDisconnectionDetectionInterval(1000);
 
         launch();
     }

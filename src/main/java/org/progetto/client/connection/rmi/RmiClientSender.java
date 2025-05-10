@@ -1,5 +1,6 @@
 package org.progetto.client.connection.rmi;
 
+import javafx.application.Platform;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -14,7 +15,13 @@ public class RmiClientSender implements Sender {
 
     private VirtualServer server = null;
 
+    private static int rmiServerDisconnectionDetectionInterval;
+
     public RmiClientSender() {}
+
+    public static void setRmiServerDisconnectionDetectionInterval(int rmiServerDisconnectionDetectionInterval) {
+        RmiClientSender.rmiServerDisconnectionDetectionInterval = rmiServerDisconnectionDetectionInterval;
+    }
 
     /**
      * Method to connect to the RMI server
@@ -25,10 +32,39 @@ public class RmiClientSender implements Sender {
 
         server.connect(RmiClientReceiver.getInstance());
 
+        startRmiServerPinger();
+
         System.out.println("Connected to the RMIServer");
     }
 
-    // The following methods call functions implemented in the RmiServerReceiver
+    private void startRmiServerPinger(){
+        Thread pingThread = new Thread(() -> {
+            while (true) {
+                try{
+                    server.ping();
+                }catch (RemoteException e){
+                    System.err.println("RmiServer unreachable");
+
+                    Platform.runLater(() -> {
+                        try {
+                            PageController.switchScene("connection.fxml", "Connection");
+                        } catch (IOException e2) {
+                            throw new RuntimeException(e2);
+                        }
+                    });
+                    return;
+                }
+
+                try {
+                    Thread.sleep(rmiServerDisconnectionDetectionInterval);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        pingThread.setDaemon(true);
+        pingThread.start();
+    }
 
     @Override
     public void updateGameList(){

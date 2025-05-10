@@ -91,6 +91,7 @@ public class ConnectionView {
             GameData.getSender().connect(serverIp, serverPort);
 
             if(!GameData.hasSavedGameData()){
+
                 PageController.switchScene("chooseGame.fxml", "ChooseGame");
                 GameData.getSender().updateGameList();
             }else{
@@ -98,11 +99,7 @@ public class ConnectionView {
                 System.out.println("A saved game was found and the data has been restored.");
                 System.out.println("Id: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
 
-                //GameData.getSender().reconnectToGame();
-
-                // se abiliti la reconnectToGame elimina le righe qua sotto.. //todo poi eliminare
-                PageController.switchScene("chooseGame.fxml", "ChooseGame");
-                GameData.getSender().updateGameList();
+                GameData.getSender().reconnectToGame();
             }
 
         } catch (IOException | NotBoundException e) {

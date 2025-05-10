@@ -35,6 +35,11 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void ping() throws RemoteException {
+
+    }
+
+    @Override
     public void showWaitingGames(VirtualClient virtualClient) throws RemoteException {
         LobbyController.showWaitingGames(virtualClient);
     }

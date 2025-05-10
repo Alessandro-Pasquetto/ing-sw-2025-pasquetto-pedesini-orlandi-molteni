@@ -54,13 +54,21 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
             try {
 
-                GameData.setLevelGame(reconnectionGameData.getLevelGame());
-                GameData.setColor(reconnectionGameData.getPlayerColor());
+                int levelGame = reconnectionGameData.getLevelGame();
+                String gamePhase = reconnectionGameData.getGamePhase();
+                int playerColor = reconnectionGameData.getPlayerColor();
 
-                GameData.getSender().showSpaceship(GameData.getNamePlayer());
+                GameData.setLevelGame(levelGame);
+                GameData.setPhaseGame(gamePhase);
+                GameData.setColor(playerColor);
 
                 PageController.initGame(GameData.getLevelGame(), GameData.getColor());
                 PageController.switchScene("buildingPage.fxml", "Game");
+
+                Sender sender = GameData.getSender();
+                sender.showPlayers();
+                sender.showSpaceship(GameData.getNamePlayer());
+
 
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");

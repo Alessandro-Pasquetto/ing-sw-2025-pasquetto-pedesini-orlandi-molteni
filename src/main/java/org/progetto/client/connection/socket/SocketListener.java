@@ -3,9 +3,11 @@ package org.progetto.client.connection.socket;
 import javafx.application.Platform;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
+import org.progetto.client.gui.PageController;
 import org.progetto.client.model.GameData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.SocketException;
 
 /**
  * Socket message listener for messages coming from server
@@ -43,9 +45,20 @@ public class SocketListener extends Thread {
                 messageDispatcher(messageObj);
             }
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            stopListener();
+
+            if(e instanceof SocketException){
+                System.err.println("SocketServer unreachable");
+
+                Platform.runLater(() -> {
+                    try {
+                        PageController.switchScene("connection.fxml", "Connection");
+                    } catch (IOException e2) {
+                        throw new RuntimeException(e2);
+                    }
+                });
+            }
+            else
+                e.printStackTrace();
         }
     }
 

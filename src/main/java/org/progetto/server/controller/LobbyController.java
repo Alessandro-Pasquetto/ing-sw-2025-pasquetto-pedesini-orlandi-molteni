@@ -23,7 +23,7 @@ public class LobbyController {
     private static final AtomicInteger currentIdGame = new AtomicInteger(0);
     private static final ArrayList<Sender> senders = new ArrayList<>();
 
-    private static int lobbyDisconnectionDetectionInterval = 5000;
+    private static int lobbyDisconnectionDetectionInterval;
 
     // =======================
     // GETTERS
@@ -254,11 +254,12 @@ public class LobbyController {
     }
 
 
-    public static void reconnectToGame(int idGame, String name, Sender sender) throws IllegalStateException, RemoteException {
+    public static GameManager reconnectToGame(int idGame, String name, Sender sender) throws IllegalStateException{
 
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
         gameManager.reconnectPlayer(name, sender);
 
+        return gameManager;
     }
 }

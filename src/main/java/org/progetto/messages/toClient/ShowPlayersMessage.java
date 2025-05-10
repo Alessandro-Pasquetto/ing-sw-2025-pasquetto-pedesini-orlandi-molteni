@@ -11,7 +11,7 @@ public class ShowPlayersMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
 
 
     // =======================

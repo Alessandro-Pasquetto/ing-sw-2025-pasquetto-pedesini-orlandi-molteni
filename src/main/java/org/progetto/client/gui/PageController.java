@@ -109,8 +109,12 @@ public class PageController {
         if (stage.getScene() != null && stage.getScene().getRoot() == root)
             return;
 
-        // Execute this when the GUI thread is ready
-        Scene scene = new Scene(root);
+        Scene scene;
+
+        if(root.getScene() != null)
+            scene = root.getScene();
+        else
+            scene = new Scene(root);
 
         // Maximize the window when switching scenes
         double screenWidth = javafx.stage.Screen.getPrimary().getVisualBounds().getWidth();

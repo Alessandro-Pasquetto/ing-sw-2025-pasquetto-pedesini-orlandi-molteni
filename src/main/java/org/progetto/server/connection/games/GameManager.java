@@ -1,6 +1,7 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ReconnectionGameData;
 import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
@@ -38,7 +39,7 @@ public class GameManager {
     private EventControllerAbstract eventController;
     private final TimerController timer;
 
-    private static int gameDisconnectionDetectionInterval = 5000;
+    private static int gameDisconnectionDetectionInterval;
 
     // =======================
     // CONSTRUCTORS
@@ -238,7 +239,8 @@ public class GameManager {
         Game game = getGame();
 
         try{
-            sender.sendMessage(new ReconnectionGameData(game.getLevel(), player.getColor()));
+            sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor()));
+            sender.sendMessage(new PickedComponentMessage(player.getSpaceship().getBuildingBoard().getHandComponent()));
         } catch (RemoteException e) {
             System.err.println("RMI client unreachable");
             return;
@@ -248,7 +250,7 @@ public class GameManager {
             game.addPlayer(player);
         }
         else{
-            //todo
+            //todo reconnect in events
         }
     }
 

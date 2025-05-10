@@ -87,7 +87,10 @@ public class SocketListener extends Thread {
             int gameId = reconnectMessage.getGameId();
             String playerName = reconnectMessage.getNamePlayer();
 
-            LobbyController.reconnectToGame(gameId, playerName, clientHandler.getSocketWriter());
+            GameManager gameManager = LobbyController.reconnectToGame(gameId, playerName, clientHandler.getSocketWriter());
+
+            clientHandler.setGameManager(gameManager);
+            clientHandler.setPlayer(gameManager.getPlayerBySender(clientHandler.getSocketWriter()));
         }
 
         else if (messageObj instanceof String messageString) {
