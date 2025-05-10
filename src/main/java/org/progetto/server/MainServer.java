@@ -24,7 +24,7 @@ public class MainServer {
 
         LobbyController.startLobbyPinger();
 
-        // Delete save file
+        // Delete save files
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             Path path = Paths.get("saves");
 

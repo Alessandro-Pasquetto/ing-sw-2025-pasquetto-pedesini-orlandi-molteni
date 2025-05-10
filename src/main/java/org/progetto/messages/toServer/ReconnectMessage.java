@@ -8,15 +8,15 @@ public class ReconnectMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private final int gameId;
+    private final int idGame;
     private final String namePlayer;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ReconnectMessage(int gameId, String namePlayer) {
-        this.gameId = gameId;
+    public ReconnectMessage(int idGame, String namePlayer) {
+        this.idGame = idGame;
         this.namePlayer = namePlayer;
     }
 
@@ -24,8 +24,8 @@ public class ReconnectMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public int getGameId() {
-        return gameId;
+    public int getIdGame() {
+        return idGame;
     }
 
     public String getNamePlayer() {

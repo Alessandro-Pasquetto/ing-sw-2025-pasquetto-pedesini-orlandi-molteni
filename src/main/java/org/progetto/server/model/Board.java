@@ -90,7 +90,7 @@ public class Board {
      */
     public synchronized void removeTraveler(Player player) {
         if (!travelers.contains(player)){
-            throw new IllegalStateException("PlayerIsNotReady");
+            throw new IllegalStateException("PlayerIsNotATraveler");
         }
 
         travelers.remove(player);

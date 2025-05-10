@@ -177,6 +177,16 @@ public class GuiHandlerMessage {
 
             switch (messageString) {
 
+                case "FailedToReconnect":
+                    GameData.clearSaveFile();
+                    try {
+                        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    GameData.getSender().updateGameList();
+                    break;
+
                 case "UpdateGameList":
                     GameData.getSender().updateGameList();
                     break;

@@ -84,10 +84,19 @@ public class SocketListener extends Thread {
         }
 
         else if (messageObj instanceof ReconnectMessage reconnectMessage) {
-            int gameId = reconnectMessage.getGameId();
+            int idGame = reconnectMessage.getIdGame();
             String playerName = reconnectMessage.getNamePlayer();
 
-            GameManager gameManager = LobbyController.reconnectToGame(gameId, playerName, clientHandler.getSocketWriter());
+            GameManager gameManager;
+            try {
+                gameManager = LobbyController.reconnectToGame(idGame, playerName, clientHandler.getSocketWriter());
+            } catch (IllegalStateException e) {
+
+                if(e.getMessage().equals("FailedToReconnect"))
+                    clientHandler.getSocketWriter().sendMessage("FailedToReconnect");
+
+                return;
+            }
 
             clientHandler.setGameManager(gameManager);
             clientHandler.setPlayer(gameManager.getPlayerBySender(clientHandler.getSocketWriter()));

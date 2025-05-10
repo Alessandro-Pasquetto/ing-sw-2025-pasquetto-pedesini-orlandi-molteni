@@ -233,6 +233,10 @@ public class GameManager {
     public void reconnectPlayer(String namePlayer, Sender sender) {
 
         Player player = getDisconnectedPlayerByName(namePlayer);
+
+        if(player == null)
+            throw new IllegalStateException("FailedToReconnect");
+
         addSender(player, sender);
 
         System.out.println(player.getName() + " has reconnected");

@@ -139,4 +139,14 @@ public class GameData {
             System.err.println("Error reading data");
         }
     }
+
+    public static void clearSaveFile() {
+        if (saveFile != null && saveFile.exists()) {
+            try (FileWriter writer = new FileWriter(saveFile, false)) {
+                writer.write("");
+            } catch (IOException e) {
+                throw new RuntimeException("Errore durante la pulizia del file di salvataggio.", e);
+            }
+        }
+    }
 }

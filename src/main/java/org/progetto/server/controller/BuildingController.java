@@ -1210,7 +1210,8 @@ public class BuildingController {
 
             if(result.getValue()){
                 try {
-                    sender.sendMessage("Some components not connected to the central unit have been removed");
+                    if(sender != null)
+                        sender.sendMessage("Some components not connected to the central unit have been removed");
                 } catch (RemoteException e) {
                     System.err.println("RMI client unreachable");
                 }
@@ -1221,6 +1222,9 @@ public class BuildingController {
                 gameManager.removeNotCheckedReadyPlayer(player);
                 game.getBoard().addTraveler(player);
 
+                if(sender == null)
+                    continue;
+
                 try {
                     sender.sendMessage("ValidSpaceShip");
                 } catch (RemoteException e) {
@@ -1229,6 +1233,9 @@ public class BuildingController {
             }else{
                 areAllValid = false;
                 player.setIsReady(false, game);
+
+                if(sender == null)
+                    continue;
 
                 try {
                     sender.sendMessage("NotValidSpaceShip");

@@ -64,7 +64,13 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void reconnectToGame(VirtualClient virtualClient, int idGame, String name) throws RemoteException {
-        LobbyController.reconnectToGame(idGame, name, virtualClient);
+        try {
+            LobbyController.reconnectToGame(idGame, name, virtualClient);
+        } catch (IllegalStateException e) {
+
+            if(e.getMessage().equals("FailedToReconnect"))
+                virtualClient.sendMessage("FailedToReconnect");
+        }
     }
 
     @Override
