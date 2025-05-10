@@ -84,6 +84,7 @@ class PlayerTest {
     void setIsReady() {
         Player player = new Player("gino", 0, 1);
         Game game = new Game(0, 4, 0);
+        game.addPlayer(player);
 
         player.setIsReady(true, game);
 

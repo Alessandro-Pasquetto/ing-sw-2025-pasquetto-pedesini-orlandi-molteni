@@ -112,6 +112,8 @@ class BoxStorageTest {
         BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "imgSrc", 3);
 
         Box box1 = Box.GREEN;
+        assertEquals(2, box1.getValue());
+
         Box box2 = Box.YELLOW;
         Box box3 = Box.RED;
 

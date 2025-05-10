@@ -28,10 +28,10 @@ class GameControllerTest {
             }
         };
 
-        assertEquals(GamePhase.INIT, gameManager.getGame().getPhase());
+        assertEquals(GamePhase.WAITING, gameManager.getGame().getPhase());
         // Call the ready method and ensure no exceptions are thrown
         GameController.ready(gameManager, player, sender);
 
-        assertEquals(GamePhase.BUILDING, gameManager.getGame().getPhase());
+        assertEquals(GamePhase.WAITING, gameManager.getGame().getPhase());
     }
 }

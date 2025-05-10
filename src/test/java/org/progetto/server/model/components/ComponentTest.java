@@ -62,6 +62,17 @@ class ComponentTest {
     }
 
     @Test
+    void getIncorrectlyPlaced() {
+        Component component = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 0, 1, 0}, "imgSrc");
+
+        component.setIncorrectlyPlaced(true);
+        assertTrue(component.getIncorrectlyPlaced());
+
+        component.setIncorrectlyPlaced(false);
+        assertFalse(component.getIncorrectlyPlaced());
+    }
+
+    @Test
     void setRotation() {
         Spaceship spaceship = new Spaceship(2, 1);
 

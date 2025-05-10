@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
@@ -53,15 +54,15 @@ class PlanetsControllerTest {
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
 
-        VirtualClient sender = new VirtualClient() {
+        Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {
+            public void sendMessage(Object msg) throws RemoteException {
 
             }
         };
 
-        gameManager.addRmiClient(p1, sender);
-        gameManager.addRmiClient(p2, sender);
+        gameManager.addSender(p1, sender);
+        gameManager.addSender(p2, sender);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);

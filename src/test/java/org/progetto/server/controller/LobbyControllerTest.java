@@ -1,8 +1,8 @@
 package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.internalMessages.InternalGameInfo;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 
@@ -13,19 +13,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class LobbyControllerTest {
 
     @Test
-    void createGame() {
+    void createGame() throws RemoteException {
 
-        InternalGameInfo internalGameInfo = null;
         Player player = null;
         Game game = null;
 
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg) throws RemoteException {
+            }
+        };
+
         //Test game with lvl 1 initialized correctly
-        internalGameInfo  = LobbyController.createGame("Mario", 1, 4);
-        assertNotNull(internalGameInfo);
-        player = internalGameInfo.getPlayer();
+        GameManager gameManager1 = LobbyController.createGame("Mario", 1, 4, sender);
+        assertNotNull(gameManager1);
+        player = gameManager1.getGame().getPlayersCopy().get(0);
         assertNotNull(player);
-        GameManager gameManager = internalGameInfo.getGameManager();
-        game = gameManager.getGame();
+        game = gameManager1.getGame();
         assertNotNull(game);
 
         //Test player attributes
@@ -39,12 +43,11 @@ class LobbyControllerTest {
 
 
         //Test game with lvl 2 initialized correctly
-        internalGameInfo  = LobbyController.createGame("Giovanni", 2, 4);
-        assertNotNull(internalGameInfo);
-        player = internalGameInfo.getPlayer();
+        GameManager gameManager2 = LobbyController.createGame("Giovanni", 2, 4, sender);
+        assertNotNull(gameManager2);
+        player = gameManager2.getGame().getPlayersCopy().get(0);
         assertNotNull(player);
-        gameManager = internalGameInfo.getGameManager();
-        game = gameManager.getGame();
+        game = gameManager2.getGame();
         assertNotNull(game);
 
         //Test player attributes
@@ -59,30 +62,35 @@ class LobbyControllerTest {
     }
 
     @Test
-    void joinGame(){
+    void joinGame() throws RemoteException {
 
-        InternalGameInfo internalGameInfo  = LobbyController.createGame("Mario", 1, 4);
-        Player player_1 = internalGameInfo.getPlayer();
-        GameManager gameManager = internalGameInfo.getGameManager();
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg) throws RemoteException {
+            }
+        };
+
+        GameManager gameManager  = LobbyController.createGame("Mario", 1, 4, sender);
+        Player player1 = gameManager.getGame().getPlayersCopy().get(0);
         Game game = gameManager.getGame();
 
-        Player player_2 = new Player("Ciro", 1, 1);
+        Player player2 = new Player("Ciro", 1, 1);
 
         //Test incorrect game_id
-        assertThrows(IllegalStateException.class, ()->LobbyController.joinGame(game.getId() + 2, player_2.getName()));
+        assertThrows(IllegalStateException.class, ()->LobbyController.joinGame(game.getId() + 2, player2.getName(), sender));
 
         //Test correct joining
-        assertDoesNotThrow(()->LobbyController.joinGame(game.getId(), player_2.getName()));
+        assertDoesNotThrow(()->LobbyController.joinGame(game.getId(), player2.getName(), sender));
 
-        Player player_3 = new Player("Pasquale", 2, 1);
-        internalGameInfo = LobbyController.joinGame(game.getId(), player_3.getName());
+        Player player3 = new Player("Pasquale", 2, 1);
+        GameManager gameManager2 = LobbyController.joinGame(game.getId(), player3.getName(), sender);
 
         //Test game attributes
-        assertNotNull(internalGameInfo);
-        assertEquals(game.getLevel(), internalGameInfo.getGameManager().getGame().getLevel());
-        assertNotNull(game.getPlayerByName(player_1.getName()));
-        assertNotNull(game.getPlayerByName(player_2.getName()));
-        assertNotNull(game.getPlayerByName(player_3.getName()));
+        assertNotNull(gameManager2);
+        assertEquals(game.getLevel(), gameManager2.getGame().getLevel());
+        assertNotNull(game.getPlayerByName(player1.getName()));
+        assertNotNull(game.getPlayerByName(player2.getName()));
+        assertNotNull(game.getPlayerByName(player3.getName()));
         assertEquals(3, game.getPlayersSize());
 
 

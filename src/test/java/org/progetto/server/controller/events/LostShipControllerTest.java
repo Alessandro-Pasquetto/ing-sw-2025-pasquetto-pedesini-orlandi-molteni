@@ -38,16 +38,16 @@ class LostShipControllerTest {
         gameManager.getGame().addPlayer(p2);
         gameManager.getGame().addPlayer(p3);
 
-        VirtualClient sender = new VirtualClient() {
+        Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {
+            public void sendMessage(Object msg) throws RemoteException {
 
             }
         };
 
-        gameManager.addRmiClient(p1, sender);
-        gameManager.addRmiClient(p2, sender);
-        gameManager.addRmiClient(p3, sender);
+        gameManager.addSender(p1, sender);
+        gameManager.addSender(p2, sender);
+        gameManager.addSender(p3, sender);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -96,14 +96,14 @@ class LostShipControllerTest {
         Player p3 = new Player("alessio", 0, 1);
         gameManager.getGame().addPlayer(p3);
 
-        VirtualClient sender = new VirtualClient() {
+        Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {
+            public void sendMessage(Object msg) throws RemoteException {
 
             }
         };
 
-        gameManager.addRmiClient(p3, sender);
+        gameManager.addSender(p3, sender);
 
         gameManager.getGame().getBoard().addTraveler(p3);
 

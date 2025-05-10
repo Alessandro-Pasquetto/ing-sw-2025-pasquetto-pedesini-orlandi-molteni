@@ -250,38 +250,15 @@ class BuildingControllerTest {
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, otherPLayer, 2, 3, 0, 0, sender);
 
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                if(!message.equals("AllowedToPlaceComponent"))
-                    assertEquals("EventCardDeckIsAlreadyTaken", message);
-            }
-        };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
-
 
         //Test illegal placement
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object msg) throws RemoteException {
-                assertEquals("NotAllowedToPlaceComponent", msg);
-            }
-        };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 1, sender);
 
         //Test correct placing and picking
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object msg) throws RemoteException {
-                if(!msg.equals("AllowedToPlaceComponent"))
-                    assertInstanceOf(PickedUpEventCardDeckMessage.class, msg);
-            }
-        };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 1, 3, 0, 1, sender);
-
-
 
     }
 

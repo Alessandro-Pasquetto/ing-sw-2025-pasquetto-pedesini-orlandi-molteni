@@ -3,6 +3,10 @@ package org.progetto.server.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.components.Box;
+import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SpaceshipTest {
@@ -635,5 +639,63 @@ class SpaceshipTest {
         p5.getSpaceship().addBatteriesCount(0);
 
         assertEquals(0, p5.getSpaceship().maxNumberOfDoubleCannonsUsable());
+    }
+
+    @Test
+    void checkShipAllowPurpleAlien(){
+        Spaceship spaceship = new Spaceship(2, 0);
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(housingUnit);
+        buildingBoard.placeComponent(2, 2, 0);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertTrue(spaceship.checkShipAllowPurpleAlien());
+
+        Spaceship spaceship2 = new Spaceship(2, 0);
+        BuildingBoard buildingBoard2 = spaceship2.getBuildingBoard();
+
+        HousingUnit housingUnit2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard2.setHandComponent(housingUnit2);
+        buildingBoard2.placeComponent(2, 2, 0);
+
+        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard2.placeComponent(2, 1, 0);
+
+        buildingBoard2.initSpaceshipParams();
+        assertFalse(spaceship2.checkShipAllowPurpleAlien());
+    }
+
+    @Test
+    void checkShipAllowOrangeAlien(){
+        Spaceship spaceship = new Spaceship(2, 0);
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(housingUnit);
+        buildingBoard.placeComponent(2, 2, 0);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard.placeComponent(2, 1, 0);
+
+        buildingBoard.initSpaceshipParams();
+        assertTrue(spaceship.checkShipAllowOrangeAlien());
+
+        Spaceship spaceship2 = new Spaceship(2, 0);
+        BuildingBoard buildingBoard2 = spaceship2.getBuildingBoard();
+
+        HousingUnit housingUnit2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard2.setHandComponent(housingUnit2);
+        buildingBoard2.placeComponent(2, 2, 0);
+
+        buildingBoard2.setHandComponent(new Component(ComponentType.CANNON, new int[]{3, 3, 3, 3}, "imgPath"));
+        buildingBoard2.placeComponent(2, 1, 0);
+
+        buildingBoard2.initSpaceshipParams();
+        assertFalse(spaceship2.checkShipAllowOrangeAlien());
     }
 }

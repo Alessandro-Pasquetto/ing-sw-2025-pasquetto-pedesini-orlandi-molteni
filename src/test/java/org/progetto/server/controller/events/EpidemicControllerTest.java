@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
@@ -29,14 +30,14 @@ class EpidemicControllerTest {
 
         gameManager.getGame().addPlayer(player);
 
-        VirtualClient sender = new VirtualClient() {
+        Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {
+            public void sendMessage(Object msg) throws RemoteException {
 
             }
         };
 
-        gameManager.addRmiClient(player, sender);
+        gameManager.addSender(player, sender);
 
         gameManager.getGame().getBoard().addTraveler(player);
 

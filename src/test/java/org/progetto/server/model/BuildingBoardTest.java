@@ -270,6 +270,47 @@ class BuildingBoardTest {
     }
 
     @Test
+    void tryToPlaceComponent(){
+        Spaceship spaceship = new Spaceship(2, 0);
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        // test EmptyHandComponent exception
+        IllegalStateException exception1 = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.tryToPlaceComponent(0, 0);
+        });
+        assertEquals("EmptyHandComponent", exception1.getMessage());
+
+        // test NotValidCoordinates exception
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(housingUnit);
+        IllegalStateException exception2 = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.tryToPlaceComponent(-1, 2);
+        });
+        assertEquals("NotValidCoordinates", exception2.getMessage());
+        IllegalStateException exception3 = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.tryToPlaceComponent(2, -1);
+        });
+        assertEquals("NotValidCoordinates", exception3.getMessage());
+
+        // test NotAllowedToPlaceComponent exception
+        HousingUnit housingUnit2 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(housingUnit2);
+        buildingBoard.placeComponent(2, 2, 0);
+        buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        IllegalStateException exception4 = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.tryToPlaceComponent(2, 2);
+        });
+        assertEquals("NotAllowedToPlaceComponent", exception4.getMessage());
+
+        // test if it's not connected to at least one component
+        buildingBoard.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
+        IllegalStateException exception5 = assertThrows(IllegalStateException.class, () -> {
+            buildingBoard.tryToPlaceComponent(2, 0);
+        });
+        assertEquals("NotAllowedToPlaceComponent", exception5.getMessage());
+    }
+
+    @Test
     void destroyComponent() {
         Spaceship spaceship = new Spaceship(2, 0);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();

@@ -32,7 +32,7 @@ class GameTest {
     @Test
     void getPhase() {
         Game game = new Game(1, 4, 2);
-        assertEquals(GamePhase.INIT, game.getPhase());
+        assertEquals(GamePhase.WAITING, game.getPhase());
     }
 
     @Test
@@ -189,11 +189,17 @@ class GameTest {
     @Test
     void getNumReadyPlayers(){
         Game game = new Game(0, 3, 2);
+        Player player1 = new Player("mario", 1, 1);
+        Player player2 = new Player("valeria", 2, 1);
+        Player player3 = new Player("giorgia", 3, 1);
 
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(false);
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+
+        player1.setIsReady(true, game);
+        player2.setIsReady(false, game);
+        player3.setIsReady(true, game);
 
         assertEquals(2, game.getNumReadyPlayers());
     }
@@ -203,7 +209,7 @@ class GameTest {
         Game game = new Game(1, 4, 2);
 
         // Test initial phase
-        assertEquals(GamePhase.INIT, game.getPhase());
+        assertEquals(GamePhase.WAITING, game.getPhase());
 
         // Test setting to BUILDING
         game.setPhase(GamePhase.BUILDING);
@@ -430,18 +436,6 @@ class GameTest {
         assertFalse(game.checkAvailableName("matteo"));
         assertTrue(game.checkAvailableName("gianfranco"));
         assertTrue(game.checkAvailableName("francesco"));
-    }
-
-    @Test
-    void addReadyPlayers(){
-        Game game = new Game(0, 3, 2);
-
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(true);
-        game.addReadyPlayers(false);
-
-        assertEquals(2, game.getNumReadyPlayers());
     }
 
     @Test
