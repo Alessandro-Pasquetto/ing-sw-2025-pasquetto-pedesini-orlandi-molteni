@@ -64,7 +64,7 @@ public class PageController {
     // =======================
 
     public static void start() throws IOException {
-        Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/icon.png")));
+        Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/Game_icon.png")));
         stage.getIcons().add(icon);
 
         loadControllers();

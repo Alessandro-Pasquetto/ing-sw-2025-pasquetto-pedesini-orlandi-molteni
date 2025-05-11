@@ -43,19 +43,19 @@ public class BuildingView {
     public ImageView spaceShipImage;
 
     @FXML
-    public ImageView provaCrewImage;
+    public ImageView CrewImage;
 
     @FXML
-    public ImageView provaAlienImage;
+    public ImageView AlienImage;
 
     @FXML
-    public ImageView provaBatteryImage;
+    public ImageView BatteryImage;
 
     @FXML
     private Pane handComponentBox;
 
     @FXML
-    private ImageView provaBoxImage;
+    private ImageView BoxImage;
 
     @FXML
     private GridPane spaceshipMatrix;
@@ -102,10 +102,10 @@ public class BuildingView {
 
     // Initialize the grid when the view is loaded
     public void initialize() {
-        DragAndDrop.enableDragAndDropItems(provaBoxImage, "boxSlot");
-        DragAndDrop.enableDragAndDropItems(provaCrewImage, "crewSlot");
-        DragAndDrop.enableDragAndDropItems(provaAlienImage, "crewSlot");
-        DragAndDrop.enableDragAndDropItems(provaBatteryImage, "batterySlot");
+        DragAndDrop.enableDragAndDropItems(BoxImage, "boxSlot");
+        DragAndDrop.enableDragAndDropItems(CrewImage, "crewSlot");
+        DragAndDrop.enableDragAndDropItems(AlienImage, "crewSlot");
+        DragAndDrop.enableDragAndDropItems(BatteryImage, "batterySlot");
     }
 
     /**

@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="buildingPane"
-           xmlns="http://javafx.com/javafx/23.0.1"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.progetto.client.gui.BuildingView">
+<StackPane fx:id="buildingPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.BuildingView">
 
     <stylesheets>
         <URL value="@style/style.css" />
@@ -42,27 +30,27 @@
 
         <!-- Right controls -->
         <right>
-            <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" BorderPane.alignment="CENTER">
-                 <Label fx:id="timerLabel" text="00:00" />
+            <VBox alignment="TOP_CENTER" minWidth="350.0" spacing="15" style="-fx-background-color: rgba(100, 100, 100, 0.5); -fx-background-radius: 10;" BorderPane.alignment="CENTER">
+                 <Label fx:id="timerLabel" text="00:00" textFill="#eba52d" />
                  <Button onAction="#resetTimer" text="Reset Timer" />
-                 <ImageView fx:id="provaBoxImage" fitHeight="35" fitWidth="35">
+                 <ImageView fx:id="BoxImage" fitHeight="35" fitWidth="35">
                      <image>
                    <Image url="@img/items/GreenBox.png" />
                 </image>
                  </ImageView>
-                 <ImageView fx:id="provaCrewImage" fitHeight="35" fitWidth="35">
+                 <ImageView fx:id="CrewImage" fitHeight="35" fitWidth="35">
                      <image>
-                   <Image url="@img/items/CrewXD.png" />
+                   <Image url="@img/items/CrewMate_icon.png" />
                 </image>
                  </ImageView>
-                 <ImageView fx:id="provaAlienImage" fitHeight="35" fitWidth="35">
+                 <ImageView fx:id="AlienImage" fitHeight="35" fitWidth="35">
                      <image>
                    <Image url="@img/items/OrangeAlien.png" />
                 </image>
                  </ImageView>
-                 <ImageView fx:id="provaBatteryImage" fitHeight="45" fitWidth="18">
+                 <ImageView fx:id="BatteryImage" fitHeight="45" fitWidth="18">
                      <image>
-                   <Image url="@img/items/Battery.png" />
+                   <Image url="@img/items/Battery_icon.png" />
                 </image>
                  </ImageView>
             </VBox>
@@ -81,6 +69,13 @@
                         <GridPane fx:id="bookedArray" alignment="CENTER" maxHeight="100.0" maxWidth="200.0" translateX="265" translateY="-209">
                             <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" />
                             <Pane prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+                     <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                     </rowConstraints>
                         </GridPane>
                     </StackPane>
                 </children>
@@ -112,13 +107,7 @@
     </BorderPane>
 
     <!-- Event card display -->
-    <HBox fx:id="eventCardDisplay"
-          alignment="CENTER"
-          mouseTransparent="true"
-          spacing="10"
-          visible="false"
-          StackPane.alignment="CENTER"
-          onMouseClicked="#putDownDeck">
+    <HBox fx:id="eventCardDisplay" alignment="CENTER" mouseTransparent="true" onMouseClicked="#putDownDeck" spacing="10" visible="false" StackPane.alignment="CENTER">
 
         <HBox fx:id="eventCardContainer" alignment="CENTER" spacing="25" />
     </HBox>

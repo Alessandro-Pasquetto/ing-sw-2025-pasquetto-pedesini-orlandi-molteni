@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.progetto.client.gui.EventView"
+            prefWidth="1280.0" prefHeight="800.0"
+            style="-fx-background-color: #1e1e1e;">
+
+    <!-- Left: Navi e scoreboard -->
+    <left>
+        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: rgba(50,50,50,0.6);">
+            <Label text="Altre Navi" style="-fx-font-size: 16; -fx-text-fill: white;" />
+            <ListView fx:id="otherShipsList" prefHeight="300.0" prefWidth="200.0" />
+
+            <Label text="Punteggi" style="-fx-font-size: 16; -fx-text-fill: white;" />
+            <TableView fx:id="scoreboardTable" prefHeight="200.0" prefWidth="200.0">
+                <columns>
+                    <TableColumn fx:id="playerColumn" text="Giocatore" />
+                    <TableColumn fx:id="scoreColumn" text="Punti" />
+                </columns>
+            </TableView>
+        </VBox>
+    </left>
+
+    <!-- Center: Carta evento -->
+    <center>
+        <StackPane alignment="CENTER">
+            <ImageView fx:id="eventCardImage" fitWidth="300.0" fitHeight="460.0" preserveRatio="true" />
+        </StackPane>
+    </center>
+
+    <!-- Right: Terminale -->
+    <right>
+        <VBox spacing="10.0" style="-fx-background-color: rgba(40,40,40,0.8);">
+            <Label text="Terminale di Comando" style="-fx-font-size: 16; -fx-text-fill: white;" />
+            <TextArea fx:id="terminalOutput" editable="false" wrapText="true" prefHeight="300.0" />
+            <TextField fx:id="terminalInput" promptText="Scrivi comando..." onAction="#handleCommandInput" />
+            <Button text="Invia" onAction="#handleCommandInput" />
+        </VBox>
+    </right>
+
+</BorderPane>
