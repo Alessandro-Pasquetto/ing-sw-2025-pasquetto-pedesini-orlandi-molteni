@@ -343,11 +343,63 @@
     -fx-background-position: center center;
 }
 
+#buildingScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#buildingBorderPane {
+    -fx-padding: 25;
+}
+
+#activePlayersLabel,
+#buildingSectionTitle {
+    -fx-text-fill: #15357b;
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
 #eventCardDisplay {
     -fx-background-color: rgba(0, 0, 0, 0.85);
     -fx-padding: 0;
     -fx-pref-width: 100%;
     -fx-pref-height: 100%;
+}
+
+#playerListViewContainer,
+#discardedComponentsListWrapper {
+    -fx-padding: 25;
+    -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#discardedComponentsScrollPane,
+#discardedComponentsList {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+}
+
+#playerListView {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background: transparent;
+}
+
+#playerListView .list-cell {
+    -fx-background-radius: 8;
+    -fx-padding: 0 0 5 0;
+}
+
+#playerListView .list-cell:filled:selected {
+    -fx-background-color: rgba(226, 226, 226, 0.4);
+    -fx-text-fill: black;
+}
+
+#playerListView {
+    -fx-hbar-policy: never;
 }
 
 
@@ -379,5 +431,5 @@
 
 #batterySlot, #crewSlot, #boxSlot {
     -fx-border-color: gray;
-    -fx-background-color: rgba(0, 0, 0, 0.9);
+    -fx-background-color: rgba(0, 0, 0, 0.25);
 }

@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import javafx.scene.control.Alert;
 import org.progetto.client.gui.Alerts;
 import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
@@ -206,6 +207,7 @@ public class GuiHandlerMessage {
                 case "NotAllowedToPlaceComponent":
                     if(BuildingData.getIsTimerExpired())
                         PageController.getGameView().removeHandComponent();
+                    Alerts.showPopUp("You are not allowed to place this component", false);
                     break;
 
                 case "ComponentBooked":
@@ -232,7 +234,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "TimerExpired":
-                    System.out.println("TimerExpired");
+                    System.out.println("Timer expired");
                     PageController.getGameView().disableDraggableBookedComponents();
                     PageController.getGameView().placeLastComponent();
                     BuildingData.setIsTimerExpired(true);

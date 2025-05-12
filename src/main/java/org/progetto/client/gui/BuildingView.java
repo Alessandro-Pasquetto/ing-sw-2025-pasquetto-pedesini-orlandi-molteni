@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -52,6 +54,15 @@ public class BuildingView {
     public ImageView BatteryImage;
 
     @FXML
+    public HBox eventCardBox;
+
+    @FXML
+    public VBox playerListViewContainer;
+
+    @FXML
+    public Label activePlayersLabel;
+
+    @FXML
     private Pane handComponentBox;
 
     @FXML
@@ -67,7 +78,7 @@ public class BuildingView {
     private Label timerLabel;
 
     @FXML
-    private HBox sliderContent;
+    private GridPane discardedComponentsList;
 
     @FXML
     private ListView<Player> playerListView;
@@ -125,7 +136,7 @@ public class BuildingView {
             sizeX = 7;
         }
 
-        // spaceshipMatrix
+        // Spaceship matrix
         for (int row = 0; row < sizeY; row++) {
             for (int col = 0; col < sizeX; col++) {
                 Pane cell = new Pane();
@@ -143,7 +154,7 @@ public class BuildingView {
         spaceShipImage.setImage(image);
 
         // Init event card decks
-        if(levelShip == 2){
+        if (levelShip == 2){
             deck0Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
             deck0Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
@@ -162,6 +173,10 @@ public class BuildingView {
                 String imageId = clickedImage.getId();
                 pickUpDeck(imageId);
             });
+        } else {
+            deck0Image.setFitHeight(0);
+            deck1Image.setFitHeight(0);
+            deck2Image.setFitHeight(0);
         }
     }
 
@@ -172,7 +187,10 @@ public class BuildingView {
      * @param visibleComponents are the discarded components
      */
     public void loadVisibleComponents(ArrayList<Component> visibleComponents) {
-        sliderContent.getChildren().clear();
+        discardedComponentsList.getChildren().clear();
+
+        int col = 0;
+        int row = 0;
 
         for (int i = 0; i < visibleComponents.size(); i++) {
             Component component = visibleComponents.get(i);
@@ -180,8 +198,8 @@ public class BuildingView {
 
             Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(80);
-            imageView.setFitHeight(80);
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(100);
             imageView.setPreserveRatio(true);
             imageView.setPickOnBounds(true);
 
@@ -191,7 +209,13 @@ public class BuildingView {
                 }
             });
 
-            sliderContent.getChildren().add(imageView);
+            discardedComponentsList.add(imageView, col, row);
+
+            col++;
+            if (col > 1) {
+                col = 0;
+                row++;
+            }
         }
     }
 
@@ -212,8 +236,36 @@ public class BuildingView {
     public void initPlayersList(ArrayList<Player> players) {
         players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
-        ObservableList<Player> players_list = FXCollections.observableArrayList(players);
-        playerListView.setItems(players_list);
+        if (players.isEmpty()) {
+            playerListViewContainer.getChildren().removeAll(activePlayersLabel, playerListView);
+            playerListViewContainer.setMaxHeight(0);
+            VBox.setVgrow(playerListViewContainer, Priority.NEVER);
+            playerListViewContainer.setVisible(false);
+            playerListViewContainer.setManaged(false);
+            return;
+        }
+
+        ObservableList<Player> playersList = FXCollections.observableArrayList(players);
+        playerListView.setItems(playersList);
+
+        if (playersList.isEmpty()) {
+            playerListViewContainer.getChildren().removeAll(activePlayersLabel, playerListView);
+            playerListViewContainer.setMaxHeight(0);
+            VBox.setVgrow(playerListViewContainer, Priority.NEVER);
+        }
+
+        // Create a blank separator item between each player
+        ObservableList<Player> playersWithSeparators = FXCollections.observableArrayList();
+        for (int i = 0; i < playersList.size(); i++) {
+            playersWithSeparators.add(playersList.get(i));
+            // Add null separator between players (but not after the last one)
+            if (i < playersList.size() - 1) {
+                playersWithSeparators.add(null);
+            }
+        }
+
+        // Use the new list with separators
+        playerListView.setItems(playersWithSeparators);
 
         playerListView.setCellFactory(listView -> new ListCell<>() {
             private final VBox content = new VBox(5);
@@ -237,22 +289,56 @@ public class BuildingView {
                 overlayPane.setPrefSize(330, 240);
                 overlayPane.getChildren().add(shipGrid);
 
+                // Style name label
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
+                nameLabel.setAlignment(Pos.CENTER);
+                nameLabel.setMaxWidth(Double.MAX_VALUE);
+
                 shipDisplay.getChildren().addAll(shipBackgroundImage, overlayPane);
                 content.getChildren().addAll(nameLabel, shipDisplay);
+
+                // Add padding to the content VBox
+                content.setPadding(new Insets(5, 5, 5, 5));
             }
 
             @Override
             protected void updateItem(Player player, boolean empty) {
                 super.updateItem(player, empty);
 
-                if (empty || player == null) {
+                if (empty) {
                     setGraphic(null);
+                    setText(null);
+                    setStyle("-fx-background-color: transparent !important;");
+                    setMaxHeight(0);
+
+                } else if (player == null) {
+                    // This is our separator
+                    setGraphic(null);
+                    setText(null);
+                    setStyle("-fx-background-color: transparent !important;");
+                    setPrefHeight(0);
+
                 } else {
                     nameLabel.setText(player.getName());
 
+                    int color = player.getColor();
+                    String colorStyle = switch (color) {
+                        case 0 -> "-fx-background-color: rgba(0,0,178,0.25); -fx-background-radius: 8;";
+                        case 1 -> "-fx-background-color: rgba(30,164,0,0.25); -fx-background-radius: 8;";
+                        case 2 -> "-fx-background-color: rgba(178,0,0,0.25); -fx-background-radius: 8;";
+                        case 3 -> "-fx-background-color: rgba(255,221,0,0.25); -fx-background-radius: 8;";
+                        default -> throw new IllegalStateException("Unexpected value: " + color);
+                    };
+
+                    // Apply styling to content VBox instead of the cell
+                    content.setStyle(colorStyle);
+
+                    // Keep cell background in sync
+                    setStyle(colorStyle);
+
                     // Only clear the grid if it's the first time rendering or new data is needed
                     if (!isShipRendered) {
-                        shipGrid.getChildren().clear();  // Clear only the first time or when necessary
+                        shipGrid.getChildren().clear();
 
                         int level = GameData.getLevelGame();
                         String imgPath = "img/cardboard/spaceship" + level + ".jpg";
@@ -272,7 +358,7 @@ public class BuildingView {
         // Add a delay to show the spaceship
         PauseTransition delay = new PauseTransition(Duration.millis(250));
         delay.setOnFinished(event -> {
-            for (Player player : players) {
+            for (Player player : playersList) {
                 GameData.getSender().showSpaceship(player.getName());
             }
         });
@@ -357,6 +443,7 @@ public class BuildingView {
             ImageView cardView = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/cards/" + card.getImgSrc()))));
             cardView.setFitHeight(300);
             cardView.setPreserveRatio(true);
+            cardView.setStyle("-fx-border-radius: 8; -fx-background-radius: 8");
             eventCardContainer.getChildren().add(cardView);
         }
 
@@ -405,15 +492,15 @@ public class BuildingView {
     public void updateEventDecksAvailability(int deckIdx) {
         switch (deckIdx) {
             case 0:
-                deck0Image.setVisible(!deck0Image.isVisible());  // Toggle visibility
+                deck0Image.setVisible(!deck0Image.isVisible());
                 break;
 
             case 1:
-                deck1Image.setVisible(!deck1Image.isVisible());  // Toggle visibility
+                deck1Image.setVisible(!deck1Image.isVisible());
                 break;
 
             case 2:
-                deck2Image.setVisible(!deck2Image.isVisible());  // Toggle visibility
+                deck2Image.setVisible(!deck2Image.isVisible());
                 break;
         }
     }
@@ -500,8 +587,6 @@ public class BuildingView {
     }
 
     public void pickVisibleComponent(int idx) {
-
-        System.out.println(idx);
 
         if(BuildingData.getIsTimerExpired()){
             System.out.println("Timer expired");
