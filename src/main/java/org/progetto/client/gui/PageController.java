@@ -48,7 +48,7 @@ public class PageController {
         return waitingRoomView;
     }
 
-    public static BuildingView getGameView() {
+    public static BuildingView getBuildingView() {
         return buildingView;
     }
 

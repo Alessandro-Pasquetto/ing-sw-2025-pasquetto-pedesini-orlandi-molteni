@@ -721,25 +721,25 @@ public class BuildingController {
         try{
             buildingBoard.tryToPlaceComponent(xPlaceComponent, yPlaceComponent);
 
-            try{
-                ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
+            ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
 
-                buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
-                sender.sendMessage("AllowedToPlaceComponent");
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
+            sender.sendMessage("AllowedToPlaceComponent");
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
 
-                sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
-                gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
+            sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
+            gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
-            } catch (IllegalStateException e) {
-                if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
-                    sender.sendMessage("EventCardDeckIsAlreadyTaken");
-            }
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
                 sender.sendMessage("NotAllowedToPlaceComponent");
+
             else if(e.getMessage().equals("EmptyHandComponent"))
                 sender.sendMessage("EmptyHandComponent");
+
+            else if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
+                sender.sendMessage("EventCardDeckIsAlreadyTaken");
+
             else
                 sender.sendMessage(e.getMessage());
         }
@@ -1111,6 +1111,11 @@ public class BuildingController {
 
         if(gameManager.getGame().getLevel() == 1){
             sender.sendMessage("CannotPickUpEventCardDeck");
+            return;
+        }
+
+        if(player.getSpaceship().getShipComponentsCount() == 1){
+            sender.sendMessage("RequirePlacedComponent");
             return;
         }
 

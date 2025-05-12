@@ -126,30 +126,30 @@ public class GuiHandlerMessage {
             }
 
             else if(!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                    PageController.getGameView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                    PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
 
             else
-                PageController.getGameView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
-            PageController.getGameView().generateHandComponent(showHandComponentMessage.getHandComponent());
+            PageController.getBuildingView().generateHandComponent(showHandComponentMessage.getHandComponent());
         }
 
         else if (messageObj instanceof ShowBookedComponentsMessage pickedBookedComponentsMessage) {
-            PageController.getGameView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
+            PageController.getBuildingView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
         else if(messageObj instanceof ShowPlayersMessage showPlayersMessage) {
-            PageController.getGameView().initPlayersList(showPlayersMessage.getPlayers());
+            PageController.getBuildingView().initPlayersList(showPlayersMessage.getPlayers());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
-            PageController.getGameView().generateHandComponent(pickedComponentMessage.getPickedComponent());
+            PageController.getBuildingView().generateHandComponent(pickedComponentMessage.getPickedComponent());
         }
 
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
-            PageController.getGameView().loadVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
+            PageController.getBuildingView().loadVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
         }
 
         else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
@@ -170,22 +170,22 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof PickedUpEventCardDeckMessage pickedUpEventCardDeckMessage) {
-            PageController.getGameView().showEventDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
-            PageController.getGameView().updateEventDecksAvailability(pickedUpEventCardDeckMessage.getDeckIdx());
+            PageController.getBuildingView().showEventDeck(pickedUpEventCardDeckMessage.getEventCardsDeck());
+            PageController.getBuildingView().updateEventDecksAvailability(pickedUpEventCardDeckMessage.getDeckIdx());
             BuildingData.setCurrentDeckIdx(pickedUpEventCardDeckMessage.getDeckIdx());
         }
 
         else if(messageObj instanceof AnotherPlayerPickedUpEventCardDeck anotherPlayerPickedUpEventCardDeck) {
-            PageController.getGameView().updateEventDecksAvailability(anotherPlayerPickedUpEventCardDeck.getDeckIdx());
+            PageController.getBuildingView().updateEventDecksAvailability(anotherPlayerPickedUpEventCardDeck.getDeckIdx());
         }
 
         else if(messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
-            PageController.getGameView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
+            PageController.getBuildingView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
-            PageController.getGameView().updateTimer(timer);
+            PageController.getBuildingView().updateTimer(timer);
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -224,7 +224,7 @@ public class GuiHandlerMessage {
 
                 case "NotAllowedToPlaceComponent":
                     if(BuildingData.getIsTimerExpired())
-                        PageController.getGameView().removeHandComponent();
+                        PageController.getBuildingView().removeHandComponent();
                     Alerts.showPopUp("You are not allowed to place this component", false);
                     break;
 
@@ -234,7 +234,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "HandComponentDiscarded":
-                    PageController.getGameView().removeHandComponent();
+                    PageController.getBuildingView().removeHandComponent();
                     break;
 
                 case "HasBeenBooked":
@@ -246,15 +246,15 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EventCardDeckPutDown":
-                    PageController.getGameView().hideEventDeck();
-                    PageController.getGameView().updateEventDecksAvailability(BuildingData.getCurrentDeckIdx());
+                    PageController.getBuildingView().hideEventDeck();
+                    PageController.getBuildingView().updateEventDecksAvailability(BuildingData.getCurrentDeckIdx());
                     BuildingData.setCurrentDeckIdx(-1);
                     break;
 
                 case "TimerExpired":
                     System.out.println("Timer expired");
-                    PageController.getGameView().disableDraggableBookedComponents();
-                    PageController.getGameView().placeLastComponent();
+                    PageController.getBuildingView().disableDraggableBookedComponents();
+                    PageController.getBuildingView().placeLastComponent();
                     BuildingData.setIsTimerExpired(true);
                     break;
 

@@ -515,9 +515,8 @@ public class Game {
      */
     public ArrayList<EventCard> pickUpEventCardDeck(Player player, int idx) throws IllegalStateException{
 
-        if (idx < 0 || idx >= eventDeckAvailable.length) {
+        if (idx < 0 || idx >= eventDeckAvailable.length)
             throw new IllegalStateException("IllegalIndexEventCardDeck");
-        }
 
         synchronized (eventDeckAvailable) {
             if (eventDeckAvailable[idx] == null && !Arrays.asList(eventDeckAvailable).contains(player)) {

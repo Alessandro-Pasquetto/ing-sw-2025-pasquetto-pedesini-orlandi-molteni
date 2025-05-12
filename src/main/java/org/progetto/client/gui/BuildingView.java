@@ -650,7 +650,7 @@ public class BuildingView {
      * @author Alessandro
      */
     public void disableDraggableBookedComponents() {
-        for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
+        for (Node node : PageController.getBuildingView().getBookedArray().getChildren()) {
             if (node instanceof Pane cell) {
                 if (!cell.getChildren().isEmpty()) {
                     Node child = cell.getChildren().get(0);
@@ -1011,7 +1011,7 @@ public class BuildingView {
 
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
 
-        for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
+        for (Node node : this.spaceshipMatrix.getChildren()) {
             if (node instanceof Pane cell) {
                 // Check if the cell is already occupied by a Pane (component)
                 Integer rowIndex = GridPane.getRowIndex(cell);

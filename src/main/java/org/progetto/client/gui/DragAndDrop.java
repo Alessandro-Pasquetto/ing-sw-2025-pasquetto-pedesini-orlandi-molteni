@@ -78,7 +78,7 @@ public class DragAndDrop {
         componentPane.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
-        for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
+        for (Node node : PageController.getBuildingView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
@@ -115,7 +115,7 @@ public class DragAndDrop {
         }
 
         // Check if the drop is inside any cell of the bookedArray
-        for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
+        for (Node node : PageController.getBuildingView().getBookedArray().getChildren()) {
             if (node instanceof Pane cell) {
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
@@ -181,7 +181,7 @@ public class DragAndDrop {
             double sceneY2 = event2.getSceneY();
 
             // Check if the drop is inside any cell of the grid
-            for (Node node : PageController.getGameView().getBookedArray().getChildren()) {
+            for (Node node : PageController.getBuildingView().getBookedArray().getChildren()) {
                 if (node instanceof Pane cell) {
                     Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                     if (cellBounds.contains(sceneX2, sceneY2)) {
@@ -304,7 +304,7 @@ public class DragAndDrop {
         itemImage.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
-        for (Node node : PageController.getGameView().getSpaceshipMatrix().getChildren()) {
+        for (Node node : PageController.getBuildingView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
                 // Check if the drop is inside of that cell
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());

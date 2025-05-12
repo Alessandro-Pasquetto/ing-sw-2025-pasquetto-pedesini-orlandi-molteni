@@ -35,7 +35,6 @@ public class MainClient extends Application {
                 GameData.setUIType(command);
                 TuiCommandFilter.setProtocol();
                 TuiCommandFilter.listenerCommand();
-
                 break;
 
             }else if(command.equals("GUI")){
