@@ -1,46 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.progetto.client.gui.EventView"
-            prefWidth="1280.0" prefHeight="800.0"
-            style="-fx-background-color: #1e1e1e;">
+<?import javafx.scene.layout.GridPane?>
+<BorderPane prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #1e1e1e;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.EventView">
 
     <!-- Left: Navi e scoreboard -->
     <left>
-        <VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: rgba(50,50,50,0.6);">
-            <Label text="Altre Navi" style="-fx-font-size: 16; -fx-text-fill: white;" />
-            <ListView fx:id="otherShipsList" prefHeight="300.0" prefWidth="200.0" />
-
-            <Label text="Punteggi" style="-fx-font-size: 16; -fx-text-fill: white;" />
-            <TableView fx:id="scoreboardTable" prefHeight="200.0" prefWidth="200.0">
-                <columns>
-                    <TableColumn fx:id="playerColumn" text="Giocatore" />
-                    <TableColumn fx:id="scoreColumn" text="Punti" />
-                </columns>
-            </TableView>
-        </VBox>
+      <StackPane prefHeight="800.0" prefWidth="437.0">
+         <children>
+            <ImageView fitHeight="793.0" fitWidth="535.0">
+               <image>
+                  <Image url="@img/GUI/plancia.png" />
+               </image>
+            </ImageView>
+              <VBox alignment="CENTER" prefHeight="800.0" prefWidth="317.0" spacing="10.0">
+                  <TextArea fx:id="terminalOutput" editable="false" prefHeight="300.0" wrapText="true" />
+                  <TextField fx:id="terminalInput" onAction="#handleCommandInput" promptText="Scrivi comando..." />
+                  <Button onAction="#handleCommandInput" text="Invia" />
+               <StackPane.margin>
+                  <Insets left="135.0" right="50.0" />
+               </StackPane.margin>
+              </VBox>
+         </children>
+      </StackPane>
     </left>
 
     <!-- Center: Carta evento -->
     <center>
-        <StackPane alignment="CENTER">
-            <ImageView fx:id="eventCardImage" fitWidth="300.0" fitHeight="460.0" preserveRatio="true" />
-        </StackPane>
+        <StackPane fx:id="shipContainerPane" alignment="CENTER" BorderPane.alignment="TOP_RIGHT" />
     </center>
-
-    <!-- Right: Terminale -->
-    <right>
-        <VBox spacing="10.0" style="-fx-background-color: rgba(40,40,40,0.8);">
-            <Label text="Terminale di Comando" style="-fx-font-size: 16; -fx-text-fill: white;" />
-            <TextArea fx:id="terminalOutput" editable="false" wrapText="true" prefHeight="300.0" />
-            <TextField fx:id="terminalInput" promptText="Scrivi comando..." onAction="#handleCommandInput" />
-            <Button text="Invia" onAction="#handleCommandInput" />
-        </VBox>
-    </right>
+   <right>
+      <VBox alignment="TOP_CENTER" BorderPane.alignment="TOP_CENTER">
+         <children>
+               <Label style="-fx-font-size: 16; -fx-text-fill: white;" text="Altre Navi" />
+               <ListView fx:id="otherShipsList" />
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </VBox>
+   </right>
 
 </BorderPane>

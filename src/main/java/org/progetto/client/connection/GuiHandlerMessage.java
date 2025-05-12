@@ -104,12 +104,30 @@ public class GuiHandlerMessage {
                     System.out.println("Error loading the page");
                 }
             }
+
+            else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
+                try {
+                    GameData.saveGameData();
+                    PageController.initEvent(GameData.getLevelGame());
+                    PageController.switchScene("gamePage.fxml", "Game");
+
+                } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
+                    System.out.println("Error loading the page");
+                }
+            }
+
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
 
-            if(!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                PageController.getGameView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+            if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
+                PageController.getEventView().showPlayerShip(responseSpaceshipMessage.getOwner());
+            }
+
+            else if(!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                    PageController.getGameView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+
             else
                 PageController.getGameView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
         }
