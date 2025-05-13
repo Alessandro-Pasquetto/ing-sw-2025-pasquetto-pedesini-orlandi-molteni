@@ -19,13 +19,14 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
-    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, gameRoot, eventRoot,travelRoot;
+    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, buildingRoot, adjustingRoot, eventRoot,travelRoot;
 
     private static Stage stage;
     private static ConnectionView connectionView;
     private static ChooseGameView chooseGameView;
     private static WaitingRoomView waitingRoomView;
     private static BuildingView buildingView;
+    private static AdjustingView adjustingView;
     private static EventView eventView;
     private static TravelView travelView;
 
@@ -53,6 +54,10 @@ public class PageController {
         return buildingView;
     }
 
+    public static AdjustingView getAdjustingView() {
+        return adjustingView;
+    }
+
     public static EventView getEventView() {
         return eventView;
     }
@@ -74,7 +79,7 @@ public class PageController {
     // =======================
 
     public static void start() throws IOException {
-        Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/Game_icon.png")));
+        Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/game_icon.png")));
         stage.getIcons().add(icon);
 
         loadControllers();
@@ -103,8 +108,12 @@ public class PageController {
         waitingRoomView = loader.getController();
 
         loader = new FXMLLoader(MainClient.class.getResource("buildingPage.fxml"));
-        gameRoot = loader.load();
+        buildingRoot = loader.load();
         buildingView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("adjustingPage.fxml"));
+        adjustingRoot = loader.load();
+        adjustingView = loader.getController();
 
         loader = new FXMLLoader(MainClient.class.getResource("gamePage.fxml"));
         eventRoot = loader.load();
@@ -120,7 +129,8 @@ public class PageController {
             case "connection.fxml" -> connectionRoot;
             case "chooseGame.fxml" -> chooseGameRoot;
             case "waitingRoom.fxml" -> waitingRoomRoot;
-            case "buildingPage.fxml" -> gameRoot;
+            case "buildingPage.fxml" -> buildingRoot;
+            case "adjustingPage.fxml" -> adjustingRoot;
             case "gamePage.fxml" -> eventRoot;
             case "travelPage.fxml" -> travelRoot;
 

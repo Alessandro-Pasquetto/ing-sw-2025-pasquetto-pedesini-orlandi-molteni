@@ -23,7 +23,7 @@
          <children>
             <ImageView fitHeight="793.0" fitWidth="535.0">
                <image>
-                  <Image url="@img/GUI/plancia.png" />
+                  <Image url="@img/plancia.png" />
                </image>
             </ImageView>
               <VBox alignment="CENTER" prefHeight="800.0" prefWidth="317.0" spacing="10.0">

@@ -32,7 +32,7 @@
                         </VBox.margin>
                     </Pane>
                     <Button onAction="#pickHiddenComponent" text="Pick Component" />
-                    <Button onAction="#discardComponent" text="Discard Component" />
+                    <Button onAction="#discardComponent" text="Discard" />
                     <Button onAction="#rotateComponent" text="Rotate" />
                 </VBox>
             </left>
@@ -53,6 +53,7 @@
                                       maxWidth="390.0"
                                       VBox.vgrow="ALWAYS" />
                         </ScrollPane>
+                        <ImageView fx:id="trash" fitHeight="200" fitWidth="200" />
                     </VBox>
                 </VBox>
             </right>

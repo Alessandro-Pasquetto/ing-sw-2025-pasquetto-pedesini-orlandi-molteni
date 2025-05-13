@@ -1,20 +1,17 @@
 package org.progetto.client.gui;
 
 import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
@@ -69,10 +66,10 @@ public class BuildingView {
     public HBox timerContainer;
 
     @FXML
-    private Pane handComponentBox;
+    public ImageView trash;
 
     @FXML
-    private ImageView BoxImage;
+    private Pane handComponentBox;
 
     @FXML
     private GridPane spaceshipMatrix;
@@ -94,9 +91,6 @@ public class BuildingView {
 
     @FXML
     public HBox eventCardContainer;
-
-    @FXML
-    private StackPane centerPane;
 
     @FXML
     private ImageView deck0Image;
@@ -123,6 +117,15 @@ public class BuildingView {
 //        DragAndDrop.enableDragAndDropItems(CrewImage, "crewSlot");
 //        DragAndDrop.enableDragAndDropItems(AlienImage, "crewSlot");
 //        DragAndDrop.enableDragAndDropItems(BatteryImage, "batterySlot");
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/blackHole.png")));
+        trash.setImage(image);
+        RotateTransition rotate = new RotateTransition(Duration.seconds(5), trash);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(javafx.animation.Interpolator.LINEAR);
+        rotate.play();
+
+        trash.setOnDragDropped(event -> {discardComponent();});
     }
 
     /**
@@ -559,6 +562,10 @@ public class BuildingView {
         return spaceshipMatrix;
     }
 
+    public ImageView getTrash() {
+        return trash;
+    }
+
     public GridPane getBookedArray() {
         return bookedArray;
     }
@@ -993,12 +1000,15 @@ public class BuildingView {
                 Integer rowIndex = GridPane.getRowIndex(cell);
                 Integer colIndex = GridPane.getColumnIndex(cell);
 
+                Component component = spaceshipMatrix[rowIndex][colIndex];
+
                 // If the cell contains a component and the spaceshipCell is empty
-                if (!cell.getChildren().isEmpty() && spaceshipMatrix[rowIndex][colIndex] == null)
+                if (!cell.getChildren().isEmpty() && component == null)
                     cell.getChildren().clear();
 
-                if (spaceshipMatrix[rowIndex][colIndex] != null){
-                    Pane componentPane = generateComponentPane(spaceshipMatrix[rowIndex][colIndex]);
+                if (component != null){
+                    Pane componentPane = generateComponentPane(component);
+                    componentPane.setRotate(90 * component.getRotation());
                     cell.getChildren().add(componentPane);
                 }
             }

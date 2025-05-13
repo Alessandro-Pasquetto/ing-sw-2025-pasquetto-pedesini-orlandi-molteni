@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 
-public class AdjustingPageView {
+public class AdjustingView {
 
     @FXML
     public ImageView spaceShipImage;

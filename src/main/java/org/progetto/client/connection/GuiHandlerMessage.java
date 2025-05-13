@@ -105,6 +105,28 @@ public class GuiHandlerMessage {
                 }
             }
 
+            else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
+
+                try {
+                    PageController.switchScene("adjustingPage.fxml", "Adjusting");
+
+                } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
+                    System.out.println("Error loading the page");
+                }
+            }
+
+            else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
+
+                try {
+                    PageController.switchScene("buildingPage.fxml", "Populating");
+
+                } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
+                    System.out.println("Error loading the page");
+                }
+            }
+
             else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                 try {
                     GameData.saveGameData();

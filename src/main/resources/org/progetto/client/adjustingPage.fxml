@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="adjustingPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.AdjustingPageView">
+<StackPane fx:id="adjustingPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.AdjustingView">
 
     <stylesheets>
         <URL value="@style/style.css" />

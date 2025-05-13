@@ -77,6 +77,12 @@ public class DragAndDrop {
 
         componentPane.setManaged(false);
 
+        ImageView trash = PageController.getBuildingView().getTrash();
+        if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
+            PageController.getBuildingView().discardComponent();
+            isValidDrop = true;
+        }
+
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getBuildingView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
