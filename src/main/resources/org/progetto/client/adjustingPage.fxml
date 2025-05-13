@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="adjustingPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.AdjustingPageView">
+
+    <stylesheets>
+        <URL value="@style/style.css" />
+    </stylesheets>
+
+    <ScrollPane fx:id="adjustingScrollPane" fitToWidth="true" fitToHeight="true" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+        <BorderPane maxHeight="Infinity" maxWidth="Infinity" fx:id="adjustingBorderPane">
+
+            <top>
+                <VBox BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                    <Label fx:id="adjustingSectionTitle" text="WARNING! YOU HAVE TO FIX YOUR SHIP" wrapText="true" >
+                        <VBox.margin>
+                            <Insets bottom="30.0" top="30.0" />
+                        </VBox.margin>
+                    </Label>
+                </VBox>
+            </top>
+
+            <center>
+                <VBox BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                    <StackPane alignment="CENTER">
+                        <ImageView fx:id="spaceShipImage" fitHeight="554.0" fitWidth="757.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                        <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
+                    </StackPane>
+                </VBox>
+            </center>
+        </BorderPane>
+    </ScrollPane>
+</StackPane>

@@ -248,7 +248,7 @@ public class BuildingView {
      *
      * @author Lorenzo
      */
-    public void initPlayersList(ArrayList<Player> players) {
+    public void updatePlayersList(ArrayList<Player> players) {
         players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
         if (players.isEmpty()) {
@@ -418,30 +418,6 @@ public class BuildingView {
 
                 shipGrid.add(cell, col, row);
             }
-        }
-    }
-
-    /**
-     * Allows a player to show spaceships of other players
-     *
-     * @author Lorenzo
-     * @param player is the clicked player
-     */
-    public void showPlayerSpaceship(Player player, Spaceship ship) {
-        try {
-            FXMLLoader loader = new FXMLLoader(MainClient.class.getResource("otherPlayerPage.fxml"));
-            Parent root = loader.load();
-
-            OtherPlayerSpaceshipView controller = loader.getController();
-            controller.drawShip(ship.getBuildingBoard().getCopySpaceshipMatrix());
-
-            Stage stage = new Stage();
-            stage.setTitle("Nave di " + player.getName());
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
