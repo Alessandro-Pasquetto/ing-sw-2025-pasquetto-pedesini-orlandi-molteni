@@ -47,6 +47,7 @@ public class EventView {
     }
 
     public void showPlayerShip(Player currentPlayer) {
+
         // Imposta immagine di sfondo
         int level = GameData.getLevelGame();
         String imgPath = "img/cardboard/spaceship" + level + ".jpg";
@@ -67,7 +68,7 @@ public class EventView {
         for (int row = 0; row < sizeY; row++) {
             for (int col = 0; col < sizeX; col++) {
                 Pane cell = new Pane();
-                cell.setPrefSize(250, 250);
+                cell.setPrefSize(110, 110);
 
                 if(BuildingData.getCellMask(col, row))
                     cell.setId("spaceshipCell");
@@ -87,8 +88,8 @@ public class EventView {
                 if (component != null) {
                     String componentImg = component.getImgSrc();
                     ImageView part = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/components/" + componentImg))));
-                    part.setFitWidth(250);
-                    part.setFitHeight(250);
+                    part.setFitWidth(120);
+                    part.setFitHeight(120);
 
                     // Inserisci il componente sopra la cella esistente
                     StackPane cellWrapper = new StackPane();

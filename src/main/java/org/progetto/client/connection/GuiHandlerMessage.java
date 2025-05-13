@@ -141,7 +141,7 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof ShowPlayersMessage showPlayersMessage) {
-            PageController.getBuildingView().initPlayersList(showPlayersMessage.getPlayers());
+            PageController.getBuildingView().updatePlayersList(showPlayersMessage.getPlayers());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
