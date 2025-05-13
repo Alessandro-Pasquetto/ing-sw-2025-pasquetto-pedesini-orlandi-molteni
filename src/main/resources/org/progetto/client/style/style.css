@@ -412,7 +412,7 @@
 }
 
 #handComponentBox {
-    -fx-border-color: black;
+    -fx-border-color: rgba(128, 128, 128, 0.5);
     -fx-background-color: rgba(0, 0, 0, 0.25);
 }
 

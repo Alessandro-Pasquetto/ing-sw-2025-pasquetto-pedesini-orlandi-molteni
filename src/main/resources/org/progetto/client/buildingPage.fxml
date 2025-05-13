@@ -22,11 +22,15 @@
                         <ListView fx:id="playerListView" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
 
                         <VBox.margin>
-                            <Insets bottom="10.0" />
+                            <Insets bottom="15.0" />
                         </VBox.margin>
                     </VBox>
 
-                    <Pane fx:id="handComponentBox" minWidth="100.0" minHeight="100.0" maxWidth="100.0" maxHeight="100.0" />
+                    <Pane fx:id="handComponentBox" minWidth="100.0" minHeight="100.0" maxWidth="100.0" maxHeight="100.0" >
+                        <VBox.margin>
+                            <Insets bottom="10.0" />
+                        </VBox.margin>
+                    </Pane>
                     <Button onAction="#pickHiddenComponent" text="Pick Component" />
                     <Button onAction="#discardComponent" text="Discard Component" />
                     <Button onAction="#rotateComponent" text="Rotate" />
@@ -35,10 +39,10 @@
 
             <right>
                 <VBox alignment="CENTER_RIGHT" minWidth="410.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="discardedComponentsListWrapper" alignment="TOP_LEFT" spacing="20" VBox.vgrow="ALWAYS" maxWidth="260.0">
+                    <VBox fx:id="discardedComponentsListWrapper" alignment="TOP_LEFT" spacing="20" VBox.vgrow="ALWAYS" maxWidth="390.0">
                         <Label fx:id="buildingSectionTitle" text="Discarded components" wrapText="true" />
                         <ScrollPane fx:id="discardedComponentsScrollPane"
-                                    maxWidth="260.0"
+                                    maxWidth="390.0"
                                     hbarPolicy="NEVER"
                                     vbarPolicy="AS_NEEDED"
                                     VBox.vgrow="ALWAYS">
@@ -46,7 +50,7 @@
                                       alignment="TOP_CENTER"
                                       hgap="10"
                                       vgap="10"
-                                      maxWidth="260.0"
+                                      maxWidth="390.0"
                                       VBox.vgrow="ALWAYS" />
                         </ScrollPane>
                     </VBox>
@@ -54,29 +58,29 @@
             </right>
 
             <top>
-                <HBox spacing="10" alignment="CENTER">
+                <HBox fx:id="timerContainer" spacing="10" alignment="CENTER">
                     <Label fx:id="timerLabel" text="00:00" textFill="#eba52d" />
-                    <Button onAction="#resetTimer" text="Reset Timer" />
-                    <ImageView fx:id="BoxImage" fitHeight="35" fitWidth="35">
-                        <image>
-                            <Image url="@img/items/GreenBox.png" />
-                        </image>
-                    </ImageView>
-                    <ImageView fx:id="CrewImage" fitHeight="35" fitWidth="35">
-                        <image>
-                            <Image url="@img/items/CrewMate_icon.png" />
-                        </image>
-                    </ImageView>
-                    <ImageView fx:id="AlienImage" fitHeight="35" fitWidth="35">
-                        <image>
-                            <Image url="@img/items/OrangeAlien.png" />
-                        </image>
-                    </ImageView>
-                    <ImageView fx:id="BatteryImage" fitHeight="45" fitWidth="18">
-                        <image>
-                            <Image url="@img/items/Battery_icon.png" />
-                        </image>
-                    </ImageView>
+                    <Button fx:id="timerButton" onAction="#resetTimer" text="Reset Timer" />
+<!--                    <ImageView fx:id="BoxImage" fitHeight="35" fitWidth="35">-->
+<!--                        <image>-->
+<!--                            <Image url="@img/items/GreenBox.png" />-->
+<!--                        </image>-->
+<!--                    </ImageView>-->
+<!--                    <ImageView fx:id="CrewImage" fitHeight="35" fitWidth="35">-->
+<!--                        <image>-->
+<!--                            <Image url="@img/items/CrewMate_icon.png" />-->
+<!--                        </image>-->
+<!--                    </ImageView>-->
+<!--                    <ImageView fx:id="AlienImage" fitHeight="35" fitWidth="35">-->
+<!--                        <image>-->
+<!--                            <Image url="@img/items/OrangeAlien.png" />-->
+<!--                        </image>-->
+<!--                    </ImageView>-->
+<!--                    <ImageView fx:id="BatteryImage" fitHeight="45" fitWidth="18">-->
+<!--                        <image>-->
+<!--                            <Image url="@img/items/Battery_icon.png" />-->
+<!--                        </image>-->
+<!--                    </ImageView>-->
                 </HBox>
             </top>
 

@@ -44,14 +44,14 @@ public class BuildingView {
     @FXML
     public ImageView spaceShipImage;
 
-    @FXML
-    public ImageView CrewImage;
-
-    @FXML
-    public ImageView AlienImage;
-
-    @FXML
-    public ImageView BatteryImage;
+//    @FXML
+//    public ImageView CrewImage;
+//
+//    @FXML
+//    public ImageView AlienImage;
+//
+//    @FXML
+//    public ImageView BatteryImage;
 
     @FXML
     public HBox eventCardBox;
@@ -61,6 +61,12 @@ public class BuildingView {
 
     @FXML
     public Label activePlayersLabel;
+
+    @FXML
+    public Button timerButton;
+
+    @FXML
+    public HBox timerContainer;
 
     @FXML
     private Pane handComponentBox;
@@ -113,10 +119,10 @@ public class BuildingView {
 
     // Initialize the grid when the view is loaded
     public void initialize() {
-        DragAndDrop.enableDragAndDropItems(BoxImage, "boxSlot");
-        DragAndDrop.enableDragAndDropItems(CrewImage, "crewSlot");
-        DragAndDrop.enableDragAndDropItems(AlienImage, "crewSlot");
-        DragAndDrop.enableDragAndDropItems(BatteryImage, "batterySlot");
+//        DragAndDrop.enableDragAndDropItems(BoxImage, "boxSlot");
+//        DragAndDrop.enableDragAndDropItems(CrewImage, "crewSlot");
+//        DragAndDrop.enableDragAndDropItems(AlienImage, "crewSlot");
+//        DragAndDrop.enableDragAndDropItems(BatteryImage, "batterySlot");
     }
 
     /**
@@ -153,8 +159,17 @@ public class BuildingView {
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
 
+        // Remove timer if the game is level 1
+        if (levelShip == 1) {
+            timerContainer.getChildren().remove(timerLabel);
+            timerContainer.getChildren().remove(timerButton);
+        }
+    }
+
+    public void initEventCardDecks(int levelGame) {
+
         // Init event card decks
-        if (levelShip == 2){
+        if (levelGame == 2){
             deck0Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
             deck0Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
@@ -167,7 +182,7 @@ public class BuildingView {
                 String imageId = clickedImage.getId();
                 pickUpDeck(imageId);
             });
-            deck2Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv1.jpg"))));
+            deck2Image.setImage(new Image(String.valueOf(MainClient.class.getResource("img/cards/card-back-lv2.jpg"))));
             deck2Image.setOnMouseClicked(event -> {
                 ImageView clickedImage = (ImageView) event.getSource();
                 String imageId = clickedImage.getId();
@@ -212,7 +227,7 @@ public class BuildingView {
             discardedComponentsList.add(imageView, col, row);
 
             col++;
-            if (col > 1) {
+            if (col > 2) {
                 col = 0;
                 row++;
             }
