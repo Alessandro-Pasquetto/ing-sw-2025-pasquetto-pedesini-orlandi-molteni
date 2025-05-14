@@ -386,6 +386,7 @@
     -fx-background-color: transparent;
     -fx-control-inner-background: transparent;
     -fx-background: transparent;
+    -fx-hbar-policy: never;
 }
 
 #playerListView .list-cell {
@@ -398,13 +399,12 @@
     -fx-text-fill: black;
 }
 
-#playerListView {
-    -fx-hbar-policy: never;
-}
-
 #trash {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.5, 0, 0);
 }
+
+
+
 
 
 

@@ -32,23 +32,14 @@ import java.util.Map;
 
 public class BuildingView {
 
-    final int COMPONENT_SIZE = 100;
-    final int BOX_SLOT_SIZE = 35;
-    final int CREW_SLOT_SIZE = 35;
-    final int BATTERY_SLOT_WIDTH = 18;
-    final int BATTERY_SLOT_HEIGHT = 45;
+    final int COMPONENT_SIZE = 80;
+    final int BOX_SLOT_SIZE = 28;
+    final int CREW_SLOT_SIZE = 28;
+    final int BATTERY_SLOT_WIDTH = 14;
+    final int BATTERY_SLOT_HEIGHT = 36;
 
     @FXML
     public ImageView spaceShipImage;
-
-//    @FXML
-//    public ImageView CrewImage;
-//
-//    @FXML
-//    public ImageView AlienImage;
-//
-//    @FXML
-//    public ImageView BatteryImage;
 
     @FXML
     public HBox eventCardBox;
@@ -67,6 +58,12 @@ public class BuildingView {
 
     @FXML
     public ImageView trash;
+
+    @FXML
+    public ImageView rotateButton;
+
+    @FXML
+    public ImageView componentDeck;
 
     @FXML
     private Pane handComponentBox;
@@ -113,12 +110,10 @@ public class BuildingView {
 
     // Initialize the grid when the view is loaded
     public void initialize() {
-//        DragAndDrop.enableDragAndDropItems(BoxImage, "boxSlot");
-//        DragAndDrop.enableDragAndDropItems(CrewImage, "crewSlot");
-//        DragAndDrop.enableDragAndDropItems(AlienImage, "crewSlot");
-//        DragAndDrop.enableDragAndDropItems(BatteryImage, "batterySlot");
-        Image image = new Image(String.valueOf(MainClient.class.getResource("img/blackHole.png")));
-        trash.setImage(image);
+
+        // Initialize black hole image
+        Image blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole.png")));
+        trash.setImage(blackHoleImage);
         RotateTransition rotate = new RotateTransition(Duration.seconds(5), trash);
         rotate.setByAngle(360);
         rotate.setCycleCount(RotateTransition.INDEFINITE);
@@ -126,6 +121,18 @@ public class BuildingView {
         rotate.play();
 
         trash.setOnDragDropped(event -> {discardComponent();});
+
+        // Initialize hidden component deck
+        componentDeck.setImage(new Image(String.valueOf(MainClient.class.getResource("img/hidden-deck.png"))));
+        componentDeck.setOnMouseClicked(event -> {
+            pickHiddenComponent();
+        });
+
+        // Initialize rotate button image
+        rotateButton.setImage(new Image(String.valueOf(MainClient.class.getResource("img/rotate.png"))));
+        rotateButton.setOnMouseClicked(event -> {
+            rotateComponent();
+        });
     }
 
     /**
@@ -216,8 +223,8 @@ public class BuildingView {
 
             Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(100);
-            imageView.setFitHeight(100);
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
             imageView.setPreserveRatio(true);
             imageView.setPickOnBounds(true);
 
@@ -297,18 +304,18 @@ public class BuildingView {
             private boolean isShipRendered = false;
 
             {
-                shipBackgroundImage.setFitWidth(330);
+                shipBackgroundImage.setFitWidth(267);
                 shipBackgroundImage.setPreserveRatio(true);
 
                 shipGrid.setStyle("-fx-background-color: transparent;");
-                shipGrid.setLayoutX(GameData.getLevelGame() == 1 ? 59.0 : 16.0);
-                shipGrid.setLayoutY(12.0);
+                shipGrid.setLayoutX(GameData.getLevelGame() == 1 ? 55.0 : 20.0);
+                shipGrid.setLayoutY(9.0);
 
-                overlayPane.setPrefSize(330, 240);
+                overlayPane.setPrefSize(267, 195);
                 overlayPane.getChildren().add(shipGrid);
 
                 // Style name label
-                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: white;");
+                nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
                 nameLabel.setAlignment(Pos.CENTER);
                 nameLabel.setMaxWidth(Double.MAX_VALUE);
 
@@ -348,10 +355,6 @@ public class BuildingView {
                         default -> throw new IllegalStateException("Unexpected value: " + color);
                     };
 
-                    // Apply styling to content VBox instead of the cell
-                    content.setStyle(colorStyle);
-
-                    // Keep cell background in sync
                     setStyle(colorStyle);
 
                     // Only clear the grid if it's the first time rendering or new data is needed
@@ -394,13 +397,13 @@ public class BuildingView {
             for (int col = 0; col < shipMatrix[row].length; col++) {
                 Component comp = shipMatrix[row][col];
                 Pane cell = new Pane();
-                cell.setPrefSize(43, 43);
+                cell.setPrefSize(35, 35);
 
                 if (comp != null) {
                     Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
                     ImageView iv = new ImageView(img);
-                    iv.setFitWidth(43);
-                    iv.setFitHeight(43);
+                    iv.setFitWidth(35);
+                    iv.setFitHeight(35);
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
                     switch (comp.getRotation()){
@@ -534,15 +537,15 @@ public class BuildingView {
 
                     Pane slot1 = new Pane();
                     slot1.setId("crewSlot");
-                    slot1.setLayoutX(10.0);
-                    slot1.setLayoutY(30.0);
+                    slot1.setLayoutX(8.0);
+                    slot1.setLayoutY(24.0);
                     slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                     slot1.getProperties().put("idx", 0);
 
                     Pane slot2 = new Pane();
                     slot2.setId("crewSlot");
-                    slot2.setLayoutX(50.0);
-                    slot2.setLayoutY(30.0);
+                    slot2.setLayoutX(40.0);
+                    slot2.setLayoutY(24.0);
                     slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                     slot2.getProperties().put("idx", 1);
 
@@ -695,8 +698,8 @@ public class BuildingView {
                     case 1:
                         Pane slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
@@ -706,15 +709,15 @@ public class BuildingView {
                     case 2:
                         slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(10.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(8.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
                         Pane slot2 = new Pane();
                         slot2.setId("boxSlot");
-                        slot2.setLayoutX(30.0);
-                        slot2.setLayoutY(50.0);
+                        slot2.setLayoutX(24.0);
+                        slot2.setLayoutY(40.0);
                         slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot2.getProperties().put("idx", 1);
 
@@ -725,22 +728,22 @@ public class BuildingView {
                     case 3:
                         slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(10.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(8.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
                         slot2 = new Pane();
                         slot2.setId("boxSlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(10.0);
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(8.0);
                         slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot2.getProperties().put("idx", 1);
 
                         Pane slot3 = new Pane();
                         slot3.setId("boxSlot");
-                        slot3.setLayoutX(50.0);
-                        slot3.setLayoutY(50.0);
+                        slot3.setLayoutX(40.0);
+                        slot3.setLayoutY(40.0);
                         slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot3.getProperties().put("idx", 2);
 
@@ -753,15 +756,15 @@ public class BuildingView {
             case HousingUnit housingUnit -> {
                 Pane slot1 = new Pane();
                 slot1.setId("crewSlot");
-                slot1.setLayoutX(10.0);
-                slot1.setLayoutY(30.0);
+                slot1.setLayoutX(8.0);
+                slot1.setLayoutY(24.0);
                 slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                 slot1.getProperties().put("idx", 0);
 
                 Pane slot2 = new Pane();
                 slot2.setId("crewSlot");
-                slot2.setLayoutX(50.0);
-                slot2.setLayoutY(30.0);
+                slot2.setLayoutX(40.0);
+                slot2.setLayoutY(24.0);
                 slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                 slot2.getProperties().put("idx", 1);
 
@@ -773,15 +776,15 @@ public class BuildingView {
                     case 2:
                         Pane slot1 = new Pane();
                         slot1.setId("batterySlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot1.getProperties().put("idx", 0);
 
                         Pane slot2 = new Pane();
                         slot2.setId("batterySlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(30.0);
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(24.0);
                         slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot2.getProperties().put("idx", 1);
 
@@ -792,22 +795,22 @@ public class BuildingView {
                     case 3:
                         slot1 = new Pane();
                         slot1.setId("batterySlot");
-                        slot1.setLayoutX(20.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(16.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot1.getProperties().put("idx", 0);
 
                         slot2 = new Pane();
                         slot2.setId("batterySlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(30.0);
+                        slot2.setLayoutX(32.0);
+                        slot2.setLayoutY(24.0);
                         slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot2.getProperties().put("idx", 1);
 
                         Pane slot3 = new Pane();
                         slot3.setId("batterySlot");
-                        slot3.setLayoutX(60.0);
-                        slot3.setLayoutY(30.0);
+                        slot3.setLayoutX(48.0);
+                        slot3.setLayoutY(24.0);
                         slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot3.getProperties().put("idx", 2);
 
@@ -847,8 +850,8 @@ public class BuildingView {
                     case 1:
                         Pane slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
@@ -858,15 +861,15 @@ public class BuildingView {
                     case 2:
                         slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(10.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(8.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
                         Pane slot2 = new Pane();
                         slot2.setId("boxSlot");
-                        slot2.setLayoutX(30.0);
-                        slot2.setLayoutY(50.0);
+                        slot2.setLayoutX(24.0);
+                        slot2.setLayoutY(40.0);
                         slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot2.getProperties().put("idx", 1);
 
@@ -877,22 +880,22 @@ public class BuildingView {
                     case 3:
                         slot1 = new Pane();
                         slot1.setId("boxSlot");
-                        slot1.setLayoutX(10.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(8.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot1.getProperties().put("idx", 0);
 
                         slot2 = new Pane();
                         slot2.setId("boxSlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(10.0);
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(8.0);
                         slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot2.getProperties().put("idx", 1);
 
                         Pane slot3 = new Pane();
                         slot3.setId("boxSlot");
-                        slot3.setLayoutX(50.0);
-                        slot3.setLayoutY(50.0);
+                        slot3.setLayoutX(40.0);
+                        slot3.setLayoutY(40.0);
                         slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                         slot3.getProperties().put("idx", 2);
 
@@ -905,15 +908,15 @@ public class BuildingView {
             case HousingUnit housingUnit -> {
                 Pane slot1 = new Pane();
                 slot1.setId("crewSlot");
-                slot1.setLayoutX(10.0);
-                slot1.setLayoutY(30.0);
+                slot1.setLayoutX(8.0);
+                slot1.setLayoutY(24.0);
                 slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                 slot1.getProperties().put("idx", 0);
 
                 Pane slot2 = new Pane();
                 slot2.setId("crewSlot");
-                slot2.setLayoutX(50.0);
-                slot2.setLayoutY(30.0);
+                slot2.setLayoutX(40.0);
+                slot2.setLayoutY(24.0);
                 slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
                 slot2.getProperties().put("idx", 1);
 
@@ -925,15 +928,15 @@ public class BuildingView {
                     case 2:
                         Pane slot1 = new Pane();
                         slot1.setId("batterySlot");
-                        slot1.setLayoutX(30.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(24.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot1.getProperties().put("idx", 0);
 
                         Pane slot2 = new Pane();
                         slot2.setId("batterySlot");
-                        slot2.setLayoutX(50.0);
-                        slot2.setLayoutY(30.0);
+                        slot2.setLayoutX(40.0);
+                        slot2.setLayoutY(24.0);
                         slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot2.getProperties().put("idx", 1);
 
@@ -944,22 +947,22 @@ public class BuildingView {
                     case 3:
                         slot1 = new Pane();
                         slot1.setId("batterySlot");
-                        slot1.setLayoutX(20.0);
-                        slot1.setLayoutY(30.0);
+                        slot1.setLayoutX(16.0);
+                        slot1.setLayoutY(24.0);
                         slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot1.getProperties().put("idx", 0);
 
                         slot2 = new Pane();
                         slot2.setId("batterySlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(30.0);
+                        slot2.setLayoutX(32.0);
+                        slot2.setLayoutY(24.0);
                         slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot2.getProperties().put("idx", 1);
 
                         Pane slot3 = new Pane();
                         slot3.setId("batterySlot");
-                        slot3.setLayoutX(60.0);
-                        slot3.setLayoutY(30.0);
+                        slot3.setLayoutX(48.0);
+                        slot3.setLayoutY(24.0);
                         slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
                         slot3.getProperties().put("idx", 2);
 
