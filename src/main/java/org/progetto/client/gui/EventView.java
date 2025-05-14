@@ -6,9 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
@@ -19,39 +17,59 @@ import org.progetto.server.model.components.Component;
 public class EventView {
 
     @FXML
-    private TextArea terminalOutput;
-    @FXML
-    private TextField terminalInput;
-    @FXML
     private StackPane shipContainerPane;
     @FXML
     private GridPane spaceshipMatrix;
     @FXML
     private ImageView shipBackgroundImage;
-
-
-
     @FXML
-    private void handleCommandInput() {
-        String input = terminalInput.getText();
-        terminalOutput.appendText("> " + input + "\n");
-        terminalInput.clear();
+    private BorderPane rootPane;
+    @FXML
+    private ImageView eventCard;
 
-        // Logica comando...
-    }
+
+
+
 
     public void initEvent() {
 
         GameData.getSender().showSpaceship(GameData.getNamePlayer());
 
+        //initialize background
+        Image img = null;
+        if(GameData.getLevelGame() == 1)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_1.png")));
+
+        else if(GameData.getLevelGame() == 2)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_2.png")));
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                img,
+                BackgroundRepeat.NO_REPEAT,   // ripetizione orizzontale
+                BackgroundRepeat.NO_REPEAT,   // ripetizione verticale
+                BackgroundPosition.CENTER,    // posizione
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        Background background = new Background(backgroundImage);
+        rootPane.setBackground(background);
+
+
+    }
+
+    public void initEventCard(String imgSrc) {
+        Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSrc)));
+        eventCard.setImage(img);
     }
 
     public void showPlayerShip(Player currentPlayer) {
 
-        // Imposta immagine di sfondo
-        int level = GameData.getLevelGame();
-        String imgPath = "img/cardboard/spaceship" + level + ".jpg";
-        shipBackgroundImage.setImage(new Image(String.valueOf(MainClient.class.getResource(imgPath))));
+//        // Imposta immagine di sfondo
+//        int level = GameData.getLevelGame();
+//        String imgPath = "img/cardboard/spaceship" + level + ".jpg";
+//        shipBackgroundImage.setImage(new Image(String.valueOf(MainClient.class.getResource(imgPath))));
 
         // Pulisce e riempie la griglia
         spaceshipMatrix.getChildren().clear();

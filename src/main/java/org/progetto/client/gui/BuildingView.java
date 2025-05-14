@@ -1,5 +1,6 @@
 package org.progetto.client.gui;
 
+import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
@@ -40,6 +41,10 @@ public class BuildingView {
 
     @FXML
     public ImageView spaceShipImage;
+
+
+    @FXML
+    public StackPane buildingPane;
 
     @FXML
     public HBox eventCardBox;
@@ -117,7 +122,7 @@ public class BuildingView {
         RotateTransition rotate = new RotateTransition(Duration.seconds(5), trash);
         rotate.setByAngle(360);
         rotate.setCycleCount(RotateTransition.INDEFINITE);
-        rotate.setInterpolator(javafx.animation.Interpolator.LINEAR);
+        rotate.setInterpolator(Interpolator.LINEAR);
         rotate.play();
 
         trash.setOnDragDropped(event -> {discardComponent();});
@@ -143,6 +148,29 @@ public class BuildingView {
      * @param color is the player color
      */
     public void initSpaceship(int levelShip, int color) {
+
+        //initialize background
+        Image img = null;
+        if(GameData.getLevelGame() == 1)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_1.png")));
+
+        else if(GameData.getLevelGame() == 2)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_2.png")));
+
+        BackgroundImage backgroundImage = new BackgroundImage(
+                img,
+                BackgroundRepeat.NO_REPEAT,   // ripetizione orizzontale
+                BackgroundRepeat.NO_REPEAT,   // ripetizione verticale
+                BackgroundPosition.CENTER,    // posizione
+                new BackgroundSize(
+                        100, 100, true, true, false, true
+                )
+        );
+
+        Background background = new Background(backgroundImage);
+        buildingPane.setBackground(background);
+
+
 
         int sizeX = 5;
         int sizeY = 5;

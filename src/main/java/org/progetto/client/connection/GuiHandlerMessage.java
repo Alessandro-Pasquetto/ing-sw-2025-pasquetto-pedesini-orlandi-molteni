@@ -6,6 +6,7 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
@@ -203,6 +204,11 @@ public class GuiHandlerMessage {
 
         else if(messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
             PageController.getBuildingView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
+        }
+
+        else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
+            System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
+            PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
