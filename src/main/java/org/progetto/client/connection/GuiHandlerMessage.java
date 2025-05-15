@@ -272,6 +272,8 @@ public class GuiHandlerMessage {
 
                 case "PickedBookedComponent":
                     BuildingData.setNewHandComponent(BuildingData.getTempPickingBookedComponent());
+                    BuildingData.setXHandComponent(BuildingData.getTempXPickingBooked());
+                    BuildingData.setYHandComponent(-1);
                     break;
 
                 case "RequirePlacedComponent":

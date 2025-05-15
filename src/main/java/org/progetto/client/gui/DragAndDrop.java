@@ -82,7 +82,6 @@ public class DragAndDrop {
         ImageView trash = PageController.getBuildingView().getTrash();
         if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
             PageController.getBuildingView().discardComponent();
-            isValidDrop = true;
         }
 
         // Check if the drop is inside any cell of the spaceship
@@ -159,16 +158,16 @@ public class DragAndDrop {
             }
         }
 
+        // If the drop was inside a booking cell or the booked component drop is not valid
+        if(BuildingData.getYHandComponent() == -1){
+            componentPane.setRotate(componentPane.getRotate() - 90 * BuildingData.getRHandComponent());
+
+            GameData.getSender().bookComponent(BuildingData.getXHandComponent());
+        }
+
         // If the drop was inside a cell
-        if (isValidDrop) {
+        if (!isValidDrop){
 
-            // If the drop was inside a booking cell
-            if(BuildingData.getYHandComponent() == -1){
-                componentPane.setRotate(componentPane.getRotate() - 90 * BuildingData.getRHandComponent());
-
-                GameData.getSender().bookComponent(BuildingData.getXHandComponent());
-            }
-        }else{
             // If the drop was not inside any cell, return the image to its original position
             Object originalParent = componentPane.getProperties().get("originalParent");
             if (componentPane.getParent() != originalParent && originalParent instanceof Pane) {
@@ -178,6 +177,7 @@ public class DragAndDrop {
             componentPane.setLayoutX((double) componentPane.getProperties().get("originalLayoutX"));
             componentPane.setLayoutY((double) componentPane.getProperties().get("originalLayoutY"));
         }
+
         event.consume();  // Consume the event to prevent default behavior
     }
 
@@ -198,13 +198,13 @@ public class DragAndDrop {
                     if (cellBounds.contains(sceneX2, sceneY2)) {
 
                         Integer colIndex = GridPane.getColumnIndex(cell);
+                        BuildingData.setTempXPickingBooked(colIndex);
 
-                        if(BuildingData.getHandComponent() == null){
+                        if(BuildingData.getHandComponent() == null)
                             GameData.getSender().pickBookedComponent(colIndex);
 
-                        }else if(BuildingData.getXHandComponent() != -1) {
+                        else if(BuildingData.getXHandComponent() != -1)
                             GameData.getSender().placeHandComponentAndPickBookedComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), colIndex);
-                        }
 
                         break;
                     }

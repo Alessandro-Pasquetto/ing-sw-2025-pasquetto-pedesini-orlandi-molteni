@@ -11,6 +11,7 @@ public class BuildingData {
 
     private static Pane handComponent = null;
     private static Pane tempPickingBookedComponent = null;
+    private static int tempXPickingBooked = 0;
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
@@ -28,6 +29,10 @@ public class BuildingData {
 
     public static Pane getTempPickingBookedComponent() {
         return tempPickingBookedComponent;
+    }
+
+    public static int getTempXPickingBooked() {
+        return tempXPickingBooked;
     }
 
     public static int getXHandComponent(){
@@ -68,6 +73,10 @@ public class BuildingData {
 
     public static void setTempPickingBookedComponent(Pane tempPickingBookedComponent) {
         BuildingData.tempPickingBookedComponent = tempPickingBookedComponent;
+    }
+
+    public static void setTempXPickingBooked(int tempXPickingBooked) {
+        BuildingData.tempXPickingBooked = tempXPickingBooked;
     }
 
     public static void setXHandComponent(int xHandComponent){
