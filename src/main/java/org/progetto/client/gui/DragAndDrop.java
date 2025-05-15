@@ -77,6 +77,8 @@ public class DragAndDrop {
 
         componentPane.setManaged(false);
 
+        //TODO: Check if i'm trying to to discard a booked component, in this case revert its positoin in its booking cell
+
         ImageView trash = PageController.getBuildingView().getTrash();
         if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
             PageController.getBuildingView().discardComponent();
@@ -95,7 +97,8 @@ public class DragAndDrop {
                     // Check if the cell already has a child (component)
                     if (!cell.getChildren().isEmpty()) {
                         // The cell is occupied, so prevent dropping the component here
-                        System.out.println("Cell already occupied.");
+                        System.out.println("Cell already occupied");
+                        Alerts.showPopUp("Cell already occupied!", true);
                         break;
                     }
 
@@ -132,7 +135,9 @@ public class DragAndDrop {
                     // Check if the cell already has a child (component)
                     if (!cell.getChildren().isEmpty()) {
                         // The cell is occupied, so prevent dropping the component here
-                        System.out.println("Cell already occupied.");
+                        System.out.println("Cell already occupied");
+                        Alerts.showPopUp("Cell already occupied!", true);
+
                         break;
                     }
 

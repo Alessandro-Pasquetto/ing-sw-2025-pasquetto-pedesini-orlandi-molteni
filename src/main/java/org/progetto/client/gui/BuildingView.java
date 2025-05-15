@@ -42,7 +42,6 @@ public class BuildingView {
     @FXML
     public ImageView spaceShipImage;
 
-
     @FXML
     public StackPane buildingPane;
 
@@ -376,10 +375,26 @@ public class BuildingView {
 
                     int color = player.getColor();
                     String colorStyle = switch (color) {
-                        case 0 -> "-fx-background-color: rgba(0,0,178,0.25); -fx-background-radius: 8;";
-                        case 1 -> "-fx-background-color: rgba(30,164,0,0.25); -fx-background-radius: 8;";
-                        case 2 -> "-fx-background-color: rgba(178,0,0,0.25); -fx-background-radius: 8;";
-                        case 3 -> "-fx-background-color: rgba(255,221,0,0.25); -fx-background-radius: 8;";
+                        case 0 -> "-fx-background-color: rgba(0,0,178,0.25); " +
+                                "-fx-border-color: rgba(0,0,178,1); " +
+                                "-fx-border-width: 2; " +
+                                "-fx-background-radius: 8; " +
+                                "-fx-border-radius: 8;";
+                        case 1 -> "-fx-background-color: rgba(30,164,0,0.25); " +
+                                "-fx-border-color: rgba(30,164,0,1); " +
+                                "-fx-border-width: 2; " +
+                                "-fx-background-radius: 8; " +
+                                "-fx-border-radius: 8;";
+                        case 2 -> "-fx-background-color: rgba(178,0,0,0.25); " +
+                                "-fx-border-color: rgba(178,0,0,1); " +
+                                "-fx-border-width: 2; " +
+                                "-fx-background-radius: 8; " +
+                                "-fx-border-radius: 8;";
+                        case 3 -> "-fx-background-color: rgba(255,221,0,0.25); " +
+                                "-fx-border-color: rgba(255,221,0,1); " +
+                                "-fx-border-width: 2; " +
+                                "-fx-background-radius: 8; " +
+                                "-fx-border-radius: 8;";
                         default -> throw new IllegalStateException("Unexpected value: " + color);
                     };
 
@@ -507,6 +522,9 @@ public class BuildingView {
 
         else if (BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
+
+        else
+            Alerts.showPopUp("Your hand is already full!", true);
     }
 
     @FXML
@@ -613,6 +631,9 @@ public class BuildingView {
 
         else if (BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
+
+        else
+            Alerts.showPopUp("Your hand is already full!", true);
     }
 
     public void pickVisibleComponent(int idx) {
@@ -628,6 +649,9 @@ public class BuildingView {
         else if(BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idx);
 
+        else
+            Alerts.showPopUp("Your hand is already full!", true);
+
         GameData.getSender().showVisibleComponents();
     }
 
@@ -638,6 +662,9 @@ public class BuildingView {
 
         else if(BuildingData.getXHandComponent() != -1)
             GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
+
+        else
+            Alerts.showPopUp("Your hand is full!", true);
     }
 
     /**
@@ -1077,6 +1104,10 @@ public class BuildingView {
 
         if(BuildingData.getHandComponent() != null)
             BuildingData.rotateComponent();
+
+        else
+            Alerts.showPopUp("You have no component in your hand!", true);
+            Alerts.showPopUp("You have no component in your hand!", true);
     }
 
     /**

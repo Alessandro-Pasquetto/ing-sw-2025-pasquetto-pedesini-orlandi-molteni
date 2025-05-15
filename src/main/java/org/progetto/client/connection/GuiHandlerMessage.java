@@ -65,7 +65,7 @@ public class GuiHandlerMessage {
                 GameData.setColor(playerColor);
 
                 PageController.initGame(GameData.getLevelGame(), GameData.getColor());
-                PageController.switchScene("buildingPage.fxml", "Game");
+                PageController.switchScene("buildingPage.fxml", "Building");
 
                 Sender sender = GameData.getSender();
 
@@ -98,7 +98,7 @@ public class GuiHandlerMessage {
                     GameData.saveGameData();
 
                     PageController.initGame(GameData.getLevelGame(), GameData.getColor());
-                    PageController.switchScene("buildingPage.fxml", "Game");
+                    PageController.switchScene("buildingPage.fxml", "Building");
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
@@ -267,11 +267,15 @@ public class GuiHandlerMessage {
 
                 case "HasBeenBooked":
                     System.out.println("You cannot discard a booked component");
+                    Alerts.showPopUp("You cannot discard a booked component", false);
                     break;
 
                 case "PickedBookedComponent":
                     BuildingData.setNewHandComponent(BuildingData.getTempPickingBookedComponent());
                     break;
+
+                case "RequirePlacedComponent":
+                    Alerts.showPopUp("Its required to place a component before picking up a deck!", true);
 
                 case "EventCardDeckPutDown":
                     PageController.getBuildingView().hideEventDeck();
@@ -279,8 +283,11 @@ public class GuiHandlerMessage {
                     BuildingData.setCurrentDeckIdx(-1);
                     break;
 
+                case "ImpossibleToResetTimer":
+                    Alerts.showPopUp("Impossible to reset timer!", true);
+
                 case "TimerExpired":
-                    System.out.println("Timer expired");
+                    Alerts.showPopUp("Timer expired!", false);
                     PageController.getBuildingView().disableDraggableBookedComponents();
                     PageController.getBuildingView().placeLastComponent();
                     BuildingData.setIsTimerExpired(true);
