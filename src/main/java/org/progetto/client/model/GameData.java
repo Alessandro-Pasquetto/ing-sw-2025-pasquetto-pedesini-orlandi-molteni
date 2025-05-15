@@ -1,6 +1,8 @@
 package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
+import org.progetto.server.controller.EventPhase;
+import org.progetto.server.model.events.CardType;
 
 import java.io.*;
 
@@ -20,6 +22,7 @@ public class GameData {
     private static int idGame;
     private static int levelGame;
     private static String phaseGame = "LOBBY";
+    private static CardType activeCard;
     private static String namePlayer;
     private static int color;
     private static String UIType;
@@ -64,6 +67,10 @@ public class GameData {
         return color;
     }
 
+    public static CardType getActiveCard() {
+        return activeCard;
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -98,6 +105,10 @@ public class GameData {
 
     public static void setColor(int color) {
         GameData.color = color;
+    }
+
+    public static void setActiveCard(CardType activeCard) {
+        GameData.activeCard = activeCard;
     }
 
     // =======================

@@ -478,10 +478,20 @@ public class Game {
 //            pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
-//        ArrayList<Box> rewardBoxes = new ArrayList<>(
-//        List.of(new Box[]{Box.RED, Box.YELLOW, Box.BLUE})
-//        );
-//        pickedEventCard = new Smugglers(CardType.SMUGGLERS, 1, "imgSrc", 3, 2, 1, rewardBoxes);
+        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
+
+        ArrayList<Box> planet1 = new ArrayList<>();
+        planet1.add(Box.RED);
+        planet1.add(Box.YELLOW);
+
+        ArrayList<Box> planet2 = new ArrayList<>();
+        planet2.add(Box.GREEN);
+        planet2.add(Box.BLUE);
+
+        rewardsForPlanets.add(planet1);
+        rewardsForPlanets.add(planet2);
+
+        pickedEventCard = new Planets(CardType.PLANETS, 2, "card6-lv2.jpg", rewardsForPlanets,2);
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;

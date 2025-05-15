@@ -6,12 +6,17 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.EventCommands;
 import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
-import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
+import org.progetto.messages.toClient.EventCommon.*;
+import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
+import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
+import org.progetto.server.model.components.Box;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -208,8 +213,77 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
+            GameData.setActiveCard(pickedEventCardMessage.getEventCard().getType());
+
+            //todo remove
+            ArrayList<Box> planet2 = new ArrayList<>();
+            planet2.add(Box.GREEN);
+            planet2.add(Box.BLUE);
+
+
+            PageController.getEventView().renderBoxes(planet2);
             PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
         }
+
+        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
+           PageController.getEventView().responseHowManyDoubleCannons(
+                   howManyDoubleCannonsMessage.getFirePowerRequired(),
+                   howManyDoubleCannonsMessage.getMaxUsable(),
+                   howManyDoubleCannonsMessage.getShootingPower(),
+                   false
+           );
+        }
+
+        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
+            PageController.getEventView().responseHowManyDoubleEngines(
+                    howManyDoubleEnginesMessage.getMaxUsable(),
+                    howManyDoubleEnginesMessage.getEnginePower(),
+                    false
+            );
+        }
+
+        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
+            PageController.getEventView().responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
+        }
+
+        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
+            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
+        }
+
+        else if(messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
+            PageController.getEventView().responseBoxToDiscard(boxToDiscardMessage.getBoxToDiscard());
+        }
+
+        else if(messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
+            PageController.getEventView().responseAcceptRewardCreditsAndPenalties(
+                    acceptRewardCreditsAndPenaltiesMessage.getRewardCredits(),
+                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays(),
+                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew(),
+                    false
+            );
+        }
+
+        else if(messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
+            PageController.getEventView().responseAcceptRewardCreditsAndPenaltyDays(
+                    acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits(),
+                    acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays(),
+                    false
+            );
+        }
+
+        else if(messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
+            PageController.getEventView().responseAcceptRewardBoxesAndPenaltyDays(
+                    acceptRewardBoxesAndPenaltyDaysMessage.getRewardBoxes(),
+                    acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays(),
+                    false
+            );
+        }
+
+        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
+            PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
+            PageController.getEventView().responseRewardBox(availableBoxesMessage.getBoxes());
+        }
+
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
@@ -278,6 +352,7 @@ public class GuiHandlerMessage {
 
                 case "RequirePlacedComponent":
                     Alerts.showPopUp("Its required to place a component before picking up a deck!", true);
+                    break;
 
                 case "EventCardDeckPutDown":
                     PageController.getBuildingView().hideEventDeck();
@@ -287,6 +362,7 @@ public class GuiHandlerMessage {
 
                 case "ImpossibleToResetTimer":
                     Alerts.showPopUp("Impossible to reset timer!", true);
+                    break;
 
                 case "TimerExpired":
                     Alerts.showPopUp("Timer expired!", false);
@@ -297,6 +373,18 @@ public class GuiHandlerMessage {
 
                 case "YouAreReady":
                     System.out.println("You are ready");
+                    break;
+
+                case "NotEnoughBatteries":
+                    Alerts.showWarning("Not enough batteries!");
+                    break;
+
+                case "AskToUseShield":
+                    PageController.getEventView().responseChooseToUseShield(false);
+                    break;
+
+                case "LandRequest":
+                    PageController.getEventView().responseLandRequest(false);
                     break;
 
                 default:

@@ -34,17 +34,19 @@
                   <VBox.margin>
                      <Insets top="20.0" />
                   </VBox.margin></TextArea>
-                    <TextField fx:id="consoleInput" maxHeight="45.0" minHeight="45.0" prefHeight="45.0" promptText="Enter command..." styleClass="console-input" />
+                    <TextField fx:id="consoleInput" maxHeight="45.0" minHeight="45.0" prefHeight="45.0" promptText="Enter command..." styleClass="console-input"  onAction="#handleInput" />
                <StackPane.margin>
                   <Insets left="110.0" right="30.0" />
                </StackPane.margin>
                 </VBox>
             </StackPane>
-            <ScrollPane fx:id="dragScrollPane" fitToWidth="true" minHeight="300.0" prefWidth="420.0" style="-fx-background-color: transparent;">
-                <FlowPane fx:id="dragContainer" hgap="10" style="-fx-background-color: transparent;" vgap="10" />
+            <ScrollPane fx:id="boxScrollPane" fitToWidth="true" minHeight="300.0" prefWidth="420.0" style="-fx-background-color: transparent;">
+                <FlowPane fx:id="boxContainer" hgap="10" style="-fx-background-color: transparent;" vgap="10" />
             </ScrollPane>
         </VBox>
     </left>
+
+    <!-- Center: Nave -->
 
     <center>
         <StackPane fx:id="shipContainerPane" alignment="CENTER">

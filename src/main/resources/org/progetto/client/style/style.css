@@ -438,8 +438,8 @@
 .console-textarea {
     -fx-control-inner-background: #0f1919;
     -fx-text-fill: #55b000;
-    -fx-font-family: "Consolas";
-    -fx-font-size: 16px;
+    -fx-font-family: "Jersey 20";
+    -fx-font-size: 14px;
     -fx-background-insets: 0;
     -fx-background-radius: 5;
 }
@@ -448,7 +448,7 @@
     -fx-background-color: #0f1919;
     -fx-text-fill: #55b000;
     -fx-font-family: "Jersey 20";
-    -fx-font-size: 20px;
+    -fx-font-size: 14px;
     -fx-background-radius: 5;
 }
 
