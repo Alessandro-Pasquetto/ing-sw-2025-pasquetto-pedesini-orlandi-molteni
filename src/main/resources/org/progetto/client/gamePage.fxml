@@ -22,26 +22,32 @@
 
     <!-- Left: Console e drag area -->
     <left>
-        <VBox fx:id="leftPane" alignment="TOP_CENTER" prefWidth="420" spacing="60.0">
-            <StackPane>
+        <VBox fx:id="leftPane" alignment="TOP_CENTER" prefWidth="480.0" spacing="60.0">
+            <StackPane prefWidth="420.0">
                 <ImageView fx:id="consoleImage" fitWidth="420" preserveRatio="true">
                     <image>
                         <Image url="@img/plancia.png" />
                     </image>
+               <StackPane.margin>
+                  <Insets top="20.0" />
+               </StackPane.margin>
                 </ImageView>
                 <VBox alignment="TOP_CENTER" maxWidth="360.0" spacing="10.0" translateY="70">
                     <TextArea fx:id="consoleOutput" editable="false" prefHeight="330.0" prefWidth="316.0" styleClass="console-textarea" wrapText="true">
                   <VBox.margin>
                      <Insets top="20.0" />
                   </VBox.margin></TextArea>
-                    <TextField fx:id="consoleInput" maxHeight="45.0" minHeight="45.0" prefHeight="45.0" promptText="Enter command..." styleClass="console-input"  onAction="#handleInput" />
+                    <TextField fx:id="consoleInput" maxHeight="45.0" minHeight="45.0" onAction="#handleInput" prefHeight="45.0" promptText="Enter command..." styleClass="console-input" />
                <StackPane.margin>
-                  <Insets left="110.0" right="30.0" />
+                  <Insets left="140.0" right="65.0" top="20.0" />
                </StackPane.margin>
                 </VBox>
             </StackPane>
-            <ScrollPane fx:id="boxScrollPane" fitToWidth="true" minHeight="300.0" prefWidth="420.0" style="-fx-background-color: transparent;">
-                <FlowPane fx:id="boxContainer" hgap="10" style="-fx-background-color: transparent;" vgap="10" />
+            <ScrollPane fx:id="boxScrollPane" fitToWidth="true" maxHeight="0.0" minHeight="250.0" prefWidth="420.0">
+                <FlowPane fx:id="boxContainer" hgap="10" vgap="10" />
+            <VBox.margin>
+               <Insets left="30.0" right="30.0" />
+            </VBox.margin>
             </ScrollPane>
         </VBox>
     </left>
@@ -57,12 +63,18 @@
 
     <!-- Right: Carta evento e bottone -->
     <right>
-      <VBox alignment="CENTER">
+      <VBox alignment="CENTER" minWidth="400.0" spacing="40.0">
          <children>
-              <VBox fx:id="rightPane" alignment="CENTER" spacing="20">
-                  <ImageView fx:id="eventCard" fitHeight="450" fitWidth="300" pickOnBounds="true" preserveRatio="true" />
-                  <Button fx:id="showBoardButton" styleClass="yellow-button" text="Show Board" />
+              <VBox fx:id="rightPane" alignment="CENTER" minHeight="550.0">
+                  <ImageView fx:id="eventCard" fitHeight="450" fitWidth="300" pickOnBounds="true" preserveRatio="true">
+                  <VBox.margin>
+                     <Insets right="10.0" />
+                  </VBox.margin></ImageView>
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin>
               </VBox>
+               <Button fx:id="showBoardButton" styleClass="yellow-button" text="Show Board" />
          </children>
       </VBox>
     </right>

@@ -435,6 +435,31 @@
     -fx-background-position: center center;
 }
 
+#leftPane{
+    -fx-background-color: rgba(6, 12, 17, 0.85);
+}
+
+#rightPane{
+    -fx-background-color: rgba(6, 12, 17, 0.70);
+    -fx-background-radius: 21;
+    -fx-border-radius: 21;
+
+}
+
+#boxScrollPane{
+    -fx-background-color: transparent;
+    -fx-background: rgba(15, 25, 25, 0.5);;
+    -fx-background-radius: 21;
+    -fx-border-radius: 21;
+    -fx-border-color: black;
+}
+
+#boxContainer{
+    -fx-background-color: rgba(15, 25, 25, 0.5);
+    -fx-background-radius: 21;
+    -fx-border-radius: 21;
+}
+
 .console-textarea {
     -fx-control-inner-background: #0f1919;
     -fx-text-fill: #55b000;
@@ -442,14 +467,16 @@
     -fx-font-size: 14px;
     -fx-background-insets: 0;
     -fx-background-radius: 5;
+    -fx-border-color: black;
 }
 
 .console-input {
-    -fx-background-color: #0f1919;
+    -fx-background-color: rgba(0, 0, 0, 0.84);
     -fx-text-fill: #55b000;
     -fx-font-family: "Jersey 20";
     -fx-font-size: 14px;
-    -fx-background-radius: 5;
+    -fx-background-radius: 6;
+    -fx-border-color: black;
 }
 
 .ship-grid {
