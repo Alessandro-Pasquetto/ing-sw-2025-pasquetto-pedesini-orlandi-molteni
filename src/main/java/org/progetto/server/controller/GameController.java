@@ -31,6 +31,8 @@ public class GameController {
             return;
         }
 
+        sender.sendMessage("YouAreReady");
+
         if(!player.getIsReady()){
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
@@ -39,8 +41,6 @@ public class GameController {
             if(gameManager.getGame().getPhase().equals(GamePhase.INIT))
                 gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(gameManager.getGame().getPlayersCopy()));
         }
-
-        sender.sendMessage("YouAreReady");
     }
 
     /**

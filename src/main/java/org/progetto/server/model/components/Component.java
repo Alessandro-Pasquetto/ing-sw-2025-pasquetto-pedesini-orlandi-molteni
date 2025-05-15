@@ -89,7 +89,8 @@ public class Component implements Serializable {
     }
 
     public void setIncorrectlyPlaced(boolean incorrectlyPlaced) {
-        this.incorrectlyPlaced = incorrectlyPlaced;
+        if(!type.equals(ComponentType.CENTRAL_UNIT))
+            this.incorrectlyPlaced = incorrectlyPlaced;
     }
 
     // =======================

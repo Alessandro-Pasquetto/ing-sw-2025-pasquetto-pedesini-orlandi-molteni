@@ -450,23 +450,31 @@ public class BuildingBoard implements Serializable {
 
         switch (cannon.getRotation()){
             case 0: // up
-                if(y > 0 && spaceshipMatrix[y - 1][x] != null)
+                if(y > 0 && spaceshipMatrix[y - 1][x] != null){
+                    spaceshipMatrix[y - 1][x].setIncorrectlyPlaced(true);
                     return false;
+                }
                 break;
 
             case 1: // right
-                if(x + 1 < spaceshipMatrix[0].length && spaceshipMatrix[y][x + 1] != null)
+                if(x + 1 < spaceshipMatrix[0].length && spaceshipMatrix[y][x + 1] != null){
+                    spaceshipMatrix[y][x + 1].setIncorrectlyPlaced(true);
                     return false;
+                }
                 break;
 
             case 2: // bottom
-                if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null)
+                if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null){
+                    spaceshipMatrix[y + 1][x].setIncorrectlyPlaced(true);
                     return false;
+                }
                 break;
 
             case 3: // left
-                if(x > 0 && spaceshipMatrix[y][x - 1] != null)
+                if(x > 0 && spaceshipMatrix[y][x - 1] != null){
+                    spaceshipMatrix[y][x - 1].setIncorrectlyPlaced(true);
                     return false;
+                }
                 break;
         }
 
@@ -489,7 +497,7 @@ public class BuildingBoard implements Serializable {
         if(visited[y][x])
             return true;
 
-        boolean currentResult = true;
+        boolean correctlyPlaced = true;
 
         numComponentsChecked.getAndIncrement();
         visited[y][x] = true;
@@ -500,11 +508,16 @@ public class BuildingBoard implements Serializable {
 
         if (currentType == ComponentType.CANNON || currentType == ComponentType.DOUBLE_CANNON) {
             if (!checkCannonValidity(currentComponent, x, y))
-                currentResult = false;
+                correctlyPlaced = false;
 
         } else if (currentType == ComponentType.ENGINE || currentType == ComponentType.DOUBLE_ENGINE) {
-            if (currentRotation != 0 || (y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null))
-                currentResult = false;
+            if (currentRotation != 0)
+                correctlyPlaced = false;
+
+            else if(y + 1 < spaceshipMatrix.length && spaceshipMatrix[y + 1][x] != null){
+                spaceshipMatrix[y + 1][x].setIncorrectlyPlaced(true);
+                correctlyPlaced = false;
+            }
         }
 
         boolean up = false, right = false, bottom = false, left = false;
@@ -514,8 +527,12 @@ public class BuildingBoard implements Serializable {
             Component upComponent = spaceshipMatrix[y - 1][x];
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
-            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0))
-                currentResult = false;
+            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1))
+                correctlyPlaced = false;
+            else if ((upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)){
+                upComponent.setIncorrectlyPlaced(true);
+                correctlyPlaced = false;
+            }
 
             if (upConnection != 0)
                 up = true;
@@ -530,8 +547,12 @@ public class BuildingBoard implements Serializable {
             Component rightComponent = spaceshipMatrix[y][x + 1];
             int rightConnection = currentComponent.getConnections()[1];
             int relativeConnection = rightComponent.getConnections()[3];
-            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0))
-                currentResult = false;
+            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1))
+                correctlyPlaced = false;
+            else if ((rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)){
+                rightComponent.setIncorrectlyPlaced(true);
+                correctlyPlaced = false;
+            }
 
             if (rightConnection != 0)
                 right = true;
@@ -546,8 +567,12 @@ public class BuildingBoard implements Serializable {
             Component bottomComponent = spaceshipMatrix[y + 1][x];
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
-            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0))
-                currentResult = false;
+            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1))
+                correctlyPlaced = false;
+            else if((bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0)){
+                bottomComponent.setIncorrectlyPlaced(true);
+                correctlyPlaced = false;
+            }
 
             if (bottomConnection != 0)
                 bottom = true;
@@ -562,8 +587,12 @@ public class BuildingBoard implements Serializable {
             Component leftComponent = spaceshipMatrix[y][x - 1];
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
-            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0))
-                currentResult = false;
+            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1))
+                correctlyPlaced = false;
+            else if ((leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)) {
+                leftComponent.setIncorrectlyPlaced(true);
+                correctlyPlaced = false;
+            }
 
             if (leftConnection != 0)
                 left = true;
@@ -573,7 +602,8 @@ public class BuildingBoard implements Serializable {
                 exposedConnectorsCount.getAndIncrement();
         }
 
-        currentComponent.setIncorrectlyPlaced(!currentResult);
+        if(!correctlyPlaced)
+            currentComponent.setIncorrectlyPlaced(true);
 
         boolean resultUp = true;
         boolean resultRight = true;
@@ -588,7 +618,7 @@ public class BuildingBoard implements Serializable {
         if (left)
             resultLeft = dfsStartValidity(x - 1, y, visited, numComponentsChecked, exposedConnectorsCount);
 
-        return resultUp && resultRight && resultDown && resultLeft && currentResult;
+        return resultUp && resultRight && resultDown && resultLeft && correctlyPlaced;
     }
 
     /**
@@ -617,6 +647,7 @@ public class BuildingBoard implements Serializable {
         numComponentsChecked = new AtomicInteger(0);
         exposedConnectorsCount = new AtomicInteger(0);
 
+        resetIncorrectlyPlacedComponents();
         boolean result = dfsStartValidity(getCentralUnit().getX(), getCentralUnit().getY(), visited, numComponentsChecked, exposedConnectorsCount) && numComponentsChecked.get() == spaceship.getShipComponentsCount();
 
         spaceship.setExposedConnectorsCount(exposedConnectorsCount.get());
@@ -1143,6 +1174,18 @@ public class BuildingBoard implements Serializable {
 
                 if(component instanceof HousingUnit hu && hu.getCrewCount() == 0)
                     hu.incrementCrewCount(spaceship, 2);
+            }
+        }
+    }
+
+    private void resetIncorrectlyPlacedComponents() {
+
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+                Component component = spaceshipMatrix[y][x];
+
+                if(component != null)
+                    component.setIncorrectlyPlaced(false);
             }
         }
     }
