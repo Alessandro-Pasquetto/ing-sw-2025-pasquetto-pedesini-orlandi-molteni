@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -1222,20 +1223,7 @@ public class BuildingController {
                 }
             }
 
-            if(result.getKey()){
-
-                gameManager.removeNotCheckedReadyPlayer(player);
-                game.getBoard().addTraveler(player);
-
-                if(sender == null)
-                    continue;
-
-                try {
-                    sender.sendMessage("ValidSpaceShip");
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
-            }else{
+            if(!result.getKey()){
                 areAllValid = false;
                 player.setIsReady(false, game);
 
@@ -1251,6 +1239,54 @@ public class BuildingController {
             }
         }
         return areAllValid;
+    }
+
+    public static void checkStartShipValidityController(GameManager gameManager, Player player) {
+
+        Game game = gameManager.getGame();
+
+        Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
+        Sender sender = gameManager.getSenderByPlayer(player);
+
+        if(result.getValue()){
+            try {
+                if(sender != null)
+                    sender.sendMessage("Some components not connected to the central unit have been removed");
+            } catch (RemoteException e) {
+                System.err.println("RMI client unreachable");
+            }
+        }
+
+        if(result.getKey()){
+
+            player.setIsReady(true, game);
+            gameManager.removeNotCheckedReadyPlayer(player);
+            game.getBoard().addTraveler(player);
+
+            if(sender == null)
+                return;
+
+            try {
+                sender.sendMessage("ValidSpaceShip");
+            } catch (RemoteException e) {
+                System.err.println("RMI client unreachable");
+            }
+
+            gameManager.getGameThread().notifyThread();
+
+        }else{
+            player.setIsReady(false, game);
+
+            if(sender == null)
+                return;
+
+            try {
+                sender.sendMessage("NotValidSpaceShip");
+                SpaceshipController.showSpaceship(gameManager, player.getName(), sender);
+            } catch (RemoteException e) {
+                System.err.println("RMI client unreachable");
+            }
+        }
     }
 
     /**

@@ -91,7 +91,7 @@ public class GameThread extends Thread {
                         waitPlayersReady();
                         BuildingController.autoReadyBuildingForDisconnectedPlayers(gameManager);
 
-                        while(!BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager)){
+                        if(!BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             game.setPhase(GamePhase.ADJUSTING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
