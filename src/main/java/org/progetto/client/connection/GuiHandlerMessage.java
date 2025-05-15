@@ -1,7 +1,7 @@
 package org.progetto.client.connection;
 
-import javafx.scene.control.Alert;
 import org.progetto.client.gui.Alerts;
+import org.progetto.client.gui.BuildingView;
 import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
@@ -47,7 +47,7 @@ public class GuiHandlerMessage {
 
             try {
                 PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
-                PageController.getWaitingRoomView().init(gameId, levelGame, numMaxPlayer);
+                PageController.getWaitingRoomView().populateGameInformation(gameId, levelGame, numMaxPlayer);
 
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");
@@ -69,7 +69,7 @@ public class GuiHandlerMessage {
                 GameData.setPhaseGame(gamePhase);
                 GameData.setColor(playerColor);
 
-                PageController.initGame(GameData.getLevelGame(), GameData.getColor());
+                PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
                 PageController.switchScene("buildingPage.fxml", "Building");
 
                 Sender sender = GameData.getSender();
@@ -90,6 +90,15 @@ public class GuiHandlerMessage {
             PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
         }
 
+        else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
+
+            switch (GameData.getPhaseGame()) {
+                case "BUILDING":
+                    PageController.getBuildingView().updateOtherPlayerReadyState(anotherPlayerIsReadyMessage.getNamePlayer());
+                    break;
+            }
+        }
+
         else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
@@ -99,10 +108,9 @@ public class GuiHandlerMessage {
 
             else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                 try {
-
                     GameData.saveGameData();
 
-                    PageController.initGame(GameData.getLevelGame(), GameData.getColor());
+                    PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("buildingPage.fxml", "Building");
 
                 } catch (IOException e) {
@@ -114,6 +122,7 @@ public class GuiHandlerMessage {
             else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
 
                 try {
+                    PageController.initAdjusting(GameData.getLevelGame());
                     PageController.switchScene("adjustingPage.fxml", "Adjusting");
 
                 } catch (IOException e) {
@@ -149,15 +158,22 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
 
-            if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
-                PageController.getEventView().showPlayerShip(responseSpaceshipMessage.getOwner());
+            switch (GameData.getPhaseGame()) {
+                case "BUILDING":
+                    if (!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                        PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                    else
+                        PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    break;
+
+                case "ADJUSTING":
+                    PageController.getAdjustingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    break;
+
+                case "EVENT":
+                    PageController.getEventView().showPlayerShip(responseSpaceshipMessage.getOwner());
+                    break;
             }
-
-            else if(!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                    PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
-
-            else
-                PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
         }
 
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
@@ -290,6 +306,10 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateTimer(timer);
         }
 
+        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage) {
+            GameData.getSender().showSpaceship(GameData.getNamePlayer());
+        }
+
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Current card: " + pickedEventCardMessage.getImgSrc());
         }
@@ -373,6 +393,10 @@ public class GuiHandlerMessage {
 
                 case "YouAreReady":
                     System.out.println("You are ready");
+
+                    if (GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
+                        PageController.getBuildingView().setReadyButtonDisabled();
+                    }
                     break;
 
                 case "NotEnoughBatteries":

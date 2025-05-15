@@ -25,6 +25,19 @@
     -fx-background-radius: 8;
 }
 
+.button:disabled {
+    -fx-opacity: 1;
+    -fx-background-color: linear-gradient(to bottom right, #ababab, #828282);
+    -fx-text-fill: #2d2d2d;
+    -fx-font-size: 14;
+    -fx-font-weight: 700;
+    -fx-border-color: rgb(86, 86, 86);
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-cursor: default;
+}
+
 .button:hover {
     -fx-cursor: hand;
 }
@@ -44,7 +57,7 @@
    ============================ */
 
 #connectionPane {
-    -fx-background-image: url("../img/space-background_1.png");
+    -fx-background-image: url("../img/space-background-1.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
@@ -72,7 +85,7 @@
    ============================ */
 
 #chooseGamePane {
-    -fx-background-image: url("../img/space-background_1.png");
+    -fx-background-image: url("../img/space-background-1.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
@@ -195,7 +208,7 @@
    ============================ */
 
 #waitingRoomPane {
-    -fx-background-image: url("../img/space-background_1.png");
+    -fx-background-image: url("../img/space-background-1.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
@@ -424,12 +437,45 @@
     -fx-background-color: rgba(0, 0, 0, 0.25);
 }
 
+#deck0Image, #deck1Image, #deck2Image {
+    -fx-cursor: hand;
+}
+
+#componentDeck {
+    -fx-cursor: hand;
+}
+
+#rotateButton {
+    -fx-cursor: hand;
+}
+
+/* ============================
+   ADJUSTING VIEW
+   ============================ */
+
+#adjustingScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#adjustingSectionTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+}
+
+#adjustingSectionDesc {
+    -fx-text-fill: rgb(230, 230, 230);
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
 /* ============================
    EVENT VIEW
    ============================ */
 
 #mainPane {
-    -fx-background-image: url("../img/space-background_2.png");
+    -fx-background-image: url("../img/space-background-2.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;

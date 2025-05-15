@@ -27,6 +27,7 @@ public class PageController {
     private static WaitingRoomView waitingRoomView;
     private static BuildingView buildingView;
     private static AdjustingView adjustingView;
+    private static PopulatingView populatingView;
     private static EventView eventView;
     private static TravelView travelView;
 
@@ -78,6 +79,11 @@ public class PageController {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Initializes the GUI
+     *
+     * @throws IOException if the FXML files cannot be loaded
+     */
     public static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/game-icon.png")));
         stage.getIcons().add(icon);
@@ -91,6 +97,11 @@ public class PageController {
         stage.show();
     }
 
+    /**
+     * Loads the FXML files and their corresponding controllers
+     *
+     * @throws IOException if the FXML files cannot be loaded
+     */
     private static void loadControllers() throws IOException {
         FXMLLoader loader;
 
@@ -124,6 +135,13 @@ public class PageController {
         travelView = loader.getController();
     }
 
+    /**
+     * Switches the scene to the specified FXML file
+     *
+     * @param fxmlFile the name of the FXML file
+     * @param title    the title of the window
+     * @throws IOException if the FXML file cannot be loaded
+     */
     public static void switchScene(String fxmlFile, String title) throws IOException {
         Parent root = switch (fxmlFile) {
             case "connection.fxml" -> connectionRoot;
@@ -159,14 +177,27 @@ public class PageController {
         stage.show();
     }
 
-    public static void initGame(int levelGame, int color) {
+    /**
+     * Initializes the building view with the specified level and color
+     *
+     * @param levelGame the level of the game
+     * @param color the color of the spaceship
+     */
+    public static void initBuilding(int levelGame, int color) {
         BuildingData.initMask(levelGame);
+        buildingView.initBackground(levelGame);
         buildingView.initSpaceship(levelGame, color);
+        buildingView.initTimer(levelGame);
         buildingView.initEventCardDecks(levelGame);
         buildingView.initPlayersList();
         // todo
         // gameView.loadBoardImg(imgSrcBoard);
         // gameView.loadShipImg(imgSrcSpaceship);
+    }
+
+    public static void initAdjusting(int levelGame) {
+        adjustingView.initBackground(levelGame);
+        adjustingView.initSpaceship(levelGame);
     }
 
     public static void initEvent(int levelGame) {
@@ -176,5 +207,4 @@ public class PageController {
     public static void initTravel(int levelGame) {
         travelView.initialize();
     }
-
 }

@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 public class WaitingRoomView {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     @FXML
     private TableView<String[]> playersTable;
 
@@ -43,6 +47,15 @@ public class WaitingRoomView {
 
     private final ObservableList<String[]> playersList = FXCollections.observableArrayList();
 
+    // =======================
+    // METHODS
+    // =======================
+
+    /**
+     * Setup method for this view
+     *
+     * @author Alessandro, Gabriele
+     */
     public void initialize() {
         playersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -53,7 +66,15 @@ public class WaitingRoomView {
         readyButton.setDisable(true);
     }
 
-    public void init(int gameId, int gameLevel, int numMaxPlayersParam) {
+    /**
+     * Populates the game information in the waiting room.
+     *
+     * @author Alessandro, Gabriele
+     * @param gameId game ID
+     * @param gameLevel game level
+     * @param numMaxPlayersParam maximum number of players
+     */
+    public void populateGameInformation(int gameId, int gameLevel, int numMaxPlayersParam) {
         gameIdLabel.setText(String.valueOf(gameId));
         gameLevelLabel.setText(String.valueOf(gameLevel));
         gameMaxPlayersLabel.setText(String.valueOf(numMaxPlayersParam));
@@ -62,6 +83,13 @@ public class WaitingRoomView {
         readyButton.setDefaultButton(true);
     }
 
+    /**
+     * Called when the ready button is pressed.
+     * Sends a message to the server to notify that the player is ready.
+     * Disables the button after pressing it.
+     *
+     * @author Alessandro
+     */
     @FXML
     private void onReadyPressed() {
         GameData.getSender().readyPlayer();
@@ -70,10 +98,22 @@ public class WaitingRoomView {
         //TODO: maybe add a feature to remove ready state
     }
 
+    /**
+     * Called when the player is not ready anymore.
+     * Enables the ready button.
+     *
+     * @author Alessandro
+     */
     public void activateReadyBtn() {
         readyButton.setDisable(false);
     }
 
+    /**
+     * Updates the players list in the waiting room.
+     *
+     * @author Alessandro, Gabriele
+     * @param players list of players
+     */
     public void updatePlayersList(ArrayList<Player> players) {
 
         playersList.clear();

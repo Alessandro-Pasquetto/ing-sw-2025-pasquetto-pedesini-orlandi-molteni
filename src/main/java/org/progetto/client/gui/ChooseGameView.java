@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 
 public class ChooseGameView {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     @FXML
     private TextField usernameTextField;
 
@@ -50,6 +54,15 @@ public class ChooseGameView {
 
     private final ObservableList<WaitingGameInfoMessage> gameData = FXCollections.observableArrayList();
 
+    // =======================
+    // METHODS
+    // =======================
+
+    /**
+     * Setup method for this view.
+     *
+     * @author Gabriele
+     */
     @FXML
     public void initialize() {
         boxGameLevel.setItems(FXCollections.observableArrayList(1, 2));
@@ -73,6 +86,11 @@ public class ChooseGameView {
         addJoinButtonToTable();
     }
 
+    /**
+     * This method adds a button to each row of the games table that allows the user to join a game.
+     *
+     * @author Gabriele
+     */
     private void addJoinButtonToTable() {
         joinCol.setCellFactory(col -> new TableCell<>() {
             private final Button joinButton = new Button("Join");
@@ -101,6 +119,12 @@ public class ChooseGameView {
         });
     }
 
+    /**
+     * This method is called when the user clicks the create game button.
+     * It retrieves the username, game level, and number of players from the text fields and combo boxes, validates them, and attempts to create a new game.
+     *
+     * @author Gabriele
+     */
     public void createNewGame() {
         String username = usernameTextField.getText().trim();
 
@@ -126,6 +150,12 @@ public class ChooseGameView {
         GameData.getSender().createGame(gameLevel, numMaxPlayers);
     }
 
+    /**
+     * This method is called when the user clicks the refresh button.
+     * It retrieves the list of available games from the server and updates the games table.
+     *
+     * @author Gabriele
+     */
     public void generateGameRecordList(ArrayList<WaitingGameInfoMessage> gamesInfo) {
         gameData.clear();
         gameData.addAll(gamesInfo);

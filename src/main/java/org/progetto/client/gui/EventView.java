@@ -27,18 +27,25 @@ public class EventView {
 
     @FXML
     private StackPane shipContainerPane;
+
     @FXML
     private GridPane spaceshipMatrix;
+
     @FXML
     private ImageView shipBackgroundImage;
+
     @FXML
-    private BorderPane rootPane;
+    private BorderPane eventPane;
+
     @FXML
     private ImageView eventCard;
+
     @FXML
     private TextArea consoleOutput;
+
     @FXML
     private TextField consoleInput;
+
     @FXML
     private FlowPane boxContainer;
 
@@ -46,21 +53,16 @@ public class EventView {
     private CompletableFuture<String> inputFuture;
     private CompletableFuture<int[]> componentClickFuture;
 
-
-
-
-
     public void initEvent() {
-
         GameData.getSender().showSpaceship(GameData.getNamePlayer());
 
         //initialize background
         Image img = null;
         if(GameData.getLevelGame() == 1)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_1.png")));
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-1.png")));
 
         else if(GameData.getLevelGame() == 2)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_2.png")));
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-2.png")));
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 img,
@@ -73,9 +75,7 @@ public class EventView {
         );
 
         Background background = new Background(backgroundImage);
-        rootPane.setBackground(background);
-
-
+        eventPane.setBackground(background);
     }
 
     public void initEventCard(String imgSrc) {
@@ -90,7 +90,6 @@ public class EventView {
 //        String imgPath = "img/cardboard/spaceship" + level + ".jpg";
 //        shipBackgroundImage.setImage(new Image(String.valueOf(MainClient.class.getResource(imgPath))));
 
-        // Pulisce e riempie la griglia
         spaceshipMatrix.getChildren().clear();
 
         int sizeX = 5;
@@ -117,7 +116,6 @@ public class EventView {
         renderShipComponents(currentPlayer.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix(), spaceshipMatrix);
     }
 
-
     private void renderShipComponents(Component[][] layout, GridPane grid) {
         for (int row = 0; row < layout.length; row++) {
             for (int col = 0; col < layout[row].length; col++) {
@@ -129,7 +127,6 @@ public class EventView {
                     part.setFitWidth(120);
                     part.setFitHeight(120);
 
-                    // Inserisci il componente sopra la cella esistente
                     StackPane cellWrapper = new StackPane();
                     cellWrapper.setPrefSize(64, 64);
                     cellWrapper.getChildren().add(part);
@@ -158,7 +155,6 @@ public class EventView {
         }
     }
 
-
     /**
      * Disable the onclick on the component
      *
@@ -168,8 +164,6 @@ public class EventView {
             node.setOnMouseClicked(null);
         }
     }
-
-
 
     /**
      * Prints all the incoming messages
@@ -213,7 +207,6 @@ public class EventView {
         if(!printed)
             printToTerminal("Sometimes violence is the answer,how many double cannons do you want to activate?");
 
-
         inputFuture = new CompletableFuture<>();
 
         inputFuture.thenAccept(response -> {
@@ -231,7 +224,6 @@ public class EventView {
             }
         });
     }
-
 
     /**
      * Handles player decision on how many double engines to use
@@ -274,13 +266,10 @@ public class EventView {
         printToTerminal("Select the battery storage from which to remove the battery");
         printToTerminal("You need to discard " + required + " batteries");
 
-        // Prepara la futura risposta
         componentClickFuture = new CompletableFuture<>();
 
-        // Attiva click su componenti
         enableComponentClickSelection();
 
-        // Quando l'utente risponde
         componentClickFuture.thenAccept(coords -> {
             int x = coords[0];
             int y = coords[1];
@@ -304,20 +293,16 @@ public class EventView {
         printToTerminal("Select the housing unit from which to remove the battery");
         printToTerminal("You need to discard " + required + " crew members");
 
-        // Prepara la futura risposta
         componentClickFuture = new CompletableFuture<>();
 
-        // Attiva click su componenti
         enableComponentClickSelection();
 
-        // Quando l'utente risponde
         componentClickFuture.thenAccept(coords -> {
             int x = coords[0];
             int y = coords[1];
 
             printToTerminal("Selected cell: (" + x + ", " + y + ")");
 
-            // Invia le coordinate al server (puoi adattare il metodo)
             GameData.getSender().responseBatteryToDiscard(x,y);
 
             disableComponentClickSelection();
@@ -343,7 +328,6 @@ public class EventView {
         if(!printed)
             printToTerminal("Do you want to use a shield? (YES or NO)");
 
-
         inputFuture = new CompletableFuture<>();
 
 
@@ -356,10 +340,8 @@ public class EventView {
                 printToTerminal("You must choose between YES or NO");
                 responseChooseToUseShield(true);
             }
-
         });
     }
-
 
     /**
      * Handles player decision to accept reward credits and penalty
@@ -375,7 +357,6 @@ public class EventView {
             printToTerminal("Do you want to accept the reward and penalties? (YES or NO)");
         }
 
-
         inputFuture = new CompletableFuture<>();
 
 
@@ -388,10 +369,8 @@ public class EventView {
                 printToTerminal("You must choose between YES or NO");
                 responseAcceptRewardCreditsAndPenalties(reward, penaltyDays, penaltyCrew,true);
             }
-
         });
     }
-
 
     /**
      * Handles player decision to accept reward credits and penalty days
@@ -406,7 +385,6 @@ public class EventView {
             printToTerminal("Do you want to accept the reward and the days penalty? (YES or NO)");
         }
 
-
         inputFuture = new CompletableFuture<>();
 
         inputFuture.thenAccept(response -> {
@@ -418,10 +396,8 @@ public class EventView {
                 printToTerminal("You must choose between YES or NO");
                responseAcceptRewardCreditsAndPenaltyDays(reward, penaltyDays,true);
             }
-
         });
     }
-
 
     /**
      * Handles player decision to accept reward boxes and penalty days
@@ -451,7 +427,6 @@ public class EventView {
         });
     }
 
-
     public void renderBoxes(ArrayList<Box> availableBoxes){
         boxContainer.getChildren().clear();
 
@@ -476,7 +451,6 @@ public class EventView {
 
             boxContainer.getChildren().add(boxImage);
         }
-
     }
 
     /**
@@ -489,7 +463,6 @@ public class EventView {
         //todo
     }
 
-
     /**
      * Handles player decision to land on a lost station
      *
@@ -501,10 +474,10 @@ public class EventView {
             printToTerminal("do you want to land? (YES or NO)");
         }
 
-        // Prepara la futura risposta
+        // Prepares future answer
         inputFuture = new CompletableFuture<>();
 
-        // Quando l'utente risponde
+        // When user responds
         inputFuture.thenAccept(response -> {
 
             if (response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")) {
@@ -517,15 +490,4 @@ public class EventView {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -16,6 +16,10 @@ import java.rmi.NotBoundException;
 
 public class ConnectionView {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     @FXML
     private TextField serverIpTextField;
 
@@ -33,6 +37,15 @@ public class ConnectionView {
 
     private ToggleGroup toggleGroup;
 
+    // =======================
+    // METHODS
+    // =======================
+
+    /**
+     * Setup method for this view
+     *
+     * @author Alessandro, Gabriele
+     */
     @FXML
     public void initialize() {
         toggleGroup = new ToggleGroup();
@@ -58,6 +71,12 @@ public class ConnectionView {
         });
     }
 
+    /**
+     * This method is called when the user clicks the connect button.
+     * It retrieves the server IP and port from the text fields, validates them, and attempts to connect to the server using the selected connection method (RMI or Socket).
+     *
+     * @author Alessandro
+     */
     @FXML
     private void connectToServer() {
         String serverIp = serverIpTextField.getText();

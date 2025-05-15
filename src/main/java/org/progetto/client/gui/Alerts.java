@@ -38,7 +38,7 @@ public class Alerts {
             -fx-padding: 15px;
             -fx-background-radius: 10;
             -fx-font-size: 14px;
-        """);
+            """);
         messageLabel.setFont(Font.font("Arial"));
 
         StackPane content = new StackPane(messageLabel);
@@ -48,23 +48,31 @@ public class Alerts {
         popup.getContent().add(content);
         popup.setAutoHide(true);
 
+        Stage stage = PageController.getStage();
+
+        // First show the popup off-screen to compute its actual dimensions
+        popup.show(stage, -10000, -10000);
+
+        // Now we can get the actual width and height of the popup
+        double popupWidth = content.getWidth();
+        double popupHeight = content.getHeight();
+
+        // Calculate the proper position to center the popup
         double centerX;
         double centerY;
-        Stage stage = PageController.getStage();
 
         if(onMouseEvent) {
             Robot robot = new Robot();
-
-            centerX = robot.getMousePosition().getX();
-            centerY = robot.getMousePosition().getY();
-
-        }
-        else {
-            centerX = stage.getX() + stage.getWidth() / 2 - 100;
-            centerY = stage.getY() + stage.getHeight() / 2 - 50;
+            centerX = robot.getMousePosition().getX() - (popupWidth / 2);
+            centerY = robot.getMousePosition().getY() - (popupHeight / 2);
+        } else {
+            centerX = stage.getX() + (stage.getWidth() / 2) - (popupWidth / 2);
+            centerY = stage.getY() + (stage.getHeight() / 2) - (popupHeight / 2);
         }
 
-        popup.show(stage, centerX , centerY );
+        // Hide and reshow at the correct position
+        popup.hide();
+        popup.show(stage, centerX, centerY);
 
         FadeTransition ft = new FadeTransition(Duration.seconds(3), content);
         ft.setFromValue(1.0);

@@ -33,6 +33,10 @@ import java.util.Map;
 
 public class BuildingView {
 
+    // =======================
+    // ATTRIBUTES
+    // =======================
+
     final int COMPONENT_SIZE = 80;
     final int BOX_SLOT_SIZE = 28;
     final int CREW_SLOT_SIZE = 28;
@@ -70,6 +74,9 @@ public class BuildingView {
     public ImageView componentDeck;
 
     @FXML
+    public Button buildingReadyButton;
+
+    @FXML
     private Pane handComponentBox;
 
     @FXML
@@ -104,15 +111,15 @@ public class BuildingView {
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
-    public static void registerPlayerShipGrid(String playerName, GridPane grid) {
-        shipGridsByPlayer.put(playerName, grid);
-    }
+    // =======================
+    // METHODS
+    // =======================
 
-    public static GridPane getShipGridByPlayer(String playerName) {
-        return shipGridsByPlayer.get(playerName);
-    }
-
-    // Initialize the grid when the view is loaded
+    /**
+     * Initializes the building view
+     *
+     * @author Alessandro, Gabriele
+     */
     public void initialize() {
 
         // Initialize black hole image
@@ -140,27 +147,26 @@ public class BuildingView {
     }
 
     /**
-     * Allows to set_up the building matrix with a given size
+     * Initializes the background
      *
-     * @author Alessandro,Lorenzo
-     * @param levelShip is the game level
-     * @param color is the player color
+     * @author Lorenzo
+     * @param levelGame is the game level
      */
-    public void initSpaceship(int levelShip, int color) {
+    public void initBackground(int levelGame) {
 
-        //initialize background
+        // Initialize background
         Image img = null;
-        if(GameData.getLevelGame() == 1)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_1.png")));
+        if(levelGame == 1)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-1.png")));
 
-        else if(GameData.getLevelGame() == 2)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background_2.png")));
+        else if(levelGame == 2)
+            img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-2.png")));
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 img,
-                BackgroundRepeat.NO_REPEAT,   // ripetizione orizzontale
-                BackgroundRepeat.NO_REPEAT,   // ripetizione verticale
-                BackgroundPosition.CENTER,    // posizione
+                BackgroundRepeat.NO_REPEAT,   // horizontal repetition
+                BackgroundRepeat.NO_REPEAT,   // vertical repetition
+                BackgroundPosition.CENTER,    // position
                 new BackgroundSize(
                         100, 100, true, true, false, true
                 )
@@ -168,9 +174,18 @@ public class BuildingView {
 
         Background background = new Background(backgroundImage);
         buildingPane.setBackground(background);
+    }
 
+    /**
+     * Setups the building matrix with a given size
+     *
+     * @author Alessandro, Lorenzo
+     * @param levelShip is the game level
+     * @param color is the player color
+     */
+    public void initSpaceship(int levelShip, int color) {
 
-
+        // Spaceship matrix
         int sizeX = 5;
         int sizeY = 5;
 
@@ -179,7 +194,6 @@ public class BuildingView {
             sizeX = 7;
         }
 
-        // Spaceship matrix
         for (int row = 0; row < sizeY; row++) {
             for (int col = 0; col < sizeX; col++) {
                 Pane cell = new Pane();
@@ -195,14 +209,29 @@ public class BuildingView {
         insertCentralUnitComponent(levelShip, getImgSrcCentralUnitFromColor(color));
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
+    }
+
+    /**
+     * Initializes the timer
+     *
+     * @author Gabriele
+     * @param levelGame is the game level
+     */
+    public void initTimer(int levelGame) {
 
         // Remove timer if the game is level 1
-        if (levelShip == 1) {
+        if (levelGame == 1) {
             timerContainer.getChildren().remove(timerLabel);
             timerContainer.getChildren().remove(timerButton);
         }
     }
 
+    /**
+     * Allows to setup the booked array with a given size
+     *
+     * @author Alessandro, Lorenzo
+     * @param levelGame is the game level
+     */
     public void initEventCardDecks(int levelGame) {
 
         // Init event card decks
@@ -235,7 +264,7 @@ public class BuildingView {
     /**
      * Load in the slider all the visible components discarded by players
      *
-     * @author Lorenzo
+     * @author Lorenzo, Gabriele
      * @param visibleComponents are the discarded components
      */
     public void loadVisibleComponents(ArrayList<Component> visibleComponents) {
@@ -283,7 +312,8 @@ public class BuildingView {
     /**
      * Populate the list of active players
      *
-     * @author Lorenzo
+     * @author Gabriele
+     * @param players is the list of players
      */
     public void updatePlayersList(ArrayList<Player> players) {
         players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
@@ -429,6 +459,13 @@ public class BuildingView {
         delay.play();
     }
 
+    /**
+     * Updates other player's spaceship view
+     *
+     * @author Gabriele
+     * @param player is the player to update
+     * @param ship is the spaceship to show
+     */
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
 
@@ -471,6 +508,45 @@ public class BuildingView {
     }
 
     /**
+     * Register the ship grid for a player
+     *
+     * @author Gabriele
+     */
+    public static void registerPlayerShipGrid(String playerName, GridPane grid) {
+        shipGridsByPlayer.put(playerName, grid);
+    }
+
+    /**
+     * Get the ship grid for a player
+     *
+     * @author Gabriele
+     */
+    public static GridPane getShipGridByPlayer(String playerName) {
+        return shipGridsByPlayer.get(playerName);
+    }
+
+    /**
+     * Renders ready state for a player
+     *
+     * @author Gabriele
+     * @param name is the name of the player to update
+     */
+    public void updateOtherPlayerReadyState(String name) {
+        for (Node cell : playerListView.lookupAll(".list-cell")) {
+            if (cell instanceof ListCell<?>) {
+                ListCell<?> listCell = (ListCell<?>) cell;
+                Object item = listCell.getItem();
+
+                if (item instanceof Player player && player.getName().equals(name)) {
+                    Label nameLabel = (Label) ((VBox) listCell.getGraphic()).getChildren().get(0);
+                    nameLabel.setText(player.getName() + " (ready)");
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * Update the eventDeck visual
      *
      * @param deck is the list of cards chosen
@@ -502,6 +578,11 @@ public class BuildingView {
         eventCardDisplay.setMouseTransparent(true);
     }
 
+    /**
+     * Pick up the event card deck
+     *
+     * @param id is the id of the deck
+     */
     @FXML
     private void pickUpDeck(String id) {
 
@@ -527,6 +608,11 @@ public class BuildingView {
             Alerts.showPopUp("Your hand is already full!", true);
     }
 
+    /**
+     * Put down the event card deck
+     *
+     * @author Lorenzo
+     */
     @FXML
     private void putDownDeck() {
         GameData.getSender().putDownEventCardDeck();
@@ -548,6 +634,11 @@ public class BuildingView {
         }
     }
 
+    /**
+     * Gets the image source of the central unit based on the color
+     *
+     * @author Alessandro
+     */
     public String getImgSrcCentralUnitFromColor(int color) {
         return switch (color) {
             case 0 -> "base-unit-blue.jpg";
@@ -558,6 +649,11 @@ public class BuildingView {
         };
     }
 
+    /**
+     * Inserts the central unit component in the spaceship matrix
+     *
+     * @author Alessandro
+     */
     public void insertCentralUnitComponent(int levelShip, String imgSrcCentralUnit) {
         int y = 2;
         int x = 2;
@@ -607,18 +703,38 @@ public class BuildingView {
         }
     }
 
+    /**
+     * Gets the spaceship matrix
+     *
+     * @author Alessandro
+     */
     public GridPane getSpaceshipMatrix() {
         return spaceshipMatrix;
     }
 
+    /**
+     * Gets trash element
+     *
+     * @author Alessandro
+     */
     public ImageView getTrash() {
         return trash;
     }
 
+    /**
+     * Gets booked array
+     *
+     * @author Alessandro
+     */
     public GridPane getBookedArray() {
         return bookedArray;
     }
 
+    /**
+     * Picks a hidden component from the deck
+     *
+     * @author Alessandro
+     */
     public void pickHiddenComponent() {
 
         if(BuildingData.getIsTimerExpired()){
@@ -636,6 +752,11 @@ public class BuildingView {
             Alerts.showPopUp("Your hand is already full!", true);
     }
 
+    /**
+     * Picks a visible component from the table
+     *
+     * @author Alessandro
+     */
     public void pickVisibleComponent(int idx) {
 
         if(BuildingData.getIsTimerExpired()){
@@ -655,6 +776,11 @@ public class BuildingView {
         GameData.getSender().showVisibleComponents();
     }
 
+    /**
+     * Places the hand component in the spaceship matrix
+     *
+     * @author Alessandro
+     */
     public void placeHandComponentAndReady(){
 
         if(BuildingData.getHandComponent() == null)
@@ -735,6 +861,13 @@ public class BuildingView {
         BuildingData.resetHandComponent();
     }
 
+    /**
+     * Generates a component pane
+     *
+     * @author Alessandro
+     * @param component is the component to generate
+     * @return the generated component pane
+     */
     private Pane generateComponentPane(Component component) {
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
         ImageView imageView = new ImageView(image);
@@ -1048,6 +1181,11 @@ public class BuildingView {
         timerLabel.setText(timeText);
     }
 
+    /**
+     * Updates the spaceship matrix
+     *
+     * @author Alessandro
+     */
     public void updateSpaceship(Spaceship spaceship) {
 
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
@@ -1073,6 +1211,11 @@ public class BuildingView {
         }
     }
 
+    /**
+     * Updates the booked components
+     *
+     * @author Alessandro
+     */
     public void updateBookedComponents(Component[] bookedComponents) {
 
         for (int i = 0; i < 2; i++) {
@@ -1107,7 +1250,6 @@ public class BuildingView {
 
         else
             Alerts.showPopUp("You have no component in your hand!", true);
-            Alerts.showPopUp("You have no component in your hand!", true);
     }
 
     /**
@@ -1117,5 +1259,14 @@ public class BuildingView {
      */
     public void resetTimer() {
         GameData.getSender().resetTimer();
+    }
+
+    /**
+     * Sets the ready button to disabled
+     *
+     * @author Gabriele
+     */
+    public void setReadyButtonDisabled() {
+        buildingReadyButton.setDisable(true);
     }
 }

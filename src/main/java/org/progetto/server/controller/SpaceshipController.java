@@ -262,7 +262,7 @@ public class SpaceshipController {
     /**
      * Called after in the firstAdjusting
      *
-     * @author Lorenzo, Alessandro
+     * @author Alessandro
      * @param gameManager of the current game
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
