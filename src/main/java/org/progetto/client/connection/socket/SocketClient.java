@@ -227,7 +227,12 @@ public class SocketClient implements Sender {
 
     @Override
     public void responsePlaceAlien(int x, int y, String color) {
-        SocketWriter.sendMessage(new ResponsePlaceAlien(x, y, color));
+        SocketWriter.sendMessage(new ResponsePlaceAlienMessage(x, y, color));
+    }
+
+    @Override
+    public void responseStartingPosition(int startingPosition) {
+        SocketWriter.sendMessage(new ResponseStartingPositionMessage(startingPosition));
     }
 
     @Override
@@ -302,6 +307,6 @@ public class SocketClient implements Sender {
 
     @Override
     public void responseSelectSpaceshipPart(int x, int y) {
-        SocketWriter.sendMessage(new ResponseSelectSpaceshipPart(x, y));
+        SocketWriter.sendMessage(new ResponseSelectSpaceshipPartMessage(x, y));
     }
 }

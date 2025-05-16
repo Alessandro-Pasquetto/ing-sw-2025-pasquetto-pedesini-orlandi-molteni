@@ -67,7 +67,6 @@ public class SocketListener extends Thread {
             } catch (IllegalStateException e) {
                 clientHandler.getSocketWriter().sendMessage(e.getMessage());
             }
-
         }
 
         else if (messageObj instanceof JoinGameMessage joinGameMessage) {
@@ -211,12 +210,18 @@ public class SocketListener extends Thread {
             SpaceshipController.startDestroyComponent(gameManager, player, x, y, socketWriter);
         }
 
-        else if (messageObj instanceof ResponsePlaceAlien responsePlaceAlien) {
+        else if (messageObj instanceof ResponsePlaceAlienMessage responsePlaceAlien) {
             String color = responsePlaceAlien.getColor();
             int x = responsePlaceAlien.getX();
             int y = responsePlaceAlien.getY();
 
             PopulateController.receivePlaceAlien(gameManager, player, x, y, color);
+        }
+
+        else if (messageObj instanceof ResponseStartingPositionMessage responseStartingPositionMessage) {
+            int startingPosition = responseStartingPositionMessage.getStartingPosition();
+
+            BuildingController.receiveStartingPosition(gameManager, player, startingPosition, socketWriter);
         }
 
         else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
@@ -418,7 +423,7 @@ public class SocketListener extends Thread {
             }
         }
 
-        else if (messageObj instanceof ResponseSelectSpaceshipPart responseSelectSpaceshipPart){
+        else if (messageObj instanceof ResponseSelectSpaceshipPartMessage responseSelectSpaceshipPart){
             int x = responseSelectSpaceshipPart.getX();
             int y = responseSelectSpaceshipPart.getY();
 

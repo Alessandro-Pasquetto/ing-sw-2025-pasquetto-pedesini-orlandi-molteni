@@ -1,6 +1,5 @@
 package org.progetto.server.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -12,13 +11,15 @@ public class Board {
 
     private final Player[] track;
     private final ArrayList<Player> travelers;  // order: leader -> last
+    private Player[] startingPositions;         // order: leader -> last
     private final String imgSrc;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public Board(int levelBoard) {
+    public Board(int levelBoard, int numPlayers) {
+        this.startingPositions = new Player[numPlayers];
         this.track = new Player[elaborateSizeBoardFromLv(levelBoard)];
         this.travelers = new ArrayList<>();
         this.imgSrc = "board" + levelBoard + ".png";
@@ -39,6 +40,10 @@ public class Board {
             copyTravelers = new ArrayList<>(travelers);
         }
         return copyTravelers;
+    }
+
+    public Player[] getStartingPositions() {
+        return startingPositions.clone();
     }
 
     public int getNumTravelers() {
@@ -65,6 +70,48 @@ public class Board {
             case 2 -> 24;
             default -> 0;
         };
+    }
+
+    /**
+     * Handles player choice on starting position
+     *
+     * @author Gabriele
+     * @param player reference to the player
+     * @param position the starting position of the player
+     * @return the starting position of the player
+     */
+    public synchronized void decideStartingPositionOnTrack(Player player, int position) {
+        if (position < 0 || position >= startingPositions.length) {
+            throw new IllegalArgumentException("InvalidStartingPosition");
+        }
+
+        if (startingPositions[position] != null) {
+            throw new IllegalStateException("StartingPositionAlreadyTaken");
+        }
+
+        for (Player p : startingPositions) {
+            if (p != null && p.equals(player)) {
+                throw new IllegalStateException("PlayerAlreadyHasAStartingPosition");
+            }
+        }
+
+        startingPositions[position] = player;
+    }
+
+    /**
+     * Updates the list of travelers based on the starting positions
+     *
+     * @author Gabriele
+     */
+    public void updateTravelersBasedOnStartingPosition() {
+
+        travelers.clear();
+
+        for (int i = 0; i < startingPositions.length; i++) {
+            if (startingPositions[i] != null) {
+                travelers.add(startingPositions[i]);
+            }
+        }
     }
 
     /**
@@ -110,11 +157,10 @@ public class Board {
      * @author Alessandro
      * @param levelBoard
      */
-    public synchronized void addTravelersInTrack(int levelBoard) {
+    public synchronized void addTravelersOnTrack(int levelBoard) {
 
         switch (levelBoard) {
             case 1:
-
                 track[4] = travelers.get(0);
                 travelers.get(0).setPosition(4);
                 if(travelers.size() == 1) break;
@@ -131,21 +177,22 @@ public class Board {
                 travelers.get(3).setPosition(0);
 
                 break;
+
             case 2:
-                track[6] = travelers.get(0);
-                travelers.get(0).setPosition(6);
-                if(travelers.size() == 1) break;
+                track[6] = startingPositions[0];
+                startingPositions[0].setPosition(6);
+                if(startingPositions.length == 1) break;
 
-                track[3] = travelers.get(1);
-                travelers.get(1).setPosition(3);
-                if(travelers.size() == 2) break;
+                track[3] = startingPositions[1];
+                startingPositions[1].setPosition(3);
+                if(startingPositions.length == 2) break;
 
-                track[1] = travelers.get(2);
-                travelers.get(2).setPosition(1);
-                if(travelers.size() == 3) break;
+                track[1] = startingPositions[2];
+                startingPositions[2].setPosition(1);
+                if(startingPositions.length == 3) break;
 
-                track[0] = travelers.get(3);
-                travelers.get(3).setPosition(0);
+                track[0] = startingPositions[3];
+                startingPositions[3].setPosition(0);
 
                 break;
         }

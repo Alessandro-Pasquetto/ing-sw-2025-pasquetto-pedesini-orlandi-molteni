@@ -6,6 +6,7 @@ public enum GamePhase {
     BUILDING,
     ADJUSTING,
     POPULATING,
+    POSITIONING,
     TRAVEL,
     EVENT,
     ENDGAME

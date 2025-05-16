@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -1208,7 +1209,7 @@ public class BuildingController {
             Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            if(result.getValue()){
+            if (result.getValue()) {
                 try {
                     if(sender != null)
                         sender.sendMessage("Some components not connected to the central unit have been removed");
@@ -1217,7 +1218,7 @@ public class BuildingController {
                 }
             }
 
-            if(result.getKey()){
+            if (result.getKey()) {
 
                 gameManager.removeNotCheckedReadyPlayer(player);
                 game.getBoard().addTraveler(player);
@@ -1230,7 +1231,8 @@ public class BuildingController {
                 } catch (RemoteException e) {
                     System.err.println("RMI client unreachable");
                 }
-            }else{
+
+            } else {
 
                 areAllValid = false;
                 player.setIsReady(false, game);
@@ -1249,6 +1251,13 @@ public class BuildingController {
         return areAllValid;
     }
 
+    /**
+     * Checks the validity of the spaceship for a player and adds it to the travelers if valid
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     * @param player current player
+     */
     public static void checkStartShipValidityControllerAndAddToTravelers(GameManager gameManager, Player player) {
 
         Game game = gameManager.getGame();
@@ -1256,7 +1265,7 @@ public class BuildingController {
         Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
         Sender sender = gameManager.getSenderByPlayer(player);
 
-        if(result.getValue()){
+        if (result.getValue()) {
             try {
                 if(sender != null)
                     sender.sendMessage("Some components not connected to the central unit have been removed");
@@ -1265,7 +1274,7 @@ public class BuildingController {
             }
         }
 
-        if(result.getKey()){
+        if (result.getKey()) {
 
             player.setIsReady(true, game);
             gameManager.removeNotCheckedReadyPlayer(player);
@@ -1282,7 +1291,7 @@ public class BuildingController {
 
             gameManager.getGameThread().notifyThread();
 
-        }else{
+        } else {
             player.setIsReady(false, game);
 
             if(sender == null)
@@ -1319,6 +1328,12 @@ public class BuildingController {
         return areAllInit;
     }
 
+    /**
+     * Set all disconnected players as ready
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     */
     public static void autoReadyBuildingForDisconnectedPlayers(GameManager gameManager){
 
         for(Player player : gameManager.getDisconnectedPlayersCopy()){
@@ -1330,6 +1345,12 @@ public class BuildingController {
         }
     }
 
+    /**
+     * Add disconnected players with illegal spaceship to losing players
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     */
     public static void addDisconnectedPlayersWithIllegalSpaceshipToLosingPlayers(GameManager gameManager){
 
         for(Player player : gameManager.getDisconnectedPlayersCopy()){
@@ -1339,6 +1360,66 @@ public class BuildingController {
             if(!result.getKey()) {
                 gameManager.addLosingPlayer(player);
             }
+        }
+    }
+
+    /**
+     * Ask for starting position to all players
+     *
+     * @author Gabriele
+     * @param gameManager current gameManager
+     */
+    public static void askForStartingPosition(GameManager gameManager) throws InterruptedException {
+
+        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+            Sender sender = gameManager.getSenderByPlayer(player);
+            if (sender != null) {
+                try {
+                    Player[] startingPositions = gameManager.getGame().getBoard().getStartingPositions();
+                    sender.sendMessage(new AskStartingPositionMessage(startingPositions));
+                } catch (RemoteException e) {
+                    System.err.println("RMI client unreachable");
+                }
+            }
+
+            gameManager.getGameThread().resetAndWaitPlayerReady(player);
+        }
+    }
+
+    /**
+     * Handles player decision to set starting position
+     *
+     * @author Gabriele
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param startingPosition the starting position of the player
+     * @param sender current sender
+     * @throws RemoteException
+     */
+    public static void receiveStartingPosition(GameManager gameManager, Player player, int startingPosition, Sender sender) throws RemoteException {
+
+        if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
+            sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        try {
+            gameManager.getGame().getBoard().decideStartingPositionOnTrack(player, startingPosition);
+            sender.sendMessage("StartingPositionSet");
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerSetStartingPositionMessage(player.getName(), startingPosition), sender);
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("StartingPositionAlreadyTaken"))
+                sender.sendMessage("StartingPositionAlreadyTaken");
+            else if (e.getMessage().equals("InvalidStartingPosition"))
+                sender.sendMessage("InvalidStartingPosition");
+            else if (e.getMessage().equals("PlayerAlreadyHasAStartingPosition"))
+                sender.sendMessage("PlayerAlreadyHasAStartingPosition");
+            else
+                sender.sendMessage(e.getMessage());
         }
     }
 }

@@ -57,7 +57,7 @@ class BoardTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         track = board.getTrack();
 
@@ -80,7 +80,7 @@ class BoardTest {
 
         assertTrue(board.allTravelersReady());
 
-        board.addTravelersInTrack(2);
+        board.addTravelersOnTrack(2);
         track = board.getTrack();
 
         assertEquals(p1, track[6]);
@@ -140,7 +140,7 @@ class BoardTest {
         // Move player ahead
         board = new Board(1);
         board.addTraveler(p1);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 3);
 
         track = board.getTrack();
@@ -150,7 +150,7 @@ class BoardTest {
         // Move player behind
         board = new Board(1);
         board.addTraveler(p1);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, -3);
 
         track = board.getTrack();
@@ -161,7 +161,7 @@ class BoardTest {
         board = new Board(1);
         board.addTraveler(p1);
         board.addTraveler(p2);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p2, 2);
 
         track = board.getTrack();
@@ -172,7 +172,7 @@ class BoardTest {
         board = new Board(1);
         board.addTraveler(p1);
         board.addTraveler(p2);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, -2);
 
         track = board.getTrack();
@@ -182,7 +182,7 @@ class BoardTest {
         // Move ahead player returning in the starting point of the track
         board = new Board(1);
         board.addTraveler(p1);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 14);
 
         track = board.getTrack();
@@ -192,7 +192,7 @@ class BoardTest {
         // Move behind player returning in the end point of the track
         board = new Board(1);
         board.addTraveler(p1);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, -5);
 
         track = board.getTrack();
@@ -210,7 +210,7 @@ class BoardTest {
         // Move player ahead
         board = new Board(1);
         board.addTraveler(p1);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         board.movePlayerByDistance(p1, 3);
 
@@ -261,7 +261,7 @@ class BoardTest {
 
         board.addTraveler(p1);
         board.addTraveler(p2);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 30);
 
         board.checkLappedPlayers();
@@ -275,7 +275,7 @@ class BoardTest {
 
         board2.addTraveler(p3);
         board2.addTraveler(p4);
-        board2.addTravelersInTrack(1);
+        board2.addTravelersOnTrack(1);
         board2.movePlayerByDistance(p3, 3);
 
         assertNull(board2.checkLappedPlayers());

@@ -70,6 +70,8 @@ public interface Sender {
 
     void responsePlaceAlien(int x, int y, String color);
 
+    void responseStartingPosition(int startingPosition);
+
     void responseHowManyDoubleCannons(int howManyWantToUse);
 
     void responseHowManyDoubleEngines(int howManyWantToUse);

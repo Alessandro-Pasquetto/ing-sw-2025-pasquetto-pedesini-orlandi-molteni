@@ -41,7 +41,7 @@ class BattlezoneTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         p1.getSpaceship().addCrewCount(7);
         p2.getSpaceship().addCrewCount(5);
@@ -80,7 +80,7 @@ class BattlezoneTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         board.movePlayerByDistance(p1, 13);
         board.movePlayerByDistance(p2, 11);

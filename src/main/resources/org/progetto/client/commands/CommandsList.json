@@ -156,6 +156,7 @@
       "BUILDING",
       "ADJUSTING",
       "POPULATING",
+      "POSITIONING",
       "TRAVEL",
       "EVENT",
       "ENDGAME"
@@ -169,6 +170,7 @@
       "BUILDING",
       "ADJUSTING",
       "POPULATING",
+      "POSITIONING",
       "TRAVEL",
       "EVENT",
       "ENDGAME"
@@ -181,6 +183,7 @@
     "phases": [
       "ADJUSTING",
       "POPULATING",
+      "POSITIONING",
       "TRAVEL",
       "EVENT",
       "ENDGAME"
@@ -191,6 +194,9 @@
     "description": "Show current track",
     "usage": "ShowTrack",
     "phases": [
+      "ADJUSTING",
+      "POPULATING",
+      "POSITIONING",
       "TRAVEL",
       "EVENT",
       "ENDGAME"

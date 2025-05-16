@@ -15,7 +15,7 @@ public class Planets extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private boolean planetsTaken[]; // for each cell, it becomes true if that planet is taken by a player
+    private boolean[] planetsTaken; // for each cell, it becomes true if that planet is taken by a player
     private ArrayList<ArrayList<Box>> rewardsForPlanets;
     private Stack<Player> landedPlayers; // ordered based on route order
     private int penaltyDays;

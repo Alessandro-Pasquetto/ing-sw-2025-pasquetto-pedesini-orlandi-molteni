@@ -95,7 +95,7 @@ public class TuiCommandFilter {
                 continue;
             }
 
-            System.out.println("");
+            System.out.println();
             System.out.println("What port do you want to connect to?");
 
             int serverPort;
@@ -104,12 +104,12 @@ public class TuiCommandFilter {
                 serverPort = Integer.parseInt(scanner.nextLine().trim());
 
             }catch (NumberFormatException e){
-                System.out.println("serverPort must be a number!");
+                System.err.println("Port must be a number!");
                 continue;
             }
 
             if (serverPort < 0) {
-                System.out.println("Port cannot be negative!");
+                System.err.println("Port cannot be negative!");
                 continue;
             }
 
@@ -120,7 +120,7 @@ public class TuiCommandFilter {
                 break;
 
             } catch (Exception e) {
-                System.out.println("Error connecting to " + ip + ":" + serverPort);
+                System.err.println("Error connecting to " + ip + ":" + serverPort);
             }
         }
 
@@ -156,9 +156,9 @@ public class TuiCommandFilter {
                 try {
                     String command = tuiMessageQueue.take();
 
-                    try{
+                    try {
                         handleCommand(command);
-                    }catch (IllegalStateException e){
+                    } catch (IllegalStateException e){
                         if (getIsWaitingResponse())
                             setResponse(command);
                         else
@@ -583,6 +583,47 @@ public class TuiCommandFilter {
                             GameCommands.readyPlayer(commandParts);
                         else
                             expectedFormat(commandType);
+                        break;
+
+                    default:
+                        if (commands.get(commandType.toLowerCase()) == null)
+                            throw new IllegalStateException("Command not found");
+                        else
+                            throw new IllegalStateException("Command not available in that phase");
+                }
+                break;
+
+            case "POSITIONING":
+                switch (commandType) {
+                    case "SHOWSHIP":
+                        if (commandParts.length <= 2)
+                            GameCommands.showSpaceship(commandParts);
+                        else {
+                            expectedFormat(commandType);
+                        }
+                        break;
+
+                    case "SHIPSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.spaceshipStats(commandParts);
+                        else {
+                            expectedFormat(commandType);
+                        }
+                        break;
+
+                    case "PLAYERSTATS":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.playerStats(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+                    case "SHOWTRACK":
+                        if (isValidCommand(commandParts.length, 1))
+                            GameCommands.showTrack(commandParts);
+                        else {
+                            expectedFormat(commandType);
+                        }
                         break;
 
                     default:

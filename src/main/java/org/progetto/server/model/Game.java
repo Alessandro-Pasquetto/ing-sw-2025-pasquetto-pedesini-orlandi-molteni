@@ -61,7 +61,7 @@ public class Game {
         this.hiddenEventDeck = new ArrayList<>();
         this.visibleEventCardDecks = loadEvents();
         this.eventDeckAvailable = new Player[] {null, null, null};
-        this.board = new Board(level);
+        this.board = new Board(level, maxNumPlayers);
         this.activeEventCard = null;
         this.activePlayer = null;
     }

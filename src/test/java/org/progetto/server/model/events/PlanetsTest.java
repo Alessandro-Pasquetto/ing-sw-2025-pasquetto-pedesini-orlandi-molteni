@@ -174,7 +174,7 @@ class PlanetsTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         board.movePlayerByDistance(p1, 5);
         board.movePlayerByDistance(p2, 5);

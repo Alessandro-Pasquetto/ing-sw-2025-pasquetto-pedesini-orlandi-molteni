@@ -2,7 +2,7 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class ResponseSelectSpaceshipPart implements Serializable {
+public class ResponseSelectSpaceshipPartMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -11,7 +11,7 @@ public class ResponseSelectSpaceshipPart implements Serializable {
     private final int x;
     private final int y;
 
-    public ResponseSelectSpaceshipPart(int x, int y) {
+    public ResponseSelectSpaceshipPartMessage(int x, int y) {
         this.x = x;
         this.y = y;
     }

@@ -232,7 +232,7 @@ class PiratesTest {
         board.addTraveler(player1);
         board.addTraveler(player2);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         Pirates pirates1 = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles1);
         Pirates pirates2 = new Pirates(CardType.PIRATES, 2, "imgPath", 6, -2, 4, projectiles2);

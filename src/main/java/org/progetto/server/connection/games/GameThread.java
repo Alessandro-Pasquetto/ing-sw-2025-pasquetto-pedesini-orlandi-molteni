@@ -53,7 +53,7 @@ public class GameThread extends Thread {
                     case WAITING:
                         System.out.println("Waiting for players...");
 
-                        resetReadyAndWaitPlayers();
+                        resetAndWaitPlayersReady();
 
                         gameManager.getGame().setPhase(GamePhase.INIT);
                         break;
@@ -108,14 +108,26 @@ public class GameThread extends Thread {
 
                             PopulateController.askAliens(gameManager);
 
-                            // Waiting to populate the spaceship (don't do another phase for this, bcs custom actions after this)
+                            // Waiting to populate the spaceship
                             waitPlayersReady();
                         }
                         PopulateController.fillHumansDisconnectedPlayers(gameManager);
 
                         // Preparing travelers on the track
-                        game.getBoard().addTravelersInTrack(game.getLevel());
-                        GameController.removeDisconnectedPlayersFromTravelers(gameManager);
+                        if (game.getLevel() == 1) {
+                            game.getBoard().addTravelersOnTrack(game.getLevel());
+                            GameController.removeDisconnectedPlayersFromTravelers(gameManager);
+                        } else {
+                            game.setPhase(GamePhase.POSITIONING);
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                            System.out.println("Waiting for the players to decide their starting position...");
+
+                            BuildingController.askForStartingPosition(gameManager);
+
+                            game.getBoard().addTravelersOnTrack(game.getLevel());
+                            game.getBoard().updateTravelersBasedOnStartingPosition();
+                            // TODO: handle disconnected players
+                        }
 
                         if(game.getLevel() != 1)
                             game.composeHiddenEventDeck();
@@ -210,7 +222,12 @@ public class GameThread extends Thread {
     // OTHER METHODS
     // =======================
 
-    public void resetReadyAndWaitPlayers() throws InterruptedException {
+    /**
+     * Pauses the game thread until all players are ready to continue
+     *
+     * @author Alessandro
+     */
+    public void resetAndWaitPlayersReady() throws InterruptedException {
         Game game = gameManager.getGame();
         game.resetReadyPlayers();
 
@@ -220,6 +237,11 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Pauses the game thread until all players are ready to continue in waiting phase
+     *
+     * @author Alessandro
+     */
     public void resetAndWaitWaitingPlayersReady() throws InterruptedException {
         Game game = gameManager.getGame();
         game.resetReadyPlayers();

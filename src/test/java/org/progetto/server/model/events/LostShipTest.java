@@ -76,7 +76,7 @@ class LostShipTest {
         Board board = new Board(1);
         board.addTraveler(player1);
         board.addTraveler(player2);
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         LostShip lostShip1 = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 3, -3);
         LostShip lostShip2 = new LostShip(CardType.LOSTSHIP, 2, "imgPath", 1, 2, -2);

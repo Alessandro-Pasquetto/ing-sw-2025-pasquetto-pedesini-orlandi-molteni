@@ -16,6 +16,7 @@ import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.server.controller.BuildingController;
 import org.progetto.server.model.Player;
 
 /**
@@ -141,6 +142,10 @@ public class TuiHandlerMessage {
             System.out.printf ("│ X: %d %n", alienPlacedMessage.getX());
             System.out.printf ("│ Y: %d %n", alienPlacedMessage.getY());
             System.out.println();
+        }
+
+        else if (messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
+            BuildingCommands.responseStartingPosition(askStartingPositionMessage.getStartingPositions());
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -472,6 +477,10 @@ public class TuiHandlerMessage {
 
                 case "ValidSpaceShip":
                     System.out.println("Your spaceship is pretty good, you're ready to go!");
+                    break;
+
+                case "StartingPositionSet":
+                    System.out.println("Starting position set successfully!");
                     break;
 
                 case "AskContinueTravel":

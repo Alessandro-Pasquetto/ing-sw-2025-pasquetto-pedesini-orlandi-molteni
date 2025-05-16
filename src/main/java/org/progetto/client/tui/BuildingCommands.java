@@ -2,6 +2,7 @@ package org.progetto.client.tui;
 
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
@@ -232,6 +233,7 @@ public class BuildingCommands {
 
         while(true) {
             System.out.println("Do you want to place " + alienColor + " alien? (YES or NO)");
+
             String response = TuiCommandFilter.waitResponse();
 
             if(response.equalsIgnoreCase("NO")){
@@ -264,6 +266,49 @@ public class BuildingCommands {
 
             else
                 System.out.println("You must choose between YES or NO");
+        }
+    }
+
+    /**
+     * Handles player response to select starting position
+     *
+     * @author Gabriele
+     * @param startingPositions array of starting positions
+     */
+    public static void responseStartingPosition(Player[] startingPositions) {
+
+        while(true) {
+            System.out.println("In which position do you want to start?");
+
+            for (int i = 0; i < startingPositions.length; i++) {
+                if (startingPositions[i] == null) {
+                    System.out.printf("[%d] Slot: %s%n", i + 1, "EMPTY");
+                } else {
+                    System.out.printf("[%d] Slot: %s%n", i + 1, startingPositions[i].getName());
+                }
+            }
+
+            String response = TuiCommandFilter.waitResponse();
+
+            try {
+                int position = Integer.parseInt(response) - 1;
+
+                if (position < 0 || position >= startingPositions.length) {
+                    System.out.println("Invalid position. Please choose a valid slot.");
+                    continue;
+                }
+
+                if (startingPositions[position] != null) {
+                    System.out.println("This slot is already taken. Please choose another one.");
+                    continue;
+                }
+
+                GameData.getSender().responseStartingPosition(position);
+                break;
+
+            } catch (NumberFormatException e) {
+                System.err.println("You must insert a number!");
+            }
         }
     }
 }

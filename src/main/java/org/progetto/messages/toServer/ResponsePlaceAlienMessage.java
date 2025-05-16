@@ -2,7 +2,7 @@ package org.progetto.messages.toServer;
 
 import java.io.Serializable;
 
-public class ResponsePlaceAlien implements Serializable {
+public class ResponsePlaceAlienMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -16,7 +16,7 @@ public class ResponsePlaceAlien implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public ResponsePlaceAlien(int x, int y, String color) {
+    public ResponsePlaceAlienMessage(int x, int y, String color) {
         this.x = x;
         this.y = y;
         this.color = color;

@@ -184,7 +184,7 @@ class SmugglersTest {
         board.addTraveler(player1);
         board.addTraveler(player2);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
         rewardBoxes1.add(Box.RED);

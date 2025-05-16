@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -15,6 +16,14 @@ public class PopulateController {
     // OTHER METHODS
     // =======================
 
+    /**
+     * It asks to all players if they want to place an alien on their spaceship
+     *
+     * @author Alessandro
+     * @param gameManager the game manager
+     * @throws InterruptedException if the thread is interrupted
+     * @throws RemoteException if there is a remote exception
+     */
     public static void askAliens(GameManager gameManager) throws InterruptedException, RemoteException {
 
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
@@ -37,6 +46,17 @@ public class PopulateController {
         }
     }
 
+    /**
+     * It receives the alien placed by the player
+     *
+     * @author Alessandro
+     * @param gameManager the game manager
+     * @param player the player who placed the alien
+     * @param x the x coordinate of the alien
+     * @param y the y coordinate of the alien
+     * @param color the color of the alien
+     * @throws RemoteException if there is a remote exception
+     */
     public static void receivePlaceAlien(GameManager gameManager, Player player, int x, int y, String color) throws RemoteException {
         if(color.equals("purple"))
             receivePurpleAlien(gameManager, player, x, y);
@@ -44,16 +64,26 @@ public class PopulateController {
             receiveOrangeAlien(gameManager, player, x, y);
     }
 
+    /**
+     * It receives the purple alien placed by the player
+     *
+     * @author Alessandro
+     * @param gameManager the game manager
+     * @param player the player who placed the alien
+     * @param x the x coordinate of the alien
+     * @param y the y coordinate of the alien
+     * @throws RemoteException if there is a remote exception
+     */
     private static void receivePurpleAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)))
             sender.sendMessage("IncorrectPhase");
 
-        if(x != -1 || y != -1){
+        if (x != -1 || y != -1) {
             try{
                 player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
-                sender.sendMessage("Purple alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+                sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             } catch (IllegalStateException e) {
                 sender.sendMessage(e.getMessage());
@@ -64,13 +94,23 @@ public class PopulateController {
 
         if (player.getSpaceship().checkShipAllowOrangeAlien())
             sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
-        else{
+        else {
             player.getSpaceship().getBuildingBoard().fillHumans();
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         }
     }
 
+    /**
+     * It receives the orange alien placed by the player
+     *
+     * @author Alessandro
+     * @param gameManager the game manager
+     * @param player the player who placed the alien
+     * @param x the x coordinate of the alien
+     * @param y the y coordinate of the alien
+     * @throws RemoteException if there is a remote exception
+     */
     private static void receiveOrangeAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
         Game game = gameManager.getGame();
 
@@ -82,7 +122,7 @@ public class PopulateController {
         if(x != -1 || y != -1){
             try{
                 player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
-                sender.sendMessage("Orange alien placed at X: " + (x + 6 - gameManager.getGame().getLevel()) + " Y: " + (y + 5));
+                sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             } catch (IllegalStateException e) {
                 sender.sendMessage(e.getMessage());
@@ -96,6 +136,12 @@ public class PopulateController {
         gameManager.getGameThread().notifyThread();
     }
 
+    /**
+     * It fills with humans the spaceships of the disconnected players
+     *
+     * @author Alessandro
+     * @param gameManager the game manager
+     */
     public static void fillHumansDisconnectedPlayers(GameManager gameManager){
 
         for (Player player : gameManager.getDisconnectedPlayersCopy()){
@@ -103,6 +149,5 @@ public class PopulateController {
             if(!player.getIsReady())
                 player.getSpaceship().getBuildingBoard().fillHumans();
         }
-
     }
 }

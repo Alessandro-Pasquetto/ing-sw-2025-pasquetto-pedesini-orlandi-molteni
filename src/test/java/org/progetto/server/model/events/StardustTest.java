@@ -29,7 +29,7 @@ class StardustTest {
         board.addTraveler(player3);
         board.addTraveler(player4);
 
-        board.addTravelersInTrack(2);
+        board.addTravelersOnTrack(2);
 
         BuildingBoard buildingBoard1 = player1.getSpaceship().getBuildingBoard();
 

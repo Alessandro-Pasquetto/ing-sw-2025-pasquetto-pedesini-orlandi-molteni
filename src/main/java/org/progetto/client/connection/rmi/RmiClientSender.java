@@ -384,6 +384,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void responseStartingPosition(int startingPosition) {
+        try {
+            server.responseStartingPosition(RmiClientReceiver.getInstance(), GameData.getIdGame(), startingPosition);
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
     public void responseHowManyDoubleCannons(int howManyWantToUse) {
         try {
             server.responseHowManyDoubleCannons(RmiClientReceiver.getInstance(), GameData.getIdGame(), howManyWantToUse);

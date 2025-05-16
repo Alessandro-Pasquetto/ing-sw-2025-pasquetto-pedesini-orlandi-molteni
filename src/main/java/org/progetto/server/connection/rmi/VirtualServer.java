@@ -77,6 +77,8 @@ public interface VirtualServer extends Remote {
 
     void responsePlaceAlien(VirtualClient virtualClient, int idGame, int x, int y, String color) throws RemoteException;
 
+    void responseStartingPosition(VirtualClient virtualClient, int idGame, int startingPosition) throws RemoteException;
+
     void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;
 
     void responseHowManyDoubleEngines(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException;

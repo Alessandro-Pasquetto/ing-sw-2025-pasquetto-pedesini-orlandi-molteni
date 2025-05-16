@@ -98,7 +98,7 @@ class SlaversTest {
         board.addTraveler(player1);
         board.addTraveler(player2);
 
-        board.addTravelersInTrack(1);
+        board.addTravelersOnTrack(1);
 
         Slavers slavers1 = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         Slavers slavers2 = new Slavers(CardType.SLAVERS, 2, "imgPath", 6, 3, -2, 4);
