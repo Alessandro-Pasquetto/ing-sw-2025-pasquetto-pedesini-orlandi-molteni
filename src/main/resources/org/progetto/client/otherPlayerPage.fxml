@@ -2,7 +2,6 @@
 
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.progetto.client.gui.OtherPlayerSpaceshipView"
             prefWidth="600" prefHeight="600">

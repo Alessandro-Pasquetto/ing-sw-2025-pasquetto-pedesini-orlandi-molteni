@@ -302,7 +302,7 @@ public class SpaceshipController {
             sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
-            BuildingController.checkStartShipValidityController(gameManager, player);
+            BuildingController.checkStartShipValidityControllerAndAddToTravelers(gameManager, player);
 
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());

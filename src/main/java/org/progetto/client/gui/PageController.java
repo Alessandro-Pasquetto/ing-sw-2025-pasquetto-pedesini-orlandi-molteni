@@ -19,7 +19,7 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
-    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, buildingRoot, adjustingRoot, eventRoot,travelRoot;
+    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, buildingRoot, adjustingRoot, populatingRoot, eventRoot, travelRoot, gameOverRoot;
 
     private static Stage stage;
     private static ConnectionView connectionView;
@@ -30,6 +30,7 @@ public class PageController {
     private static PopulatingView populatingView;
     private static EventView eventView;
     private static TravelView travelView;
+    private static GameOverView gameOverView;
 
     // =======================
     // GETTERS
@@ -59,12 +60,20 @@ public class PageController {
         return adjustingView;
     }
 
+    public static PopulatingView getPopulatingView() {
+        return populatingView;
+    }
+
     public static EventView getEventView() {
         return eventView;
     }
 
     public static TravelView getTravelView() {
         return travelView;
+    }
+
+    public static GameOverView getGameOverView() {
+        return gameOverView;
     }
 
     // =======================
@@ -126,6 +135,10 @@ public class PageController {
         adjustingRoot = loader.load();
         adjustingView = loader.getController();
 
+        loader = new FXMLLoader(MainClient.class.getResource("populatingPage.fxml"));
+        populatingRoot = loader.load();
+        populatingView = loader.getController();
+
         loader = new FXMLLoader(MainClient.class.getResource("gamePage.fxml"));
         eventRoot = loader.load();
         eventView = loader.getController();
@@ -133,6 +146,10 @@ public class PageController {
         loader = new FXMLLoader(MainClient.class.getResource("travelPage.fxml"));
         travelRoot = loader.load();
         travelView = loader.getController();
+
+        loader = new FXMLLoader(MainClient.class.getResource("gameOverPage.fxml"));
+        gameOverRoot = loader.load();
+        gameOverView = loader.getController();
     }
 
     /**
@@ -149,8 +166,10 @@ public class PageController {
             case "waitingRoom.fxml" -> waitingRoomRoot;
             case "buildingPage.fxml" -> buildingRoot;
             case "adjustingPage.fxml" -> adjustingRoot;
+            case "populatingPage.fxml" -> populatingRoot;
             case "gamePage.fxml" -> eventRoot;
             case "travelPage.fxml" -> travelRoot;
+            case "gameOverPage.fxml" -> gameOverRoot;
 
             default -> null;
         };
@@ -196,6 +215,7 @@ public class PageController {
     }
 
     public static void initAdjusting(int levelGame) {
+        BuildingData.initMask(levelGame);
         adjustingView.initBackground(levelGame);
         adjustingView.initSpaceship(levelGame);
     }

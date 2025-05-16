@@ -1,13 +1,10 @@
 package org.progetto.client.connection;
 
 import org.progetto.client.gui.Alerts;
-import org.progetto.client.gui.BuildingView;
 import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.tui.EventCommands;
-import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
@@ -61,6 +58,8 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
             try {
 
+                Sender sender = GameData.getSender();
+
                 int levelGame = reconnectionGameData.getLevelGame();
                 String gamePhase = reconnectionGameData.getGamePhase();
                 int playerColor = reconnectionGameData.getPlayerColor();
@@ -69,16 +68,33 @@ public class GuiHandlerMessage {
                 GameData.setPhaseGame(gamePhase);
                 GameData.setColor(playerColor);
 
-                PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
-                PageController.switchScene("buildingPage.fxml", "Building");
+                switch (gamePhase) {
+                    case "BUILDING":
+                        PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
+                        PageController.switchScene("buildingPage.fxml", "Building");
 
-                Sender sender = GameData.getSender();
+                        sender.showHandComponent();
+                        sender.showBookedComponents();
+                        sender.showSpaceship(GameData.getNamePlayer());
+                        sender.showPlayers();
+                        sender.showVisibleComponents();
+                        break;
 
-                sender.showHandComponent();
-                sender.showBookedComponents();
-                sender.showSpaceship(GameData.getNamePlayer());
-                sender.showPlayers();
-                sender.showVisibleComponents();
+                    case "ADJUSTING":
+                        PageController.initAdjusting(GameData.getLevelGame());
+                        PageController.switchScene("adjustingPage.fxml", "Adjusting");
+
+                        sender.showSpaceship(GameData.getNamePlayer());
+                        break;
+
+                    case "POPULATING":
+                        break;
+
+                    case "EVENT":
+                        PageController.initEvent(GameData.getLevelGame());
+                        PageController.switchScene("gamePage.fxml", "Game");
+                        break;
+                }
 
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");
@@ -125,6 +141,8 @@ public class GuiHandlerMessage {
                     PageController.initAdjusting(GameData.getLevelGame());
                     PageController.switchScene("adjustingPage.fxml", "Adjusting");
 
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
+
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
                     System.out.println("Error loading the page");
@@ -134,7 +152,7 @@ public class GuiHandlerMessage {
             else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
 
                 try {
-                    PageController.switchScene("buildingPage.fxml", "Populating");
+                    PageController.switchScene("populatingPage.fxml", "Populating");
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
@@ -144,7 +162,6 @@ public class GuiHandlerMessage {
 
             else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                 try {
-                    GameData.saveGameData();
                     PageController.initEvent(GameData.getLevelGame());
                     PageController.switchScene("gamePage.fxml", "Game");
 
@@ -153,7 +170,6 @@ public class GuiHandlerMessage {
                     System.out.println("Error loading the page");
                 }
             }
-
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {

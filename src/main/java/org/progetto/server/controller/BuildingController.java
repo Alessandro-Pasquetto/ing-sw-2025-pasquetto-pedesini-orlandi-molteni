@@ -5,7 +5,6 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -1250,7 +1249,7 @@ public class BuildingController {
         return areAllValid;
     }
 
-    public static void checkStartShipValidityController(GameManager gameManager, Player player) {
+    public static void checkStartShipValidityControllerAndAddToTravelers(GameManager gameManager, Player player) {
 
         Game game = gameManager.getGame();
 
@@ -1331,14 +1330,14 @@ public class BuildingController {
         }
     }
 
-    public static void kickOutDisconnectedPlayersWithIllegalSpaceship(GameManager gameManager){
+    public static void addDisconnectedPlayersWithIllegalSpaceshipToLosingPlayers(GameManager gameManager){
 
         for(Player player : gameManager.getDisconnectedPlayersCopy()){
 
             Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
 
             if(!result.getKey()) {
-                gameManager.kickOutPlayer(player);
+                gameManager.addLosingPlayer(player);
             }
         }
     }

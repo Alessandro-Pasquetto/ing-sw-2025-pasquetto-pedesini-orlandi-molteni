@@ -75,11 +75,8 @@ public class Board {
      */
     public synchronized void addTraveler(Player player) {
 
-        if (travelers.contains(player)){
-            throw new IllegalStateException("PlayerIsAlreadyATraveler");
-        }
-
-        travelers.add(player);
+        if (!travelers.contains(player))
+            travelers.add(player);
     }
 
     /**
@@ -89,10 +86,6 @@ public class Board {
      * @param player reference to ready player
      */
     public synchronized void removeTraveler(Player player) {
-        if (!travelers.contains(player)){
-            throw new IllegalStateException("PlayerIsNotATraveler");
-        }
-
         travelers.remove(player);
     }
 

@@ -103,8 +103,6 @@ public class AdjustingView {
 
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
-
-        GameData.getSender().showSpaceship(GameData.getNamePlayer());
     }
 
     /**

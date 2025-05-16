@@ -32,6 +32,8 @@ public class GameManager {
 
     private final ArrayList<Player> disconnectedPlayers = new ArrayList<>();
 
+    private final ArrayList<Player> losingPlayers = new ArrayList<>();
+
     // List to save playersOrder after building
     private final ArrayList<Player> notCheckedReadyPlayers = new ArrayList<>();
 
@@ -185,6 +187,24 @@ public class GameManager {
         }
     }
 
+    public void addLosingPlayer(Player player) {
+        synchronized (losingPlayers) {
+            losingPlayers.add(player);
+        }
+    }
+
+    public void removeLosingPlayer(Player player) {
+        synchronized (losingPlayers) {
+            losingPlayers.remove(player);
+        }
+    }
+
+    public boolean isLosingPlayer(Player player) {
+        synchronized (losingPlayers) {
+            return losingPlayers.contains(player);
+        }
+    }
+
     public void disconnectPlayer(Player player) {
         System.out.println(player.getName() + " has disconnected");
 
@@ -213,8 +233,6 @@ public class GameManager {
             return;
         }
 
-
-        game.removePlayer(player);
         addDisconnectedPlayers(player);
         // todo notificare la disconnessione del player agli altri
 
@@ -226,40 +244,46 @@ public class GameManager {
 
         //todo gestire il resto
 
-        addDisconnectedPlayers(player);
         gameThread.notifyThread();
     }
 
     public void reconnectPlayer(String namePlayer, Sender sender) {
+        try {
 
-        Player player = getDisconnectedPlayerByName(namePlayer);
+            Player player = getDisconnectedPlayerByName(namePlayer);
 
-        if(player == null)
-            throw new IllegalStateException("FailedToReconnect");
+            if(player == null)
+                throw new IllegalStateException("FailedToReconnect");
 
-        addSender(player, sender);
+            addSender(player, sender);
 
-        System.out.println(player.getName() + " has reconnected");
+            System.out.println(player.getName() + " has reconnected");
 
-        Game game = getGame();
+            Game game = getGame();
 
-        try{
             sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor()));
 
-        } catch (RemoteException e) {
-            System.err.println("RMI client unreachable");
-            return;
-        }
+            if(isLosingPlayer(player)){
+                sender.sendMessage("GameOver");
+                return;
+            }
 
-        if(!game.getPhase().equals(GamePhase.EVENT)){
-            game.addPlayer(player);
-        }
-        else{
-            //todo reconnect in events
+            if(!game.getPhase().equals(GamePhase.EVENT)){
+                game.addPlayer(player);
+            }
+            else{
+                //todo reconnect in events
+            }
+
+            removeDisconnectedPlayer(player);
+
+        }catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
         }
     }
 
-    public void kickOutPlayer(Player player) {
+    public void kickOutDisconnectedPlayer(Player player) {
+        removeLosingPlayer(player);
         removeDisconnectedPlayer(player);
         removeSender(player);
     }

@@ -99,7 +99,7 @@ public class GameThread extends Thread {
                             // Waiting for adjusting spaceship
                             waitPlayersReady();
                         }
-                        BuildingController.kickOutDisconnectedPlayersWithIllegalSpaceship(gameManager);
+                        BuildingController.addDisconnectedPlayersWithIllegalSpaceshipToLosingPlayers(gameManager);
 
                         if(!BuildingController.initializeAllSpaceship(game)){
                             game.setPhase(GamePhase.POPULATING);
