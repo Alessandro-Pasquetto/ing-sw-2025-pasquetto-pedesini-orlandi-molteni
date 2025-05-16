@@ -1218,7 +1218,21 @@ public class BuildingController {
                 }
             }
 
-            if(!result.getKey()){
+            if(result.getKey()){
+
+                gameManager.removeNotCheckedReadyPlayer(player);
+                game.getBoard().addTraveler(player);
+
+                if(sender == null)
+                    continue;
+
+                try {
+                    sender.sendMessage("ValidSpaceShip");
+                } catch (RemoteException e) {
+                    System.err.println("RMI client unreachable");
+                }
+            }else{
+
                 areAllValid = false;
                 player.setIsReady(false, game);
 
