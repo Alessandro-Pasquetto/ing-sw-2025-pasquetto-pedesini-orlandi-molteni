@@ -399,6 +399,10 @@ public class GuiHandlerMessage {
                     }
                     break;
 
+                case "ActionNotAllowedInReadyState":
+                    Alerts.showPopUp("Action not allowed in ready state!", true);
+                    break;
+
                 case "NotEnoughBatteries":
                     Alerts.showWarning("Not enough batteries!");
                     break;

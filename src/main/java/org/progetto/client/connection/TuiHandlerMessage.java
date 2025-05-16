@@ -334,6 +334,10 @@ public class TuiHandlerMessage {
                     System.out.println("You are ready");
                     break;
 
+                case "ActionNotAllowedInReadyState":
+                    System.out.println("Action not allowed in ready state!");
+                    break;
+
                 case "PlayerNameNotFound":
                     System.out.println("Unable to find player");
                     break;

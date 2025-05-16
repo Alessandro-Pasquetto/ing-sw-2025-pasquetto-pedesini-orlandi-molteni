@@ -416,11 +416,6 @@ public class BuildingController {
             return;
         }
 
-        if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
-            return;
-        }
-
         if(gameManager.getTimerExpired()){
             sender.sendMessage("TimerExpired");
             return;

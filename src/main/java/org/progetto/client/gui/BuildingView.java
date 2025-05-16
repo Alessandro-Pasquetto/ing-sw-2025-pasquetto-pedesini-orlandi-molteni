@@ -283,6 +283,7 @@ public class BuildingView {
             imageView.setFitHeight(80);
             imageView.setPreserveRatio(true);
             imageView.setPickOnBounds(true);
+            imageView.setStyle("-fx-cursor: hand;");
 
             imageView.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1) {
