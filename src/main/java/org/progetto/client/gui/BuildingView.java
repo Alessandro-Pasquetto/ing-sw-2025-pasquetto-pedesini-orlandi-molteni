@@ -25,7 +25,6 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -606,7 +605,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
 
         else
-            Alerts.showPopUp("Your hand is already full!", true);
+            Alerts.showPopup("Your hand is already full!", true);
     }
 
     /**
@@ -750,7 +749,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
 
         else
-            Alerts.showPopUp("Your hand is already full!", true);
+            Alerts.showPopup("Your hand is already full!", true);
     }
 
     /**
@@ -772,7 +771,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idx);
 
         else
-            Alerts.showPopUp("Your hand is already full!", true);
+            Alerts.showPopup("Your hand is already full!", true);
 
         GameData.getSender().showVisibleComponents();
     }
@@ -791,7 +790,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
 
         else
-            Alerts.showPopUp("Your hand is full!", true);
+            Alerts.showPopup("Your hand is full!", true);
     }
 
     /**
@@ -1253,7 +1252,7 @@ public class BuildingView {
             BuildingData.rotateComponent();
 
         else
-            Alerts.showPopUp("You have no component in your hand!", true);
+            Alerts.showPopup("You have no component in your hand!", true);
     }
 
     /**

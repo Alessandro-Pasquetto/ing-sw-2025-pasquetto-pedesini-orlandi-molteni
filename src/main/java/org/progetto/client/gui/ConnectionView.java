@@ -5,9 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
 import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.model.GameData;
@@ -83,7 +81,7 @@ public class ConnectionView {
         String serverPortString = serverPortTextField.getText();
 
         if (serverIp.isEmpty() || serverPortString.isEmpty()) {
-            Alerts.showPopUp("All fields should be compiled!", true);
+            Alerts.showPopup("All fields should be compiled!", true);
             return;
         }
 
@@ -92,12 +90,12 @@ public class ConnectionView {
             serverPort = Integer.parseInt(serverPortString);
 
         } catch (NumberFormatException e){
-            Alerts.showPopUp("Server port must be a number!", true);
+            Alerts.showPopup("Server port must be a number!", true);
             return;
         }
 
         if (serverPort < 0) {
-            Alerts.showPopUp("Port cannot be negative!", true);
+            Alerts.showPopup("Port cannot be negative!", true);
             return;
         }
 
@@ -122,7 +120,7 @@ public class ConnectionView {
             }
 
         } catch (IOException | NotBoundException e) {
-            Alerts.showPopUp("Error connecting to " + serverIp + ":" + serverPort, true);
+            Alerts.showPopup("Error connecting to " + serverIp + ":" + serverPort, true);
         }
     }
 }

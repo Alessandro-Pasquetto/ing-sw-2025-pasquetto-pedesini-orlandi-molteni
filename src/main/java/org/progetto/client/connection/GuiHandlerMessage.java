@@ -349,11 +349,11 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotValidGameId":
-                    Alerts.showPopUp("That game does not exist", false);
+                    Alerts.showPopup("That game does not exist", false);
                     break;
 
                 case "NotAvailableName":
-                    Alerts.showPopUp("Username already taken for this game", false);
+                    Alerts.showPopup("Username already taken for this game", false);
                     break;
 
                 case "AllowedToPlaceComponent":
@@ -363,7 +363,7 @@ public class GuiHandlerMessage {
                 case "NotAllowedToPlaceComponent":
                     if(BuildingData.getIsTimerExpired())
                         PageController.getBuildingView().removeHandComponent();
-                    Alerts.showPopUp("You are not allowed to place this component", false);
+                    Alerts.showPopup("You are not allowed to place this component", false);
                     break;
 
                 case "ComponentBooked":
@@ -377,7 +377,7 @@ public class GuiHandlerMessage {
 
                 case "HasBeenBooked":
                     System.out.println("You cannot discard a booked component");
-                    Alerts.showPopUp("You cannot discard a booked component", false);
+                    Alerts.showPopup("You cannot discard a booked component", false);
                     break;
 
                 case "PickedBookedComponent":
@@ -387,7 +387,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "RequirePlacedComponent":
-                    Alerts.showPopUp("Its required to place a component before picking up a deck!", true);
+                    Alerts.showPopup("Its required to place a component before picking up a deck!", true);
                     break;
 
                 case "EventCardDeckPutDown":
@@ -397,15 +397,15 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ImpossibleToResetTimer":
-                    Alerts.showPopUp("Impossible to reset timer!", true);
+                    Alerts.showPopup("Impossible to reset timer!", true);
                     break;
 
                 case "FinalResetNotAllowed":
-                    Alerts.showPopUp("Final reset not allowed: player not ready!", true);
+                    Alerts.showPopup("Final reset not allowed: player not ready!", true);
                     break;
 
                 case "TimerExpired":
-                    Alerts.showPopUp("Timer expired!", false);
+                    Alerts.showPopup("Timer expired!", false);
                     BuildingData.setIsTimerExpired(true);
                     PageController.getBuildingView().disableDraggableBookedComponents();
                     PageController.getBuildingView().placeLastComponent();
@@ -420,7 +420,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ActionNotAllowedInReadyState":
-                    Alerts.showPopUp("Action not allowed in ready state!", true);
+                    Alerts.showPopup("Action not allowed in ready state!", true);
                     break;
 
                 case "NotEnoughBatteries":

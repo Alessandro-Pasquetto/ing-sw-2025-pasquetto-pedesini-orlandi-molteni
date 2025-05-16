@@ -19,7 +19,15 @@ public class PageController {
     // ATTRIBUTES
     // =======================
 
-    private static Parent connectionRoot, chooseGameRoot, waitingRoomRoot, buildingRoot, adjustingRoot, populatingRoot, eventRoot, travelRoot, gameOverRoot;
+    private static Parent connectionRoot;
+    private static Parent chooseGameRoot;
+    private static Parent waitingRoomRoot;
+    private static Parent buildingRoot;
+    private static Parent adjustingRoot;
+    private static Parent populatingRoot;
+    private static Parent eventRoot;
+    private static Parent travelRoot;
+    private static Parent gameOverRoot;
 
     private static Stage stage;
     private static ConnectionView connectionView;
