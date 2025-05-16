@@ -417,8 +417,16 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerBySender(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
 
-        BuildingController.resetTimer(gameManager, virtualClient);
+        BuildingController.resetTimer(gameManager, player ,virtualClient);
     }
 
     @Override

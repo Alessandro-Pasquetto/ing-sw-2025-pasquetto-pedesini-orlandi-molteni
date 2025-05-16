@@ -483,7 +483,7 @@ public class SocketListener extends Thread {
                     break;
 
                 case "ResetTimer":
-                    BuildingController.resetTimer(gameManager, socketWriter);
+                    BuildingController.resetTimer(gameManager, player, socketWriter);
                     break;
 
                 case "RollDice":

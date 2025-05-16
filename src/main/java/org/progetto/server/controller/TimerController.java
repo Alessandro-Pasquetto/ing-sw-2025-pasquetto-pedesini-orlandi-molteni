@@ -39,6 +39,10 @@ public class TimerController {
         return isTimerExpired;
     }
 
+    public synchronized int getTimerFlipsAllowed() {
+        return timerFlipsAllowed;
+    }
+
     // =======================
     // SETTERS
     // =======================

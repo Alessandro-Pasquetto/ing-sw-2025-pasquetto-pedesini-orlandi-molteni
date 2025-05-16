@@ -879,11 +879,6 @@ public class BuildingController {
             return;
         }
 
-        if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
-            return;
-        }
-
         sender.sendMessage("YouAreReady");
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
@@ -1177,10 +1172,15 @@ public class BuildingController {
      * @param sender current sender
      * @throws RemoteException
      */
-    public static void resetTimer(GameManager gameManager, Sender sender) throws RemoteException{
+    public static void resetTimer(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             sender.sendMessage("IncorrectPhase");
+            return;
+        }
+
+        if(gameManager.getTimerController().getTimerFlipsAllowed() == 1 && !player.getIsReady()){
+            sender.sendMessage("FinalResetNotAllowed");
             return;
         }
 

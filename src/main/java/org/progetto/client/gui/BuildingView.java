@@ -801,11 +801,14 @@ public class BuildingView {
      */
     public void placeLastComponent(){
 
-        if(BuildingData.getHandComponent() == null)
+        if(BuildingData.getHandComponent() == null){
+            GameData.getSender().readyPlayer();
             return;
+        }
 
         if(BuildingData.getXHandComponent() == -1){
             removeHandComponent();
+            GameData.getSender().readyPlayer();
             return;
         }
 

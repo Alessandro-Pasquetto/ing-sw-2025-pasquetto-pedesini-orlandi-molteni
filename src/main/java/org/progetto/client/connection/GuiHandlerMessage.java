@@ -384,11 +384,15 @@ public class GuiHandlerMessage {
                     Alerts.showPopUp("Impossible to reset timer!", true);
                     break;
 
+                case "FinalResetNotAllowed":
+                    Alerts.showPopUp("Final reset not allowed: player not ready!", true);
+                    break;
+
                 case "TimerExpired":
                     Alerts.showPopUp("Timer expired!", false);
+                    BuildingData.setIsTimerExpired(true);
                     PageController.getBuildingView().disableDraggableBookedComponents();
                     PageController.getBuildingView().placeLastComponent();
-                    BuildingData.setIsTimerExpired(true);
                     break;
 
                 case "YouAreReady":
