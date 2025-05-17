@@ -481,17 +481,22 @@ public class Game {
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
         ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(Box.RED);
-        planet1.add(Box.YELLOW);
+        planet1.add(Box.GREEN);
+        planet1.add(Box.GREEN);
 
         ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(Box.GREEN);
-        planet2.add(Box.BLUE);
+        planet2.add(Box.YELLOW);
+
+        ArrayList<Box> planet3 = new ArrayList<>();
+        planet3.add(Box.BLUE);
+        planet3.add(Box.BLUE);
+        planet3.add(Box.BLUE);
 
         rewardsForPlanets.add(planet1);
         rewardsForPlanets.add(planet2);
+        rewardsForPlanets.add(planet3);
 
-        pickedEventCard = new Planets(CardType.PLANETS, 2, "card6-lv2.jpg", rewardsForPlanets,2);
+        pickedEventCard = new Planets(CardType.PLANETS, 1, "card6-lv1.jpg", rewardsForPlanets,1);
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;

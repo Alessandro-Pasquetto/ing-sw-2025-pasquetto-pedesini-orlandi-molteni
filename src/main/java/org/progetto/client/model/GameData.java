@@ -3,6 +3,7 @@ package org.progetto.client.model;
 import org.progetto.client.connection.Sender;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.events.CardType;
+import org.progetto.server.model.events.EventCard;
 
 import java.io.*;
 
@@ -22,7 +23,7 @@ public class GameData {
     private static int idGame;
     private static int levelGame;
     private static String phaseGame = "LOBBY";
-    private static CardType activeCard;
+    private static EventCard activeCard;
     private static String namePlayer;
     private static int color;
     private static String UIType;
@@ -67,7 +68,7 @@ public class GameData {
         return color;
     }
 
-    public static CardType getActiveCard() {
+    public static EventCard getActiveCard() {
         return activeCard;
     }
 
@@ -107,7 +108,7 @@ public class GameData {
         GameData.color = color;
     }
 
-    public static void setActiveCard(CardType activeCard) {
+    public static void setActiveCard(EventCard activeCard) {
         GameData.activeCard = activeCard;
     }
 

@@ -5,10 +5,12 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.EventCommands;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
+import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
@@ -245,15 +247,8 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
-            GameData.setActiveCard(pickedEventCardMessage.getEventCard().getType());
+            GameData.setActiveCard(pickedEventCardMessage.getEventCard());
 
-            //todo remove
-            ArrayList<Box> planet2 = new ArrayList<>();
-            planet2.add(Box.GREEN);
-            planet2.add(Box.BLUE);
-
-
-            PageController.getEventView().renderBoxes(planet2);
             PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
         }
 
@@ -314,6 +309,14 @@ public class GuiHandlerMessage {
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
             PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
             PageController.getEventView().responseRewardBox(availableBoxesMessage.getBoxes());
+        }
+
+        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
+           PageController.getEventView().responsePlanetLandRequest(
+                   availablePlanetsMessage.getRewardsForPlanets(),
+                   availablePlanetsMessage.getPlanetsTaken(),
+                   false
+           );
         }
 
 

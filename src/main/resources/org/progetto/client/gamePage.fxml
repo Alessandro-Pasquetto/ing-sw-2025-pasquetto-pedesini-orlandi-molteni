@@ -20,6 +20,8 @@
         <URL value="@style/style.css" />
     </stylesheets>
 
+    <!-- Left: text console and items scrollPane -->
+
     <left>
         <VBox fx:id="leftPane" alignment="TOP_CENTER" prefWidth="480.0" spacing="60.0">
             <StackPane prefWidth="420.0">
@@ -60,21 +62,30 @@
         </StackPane>
     </center>
 
+    <!-- Right: Card view -->
+
     <right>
-      <VBox alignment="CENTER" minWidth="400.0" spacing="40.0">
-         <children>
-              <VBox fx:id="rightPane" alignment="CENTER" minHeight="550.0">
-                  <ImageView fx:id="eventCard" fitHeight="450" fitWidth="300" pickOnBounds="true" preserveRatio="true">
-                  <VBox.margin>
-                     <Insets right="10.0" />
-                  </VBox.margin></ImageView>
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
-              </VBox>
-               <Button fx:id="showBoardButton" styleClass="yellow-button" text="Show Board" />
-         </children>
-      </VBox>
+        <VBox alignment="CENTER" minWidth="400.0" spacing="40.0" fx:id="rightPane">
+            <children>
+
+                <StackPane fx:id="cardContainer" minHeight="550.0" alignment="CENTER">
+                    <children>
+                        <ImageView fx:id="eventCard" fitHeight="450" fitWidth="300" pickOnBounds="true" preserveRatio="true">
+                            <StackPane.margin>
+                                <Insets right="10.0" />
+                            </StackPane.margin>
+                        </ImageView>
+
+                        <VBox fx:id="overlayContainer" spacing="0" pickOnBounds="false"
+                              mouseTransparent="false"
+                              maxWidth="300.0" maxHeight="450.0"
+                              minWidth="300.0" minHeight="450.0"/>
+                    </children>
+                </StackPane>
+
+                <Button fx:id="showBoardButton" styleClass="yellow-button" text="Show Board" />
+            </children>
+        </VBox>
     </right>
 
 </BorderPane>

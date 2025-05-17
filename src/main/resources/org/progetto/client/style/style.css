@@ -485,7 +485,7 @@
     -fx-background-color: rgba(6, 12, 17, 0.85);
 }
 
-#rightPane{
+#cardContainer{
     -fx-background-color: rgba(6, 12, 17, 0.70);
     -fx-background-radius: 21;
     -fx-border-radius: 21;

@@ -1,11 +1,15 @@
 package org.progetto.client.gui;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import org.progetto.client.MainClient;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.BuildingData;
@@ -14,10 +18,10 @@ import org.progetto.client.tui.TuiCommandFilter;
 import org.progetto.client.tui.TuiPrinters;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Box;
-import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
+import org.progetto.server.model.events.Planets;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -49,9 +53,20 @@ public class EventView {
     @FXML
     private FlowPane boxContainer;
 
+    @FXML
+    private VBox overlayContainer;
+
+
+    final int COMPONENT_SIZE = 120;
+    final int BOX_SLOT_SIZE = 42;
+    final int CREW_SLOT_SIZE = 42;
+    final int BATTERY_SLOT_WIDTH = 14;
+    final int BATTERY_SLOT_HEIGHT = 36;
+
 
     private CompletableFuture<String> inputFuture;
     private CompletableFuture<int[]> componentClickFuture;
+    private CompletableFuture<Integer> planetClickFuture;
 
     public void initEvent() {
         GameData.getSender().showSpaceship(GameData.getNamePlayer());
@@ -78,17 +93,64 @@ public class EventView {
         eventPane.setBackground(background);
     }
 
+    /**
+     * Initialize the event card picked
+     *
+     * @author Lorenzo
+     * @param imgSrc id the image path to the card
+     */
     public void initEventCard(String imgSrc) {
+
+        EventCard card = GameData.getActiveCard();
+
         Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSrc)));
         eventCard.setImage(img);
+
+        overlayContainer.getChildren().clear();
+
+        switch (card.getType()){
+
+            case PLANETS:
+                Planets planets = (Planets) card;
+                double cardHeight = 450;
+                double rowHeight = cardHeight / planets.getRewardsForPlanets().size();
+
+                for (int i = 0; i < planets.getRewardsForPlanets().size(); i++) {
+                    Rectangle zone = new Rectangle(eventCard.getFitWidth(), rowHeight);
+                    zone.setFill(Color.TRANSPARENT);
+                    int planetIndex = i;
+                    zone.setUserData(planetIndex);
+                    zone.setOnMouseClicked(e ->{
+                        if (planetClickFuture != null && !planetClickFuture.isDone()) {
+                            int planetIdx = (int) zone.getUserData();
+                            planetClickFuture.complete(planetIdx);
+
+                        }
+                    });
+
+                    StackPane stack = new StackPane();
+                    stack.setPrefSize(300, rowHeight);
+
+                    // imposta allineamento della pedina
+                    stack.setAlignment(Pos.CENTER_LEFT);
+                    stack.getChildren().add(zone);
+                    overlayContainer.getChildren().add(zone);
+                }
+
+        }
+
+
     }
 
+
+    /**
+     * Enables live view of the player spaceship
+     *
+     * @author Lorenzo
+     * @param currentPlayer is the current player
+     */
     public void showPlayerShip(Player currentPlayer) {
 
-//        // Imposta immagine di sfondo
-//        int level = GameData.getLevelGame();
-//        String imgPath = "img/cardboard/spaceship" + level + ".jpg";
-//        shipBackgroundImage.setImage(new Image(String.valueOf(MainClient.class.getResource(imgPath))));
 
         spaceshipMatrix.getChildren().clear();
 
@@ -124,18 +186,170 @@ public class EventView {
                     String componentImg = component.getImgSrc();
                     ImageView part = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/components/" + componentImg))));
                     part.setUserData(layout[row][col]);
-                    part.setFitWidth(120);
-                    part.setFitHeight(120);
+                    part.setFitWidth(COMPONENT_SIZE);
+                    part.setFitHeight(COMPONENT_SIZE);
 
                     StackPane cellWrapper = new StackPane();
                     cellWrapper.setPrefSize(64, 64);
                     cellWrapper.getChildren().add(part);
+
+                    switch (component) {
+                        case BoxStorage boxStorage -> {
+
+                            switch (boxStorage.getCapacity()) {
+                                case 1:
+                                    Pane slot1 = new Pane();
+                                    slot1.setId("boxSlot");
+                                    slot1.setLayoutX(24.0);
+                                    slot1.setLayoutY(24.0);
+                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot1.getProperties().put("idx", 0);
+
+                                    cellWrapper.getChildren().add(slot1);
+                                    break;
+
+                                case 2:
+                                    slot1 = new Pane();
+                                    slot1.setId("boxSlot");
+                                    slot1.setLayoutX(24.0);
+                                    slot1.setLayoutY(8.0);
+                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot1.getProperties().put("idx", 0);
+
+                                    Pane slot2 = new Pane();
+                                    slot2.setId("boxSlot");
+                                    slot2.setLayoutX(24.0);
+                                    slot2.setLayoutY(40.0);
+                                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot2.getProperties().put("idx", 1);
+
+                                    cellWrapper.getChildren().add(slot1);
+                                    cellWrapper.getChildren().add(slot2);
+                                    break;
+
+                                case 3:
+                                    slot1 = new Pane();
+                                    slot1.setId("boxSlot");
+                                    slot1.setLayoutX(8.0);
+                                    slot1.setLayoutY(24.0);
+                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot1.getProperties().put("idx", 0);
+
+                                    slot2 = new Pane();
+                                    slot2.setId("boxSlot");
+                                    slot2.setLayoutX(40.0);
+                                    slot2.setLayoutY(8.0);
+                                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot2.getProperties().put("idx", 1);
+
+                                    Pane slot3 = new Pane();
+                                    slot3.setId("boxSlot");
+                                    slot3.setLayoutX(40.0);
+                                    slot3.setLayoutY(40.0);
+                                    slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                                    slot3.getProperties().put("idx", 2);
+
+                                    cellWrapper.getChildren().add(slot1);
+                                    cellWrapper.getChildren().add(slot2);
+                                    cellWrapper.getChildren().add(slot3);
+                                    break;
+                            }
+                        }
+                        case HousingUnit housingUnit -> {
+                            Pane slot1 = new Pane();
+                            slot1.setId("crewSlot");
+                            slot1.setLayoutX(8.0);
+                            slot1.setLayoutY(24.0);
+                            slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                            slot1.getProperties().put("idx", 0);
+
+                            Pane slot2 = new Pane();
+                            slot2.setId("crewSlot");
+                            slot2.setLayoutX(40.0);
+                            slot2.setLayoutY(24.0);
+                            slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                            slot2.getProperties().put("idx", 1);
+
+                            cellWrapper.getChildren().add(slot1);
+                            cellWrapper.getChildren().add(slot2);
+                        }
+                        case BatteryStorage batteryStorage -> {
+                            switch (batteryStorage.getCapacity()) {
+                                case 2:
+                                    Pane slot1 = new Pane();
+                                    slot1.setId("batterySlot");
+                                    slot1.setLayoutX(24.0);
+                                    slot1.setLayoutY(24.0);
+                                    slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                                    slot1.getProperties().put("idx", 0);
+
+                                    Pane slot2 = new Pane();
+                                    slot2.setId("batterySlot");
+                                    slot2.setLayoutX(40.0);
+                                    slot2.setLayoutY(24.0);
+                                    slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                                    slot2.getProperties().put("idx", 1);
+
+                                    cellWrapper.getChildren().add(slot1);
+                                    cellWrapper.getChildren().add(slot2);
+
+                                    break;
+                                case 3:
+                                    slot1 = new Pane();
+                                    slot1.setId("batterySlot");
+                                    slot1.setLayoutX(16.0);
+                                    slot1.setLayoutY(24.0);
+                                    slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                                    slot1.getProperties().put("idx", 0);
+
+                                    slot2 = new Pane();
+                                    slot2.setId("batterySlot");
+                                    slot2.setLayoutX(32.0);
+                                    slot2.setLayoutY(24.0);
+                                    slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                                    slot2.getProperties().put("idx", 1);
+
+                                    Pane slot3 = new Pane();
+                                    slot3.setId("batterySlot");
+                                    slot3.setLayoutX(48.0);
+                                    slot3.setLayoutY(24.0);
+                                    slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                                    slot3.getProperties().put("idx", 2);
+
+                                    cellWrapper.getChildren().add(slot1);
+                                    cellWrapper.getChildren().add(slot2);
+                                    cellWrapper.getChildren().add(slot3);
+                                    break;
+                            }
+                        }
+                        default -> {}
+                    }
+
+                    switch (component.getRotation()){
+                        case 0:
+                            cellWrapper.setRotate(0);
+                            break;
+                        case 1:
+                            cellWrapper.setRotate(90);
+                            break;
+                        case 2:
+                            cellWrapper.setRotate(180);
+                            break;
+                        case 3:
+                            cellWrapper.setRotate(270);
+                            break;
+                    }
 
                     grid.add(cellWrapper, col, row);
                 }
             }
         }
     }
+
+
+
+
+
 
     /**
      * Enable selection of a component by click
@@ -323,6 +537,7 @@ public class EventView {
      * Handles player decision to use a shield
      *
      * @author Lorenzo
+     * @param printed indicates if the text has been already printed
      */
     public void responseChooseToUseShield(boolean printed) {
         if(!printed)
@@ -350,6 +565,7 @@ public class EventView {
      * @param reward is the credit reward
      * @param penaltyDays are the days of penalty
      * @param penaltyCrew are the crew to discard by penalty
+     * @param printed indicates if the text has been already printed
      */
     public void responseAcceptRewardCreditsAndPenalties(int reward, int penaltyDays, int penaltyCrew,boolean printed) {
 
@@ -378,6 +594,7 @@ public class EventView {
      * @author Lorenzo
      * @param reward is the credit reward
      * @param penaltyDays are the days of penalty
+     * @param printed indicates if the text has been already printed
      */
     public void responseAcceptRewardCreditsAndPenaltyDays(int reward, int penaltyDays,boolean printed){
 
@@ -405,6 +622,7 @@ public class EventView {
      * @author Lorenzo
      * @param reward are the reward boxes
      * @param penaltyDays are the days of penalty
+     * @param printed indicates if the text has been already printed
      */
     public void responseAcceptRewardBoxesAndPenaltyDays(ArrayList<Box> reward, int penaltyDays,boolean printed){
 
@@ -427,6 +645,12 @@ public class EventView {
         });
     }
 
+    /**
+     * Render the available boxes on the view
+     *
+     * @author Lorenzo
+     * @param availableBoxes
+     */
     public void renderBoxes(ArrayList<Box> availableBoxes){
         boxContainer.getChildren().clear();
 
@@ -467,6 +691,7 @@ public class EventView {
      * Handles player decision to land on a lost station
      *
      * @author Lorenzo
+     * @param printed indicates if the text has been already printed
      */
     public void responseLandRequest(boolean printed) {
         if(!printed) {
@@ -490,4 +715,117 @@ public class EventView {
         });
 
     }
+
+    /**
+     * Handles player decision to land on a planet
+     *
+     * @author Lorenzo
+     * @author Alessandro
+     * @param planets
+     * @param planetsTaken is the array of available planets
+     * @param printed indicates if the text has been already printed
+     */
+    public void responsePlanetLandRequest(ArrayList<ArrayList<Box>> planets, boolean[] planetsTaken,boolean printed) {
+
+        if (!printed)
+            printToTerminal("Do you want to land? (YES or NO)");
+
+        // Prepares future answer
+        inputFuture = new CompletableFuture<>();
+
+        // When user responds
+        inputFuture.thenAccept(response -> {
+
+            if (response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")) {
+                Sender sender = GameData.getSender();
+
+                if (response.equalsIgnoreCase("NO")) {
+                    sender.responsePlanetLandRequest(-1);
+                    return;
+                }
+
+                sender.responseLandRequest(response);
+                responsePlanetIndex(planets,planetsTaken,false);
+            } else {
+                printToTerminal("You must choose between YES or NO");
+                responsePlanetLandRequest(planets, planetsTaken, true);
+            }
+        });
+
+
+    }
+
+    /**
+     *Handles planet decision
+     *
+     * @author Lorenzo
+     * @param planets
+     * @param planetsTaken
+     * @param printed indicates if the text has been already printed
+     */
+    public void responsePlanetIndex(ArrayList<ArrayList<Box>> planets, boolean[] planetsTaken,boolean printed){
+        if(!printed)
+            printToTerminal("Click on the planet where you want to land");
+
+
+        //place player's pawn to the planet taken
+        for(int i = 0; i<planetsTaken.length; i++) {
+            if(planetsTaken[i]){
+                StackPane targetStack = (StackPane) overlayContainer.getChildren().get(i);
+
+                ImageView pawnView = new ImageView(new Image(String.valueOf(getClass().getResource("CrewMate_icon.png"))));
+                pawnView.setFitHeight(30);
+                pawnView.setFitWidth(30);
+
+                StackPane.setAlignment(pawnView, Pos.BOTTOM_RIGHT);
+                StackPane.setMargin(pawnView, new Insets(5));
+
+                targetStack.getChildren().add(pawnView);
+            }
+
+        }
+
+        planetClickFuture = new CompletableFuture<>();
+
+        planetClickFuture.thenAccept(response -> {
+
+            Sender sender = GameData.getSender();
+
+            int planet_idx = Integer.parseInt(String.valueOf(response));
+
+            if(planet_idx < 0 || planet_idx >= planetsTaken.length){
+                printToTerminal("Invalid planet index");
+                responsePlanetIndex(planets, planetsTaken, true);
+            }
+
+            if(planetsTaken[planet_idx]){
+                printToTerminal("Planet already taken");
+                responsePlanetIndex(planets, planetsTaken, true);
+            }
+
+            sender.responsePlanetLandRequest(planet_idx);
+            printToTerminal("Landed on planet number " + response);
+
+            StackPane targetStack = (StackPane) overlayContainer.getChildren().get(response);
+
+            ImageView pawnView = new ImageView(new Image(String.valueOf(getClass().getResource("CrewMate_icon.png"))));
+            pawnView.setFitHeight(30);
+            pawnView.setFitWidth(30);
+
+            StackPane.setAlignment(pawnView, Pos.BOTTOM_RIGHT);
+            StackPane.setMargin(pawnView, new Insets(5));
+
+            targetStack.getChildren().add(pawnView);
+
+        });
+
+
+
+
+
+    }
+
+
+
+
 }
