@@ -92,6 +92,10 @@ public class GuiHandlerMessage {
                         break;
 
                     case "POPULATING":
+                        PageController.initPopulating(GameData.getLevelGame());
+                        PageController.switchScene("populatingPage.fxml", "Populating");
+
+                        sender.showSpaceship(GameData.getNamePlayer());
                         break;
 
                     case "EVENT":
@@ -156,7 +160,10 @@ public class GuiHandlerMessage {
             else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
 
                 try {
+                    PageController.initPopulating(GameData.getLevelGame());
                     PageController.switchScene("populatingPage.fxml", "Populating");
+
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
@@ -200,6 +207,10 @@ public class GuiHandlerMessage {
 
                 case "ADJUSTING":
                     PageController.getAdjustingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    break;
+
+                case "POPULATING":
+                    PageController.getPopulatingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
                     break;
 
                 case "EVENT":

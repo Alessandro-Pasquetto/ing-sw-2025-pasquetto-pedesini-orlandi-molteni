@@ -240,6 +240,12 @@ public class PageController {
         adjustingView.initSpaceship(levelGame);
     }
 
+    public static void initPopulating(int levelGame) {
+        BuildingData.initMask(levelGame);
+        populatingView.initBackground(levelGame);
+        populatingView.initSpaceship(levelGame);
+    }
+
     public static void initPositioning(int levelGame) {
         positioningView.initBackground(levelGame);
         positioningView.initTrack(levelGame);

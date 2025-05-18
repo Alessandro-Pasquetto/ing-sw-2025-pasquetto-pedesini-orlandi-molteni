@@ -5,22 +5,32 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<StackPane xmlns="http://javafx.com/javafx/23.0.1"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.progetto.client.gui.PopulatingView"
-           fx:id="populatingRoomPane">
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
+<StackPane  fx:id="populatingPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.PopulatingView">
 
     <stylesheets>
         <URL value="@style/style.css"/>
     </stylesheets>
 
-    <AnchorPane fx:id="fullScreenPane" style="-fx-background-color: transparent;">
-        <VBox spacing="3" fx:id="statusLabelBox" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="40.0">
-            <Label fx:id="valueStatusLabel" text="" styleClass="waitingStatusLabel"/>
-            <Label fx:id="phraseStatusLabel" text="" styleClass="waitingStatusLabel"/>
-        </VBox>
-    </AnchorPane>
+    <ScrollPane fx:id="populatingScrollPane" fitToWidth="true" fitToHeight="true" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+        <BorderPane maxHeight="Infinity" maxWidth="Infinity" fx:id="populatingBorderPane">
+            <center>
+                <VBox spacing="30" alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <Label fx:id="populatingSectionTitle" text="YOU NEED TO POPULATE YOUR SPACESHIP!" wrapText="true" ></Label>
 
-    <Label text="POPULATING PAGE" />
+                    <VBox BorderPane.alignment="CENTER" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                        <StackPane alignment="CENTER">
+                            <ImageView fx:id="spaceShipImage" fitHeight="443.0" fitWidth="606.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
+                        </StackPane>
+                    </VBox>
+
+                    <Label fx:id="populatingSectionDesc" text="Select a lit component to fill it with the alien of that color clicking on them..." wrapText="true" ></Label>
+                </VBox>
+            </center>
+        </BorderPane>
+    </ScrollPane>
 </StackPane>
