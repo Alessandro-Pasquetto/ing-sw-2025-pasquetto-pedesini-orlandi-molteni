@@ -116,25 +116,29 @@ public class EventView {
                 double rowHeight = cardHeight / planets.getRewardsForPlanets().size();
 
                 for (int i = 0; i < planets.getRewardsForPlanets().size(); i++) {
-                    Rectangle zone = new Rectangle(eventCard.getFitWidth(), rowHeight);
-                    zone.setFill(Color.TRANSPARENT);
+                    StackPane stack_zone = new StackPane();
+                    stack_zone.setPrefSize(eventCard.getFitWidth(), rowHeight);
+                    stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
                     int planetIndex = i;
-                    zone.setUserData(planetIndex);
-                    zone.setOnMouseClicked(e ->{
+                    stack_zone.setUserData(planetIndex);
+                    stack_zone.setOnMouseClicked(e ->{
                         if (planetClickFuture != null && !planetClickFuture.isDone()) {
-                            int planetIdx = (int) zone.getUserData();
+                            int planetIdx = (int) stack_zone.getUserData();
                             planetClickFuture.complete(planetIdx);
 
                         }
                     });
 
-                    StackPane stack = new StackPane();
-                    stack.setPrefSize(300, rowHeight);
+                    ImageView pawnView = new ImageView();
+                    pawnView.setFitHeight(60);
+                    pawnView.setFitWidth(60);
+                    pawnView.setMouseTransparent(true);
 
-                    // imposta allineamento della pedina
-                    stack.setAlignment(Pos.CENTER_LEFT);
-                    stack.getChildren().add(zone);
-                    overlayContainer.getChildren().add(zone);
+                    StackPane.setAlignment(pawnView, Pos.BOTTOM_LEFT);
+                    StackPane.setMargin(pawnView, new Insets(5));
+
+                    stack_zone.getChildren().add(pawnView);
+                    overlayContainer.getChildren().add(stack_zone);
                 }
 
         }
@@ -674,6 +678,12 @@ public class EventView {
             });
 
             boxContainer.getChildren().add(boxImage);
+
+            for(Node node: boxContainer.getChildren()){
+                ImageView frame = (ImageView) node;
+                DragAndDrop.enableDragAndDropItems(frame,"boxSlot");
+            }
+
         }
     }
 
@@ -683,8 +693,8 @@ public class EventView {
      * @author Lorenzo
      * @param availableBoxes is the list of all available boxes
      */
-    public void responseRewardBox(ArrayList<Box> availableBoxes) {
-        //todo
+    public void responseRewardBox(ArrayList<Box> availableBoxes) {//todo
+
     }
 
     /**
@@ -767,22 +777,17 @@ public class EventView {
         if(!printed)
             printToTerminal("Click on the planet where you want to land");
 
-
         //place player's pawn to the planet taken
         for(int i = 0; i<planetsTaken.length; i++) {
             if(planetsTaken[i]){
                 StackPane targetStack = (StackPane) overlayContainer.getChildren().get(i);
-
-                ImageView pawnView = new ImageView(new Image(String.valueOf(getClass().getResource("CrewMate_icon.png"))));
-                pawnView.setFitHeight(30);
-                pawnView.setFitWidth(30);
-
-                StackPane.setAlignment(pawnView, Pos.BOTTOM_RIGHT);
-                StackPane.setMargin(pawnView, new Insets(5));
-
-                targetStack.getChildren().add(pawnView);
+                ImageView pawnView = (ImageView) targetStack.getChildren();
+                switch(GameData.getColor()){
+                    case 1 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/green_pawn.png"))));
+                    case 2 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/red_pawn.png"))));
+                    case 3 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/yellow_pawn.png"))));
+                }
             }
-
         }
 
         planetClickFuture = new CompletableFuture<>();
@@ -803,24 +808,28 @@ public class EventView {
                 responsePlanetIndex(planets, planetsTaken, true);
             }
 
-            sender.responsePlanetLandRequest(planet_idx);
-            printToTerminal("Landed on planet number " + response);
+            else {
+                sender.responsePlanetLandRequest(planet_idx);
+                printToTerminal("Landed on planet number " + response.toString());
+                StackPane targetStack = (StackPane) overlayContainer.getChildren().get(response);
+                ImageView pawnView = (ImageView) targetStack.getChildren().getFirst();
+                System.out.println(pawnView.getParent());
+                System.out.println(GameData.getColor());
+                switch (GameData.getColor()) {
+                    case 0 ->
+                            pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/green_pawn.png"))));
+                    case 1 ->
+                            pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/red_pawn.png"))));
+                    case 2 ->
+                            pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/yellow_pawn.png"))));
+                }
 
-            StackPane targetStack = (StackPane) overlayContainer.getChildren().get(response);
 
-            ImageView pawnView = new ImageView(new Image(String.valueOf(getClass().getResource("CrewMate_icon.png"))));
-            pawnView.setFitHeight(30);
-            pawnView.setFitWidth(30);
+            }
 
-            StackPane.setAlignment(pawnView, Pos.BOTTOM_RIGHT);
-            StackPane.setMargin(pawnView, new Insets(5));
 
-            targetStack.getChildren().add(pawnView);
 
         });
-
-
-
 
 
     }
