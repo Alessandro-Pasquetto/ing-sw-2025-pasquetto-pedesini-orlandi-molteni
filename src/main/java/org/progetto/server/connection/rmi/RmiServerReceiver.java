@@ -460,11 +460,16 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
+    public void showStartingPositions(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        PositioningController.showStartingPositions(gameManager, virtualClient);
+    }
+
+    @Override
     public void showPlayersInPositioningDecisionOrder(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         PositioningController.showPlayersInPositioningDecisionOrder(gameManager, virtualClient);
     }
-
 
     @Override
     public void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException {

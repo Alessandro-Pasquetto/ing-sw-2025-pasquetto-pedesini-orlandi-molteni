@@ -5,7 +5,7 @@ import org.progetto.server.model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ShowPlayersInPositioningDecisionOrderMessage implements Serializable {
+public class PlayersInPositioningDecisionOrderMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -17,7 +17,7 @@ public class ShowPlayersInPositioningDecisionOrderMessage implements Serializabl
     // CONSTRUCTORS
     // =======================
 
-    public ShowPlayersInPositioningDecisionOrderMessage(ArrayList<Player> players) {
+    public PlayersInPositioningDecisionOrderMessage(ArrayList<Player> players) {
         this.players = players;
     }
 

@@ -2,7 +2,7 @@ package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class AnotherPlayerIsActiveMessage implements Serializable {
+public class ActivePlayerMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -14,7 +14,7 @@ public class AnotherPlayerIsActiveMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerIsActiveMessage(String playerName) {
+    public ActivePlayerMessage(String playerName) {
         this.playerName = playerName;
     }
 

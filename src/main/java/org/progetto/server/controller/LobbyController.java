@@ -169,7 +169,7 @@ public class LobbyController {
             waitingGameInfoMessages.add(waitingGameInfoMessage);
         }
 
-        sender.sendMessage(new ShowWaitingGamesMessage(waitingGameInfoMessages));
+        sender.sendMessage(new WaitingGamesMessage(waitingGameInfoMessages));
     }
 
     /**
@@ -204,7 +204,7 @@ public class LobbyController {
 
         // Messages
         sender.sendMessage(new GameInfoMessage(idGame, levelGame, numPlayers));
-        sender.sendMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        sender.sendMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
         sender.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
         if(numPlayers != 1){
@@ -246,7 +246,7 @@ public class LobbyController {
 
         broadcastLobbyMessage("UpdateGameList");
         sender.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()));
-        gameManager.broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+        gameManager.broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
         gameManager.getGameThread().notifyThread();
 

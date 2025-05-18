@@ -1,12 +1,10 @@
 package org.progetto.server.controller;
 
 import javafx.util.Pair;
-import org.progetto.messages.toClient.AnotherPlayerIsActiveMessage;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;

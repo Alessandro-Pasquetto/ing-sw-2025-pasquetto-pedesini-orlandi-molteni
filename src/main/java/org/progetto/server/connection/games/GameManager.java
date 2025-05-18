@@ -1,15 +1,15 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.Building.PickedComponentMessage;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ReconnectionGameData;
-import org.progetto.messages.toClient.ShowWaitingPlayersMessage;
+import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
-import org.progetto.server.controller.BuildingController;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.PositioningController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
+import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
@@ -209,6 +209,7 @@ public class GameManager {
         System.out.println(player.getName() + " has disconnected");
 
         Game game = getGame();
+        Board board = game.getBoard();
 
         game.removePlayer(player);
         removeSender(player);
@@ -226,7 +227,7 @@ public class GameManager {
             if(game.getPlayersSize() == 0)
                 GameManagerMaps.removeGameManager(game.getId());
             else
-                broadcastGameMessage(new ShowWaitingPlayersMessage(game.getPlayersCopy()));
+                broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
             LobbyController.broadcastLobbyMessage("UpdateGameList");
 
@@ -235,6 +236,12 @@ public class GameManager {
 
         addDisconnectedPlayers(player);
         // todo notificare la disconnessione del player agli altri
+
+        if(game.getPhase().equals(GamePhase.POSITIONING)) {
+
+            if(game.getActivePlayer().equals(player))
+                PositioningController.insertInLastStartingPosition(this, player);
+        }
 
         if(game.getPhase().equals(GamePhase.EVENT)){
 
@@ -261,7 +268,13 @@ public class GameManager {
 
             Game game = getGame();
 
-            sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor()));
+            Player activePlayer = game.getActivePlayer();
+            String nameActivePlayer = "";
+
+            if(activePlayer != null)
+                nameActivePlayer = activePlayer.getName();
+
+            sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer));
 
             if(isLosingPlayer(player)){
                 sender.sendMessage("GameOver");

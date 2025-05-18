@@ -10,22 +10,20 @@ public class PickedEventCardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    EventCard eventCard;
-
+    private final EventCard eventCard;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
     public PickedEventCardMessage(EventCard eventCard) {
-     this.eventCard = eventCard;
+        this.eventCard = eventCard;
 
     }
 
     // =======================
     // GETTERS
     // =======================
-
 
     public EventCard getEventCard() {
         return eventCard;

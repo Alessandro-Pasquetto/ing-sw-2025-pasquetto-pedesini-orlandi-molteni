@@ -8,18 +8,20 @@ public class ReconnectionGameData implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int levelGame; //todo aggiungere dati necessari
-    private String gamePhase;
-    private int playerColor;
+    private final int levelGame;
+    private final String gamePhase;
+    private final int playerColor;
+    private final String nameActivePlayer;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ReconnectionGameData(int levelGame, String gamePhase, int playerColor) {
+    public ReconnectionGameData(int levelGame, String gamePhase, int playerColor, String nameActivePlayer) {
         this.levelGame = levelGame;
         this.gamePhase = gamePhase;
         this.playerColor = playerColor;
+        this.nameActivePlayer = nameActivePlayer;
     }
 
     // =======================
@@ -36,5 +38,9 @@ public class ReconnectionGameData implements Serializable {
 
     public int getPlayerColor() {
         return playerColor;
+    }
+
+    public String getNameActivePlayer() {
+        return nameActivePlayer;
     }
 }

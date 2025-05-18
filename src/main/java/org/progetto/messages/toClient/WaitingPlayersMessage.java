@@ -1,25 +1,23 @@
 package org.progetto.messages.toClient;
 
 import org.progetto.server.model.Player;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ShowPlayersMessage implements Serializable {
+public class WaitingPlayersMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private final ArrayList<Player> players;
-
+    private final ArrayList<Player> players = new ArrayList<Player>();
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public ShowPlayersMessage(ArrayList<Player> players) {
-        this.players = players;
+    public WaitingPlayersMessage(ArrayList<Player> players) {
+        this.players.addAll(players);
     }
 
     // =======================
@@ -29,5 +27,4 @@ public class ShowPlayersMessage implements Serializable {
     public ArrayList<Player> getPlayers() {
         return players;
     }
-
 }

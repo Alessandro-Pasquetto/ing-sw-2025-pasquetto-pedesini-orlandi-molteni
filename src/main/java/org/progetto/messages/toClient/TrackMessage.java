@@ -5,7 +5,7 @@ import org.progetto.server.model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ResponseTrackMessage implements Serializable {
+public class TrackMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -18,7 +18,7 @@ public class ResponseTrackMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public ResponseTrackMessage(ArrayList<Player> travelers, Player[] track) {
+    public TrackMessage(ArrayList<Player> travelers, Player[] track) {
         this.travelers = travelers;
         this.track = track;
     }

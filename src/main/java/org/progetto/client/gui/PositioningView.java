@@ -129,7 +129,7 @@ public class PositioningView {
         this.players = players;
 
         for (Player player : players) {
-            HBox playerBox = createPlayerItem(player, null);
+            HBox playerBox = createPlayerItem(player, GameData.getActivePlayer());
             playerListContainer.getChildren().add(playerBox);
         }
     }
@@ -140,7 +140,7 @@ public class PositioningView {
      * @author Gabriele
      * @param activePlayer The currently active player's name
      */
-    public void updatePlayersList(String activePlayer) {
+    public void highlightsActivePlayer(String activePlayer) {
         playerListContainer.getChildren().clear();
 
         for (Player player : players) {

@@ -111,10 +111,9 @@ public class GameThread extends Thread {
                         PopulateController.fillHumansDisconnectedPlayers(gameManager);
 
                         // Preparing travelers on the track
-                        if (game.getLevel() == 1) {
+                        if (game.getLevel() == 1)
                             game.getBoard().addTravelersOnTrack(game.getLevel());
-                            GameController.removeDisconnectedPlayersFromTravelers(gameManager);
-                        } else {
+                        else {
                             game.setPhase(GamePhase.POSITIONING);
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                             System.out.println("Waiting for the players to decide their starting position...");
@@ -137,6 +136,8 @@ public class GameThread extends Thread {
                         System.out.println();
                         System.out.println("New event...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+
+                        GameController.removeDisconnectedPlayersFromTravelers(gameManager);
 
                         EventController.pickEventCard(gameManager);
 
@@ -254,7 +255,7 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until the player is ready
+     * Pauses the game thread until the player is ready or disconnected
      *
      * @author Alessandro
      */
@@ -262,7 +263,7 @@ public class GameThread extends Thread {
         player.setIsReady(false, gameManager.getGame());
 
         synchronized (gameThreadLock) {
-            while (!player.getIsReady())
+            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
                 gameThreadLock.wait();
         }
     }

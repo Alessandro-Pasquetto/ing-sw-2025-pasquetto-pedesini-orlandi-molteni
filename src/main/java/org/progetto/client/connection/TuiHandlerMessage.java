@@ -14,7 +14,6 @@ import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
-import org.progetto.messages.toClient.Positioning.PlayerSetStartingPositionMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
@@ -32,8 +31,8 @@ public class TuiHandlerMessage {
      */
     public static void handleMessage(Object messageObj) {
 
-        if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            TuiPrinters.printWaitingGames(showWaitingGamesMessage.getWaitingGames());
+        if (messageObj instanceof WaitingGamesMessage waitingGamesMessage) {
+            TuiPrinters.printWaitingGames(waitingGamesMessage.getWaitingGames());
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
@@ -45,8 +44,8 @@ public class TuiHandlerMessage {
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
 
-        else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
-            for (Player player : showWaitingPlayersMessage.getPlayers()) {
+        else if (messageObj instanceof WaitingPlayersMessage waitingPlayersMessage) {
+            for (Player player : waitingPlayersMessage.getPlayers()) {
                 if(player.getName().equals(GameData.getNamePlayer())) {
                     GameData.setColor(player.getColor());
                 }
@@ -67,12 +66,12 @@ public class TuiHandlerMessage {
             TuiPrinters.printSpaceshipStats(responseSpaceshipStatsMessage.getSpaceship());
         }
 
-        else if (messageObj instanceof ResponsePlayerStatsMessage responsePlayerStatsMessage) {
-            TuiPrinters.printPlayerStats(responsePlayerStatsMessage.getPlayerName(), responsePlayerStatsMessage.getCredits(), responsePlayerStatsMessage.getPosition(), responsePlayerStatsMessage.getHasLeft());
+        else if (messageObj instanceof PlayerStatsMessage playerStatsMessage) {
+            TuiPrinters.printPlayerStats(playerStatsMessage.getPlayerName(), playerStatsMessage.getCredits(), playerStatsMessage.getPosition(), playerStatsMessage.getHasLeft());
         }
 
-        else if (messageObj instanceof ResponseTrackMessage responseTrackMessage) {
-            TuiPrinters.printTrack(responseTrackMessage.getTravelers(), responseTrackMessage.getTrack());
+        else if (messageObj instanceof TrackMessage trackMessage) {
+            TuiPrinters.printTrack(trackMessage.getTravelers(), trackMessage.getTrack());
         }
 
         else if (messageObj instanceof ShowHandComponentMessage showHandComponentMessage) {
@@ -147,10 +146,6 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
             BuildingCommands.responseStartingPosition(askStartingPositionMessage.getStartingPositions());
-        }
-
-        else if (messageObj instanceof PlayerSetStartingPositionMessage playerSetStartingPositionMessage) {
-            System.out.println("Starting position set successfully!");
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -346,6 +341,10 @@ public class TuiHandlerMessage {
 
                 case "ActionNotAllowedInReadyState":
                     System.out.println("Action not allowed in ready state!");
+                    break;
+
+                case "ValidStartingPosition":
+                    System.out.println("Starting position set successfully!");
                     break;
 
                 case "PlayerNameNotFound":

@@ -10,7 +10,7 @@ public class AskStartingPositionMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Player[] startingPositions;
+    private final Player[] startingPositions;
 
     // =======================
     // CONSTRUCTORS

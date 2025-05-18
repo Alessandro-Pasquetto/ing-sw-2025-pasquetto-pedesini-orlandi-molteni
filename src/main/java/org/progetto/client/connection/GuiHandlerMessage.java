@@ -10,10 +10,9 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.Positioning.AnotherPlayerSetStartingPositionMessage;
+import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
-import org.progetto.messages.toClient.Positioning.PlayerSetStartingPositionMessage;
-import org.progetto.messages.toClient.Positioning.ShowPlayersInPositioningDecisionOrderMessage;
+import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
@@ -33,8 +32,8 @@ public class GuiHandlerMessage {
      */
     public static void handleMessage(Object messageObj) {
 
-        if (messageObj instanceof ShowWaitingGamesMessage showWaitingGamesMessage) {
-            ArrayList<WaitingGameInfoMessage> gamesInfo = showWaitingGamesMessage.getWaitingGames();
+        if (messageObj instanceof WaitingGamesMessage waitingGamesMessage) {
+            ArrayList<WaitingGameInfoMessage> gamesInfo = waitingGamesMessage.getWaitingGames();
             PageController.getChooseGameView().generateGameRecordList(gamesInfo);
         }
 
@@ -68,6 +67,8 @@ public class GuiHandlerMessage {
                 String gamePhase = reconnectionGameData.getGamePhase();
                 int playerColor = reconnectionGameData.getPlayerColor();
 
+                GameData.setActivePlayer(reconnectionGameData.getNameActivePlayer());
+
                 GameData.setLevelGame(levelGame);
                 GameData.setPhaseGame(gamePhase);
                 GameData.setColor(playerColor);
@@ -98,6 +99,14 @@ public class GuiHandlerMessage {
                         sender.showSpaceship(GameData.getNamePlayer());
                         break;
 
+                    case "POSITIONING":
+                        PageController.initPositioning(GameData.getLevelGame());
+                        PageController.switchScene("positioningPage.fxml", "Positioning");
+
+                        sender.showPlayersInPositioningDecisionOrder();
+                        sender.showStartingPositions();
+                        break;
+
                     case "EVENT":
                         PageController.initEvent(GameData.getLevelGame());
                         PageController.switchScene("gamePage.fxml", "Game");
@@ -110,8 +119,8 @@ public class GuiHandlerMessage {
             }
         }
 
-        else if (messageObj instanceof ShowWaitingPlayersMessage showWaitingPlayersMessage) {
-            PageController.getWaitingRoomView().updatePlayersList(showWaitingPlayersMessage.getPlayers());
+        else if (messageObj instanceof WaitingPlayersMessage waitingPlayersMessage) {
+            PageController.getWaitingRoomView().updatePlayersList(waitingPlayersMessage.getPlayers());
         }
 
         else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
@@ -227,12 +236,12 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
-        else if(messageObj instanceof ShowPlayersMessage showPlayersMessage) {
-            PageController.getBuildingView().updatePlayersList(showPlayersMessage.getPlayers());
+        else if(messageObj instanceof PlayersMessage playersMessage) {
+            PageController.getBuildingView().updatePlayersList(playersMessage.getPlayers());
         }
 
-        else if(messageObj instanceof ShowPlayersInPositioningDecisionOrderMessage showPlayersInPositioningDecisionOrderMessage) {
-            PageController.getPositioningView().initPlayersList(showPlayersInPositioningDecisionOrderMessage.getPlayers());
+        else if(messageObj instanceof PlayersInPositioningDecisionOrderMessage playersInPositioningDecisionOrderMessage) {
+            PageController.getPositioningView().initPlayersList(playersInPositioningDecisionOrderMessage.getPlayers());
         }
 
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
@@ -252,11 +261,11 @@ public class GuiHandlerMessage {
             GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
         }
 
-        else if (messageObj instanceof AnotherPlayerDiscardComponentMessage anotherPlayerDiscardComponentMessage) {
+        else if (messageObj instanceof AnotherPlayerDiscardComponentMessage) {
             GameData.getSender().showVisibleComponents();
         }
 
-        else if (messageObj instanceof AnotherPlayerPickedVisibleComponentMessage anotherPlayerDiscardComponentMessage) {
+        else if (messageObj instanceof AnotherPlayerPickedVisibleComponentMessage) {
             GameData.getSender().showVisibleComponents();
         }
 
@@ -274,29 +283,23 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
         }
 
-        else if (messageObj instanceof AnotherPlayerIsActiveMessage anotherPlayerIsActiveMessage) {
-            GameData.setActivePlayer(anotherPlayerIsActiveMessage.getPlayerName());
+        else if (messageObj instanceof ActivePlayerMessage activePlayerMessage) {
+            GameData.setActivePlayer(activePlayerMessage.getPlayerName());
 
             switch (GameData.getPhaseGame()) {
 
                 case "POSITIONING":
-                    PageController.getPositioningView().updatePlayersList(anotherPlayerIsActiveMessage.getPlayerName());
+                    PageController.getPositioningView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
                     break;
             }
         }
 
-        else if (messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
+        else if (messageObj instanceof AskStartingPositionMessage) {
             PageController.getPositioningView().updateLabels(true);
         }
 
-        else if (messageObj instanceof PlayerSetStartingPositionMessage playerSetStartingPositionMessage) {
-            PageController.getPositioningView().updateTrack(playerSetStartingPositionMessage.getStartingPositions());
-            PageController.getPositioningView().updateLabels(false);
-        }
-
-        else if (messageObj instanceof AnotherPlayerSetStartingPositionMessage anotherPlayerSetStartingPositionMessage) {
-            PageController.getPositioningView().updateTrack(anotherPlayerSetStartingPositionMessage.getStartingPositions());
-            PageController.getPositioningView().updateLabels(false);
+        else if (messageObj instanceof StartingPositionsMessage startingPositionsMessage) {
+            PageController.getPositioningView().updateTrack(startingPositionsMessage.getStartingPositions());
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -378,7 +381,7 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateTimer(timer);
         }
 
-        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage) {
+        else if (messageObj instanceof DestroyedComponentMessage) {
             GameData.getSender().showSpaceship(GameData.getNamePlayer());
         }
 
@@ -477,17 +480,6 @@ public class GuiHandlerMessage {
 
                 case "ActionNotAllowedInReadyState":
                     Alerts.showPopup("Action not allowed in ready state!", true);
-                    break;
-
-                case "YourTurn":
-                    GameData.setActivePlayer(GameData.getNamePlayer());
-
-                    switch (GameData.getPhaseGame()) {
-
-                        case "POSITIONING":
-                            PageController.getPositioningView().updatePlayersList(GameData.getNamePlayer());
-                            break;
-                    }
                     break;
 
                 case "StartingPositionAlreadyTaken":

@@ -3,7 +3,7 @@ package org.progetto.messages.toClient;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ShowWaitingGamesMessage implements Serializable {
+public class WaitingGamesMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -15,7 +15,7 @@ public class ShowWaitingGamesMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public ShowWaitingGamesMessage(ArrayList<WaitingGameInfoMessage> waitingGames) {
+    public WaitingGamesMessage(ArrayList<WaitingGameInfoMessage> waitingGames) {
         this.waitingGames = waitingGames;
     }
 

@@ -479,6 +479,10 @@ public class SocketListener extends Thread {
                     GameController.showPlayers(gameManager, socketWriter);
                     break;
 
+                case "ShowStartingPositions":
+                    PositioningController.showStartingPositions(gameManager, socketWriter);
+                    break;
+
                 case "ShowPlayersInPositioningDecisionOrder":
                     PositioningController.showPlayersInPositioningDecisionOrder(gameManager, socketWriter);
                     break;

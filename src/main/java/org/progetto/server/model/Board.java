@@ -11,7 +11,7 @@ public class Board {
 
     private final Player[] track;
     private final ArrayList<Player> travelers;  // order: leader -> last
-    private Player[] startingPositions;         // order: leader -> last
+    private final Player[] startingPositions;   // order: leader -> last
     private final String imgSrc;
 
     // =======================
@@ -42,12 +42,23 @@ public class Board {
         return copyTravelers;
     }
 
-    public Player[] getStartingPositions() {
-        return startingPositions.clone();
+    public Player[] getStartingPositionsCopy() {
+
+        Player[] startingPositionsCopy = new Player[startingPositions.length];
+
+        synchronized (startingPositions) {
+            for (int i = 0; i < startingPositions.length; i++) {
+                startingPositionsCopy[i] = startingPositions[i];
+            }
+        }
+
+        return startingPositionsCopy;
     }
 
     public int getNumTravelers() {
-        return travelers.size();
+        synchronized (travelers) {
+            return travelers.size();
+        }
     }
 
     public String getImgSrc() {

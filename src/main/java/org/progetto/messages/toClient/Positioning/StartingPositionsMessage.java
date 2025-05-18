@@ -4,19 +4,19 @@ import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 
-public class PlayerSetStartingPositionMessage implements Serializable {
+public class StartingPositionsMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private Player[] startingPositions;
+    private final Player[] startingPositions;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PlayerSetStartingPositionMessage(Player[] startingPositions) {
+    public StartingPositionsMessage(Player[] startingPositions) {
         this.startingPositions = startingPositions;
     }
 
