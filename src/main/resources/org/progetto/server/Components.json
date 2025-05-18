@@ -396,74 +396,62 @@
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [1, 1, 0, 1],
-    "imgSrc": "orange-alien-housing-unit1.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit1.jpg"
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [2, 1, 0, 1],
-    "imgSrc": "orange-alien-housing-unit2.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit2.jpg"
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [0, 0, 0, 3],
-    "imgSrc": "orange-alien-housing-unit3.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit3.jpg"
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [0, 0, 1, 3],
-    "imgSrc": "orange-alien-housing-unit4.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit4.jpg"
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [0, 2, 0, 3],
-    "imgSrc": "orange-alien-housing-unit5.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit5.jpg"
   },
   {
     "type": "ORANGE_HOUSING_UNIT",
     "connections": [1, 0, 0, 3],
-    "imgSrc": "orange-alien-housing-unit6.jpg",
-    "capacity": 0
+    "imgSrc": "orange-alien-housing-unit6.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [1, 2, 0, 2],
-    "imgSrc": "purple-alien-housing-unit1.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit1.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [2, 2, 0, 2],
-    "imgSrc": "purple-alien-housing-unit2.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit2.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [0, 0, 0, 3],
-    "imgSrc": "purple-alien-housing-unit3.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit3.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [0, 0, 2, 3],
-    "imgSrc": "purple-alien-housing-unit4.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit4.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [0, 1, 0, 3],
-    "imgSrc": "purple-alien-housing-unit5.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit5.jpg"
   },
   {
     "type": "PURPLE_HOUSING_UNIT",
     "connections": [2, 0, 0, 3],
-    "imgSrc": "purple-alien-housing-unit6.jpg",
-    "capacity": 0
+    "imgSrc": "purple-alien-housing-unit6.jpg"
   },
   {
     "type": "RED_BOX_STORAGE",
