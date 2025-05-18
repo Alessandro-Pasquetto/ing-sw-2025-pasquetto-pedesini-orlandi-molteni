@@ -25,6 +25,7 @@ public class PageController {
     private static Parent buildingRoot;
     private static Parent adjustingRoot;
     private static Parent populatingRoot;
+    private static Parent positioningRoot;
     private static Parent eventRoot;
     private static Parent travelRoot;
     private static Parent gameOverRoot;
@@ -36,6 +37,7 @@ public class PageController {
     private static BuildingView buildingView;
     private static AdjustingView adjustingView;
     private static PopulatingView populatingView;
+    private static PositioningView positioningView;
     private static EventView eventView;
     private static TravelView travelView;
     private static GameOverView gameOverView;
@@ -70,6 +72,10 @@ public class PageController {
 
     public static PopulatingView getPopulatingView() {
         return populatingView;
+    }
+
+    public static PositioningView getPositioningView() {
+        return positioningView;
     }
 
     public static EventView getEventView() {
@@ -147,6 +153,10 @@ public class PageController {
         populatingRoot = loader.load();
         populatingView = loader.getController();
 
+        loader = new FXMLLoader(MainClient.class.getResource("positioningPage.fxml"));
+        positioningRoot = loader.load();
+        positioningView = loader.getController();
+
         loader = new FXMLLoader(MainClient.class.getResource("gamePage.fxml"));
         eventRoot = loader.load();
         eventView = loader.getController();
@@ -175,6 +185,7 @@ public class PageController {
             case "buildingPage.fxml" -> buildingRoot;
             case "adjustingPage.fxml" -> adjustingRoot;
             case "populatingPage.fxml" -> populatingRoot;
+            case "positioningPage.fxml" -> positioningRoot;
             case "gamePage.fxml" -> eventRoot;
             case "travelPage.fxml" -> travelRoot;
             case "gameOverPage.fxml" -> gameOverRoot;
@@ -226,6 +237,11 @@ public class PageController {
         BuildingData.initMask(levelGame);
         adjustingView.initBackground(levelGame);
         adjustingView.initSpaceship(levelGame);
+    }
+
+    public static void initPositioning(int levelGame) {
+        positioningView.initBackground(levelGame);
+        positioningView.initTrack(levelGame);
     }
 
     public static void initEvent(int levelGame) {

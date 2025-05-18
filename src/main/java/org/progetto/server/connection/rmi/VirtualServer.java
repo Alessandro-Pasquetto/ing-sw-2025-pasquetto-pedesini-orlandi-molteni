@@ -1,5 +1,6 @@
 package org.progetto.server.connection.rmi;
 
+import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.VirtualClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -59,7 +60,9 @@ public interface VirtualServer extends Remote {
 
     void playerStats(VirtualClient virtualClient, int idGame) throws RemoteException;
 
-    void showPlayers(VirtualClient virtualClient,int idGame) throws RemoteException;
+    void showPlayers(VirtualClient virtualClient, int idGame) throws RemoteException;
+
+    void showPlayersInPositioningDecisionOrder(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException;
 

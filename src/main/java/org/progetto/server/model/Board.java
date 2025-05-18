@@ -82,7 +82,7 @@ public class Board {
      */
     public synchronized void decideStartingPositionOnTrack(Player player, int position) {
         if (position < 0 || position >= startingPositions.length) {
-            throw new IllegalArgumentException("InvalidStartingPosition");
+            throw new IllegalStateException("InvalidStartingPosition");
         }
 
         if (startingPositions[position] != null) {
@@ -155,7 +155,7 @@ public class Board {
      * Adds ready players to the list of players participating in the journey
      *
      * @author Alessandro
-     * @param levelBoard
+     * @param levelBoard the level of the board
      */
     public synchronized void addTravelersOnTrack(int levelBoard) {
 
@@ -179,20 +179,20 @@ public class Board {
                 break;
 
             case 2:
-                track[6] = startingPositions[0];
-                startingPositions[0].setPosition(6);
-                if(startingPositions.length == 1) break;
+                track[6] = travelers.get(0);
+                travelers.get(0).setPosition(6);
+                if(travelers.size() == 1) break;
 
-                track[3] = startingPositions[1];
-                startingPositions[1].setPosition(3);
-                if(startingPositions.length == 2) break;
+                track[3] = travelers.get(1);
+                travelers.get(1).setPosition(3);
+                if(travelers.size() == 2) break;
 
-                track[1] = startingPositions[2];
-                startingPositions[2].setPosition(1);
-                if(startingPositions.length == 3) break;
+                track[1] = travelers.get(2);
+                travelers.get(2).setPosition(1);
+                if(travelers.size() == 3) break;
 
-                track[0] = startingPositions[3];
-                startingPositions[3].setPosition(0);
+                track[0] = travelers.get(3);
+                travelers.get(3).setPosition(0);
 
                 break;
         }

@@ -3,10 +3,7 @@ package org.progetto.server.connection.games;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.server.connection.Sender;
-import org.progetto.server.controller.BuildingController;
-import org.progetto.server.controller.EventController;
-import org.progetto.server.controller.GameController;
-import org.progetto.server.controller.PopulateController;
+import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -122,10 +119,10 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                             System.out.println("Waiting for the players to decide their starting position...");
 
-                            BuildingController.askForStartingPosition(gameManager);
+                            PositioningController.askForStartingPosition(gameManager);
 
-                            game.getBoard().addTravelersOnTrack(game.getLevel());
                             game.getBoard().updateTravelersBasedOnStartingPosition();
+                            game.getBoard().addTravelersOnTrack(game.getLevel());
                             // TODO: handle disconnected players
                         }
 

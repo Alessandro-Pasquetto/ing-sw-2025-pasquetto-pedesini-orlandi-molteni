@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 import javafx.util.Pair;
+import org.progetto.messages.toClient.AnotherPlayerIsActiveMessage;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
@@ -1360,66 +1361,6 @@ public class BuildingController {
             if(!result.getKey()) {
                 gameManager.addLosingPlayer(player);
             }
-        }
-    }
-
-    /**
-     * Ask for starting position to all players
-     *
-     * @author Gabriele
-     * @param gameManager current gameManager
-     */
-    public static void askForStartingPosition(GameManager gameManager) throws InterruptedException {
-
-        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
-            Sender sender = gameManager.getSenderByPlayer(player);
-            if (sender != null) {
-                try {
-                    Player[] startingPositions = gameManager.getGame().getBoard().getStartingPositions();
-                    sender.sendMessage(new AskStartingPositionMessage(startingPositions));
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
-            }
-
-            gameManager.getGameThread().resetAndWaitPlayerReady(player);
-        }
-    }
-
-    /**
-     * Handles player decision to set starting position
-     *
-     * @author Gabriele
-     * @param gameManager current gameManager
-     * @param player current player
-     * @param startingPosition the starting position of the player
-     * @param sender current sender
-     * @throws RemoteException
-     */
-    public static void receiveStartingPosition(GameManager gameManager, Player player, int startingPosition, Sender sender) throws RemoteException {
-
-        if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
-            sender.sendMessage("IncorrectPhase");
-            return;
-        }
-
-        try {
-            gameManager.getGame().getBoard().decideStartingPositionOnTrack(player, startingPosition);
-            sender.sendMessage("StartingPositionSet");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerSetStartingPositionMessage(player.getName(), startingPosition), sender);
-
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
-
-        } catch (IllegalStateException e) {
-            if (e.getMessage().equals("StartingPositionAlreadyTaken"))
-                sender.sendMessage("StartingPositionAlreadyTaken");
-            else if (e.getMessage().equals("InvalidStartingPosition"))
-                sender.sendMessage("InvalidStartingPosition");
-            else if (e.getMessage().equals("PlayerAlreadyHasAStartingPosition"))
-                sender.sendMessage("PlayerAlreadyHasAStartingPosition");
-            else
-                sender.sendMessage(e.getMessage());
         }
     }
 }

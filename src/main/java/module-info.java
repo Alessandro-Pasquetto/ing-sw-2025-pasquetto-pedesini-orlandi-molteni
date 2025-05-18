@@ -48,4 +48,5 @@ module org.progetto{
     exports org.progetto.server.controller.events;
     exports org.progetto.messages.toClient.Populating;
     opens org.progetto.messages.toClient to com.google.gson, javafx.fxml;
+    exports org.progetto.messages.toClient.Positioning;
 }

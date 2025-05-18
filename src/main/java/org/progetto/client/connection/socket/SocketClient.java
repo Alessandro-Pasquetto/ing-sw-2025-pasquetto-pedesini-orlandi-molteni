@@ -196,6 +196,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void showPlayersInPositioningDecisionOrder() {
+        SocketWriter.sendMessage("ShowPlayersInPositioningDecisionOrder");
+    }
+
+    @Override
     public void showSpaceship(String owner){
         SocketWriter.sendMessage(new RequestSpaceshipMessage(owner));
     }

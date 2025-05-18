@@ -5,16 +5,18 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.tui.EventCommands;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.Positioning.AnotherPlayerSetStartingPositionMessage;
+import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
+import org.progetto.messages.toClient.Positioning.PlayerSetStartingPositionMessage;
+import org.progetto.messages.toClient.Positioning.ShowPlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
-import org.progetto.server.model.components.Box;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -162,6 +164,18 @@ public class GuiHandlerMessage {
                 }
             }
 
+            else if(GameData.getPhaseGame().equalsIgnoreCase("POSITIONING")) {
+
+                try {
+                    PageController.initPositioning(GameData.getLevelGame());
+                    PageController.switchScene("positioningPage.fxml", "Positioning");
+
+                } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
+                    System.out.println("Error loading the page");
+                }
+            }
+
             else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                 try {
                     PageController.initEvent(GameData.getLevelGame());
@@ -206,6 +220,10 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updatePlayersList(showPlayersMessage.getPlayers());
         }
 
+        else if(messageObj instanceof ShowPlayersInPositioningDecisionOrderMessage showPlayersInPositioningDecisionOrderMessage) {
+            PageController.getPositioningView().initPlayersList(showPlayersInPositioningDecisionOrderMessage.getPlayers());
+        }
+
         else if (messageObj instanceof PickedComponentMessage pickedComponentMessage) {
             PageController.getBuildingView().generateHandComponent(pickedComponentMessage.getPickedComponent());
         }
@@ -243,6 +261,31 @@ public class GuiHandlerMessage {
 
         else if(messageObj instanceof AnotherPlayerPutDownEventCardDeckMessage anotherPlayerPutDownEventCardDeckMessage) {
             PageController.getBuildingView().updateEventDecksAvailability(anotherPlayerPutDownEventCardDeckMessage.getDeckIdx());
+        }
+
+        else if (messageObj instanceof AnotherPlayerIsActiveMessage anotherPlayerIsActiveMessage) {
+            GameData.setActivePlayer(anotherPlayerIsActiveMessage.getPlayerName());
+
+            switch (GameData.getPhaseGame()) {
+
+                case "POSITIONING":
+                    PageController.getPositioningView().updatePlayersList(anotherPlayerIsActiveMessage.getPlayerName());
+                    break;
+            }
+        }
+
+        else if (messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
+            PageController.getPositioningView().updateLabels(true);
+        }
+
+        else if (messageObj instanceof PlayerSetStartingPositionMessage playerSetStartingPositionMessage) {
+            PageController.getPositioningView().updateTrack(playerSetStartingPositionMessage.getStartingPositions());
+            PageController.getPositioningView().updateLabels(false);
+        }
+
+        else if (messageObj instanceof AnotherPlayerSetStartingPositionMessage anotherPlayerSetStartingPositionMessage) {
+            PageController.getPositioningView().updateTrack(anotherPlayerSetStartingPositionMessage.getStartingPositions());
+            PageController.getPositioningView().updateLabels(false);
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -318,7 +361,6 @@ public class GuiHandlerMessage {
                    false
            );
         }
-
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
@@ -424,6 +466,29 @@ public class GuiHandlerMessage {
 
                 case "ActionNotAllowedInReadyState":
                     Alerts.showPopup("Action not allowed in ready state!", true);
+                    break;
+
+                case "YourTurn":
+                    GameData.setActivePlayer(GameData.getNamePlayer());
+
+                    switch (GameData.getPhaseGame()) {
+
+                        case "POSITIONING":
+                            PageController.getPositioningView().updatePlayersList(GameData.getNamePlayer());
+                            break;
+                    }
+                    break;
+
+                case "StartingPositionAlreadyTaken":
+                    Alerts.showPopup("Position already taken!", true);
+                    break;
+
+                case "InvalidStartingPosition":
+                    Alerts.showPopup("Invalid starting position!", true);
+                    break;
+
+                case "PlayerAlreadyHasAStartingPosition":
+                    Alerts.showPopup("You already have a starting position!", true);
                     break;
 
                 case "NotEnoughBatteries":

@@ -221,7 +221,7 @@ public class SocketListener extends Thread {
         else if (messageObj instanceof ResponseStartingPositionMessage responseStartingPositionMessage) {
             int startingPosition = responseStartingPositionMessage.getStartingPosition();
 
-            BuildingController.receiveStartingPosition(gameManager, player, startingPosition, socketWriter);
+            PositioningController.receiveStartingPosition(gameManager, player, startingPosition, socketWriter);
         }
 
         else if(messageObj instanceof ResponseHowManyDoubleCannonsMessage responseHowManyDoubleCannonsMessage) {
@@ -476,7 +476,11 @@ public class SocketListener extends Thread {
                     break;
 
                 case "ShowPlayers":
-                    GameController.showPlayers(gameManager,socketWriter);
+                    GameController.showPlayers(gameManager, socketWriter);
+                    break;
+
+                case "ShowPlayersInPositioningDecisionOrder":
+                    PositioningController.showPlayersInPositioningDecisionOrder(gameManager, socketWriter);
                     break;
 
                 case "SpaceshipStats":

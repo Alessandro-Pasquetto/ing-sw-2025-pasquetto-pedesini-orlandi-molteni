@@ -25,6 +25,7 @@ public class GameData {
     private static String phaseGame = "LOBBY";
     private static EventCard activeCard;
     private static String namePlayer;
+    private static String activePlayer;
     private static int color;
     private static String UIType;
 
@@ -58,6 +59,10 @@ public class GameData {
 
     public static String getNamePlayer(){
         return namePlayer;
+    }
+
+    public static String getActivePlayer() {
+        return activePlayer;
     }
 
     public static String getUIType(){
@@ -98,6 +103,10 @@ public class GameData {
 
     public static void setNamePlayer(String namePlayer){
         GameData.namePlayer = namePlayer;
+    }
+
+    public static void setActivePlayer(String activePlayer) {
+        GameData.activePlayer = activePlayer;
     }
 
     public static void setUIType(String UIType){

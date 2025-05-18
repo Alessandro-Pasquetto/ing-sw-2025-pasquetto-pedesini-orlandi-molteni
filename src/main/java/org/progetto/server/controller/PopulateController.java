@@ -10,6 +10,9 @@ import org.progetto.server.model.Player;
 
 import java.rmi.RemoteException;
 
+/**
+ * Populating phase controller class
+ */
 public class PopulateController {
 
     // =======================

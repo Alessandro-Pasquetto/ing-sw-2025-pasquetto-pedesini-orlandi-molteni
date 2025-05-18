@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 /**
  * Handles model's methods invocation made by RMI clients
  */
-public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer{
+public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer {
 
     // =======================
     // CONSTRUCTORS
@@ -456,7 +456,13 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        GameController.showPlayers(gameManager,virtualClient);
+        GameController.showPlayers(gameManager, virtualClient);
+    }
+
+    @Override
+    public void showPlayersInPositioningDecisionOrder(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        PositioningController.showPlayersInPositioningDecisionOrder(gameManager, virtualClient);
     }
 
 
@@ -531,7 +537,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        BuildingController.receiveStartingPosition(gameManager, player, startingPosition, virtualClient);
+        PositioningController.receiveStartingPosition(gameManager, player, startingPosition, virtualClient);
     }
 
     @Override

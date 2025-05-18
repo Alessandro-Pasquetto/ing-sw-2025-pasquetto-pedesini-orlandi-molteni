@@ -1,10 +1,10 @@
-package org.progetto.messages.toClient.Building;
+package org.progetto.messages.toClient.Positioning;
 
 import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 
-public class AskStartingPositionMessage implements Serializable {
+public class PlayerSetStartingPositionMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -16,7 +16,7 @@ public class AskStartingPositionMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public AskStartingPositionMessage(Player[] startingPositions) {
+    public PlayerSetStartingPositionMessage(Player[] startingPositions) {
         this.startingPositions = startingPositions;
     }
 

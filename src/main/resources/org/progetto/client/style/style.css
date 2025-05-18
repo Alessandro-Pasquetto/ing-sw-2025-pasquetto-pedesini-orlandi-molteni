@@ -471,6 +471,27 @@
 }
 
 /* ============================
+   POSITIONING VIEW
+   ============================ */
+
+#positioningScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#positioningSectionTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+}
+
+#positioningSectionDesc {
+    -fx-text-fill: rgb(230, 230, 230);
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
+/* ============================
    EVENT VIEW
    ============================ */
 

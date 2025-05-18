@@ -60,6 +60,8 @@ public interface Sender {
 
     void showPlayers();
 
+    void showPlayersInPositioningDecisionOrder();
+
     void showSpaceship(String owner);
 
     void spaceshipStats();
