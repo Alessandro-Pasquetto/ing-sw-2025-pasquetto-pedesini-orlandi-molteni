@@ -17,7 +17,7 @@
 
             <left>
                 <VBox alignment="CENTER" minWidth="345.0" spacing="15" BorderPane.alignment="CENTER">
-                    <VBox fx:id="playerListViewContainer" alignment="TOP_LEFT" spacing="20" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="playerListViewContainer" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS">
                         <Label fx:id="activePlayersLabel" text="Active players" />
                         <ListView fx:id="playerListView" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
 
@@ -32,7 +32,7 @@
 
             <right>
                 <VBox alignment="CENTER" minWidth="345.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="discardedComponentsListWrapper" alignment="TOP_LEFT" spacing="20" VBox.vgrow="ALWAYS" maxWidth="345.0">
+                    <VBox fx:id="discardedComponentsListWrapper" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS" maxWidth="345.0">
                         <Label fx:id="buildingSectionTitle" text="Discarded components" wrapText="true" />
                         <ScrollPane fx:id="discardedComponentsScrollPane"
                                     maxWidth="345.0"

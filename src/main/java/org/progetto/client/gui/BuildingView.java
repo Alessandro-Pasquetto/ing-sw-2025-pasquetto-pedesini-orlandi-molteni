@@ -119,10 +119,17 @@ public class BuildingView {
      *
      * @author Alessandro, Gabriele
      */
-    public void initialize() {
+    public void initImages() {
 
         // Initialize black hole image
-        Image blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole.png")));
+        Image blackHoleImage;
+
+        if (GameData.getLevelGame() == 1) {
+            blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole-1.png")));
+        } else {
+            blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole-2.png")));
+        }
+
         trash.setImage(blackHoleImage);
         RotateTransition rotate = new RotateTransition(Duration.seconds(5), trash);
         rotate.setByAngle(360);

@@ -37,8 +37,8 @@
             </center>
 
             <right>
-                <VBox spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20px; -fx-background-color: rgba(255,255,255,0.1); -fx-min-width: 200px">
-                    <Label text="Players" style="-fx-font-size: 18px; -fx-font-weight: bold"/>
+                <VBox fx:id="playerListWrapper" spacing="20" alignment="TOP_CENTER">
+                    <Label fx:id="playerListTitle" text="Players" />
                     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent">
                         <VBox fx:id="playerListContainer" spacing="8"/>
                     </ScrollPane>

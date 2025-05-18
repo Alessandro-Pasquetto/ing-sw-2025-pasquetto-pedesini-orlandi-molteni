@@ -223,6 +223,7 @@ public class PageController {
      */
     public static void initBuilding(int levelGame, int color) {
         BuildingData.initMask(levelGame);
+        buildingView.initImages();
         buildingView.initBackground(levelGame);
         buildingView.initSpaceship(levelGame, color);
         buildingView.initTimer(levelGame);

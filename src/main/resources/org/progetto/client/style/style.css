@@ -360,7 +360,7 @@
 
 #activePlayersLabel,
 #buildingSectionTitle {
-    -fx-text-fill: #15357b;
+    -fx-text-fill: rgb(223, 154, 0);
     -fx-font-size: 18;
     -fx-font-weight: 700;
 }
@@ -375,7 +375,7 @@
 #playerListViewContainer,
 #discardedComponentsListWrapper {
     -fx-padding: 25;
-    -fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);
+    -fx-background-color: rgba(255,255,255,0.1);
     -fx-border-color: rgba(43, 50, 57, 0.5);
     -fx-border-width: 2;
     -fx-background-radius: 8;
@@ -479,6 +479,10 @@
     -fx-background-color: transparent;
 }
 
+#positioningBorderPane {
+    -fx-padding: 25;
+}
+
 #positioningSectionTitle {
     -fx-text-fill: rgb(223, 154, 0);
     -fx-font-size: 28;
@@ -488,6 +492,28 @@
 #positioningSectionDesc {
     -fx-text-fill: rgb(230, 230, 230);
     -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
+#playerListWrapper {
+    -fx-padding: 25px;
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-min-width: 200px;
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#playerListWrapper #playerListTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 18;
+    -fx-font-weight: 700;
+}
+
+#playerListWrapper .player-item {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-font-size: 14;
     -fx-font-weight: 500;
 }
 
