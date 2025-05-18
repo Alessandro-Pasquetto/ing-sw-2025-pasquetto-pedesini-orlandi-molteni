@@ -22,6 +22,8 @@ public class PopulatingView {
     // =======================
 
     final int COMPONENT_SIZE = 80;
+    private boolean orangeAlienAdded = false;
+    private boolean purpleAlienAdded = false;
 
     @FXML
     public StackPane populatingPane;
@@ -195,49 +197,74 @@ public class PopulatingView {
     }
 
     public void orangeAlienFill(Component comp) {
+        // check if an orange alien was already added
+        if (orangeAlienAdded) {
+            return;
+        }
+
         ((HousingUnit) comp).setAlienOrange(true);
 
         Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/OrangeAlien.png")));
 
-        // Create an ImageView for the alien
+        Pane cell = getCellFromSpaceshipMatrix(comp.getX(), comp.getY());
+
+        Pane subCell = new Pane();
+        subCell.setPrefSize(COMPONENT_SIZE * 0.8, COMPONENT_SIZE * 0.8);
+        subCell.setLayoutX((COMPONENT_SIZE - subCell.getPrefWidth()) / 2);
+        subCell.setLayoutY((COMPONENT_SIZE - subCell.getPrefHeight()) / 2);
+        subCell.setId("alienSubCell");
+
         ImageView alienImageView = new ImageView(alienImage);
-        alienImageView.setFitWidth(COMPONENT_SIZE);
-        alienImageView.setFitHeight(COMPONENT_SIZE);
+        alienImageView.setFitWidth(subCell.getPrefWidth());
+        alienImageView.setFitHeight(subCell.getPrefHeight());
         alienImageView.setPreserveRatio(true);
 
-        alienImageView.setRotate(0);
+        subCell.getChildren().add(alienImageView);
 
-        // Find the cell and add the image
-        Pane cell = getCellFromSpaceshipMatrix(comp.getX(), comp.getY());
-        cell.getChildren().add(alienImageView);
+        cell.getChildren().add(subCell);
 
         // Bring alien image to front
         alienImageView.toFront();
 
         resetHighlightedCells(Color.rgb(255, 165, 0, 0.25));
+
+        orangeAlienAdded = true;
     }
 
     public void purpleAlienFill(Component comp) {
+        // check if an orange alien was already added
+        if (purpleAlienAdded) {
+            return;
+        }
+
         ((HousingUnit) comp).setAlienPurple(true);
 
         Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/PurpleAlien.png")));
 
-        // Create an ImageView for the alien
-        ImageView alienImageView = new ImageView(alienImage);
-        alienImageView.setFitWidth(COMPONENT_SIZE);
-        alienImageView.setFitHeight(COMPONENT_SIZE);
-        alienImageView.setPreserveRatio(true);
-
-        alienImageView.setRotate(0);
-
         // Find the cell and add the image
         Pane cell = getCellFromSpaceshipMatrix(comp.getX(), comp.getY());
-        cell.getChildren().add(alienImageView);
+
+        Pane subCell = new Pane();
+        subCell.setPrefSize(COMPONENT_SIZE * 0.8, COMPONENT_SIZE * 0.8);
+        subCell.setLayoutX((COMPONENT_SIZE - subCell.getPrefWidth()) / 2);
+        subCell.setLayoutY((COMPONENT_SIZE - subCell.getPrefHeight()) / 2);
+        subCell.setId("alienSubCell");
+
+        ImageView alienImageView = new ImageView(alienImage);
+        alienImageView.setFitWidth(subCell.getPrefWidth());
+        alienImageView.setFitHeight(subCell.getPrefHeight());
+        alienImageView.setPreserveRatio(true);
+
+        subCell.getChildren().add(alienImageView);
+
+        cell.getChildren().add(subCell);
 
         // Bring alien image to front
         alienImageView.toFront();
 
         resetHighlightedCells(Color.rgb(160, 32, 240, 0.25));
+
+        purpleAlienAdded = true;
     }
 
     private Pane getCellFromSpaceshipMatrix(int x, int y) {
