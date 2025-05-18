@@ -4,6 +4,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -18,6 +19,12 @@ public class DragAndDrop {
 
     // DragAndDrop functions
     private static void onMousePressedFunctionComponent(Pane componentPane, MouseEvent event){
+
+        if (event.getButton() != MouseButton.PRIMARY)
+            return;
+
+        componentPane.getProperties().put("dragStartedWithPrimary", true);
+
         // Store initial scene coordinates to detect drag
         componentPane.getProperties().put("initialSceneX", event.getSceneX());
         componentPane.getProperties().put("initialSceneY", event.getSceneY());
@@ -54,6 +61,10 @@ public class DragAndDrop {
 
     private static void onMouseDraggedFunctionComponent(Pane componentPane, MouseEvent event){
 
+        Boolean startedWithPrimary = (Boolean) componentPane.getProperties().get("dragStartedWithPrimary");
+        if (startedWithPrimary == null || !startedWithPrimary)
+            return;
+
         // Get the initial offset saved during MousePressed
         double offsetX = (double) componentPane.getProperties().get("dragOffsetX");
         double offsetY = (double) componentPane.getProperties().get("dragOffsetY");
@@ -70,6 +81,12 @@ public class DragAndDrop {
     }
 
     private static void onMouseReleasedFunctionComponent(Pane componentPane, MouseEvent event){
+
+        if (event.getButton() != MouseButton.PRIMARY)
+            return;
+
+        componentPane.getProperties().put("dragStartedWithPrimary", false);
+
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
@@ -185,6 +202,11 @@ public class DragAndDrop {
         // Set his pressFunction
         componentPane.setOnMousePressed(event2 -> {
 
+            if (event2.getButton() != MouseButton.PRIMARY)
+                return;
+
+            componentPane.getProperties().put("dragStartedWithPrimary", true);
+
             BuildingData.setTempPickingBookedComponent(componentPane);
             onMousePressedFunctionComponent(componentPane, event2);
 
@@ -256,6 +278,12 @@ public class DragAndDrop {
 
     // DragAndDrop functions
     private static void onMousePressedFunctionItems(ImageView itemImage, MouseEvent event){
+
+        if (event.getButton() != MouseButton.PRIMARY)
+            return;
+
+        itemImage.getProperties().put("dragStartedWithPrimary", true);
+
         // Store initial scene coordinates to detect drag
         itemImage.getProperties().put("initialSceneX", event.getSceneX());
         itemImage.getProperties().put("initialSceneY", event.getSceneY());
@@ -291,6 +319,11 @@ public class DragAndDrop {
     }
 
     private static void onMouseDraggedFunctionItems(ImageView itemImage, MouseEvent event){
+
+        Boolean startedWithPrimary = (Boolean) itemImage.getProperties().get("dragStartedWithPrimary");
+        if (startedWithPrimary == null || !startedWithPrimary)
+            return;
+
         // Get the initial offset saved during MousePressed
         double offsetX = (double) itemImage.getProperties().get("dragOffsetX");
         double offsetY = (double) itemImage.getProperties().get("dragOffsetY");
@@ -307,6 +340,12 @@ public class DragAndDrop {
     }
 
     private static void onMouseReleasedFunctionItems(ImageView itemImage, MouseEvent event, String targetId){
+
+        if (event.getButton() != MouseButton.PRIMARY)
+            return;
+
+        itemImage.getProperties().put("dragStartedWithPrimary", true);
+
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();

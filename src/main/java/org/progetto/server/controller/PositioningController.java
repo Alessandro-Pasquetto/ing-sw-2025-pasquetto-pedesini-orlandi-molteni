@@ -52,7 +52,7 @@ public class PositioningController {
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
             }else
-                insertInLastStartingPosition(gameManager, player);
+                insertAtFurthestStartPosition(gameManager, player);
         }
     }
 
@@ -98,7 +98,7 @@ public class PositioningController {
         }
     }
 
-    public static void insertInLastStartingPosition(GameManager gameManager, Player player) {
+    public static void insertAtFurthestStartPosition(GameManager gameManager, Player player) {
         Board board = gameManager.getGame().getBoard();
         Player[] startingPositions = board.getStartingPositionsCopy();
 

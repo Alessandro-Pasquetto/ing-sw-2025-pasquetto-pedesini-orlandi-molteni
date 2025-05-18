@@ -527,9 +527,7 @@ public class BuildingBoard implements Serializable {
             Component upComponent = spaceshipMatrix[y - 1][x];
             int upConnection = currentComponent.getConnections()[0];
             int relativeConnection = upComponent.getConnections()[2];
-            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1))
-                correctlyPlaced = false;
-            else if ((upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)){
+            if ((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)){
                 upComponent.setIncorrectlyPlaced(true);
                 correctlyPlaced = false;
             }
@@ -547,9 +545,7 @@ public class BuildingBoard implements Serializable {
             Component rightComponent = spaceshipMatrix[y][x + 1];
             int rightConnection = currentComponent.getConnections()[1];
             int relativeConnection = rightComponent.getConnections()[3];
-            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1))
-                correctlyPlaced = false;
-            else if ((rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)){
+            if ((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)){
                 rightComponent.setIncorrectlyPlaced(true);
                 correctlyPlaced = false;
             }
@@ -567,9 +563,7 @@ public class BuildingBoard implements Serializable {
             Component bottomComponent = spaceshipMatrix[y + 1][x];
             int bottomConnection = currentComponent.getConnections()[2];
             int relativeConnection = bottomComponent.getConnections()[0];
-            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1))
-                correctlyPlaced = false;
-            else if((bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0)){
+            if ((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0)){
                 bottomComponent.setIncorrectlyPlaced(true);
                 correctlyPlaced = false;
             }
@@ -587,9 +581,7 @@ public class BuildingBoard implements Serializable {
             Component leftComponent = spaceshipMatrix[y][x - 1];
             int leftConnection = currentComponent.getConnections()[3];
             int relativeConnection = leftComponent.getConnections()[1];
-            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1))
-                correctlyPlaced = false;
-            else if ((leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)) {
+            if ((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)){
                 leftComponent.setIncorrectlyPlaced(true);
                 correctlyPlaced = false;
             }

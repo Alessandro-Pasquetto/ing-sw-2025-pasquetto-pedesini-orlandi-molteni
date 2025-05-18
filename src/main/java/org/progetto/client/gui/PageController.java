@@ -252,6 +252,7 @@ public class PageController {
     }
 
     public static void initEvent(int levelGame) {
+        BuildingData.initMask(levelGame);
         eventView.initEvent();
     }
 

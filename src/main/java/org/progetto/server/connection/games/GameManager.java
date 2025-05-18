@@ -240,7 +240,7 @@ public class GameManager {
         if(game.getPhase().equals(GamePhase.POSITIONING)) {
 
             if(game.getActivePlayer().equals(player))
-                PositioningController.insertInLastStartingPosition(this, player);
+                PositioningController.insertAtFurthestStartPosition(this, player);
         }
 
         if(game.getPhase().equals(GamePhase.EVENT)){
