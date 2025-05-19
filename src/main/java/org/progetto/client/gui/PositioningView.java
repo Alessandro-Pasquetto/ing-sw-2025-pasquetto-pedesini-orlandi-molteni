@@ -235,7 +235,7 @@ public class PositioningView {
                 Image rocket = new Image(String.valueOf(MainClient.class.getResource(rocketImage)));
                 ImageView rocketView = new ImageView(rocket);
 
-                rocketView.setFitWidth(25);
+                rocketView.setFitWidth(37.5);
                 rocketView.setFitHeight(50);
                 rocketView.setPreserveRatio(true);
 
@@ -256,10 +256,10 @@ public class PositioningView {
      */
     private String getRocketImagePath(int color) {
         return switch (color) {
-            case 0 -> "img/cardboard/blue.png";
-            case 1 -> "img/cardboard/green.png";
-            case 2 -> "img/cardboard/red.png";
-            case 3 -> "img/cardboard/yellow.png";
+            case 0 -> "img/items/blue_pawn.png";
+            case 1 -> "img/items/green_pawn.png";
+            case 2 -> "img/items/red_pawn.png";
+            case 3 -> "img/items/yellow_pawn.png";
             default -> "";
         };
     }

@@ -9,6 +9,7 @@ import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
 import java.io.IOException;
 import java.util.Objects;
+import javafx.scene.text.Font;
 
 /**
  * GUI page controller
@@ -110,6 +111,9 @@ public class PageController {
     public static void start() throws IOException {
         Image icon = new Image(Objects.requireNonNull(MainClient.class.getResourceAsStream("img/game-icon.png")));
         stage.getIcons().add(icon);
+
+        // Loads the custom font
+        Font.loadFont(MainClient.class.getResourceAsStream("/org/progetto/client/fonts/title-font.ttf"), 10);
 
         loadControllers();
 

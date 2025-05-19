@@ -18,7 +18,7 @@
             <left>
                 <VBox alignment="CENTER" minWidth="345.0" spacing="15" BorderPane.alignment="CENTER">
                     <VBox fx:id="playerListViewContainer" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS">
-                        <Label fx:id="activePlayersLabel" text="Active players" />
+                        <Label fx:id="activePlayersLabel" text="Players" />
                         <ListView fx:id="playerListView" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
 
                         <VBox.margin>
