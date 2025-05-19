@@ -347,6 +347,18 @@ public class TuiHandlerMessage {
                     System.out.println("Starting position set successfully!");
                     break;
 
+                case "ComponentAlreadyOccupied":
+                    System.out.println("Component already occupied!");
+                    break;
+
+                case "CannotContainOrangeAlien":
+                    System.out.println("Cannot contain orange alien!");
+                    break;
+
+                case "CannotContainPurpleAlien":
+                    System.out.println("Cannot contain purple alien!");
+                    break;
+
                 case "PlayerNameNotFound":
                     System.out.println("Unable to find player");
                     break;

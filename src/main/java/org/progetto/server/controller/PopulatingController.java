@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 /**
  * Populating phase controller class
  */
-public class PopulateController {
+public class PopulatingController {
 
     // =======================
     // OTHER METHODS
@@ -45,6 +45,9 @@ public class PopulateController {
             else {
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
+
+                Sender sender = gameManager.getSenderByPlayer(player);
+                sender.sendMessage("PopulatingComplete");
             }
         }
     }
@@ -101,6 +104,8 @@ public class PopulateController {
             player.getSpaceship().getBuildingBoard().fillHumans();
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
+
+            sender.sendMessage("PopulatingComplete");
         }
     }
 
@@ -137,6 +142,8 @@ public class PopulateController {
         player.getSpaceship().getBuildingBoard().fillHumans();
         player.setIsReady(true, game);
         gameManager.getGameThread().notifyThread();
+
+        sender.sendMessage("PopulatingComplete");
     }
 
     /**

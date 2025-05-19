@@ -215,7 +215,7 @@ public class SocketListener extends Thread {
             int x = responsePlaceAlien.getX();
             int y = responsePlaceAlien.getY();
 
-            PopulateController.receivePlaceAlien(gameManager, player, x, y, color);
+            PopulatingController.receivePlaceAlien(gameManager, player, x, y, color);
         }
 
         else if (messageObj instanceof ResponseStartingPositionMessage responseStartingPositionMessage) {

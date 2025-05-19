@@ -53,6 +53,64 @@
     -fx-cursor: move;
 }
 
+.scroll-bar {
+    -fx-background-color: rgba(240, 240, 240, 0);
+    -fx-border-color: rgba(224, 224, 224, 0);
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #adadad;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #989898;
+}
+
+.scroll-bar .thumb:pressed {
+    -fx-background-color: #676767;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: rgba(240, 240, 240, 0);
+    -fx-border-color: rgba(224, 224, 224, 0);
+    -fx-padding: 3px;
+}
+
+.scroll-bar .increment-button .increment-arrow,
+.scroll-bar .decrement-button .decrement-arrow {
+    -fx-background-color: rgba(96, 96, 96, 0);
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(248, 248, 248, 0);
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 12px;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 12px;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
 /* ============================
    CONNECTION VIEW
    ============================ */
@@ -112,7 +170,7 @@
 #createGamePane .sectionTitle,
 #joinGamePane .sectionTitle {
     -fx-text-fill: #15357b;
-    -fx-font-size: 24;
+    -fx-font-size: 28;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -228,7 +286,7 @@
 
 #waitingRoomContainer .sectionTitle {
     -fx-text-fill: #15357b;
-    -fx-font-size: 24;
+    -fx-font-size: 28;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -364,7 +422,7 @@
 #activePlayersLabel,
 #buildingSectionTitle {
     -fx-text-fill: rgb(223, 154, 0);
-    -fx-font-size: 18;
+    -fx-font-size: 24;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -396,7 +454,14 @@
     -fx-background-color: transparent;
     -fx-control-inner-background: transparent;
     -fx-background: transparent;
-    -fx-hbar-policy: never;
+    -fx-hbar-policy: NEVER !important;
+}
+
+#playerListView .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-min-height: 0;
 }
 
 #playerListView .list-cell {
@@ -513,7 +578,7 @@
 
 #playerListWrapper #playerListTitle {
     -fx-text-fill: rgb(223, 154, 0);
-    -fx-font-size: 18;
+    -fx-font-size: 24;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -521,6 +586,32 @@
 #playerListWrapper .player-item {
     -fx-text-fill: rgb(255, 255, 255);
     -fx-font-size: 14;
+    -fx-font-weight: 500;
+}
+
+/* ============================
+   POPULATING VIEW
+   ============================ */
+
+#populatingScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#populatingBorderPane {
+    -fx-padding: 25;
+}
+
+#populatingSectionTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
+}
+
+#populatingSectionDesc {
+    -fx-text-fill: rgb(230, 230, 230);
+    -fx-font-size: 18;
     -fx-font-weight: 500;
 }
 

@@ -81,7 +81,7 @@ public class ConnectionView {
         String serverPortString = serverPortTextField.getText();
 
         if (serverIp.isEmpty() || serverPortString.isEmpty()) {
-            Alerts.showPopup("All fields should be compiled!", true);
+            Alerts.showError("All fields should be compiled!", true);
             return;
         }
 
@@ -90,12 +90,12 @@ public class ConnectionView {
             serverPort = Integer.parseInt(serverPortString);
 
         } catch (NumberFormatException e){
-            Alerts.showPopup("Server port must be a number!", true);
+            Alerts.showError("Server port must be a number!", true);
             return;
         }
 
         if (serverPort < 0) {
-            Alerts.showPopup("Port cannot be negative!", true);
+            Alerts.showError("Port cannot be negative!", true);
             return;
         }
 
@@ -120,7 +120,7 @@ public class ConnectionView {
             }
 
         } catch (IOException | NotBoundException e) {
-            Alerts.showPopup("Error connecting to " + serverIp + ":" + serverPort, true);
+            Alerts.showError("Error connecting to " + serverIp + ":" + serverPort, true);
         }
     }
 }

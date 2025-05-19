@@ -853,7 +853,7 @@ public class BuildingBoard implements Serializable {
             int upConnection = hu.getConnections()[0];
             int relativeConnection = spaceshipMatrix[y - 1][x].getConnections()[2];
 
-            if (!((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)) && upConnection != 0){
+            if ((upConnection != 0 && relativeConnection != 0) && (upConnection == 3 || relativeConnection == 3 || upConnection == relativeConnection)){
                 hu.setAllowPurpleAlien(true);
                 return true;
             }
@@ -865,7 +865,7 @@ public class BuildingBoard implements Serializable {
             int rightConnection = hu.getConnections()[1];
             int relativeConnection = spaceshipMatrix[y][x + 1].getConnections()[3];
 
-            if(!((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)) && rightConnection != 0){
+            if((rightConnection != 0 && relativeConnection != 0) && (rightConnection == 3 || relativeConnection == 3 || rightConnection == relativeConnection)){
                 hu.setAllowPurpleAlien(true);
                 return true;
             }
@@ -877,7 +877,7 @@ public class BuildingBoard implements Serializable {
             int bottomConnection = hu.getConnections()[2];
             int relativeConnection = spaceshipMatrix[y + 1][x].getConnections()[0];
 
-            if(!((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0)) && bottomConnection != 0){
+            if((bottomConnection != 0 && relativeConnection != 0) && (bottomConnection == 3 || relativeConnection == 3 || bottomConnection == relativeConnection)){
                 hu.setAllowPurpleAlien(true);
                 return true;
             }
@@ -889,7 +889,7 @@ public class BuildingBoard implements Serializable {
             int leftConnection = hu.getConnections()[3];
             int relativeConnection = spaceshipMatrix[y][x - 1].getConnections()[1];
 
-            if(!((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)) && leftConnection != 0){
+            if((leftConnection != 0 && relativeConnection != 0) && (leftConnection == 3 || relativeConnection == 3 || leftConnection == relativeConnection)){
                 hu.setAllowPurpleAlien(true);
                 return true;
             }
@@ -917,7 +917,7 @@ public class BuildingBoard implements Serializable {
             int upConnection = hu.getConnections()[0];
             int relativeConnection = spaceshipMatrix[y - 1][x].getConnections()[2];
 
-            if (!((upConnection == 1 && relativeConnection == 2) || (upConnection == 2 && relativeConnection == 1) || (upConnection == 0 && relativeConnection != 0) || (upConnection != 0 && relativeConnection == 0)) && upConnection != 0){
+            if ((upConnection != 0 && relativeConnection != 0) && (upConnection == 3 || relativeConnection == 3 || upConnection == relativeConnection)){
                 hu.setAllowOrangeAlien(true);
                 return true;
             }
@@ -929,7 +929,7 @@ public class BuildingBoard implements Serializable {
             int rightConnection = hu.getConnections()[1];
             int relativeConnection = spaceshipMatrix[y][x + 1].getConnections()[3];
 
-            if(!((rightConnection == 1 && relativeConnection == 2) || (rightConnection == 2 && relativeConnection == 1) || (rightConnection == 0 && relativeConnection != 0) || (rightConnection != 0 && relativeConnection == 0)) && rightConnection != 0){
+            if((rightConnection != 0 && relativeConnection != 0) && (rightConnection == 3 || relativeConnection == 3 || rightConnection == relativeConnection)){
                 hu.setAllowOrangeAlien(true);
                 return true;
             }
@@ -941,7 +941,7 @@ public class BuildingBoard implements Serializable {
             int bottomConnection = hu.getConnections()[2];
             int relativeConnection = spaceshipMatrix[y + 1][x].getConnections()[0];
 
-            if(!((bottomConnection == 1 && relativeConnection == 2) || (bottomConnection == 2 && relativeConnection == 1) || (bottomConnection == 0 && relativeConnection != 0) || (bottomConnection != 0 && relativeConnection == 0)) && bottomConnection != 0){
+            if((bottomConnection != 0 && relativeConnection != 0) && (bottomConnection == 3 || relativeConnection == 3 || bottomConnection == relativeConnection)){
                 hu.setAllowOrangeAlien(true);
                 return true;
             }
@@ -953,7 +953,7 @@ public class BuildingBoard implements Serializable {
             int leftConnection = hu.getConnections()[3];
             int relativeConnection = spaceshipMatrix[y][x - 1].getConnections()[1];
 
-            if(!((leftConnection == 1 && relativeConnection == 2) || (leftConnection == 2 && relativeConnection == 1) || (leftConnection == 0 && relativeConnection != 0) || (leftConnection != 0 && relativeConnection == 0)) && leftConnection != 0){
+            if((leftConnection != 0 && relativeConnection != 0) && (leftConnection == 3 || relativeConnection == 3 || leftConnection == relativeConnection)){
                 hu.setAllowOrangeAlien(true);
                 return true;
             }
@@ -1030,7 +1030,10 @@ public class BuildingBoard implements Serializable {
                     case HOUSING_UNIT:
                         HousingUnit hu = (HousingUnit) component;
 
-                        if(spaceship.getLevelShip() != 1 && (checkAndSetAllowPurpleAlien(hu) || checkAndSetAllowOrangeAlien(hu)))
+                        boolean allowPurpleAlien = checkAndSetAllowPurpleAlien(hu);
+                        boolean allowOrangeAlien = checkAndSetAllowOrangeAlien(hu);
+
+                        if(spaceship.getLevelShip() != 1 && (allowPurpleAlien || allowOrangeAlien))
                             doesNotRequirePlayerAction = false;
                         else
                             hu.incrementCrewCount(spaceship, 2);
@@ -1165,7 +1168,7 @@ public class BuildingBoard implements Serializable {
         Component component = spaceshipMatrix[yComponent][xComponent];
 
         if(component == null || component.getType() != ComponentType.HOUSING_UNIT)
-            throw new IllegalStateException("NotValidCoordinates");
+            throw new IllegalStateException("NotValidComponent");
 
         HousingUnit hu = (HousingUnit) component;
 

@@ -314,7 +314,7 @@ public class Spaceship implements Serializable {
 
         Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
 
-        for(int y = 0; y < spaceshipMatrix.length; y++) {
+        for (int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 
                 Component component = spaceshipMatrix[y][x];

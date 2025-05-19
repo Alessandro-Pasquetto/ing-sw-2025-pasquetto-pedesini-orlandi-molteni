@@ -240,7 +240,7 @@ public class Game {
 
                 for(int i = 1; i < 4; i++) {
                     decks[i - 1].add(lv1Deck.get(i));   //Add 1 lv1 card
-                    decks[i - 1].addAll(lv2Deck.subList(i*2, i*2 + 2)); //Adds 2 lv2 cards
+                    decks[i - 1].addAll(lv2Deck.subList(i * 2, i * 2 + 2)); //Adds 2 lv2 cards
                 }
 
                 return decks;
@@ -380,10 +380,10 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-            int randomPos = (int) (Math.random() * componentDeck.size());
-            pickedComponent = componentDeck.remove(randomPos);
+//            int randomPos = (int) (Math.random() * componentDeck.size());
+//            pickedComponent = componentDeck.remove(randomPos);
 
-            /*
+
             // forzare componente, todo da rimuovere
             int randomPos = 0;
             ComponentType type;
@@ -395,7 +395,7 @@ public class Game {
             } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT));
 
             pickedComponent = componentDeck.remove(randomPos);
-            */
+
         }
 
 

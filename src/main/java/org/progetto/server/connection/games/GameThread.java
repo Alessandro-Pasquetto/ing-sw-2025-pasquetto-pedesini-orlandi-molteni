@@ -103,12 +103,12 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                             System.out.println("Waiting for the players to populate their ships...");
 
-                            PopulateController.askAliens(gameManager);
+                            PopulatingController.askAliens(gameManager);
 
                             // Waiting to populate the spaceship
                             waitPlayersReady();
                         }
-                        PopulateController.fillHumansDisconnectedPlayers(gameManager);
+                        PopulatingController.fillHumansDisconnectedPlayers(gameManager);
 
                         // Preparing travelers on the track
                         if (game.getLevel() == 1)

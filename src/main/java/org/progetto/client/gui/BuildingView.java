@@ -612,7 +612,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickUpEventCardDeck(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idxDeck);
 
         else
-            Alerts.showPopup("Your hand is already full!", true);
+            Alerts.showError("Your hand is already full!", true);
     }
 
     /**
@@ -756,7 +756,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickHiddenComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
 
         else
-            Alerts.showPopup("Your hand is already full!", true);
+            Alerts.showError("Your hand is already full!", true);
     }
 
     /**
@@ -778,7 +778,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndPickVisibleComponent(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent(), idx);
 
         else
-            Alerts.showPopup("Your hand is already full!", true);
+            Alerts.showError("Your hand is already full!", true);
 
         GameData.getSender().showVisibleComponents();
     }
@@ -797,7 +797,7 @@ public class BuildingView {
             GameData.getSender().placeHandComponentAndReady(BuildingData.getXHandComponent(), BuildingData.getYHandComponent(), BuildingData.getRHandComponent());
 
         else
-            Alerts.showPopup("Your hand is full!", true);
+            Alerts.showError("Your hand is full!", true);
     }
 
     /**
@@ -1259,7 +1259,7 @@ public class BuildingView {
             BuildingData.rotateComponent();
 
         else
-            Alerts.showPopup("You have no component in your hand!", true);
+            Alerts.showError("You have no component in your hand!", true);
     }
 
     /**

@@ -10,6 +10,8 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
+import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
@@ -302,6 +304,15 @@ public class GuiHandlerMessage {
             PageController.getPositioningView().updateTrack(startingPositionsMessage.getStartingPositions());
         }
 
+        else if (messageObj instanceof AskAlienMessage askAlienMessage) {
+            PageController.getPopulatingView().updateSpaceship(askAlienMessage.getSpaceship());
+            PageController.getPopulatingView().askForAlien(askAlienMessage.getColor(), askAlienMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof AlienPlacedMessage alienPlacedMessage) {
+            GameData.getSender().showSpaceship(GameData.getNamePlayer());
+        }
+
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
@@ -408,11 +419,11 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotValidGameId":
-                    Alerts.showPopup("That game does not exist", false);
+                    Alerts.showError("That game does not exist", false);
                     break;
 
                 case "NotAvailableName":
-                    Alerts.showPopup("Username already taken for this game", false);
+                    Alerts.showError("Username already taken for this game", false);
                     break;
 
                 case "AllowedToPlaceComponent":
@@ -422,7 +433,7 @@ public class GuiHandlerMessage {
                 case "NotAllowedToPlaceComponent":
                     if(BuildingData.getIsTimerExpired())
                         PageController.getBuildingView().removeHandComponent();
-                    Alerts.showPopup("You are not allowed to place this component", false);
+                    Alerts.showError("You are not allowed to place this component", false);
                     break;
 
                 case "ComponentBooked":
@@ -436,7 +447,7 @@ public class GuiHandlerMessage {
 
                 case "HasBeenBooked":
                     System.out.println("You cannot discard a booked component");
-                    Alerts.showPopup("You cannot discard a booked component", false);
+                    Alerts.showError("You cannot discard a booked component", false);
                     break;
 
                 case "PickedBookedComponent":
@@ -446,7 +457,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "RequirePlacedComponent":
-                    Alerts.showPopup("Its required to place a component before picking up a deck!", true);
+                    Alerts.showError("Its required to place a component before picking up a deck!", true);
                     break;
 
                 case "EventCardDeckPutDown":
@@ -456,15 +467,15 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ImpossibleToResetTimer":
-                    Alerts.showPopup("Impossible to reset timer!", true);
+                    Alerts.showError("Impossible to reset timer!", true);
                     break;
 
                 case "FinalResetNotAllowed":
-                    Alerts.showPopup("Final reset not allowed: player not ready!", true);
+                    Alerts.showError("Final reset not allowed: player not ready!", true);
                     break;
 
                 case "TimerExpired":
-                    Alerts.showPopup("Timer expired!", false);
+                    Alerts.showError("Timer expired!", false);
                     BuildingData.setIsTimerExpired(true);
                     PageController.getBuildingView().disableDraggableBookedComponents();
                     PageController.getBuildingView().placeLastComponent();
@@ -479,19 +490,40 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ActionNotAllowedInReadyState":
-                    Alerts.showPopup("Action not allowed in ready state!", true);
+                    Alerts.showError("Action not allowed in ready state!", true);
                     break;
 
                 case "StartingPositionAlreadyTaken":
-                    Alerts.showPopup("Position already taken!", true);
+                    Alerts.showError("Position already taken!", true);
+                    break;
+
+                case "ValidStartingPosition":
+                    PageController.getPositioningView().updateLabels(false);
                     break;
 
                 case "InvalidStartingPosition":
-                    Alerts.showPopup("Invalid starting position!", true);
+                    Alerts.showError("Invalid starting position!", true);
                     break;
 
                 case "PlayerAlreadyHasAStartingPosition":
-                    Alerts.showPopup("You already have a starting position!", true);
+                    Alerts.showError("You already have a starting position!", true);
+                    break;
+
+                case "ComponentAlreadyOccupied":
+                    Alerts.showError("Component already occupied!", true);
+                    break;
+
+                case "CannotContainOrangeAlien":
+                    Alerts.showError("Cannot contain orange alien!", true);
+                    break;
+
+                case "CannotContainPurpleAlien":
+                    Alerts.showError("Cannot contain purple alien!", true);
+                    break;
+
+                case "PopulatingComplete":
+                    PageController.getPopulatingView().updateLabels();
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
                     break;
 
                 case "NotEnoughBatteries":

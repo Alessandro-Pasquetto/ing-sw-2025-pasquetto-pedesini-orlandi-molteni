@@ -116,7 +116,7 @@ public class DragAndDrop {
                     if (!cell.getChildren().isEmpty()) {
                         // The cell is occupied, so prevent dropping the component here
                         System.out.println("Cell already occupied");
-                        Alerts.showPopup("Cell already occupied!", true);
+                        Alerts.showError("Cell already occupied!", true);
                         break;
                     }
 
@@ -154,7 +154,7 @@ public class DragAndDrop {
                     if (!cell.getChildren().isEmpty()) {
                         // The cell is occupied, so prevent dropping the component here
                         System.out.println("Cell already occupied");
-                        Alerts.showPopup("Cell already occupied!", true);
+                        Alerts.showError("Cell already occupied!", true);
 
                         break;
                     }

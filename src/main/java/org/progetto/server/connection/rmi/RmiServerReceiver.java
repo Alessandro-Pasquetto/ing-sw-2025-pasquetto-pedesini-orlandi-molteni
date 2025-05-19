@@ -526,7 +526,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        PopulateController.receivePlaceAlien(gameManager, player, x, y, color);
+        PopulatingController.receivePlaceAlien(gameManager, player, x, y, color);
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.progetto.client.gui;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -273,6 +274,7 @@ public class PositioningView {
     private Rectangle createTrackCell() {
         Rectangle cell = new Rectangle(50, 50);
         cell.setFill(Color.TRANSPARENT);
+        cell.setCursor(Cursor.HAND);
         cell.setOnMouseClicked(event -> reservePosition(cell));
 
         return cell;
@@ -286,12 +288,12 @@ public class PositioningView {
      */
     private void reservePosition(Rectangle cell) {
         if (cell.getStyleClass().contains("selected")) {
-            Alerts.showPopup("Position already taken!", true);
+            Alerts.showError("Position already taken!", true);
             return;
         }
 
         if (!GameData.getNamePlayer().equals(GameData.getActivePlayer())) {
-            Alerts.showPopup("It's not your turn!", true);
+            Alerts.showError("It's not your turn!", true);
             return;
         }
 
@@ -301,13 +303,19 @@ public class PositioningView {
         }
     }
 
+    /**
+     * Updates the labels based on the player's turn
+     *
+     * @author Gabriele
+     * @param isHisTurn True if it's the player's turn, false otherwise
+     */
     public void updateLabels(boolean isHisTurn) {
         if (isHisTurn) {
             positioningSectionTitle.setText("IN WHICH POSITION DO YOU WANT TO START?");
             positioningSectionDesc.setText("Select your starting position by clicking on a cell on the track...");
         } else {
-            positioningSectionTitle.setText("ANOTHER PLAYER IS DECIDING WHERE TO START");
-            positioningSectionDesc.setText("Please wait for your turn...");
+            positioningSectionTitle.setText("YOU CHOSE YOUR STARTING POSITION");
+            positioningSectionDesc.setText("Please wait while the other players make a decision...");
         }
     }
 }
