@@ -246,7 +246,7 @@ public class SpaceshipController {
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             // Checks ship validity
-            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndTryToFix()) {
+            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()) {
                 sender.sendMessage("AskSelectSpaceshipPart");
 
             } else {
