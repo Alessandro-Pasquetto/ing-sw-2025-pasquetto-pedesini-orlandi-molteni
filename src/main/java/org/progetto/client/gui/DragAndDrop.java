@@ -1,5 +1,6 @@
 package org.progetto.client.gui;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -10,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.Game;
 
 public class DragAndDrop {
 
@@ -353,8 +355,15 @@ public class DragAndDrop {
 
         itemImage.setManaged(false);
 
+        ObservableList<Node> view = null;
+        if(GameData.getPhaseGame().equals("BUILDING"))
+            view = PageController.getBuildingView().getSpaceshipMatrix().getChildren();
+
+        else if(GameData.getPhaseGame().equals("EVENT"))
+            view = PageController.getEventView().getSpaceshipMatrix().getChildren();
+
         // Check if the drop is inside any cell of the spaceship
-        for (Node node : PageController.getBuildingView().getSpaceshipMatrix().getChildren()) {
+        for (Node node : view) {
             if (node instanceof Pane cell) {
                 // Check if the drop is inside of that cell
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
@@ -384,9 +393,22 @@ public class DragAndDrop {
                                             root.getChildren().remove(itemImage);
                                             slot.getChildren().add(itemImage);
 
-                                            // Center the image inside the slot
-                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+
+                                            if(GameData.getPhaseGame().equals("EVENT")) {
+                                                itemImage.setFitWidth(50);
+                                                itemImage.setPreserveRatio(true);
+
+                                                // Center the image inside the slot
+                                                itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                                itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
+
+                                            }
+
+                                            else{
+                                                // Center the image inside the slot
+                                                itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                                itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+                                            }
 
                                             //todo handle idx
                                             System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));

@@ -57,11 +57,11 @@ public class EventView {
     private VBox overlayContainer;
 
 
-    final int COMPONENT_SIZE = 120;
-    final int BOX_SLOT_SIZE = 42;
-    final int CREW_SLOT_SIZE = 42;
-    final int BATTERY_SLOT_WIDTH = 14;
-    final int BATTERY_SLOT_HEIGHT = 36;
+    final int COMPONENT_SIZE = 110;
+    final int BOX_SLOT_SIZE = 35;
+    final int CREW_SLOT_SIZE = 35;
+    final int BATTERY_SLOT_WIDTH = 20;
+    final int BATTERY_SLOT_HEIGHT = 50;
 
 
     private CompletableFuture<String> inputFuture;
@@ -73,17 +73,17 @@ public class EventView {
 
         //initialize background
         Image img = null;
-        if(GameData.getLevelGame() == 1)
+        if (GameData.getLevelGame() == 1)
             img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-1.png")));
 
-        else if(GameData.getLevelGame() == 2)
+        else if (GameData.getLevelGame() == 2)
             img = new Image(String.valueOf(MainClient.class.getResource("img/space-background-2.png")));
 
         BackgroundImage backgroundImage = new BackgroundImage(
                 img,
-                BackgroundRepeat.NO_REPEAT,   // ripetizione orizzontale
-                BackgroundRepeat.NO_REPEAT,   // ripetizione verticale
-                BackgroundPosition.CENTER,    // posizione
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
                 new BackgroundSize(
                         100, 100, true, true, false, true
                 )
@@ -96,8 +96,8 @@ public class EventView {
     /**
      * Initialize the event card picked
      *
-     * @author Lorenzo
      * @param imgSrc id the image path to the card
+     * @author Lorenzo
      */
     public void initEventCard(String imgSrc) {
 
@@ -108,7 +108,7 @@ public class EventView {
 
         overlayContainer.getChildren().clear();
 
-        switch (card.getType()){
+        switch (card.getType()) {
 
             case PLANETS:
                 Planets planets = (Planets) card;
@@ -121,7 +121,7 @@ public class EventView {
                     stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
                     int planetIndex = i;
                     stack_zone.setUserData(planetIndex);
-                    stack_zone.setOnMouseClicked(e ->{
+                    stack_zone.setOnMouseClicked(e -> {
                         if (planetClickFuture != null && !planetClickFuture.isDone()) {
                             int planetIdx = (int) stack_zone.getUserData();
                             planetClickFuture.complete(planetIdx);
@@ -150,8 +150,8 @@ public class EventView {
     /**
      * Enables live view of the player spaceship
      *
-     * @author Lorenzo
      * @param currentPlayer is the current player
+     * @author Lorenzo
      */
     public void showPlayerShip(Player currentPlayer) {
 
@@ -161,7 +161,7 @@ public class EventView {
         int sizeX = 5;
         int sizeY = 5;
 
-        if (currentPlayer.getSpaceship().getLevelShip() == 2){
+        if (currentPlayer.getSpaceship().getLevelShip() == 2) {
             spaceshipMatrix.setLayoutX(190.0);
             sizeX = 7;
         }
@@ -172,188 +172,210 @@ public class EventView {
                 Pane cell = new Pane();
                 cell.setPrefSize(110, 110);
 
-                if(BuildingData.getCellMask(col, row))
+                if (BuildingData.getCellMask(col, row))
                     cell.setId("spaceshipCell");
 
                 spaceshipMatrix.add(cell, col, row);
             }
         }
 
-        renderShipComponents(currentPlayer.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix(), spaceshipMatrix);
+        renderShipComponents(currentPlayer.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix());
     }
 
-    private void renderShipComponents(Component[][] layout, GridPane grid) {
-        for (int row = 0; row < layout.length; row++) {
-            for (int col = 0; col < layout[row].length; col++) {
-                Component component = layout[row][col];
-                if (component != null) {
-                    String componentImg = component.getImgSrc();
-                    ImageView part = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/components/" + componentImg))));
-                    part.setUserData(layout[row][col]);
-                    part.setFitWidth(COMPONENT_SIZE);
-                    part.setFitHeight(COMPONENT_SIZE);
+    private void renderShipComponents(Component[][] layout) {
 
-                    StackPane cellWrapper = new StackPane();
-                    cellWrapper.setPrefSize(64, 64);
-                    cellWrapper.getChildren().add(part);
+        for (Node node : this.spaceshipMatrix.getChildren()) {
+            if (node instanceof Pane cell) {
+                Integer rowIndex = GridPane.getRowIndex(cell);
+                Integer colIndex = GridPane.getColumnIndex(cell);
 
-                    switch (component) {
-                        case BoxStorage boxStorage -> {
+                Component component = layout[rowIndex][colIndex];
 
-                            switch (boxStorage.getCapacity()) {
-                                case 1:
-                                    Pane slot1 = new Pane();
-                                    slot1.setId("boxSlot");
-                                    slot1.setLayoutX(24.0);
-                                    slot1.setLayoutY(24.0);
-                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot1.getProperties().put("idx", 0);
+                if (!cell.getChildren().isEmpty() && component == null)
+                    cell.getChildren().clear();
 
-                                    cellWrapper.getChildren().add(slot1);
-                                    break;
-
-                                case 2:
-                                    slot1 = new Pane();
-                                    slot1.setId("boxSlot");
-                                    slot1.setLayoutX(24.0);
-                                    slot1.setLayoutY(8.0);
-                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot1.getProperties().put("idx", 0);
-
-                                    Pane slot2 = new Pane();
-                                    slot2.setId("boxSlot");
-                                    slot2.setLayoutX(24.0);
-                                    slot2.setLayoutY(40.0);
-                                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot2.getProperties().put("idx", 1);
-
-                                    cellWrapper.getChildren().add(slot1);
-                                    cellWrapper.getChildren().add(slot2);
-                                    break;
-
-                                case 3:
-                                    slot1 = new Pane();
-                                    slot1.setId("boxSlot");
-                                    slot1.setLayoutX(8.0);
-                                    slot1.setLayoutY(24.0);
-                                    slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot1.getProperties().put("idx", 0);
-
-                                    slot2 = new Pane();
-                                    slot2.setId("boxSlot");
-                                    slot2.setLayoutX(40.0);
-                                    slot2.setLayoutY(8.0);
-                                    slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot2.getProperties().put("idx", 1);
-
-                                    Pane slot3 = new Pane();
-                                    slot3.setId("boxSlot");
-                                    slot3.setLayoutX(40.0);
-                                    slot3.setLayoutY(40.0);
-                                    slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                                    slot3.getProperties().put("idx", 2);
-
-                                    cellWrapper.getChildren().add(slot1);
-                                    cellWrapper.getChildren().add(slot2);
-                                    cellWrapper.getChildren().add(slot3);
-                                    break;
-                            }
-                        }
-                        case HousingUnit housingUnit -> {
-                            Pane slot1 = new Pane();
-                            slot1.setId("crewSlot");
-                            slot1.setLayoutX(8.0);
-                            slot1.setLayoutY(24.0);
-                            slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                            slot1.getProperties().put("idx", 0);
-
-                            Pane slot2 = new Pane();
-                            slot2.setId("crewSlot");
-                            slot2.setLayoutX(40.0);
-                            slot2.setLayoutY(24.0);
-                            slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                            slot2.getProperties().put("idx", 1);
-
-                            cellWrapper.getChildren().add(slot1);
-                            cellWrapper.getChildren().add(slot2);
-                        }
-                        case BatteryStorage batteryStorage -> {
-                            switch (batteryStorage.getCapacity()) {
-                                case 2:
-                                    Pane slot1 = new Pane();
-                                    slot1.setId("batterySlot");
-                                    slot1.setLayoutX(24.0);
-                                    slot1.setLayoutY(24.0);
-                                    slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                                    slot1.getProperties().put("idx", 0);
-
-                                    Pane slot2 = new Pane();
-                                    slot2.setId("batterySlot");
-                                    slot2.setLayoutX(40.0);
-                                    slot2.setLayoutY(24.0);
-                                    slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                                    slot2.getProperties().put("idx", 1);
-
-                                    cellWrapper.getChildren().add(slot1);
-                                    cellWrapper.getChildren().add(slot2);
-
-                                    break;
-                                case 3:
-                                    slot1 = new Pane();
-                                    slot1.setId("batterySlot");
-                                    slot1.setLayoutX(16.0);
-                                    slot1.setLayoutY(24.0);
-                                    slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                                    slot1.getProperties().put("idx", 0);
-
-                                    slot2 = new Pane();
-                                    slot2.setId("batterySlot");
-                                    slot2.setLayoutX(32.0);
-                                    slot2.setLayoutY(24.0);
-                                    slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                                    slot2.getProperties().put("idx", 1);
-
-                                    Pane slot3 = new Pane();
-                                    slot3.setId("batterySlot");
-                                    slot3.setLayoutX(48.0);
-                                    slot3.setLayoutY(24.0);
-                                    slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                                    slot3.getProperties().put("idx", 2);
-
-                                    cellWrapper.getChildren().add(slot1);
-                                    cellWrapper.getChildren().add(slot2);
-                                    cellWrapper.getChildren().add(slot3);
-                                    break;
-                            }
-                        }
-                        default -> {}
-                    }
-
-                    switch (component.getRotation()){
-                        case 0:
-                            cellWrapper.setRotate(0);
-                            break;
-                        case 1:
-                            cellWrapper.setRotate(90);
-                            break;
-                        case 2:
-                            cellWrapper.setRotate(180);
-                            break;
-                        case 3:
-                            cellWrapper.setRotate(270);
-                            break;
-                    }
-
-                    grid.add(cellWrapper, col, row);
+                if (component != null){
+                    Pane componentPane = generateComponentPane(component);
+                    componentPane.setRotate(90 * component.getRotation());
+                    cell.getChildren().add(componentPane);
                 }
             }
         }
+
+    }
+
+    private Pane generateComponentPane(Component component) {
+        String componentImg = component.getImgSrc();
+        ImageView part = new ImageView(new Image(String.valueOf(MainClient.class.getResource("img/components/" + componentImg))));
+        part.setUserData(component);
+        part.setFitWidth(COMPONENT_SIZE);
+        part.setFitHeight(COMPONENT_SIZE);
+
+        Pane componentPane = new Pane();
+        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
+
+        componentPane.getChildren().add(part);
+
+        switch (component) {
+            case BoxStorage boxStorage -> {
+
+                switch (boxStorage.getCapacity()) {
+                    case 1:
+                        Pane slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(36);
+                        slot1.setLayoutY(36);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        componentPane.getChildren().add(slot1);
+                        break;
+
+                    case 2:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(37);
+                        slot1.setLayoutY(17);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        Pane slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(38);
+                        slot2.setLayoutY(58);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        break;
+
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("boxSlot");
+                        slot1.setLayoutX(18);
+                        slot1.setLayoutY(35);
+                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot1.getProperties().put("idx", 0);
+
+                        slot2 = new Pane();
+                        slot2.setId("boxSlot");
+                        slot2.setLayoutX(59);
+                        slot2.setLayoutY(18);
+                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot2.getProperties().put("idx", 1);
+
+                        Pane slot3 = new Pane();
+                        slot3.setId("boxSlot");
+                        slot3.setLayoutX(59);
+                        slot3.setLayoutY(59);
+                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                        slot3.getProperties().put("idx", 2);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
+            }
+            case HousingUnit housingUnit -> {
+                Pane slot1 = new Pane();
+                slot1.setId("crewSlot");
+                slot1.setLayoutX(12);
+                slot1.setLayoutY(37);
+                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                Pane slot2 = new Pane();
+                slot2.setId("crewSlot");
+                slot2.setLayoutX(66);
+                slot2.setLayoutY(38);
+                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+            }
+            case BatteryStorage batteryStorage -> {
+                switch (batteryStorage.getCapacity()) {
+                    case 2:
+                        Pane slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(33);
+                        slot1.setLayoutY(30);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        Pane slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(54);
+                        slot2.setLayoutY(30);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+
+                        break;
+                    case 3:
+                        slot1 = new Pane();
+                        slot1.setId("batterySlot");
+                        slot1.setLayoutX(25);
+                        slot1.setLayoutY(30);
+                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot1.getProperties().put("idx", 0);
+
+                        slot2 = new Pane();
+                        slot2.setId("batterySlot");
+                        slot2.setLayoutX(43);
+                        slot2.setLayoutY(30);
+                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot2.getProperties().put("idx", 1);
+
+                        Pane slot3 = new Pane();
+                        slot3.setId("batterySlot");
+                        slot3.setLayoutX(66);
+                        slot3.setLayoutY(30);
+                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
+                        slot3.getProperties().put("idx", 2);
+
+                        componentPane.getChildren().add(slot1);
+                        componentPane.getChildren().add(slot2);
+                        componentPane.getChildren().add(slot3);
+                        break;
+                }
+            }
+            default -> {
+            }
+        }
+
+        switch (component.getRotation()) {
+            case 0:
+                componentPane.setRotate(0);
+                break;
+            case 1:
+                componentPane.setRotate(90);
+                break;
+            case 2:
+                componentPane.setRotate(180);
+                break;
+            case 3:
+                componentPane.setRotate(270);
+                break;
+        }
+
+        return componentPane;
     }
 
 
-
-
-
+    /**
+     * Gets the spaceship matrix
+     *
+     * @author Alessandro
+     */
+    public GridPane getSpaceshipMatrix() {
+        return spaceshipMatrix;
+    }
 
     /**
      * Enable selection of a component by click
@@ -673,10 +695,6 @@ public class EventView {
             boxImage.setSmooth(true);
             boxImage.setCache(true);
 
-            boxImage.setOnMouseClicked(event -> {
-
-            });
-
             boxContainer.getChildren().add(boxImage);
 
             for(Node node: boxContainer.getChildren()){
@@ -783,6 +801,7 @@ public class EventView {
                 StackPane targetStack = (StackPane) overlayContainer.getChildren().get(i);
                 ImageView pawnView = (ImageView) targetStack.getChildren();
                 switch(GameData.getColor()){
+                    case 0 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/blue_pawn.png"))));
                     case 1 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/green_pawn.png"))));
                     case 2 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/red_pawn.png"))));
                     case 3 ->  pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/yellow_pawn.png"))));
