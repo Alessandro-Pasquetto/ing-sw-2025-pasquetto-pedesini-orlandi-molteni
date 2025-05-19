@@ -91,7 +91,7 @@ public class TuiCommandFilter {
             String ip = scanner.nextLine().trim();
 
             if (ip.isEmpty()) {
-                System.out.println("Empty response!");
+                System.err.println("Empty response!");
                 continue;
             }
 
@@ -212,7 +212,7 @@ public class TuiCommandFilter {
         if (commandLength == l)
             return true;
         else {
-            System.out.println("Invalid command format");
+            System.err.println("Invalid command format");
             return false;
         }
     }
@@ -261,7 +261,7 @@ public class TuiCommandFilter {
         Command cmd = commands.get(command.toLowerCase());
 
         if (cmd != null) {
-            System.out.println("Expected format: " + cmd.getUsage());
+            System.err.println("Expected format: " + cmd.getUsage());
         } else {
             System.err.println("Command not found");
         }

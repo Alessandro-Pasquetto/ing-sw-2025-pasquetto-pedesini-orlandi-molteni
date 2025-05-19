@@ -265,7 +265,7 @@ public class BuildingCommands {
             }
 
             else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -294,12 +294,12 @@ public class BuildingCommands {
                 int position = Integer.parseInt(response) - 1;
 
                 if (position < 0 || position >= startingPositions.length) {
-                    System.out.println("Invalid position. Please choose a valid slot.");
+                    System.err.println("Invalid position. Please choose a valid slot.");
                     continue;
                 }
 
                 if (startingPositions[position] != null) {
-                    System.out.println("This slot is already taken. Please choose another one.");
+                    System.err.println("This slot is already taken. Please choose another one.");
                     continue;
                 }
 

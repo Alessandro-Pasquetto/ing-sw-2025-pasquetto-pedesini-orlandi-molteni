@@ -119,7 +119,7 @@ public class GameCommands {
             System.out.println(bottomBorder);
 
         } catch (IOException e) {
-            System.out.println("Error loading command list: " + e.getMessage());
+            System.err.println("Error loading command list: " + e.getMessage());
         }
     }
 

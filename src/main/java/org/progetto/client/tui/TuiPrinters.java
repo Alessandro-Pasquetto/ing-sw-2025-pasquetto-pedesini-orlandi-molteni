@@ -907,7 +907,7 @@ public class TuiPrinters {
                 System.out.println("P" + (i + 1) + ": " + travelers.get(i).getName());
             }
         } else {
-            System.out.println("No travelers found");
+            System.err.println("No travelers found");
         }
 
         System.out.println();
