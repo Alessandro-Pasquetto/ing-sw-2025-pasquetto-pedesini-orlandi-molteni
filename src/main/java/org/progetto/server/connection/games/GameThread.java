@@ -221,7 +221,7 @@ public class GameThread extends Thread {
     // =======================
 
     /**
-     * Pauses the game thread until all players are ready to continue
+     * Pauses the game thread until max num players are ready to continue
      *
      * @author Alessandro
      */
@@ -236,7 +236,7 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all players are ready to continue in waiting phase
+     * Pauses the game thread until max num players are ready to continue in waiting phase
      *
      * @author Alessandro
      */
@@ -269,7 +269,7 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all players are ready to continue
+     * Pauses the game thread until all connected players are ready to continue
      *
      * @author Alessandro
      */
@@ -283,7 +283,7 @@ public class GameThread extends Thread {
     }
 
     /**
-     * Pauses the game thread until all travelers are ready to continue
+     * Pauses the game thread until all connected travelers are ready to continue
      *
      * @author Gabriele
      */

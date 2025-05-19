@@ -20,7 +20,7 @@ public class PopulatingController {
     // =======================
 
     /**
-     * It asks to all players if they want to place an alien on their spaceship
+     * It asks all players if they want to place an alien on their spaceship
      *
      * @author Alessandro
      * @param gameManager the game manager
@@ -30,25 +30,19 @@ public class PopulatingController {
     public static void askAliens(GameManager gameManager) throws InterruptedException, RemoteException {
 
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
-            if (!player.getIsReady() && player.getSpaceship().checkShipAllowPurpleAlien()){
 
-                Sender sender = gameManager.getSenderByPlayer(player);
-                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
-            }
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-            else if (!player.getIsReady() && player.getSpaceship().checkShipAllowOrangeAlien()){
-
-                Sender sender = gameManager.getSenderByPlayer(player);
-                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
-            }
-
-            else {
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-
-                Sender sender = gameManager.getSenderByPlayer(player);
+            if(player.getIsReady()){
                 sender.sendMessage("PopulatingComplete");
+                continue;
             }
+
+            if (player.getSpaceship().checkShipAllowPurpleAlien())
+                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+
+            else if (player.getSpaceship().checkShipAllowOrangeAlien())
+                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
         }
     }
 
