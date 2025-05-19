@@ -1,7 +1,10 @@
 package org.progetto.client.gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +18,8 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 
+import java.util.Optional;
+
 public class PopulatingView {
 
     // =======================
@@ -24,6 +29,7 @@ public class PopulatingView {
     final int COMPONENT_SIZE = 80;
     private boolean orangeAlienAdded = false;
     private boolean purpleAlienAdded = false;
+    private boolean alienPlacementStarted = false;
 
     @FXML
     public StackPane populatingPane;
@@ -149,43 +155,16 @@ public class PopulatingView {
                             cell.setRotate(270);
                             break;
                     }
-
-                    // Checks if the component can host alien
-                    if (comp.getType().equals(ComponentType.HOUSING_UNIT)) {
-                        if (((HousingUnit) comp).getAllowOrangeAlien() && !ship.getAlienOrange()){
-                            Rectangle overlay = new Rectangle(COMPONENT_SIZE, COMPONENT_SIZE);
-                            overlay.setFill(Color.rgb(255, 165, 0, 0.25));
-                            cell.getChildren().add(overlay);
-
-                            cell.getChildren().get(1).toFront();
-
-                            cell.setStyle("-fx-cursor: hand;");
-
-                            cell.setOnMouseClicked(event -> {
-                                orangeAlienFill(comp);
-                            });
-                        }
-                        else if (((HousingUnit) comp).getAllowPurpleAlien() && !ship.getAlienPurple()){
-                            Rectangle overlay = new Rectangle(COMPONENT_SIZE, COMPONENT_SIZE);
-                            overlay.setFill(Color.rgb(160, 32, 240, 0.25));
-                            cell.getChildren().add(overlay);
-
-                            cell.getChildren().get(1).toFront();
-
-                            cell.setStyle("-fx-cursor: hand;");
-
-                            cell.setOnMouseClicked(event -> {
-                                purpleAlienFill(comp);
-                            });
-                        }
-
-                    } else {
-                        cell.setStyle("-fx-cursor: default;");
-                    }
                 }
 
                 shipGrid.add(cell, col, row);
             }
+        }
+
+        // Verifica se si deve avviare il processo di posizionamento degli alieni
+        if (!alienPlacementStarted) {
+            alienPlacementStarted = true; // Evita chiamate ripetute
+            startAlienPlacementProcess(ship);
         }
 
         // Checks if incorrectly placed components are present
@@ -193,7 +172,6 @@ public class PopulatingView {
             populatingSectionTitle.setText("YOUR ALIENS ARE READY!");
             populatingSectionDesc.setText("You have to wait for the other players to populate their spaceship...");
         }
-
     }
 
     public void orangeAlienFill(Component comp) {
@@ -287,5 +265,183 @@ public class PopulatingView {
                 );
             }
         }
+    }
+
+    public void startAlienPlacementProcess(Spaceship ship) {
+        // Start the process only once, not on every update
+        Platform.runLater(() -> proceedToPurpleAlienPlacement(ship));
+    }
+
+    private void proceedToPurpleAlienPlacement(Spaceship ship) {
+        if (hasValidCellsForAlien(ship, "purple")) {
+            askForAlienPlacement("purple", Color.rgb(160, 32, 240, 0.25), () -> {
+                // Highlight purple cells
+                highlightCellsForAlien(ship, "purple", () -> {
+                    updateValidCellsForOrange(ship);
+
+                    proceedToOrangeAlienPlacement(ship);
+                });
+            }, () -> {
+                // If choose NO, skip to orange
+                proceedToOrangeAlienPlacement(ship);
+            });
+        } else {
+            proceedToOrangeAlienPlacement(ship);
+        }
+    }
+
+    private void proceedToOrangeAlienPlacement(Spaceship ship) {
+        if (hasValidCellsForAlien(ship, "orange")) {
+            askForAlienPlacement("orange", Color.rgb(255, 165, 0, 0.25), () -> {
+                // Highlights orange cells
+                highlightCellsForAlien(ship, "orange", this::goToNextPhase);
+            }, this::goToNextPhase);
+        } else {
+            goToNextPhase();
+        }
+    }
+
+    private boolean hasValidCellsForAlien(Spaceship ship, String alienColor) {
+        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+
+        for (int row = 0; row < shipMatrix.length; row++) {
+            for (int col = 0; col < shipMatrix[row].length; col++) {
+                Component comp = shipMatrix[row][col];
+                if (comp instanceof HousingUnit) {
+                    HousingUnit housingUnit = (HousingUnit) comp;
+
+                    // Finds possible valid cells for aliens
+                    if ("purple".equals(alienColor) && housingUnit.getAllowPurpleAlien() && !purpleAlienAdded) {
+                        return true;
+                    } else if ("orange".equals(alienColor) && housingUnit.getAllowOrangeAlien() && !orangeAlienAdded) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void updateValidCellsForOrange(Spaceship ship) {
+        // Update for orange
+        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        for (int row = 0; row < shipMatrix.length; row++) {
+            for (int col = 0; col < shipMatrix[row].length; col++) {
+                Component comp = shipMatrix[row][col];
+                if (comp instanceof HousingUnit) {
+                    HousingUnit housingUnit = (HousingUnit) comp;
+                    if (housingUnit.getAllowPurpleAlien() && housingUnit.getAllowOrangeAlien() && !(housingUnit.getHasPurpleAlien())) {
+                        // Purple and orange cell
+                        housingUnit.setAllowPurpleAlien(false); // Disable purple
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Asks the player if they want to place an alien of a specific color.
+     *
+     * @author Stefano
+     * @param alienColor is the color of the alien ("purple" or "orange").
+     * @param highlightColor is the highlight color for the alien.
+     * @param yesAction is the action to perform if the player selects "YES".
+     * @param noAction is the action to perform if the player selects "NO".
+     */
+    private void askForAlienPlacement(String alienColor, Color highlightColor, Runnable yesAction, Runnable noAction) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Alien Placement");
+            alert.setHeaderText("Do you want to place a " + alienColor + " alien?");
+            alert.setContentText("Click YES to highlight the cells where you can place the alien, or NO to skip.");
+
+            ButtonType yesButton = new ButtonType("YES");
+            ButtonType noButton = new ButtonType("NO");
+
+            alert.getButtonTypes().setAll(yesButton, noButton);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == yesButton) {
+                yesAction.run(); // Esegui l'azione per "YES"
+            } else {
+                noAction.run(); // Esegui l'azione per "NO"
+            }
+        });
+    }
+
+
+    /**
+     * Highlights the cells where an alien can be placed.
+     *
+     * @author Stefano
+     * @param ship is the spaceship to update.
+     * @param alienColor is the color of the alien ("purple" or "orange").
+     */
+    private void highlightCellsForAlien(Spaceship ship, String alienColor, Runnable onComplete) {
+        clearHighlightedCells();
+
+        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        boolean hasHighlighted = false;
+
+        for (int row = 0; row < shipMatrix.length; row++) {
+            for (int col = 0; col < shipMatrix[row].length; col++) {
+                Component comp = shipMatrix[row][col];
+                Pane cell = getCellFromSpaceshipMatrix(col, row);
+
+                if (comp != null && cell != null && comp instanceof HousingUnit) {
+                    HousingUnit housingUnit = (HousingUnit) comp;
+
+                    // Highlight cells for the specific color
+                    if ("purple".equals(alienColor) && housingUnit.getAllowPurpleAlien() && !purpleAlienAdded) {
+                        highlightCellForAlien(cell, comp, Color.rgb(160, 32, 240, 0.25), c -> {
+                            purpleAlienFill(c);
+                            onComplete.run();
+                        });
+                    } else if ("orange".equals(alienColor) && housingUnit.getAllowOrangeAlien() && !orangeAlienAdded) {
+                        highlightCellForAlien(cell, comp, Color.rgb(255, 165, 0, 0.25), c -> {
+                            orangeAlienFill(c);
+                            onComplete.run();
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    private void highlightCellForAlien(Pane cell, Component comp, Color color, java.util.function.Consumer<Component> fillAction) {
+        Rectangle overlay = new Rectangle(COMPONENT_SIZE, COMPONENT_SIZE);
+        overlay.setFill(color);
+        overlay.setOpacity(0.90);
+        cell.getChildren().add(overlay);
+
+        overlay.toFront();
+
+        cell.setStyle("-fx-cursor: hand;");
+
+        // Action for alien placing
+        cell.setOnMouseClicked(event -> {
+            fillAction.accept(comp);
+        });
+    }
+
+    private void clearHighlightedCells() {
+        // Rimuovi solo gli overlay senza modificare lo stato delle celle
+        spaceshipMatrix.getChildren().forEach(node -> {
+            if (node instanceof Pane) {
+                Pane cell = (Pane) node;
+                cell.getChildren().removeIf(child -> child instanceof Rectangle); // Rimuovi tutti gli overlay
+                cell.setStyle(""); // Resetta lo stile del cursore
+            }
+        });
+    }
+
+    /**
+     * Moves to the next phase of the game.
+     */
+    private void goToNextPhase() {
+        Platform.runLater(() -> {
+            populatingSectionTitle.setText("YOUR ALIENS ARE READY!");
+            populatingSectionDesc.setText("You have to wait for the other players to populate their spaceship...");
+        });
     }
 }
