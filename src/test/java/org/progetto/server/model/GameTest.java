@@ -258,6 +258,8 @@ class GameTest {
         game.addPlayer(mario);
 
         assertNotNull(game.pickUpEventCardDeck(mario, 0));
+
+        game.getEventDeckAvailableCopy();
     }
 
     @Test

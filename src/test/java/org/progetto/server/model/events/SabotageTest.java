@@ -50,7 +50,7 @@ class SabotageTest {
 
     @Test
     void penalty() {
-        Board board = new Board(1);
+        Board board = new Board(1, 1);
         Player player = new Player("gino", 0, 1);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();

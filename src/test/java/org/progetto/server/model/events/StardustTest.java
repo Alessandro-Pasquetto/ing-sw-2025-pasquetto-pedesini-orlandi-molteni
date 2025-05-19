@@ -18,7 +18,7 @@ class StardustTest {
 
     @Test
     void penalty() {
-        Board board = new Board(2);
+        Board board = new Board(2, 4);
         Player player1 = new Player("gino", 0, 2);
         Player player2 = new Player("mario", 3, 2);
         Player player3 = new Player("anna", 1, 2);

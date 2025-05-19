@@ -9,7 +9,7 @@ class OpenSpaceTest {
 
     @Test
     void moveAhead() {
-        Board board = new Board(1);
+        Board board = new Board(1, 1);
         Player player = new Player("gino", 0, 1);
 
         board.addTraveler(player);

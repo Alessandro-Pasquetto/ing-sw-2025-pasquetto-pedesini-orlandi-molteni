@@ -126,7 +126,7 @@ class PlanetsTest {
         Player player1 = new Player("gino", 0, 1);
         Player player2 = new Player("stuart", 1, 2);
 
-        Board board = new Board(1);
+        Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
 
@@ -167,7 +167,7 @@ class PlanetsTest {
         Player p3 = new Player("andrea", 2, 1);
         Player p4 = new Player("arianna", 3, 1);
 
-        Board board = new Board(1);
+        Board board = new Board(1, 4);
 
         board.addTraveler(p1);
         board.addTraveler(p2);

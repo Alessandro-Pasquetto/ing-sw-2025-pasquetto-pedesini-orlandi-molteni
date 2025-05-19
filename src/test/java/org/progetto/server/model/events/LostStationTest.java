@@ -38,7 +38,7 @@ class LostStationTest {
     void chooseRewardBox() {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Board board = new Board(1);
+        Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
         Player[] track;
@@ -81,7 +81,7 @@ class LostStationTest {
     void penalty() {
         Player player1 = new Player("Max", 0, 1);
         Player player2 = new Player("Mindy", 1, 2);
-        Board board = new Board(1);
+        Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
 

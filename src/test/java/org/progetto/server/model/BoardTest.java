@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,11 +17,11 @@ class BoardTest {
     @Test
     void getTrack() {
         // Level 1 board
-        Board board1 = new Board(1);
+        Board board1 = new Board(1, 3);
         assertEquals(18, board1.getTrack().length);
 
         // Level 2 board
-        Board board2 = new Board(2);
+        Board board2 = new Board(2, 3);
         assertEquals(24, board2.getTrack().length);
 
         // Verify that the returned array is the same instance
@@ -31,12 +32,41 @@ class BoardTest {
     @Test
     void getImgSrc() {
         // Level 1 board
-        Board board1 = new Board(1);
+        Board board1 = new Board(1, 3);
         assertEquals("board1.png", board1.getImgSrc());
 
         // Level 2 board
-        Board board2 = new Board(2);
+        Board board2 = new Board(2, 4);
         assertEquals("board2.png", board2.getImgSrc());
+    }
+
+    @Test
+    void decideStartingPositionOnTruck() {
+        Board board = new Board(1, 3);
+
+        Player p1 = new Player("gino", 0, 1);
+        Player p2 = new Player("arnoldo", 1, 1);
+        Player p3 = new Player("andrea", 2, 1);
+
+        assertThrows(IllegalStateException.class, () -> {
+            board.decideStartingPositionOnTrack(p1, -2);
+        });
+
+        assertThrows(IllegalStateException.class, () -> {
+            board.decideStartingPositionOnTrack(p1, 6);
+        });
+
+        board.decideStartingPositionOnTrack(p1, 2);
+        board.decideStartingPositionOnTrack(p2, 0);
+        board.decideStartingPositionOnTrack(p3, 1);
+
+        assertArrayEquals(new Player[] {p2, p3, p1}, board.getStartingPositionsCopy());
+
+        board.updateTravelersBasedOnStartingPosition();
+
+        List<Player> expected = List.of(p2, p3, p1);
+
+        assertEquals(expected, board.getCopyTravelers());
     }
 
     @Test
@@ -51,7 +81,7 @@ class BoardTest {
         Player[] track;
 
         // Add travelers in level 1 spaceship
-        board = new Board(1);
+        board = new Board(1, 4);
         board.addTraveler(p1);
         board.addTraveler(p2);
         board.addTraveler(p3);
@@ -67,7 +97,7 @@ class BoardTest {
         assertEquals(p4, track[0]);
 
         // Add travelers in level 1 spaceship
-        board = new Board(2);
+        board = new Board(2, 4);
         board.addTraveler(p1);
         board.addTraveler(p2);
         board.addTraveler(p3);
@@ -101,7 +131,7 @@ class BoardTest {
         Game game = new Game(0, 4, 1);
 
         // Add travelers in level 1 spaceship
-        Board board = new Board(1);
+        Board board = new Board(1, 4);
         board.addTraveler(p1);
         board.addTraveler(p2);
         board.addTraveler(p3);
@@ -138,7 +168,7 @@ class BoardTest {
 //        }
 
         // Move player ahead
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 3);
@@ -148,7 +178,7 @@ class BoardTest {
         assertEquals(p1, track[7]);
 
         // Move player behind
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, -3);
@@ -158,7 +188,7 @@ class BoardTest {
         assertEquals(p1, track[1]);
 
         // Move ahead encountering a player
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTraveler(p2);
         board.addTravelersOnTrack(1);
@@ -169,7 +199,7 @@ class BoardTest {
         assertEquals(p2, track[5]);
 
         // Move behind encountering a player
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTraveler(p2);
         board.addTravelersOnTrack(1);
@@ -180,7 +210,7 @@ class BoardTest {
         assertEquals(p1, track[1]);
 
         // Move ahead player returning in the starting point of the track
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 14);
@@ -190,7 +220,7 @@ class BoardTest {
         assertEquals(p1, track[0]);
 
         // Move behind player returning in the end point of the track
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, -5);
@@ -208,7 +238,7 @@ class BoardTest {
         Player[] track;
 
         // Move player ahead
-        board = new Board(1);
+        board = new Board(1, 2);
         board.addTraveler(p1);
         board.addTravelersOnTrack(1);
 
@@ -232,7 +262,7 @@ class BoardTest {
         Player p3 = new Player("giulia", 2, 1);
         Player p4 = new Player("arnoldo", 3, 1);
 
-        Board board = new Board(1);
+        Board board = new Board(1, 4);
 
         board.addTraveler(p2);
         board.addTraveler(p3);
@@ -257,7 +287,7 @@ class BoardTest {
         Player p1 = new Player("gino", 0, 1);
         Player p2 = new Player("alessandro", 1, 1);
 
-        Board board = new Board(1);
+        Board board = new Board(1, 2);
 
         board.addTraveler(p1);
         board.addTraveler(p2);
@@ -271,7 +301,7 @@ class BoardTest {
         Player p3 = new Player("gino", 0, 1);
         Player p4 = new Player("alessandro", 1, 1);
 
-        Board board2 = new Board(1);
+        Board board2 = new Board(1, 2);
 
         board2.addTraveler(p3);
         board2.addTraveler(p4);
@@ -286,7 +316,7 @@ class BoardTest {
         Player p1 = new Player("gino", 0, 1);
         Player p2 = new Player("alessandro", 1, 1);
 
-        Board board = new Board(1);
+        Board board = new Board(1, 2);
 
         board.addTraveler(p1);
         board.addTraveler(p2);
@@ -301,7 +331,7 @@ class BoardTest {
         Player p3 = new Player("gino", 0, 1);
         Player p4 = new Player("alessandro", 1, 1);
 
-        Board board2 = new Board(1);
+        Board board2 = new Board(1, 2);
 
         board2.addTraveler(p3);
         board2.addTraveler(p4);

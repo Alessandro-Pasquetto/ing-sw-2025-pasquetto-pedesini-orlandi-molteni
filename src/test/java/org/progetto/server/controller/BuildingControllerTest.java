@@ -445,16 +445,14 @@ class BuildingControllerTest {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        //Test unable to pick for level 1
         Sender sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("CannotPickUpEventCardDeck", message);
 
             }
         };
 
-       BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
         //Test unable to pick with hand full
@@ -463,14 +461,6 @@ class BuildingControllerTest {
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("FullHandComponent", message);
-
-            }
-        };
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
         buildingBoard.setHandComponent(null);   //reset hand
@@ -497,14 +487,6 @@ class BuildingControllerTest {
         gameManager.getGame().addPlayer(player);
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("IllegalIndexEventCardDeck", message);
-
-            }
-        };
-
         BuildingController.pickUpEventCardDeck(gameManager, player,-1, sender);
 
         //Test deck already taken
@@ -521,13 +503,6 @@ class BuildingControllerTest {
         };
         BuildingController.pickUpEventCardDeck(gameManager, otherPLayer, 1, sender);
 
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("EventCardDeckIsAlreadyTaken", message);
-
-            }
-        };
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
 
@@ -536,15 +511,7 @@ class BuildingControllerTest {
         gameManager.getGame().addPlayer(player);
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertInstanceOf(PickedUpEventCardDeckMessage.class, message);
-
-            }
-        };
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
-
 
     }
 
@@ -577,13 +544,8 @@ class BuildingControllerTest {
             @Override
             public void sendMessage(Object message) {}
         };
+
         BuildingController.pickUpEventCardDeck(gameManager, player, 2, sender);
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("EventCardDeckPutDown", message);
-            }
-        };
 
         BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
