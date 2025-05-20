@@ -1178,6 +1178,12 @@ public class BuildingBoard implements Serializable {
         switch (alienColor.toLowerCase()) {
             case "orange":
                 if (hu.getAllowOrangeAlien()) {
+
+                    if(getSpaceship().getAlienOrange())
+                        throw new IllegalStateException("OrangeAlienAlreadyPlaced");
+
+                    getSpaceship().setAlienOrange(true);
+
                     hu.setAlienOrange(true);
                     hu.setAllowPurpleAlien(false);
                     hu.incrementCrewCount(spaceship, 1);
@@ -1189,6 +1195,12 @@ public class BuildingBoard implements Serializable {
 
             case "purple":
                 if (hu.getAllowPurpleAlien()) {
+
+                    if(getSpaceship().getAlienPurple())
+                        throw new IllegalStateException("PurpleAlienAlreadyPlaced");
+
+                    getSpaceship().setAlienPurple(true);
+
                     hu.setAlienPurple(true);
                     hu.setAllowOrangeAlien(false);
                     hu.incrementCrewCount(spaceship, 1);

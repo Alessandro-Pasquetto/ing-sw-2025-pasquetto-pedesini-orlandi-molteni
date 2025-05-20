@@ -48,9 +48,17 @@ public class PopulatingView {
     @FXML
     private GridPane spaceshipMatrix;
 
+    @FXML
+    private VBox btnContainer;
+
     // =======================
     // METHODS
     // =======================
+
+
+    public void clearBtnContainer() {
+        btnContainer.getChildren().clear();
+    }
 
     /**
      * Initializes the background
@@ -221,13 +229,17 @@ public class PopulatingView {
      * @param ship is the spaceship where the alien will be placed
      */
     public void askForAlien(String alienColor, Spaceship ship) {
-        Alerts.showYesNoPopup(
-                populatingPane,
-                "Alien Placement",
-                "Do you want to place a " + alienColor + " alien?",
-                () -> highlightCellsForAlien(ship, alienColor),
-                () -> GameData.getSender().responsePlaceAlien(-1, -1, alienColor)
-        );
+
+        populatingSectionDesc.setText("Select a component to fill it with the " + alienColor + " alien clicking on it...");
+
+        PageController.getPopulatingView().updateSpaceship(ship);
+        highlightCellsForAlien(ship, alienColor);
+
+        clearBtnContainer();
+
+        Button btn = new Button("Continue");
+        btn.setOnAction(e -> GameData.getSender().responsePlaceAlien(-1, -1, alienColor));
+        btnContainer.getChildren().add(btn);
     }
 
     /**
@@ -244,25 +256,24 @@ public class PopulatingView {
 
         for (int row = 0; row < shipMatrix.length; row++) {
             for (int col = 0; col < shipMatrix[row].length; col++) {
-                Component comp = shipMatrix[row][col];
+                Component component = shipMatrix[row][col];
                 Pane cell = getCellFromSpaceshipMatrix(col, row);
 
-                if (comp != null && cell != null && comp instanceof HousingUnit) {
-                    HousingUnit housingUnit = (HousingUnit) comp;
+                if (cell != null && component instanceof HousingUnit housingUnit) {
 
                     // Highlight cells for the specific color
-                    if (alienColor.equals("purple") && housingUnit.getAllowPurpleAlien()) {
-                        highlightCellForAlien(cell, comp, Color.rgb(160, 32, 240, 0.3));
+                    if (housingUnit.getAllowPurpleAlien() && alienColor.equals("purple")) {
+                        highlightCellForAlien(cell, component, Color.rgb(160, 32, 240, 0.3));
 
                         cell.setOnMouseClicked(event -> {
-                            GameData.getSender().responsePlaceAlien(comp.getX(), comp.getY(), alienColor);
+                            GameData.getSender().responsePlaceAlien(component.getX(), component.getY(), alienColor);
                         });
 
-                    } else if (alienColor.equals("orange") && housingUnit.getAllowOrangeAlien()) {
-                        highlightCellForAlien(cell, comp, Color.rgb(255, 165, 0, 0.3));
+                    } else if (housingUnit.getAllowOrangeAlien() && alienColor.equals("orange")) {
+                        highlightCellForAlien(cell, component, Color.rgb(255, 165, 0, 0.3));
 
                         cell.setOnMouseClicked(event -> {
-                            GameData.getSender().responsePlaceAlien(comp.getX(), comp.getY(), alienColor);
+                            GameData.getSender().responsePlaceAlien(component.getX(), component.getY(), alienColor);
                         });
                     }
                 }
@@ -326,9 +337,7 @@ public class PopulatingView {
      * @author Gabriele
      */
     public void updateLabels() {
-        Platform.runLater(() -> {
-            populatingSectionTitle.setText("YOUR SPACESHIP IS POPULATED");
-            populatingSectionDesc.setText("Please wait while the other players do so...");
-        });
+        populatingSectionTitle.setText("YOUR SPACESHIP IS POPULATED");
+        populatingSectionDesc.setText("Please wait while the other players do so...");
     }
 }

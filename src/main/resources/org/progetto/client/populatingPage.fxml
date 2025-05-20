@@ -28,9 +28,9 @@
                         </StackPane>
                     </VBox>
                     <Label fx:id="populatingSectionDesc" text="Select a component to fill it with the alien of that color clicking on it..." wrapText="true" />
+                    <VBox fx:id="btnContainer" spacing="30" alignment="CENTER"/>
                 </VBox>
             </center>
-
         </BorderPane>
     </ScrollPane>
 </StackPane>

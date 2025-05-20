@@ -6,6 +6,7 @@ import org.progetto.messages.toClient.ReconnectionGameData;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.LobbyController;
+import org.progetto.server.controller.PopulatingController;
 import org.progetto.server.controller.PositioningController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
@@ -281,10 +282,13 @@ public class GameManager {
                 return;
             }
 
-            if(!game.getPhase().equals(GamePhase.EVENT)){
+            if(!game.getPhase().equals(GamePhase.EVENT))
                 game.addPlayer(player);
-            }
-            else{
+
+            if(game.getPhase().equals(GamePhase.POPULATING))
+                PopulatingController.askAliensToSinglePlayer(this, player);
+
+            if(game.getPhase().equals(GamePhase.EVENT)){
                 //todo reconnect in events
             }
 

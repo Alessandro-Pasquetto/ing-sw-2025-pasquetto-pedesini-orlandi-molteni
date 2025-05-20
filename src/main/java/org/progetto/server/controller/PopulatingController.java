@@ -7,6 +7,7 @@ import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 
 import java.rmi.RemoteException;
 
@@ -44,6 +45,24 @@ public class PopulatingController {
             else if (player.getSpaceship().checkShipAllowOrangeAlien())
                 sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
         }
+    }
+
+    public static void askAliensToSinglePlayer(GameManager gameManager, Player player) throws RemoteException {
+
+        Sender sender = gameManager.getSenderByPlayer(player);
+
+        if(player.getIsReady()){
+            sender.sendMessage("PopulatingComplete");
+            return;
+        }
+
+        Spaceship spaceship = player.getSpaceship();
+
+        if (!spaceship.getAlienPurple() && spaceship.checkShipAllowPurpleAlien())
+            sender.sendMessage(new AskAlienMessage("purple", spaceship));
+
+        else if (!spaceship.getAlienOrange() && spaceship.checkShipAllowOrangeAlien())
+            sender.sendMessage(new AskAlienMessage("orange", spaceship));
     }
 
     /**
@@ -86,9 +105,12 @@ public class PopulatingController {
                 sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             } catch (IllegalStateException e) {
-                sender.sendMessage(e.getMessage());
-                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
-                return;
+
+                if(!e.getMessage().equals("PurpleAlienAlreadyPlaced")){
+                    sender.sendMessage(e.getMessage());
+                    sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+                    return;
+                }
             }
         }
 
@@ -127,9 +149,12 @@ public class PopulatingController {
                 sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
 
             } catch (IllegalStateException e) {
-                sender.sendMessage(e.getMessage());
-                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
-                return;
+
+                if(!e.getMessage().equals("OrangeAlienAlreadyPlaced")){
+                    sender.sendMessage(e.getMessage());
+                    sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+                    return;
+                }
             }
         }
 

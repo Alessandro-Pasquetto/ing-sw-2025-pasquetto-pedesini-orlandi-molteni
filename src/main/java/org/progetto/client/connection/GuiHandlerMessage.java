@@ -11,7 +11,6 @@ import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
@@ -98,8 +97,6 @@ public class GuiHandlerMessage {
                     case "POPULATING":
                         PageController.initPopulating(GameData.getLevelGame());
                         PageController.switchScene("populatingPage.fxml", "Populating");
-
-                        sender.showSpaceship(GameData.getNamePlayer());
                         break;
 
                     case "POSITIONING":
@@ -174,8 +171,6 @@ public class GuiHandlerMessage {
                 try {
                     PageController.initPopulating(GameData.getLevelGame());
                     PageController.switchScene("populatingPage.fxml", "Populating");
-
-                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
@@ -306,12 +301,7 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof AskAlienMessage askAlienMessage) {
-            PageController.getPopulatingView().updateSpaceship(askAlienMessage.getSpaceship());
             PageController.getPopulatingView().askForAlien(askAlienMessage.getColor(), askAlienMessage.getSpaceship());
-        }
-
-        else if (messageObj instanceof AlienPlacedMessage alienPlacedMessage) {
-            GameData.getSender().showSpaceship(GameData.getNamePlayer());
         }
 
         else if (messageObj instanceof TrackMessage trackMessage) {
@@ -528,6 +518,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "PopulatingComplete":
+                    PageController.getPopulatingView().clearBtnContainer();
                     PageController.getPopulatingView().updateLabels();
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
                     break;
