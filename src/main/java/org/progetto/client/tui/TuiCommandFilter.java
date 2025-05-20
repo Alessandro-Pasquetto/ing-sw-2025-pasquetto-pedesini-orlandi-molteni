@@ -162,7 +162,7 @@ public class TuiCommandFilter {
                         if (getIsWaitingResponse())
                             setResponse(command);
                         else
-                            System.out.println(e.getMessage());
+                            System.err.println(e.getMessage());
                     }
 
                 } catch (InterruptedException e) {

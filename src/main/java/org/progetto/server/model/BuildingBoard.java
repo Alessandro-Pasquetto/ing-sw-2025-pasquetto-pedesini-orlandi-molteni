@@ -1163,12 +1163,12 @@ public class BuildingBoard implements Serializable {
     public void placeAlienComponent(String alienColor, int xComponent, int yComponent) throws IllegalStateException{
 
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
-            throw new IllegalStateException("NotValidCoordinates");
+            throw new IllegalStateException("InvalidCoordinates");
 
         Component component = spaceshipMatrix[yComponent][xComponent];
 
         if(component == null || component.getType() != ComponentType.HOUSING_UNIT)
-            throw new IllegalStateException("NotValidComponent");
+            throw new IllegalStateException("InvalidComponent");
 
         HousingUnit hu = (HousingUnit) component;
 

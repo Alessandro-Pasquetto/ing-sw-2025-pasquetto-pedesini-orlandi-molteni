@@ -16,6 +16,13 @@ import java.util.ArrayList;
 public class BuildingCommands {
 
     // =======================
+    // COLORS
+    // =======================
+
+    private static final String RESET = "\u001B[0m";
+    private static final String BLUE = "\u001B[34m";
+
+    // =======================
     // COMMANDS
     // =======================
 
@@ -219,7 +226,7 @@ public class BuildingCommands {
     public static void resetTimer(String[] commandParts){
         Sender sender = GameData.getSender();
         sender.resetTimer();
-        System.out.println("Timer reset");
+        System.out.println(BLUE + "Timer reset" + RESET);
     }
 
     /**

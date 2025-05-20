@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -23,6 +24,22 @@ import org.progetto.server.model.Player;
  * Handles messages coming from server
  */
 public class TuiHandlerMessage {
+
+    // =======================
+    // COLORS
+    // =======================
+
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String PURPLE = "\u001B[35m";
+    private static final String ORANGE = "\u001B[38;5;208m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String BLUE = "\u001B[34m";
+
+    // =======================
+    // OTHER METHODS
+    // =======================
 
     /**
      * Method that handles the messages coming from the server updating the TUI
@@ -56,6 +73,43 @@ public class TuiHandlerMessage {
             System.out.println();
             System.out.println(newGamePhaseMessage.getPhaseGame() + " phase started...");
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
+            switch (newGamePhaseMessage.getPhaseGame()) {
+                case "WAITING":
+
+                    break;
+
+                case "INIT":
+                    System.out.println("Write ready when you are ready to play");
+                    break;
+
+                case "BUILDING":
+                    System.out.println("Write ready when you have finished to build your ship");
+                    break;
+
+                case "ADJUSTING":
+
+                    break;
+
+                case "POPULATING":
+
+                    break;
+
+                case "POSITIONING":
+
+                    break;
+
+                case "TRAVEL":
+
+                    break;
+
+                case "EVENT":
+
+                    break;
+
+                case "ENDGAME":
+
+                    break;
+            }
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
@@ -118,9 +172,9 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             if (timer == 10)
-                System.out.println("10 seconds to the end");
+                System.out.println(ORANGE + "10 seconds to the end" + RESET);
             else if(timer == 0)
-                System.out.println("Timer is at 0s");
+                System.out.println(ORANGE + "Timer is at 0s" + RESET);
         }
 
         else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
@@ -216,27 +270,27 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {
-            System.out.println("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions");
+            System.out.println(GREEN + "You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
-            System.out.println(anotherPlayerMovedAheadMessage.getNamePlayer() + " have moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions");
+            System.out.println(GREEN + anotherPlayerMovedAheadMessage.getNamePlayer() + " have moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
-            System.out.println("You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions");
+            System.out.println(BLUE + "You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
-            System.out.println(anotherPlayerMovedBackwardMessage.getNamePlayer() + " have moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions");
+            System.out.println(BLUE + anotherPlayerMovedBackwardMessage.getNamePlayer() + " have moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof PlayerGetsCreditsMessage playerGetsCreditsMessage) {
-            System.out.println("You received " + playerGetsCreditsMessage.getCredits() + " credits");
+            System.out.println(YELLOW + "You received " + playerGetsCreditsMessage.getCredits() + " credits" + RESET);
         }
 
         else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherPlayerGetsCreditsMessage) {
-            System.out.println(anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits");
+            System.out.println(YELLOW + anotherPlayerGetsCreditsMessage.getNamePlayer() + " received " + anotherPlayerGetsCreditsMessage.getCredits() + " credits" + RESET);
         }
 
         else if(messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
@@ -265,11 +319,11 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
-            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
+            System.out.println(PURPLE + playerLeftMessage.getPlayerName() + " left travel" + RESET);
         }
 
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
-            System.out.println(playerDefeatedMessage.getPlayerName() + " was defeated by !");
+            System.out.println(RED + playerDefeatedMessage.getPlayerName() + " was defeated by !" + RESET);
         }
 
         else if(messageObj instanceof ScoreBoardMessage scoreBoardMessage) {
@@ -284,11 +338,11 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NotValidGameId":
-                    System.out.println("Not valid game ID!");
+                    System.err.println("Not valid game ID!");
                     break;
 
                 case "NotAvailableName":
-                    System.out.println("Username not available!");
+                    System.err.println("Username not available!");
                     break;
 
                 case "HandComponentDiscarded":
@@ -296,7 +350,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "FullHandComponent":
-                    System.out.println("Hand is full!");
+                    System.err.println("Hand is full!");
                     break;
 
                 case "AllowedToPlaceComponent":
@@ -305,9 +359,9 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NotAllowedToPlaceComponent":
-                    System.out.println("Component not placed");
+                    System.err.println("Component not placed");
                     if(BuildingData.getIsTimerExpired())
-                        System.out.print("Time finished");
+                        System.out.print(ORANGE + "Time finished" + RESET);
                     break;
 
                 case "ComponentBooked":
@@ -315,7 +369,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "HasBeenBooked":
-                    System.out.println("You cannot discard a booked component");
+                    System.err.println("You cannot discard a booked component");
                     break;
 
                 case "PickedBookedComponent":
@@ -327,11 +381,11 @@ public class TuiHandlerMessage {
                     break;
 
                 case "CannotPickUpEventCardDeck":
-                    System.out.println("You cannot pick up the event card deck!");
+                    System.err.println("You cannot pick up the event card deck!");
                     break;
 
                 case "TimerExpired":
-                    System.out.println("TimerExpired");
+                    System.out.println(ORANGE + "Timer is expired!" + RESET);
                     BuildingData.setIsTimerExpired(true);
                     break;
 
@@ -340,7 +394,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "ActionNotAllowedInReadyState":
-                    System.out.println("Action not allowed in ready state!");
+                    System.err.println("Action not allowed in ready state!");
                     break;
 
                 case "ValidStartingPosition":
@@ -348,19 +402,19 @@ public class TuiHandlerMessage {
                     break;
 
                 case "ComponentAlreadyOccupied":
-                    System.out.println("Component already occupied!");
+                    System.err.println("Component already occupied!");
                     break;
 
                 case "CannotContainOrangeAlien":
-                    System.out.println("Cannot contain orange alien!");
+                    System.err.println("Cannot contain orange alien!");
                     break;
 
                 case "CannotContainPurpleAlien":
-                    System.out.println("Cannot contain purple alien!");
+                    System.err.println("Cannot contain purple alien!");
                     break;
 
                 case "PlayerNameNotFound":
-                    System.out.println("Unable to find player");
+                    System.err.println("Unable to find player");
                     break;
 
                 case "AskToUseShield":
@@ -380,55 +434,55 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NotYourTurn":
-                    System.out.println("Not your turn!");
+                    System.err.println("Not your turn!");
                     break;
 
                 case "IncorrectPhase":
-                    System.out.println("Can't use that, incorrect phase!");
+                    System.err.println("Can't use that, incorrect phase!");
                     break;
 
                 case "NotValidCoordinates":
-                    System.out.println("Invalid coordinates!");
+                    System.err.println("Invalid coordinates!");
                     break;
 
                 case "EmptyHandComponent":
-                    System.out.println("You can't place with an empty hand, draw first!");
+                    System.err.println("You can't place with an empty hand, draw first!");
                     break;
 
                 case "IllegalIndexEventCardDeck":
-                    System.out.println("You have only 3 decks, choose a valid index!");
+                    System.err.println("You have only 3 decks, choose a valid index!");
                     break;
 
                 case "NotEnoughBatteries":
-                    System.out.println("Not enough batteries!");
+                    System.err.println("Not enough batteries!");
                     break;
 
                 case "FullHandEventDeck":
-                    System.out.println("You first need to put down the deck you are looking at! ");
+                    System.err.println("You first need to put down the deck you are looking at! ");
                     break;
 
                 case "InvalidCoordinates":
-                    System.out.println("Invalid coordinates!");
+                    System.err.println("Invalid coordinates!");
                     break;
 
                 case "InvalidComponent":
-                    System.out.println("Invalid component!");
+                    System.err.println("Invalid component!");
                     break;
 
                 case "BookedCellOccupied":
-                    System.out.println("You have already a component in that cell!");
+                    System.err.println("You have already a component in that cell!");
                     break;
 
                 case "IllegalBookIndex":
-                    System.out.println("You only have 2 cells, choose a valid index!");
+                    System.err.println("You only have 2 cells, choose a valid index!");
                     break;
 
                 case "ImpossibleToDestroyCentralUnit":
-                    System.out.println("Impossible to destroy central unit!");
+                    System.err.println("Impossible to destroy central unit!");
                     break;
 
                 case "ImpossibleToDestroyCorrectlyPlaced":
-                    System.out.println("Impossible to destroy a correctly placed component!");
+                    System.err.println("Impossible to destroy a correctly placed component!");
                     break;
 
                 case "BatteryDiscarded":
@@ -436,19 +490,19 @@ public class TuiHandlerMessage {
                     break;
 
                 case "BatteryNotDiscarded":
-                    System.out.println("Unable to discard the battery!");
+                    System.err.println("Unable to discard the battery!");
                     break;
 
                 case "IncorrectNumber":
-                    System.out.println("Incorrect number!");
+                    System.err.println("Incorrect number!");
                     break;
 
                 case "NotEnoughBoxes":
-                    System.out.println("Not enough boxes!");
+                    System.err.println("Not enough boxes!");
                     break;
 
                 case "NotEnoughCrew":
-                    System.out.println("Not enough crew!");
+                    System.err.println("Not enough crew!");
                     break;
 
                 case "CrewMemberDiscarded":
@@ -456,7 +510,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "CrewMemberNotDiscarded":
-                    System.out.println("Unable to discard the crew member!");
+                    System.err.println("Unable to discard the crew member!");
                     break;
 
                 case "BoxDiscarded":
@@ -464,7 +518,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "BoxNotDiscarded":
-                    System.out.println("Unable to discard the box!");
+                    System.err.println("Unable to discard the box!");
                     break;
 
                 case "BoxChosen":
@@ -472,11 +526,11 @@ public class TuiHandlerMessage {
                     break;
 
                 case "BoxNotChosen":
-                    System.out.println("Unable to place selected box in that position!");
+                    System.err.println("Unable to place selected box in that position!");
                     break;
 
                 case "NotValidBoxContainer":
-                    System.out.println("The box storage is not correct for that type of box!");
+                    System.err.println("The box storage is not correct for that type of box!");
                     break;
 
                 case "EmptyReward":
@@ -484,15 +538,15 @@ public class TuiHandlerMessage {
                     break;
 
                 case "YouAreSafe":
-                    System.out.println("You are safe");
+                    System.out.println(GREEN + "You are safe" + RESET);
                     break;
 
                 case "NotValidSpaceShip":
-                    System.out.println("Your spaceship is trash, fix it!");
+                    System.out.println(RED + "Your spaceship is trash, fix it!" + RESET);
                     break;
 
                 case "ValidSpaceShip":
-                    System.out.println("Your spaceship is pretty good, you're ready to go!");
+                    System.out.println(GREEN + "Your spaceship is pretty good, you're ready to go!" + RESET);
                     break;
 
                 case "AskContinueTravel":
@@ -500,7 +554,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "YouLeftTravel":
-                    System.out.println("You left travel");
+                    System.out.println(PURPLE + "You left travel" + RESET);
                     break;
 
                 case "YouAreContinuingTravel":
@@ -508,23 +562,23 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NoComponentHit":
-                    System.out.println("What a luck, no component hit!");
+                    System.out.println(GREEN + "What a luck, no component hit!" + RESET);
                     break;
 
                 case "NoComponentDamaged":
-                    System.out.println("Close call, no component damaged!");
+                    System.out.println(GREEN + "Close call, no component damaged!" + RESET);
                     break;
 
                 case "NoShieldAvailable":
-                    System.out.println("Oh no, you've no shield available!");
+                    System.out.println(RED + "Oh no, you've no shield available!" + RESET);
                     break;
 
                 case "NoCannonAvailable":
-                    System.out.println("Oh no, you've no cannons available!");
+                    System.out.println(RED + "Oh no, you've no cannons available!" + RESET);
                     break;
 
                 case "MeteorDestroyed":
-                    System.out.println("Out of danger, you've destroyed the meteor!");
+                    System.out.println(GREEN + "Out of danger, you've destroyed the meteor!" + RESET);
                     break;
 
                 case "RollDiceToFindColumn":
@@ -538,39 +592,39 @@ public class TuiHandlerMessage {
                     break;
 
                 case "NothingGotDestroyed":
-                    System.out.println("Nothing got destroyed!");
+                    System.out.println(GREEN + "Nothing got destroyed!" + RESET);
                     break;
 
                 case "YouWon":
-                    System.out.println("You won against raiders!");
+                    System.out.println(GREEN + "You won against raiders!" + RESET);
                     break;
 
                 case "YouLost":
-                    System.out.println("You lost against raiders!");
+                    System.out.println(RED + "You lost against raiders!" + RESET);
                     break;
 
                 case "YouDrew":
-                    System.out.println("You drew against raiders!");
+                    System.out.println(YELLOW + "You drew against raiders!" + RESET);
                     break;
 
                 case "RaidersDefeated":
-                    System.out.println("Raiders got defeated!");
+                    System.out.println(GREEN + "Raiders got defeated!" + RESET);
                     break;
 
                 case "YouGotLapped":
-                    System.out.println("You got lapped by leader, you cannot continue travel!");
+                    System.out.println(PURPLE + "You got lapped by leader, you cannot continue travel!" + RESET);
                     break;
 
                 case "YouHaveNoCrew":
-                    System.out.println("You have no crew left, you cannot continue travel!");
+                    System.out.println(PURPLE + "You have no crew left, you cannot continue travel!" + RESET);
                     break;
 
                 case "NoEnginePower":
-                    System.out.println("You have zero engine power in Open Space, you cannot continue travel!");
+                    System.out.println(PURPLE + "You have zero engine power in Open Space, you cannot continue travel!" + RESET);
                     break;
 
                 case "IDShipOutOfBounds":
-                    System.out.println("Building configuration not present!");
+                    System.err.println("Building configuration not present!");
                     break;
 
                 case "AskSelectSpaceshipPart":
@@ -587,6 +641,6 @@ public class TuiHandlerMessage {
         }
 
         else
-            System.out.println("A message was received but is not handled: " + messageObj.toString());
+            System.err.println("A message was received but is not handled: " + messageObj.toString());
     }
 }
