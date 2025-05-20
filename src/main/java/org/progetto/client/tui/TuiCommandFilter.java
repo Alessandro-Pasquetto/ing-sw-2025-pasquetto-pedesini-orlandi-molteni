@@ -667,6 +667,20 @@ public class TuiCommandFilter {
                         }
                         break;
 
+                    case "MOVEBOX":
+                        if (isValidCommand(commandParts.length, 7))
+                            EventCommands.moveBox(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
+                    case "REMOVEBOX":
+                        if (isValidCommand(commandParts.length, 4))
+                            EventCommands.removeBox(commandParts);
+                        else
+                            expectedFormat(commandType);
+                        break;
+
                     default:
                         if (commands.get(commandType.toLowerCase()) == null)
                             throw new IllegalStateException("Command not found");

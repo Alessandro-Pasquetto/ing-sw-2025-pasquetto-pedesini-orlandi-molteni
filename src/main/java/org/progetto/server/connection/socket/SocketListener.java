@@ -126,6 +126,7 @@ public class SocketListener extends Thread {
             int xPlaceComponent = placeComponentMessage.getX();
             int yPlaceComponent = placeComponentMessage.getY();
             int rPlaceComponent = placeComponentMessage.getRotation();
+
             BuildingController.placeComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
         }
 
@@ -133,6 +134,7 @@ public class SocketListener extends Thread {
             int xPlaceComponent = placeLastComponentMessage.getX();
             int yPlaceComponent = placeLastComponentMessage.getY();
             int rPlaceComponent = placeLastComponentMessage.getRotation();
+
             BuildingController.placeLastComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
         }
 
@@ -140,6 +142,7 @@ public class SocketListener extends Thread {
             int xPlaceComponent = placeHandComponentAndPickComponentMessage.getX();
             int yPlaceComponent = placeHandComponentAndPickComponentMessage.getY();
             int rPlaceComponent = placeHandComponentAndPickComponentMessage.getRotation();
+
             BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
         }
 
@@ -148,6 +151,7 @@ public class SocketListener extends Thread {
             int yPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getY();
             int rPlaceComponent = placeHandComponentAndPickVisibleComponentMessage.getRotation();
             int componentIdx = placeHandComponentAndPickVisibleComponentMessage.getComponentIdx();
+
             BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, componentIdx, socketWriter);
         }
 
@@ -156,6 +160,7 @@ public class SocketListener extends Thread {
             int yPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getY();
             int rPlaceComponent = placeHandComponentAndPickUpEventCardDeckMessage.getRotation();
             int deckIdx = placeHandComponentAndPickUpEventCardDeckMessage.getIdxDeck();
+
             BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, deckIdx, socketWriter);
         }
 
@@ -164,6 +169,7 @@ public class SocketListener extends Thread {
             int yPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getY();
             int rPlaceComponent = placeHandComponentAndPickBookedComponentMessage.getRotation();
             int idx = placeHandComponentAndPickBookedComponentMessage.getIdx();
+
             BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, idx, socketWriter);
         }
 
@@ -171,42 +177,50 @@ public class SocketListener extends Thread {
             int xPlaceComponent = placeHandComponentAndReadyMessageMessage.getX();
             int yPlaceComponent = placeHandComponentAndReadyMessageMessage.getY();
             int rPlaceComponent = placeHandComponentAndReadyMessageMessage.getRotation();
+
             BuildingController.placeHandComponentAndReady(gameManager, player, xPlaceComponent, yPlaceComponent, rPlaceComponent, socketWriter);
         }
 
         else if (messageObj instanceof PickVisibleComponentMessage pickVisibleComponent) {
             int componentIdx = pickVisibleComponent.getComponentIdx();
+
             BuildingController.pickVisibleComponent(gameManager, player, componentIdx, socketWriter);
         }
 
         else if (messageObj instanceof PickUpEventCardDeckMessage pickUpEventCardDeck) {
             int deckIdx = pickUpEventCardDeck.getDeckIdx();
+
             BuildingController.pickUpEventCardDeck(gameManager, player, deckIdx, socketWriter);
         }
 
         else if (messageObj instanceof BookComponentMessage bookComponentMessage) {
             int idx = bookComponentMessage.getBookIdx();
+
             BuildingController.bookComponent(gameManager, player, idx, socketWriter);
         }
 
         else if (messageObj instanceof PickBookedComponentMessage bookedComponentMessage) {
             int idx = bookedComponentMessage.getIdx();
+
             BuildingController.pickBookedComponent(gameManager, player, idx, socketWriter);
         }
 
         else if( messageObj instanceof RequestSpaceshipMessage requestSpaceshipMessage ) {
             String owner = requestSpaceshipMessage.getOwner();
+
             SpaceshipController.showSpaceship(gameManager, owner, socketWriter);
         }
 
         else if(messageObj instanceof BuildSpaceshipMessage buildSpaceshipMessage) {
             int idShip = buildSpaceshipMessage.getIdShip();
+
             BuildingController.buildShip(gameManager, player, idShip, socketWriter);
         }
 
         else if(messageObj instanceof DestroyComponentMessage destroyComponentMessage) {
             int x = destroyComponentMessage.getX();
             int y = destroyComponentMessage.getY();
+
             SpaceshipController.startDestroyComponent(gameManager, player, x, y, socketWriter);
         }
 
@@ -423,6 +437,25 @@ public class SocketListener extends Thread {
             }
         }
 
+        else if (messageObj instanceof MoveBoxMessage moveBoxMessage) {
+            int xStart = moveBoxMessage.getxStart();
+            int yStart = moveBoxMessage.getyStart();
+            int idxStart = moveBoxMessage.getIdxStart();
+            int xDestination = moveBoxMessage.getxDestination();
+            int yDestination = moveBoxMessage.getyDestination();
+            int idxDestination = moveBoxMessage.getIdxDestination();
+
+            SpaceshipController.moveBox(gameManager, player, xStart, yStart, idxStart, xDestination, yDestination, idxDestination, socketWriter);
+        }
+
+        else if (messageObj instanceof RemoveBoxMessage removeBoxMessage) {
+            int x = removeBoxMessage.getxBoxStorage();
+            int y = removeBoxMessage.getyBoxStorage();
+            int idx = removeBoxMessage.getIdx();
+
+            SpaceshipController.removeBox(gameManager, player, x, y, idx, socketWriter);
+        }
+
         else if (messageObj instanceof ResponseSelectSpaceshipPartMessage responseSelectSpaceshipPart){
             int x = responseSelectSpaceshipPart.getX();
             int y = responseSelectSpaceshipPart.getY();
@@ -432,6 +465,7 @@ public class SocketListener extends Thread {
 
         else if (messageObj instanceof ResponseContinueTravelMessage responseContinueTravelMessage ) {
             String response = responseContinueTravelMessage.getResponse();
+
             EventController.chooseToContinueTravel(gameManager, response, player, socketWriter);
         }
 

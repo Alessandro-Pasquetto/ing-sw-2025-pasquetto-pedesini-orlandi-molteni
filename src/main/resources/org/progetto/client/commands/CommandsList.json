@@ -203,6 +203,22 @@
     ]
   },
   {
+    "name": "MoveBox",
+    "description": "Moves an owned box to a new position",
+    "usage": "MoveBox <xStart> <yStart> <idxStart> <xEnd> <yEnd> <idxEnd>",
+    "phases": [
+      "EVENT"
+    ]
+  },
+  {
+    "name": "RemoveBox",
+    "description": "Removes an owned box",
+    "usage": "RemoveBox <x> <y> <idx>",
+    "phases": [
+      "EVENT"
+    ]
+  },
+  {
     "name": "BuildShip",
     "description": "Allows to build a ship template",
     "usage": "BuildShip <id>",

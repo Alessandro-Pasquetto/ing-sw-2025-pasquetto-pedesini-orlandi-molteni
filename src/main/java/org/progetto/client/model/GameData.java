@@ -169,7 +169,7 @@ public class GameData {
                 idGame = 0;
                 namePlayer = null;
             } catch (IOException e) {
-                throw new RuntimeException("Error while cleaning the save file.", e);
+                throw new RuntimeException("Error while clearing the save file", e);
             }
         }
     }

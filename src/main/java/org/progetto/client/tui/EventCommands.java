@@ -321,6 +321,64 @@ public class EventCommands {
     }
 
     /**
+     * Handles player decision to move a box
+     *
+     * @author Gabriele
+     * @param commandParts is the command parts
+     */
+    public static void moveBox(String[] commandParts) {
+        Sender sender = GameData.getSender();
+        int levelGame = GameData.getLevelGame();
+
+        int xStart = 0;
+        int yStart = 0;
+        int idxStart = 0;
+        int xEnd = 0;
+        int yEnd = 0;
+        int idxEnd = 0;
+
+        try {
+            xStart = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+            yStart = Integer.parseInt(commandParts[2]) - 5;
+            idxStart = Integer.parseInt(commandParts[3]);
+            xEnd = Integer.parseInt(commandParts[4]) - 6 + levelGame;
+            yEnd = Integer.parseInt(commandParts[5]) - 5;
+            idxEnd = Integer.parseInt(commandParts[6]);
+
+        } catch (NumberFormatException e){
+            System.err.println("You must insert a number!");
+        }
+
+        sender.moveBox(xStart, yStart, idxStart, xEnd, yEnd, idxEnd);
+    }
+
+    /**
+     * Handles player decision to remove a box
+     *
+     * @author Gabriele
+     * @param commandParts is the command parts
+     */
+    public static void removeBox(String[] commandParts) {
+        Sender sender = GameData.getSender();
+        int levelGame = GameData.getLevelGame();
+
+        int x = 0;
+        int y = 0;
+        int idx = 0;
+
+        try {
+            x = Integer.parseInt(commandParts[1]) - 6 + levelGame;
+            y = Integer.parseInt(commandParts[2]) - 5;
+            idx = Integer.parseInt(commandParts[3]);
+
+        } catch (NumberFormatException e){
+            System.err.println("You must insert a number!");
+        }
+
+        sender.removeBox(x, y, idx);
+    }
+
+    /**
      * Handles player decision to land on a lost station
      *
      * @author Lorenzo

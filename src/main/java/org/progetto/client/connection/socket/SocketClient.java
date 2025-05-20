@@ -301,6 +301,16 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void moveBox(int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination) {
+        SocketWriter.sendMessage(new MoveBoxMessage(xStart, yStart, idxStart, xDestination, yDestination, idxDestination));
+    }
+
+    @Override
+    public void removeBox(int xBoxStorage, int yBoxStorage, int idx) {
+        SocketWriter.sendMessage(new RemoveBoxMessage(xBoxStorage, yBoxStorage, idx));
+    }
+
+    @Override
     public void responseUseDoubleCannonRequest(String response) {
         SocketWriter.sendMessage(new ResponseUseDoubleCannonRequestMessage(response));
     }

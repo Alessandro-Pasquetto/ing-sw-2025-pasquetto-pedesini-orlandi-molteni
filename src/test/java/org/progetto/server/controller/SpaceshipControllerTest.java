@@ -21,37 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class SpaceshipControllerTest {
 
     @Test
-    void updateSpaceship() throws RemoteException {
-
-        Sender sender = null;
-
-        GameManager gameManager = new GameManager(0, 4, 1);
-        Player player = new Player("mario", 0, 1);
-
-        //component updatable
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals(message, "SpaceshipUpdated");
-
-            }
-        };
-        Component component = new Component(ComponentType.HOUSING_UNIT, new int[]{1, 1, 2, 1}, "imgSrc");
-        SpaceshipController.updateSpaceship(gameManager, player, component, sender);
-
-        //not updatable component
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals(message, "NotAnUpdatableComponent");
-
-            }
-        };
-        component = new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgSrc");
-        SpaceshipController.updateSpaceship(gameManager, player, component, sender);
-    }
-
-    @Test
     void moveBox() throws RemoteException, InterruptedException {
         //spaceship setup
         Sender sender = null;

@@ -510,6 +510,24 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void moveBox(int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination) {
+        try {
+            server.moveBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), xStart, yStart, idxStart, xDestination, yDestination, idxDestination);
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
+    public void removeBox(int xBoxStorage, int yBoxStorage, int idx) {
+        try {
+            server.removeBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), xBoxStorage, yBoxStorage, idx);
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
     public void responseUseDoubleCannonRequest(String response) {
         try {
             server.responseUseDoubleCannonRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);

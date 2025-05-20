@@ -98,6 +98,10 @@ public interface Sender {
 
     void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
 
+    void moveBox(int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination);
+
+    void removeBox(int xBoxStorage, int yBoxStorage, int idx);
+
     void responseUseDoubleCannonRequest(String response);
 
     void responseContinueTravel(String response);

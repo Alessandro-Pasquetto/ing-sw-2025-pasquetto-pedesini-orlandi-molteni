@@ -515,7 +515,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void responsePlaceAlien(VirtualClient virtualClient, int idGame, int x, int y, String color) throws RemoteException {
-
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
@@ -531,7 +530,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     @Override
     public void responseStartingPosition(VirtualClient virtualClient, int idGame, int startingPosition) throws RemoteException {
-
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
         Player player = null;
         try{
@@ -843,6 +841,36 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void moveBox(VirtualClient virtualClient, int idGame, int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerBySender(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        SpaceshipController.moveBox(gameManager, player, xStart, yStart, idxStart, xDestination, yDestination, idxDestination, virtualClient);
+    }
+
+    @Override
+    public void removeBox(VirtualClient virtualClient, int idGame, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player = null;
+        try{
+            player = gameManager.getPlayerBySender(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        SpaceshipController.removeBox(gameManager, player, xBoxStorage, yBoxStorage, idx, virtualClient);
     }
 
     @Override

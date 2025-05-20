@@ -537,6 +537,46 @@ public class TuiHandlerMessage {
                     System.out.println("No reward boxes left!");
                     break;
 
+                case "PermissionDenied":
+                    System.err.println("You cannot do that right now!");
+                    break;
+
+                case "BoxAlreadyThere":
+                    System.err.println("The box is already there!");
+                    break;
+
+                case "RedBoxMoved":
+                    System.out.println("Box moved successfully");
+                    break;
+
+                case "RedBoxNotMoved":
+                    System.err.println("Unable to move the box!");
+                    break;
+
+                case "CantStoreInANonRedStorage":
+                    System.err.println("You cannot store a red box in a non-red storage!");
+                    break;
+
+                case "BoxMoved":
+                    System.out.println("Box moved successfully");
+                    break;
+
+                case "BoxNotMoved":
+                    System.err.println("Unable to move the box!");
+                    break;
+
+                case "NotAStorageComponent":
+                    System.err.println("The component is not a storage component!");
+                    break;
+
+                case "BoxRemoved":
+                    System.out.println("Box removed successfully");
+                    break;
+
+                case "BoxNotRemoved":
+                    System.err.println("Unable to remove the box!");
+                    break;
+
                 case "YouAreSafe":
                     System.out.println(GREEN + "You are safe" + RESET);
                     break;
