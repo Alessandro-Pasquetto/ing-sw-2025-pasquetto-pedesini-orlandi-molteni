@@ -685,5 +685,41 @@
     -fx-cursor: hand;
 }
 
+/* ============================
+   TRAVEL VIEW
+   ============================ */
+
+#trackScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#trackBorderPane {
+    -fx-padding: 25;
+}
+
+#playerListWrapper {
+    -fx-padding: 25px;
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-min-width: 200px;
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#playerListWrapper #playerListTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 24;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
+}
+
+#playerListWrapper .player-item {
+    -fx-text-fill: rgb(255, 255, 255);
+    -fx-font-size: 14;
+    -fx-font-weight: 500;
+}
+
 
 

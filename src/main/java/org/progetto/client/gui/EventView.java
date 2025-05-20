@@ -23,6 +23,7 @@ import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
 import org.progetto.server.model.events.Planets;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
@@ -145,6 +146,18 @@ public class EventView {
 
 
     }
+
+
+    public void showGameTrack() throws IOException {
+
+        Sender sender = GameData.getSender();
+
+        PageController.initTravel(GameData.getLevelGame());
+        PageController.switchScene("travelPage.fxml", "Travel");
+
+        sender.showTrack();
+    }
+
 
 
     /**

@@ -5,6 +5,7 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.TuiPrinters;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
@@ -311,6 +312,11 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof AlienPlacedMessage alienPlacedMessage) {
             GameData.getSender().showSpaceship(GameData.getNamePlayer());
+        }
+
+        else if (messageObj instanceof TrackMessage trackMessage) {
+            PageController.getTravelView().updateTrack(trackMessage.getTrack());
+            PageController.getTravelView().initPlayersList(trackMessage.getTravelers());
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
