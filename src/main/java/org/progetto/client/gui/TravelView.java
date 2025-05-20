@@ -73,6 +73,7 @@ public class TravelView {
 
         Background background = new Background(backgroundImage);
         trackPane.setBackground(background);
+
     }
 
     /**
@@ -86,12 +87,11 @@ public class TravelView {
 
         // Coordinate delle caselle (da rilevare manualmente o programmaticamente)
         double[][] cellPositions = {
-                {145, 170}, {200, 150}, {255, 130}, {310, 115}, {365, 105},
-                {425, 100}, {485, 105}, {545, 115}, {600, 130}, {655, 150},
-                {710, 170}, {765, 195}, {785, 245}, {765, 295}, {710, 320},
-                {655, 340}, {600, 360}, {545, 375}, {485, 385}, {425, 390},
-                {365, 385}, {310, 375}, {255, 360}, {200, 340}, {145, 320},
-                {125, 270}, {125, 220}, // ecc.
+                {197, 115}, {259, 95}, {325, 72}, {389, 65}, {467, 61},
+                {536, 71}, {605, 85}, {672, 113}, {717, 159}, {758, 226},
+                {757, 303}, {707, 360}, {770, 280}, {647, 397}, {583, 427},
+                {514, 440}, {446, 449}, {379, 449}, {307, 436}, {242, 420},
+                {179, 397}, {122, 355}, {85, 289}, {86, 211}, {128, 150}
         };
 
         for (int i = 0; i < cellPositions.length; i++) {
@@ -102,14 +102,9 @@ public class TravelView {
             cell.setHeight(50);
             cell.setWidth(50);
             cell.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-border-color: white; -fx-background-radius: 50; -fx-border-radius: 50;");
+            cell.setFill(Color.TRANSPARENT);
             cell.setLayoutX(x);
             cell.setLayoutY(y);
-
-            int index = i; // per usarlo dentro al lambda
-            cell.setOnMouseClicked(e -> {
-                System.out.println("Cella cliccata: " + index);
-                // Azione su click
-            });
 
             cellsGroup.getChildren().add(cell);
             boardCells.add(cell);
@@ -118,6 +113,7 @@ public class TravelView {
         // Set the board image
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/board" + levelGame + ".png")));
         boardImage.setImage(image);
+
     }
 
     /**
@@ -230,6 +226,9 @@ public class TravelView {
             Player player =  playersPosition[i];
             if (player != null) {
                 Rectangle cell = boardCells.get(i);
+
+                System.out.println(i);
+
                 String rocketImage = getRocketImagePath(player.getColor());
                 Image rocket = new Image(String.valueOf(MainClient.class.getResource(rocketImage)));
                 ImageView rocketView = new ImageView(rocket);
@@ -238,8 +237,8 @@ public class TravelView {
                 rocketView.setFitHeight(50);
                 rocketView.setPreserveRatio(true);
 
-                rocketView.setTranslateX(cell.getTranslateX() + (cell.getWidth() - rocketView.getFitWidth()) / 2);
-                rocketView.setTranslateY(cell.getTranslateY() + (cell.getHeight() - rocketView.getFitHeight()) / 2);
+                rocketView.setTranslateX(cell.getLayoutX());
+                rocketView.setTranslateY(cell.getLayoutY());
 
 
                 cellsGroup.getChildren().add(rocketView);
@@ -264,17 +263,4 @@ public class TravelView {
         };
     }
 
-    /**
-     * Creates a track cell
-     *
-     * @author Gabriele
-     * @return the created Rectangle cell
-     */
-    private Rectangle createTrackCell() {
-        Rectangle cell = new Rectangle(50, 50);
-        cell.setFill(Color.TRANSPARENT);
-        cell.setCursor(Cursor.HAND);
-
-        return cell;
-    }
 }

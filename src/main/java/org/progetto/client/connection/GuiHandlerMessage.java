@@ -292,6 +292,10 @@ public class GuiHandlerMessage {
                 case "POSITIONING":
                     PageController.getPositioningView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
                     break;
+
+                case "TRAVEL":
+                    PageController.getTravelView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
+                    break;
             }
         }
 
