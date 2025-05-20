@@ -258,6 +258,9 @@ public class LobbyController {
 
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
+        if(gameManager == null)
+            throw new IllegalStateException("FailedToReconnect");
+
         gameManager.reconnectPlayer(name, sender);
 
         return gameManager;

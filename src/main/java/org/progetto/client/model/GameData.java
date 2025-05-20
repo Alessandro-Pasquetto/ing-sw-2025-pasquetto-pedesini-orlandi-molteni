@@ -165,8 +165,11 @@ public class GameData {
         if (saveFile != null && saveFile.exists()) {
             try (FileWriter writer = new FileWriter(saveFile, false)) {
                 writer.write("");
+
+                idGame = 0;
+                namePlayer = null;
             } catch (IOException e) {
-                throw new RuntimeException("Errore durante la pulizia del file di salvataggio.", e);
+                throw new RuntimeException("Error while cleaning the save file.", e);
             }
         }
     }

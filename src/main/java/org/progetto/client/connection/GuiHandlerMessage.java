@@ -136,8 +136,11 @@ public class GuiHandlerMessage {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
 
+            if(GameData.getPhaseGame().equalsIgnoreCase("WAITING"))
+                PageController.getWaitingRoomView().disableReadyBtn(true);
+
             if(GameData.getPhaseGame().equalsIgnoreCase("INIT"))
-                PageController.getWaitingRoomView().activateReadyBtn();
+                PageController.getWaitingRoomView().disableReadyBtn(false);
 
             else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                 try {

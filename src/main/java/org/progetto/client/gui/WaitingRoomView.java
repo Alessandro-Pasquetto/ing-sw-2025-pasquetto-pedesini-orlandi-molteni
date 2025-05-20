@@ -104,8 +104,8 @@ public class WaitingRoomView {
      *
      * @author Alessandro
      */
-    public void activateReadyBtn() {
-        readyButton.setDisable(false);
+    public void disableReadyBtn(boolean disable) {
+        readyButton.setDisable(disable);
     }
 
     /**
