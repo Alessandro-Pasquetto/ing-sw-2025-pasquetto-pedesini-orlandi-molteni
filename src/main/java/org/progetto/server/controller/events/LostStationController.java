@@ -98,7 +98,7 @@ public class LostStationController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.LAND)) {
             sender.sendMessage("IncorrectPhase");
             return;

@@ -30,9 +30,8 @@ public class EventController {
      * @param gameManager is the class that manage the current game
      * @throws RemoteException if the eventCard can't be picked
      * @throws IllegalStateException
-     * @throws InterruptedException
      */
-    public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
+    public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException {
 
         EventCard card = gameManager.getGame().pickEventCard();
         for(Player player : gameManager.getGame().getPlayersCopy()){
@@ -51,9 +50,8 @@ public class EventController {
      * @param gameManager current gameManager
      * @throws RemoteException
      * @throws IllegalStateException
-     * @throws InterruptedException
      */
-    public static void handleDefeatedPlayers(GameManager gameManager) throws RemoteException, IllegalStateException, InterruptedException {
+    public static void handleDefeatedPlayers(GameManager gameManager) throws RemoteException, IllegalStateException {
 
         Board board = gameManager.getGame().getBoard();
 

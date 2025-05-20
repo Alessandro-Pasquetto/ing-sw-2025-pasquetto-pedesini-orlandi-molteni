@@ -627,10 +627,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param yHousingUnit y coordinate of chosen housing unit
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.DISCARDED_CREW)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -847,9 +846,8 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void askToRollDice() throws RemoteException, InterruptedException {
+    private void askToRollDice() throws RemoteException {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 

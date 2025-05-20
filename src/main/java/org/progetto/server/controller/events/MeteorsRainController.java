@@ -134,7 +134,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void rollDice(Player player, Sender sender) throws RemoteException, InterruptedException {
+    public void rollDice(Player player, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.ROLL_DICE)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -222,7 +222,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @author Gabriele
      * @throws RemoteException
      */
-    private void handleBigMeteor() throws RemoteException, InterruptedException {
+    private void handleBigMeteor() throws RemoteException {
         if (!phase.equals(EventPhase.HANDLE_BIG_METEOR))
             throw new IllegalStateException("IncorrectPhase");
 

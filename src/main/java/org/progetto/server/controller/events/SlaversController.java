@@ -134,10 +134,9 @@ public class SlaversController extends EventControllerAbstract {
      * @param num number of double cannons player want to use
      * @param sender current player
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -188,10 +187,9 @@ public class SlaversController extends EventControllerAbstract {
      * @param yBatteryStorage y coordinate of chosen battery storage
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -247,9 +245,8 @@ public class SlaversController extends EventControllerAbstract {
      * @param player current player
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
+    private void battleResult(Player player, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller

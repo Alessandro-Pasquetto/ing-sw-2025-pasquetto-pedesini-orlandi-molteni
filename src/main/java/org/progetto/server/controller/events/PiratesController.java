@@ -149,10 +149,9 @@ public class PiratesController extends EventControllerAbstract {
      * @param num number of cannons player want to use
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -203,10 +202,9 @@ public class PiratesController extends EventControllerAbstract {
      * @param yBatteryStorage y coordinate of chosen battery storage
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         switch (phase) {
             case DISCARDED_BATTERIES:
                 if (!player.equals(gameManager.getGame().getActivePlayer())) {
@@ -470,10 +468,9 @@ public class PiratesController extends EventControllerAbstract {
      * @param player current player
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void rollDice(Player player, Sender sender) throws RemoteException, InterruptedException {
+    public void rollDice(Player player, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.ROLL_DICE)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -509,9 +506,8 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void askToUseShields() throws RemoteException, InterruptedException {
+    private void askToUseShields() throws RemoteException {
         if (phase.equals(EventPhase.ASK_SHIELDS)) {
 
             for (Player defeatedPlayer : defeatedPlayers) {
@@ -550,10 +546,9 @@ public class PiratesController extends EventControllerAbstract {
      * @param response player's response
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException, InterruptedException {
+    public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.SHIELD_DECISION)) {
             sender.sendMessage("IncorrectPhase");
             return;

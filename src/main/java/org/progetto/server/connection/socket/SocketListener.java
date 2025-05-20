@@ -247,11 +247,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, socketWriter);
         }
 
         else if(messageObj instanceof ResponseHowManyDoubleEnginesMessage responseHowManyDoubleEnginesMessage) {
@@ -263,11 +259,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, socketWriter);
         }
 
         else if(messageObj instanceof ResponseBatteryToDiscardMessage responseBatteryToDiscardMessage) {
@@ -280,11 +272,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, socketWriter);
         }
 
         else if(messageObj instanceof ResponseCrewToDiscardMessage responseCrewToDiscardMessage){
@@ -297,11 +285,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, socketWriter);
         }
 
         else if(messageObj instanceof ResponseBoxToDiscardMessage responseBoxToDiscardMessage){
@@ -315,11 +299,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, socketWriter);
         }
 
         else if(messageObj instanceof ResponseChooseToUseShieldMessage responseChooseToUseShieldMessage){
@@ -331,11 +311,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveProtectionDecision(player, response, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveProtectionDecision(player, response, socketWriter);
         }
 
         else if(messageObj instanceof ResponseUseDoubleCannonRequestMessage responseUseDoubleCannonRequestMessage){
@@ -347,11 +323,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveProtectionDecision(player, response, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveProtectionDecision(player, response, socketWriter);
         }
 
         else if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltiesMessage responseAcceptRewardCreditsAndPenaltiesMessage){
@@ -363,11 +335,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveRewardAndPenaltiesDecision(player, response, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveRewardAndPenaltiesDecision(player, response, socketWriter);
         }
 
         else if(messageObj instanceof ResponseLandRequestMessage responseLandRequestMessage){
@@ -379,11 +347,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveDecisionToLand(player, response, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveDecisionToLand(player, response, socketWriter);
         }
 
         else if(messageObj instanceof ResponseAcceptRewardCreditsAndPenaltyDaysMessage responseAcceptRewardCreditsAndPenaltyDaysMessage){
@@ -395,11 +359,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveRewardDecision(player, response, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveRewardDecision(player, response, socketWriter);
         }
 
         else if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
@@ -411,11 +371,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveDecisionToLandPlanet(player, planetIdx, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveDecisionToLandPlanet(player, planetIdx, socketWriter);
         }
 
         else if(messageObj instanceof ResponseRewardBoxMessage responseRewardBoxMessage){
@@ -430,11 +386,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            try {
-                eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
         }
 
         else if (messageObj instanceof MoveBoxMessage moveBoxMessage) {
@@ -540,11 +492,7 @@ public class SocketListener extends Thread {
                         return;
                     }
 
-                    try {
-                        eventController.rollDice(player, socketWriter);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    eventController.rollDice(player, socketWriter);
                     break;
 
                 default:

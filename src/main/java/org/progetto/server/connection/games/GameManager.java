@@ -200,7 +200,7 @@ public class GameManager {
             try {
                 sender.sendMessage(new PlayerColorMessage(player.getColor()));
             } catch (RemoteException e) {
-                throw new RuntimeException(e);
+                System.err.println("RMI client unreachable");
             }
         }
     }

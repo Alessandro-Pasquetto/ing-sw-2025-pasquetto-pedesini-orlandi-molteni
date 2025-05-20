@@ -25,10 +25,9 @@ public class PopulatingController {
      *
      * @author Alessandro
      * @param gameManager the game manager
-     * @throws InterruptedException if the thread is interrupted
      * @throws RemoteException if there is a remote exception
      */
-    public static void askAliens(GameManager gameManager) throws InterruptedException, RemoteException {
+    public static void askAliens(GameManager gameManager) throws RemoteException {
 
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
 

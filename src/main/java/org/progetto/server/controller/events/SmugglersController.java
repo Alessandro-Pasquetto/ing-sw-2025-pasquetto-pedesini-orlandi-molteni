@@ -145,10 +145,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param num number of double cannon player want to use
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -198,10 +197,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param yBatteryStorage y coordinate of chosen battery storage
      * @param sender current sender
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES) && !phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -301,7 +299,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender current sender
      * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException, InterruptedException {
+    private void battleResult(Player player, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -356,7 +354,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @param sender current sender
      * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException, InterruptedException {
+    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Box currently owned
@@ -386,7 +384,7 @@ public class SmugglersController extends EventControllerAbstract {
      * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException, InterruptedException {
+    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
             sender.sendMessage("IncorrectPhase");
             return;

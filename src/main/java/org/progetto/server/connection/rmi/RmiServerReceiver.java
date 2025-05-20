@@ -561,11 +561,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveHowManyCannonsToUse(player, howManyWantToUse, virtualClient);
     }
 
     @Override
@@ -586,11 +582,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveHowManyEnginesToUse(player, howManyWantToUse, virtualClient);
     }
 
     @Override
@@ -611,11 +603,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveDiscardedBatteries(player, xBatteryStorage, yBatteryStorage, virtualClient);
     }
 
     @Override
@@ -636,11 +624,8 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, virtualClient);
     }
 
     @Override
@@ -661,11 +646,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveDiscardedBox(player, xBoxStorage, yBoxStorage, idx, virtualClient);
     }
 
     @Override
@@ -686,11 +667,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveProtectionDecision(player, response, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveProtectionDecision(player, response, virtualClient);
     }
 
     @Override
@@ -711,11 +688,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveProtectionDecision(player, response, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveProtectionDecision(player, response, virtualClient);
     }
 
     @Override
@@ -736,11 +709,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
     }
 
     @Override
@@ -761,11 +730,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveDecisionToLand(player, response, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveDecisionToLand(player, response, virtualClient);
     }
 
     @Override
@@ -786,11 +751,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveRewardAndPenaltiesDecision(player, response, virtualClient);
     }
 
     @Override
@@ -811,11 +772,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveDecisionToLandPlanet(player, planetIdx, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveDecisionToLandPlanet(player, planetIdx, virtualClient);
     }
 
     @Override
@@ -836,11 +793,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, virtualClient);
     }
 
     @Override
@@ -906,11 +859,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        try {
-            eventController.rollDice(player, virtualClient);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        eventController.rollDice(player, virtualClient);
     }
 
     @Override
