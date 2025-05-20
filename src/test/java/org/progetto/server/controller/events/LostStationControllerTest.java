@@ -34,13 +34,15 @@ class LostStationControllerTest {
         LostStation lostStation = new LostStation(CardType.LOSTSTATION, 2, "imgPath", 3, boxes, -1);
         gameManager.getGame().setActiveEventCard(lostStation);
 
-        Player p1 = new Player("mario", 0, 1);
-        Player p2 = new Player("alice", 0, 1);
-        Player p3 = new Player("alessio", 0, 1);
+        Player p1 = new Player("mario");
+        Player p2 = new Player("alice");
+        Player p3 = new Player("alessio");
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
         gameManager.getGame().addPlayer(p3);
+
+        gameManager.getGame().initPlayersSpaceship();
 
         Sender sender = new Sender() {
             @Override

@@ -31,6 +31,7 @@ class LobbyControllerTest {
         assertNotNull(player);
         game = gameManager1.getGame();
         assertNotNull(game);
+        game.initPlayersSpaceship();
 
         //Test player attributes
         assertEquals("Mario", player.getName());
@@ -49,6 +50,7 @@ class LobbyControllerTest {
         assertNotNull(player);
         game = gameManager2.getGame();
         assertNotNull(game);
+        game.initPlayersSpaceship();
 
         //Test player attributes
         assertEquals("Giovanni", player.getName());
@@ -74,7 +76,7 @@ class LobbyControllerTest {
         Player player1 = gameManager.getGame().getPlayersCopy().get(0);
         Game game = gameManager.getGame();
 
-        Player player2 = new Player("Ciro", 1, 1);
+        Player player2 = new Player("Ciro");
 
         //Test incorrect game_id
         assertThrows(IllegalStateException.class, ()->LobbyController.joinGame(game.getId() + 2, player2.getName(), sender));
@@ -82,7 +84,7 @@ class LobbyControllerTest {
         //Test correct joining
         assertDoesNotThrow(()->LobbyController.joinGame(game.getId(), player2.getName(), sender));
 
-        Player player3 = new Player("Pasquale", 2, 1);
+        Player player3 = new Player("Pasquale");
         GameManager gameManager2 = LobbyController.joinGame(game.getId(), player3.getName(), sender);
 
         //Test game attributes

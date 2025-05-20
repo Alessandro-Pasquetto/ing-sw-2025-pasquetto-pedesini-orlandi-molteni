@@ -26,15 +26,17 @@ class BattlezoneTest {
         Game game = new Game(0, 4, 1);
         Board board = game.getBoard();
 
-        Player p1 = new Player("a", 0, 1);
-        Player p2 = new Player("b", 0, 1);
-        Player p3 = new Player("c", 0, 1);
-        Player p4 = new Player("d", 0, 1);
+        Player p1 = new Player("a");
+        Player p2 = new Player("b");
+        Player p3 = new Player("c");
+        Player p4 = new Player("d");
 
         game.addPlayer(p1);
         game.addPlayer(p2);
         game.addPlayer(p3);
         game.addPlayer(p4);
+
+        game.initPlayersSpaceship();
 
         board.addTraveler(p1);
         board.addTraveler(p2);
@@ -65,15 +67,17 @@ class BattlezoneTest {
         Game game = new Game(0, 4, 1);
         Board board = game.getBoard();
 
-        Player p1 = new Player("a", 0, 1);
-        Player p2 = new Player("b", 0, 1);
-        Player p3 = new Player("c", 0, 1);
-        Player p4 = new Player("d", 0, 1);
+        Player p1 = new Player("a");
+        Player p2 = new Player("b");
+        Player p3 = new Player("c");
+        Player p4 = new Player("d");
 
         game.addPlayer(p1);
         game.addPlayer(p2);
         game.addPlayer(p3);
         game.addPlayer(p4);
+
+        game.initPlayersSpaceship();
 
         board.addTraveler(p1);
         board.addTraveler(p2);
@@ -118,10 +122,14 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedCrew() {
+        Game game = new Game(0, 4, 1);
 
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
 
-        Player mario = new Player("mario", 0, 2);
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         HousingUnit housingUnit0 = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
 
@@ -152,7 +160,13 @@ class BattlezoneTest {
 
     @Test
     void checkShields() {
-        Player player = new Player("a", 0, 1);
+        Game game = new Game(0, 4, 2);
+
+        Player player = new Player("a");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
+
         player.getSpaceship().addRightDownShieldCount(2);
 
         Projectile p1 = new Projectile(ProjectileSize.BIG, 0);
@@ -175,7 +189,10 @@ class BattlezoneTest {
     void penaltyShot() {
         Game game1 = new Game(0, 3, 1);
 
-        Player p1 = new Player("a", 0, 1);
+        Player p1 = new Player("a");
+
+        game1.addPlayer(p1);
+        game1.initPlayersSpaceship();
 
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
@@ -240,7 +257,10 @@ class BattlezoneTest {
 
         Game game2 = new Game(1, 3, 2);
 
-        Player p2 = new Player("a", 1, 2);
+        Player p2 = new Player("a");
+
+        game2.addPlayer(p2);
+        game2.initPlayersSpaceship();
 
         BuildingBoard bb2 = p2.getSpaceship().getBuildingBoard();
         bb2.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
@@ -373,8 +393,12 @@ class BattlezoneTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
 
-        Player mario = new Player("mario", 0, 2);
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);

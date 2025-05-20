@@ -42,7 +42,12 @@ class PiratesTest {
 
     @Test
     void checkShields() {
-        Player player = new Player("a", 0, 1);
+        Game game = new Game(0, 3, 2);
+        Player player = new Player("a");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
+
         player.getSpaceship().addRightDownShieldCount(2);
 
         Projectile p1 = new Projectile(ProjectileSize.BIG, 0);
@@ -60,8 +65,12 @@ class PiratesTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
 
-        Player mario = new Player("mario", 0, 1);
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.BIG, 0));
@@ -94,8 +103,12 @@ class PiratesTest {
         Board board1 = game1.getBoard();
         Board board2 = game2.getBoard();
 
-        Player p1 = new Player("a", 0, 1);
-        Player p2 = new Player("a", 1, 2);
+        Player p1 = new Player("a");
+        Player p2 = new Player("a");
+
+        game1.addPlayer(p1);
+        game1.addPlayer(p2);
+        game1.initPlayersSpaceship();
 
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
@@ -226,8 +239,15 @@ class PiratesTest {
         ArrayList<Projectile> projectiles2 = new ArrayList<>();
         projectiles2.add(new Projectile(ProjectileSize.BIG, 0));
         projectiles2.add(new Projectile(ProjectileSize.SMALL, 3));
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 1);
+
+        Game game = new Game(0, 2, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
         Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
@@ -262,8 +282,15 @@ class PiratesTest {
         ArrayList<Projectile> projectiles2 = new ArrayList<>();
         projectiles2.add(new Projectile(ProjectileSize.BIG, 0));
         projectiles2.add(new Projectile(ProjectileSize.SMALL, 3));
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+
+        Game game = new Game(0, 2, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
         Pirates pirates1 = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles1);
         Pirates pirates2 = new Pirates(CardType.PIRATES, 2, "imgPath", 6, -2, 4, projectiles2);
 

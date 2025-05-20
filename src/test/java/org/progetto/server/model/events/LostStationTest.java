@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -36,8 +37,15 @@ class LostStationTest {
 
     @Test
     void chooseRewardBox() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
         Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
@@ -79,8 +87,15 @@ class LostStationTest {
 
     @Test
     void penalty() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Game game = new Game(0, 3, 2);
+
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
         Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);

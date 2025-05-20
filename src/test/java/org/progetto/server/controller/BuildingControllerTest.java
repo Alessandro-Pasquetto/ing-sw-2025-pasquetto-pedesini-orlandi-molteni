@@ -22,8 +22,9 @@ class BuildingControllerTest {
         GameManager gameManager = new GameManager(0, 1, 1);
         Game game = gameManager.getGame();
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         game.addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         Sender sender = new Sender() {
@@ -44,12 +45,13 @@ class BuildingControllerTest {
     void pickVisibleComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
-
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        Player player = new Player("mario");
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
+
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         Sender sender = new Sender() {
             @Override
@@ -71,8 +73,9 @@ class BuildingControllerTest {
     @Test
     void placeComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 1, 1);
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         final String[] lastMessage = new String[1];
@@ -102,8 +105,9 @@ class BuildingControllerTest {
     void placeLastComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -133,10 +137,11 @@ class BuildingControllerTest {
     @Test
     void placeHandComponentAndPickHiddenComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
-        Player player = new Player("mario", 0, 1);
-        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         Sender sender = new Sender() {
             @Override
@@ -165,9 +170,10 @@ class BuildingControllerTest {
     void placeHandComponentAndPickVisibleComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -199,8 +205,9 @@ class BuildingControllerTest {
     void placeHandComponentAndPickUpEventCardDeck() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -221,6 +228,7 @@ class BuildingControllerTest {
         //Test empty hand
         gameManager = new GameManager(0, 4, 2);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         player.getSpaceship().getBuildingBoard().setHandComponent(null);
         sender = new Sender() {
             @Override
@@ -233,8 +241,9 @@ class BuildingControllerTest {
 
 
         //Test deck already taken
-        Player otherPLayer = new Player("Giovanni", 0, 1);
+        Player otherPLayer = new Player("Giovanni");
         gameManager.getGame().addPlayer(otherPLayer);
+        gameManager.getGame().initPlayersSpaceship();
 
         BuildingBoard bb1 = player.getSpaceship().getBuildingBoard();
         BuildingBoard bb2 = otherPLayer.getSpaceship().getBuildingBoard();
@@ -266,8 +275,9 @@ class BuildingControllerTest {
     void placeHandComponentAndPickBookedComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -297,8 +307,9 @@ class BuildingControllerTest {
     void placeHandComponentAndReady() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -330,8 +341,9 @@ class BuildingControllerTest {
     void readyBuilding() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -354,9 +366,10 @@ class BuildingControllerTest {
     void discardComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -383,8 +396,9 @@ class BuildingControllerTest {
     void bookComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -410,8 +424,9 @@ class BuildingControllerTest {
     void pickBookedComponent() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -439,8 +454,9 @@ class BuildingControllerTest {
     void pickUpEventCardDeck() throws RemoteException {
         GameManager gameManager = new GameManager(0, 4, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -491,9 +507,10 @@ class BuildingControllerTest {
 
         //Test deck already taken
         gameManager = new GameManager(0, 4, 2);
-        Player otherPLayer = new Player("Giovanni", 0, 1);
+        Player otherPLayer = new Player("Giovanni");
         gameManager.getGame().addPlayer(otherPLayer);
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
@@ -520,8 +537,9 @@ class BuildingControllerTest {
 
         //Test empty hand deck
         GameManager gameManager = new GameManager(0, 4, 2);
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -536,8 +554,9 @@ class BuildingControllerTest {
 
         //Test full hand
         gameManager = new GameManager(0, 4, 2);
-        player = new Player("mario", 0, 1);
+        player = new Player("mario");
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
         sender = new Sender() {
@@ -554,15 +573,16 @@ class BuildingControllerTest {
     @Test
     void checkAllNotReadyStartShipValidityAndAddToTravelers() throws RemoteException {
         //setup
-        GameManager gameManager = new GameManager(0, 4, 2);
-        Player player_1 = new Player("mario", 0, 1);
-        Player player_2 = new Player("marco", 1, 1);
-        gameManager.getGame().addPlayer(player_1);
-        gameManager.getGame().addPlayer(player_2);
+        GameManager gameManager = new GameManager(0, 4, 1);
+        Player player1 = new Player("mario");
+        Player player2 = new Player("marco");
+        gameManager.getGame().addPlayer(player1);
+        gameManager.getGame().addPlayer(player2);
+        gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
-        BuildingBoard bb1 = player_1.getSpaceship().getBuildingBoard();
-        BuildingBoard bb2 = player_2.getSpaceship().getBuildingBoard();
+        BuildingBoard bb1 = player1.getSpaceship().getBuildingBoard();
+        BuildingBoard bb2 = player2.getSpaceship().getBuildingBoard();
 
 
         //init first spaceship (not valid)

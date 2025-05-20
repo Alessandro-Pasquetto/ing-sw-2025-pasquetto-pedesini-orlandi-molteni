@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
@@ -37,8 +38,11 @@ class SlaversTest {
 
     @Test
     void chooseDiscardedCrew() {
+        Game game = new Game(0, 3, 2);
+        Player mario = new Player("mario");
 
-        Player mario = new Player("mario", 0, 2);
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         HousingUnit notHouse = new HousingUnit(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
         HousingUnit crew = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -66,8 +70,11 @@ class SlaversTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
+        Player mario = new Player("mario");
 
-        Player mario = new Player("mario", 0, 2);
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
@@ -92,8 +99,8 @@ class SlaversTest {
 
     @Test
     void rewardPenalty() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
         Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
@@ -122,8 +129,8 @@ class SlaversTest {
 
     @Test
     void battleResult() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
         Slavers slavers1 = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         Slavers slavers2 = new Slavers(CardType.SLAVERS, 2, "imgPath", 6, 3, -2, 4);
 

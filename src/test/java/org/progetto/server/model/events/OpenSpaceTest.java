@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,8 +10,12 @@ class OpenSpaceTest {
 
     @Test
     void moveAhead() {
-        Board board = new Board(1, 1);
-        Player player = new Player("gino", 0, 1);
+        Game game = new Game(0, 3, 2);
+        Board board = game.getBoard();
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         board.addTraveler(player);
         board.addTravelersOnTrack(1);

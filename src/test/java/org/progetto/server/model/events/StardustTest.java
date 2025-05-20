@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -18,11 +19,18 @@ class StardustTest {
 
     @Test
     void penalty() {
-        Board board = new Board(2, 4);
-        Player player1 = new Player("gino", 0, 2);
-        Player player2 = new Player("mario", 3, 2);
-        Player player3 = new Player("anna", 1, 2);
-        Player player4 = new Player("paola", 2, 2);
+        Game game = new Game(0, 4, 2);
+        Board board = game.getBoard();
+        Player player1 = new Player("gino");
+        Player player2 = new Player("mario");
+        Player player3 = new Player("anna");
+        Player player4 = new Player("paola");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.addPlayer(player3);
+        game.addPlayer(player4);
+        game.initPlayersSpaceship();
 
         board.addTraveler(player1);
         board.addTraveler(player2);

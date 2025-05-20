@@ -34,7 +34,7 @@ class MeteorsRainControllerTest {
         MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "imgSrc", meteors);
         gameManager.getGame().setActiveEventCard(meteorsRain);
 
-        Player p1 = new Player("mario", 0, 1) {
+        Player p1 = new Player("mario") {
             int count = 0;
 
             @Override
@@ -52,10 +52,12 @@ class MeteorsRainControllerTest {
                 return result;
             }
         };
-        Player p2 = new Player("alice", 1, 1);
+        Player p2 = new Player("alice");
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
+
+        gameManager.getGame().initPlayersSpaceship();
 
         Sender sender = new Sender() {
             @Override

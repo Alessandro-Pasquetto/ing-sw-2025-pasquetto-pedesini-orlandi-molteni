@@ -1098,7 +1098,11 @@ class BuildingBoardTest {
 
         // TEST DISCONNECTED COMPONENTS
 
-        Player player = new Player("a", 1, 2);
+        Game game = new Game(0, 4, 2);
+        Player player = new Player("a");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         Spaceship spaceship = player.getSpaceship();
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -1215,12 +1219,12 @@ class BuildingBoardTest {
         exception = assertThrows(IllegalStateException.class, () -> {
             buildingBoard.placeAlienComponent("human", -1, 0);
         });
-        assertEquals("NotValidCoordinates", exception.getMessage());
+        assertEquals("InvalidCoordinates", exception.getMessage());
 
         exception = assertThrows(IllegalStateException.class, () -> {
             buildingBoard.placeAlienComponent("human", 3, 3);
         });
-        assertEquals("NotValidCoordinates", exception.getMessage());
+        assertEquals("InvalidComponent", exception.getMessage());
 
         Component nonHousing = new Component(ComponentType.STRUCTURAL_UNIT, new int[]{1, 1, 1, 1}, "imgSrc");
         buildingBoard.setHandComponent(nonHousing);
@@ -1229,6 +1233,6 @@ class BuildingBoardTest {
         exception = assertThrows(IllegalStateException.class, () -> {
             buildingBoard.placeAlienComponent("human", 3, 2);
         });
-        assertEquals("NotValidCoordinates", exception.getMessage());
+        assertEquals("InvalidComponent", exception.getMessage());
     }
 }

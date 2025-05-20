@@ -30,7 +30,7 @@ class PiratesControllerTest {
         Pirates pirates = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles);
         gameManager.getGame().setActiveEventCard(pirates);
 
-        Player p1 = new Player("mario", 0, 1) {
+        Player p1 = new Player("mario") {
             int count = 0;
 
             @Override
@@ -45,12 +45,14 @@ class PiratesControllerTest {
                 return result;
             }
         };
-        Player p2 = new Player("alice", 0, 1);
-        Player p3 = new Player("alessio", 0, 1);
+        Player p2 = new Player("alice");
+        Player p3 = new Player("alessio");
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
         gameManager.getGame().addPlayer(p3);
+
+        gameManager.getGame().initPlayersSpaceship();
 
         Sender sender = new Sender() {
             @Override

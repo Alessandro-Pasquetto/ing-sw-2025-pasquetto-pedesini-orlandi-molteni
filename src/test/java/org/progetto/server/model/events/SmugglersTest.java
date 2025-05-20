@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
@@ -41,9 +42,15 @@ class SmugglersTest {
 
     @Test
     void chooseRewardBox() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
-        Board board = new Board(1, 2);
+        Game game = new Game(0, 4, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
+        Board board = game.getBoard();
         board.addTraveler(player1);
         board.addTraveler(player2);
         Player[] track;
@@ -149,8 +156,11 @@ class SmugglersTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Game game = new Game(0, 4, 2);
+        Player player1 = new Player("Max");
 
-        Player player1 = new Player("Max", 0, 1);
+        game.addPlayer(player1);
+        game.initPlayersSpaceship();
 
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
@@ -178,8 +188,8 @@ class SmugglersTest {
 
     @Test
     void penalty() {
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
         Board board = new Board(1, 2);
         board.addTraveler(player1);
         board.addTraveler(player2);
@@ -212,8 +222,8 @@ class SmugglersTest {
         ArrayList<Box> rewardBoxes2 = new ArrayList<>();
         rewardBoxes2.add(Box.YELLOW);
         rewardBoxes2.add(Box.BLUE);
-        Player player1 = new Player("Max", 0, 1);
-        Player player2 = new Player("Mindy", 1, 2);
+        Player player1 = new Player("Max");
+        Player player2 = new Player("Mindy");
         Smugglers smugglers1 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, rewardBoxes1);
         Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 6, 2, -2, rewardBoxes2);
 

@@ -34,7 +34,10 @@ class MeteorsRainTest {
         Game game = new Game(0, 3, 1);
         Board board = game.getBoard();
 
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         BuildingBoard bb = player.getSpaceship().getBuildingBoard();
 
@@ -67,43 +70,49 @@ class MeteorsRainTest {
         Component[][] spaceshipMatrix = bb.getCopySpaceshipMatrix();
 
         // up
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 2));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 4));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 5));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s1, 2));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s1, 4));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s1, 5));
         assertEquals(spaceshipMatrix[1][1], meteorsRain.checkImpactComponent(game, player, s1, 6));
         assertEquals(spaceshipMatrix[2][3], meteorsRain.checkImpactComponent(game, player, s1, 8));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 9));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s1, 10));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s1, 9));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s1, 10));
 
         // bottom
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s3, 2));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s3, 4));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s3, 5));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s3, 2));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s3, 4));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s3, 5));
         assertEquals(spaceshipMatrix[2][1], meteorsRain.checkImpactComponent(game, player, s3, 6));
         assertEquals(spaceshipMatrix[3][3], meteorsRain.checkImpactComponent(game, player, s3, 8));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s3, 9));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s3, 10));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s3, 9));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s3, 10));
 
         // right
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s2, 3));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s2, 5));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s2, 3));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s2, 5));
         assertEquals(spaceshipMatrix[1][2], meteorsRain.checkImpactComponent(game, player, s2, 6));
         assertEquals(spaceshipMatrix[3][3], meteorsRain.checkImpactComponent(game, player, s2, 8));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s2, 9));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s2, 10));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s2, 9));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s2, 10));
 
         //left
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s4, 3));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s4, 5));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s4, 3));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s4, 5));
         assertEquals(spaceshipMatrix[2][1], meteorsRain.checkImpactComponent(game, player, s4, 7));
         assertEquals(spaceshipMatrix[3][2], meteorsRain.checkImpactComponent(game, player, s4, 8));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s4, 9));
-        assertEquals(null, meteorsRain.checkImpactComponent(game, player, s4, 10));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s4, 9));
+        assertNull(meteorsRain.checkImpactComponent(game, player, s4, 10));
     }
 
     @Test
     void checkShields() {
-        Player player = new Player("gino", 0, 1);
+        Game game = new Game(0, 3, 1);
+
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
+
         player.getSpaceship().addRightDownShieldCount(2);
 
         Projectile p1 = new Projectile(ProjectileSize.BIG, 0);
@@ -121,8 +130,12 @@ class MeteorsRainTest {
 
     @Test
     void chooseDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
 
-        Player mario = new Player("mario", 0, 1);
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         MeteorsRain meteorsRain = new MeteorsRain(CardType.METEORSRAIN, 2, "img", new ArrayList<>());
 

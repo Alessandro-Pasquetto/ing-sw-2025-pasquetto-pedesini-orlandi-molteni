@@ -16,7 +16,7 @@ class GameControllerTest {
     void ready() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 1, 1);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
         gameManager.getGame().addPlayer(player);
 
         // Verify that the player is not ready initially

@@ -44,8 +44,8 @@ class PlanetsControllerTest {
         Planets planets = new Planets(CardType.PLANETS, 2, "imgPath", rewardsForPlanets, -2);
         gameManager.getGame().setActiveEventCard(planets);
 
-        Player p1 = new Player("mario", 0, 1);
-        Player p2 = new Player("alice", 1, 1);
+        Player p1 = new Player("mario");
+        Player p2 = new Player("alice");
 
         //save starting position
         p1.setPosition(6);
@@ -53,6 +53,8 @@ class PlanetsControllerTest {
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
+
+        gameManager.getGame().initPlayersSpaceship();
 
         Sender sender = new Sender() {
             @Override

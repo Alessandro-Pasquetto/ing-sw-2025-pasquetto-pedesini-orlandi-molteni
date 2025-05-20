@@ -15,14 +15,14 @@ class PlayerTest {
 
     @Test
     void getName() {
-        Player player = new Player("gino", 1, 1);
+        Player player = new Player("gino");
 
         assertEquals("gino", player.getName());
     }
 
     @Test
     void getCredits() {
-        Player player = new Player("gino", 1, 1);
+        Player player = new Player("gino");
 
         assertEquals(0, player.getCredits());
 
@@ -32,14 +32,14 @@ class PlayerTest {
 
     @Test
     void getColor() {
-        Player player = new Player("gino", 2, 1);
+        Player player = new Player("gino");
 
-        assertEquals(2, player.getColor());
+        assertEquals(0, player.getColor());
     }
 
     @Test
     void getPosition() {
-        Player player = new Player("gino", 1, 1);
+        Player player = new Player("gino");
 
         assertEquals(0, player.getPosition());
 
@@ -49,14 +49,18 @@ class PlayerTest {
 
     @Test
     void getSpaceship() {
-        Player player = new Player("gino", 1, 1);
+        Game game = new Game(0, 3, 1);
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         assertNotNull(player.getSpaceship());
     }
 
     @Test
     void getHasLeft() {
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
 
         assertFalse(player.getHasLeft());
 
@@ -66,7 +70,7 @@ class PlayerTest {
 
     @Test
     void setPosition() {
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
 
         player.setPosition(10);
         assertEquals(10, player.getPosition());
@@ -74,7 +78,7 @@ class PlayerTest {
 
     @Test
     void setHasLeft() {
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
 
         player.setHasLeft(true);
         assertTrue(player.getHasLeft());
@@ -82,7 +86,7 @@ class PlayerTest {
 
     @Test
     void setIsReady() {
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
         Game game = new Game(0, 4, 0);
         game.addPlayer(player);
 
@@ -93,7 +97,7 @@ class PlayerTest {
 
     @Test
     void addCredits() {
-        Player player = new Player("gino", 0, 1);
+        Player player = new Player("gino");
 
         player.addCredits(50);
         assertEquals(50, player.getCredits());
@@ -105,7 +109,7 @@ class PlayerTest {
 
     @Test
     void rollDice() {
-        Player p = new Player("gino", 0, 1);
+        Player p = new Player("gino");
 
         // Checks that dice result is always between 2 and 12
         assertTrue(p.rollDice() >= 2 && p.rollDice() <= 12);

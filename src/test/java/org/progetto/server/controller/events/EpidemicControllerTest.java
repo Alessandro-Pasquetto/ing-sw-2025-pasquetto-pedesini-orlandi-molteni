@@ -26,9 +26,10 @@ class EpidemicControllerTest {
         Epidemic epidemic = new Epidemic(CardType.EPIDEMIC, 2, "imgPath");
         gameManager.getGame().setActiveEventCard(epidemic);
 
-        Player player = new Player("mario", 0, 1);
+        Player player = new Player("mario");
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
 
         Sender sender = new Sender() {
             @Override

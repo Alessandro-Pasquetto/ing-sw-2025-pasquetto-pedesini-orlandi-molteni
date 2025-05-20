@@ -3,6 +3,7 @@ package org.progetto.server.model.events;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Box;
 import org.progetto.server.model.components.BoxStorage;
@@ -78,10 +79,10 @@ class PlanetsTest {
 
     @Test
     void choosePlanet() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alba", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("arianna", 3, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alba");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("arianna");
 
         // List of rewards for each planet creation
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
@@ -123,10 +124,16 @@ class PlanetsTest {
 
     @Test
     void chooseRewardsBox() {
-        Player player1 = new Player("gino", 0, 1);
-        Player player2 = new Player("stuart", 1, 2);
+        Game game = new Game(0, 2, 1);
 
-        Board board = new Board(1, 2);
+        Player player1 = new Player("gino");
+        Player player2 = new Player("stuart");
+
+        game.addPlayer(player1);
+        game.addPlayer(player2);
+        game.initPlayersSpaceship();
+
+        Board board = game.getBoard();
         board.addTraveler(player1);
         board.addTraveler(player2);
 
@@ -162,10 +169,10 @@ class PlanetsTest {
 
     @Test
     void penalty() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alba", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("arianna", 3, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alba");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("arianna");
 
         Board board = new Board(1, 4);
 

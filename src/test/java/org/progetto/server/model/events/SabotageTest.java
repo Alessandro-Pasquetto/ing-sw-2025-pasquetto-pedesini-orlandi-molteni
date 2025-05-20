@@ -3,6 +3,7 @@ package org.progetto.server.model.events;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -15,10 +16,18 @@ class SabotageTest {
 
     @Test
     void lessPopulatedSpaceship() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alba", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("arianna", 3, 1);
+        Game game = new Game(0, 4, 1);
+
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alba");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("arianna");
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+        game.initPlayersSpaceship();
 
         p1.getSpaceship().addCrewCount(4);
         p1.getSpaceship().setAlienOrange(true);
@@ -50,8 +59,12 @@ class SabotageTest {
 
     @Test
     void penalty() {
-        Board board = new Board(1, 1);
-        Player player = new Player("gino", 0, 1);
+        Game game = new Game(0, 4, 1);
+        Board board = game.getBoard();
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 

@@ -38,10 +38,10 @@ class GameTest {
     @Test
     void getPlayerByName() {
         Game game = new Game(1, 4, 2);
-        game.addPlayer(new Player("mario", 1, 2));
-        Player alice = new Player("alice", 1, 2);
+        game.addPlayer(new Player("mario"));
+        Player alice = new Player("alice");
         game.addPlayer(alice);
-        game.addPlayer(new Player("bob", 1, 2));
+        game.addPlayer(new Player("bob"));
 
         assertEquals(alice, game.getPlayerByName("alice"));
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.getPlayerByName("matteo"));
@@ -56,7 +56,7 @@ class GameTest {
         assertTrue(game.getPlayersCopy().isEmpty());
 
         // Add a player and test
-        Player player = new Player("gino", 0, 2);
+        Player player = new Player("gino");
         game.addPlayer(player);
 
         ArrayList<Player> players = game.getPlayersCopy();
@@ -73,8 +73,9 @@ class GameTest {
     void getVisibleComponentDeckCopy() {
         Game game = new Game(1, 4, 2);
 
-        Player player = new Player("gino", 0, 2);
+        Player player = new Player("gino");
         game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         ArrayList<Component> visibleComponent = new ArrayList<>();
 
@@ -134,10 +135,10 @@ class GameTest {
         assertEquals(0, game.getPlayersSize());
 
         // Add players and test size
-        game.addPlayer(new Player("gino", 0, 2));
+        game.addPlayer(new Player("gino"));
         assertEquals(1, game.getPlayersSize());
 
-        game.addPlayer(new Player("andrea", 1, 2));
+        game.addPlayer(new Player("andrea"));
         assertEquals(2, game.getPlayersSize());
     }
 
@@ -181,7 +182,7 @@ class GameTest {
     @Test
     void getActivePlayer(){
         Game game = new Game(0, 3, 2);
-        Player player = new Player("tom", 1, 1);
+        Player player = new Player("tom");
 
         game.setActivePlayer(player);
     }
@@ -189,9 +190,9 @@ class GameTest {
     @Test
     void getNumReadyPlayers(){
         Game game = new Game(0, 3, 2);
-        Player player1 = new Player("mario", 1, 1);
-        Player player2 = new Player("valeria", 2, 1);
-        Player player3 = new Player("giorgia", 3, 1);
+        Player player1 = new Player("mario");
+        Player player2 = new Player("valeria");
+        Player player3 = new Player("giorgia");
 
         game.addPlayer(player1);
         game.addPlayer(player2);
@@ -243,7 +244,7 @@ class GameTest {
     @Test
     void setActivePlayer(){
         Game game = new Game(0, 3, 2);
-        Player player = new Player("tom", 1, 1);
+        Player player = new Player("tom");
 
         game.setActivePlayer(player);
 
@@ -252,7 +253,7 @@ class GameTest {
 
     @Test
     void loadEvents() {
-        Player mario = new Player("mario", 1, 2);
+        Player mario = new Player("mario");
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
@@ -264,18 +265,19 @@ class GameTest {
 
     @Test
     void loadComponents() {
-        Player mario = new Player("mario", 1, 2);
         Game game = new Game(0, 3, 2);
+        Player mario = new Player("mario");
 
         game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         assertNotNull(game.pickHiddenComponent(mario));
     }
 
     @Test
     void addPlayer() {
-        Player mario = new Player("mario", 1, 2);
-        Player alice = new Player("alice", 1, 2);
+        Player mario = new Player("mario");
+        Player alice = new Player("alice");
 
         Game game = new Game(0, 3, 2);
         game.addPlayer(mario);
@@ -288,8 +290,8 @@ class GameTest {
 
     @Test
     void pickUpEventCardDeck() {
-        Player player = new Player("mario", 1, 2);
-        Player player2 = new Player("anna", 3, 2);
+        Player player = new Player("mario");
+        Player player2 = new Player("anna");
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(player);
@@ -315,8 +317,8 @@ class GameTest {
 
     @Test
     void putDownEventCardDeck() {
-        Player player = new Player("mario", 1, 2);
-        Player player2 = new Player("anna", 3, 2);
+        Player player = new Player("mario");
+        Player player2 = new Player("anna");
         Game game = new Game(0, 3, 2);
         game.addPlayer(player);
         game.addPlayer(player2);
@@ -340,7 +342,7 @@ class GameTest {
 
     @Test
     void composeHiddenEventDeck() {
-        Player mario = new Player("mario", 1, 2);
+        Player mario = new Player("mario");
         Game game = new Game(0, 3, 2);
         game.addPlayer(mario);
 
@@ -349,13 +351,14 @@ class GameTest {
         assertNotNull(game.pickEventCard());
     }
 
-
     @Test
     void pickHiddenComponent() {
-        Player mario = new Player("mario", 1, 2);
-        Game game = new Game(0, 3, 2);
+        Game game = new Game(0, 1, 2);
+        Player mario = new Player("mario");
 
         game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
         Component component = game.pickHiddenComponent(mario);
         assertEquals(component, mario.getSpaceship().getBuildingBoard().getHandComponent());
 
@@ -376,12 +379,13 @@ class GameTest {
 
     @Test
     void pickVisibleComponent() {
-        Player mario = new Player("mario", 1, 2);
-        Player teo = new Player("teo", 1, 2);
+        Player mario = new Player("mario");
+        Player teo = new Player("teo");
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
         game.addPlayer(teo);
+        game.initPlayersSpaceship();
 
         Component nextDiscardedComponent = game.pickHiddenComponent(mario);
         String imgSrcDiscardedComponent = game.discardComponent(mario);
@@ -401,10 +405,11 @@ class GameTest {
 
     @Test
     void discardComponent() {
-        Player mario = new Player("mario", 1, 2);
+        Player mario = new Player("mario");
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
+        game.initPlayersSpaceship();
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> game.discardComponent(mario));
         assertEquals("EmptyHandComponent", exception.getMessage());
@@ -418,7 +423,7 @@ class GameTest {
     @Test
     void pickEventCard() {
 
-        Player mario = new Player("mario", 1, 2);
+        Player mario = new Player("mario");
         Game game = new Game(0, 3, 2);
 
         game.addPlayer(mario);
@@ -431,8 +436,8 @@ class GameTest {
     @Test
     void checkAvailableName() {
         Game game = new Game(0, 3, 2);
-        game.addPlayer(new Player("alice", 1, 2));
-        game.addPlayer(new Player("matteo", 1, 2));
+        game.addPlayer(new Player("alice"));
+        game.addPlayer(new Player("matteo"));
 
         assertFalse(game.checkAvailableName("alice"));
         assertFalse(game.checkAvailableName("matteo"));
@@ -444,9 +449,9 @@ class GameTest {
     void resetReadyPlayers(){
         Game game = new Game(0, 3, 2);
 
-        Player p1 = new Player("alice", 1, 2);
-        Player p2 = new Player("matteo", 1, 2);
-        Player p3 = new Player("gianfranco", 1, 2);
+        Player p1 = new Player("alice");
+        Player p2 = new Player("matteo");
+        Player p3 = new Player("gianfranco");
 
         game.addPlayer(p1);
         game.addPlayer(p2);
@@ -465,13 +470,15 @@ class GameTest {
     void scoreBoard() {
         Game game = new Game(0, 3, 2);
 
-        Player p1 = new Player("alice", 0, 2);
-        Player p2 = new Player("matteo", 1, 2);
-        Player p3 = new Player("gianfranco", 2, 2);
+        Player p1 = new Player("alice");
+        Player p2 = new Player("matteo");
+        Player p3 = new Player("gianfranco");
 
         game.addPlayer(p1);
         game.addPlayer(p2);
         game.addPlayer(p3);
+
+        game.initPlayersSpaceship();
 
         // Sets for each player his position
         p1.setPosition(20);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.BuildingBoard;
+import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -19,8 +20,13 @@ class EpidemicTest {
 
     @Test
     void epidemicResult() {
-        Board board = new Board(1, 1);
-        Player player = new Player("gino", 0, 1);
+        Game game = new Game(0, 3, 1);
+        Board board = game.getBoard();
+
+        Player player = new Player("gino");
+
+        game.addPlayer(player);
+        game.initPlayersSpaceship();
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 

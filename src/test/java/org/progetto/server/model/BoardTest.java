@@ -44,9 +44,9 @@ class BoardTest {
     void decideStartingPositionOnTruck() {
         Board board = new Board(1, 3);
 
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("arnoldo", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("arnoldo");
+        Player p3 = new Player("andrea");
 
         assertThrows(IllegalStateException.class, () -> {
             board.decideStartingPositionOnTrack(p1, -2);
@@ -71,10 +71,10 @@ class BoardTest {
 
     @Test
     void addTraveler() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("arnoldo", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("gianmaria", 3, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("arnoldo");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("gianmaria");
 
         Game game = new Game(0, 4, 1);
         Board board;
@@ -123,10 +123,10 @@ class BoardTest {
 
     @Test
     void removeTraveler() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("arnoldo", 1, 1);
-        Player p3 = new Player("andrea", 2, 1);
-        Player p4 = new Player("gianmaria", 3, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("arnoldo");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("gianmaria");
 
         Game game = new Game(0, 4, 1);
 
@@ -149,8 +149,8 @@ class BoardTest {
 
     @Test
     void movePlayerByDistance() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("arnoldo", 1, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("arnoldo");
 
         Board board;
         Player[] track;
@@ -232,7 +232,7 @@ class BoardTest {
 
     @Test
     void leaveTravel() {
-        Player p1 = new Player("gino", 0, 1);
+        Player p1 = new Player("gino");
 
         Board board;
         Player[] track;
@@ -257,10 +257,10 @@ class BoardTest {
 
     @Test
     void updateTurnOrder() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alessandro", 1, 1);
-        Player p3 = new Player("giulia", 2, 1);
-        Player p4 = new Player("arnoldo", 3, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alessandro");
+        Player p3 = new Player("giulia");
+        Player p4 = new Player("arnoldo");
 
         Board board = new Board(1, 4);
 
@@ -284,8 +284,8 @@ class BoardTest {
 
     @Test
     void checkLappedPlayer() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alessandro", 1, 1);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alessandro");
 
         Board board = new Board(1, 2);
 
@@ -298,8 +298,8 @@ class BoardTest {
 
         assertTrue(p2.getHasLeft());
 
-        Player p3 = new Player("gino", 0, 1);
-        Player p4 = new Player("alessandro", 1, 1);
+        Player p3 = new Player("gino");
+        Player p4 = new Player("alessandro");
 
         Board board2 = new Board(1, 2);
 
@@ -313,10 +313,20 @@ class BoardTest {
 
     @Test
     void checkNoCrewPlayers() {
-        Player p1 = new Player("gino", 0, 1);
-        Player p2 = new Player("alessandro", 1, 1);
+        Game game = new Game(0, 4, 2);
+        Player p1 = new Player("gino");
+        Player p2 = new Player("alessandro");
+        Player p3 = new Player("gino");
+        Player p4 = new Player("alessandro");
 
-        Board board = new Board(1, 2);
+        Board board = game.getBoard();
+
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+
+        game.initPlayersSpaceship();
 
         board.addTraveler(p1);
         board.addTraveler(p2);
@@ -327,9 +337,6 @@ class BoardTest {
         board.checkNoCrewPlayers();
 
         assertTrue(p2.getHasLeft());
-
-        Player p3 = new Player("gino", 0, 1);
-        Player p4 = new Player("alessandro", 1, 1);
 
         Board board2 = new Board(1, 2);
 
