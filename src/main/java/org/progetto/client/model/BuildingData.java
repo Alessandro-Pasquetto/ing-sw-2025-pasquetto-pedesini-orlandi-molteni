@@ -1,6 +1,8 @@
 package org.progetto.client.model;
 
+import javafx.animation.RotateTransition;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 import org.progetto.client.gui.DragAndDrop;
 
 public class BuildingData {
@@ -15,6 +17,7 @@ public class BuildingData {
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
     private static int yHandComponent = 0;
+    private static boolean isRotating = false;
     private static boolean isTimerExpired;
     private static int[][] shipMask;
     private static int currentDeckIdx = -1;
@@ -120,12 +123,25 @@ public class BuildingData {
     }
 
     public static void rotateComponent(){
-        handComponent.setRotate(handComponent.getRotate() + 90);
+        if (isRotating) return;
 
-        if(rHandComponent == 3)
-            rHandComponent = 0;
-        else
-            rHandComponent++;
+        isRotating = true;
+
+        RotateTransition rotateTransition = new RotateTransition(Duration.millis(200), handComponent);
+        rotateTransition.setByAngle(90);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.setAutoReverse(false);
+
+        rotateTransition.setOnFinished(event -> {
+            isRotating = false;
+
+            if(rHandComponent == 3)
+                rHandComponent = 0;
+            else
+                rHandComponent++;
+        });
+
+        rotateTransition.play();
     }
 
     public static void resetHandComponent(){

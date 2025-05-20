@@ -106,7 +106,7 @@ public class Alerts {
     public static void showYesNoPopup(Pane targetPane, String titleText, String messageText, Runnable onYes, Runnable onNo) {
         Platform.runLater(() -> {
             StackPane overlay = new StackPane();
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.75);");
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85);");
             overlay.setPickOnBounds(true);
 
             // Popup container
@@ -114,10 +114,10 @@ public class Alerts {
             popup.setMaxWidth(400);
             popup.setMaxHeight(200);
             popup.setStyle(
-                    "-fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);" +
                     "-fx-padding: 20;" +
                     "-fx-border-radius: 8;" +
                     "-fx-background-radius: 8;" +
+                    "-fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);" +
                     "-fx-border-color: rgba(43, 50, 57, 0.5);" +
                     "-fx-border-width: 2;"
             );
@@ -135,7 +135,7 @@ public class Alerts {
             // Message
             Label message = new Label(messageText);
             message.setStyle(
-                    "-fx-font-size: 14px;" +
+                    "-fx-font-size: 16px;" +
                     "-fx-text-fill: black;" +
                     "-fx-wrap-text: true;"
             );
@@ -144,8 +144,8 @@ public class Alerts {
             HBox buttonBox = new HBox(20);
             buttonBox.setAlignment(Pos.CENTER);
 
-            Button yesButton = new Button("YES");
-            Button noButton = new Button("NO");
+            Button yesButton = new Button("Yes");
+            Button noButton = new Button("No");
 
             buttonBox.getChildren().addAll(yesButton, noButton);
 
