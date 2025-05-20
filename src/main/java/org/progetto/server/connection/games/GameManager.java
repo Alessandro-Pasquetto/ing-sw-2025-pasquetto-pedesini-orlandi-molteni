@@ -1,6 +1,7 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.messages.toClient.PlayerColorMessage;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ReconnectionGameData;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
@@ -184,6 +185,22 @@ public class GameManager {
                 } catch (RemoteException e) {
                     disconnectPlayer(getPlayerBySender(vc));
                 }
+            }
+        }
+    }
+
+    public void setAndSendPlayersColor(){
+        ArrayList<Player> players = game.getPlayersCopy();
+
+        for (int i = 0; i < game.getMaxNumPlayers(); i++) {
+            Player player = players.get(i);
+            player.setColor(i);
+
+            Sender sender = getSenderByPlayer(player);
+            try {
+                sender.sendMessage(new PlayerColorMessage(player.getColor()));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
             }
         }
     }

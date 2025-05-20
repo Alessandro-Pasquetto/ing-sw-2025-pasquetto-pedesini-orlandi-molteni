@@ -1,6 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -18,7 +17,6 @@ import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
-import org.progetto.server.model.Player;
 
 /**
  * Handles messages coming from server
@@ -62,11 +60,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof WaitingPlayersMessage waitingPlayersMessage) {
-            for (Player player : waitingPlayersMessage.getPlayers()) {
-                if(player.getName().equals(GameData.getNamePlayer())) {
-                    GameData.setColor(player.getColor());
-                }
-            }
+
         }
 
         else if (messageObj instanceof NewGamePhaseMessage newGamePhaseMessage) {
@@ -110,6 +104,10 @@ public class TuiHandlerMessage {
 
                     break;
             }
+        }
+
+        else if (messageObj instanceof PlayerColorMessage playerColorMessage) {
+            GameData.setColor(playerColorMessage.getColor());
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {

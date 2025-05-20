@@ -184,6 +184,14 @@ public class Game {
     // OTHER METHODS
     // =======================
 
+    public void initPlayersSpaceship(){
+        ArrayList<Player> players = getPlayersCopy();
+
+        for (Player player : players) {
+            player.initSpaceship(level);
+        }
+    }
+
     /**
      * Loading event cards from json file and initialize visibleEventCardDecks
      *

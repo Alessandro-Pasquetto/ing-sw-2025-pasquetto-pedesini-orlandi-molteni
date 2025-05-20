@@ -20,12 +20,10 @@ public class Player implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public Player(String name, int color, int levelShip) {
+    public Player(String name) {
         this.name = name;
         this.credits = 0;
-        this.color = color;
         this.position = 0;
-        this.spaceship = new Spaceship(levelShip, color);
         this.hasLeft = false;
         this.isReady = false;
     }
@@ -66,6 +64,10 @@ public class Player implements Serializable {
     // SETTERS
     // =======================
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public void setPosition(int newPosition) {
         this.position = newPosition;
     }
@@ -84,6 +86,10 @@ public class Player implements Serializable {
     // =======================
     // OTHER METHODS
     // =======================
+
+    public void initSpaceship(int levelShip) {
+        this.spaceship = new Spaceship(levelShip, color);
+    }
 
     /**
      * Adds credits to the player

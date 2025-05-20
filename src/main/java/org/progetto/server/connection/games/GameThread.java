@@ -64,6 +64,8 @@ public class GameThread extends Thread {
                         if(gameManager.getGame().getPhase().equals(GamePhase.WAITING))
                             continue;
 
+                        gameManager.setAndSendPlayersColor();
+                        gameManager.getGame().initPlayersSpaceship();
                         gameManager.getGame().setPhase(GamePhase.BUILDING);
                         break;
 

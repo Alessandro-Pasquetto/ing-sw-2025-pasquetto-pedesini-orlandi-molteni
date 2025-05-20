@@ -193,7 +193,7 @@ public class LobbyController {
         }
 
         GameManager gameManager = new GameManager(idGame, numPlayers, levelGame);
-        Player player = new Player(name, 0, levelGame);
+        Player player = new Player(name);
 
         Game game = gameManager.getGame();
 
@@ -237,7 +237,7 @@ public class LobbyController {
         if(!game.checkAvailableName(name))
             throw new IllegalStateException("NotAvailableName");
 
-        Player player = new Player(name, game.getPlayersSize(), game.getLevel());
+        Player player = new Player(name);
 
         gameManager.getGame().addPlayer(player);
 
