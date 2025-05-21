@@ -266,6 +266,10 @@ public class GuiHandlerMessage {
             GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
         }
 
+        else if (messageObj instanceof AnotherPlayerBookedComponentMessage anotherPlayerBookedComponentMessage) {
+            GameData.getSender().showSpaceship(anotherPlayerBookedComponentMessage.getNamePlayer());
+        }
+
         else if (messageObj instanceof AnotherPlayerDiscardComponentMessage) {
             GameData.getSender().showVisibleComponents();
         }

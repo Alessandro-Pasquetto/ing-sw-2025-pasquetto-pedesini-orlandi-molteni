@@ -237,7 +237,7 @@ public class PopulatingView {
 
         clearBtnContainer();
 
-        Button btn = new Button("Continue");
+        Button btn = new Button("Skip");
         btn.setOnAction(e -> GameData.getSender().responsePlaceAlien(-1, -1, alienColor));
         btnContainer.getChildren().add(btn);
     }

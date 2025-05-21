@@ -110,6 +110,8 @@ public class BuildingView {
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
+    private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
+
     // =======================
     // METHODS
     // =======================
@@ -360,6 +362,7 @@ public class BuildingView {
             private final VBox content = new VBox(5);
             private final Label nameLabel = new Label();
             private final GridPane shipGrid = new GridPane();
+            private final GridPane bookedGrid = new GridPane();
             private final ImageView shipBackgroundImage = new ImageView();
             private final StackPane shipDisplay = new StackPane();
             private final Pane overlayPane = new Pane();
@@ -372,11 +375,16 @@ public class BuildingView {
                 shipBackgroundImage.setPreserveRatio(true);
 
                 shipGrid.setStyle("-fx-background-color: transparent;");
-                shipGrid.setLayoutX(GameData.getLevelGame() == 1 ? 55.0 : 20.0);
+                shipGrid.setLayoutX(GameData.getLevelGame() == 1 ? 50.0 : 15.0);
                 shipGrid.setLayoutY(9.0);
+
+                bookedGrid.setStyle("-fx-background-color: transparent;");
+                bookedGrid.setLayoutX(195.0);
+                bookedGrid.setLayoutY(6.0);
 
                 overlayPane.setPrefSize(267, 195);
                 overlayPane.getChildren().add(shipGrid);
+                overlayPane.getChildren().add(bookedGrid);
 
                 // Style name label
                 nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: white;");
@@ -386,7 +394,6 @@ public class BuildingView {
                 shipDisplay.getChildren().addAll(shipBackgroundImage, overlayPane);
                 content.getChildren().addAll(nameLabel, shipDisplay);
 
-                // Add padding to the content VBox
                 content.setPadding(new Insets(5, 5, 5, 5));
             }
 
@@ -440,6 +447,7 @@ public class BuildingView {
                     // Only clear the grid if it's the first time rendering or new data is needed
                     if (!isShipRendered) {
                         shipGrid.getChildren().clear();
+                        bookedGrid.getChildren().clear();
 
                         int level = GameData.getLevelGame();
                         String imgPath = "img/cardboard/spaceship" + level + ".jpg";
@@ -451,7 +459,8 @@ public class BuildingView {
                     }
 
                     setGraphic(content);
-                    registerPlayerShipGrid(player.getName(), shipGrid);  // Register the grid for later use
+                    registerPlayerShipGrid(player.getName(), shipGrid);
+                    registerPlayerBookedGrid(player.getName(), bookedGrid);
                 }
             }
         });
@@ -475,9 +484,13 @@ public class BuildingView {
      */
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[] bookedComponents = ship.getBuildingBoard().getBookedCopy();
 
         GridPane shipGrid = getShipGridByPlayer(player.getName());
-        if (shipGrid == null) return;
+        GridPane bookedGrid = getBookedGridByPlayer(player.getName());
+        if (shipGrid == null || bookedGrid == null) return;
+
+        System.out.println("GINOOOOO");
 
         shipGrid.getChildren().clear();
         for (int row = 0; row < shipMatrix.length; row++) {
@@ -512,6 +525,24 @@ public class BuildingView {
                 shipGrid.add(cell, col, row);
             }
         }
+
+        bookedGrid.getChildren().clear();
+        for (int i = 0; i < bookedComponents.length; i++) {
+            Component comp = bookedComponents[i];
+            Pane cell = new Pane();
+            cell.setPrefSize(35, 35);
+
+            if (comp != null) {
+                Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(35);
+                iv.setFitHeight(35);
+                iv.setPreserveRatio(true);
+                cell.getChildren().add(iv);
+            }
+
+            bookedGrid.add(cell, i, 0);
+        }
     }
 
     /**
@@ -530,6 +561,24 @@ public class BuildingView {
      */
     public static GridPane getShipGridByPlayer(String playerName) {
         return shipGridsByPlayer.get(playerName);
+    }
+
+    /**
+     * Register the booked grid for a player
+     *
+     * @author Gabriele
+     */
+    public static void registerPlayerBookedGrid(String playerName, GridPane grid) {
+        bookedGridsByPlayer.put(playerName, grid);
+    }
+
+    /**
+     * Get the booked grid for a player
+     *
+     * @author Gabriele
+     */
+    public static GridPane getBookedGridByPlayer(String playerName) {
+        return bookedGridsByPlayer.get(playerName);
     }
 
     /**
@@ -1142,6 +1191,7 @@ public class BuildingView {
                         componentPane.getChildren().add(slot2);
 
                         break;
+
                     case 3:
                         slot1 = new Pane();
                         slot1.setId("batterySlot");

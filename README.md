@@ -28,18 +28,18 @@ The final version includes:
 
 
 ## Implemented Functionalities
-| Functionality     | Status    |
-|------------------|-----------|
-| Basic rules      | ✅        |
-| Complete rules   | ⚠️        |
-| Socket          | ⚠️        |
-| RMI            | ⚠️        |
-| TUI            | ⚠️        |
-| GUI            | ⚠️        |
-| Demo travel    | ⛔        |
-| Multiple games | ⚠️        |
-| Resilience     | ⛔        |
-| Persistence    | ⛔        |
+| Functionality     | Status |
+|------------------|--|
+| Basic rules      | ✅ |
+| Complete rules   | ✅ |
+| Socket          | ✅ |
+| RMI            | ✅ |
+| TUI            | ✅ |
+| GUI            | ⚠️ |
+| Demo travel    | ✅ |
+| Multiple games | ✅ |
+| Resilience     | ⚠️ |
+| Persistence    | ⛔ |
 
 #### Legend
 [⛔]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[⚠️]() Implementing&nbsp;&nbsp;&nbsp;&nbsp;[✅]() Implemented
