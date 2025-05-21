@@ -33,6 +33,9 @@ public class PopulatingController {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
+            if (sender == null)
+                continue;
+
             if(player.getIsReady()){
                 sender.sendMessage("PopulatingComplete");
                 continue;

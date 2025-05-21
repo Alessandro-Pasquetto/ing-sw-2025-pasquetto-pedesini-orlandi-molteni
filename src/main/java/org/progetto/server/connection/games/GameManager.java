@@ -141,6 +141,12 @@ public class GameManager {
         return null;
     }
 
+    public ArrayList<Player> getLosingPlayersCopy() {
+        synchronized (losingPlayers) {
+            return new ArrayList<>(losingPlayers);
+        }
+    }
+
     // =======================
     // SETTERS
     // =======================

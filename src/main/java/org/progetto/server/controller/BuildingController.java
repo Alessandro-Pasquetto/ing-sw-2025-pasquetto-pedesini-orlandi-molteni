@@ -1309,19 +1309,25 @@ public class BuildingController {
      * Try to initialize all spaceship
      *
      * @author Alessandro
-     * @param game current game
+     * @param game current gameManager
      * @return areAllInit
      */
     public static boolean initializeAllSpaceship(Game game){
 
         boolean areAllInit = true;
 
-        for(Player player : game.getPlayersCopy()){
+        for(Player player : game.getBoard().getCopyTravelers()){
 
-            if(!player.getSpaceship().getBuildingBoard().initSpaceshipParams()){
+            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+
+            if(!buildingBoard.initSpaceshipParams()){
                 player.setIsReady(false, game);
                 areAllInit = false;
             }
+            buildingBoard.removeBookedComponents();
+
+            if(game.getLevel() == 1)
+                player.getSpaceship().resetDestroyedCount();
         }
 
         return areAllInit;

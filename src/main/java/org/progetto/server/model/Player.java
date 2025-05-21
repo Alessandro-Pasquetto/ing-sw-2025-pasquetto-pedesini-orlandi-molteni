@@ -8,7 +8,7 @@ public class Player implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String name;
+    private final String name;
     private int credits;
     private int color;
     private int position;

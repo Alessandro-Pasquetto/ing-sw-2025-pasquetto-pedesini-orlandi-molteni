@@ -258,6 +258,10 @@ public class Spaceship implements Serializable {
     // OTHER METHODS
     // =======================
 
+    public void resetDestroyedCount() {
+        destroyedCount = 0;
+    }
+
     /**
      * Calculates maximum number of double engines usable
      *

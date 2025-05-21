@@ -329,111 +329,110 @@ public class BuildingBoard implements Serializable {
         if(boardMask[y][x] != -1)
            throw new IllegalStateException("EmptyComponentCell");
 
-        else {
-            spaceship.addComponentsShipCount(-1);
-            spaceship.addDestroyedCount(1);
-            Component destroyedComponent = spaceshipMatrix[y][x];
-            boardMask[y][x] = 1;
-            spaceshipMatrix[y][x] = null;
+        spaceship.addComponentsShipCount(-1);
 
-            switch (destroyedComponent.getType()) {
+        spaceship.addDestroyedCount(1);
+        Component destroyedComponent = spaceshipMatrix[y][x];
+        boardMask[y][x] = 1;
+        spaceshipMatrix[y][x] = null;
 
-                case CANNON:
-                    if (destroyedComponent.getRotation() == 0)
-                        spaceship.addNormalShootingPower(-1);
-                    else
-                        spaceship.addNormalShootingPower((float) -0.5);
-                    break;
+        switch (destroyedComponent.getType()) {
 
-                case DOUBLE_CANNON:
-                    if(destroyedComponent.getRotation() == 0)
-                        spaceship.addFullDoubleCannonCount(-1);
-                    else
-                        spaceship.addHalfDoubleCannonCount(-1);
+            case CANNON:
+                if (destroyedComponent.getRotation() == 0)
+                    spaceship.addNormalShootingPower(-1);
+                else
+                    spaceship.addNormalShootingPower((float) -0.5);
+                break;
 
-                    break;
+            case DOUBLE_CANNON:
+                if(destroyedComponent.getRotation() == 0)
+                    spaceship.addFullDoubleCannonCount(-1);
+                else
+                    spaceship.addHalfDoubleCannonCount(-1);
 
-                case ENGINE:
-                    spaceship.addNormalEnginePower(-1);
-                    break;
+                break;
 
-                case DOUBLE_ENGINE:
-                    spaceship.addDoubleEngineCount(-1);
-                    break;
+            case ENGINE:
+                spaceship.addNormalEnginePower(-1);
+                break;
 
-                case SHIELD:
-                    switch (destroyedComponent.getRotation()) {
+            case DOUBLE_ENGINE:
+                spaceship.addDoubleEngineCount(-1);
+                break;
 
-                        case 0: // up-right
-                            spaceship.addUpRightShieldCount(-1);
-                            break;
+            case SHIELD:
+                switch (destroyedComponent.getRotation()) {
 
-                        case 1: // right-down
-                            spaceship.addRightDownShieldCount(-1);
-                            break;
+                    case 0: // up-right
+                        spaceship.addUpRightShieldCount(-1);
+                        break;
 
-                        case 2: // down-left
-                            spaceship.addDownLeftShieldCount(-1);
-                            break;
+                    case 1: // right-down
+                        spaceship.addRightDownShieldCount(-1);
+                        break;
 
-                        case 3: // left-up
-                            spaceship.addLeftUpShieldCount(-1);
-                            break;
-                    }
-                    break;
+                    case 2: // down-left
+                        spaceship.addDownLeftShieldCount(-1);
+                        break;
 
-                case HOUSING_UNIT:
-                    HousingUnit hu = (HousingUnit) destroyedComponent;
+                    case 3: // left-up
+                        spaceship.addLeftUpShieldCount(-1);
+                        break;
+                }
+                break;
 
-                    if (hu.getHasOrangeAlien()) {
-                        spaceship.addNormalEnginePower(-2);
-                        spaceship.setAlienOrange(false);
-                    }
+            case HOUSING_UNIT:
+                HousingUnit hu = (HousingUnit) destroyedComponent;
 
-                    if (hu.getHasPurpleAlien()) {
-                        spaceship.addNormalShootingPower(-2);
-                        spaceship.setAlienPurple(false);
-                    }
+                if (hu.getHasOrangeAlien()) {
+                    spaceship.addNormalEnginePower(-2);
+                    spaceship.setAlienOrange(false);
+                }
 
-                    spaceship.addCrewCount(-hu.getCrewCount());
-                    break;
+                if (hu.getHasPurpleAlien()) {
+                    spaceship.addNormalShootingPower(-2);
+                    spaceship.setAlienPurple(false);
+                }
 
-                case CENTRAL_UNIT:
-                    hu = (HousingUnit) destroyedComponent;
-                    spaceship.addCrewCount(-hu.getCrewCount());
-                    break;
+                spaceship.addCrewCount(-hu.getCrewCount());
+                break;
 
-                case STRUCTURAL_UNIT:
-                    break;
+            case CENTRAL_UNIT:
+                hu = (HousingUnit) destroyedComponent;
+                spaceship.addCrewCount(-hu.getCrewCount());
+                break;
 
-                case BATTERY_STORAGE:
-                    BatteryStorage bs = (BatteryStorage) destroyedComponent;
-                    spaceship.addBatteriesCount(-bs.getItemsCount());
-                    break;
+            case STRUCTURAL_UNIT:
+                break;
 
-                case RED_BOX_STORAGE:
-                    BoxStorage bsc = (BoxStorage) destroyedComponent;
-                    Box[] boxes = bsc.getBoxStorage();
+            case BATTERY_STORAGE:
+                BatteryStorage bs = (BatteryStorage) destroyedComponent;
+                spaceship.addBatteriesCount(-bs.getItemsCount());
+                break;
 
-                    for (Box box : boxes) {
-                        if (box != null)
-                            spaceship.addBoxCount(-1, box);
-                    }
-                    break;
+            case RED_BOX_STORAGE:
+                BoxStorage bsc = (BoxStorage) destroyedComponent;
+                Box[] boxes = bsc.getBoxStorage();
 
-                case BOX_STORAGE:
-                    bsc = (BoxStorage) destroyedComponent;
-                    boxes = bsc.getBoxStorage();
+                for (Box box : boxes) {
+                    if (box != null)
+                        spaceship.addBoxCount(-1, box);
+                }
+                break;
 
-                    for (Box box : boxes) {
-                        if (box != null)
-                            spaceship.addBoxCount(-1, box);
-                    }
-                    break;
+            case BOX_STORAGE:
+                bsc = (BoxStorage) destroyedComponent;
+                boxes = bsc.getBoxStorage();
 
-                default:
-                    break;
-            }
+                for (Box box : boxes) {
+                    if (box != null)
+                        spaceship.addBoxCount(-1, box);
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -963,7 +962,6 @@ public class BuildingBoard implements Serializable {
         return false;
     }
 
-    // TODO: It might then need to return, in addition to the boolean, the list of coordinates and numCrew, or it can be passed an empty list through the constructor and fill it in. I think the first idea is better
     /**
      * Initializes spaceship attributes after checking the ship validity
      *
@@ -972,7 +970,7 @@ public class BuildingBoard implements Serializable {
      */
     public boolean initSpaceshipParams() {
 
-        boolean doesNotRequirePlayerAction = true;
+        boolean isAutoPopulated = true;
 
         for(int y = 0; y < spaceshipMatrix.length; y++){
             for(int x = 0; x < spaceshipMatrix[y].length; x++){
@@ -1034,7 +1032,7 @@ public class BuildingBoard implements Serializable {
                         boolean allowOrangeAlien = checkAndSetAllowOrangeAlien(hu);
 
                         if(spaceship.getLevelShip() != 1 && (allowPurpleAlien || allowOrangeAlien))
-                            doesNotRequirePlayerAction = false;
+                            isAutoPopulated = false;
                         else
                             hu.incrementCrewCount(spaceship, 2);
 
@@ -1055,7 +1053,24 @@ public class BuildingBoard implements Serializable {
                 }
             }
         }
-        return doesNotRequirePlayerAction;
+
+        return isAutoPopulated;
+    }
+
+    /**
+     * Removes booked components
+     *
+     * @author Alessandro
+     */
+    public void removeBookedComponents() {
+
+        for (int i = 0; i < 2; i++) {
+            if(booked[i] == null)
+                continue;
+
+            booked[i] = null;
+            spaceship.addDestroyedCount(1);
+        }
     }
 
     /**
