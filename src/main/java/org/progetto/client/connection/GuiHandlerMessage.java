@@ -5,6 +5,7 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.EventCommands;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
@@ -155,7 +156,7 @@ public class GuiHandlerMessage {
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
-                    System.out.println("Error loading the page");
+                    System.err.println("Error loading the page");
                 }
             }
 
@@ -169,7 +170,7 @@ public class GuiHandlerMessage {
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
-                    System.out.println("Error loading the page");
+                    System.err.println("Error loading the page");
                 }
             }
 
@@ -181,7 +182,7 @@ public class GuiHandlerMessage {
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
-                    System.out.println("Error loading the page");
+                    System.err.println("Error loading the page");
                 }
             }
 
@@ -193,7 +194,7 @@ public class GuiHandlerMessage {
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
-                    System.out.println("Error loading the page");
+                    System.err.println("Error loading the page");
                 }
             }
 
@@ -204,9 +205,25 @@ public class GuiHandlerMessage {
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
-                    System.out.println("Error loading the page");
+                    System.err.println("Error loading the page");
                 }
             }
+
+            else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
+                try {
+                    Sender sender = GameData.getSender();
+
+                    PageController.initTravel(GameData.getLevelGame());
+                    PageController.switchScene("travelPage.fxml", "Travel");
+                   // PageController.getTravelView().askToContinue();
+                    sender.showTrack();
+
+                } catch (IOException e) {
+                    Alerts.showWarning("Error loading the page");
+                    System.err.println("Error loading the page");
+                }
+            }
+
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
@@ -549,6 +566,19 @@ public class GuiHandlerMessage {
                 case "LandRequest":
                     PageController.getEventView().responseLandRequest(false);
                     break;
+
+                case "AskContinueTravel":
+                    PageController.getTravelView().askToContinue();
+                    break;
+
+                case "YouLeftTravel":
+                    System.out.println( "You left travel");
+                    break;
+
+                case "YouAreContinuingTravel":
+                    System.out.println("You are continuing travel");
+                    break;
+
 
                 default:
                     System.out.println(messageString);

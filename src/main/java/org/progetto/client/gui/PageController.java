@@ -263,5 +263,6 @@ public class PageController {
     public static void initTravel(int levelGame) {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
+        //travelView.askToContinue();  //debug purpose
     }
 }

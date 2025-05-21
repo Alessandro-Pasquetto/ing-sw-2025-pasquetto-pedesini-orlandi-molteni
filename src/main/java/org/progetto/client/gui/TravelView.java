@@ -13,12 +13,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.progetto.client.MainClient;
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TravelView {
 
@@ -79,22 +82,38 @@ public class TravelView {
     /**
      * Initializes the track
      *
-     * @author Gabriele
+     * @author Lorenzo
      */
     public void initTrack(int levelGame) {
         cellsGroup.getChildren().clear();
         boardCells.clear();
 
-        // Coordinate delle caselle (da rilevare manualmente o programmaticamente)
-        double[][] cellPositions = {
-                {197, 115}, {259, 95}, {325, 72}, {389, 65}, {467, 61},
-                {536, 71}, {605, 85}, {672, 113}, {717, 159}, {758, 226},
-                {757, 303}, {707, 360}, {770, 280}, {647, 397}, {583, 427},
-                {514, 440}, {446, 449}, {379, 449}, {307, 436}, {242, 420},
-                {179, 397}, {122, 355}, {85, 289}, {86, 211}, {128, 150}
-        };
+        double[][] cellPositions = null;
+        if(levelGame == 1) {
+            cellPositions = new double[][]{
+                    {223, 118}, {306, 82}, {389, 69}, {480, 79},
+                    {566, 89}, {647, 113}, {723, 167}, {763, 264},
+                    {716, 343}, {640, 391}, {555, 419}, {470, 433},
+                    {385, 431}, {299, 419}, {215, 393}, {142, 342},
+                    {99, 246}, {148, 165}
 
-        for (int i = 0; i < cellPositions.length; i++) {
+            };
+
+        }
+        else if(levelGame == 2){
+
+            cellPositions = new double[][]{
+                    {197, 115}, {259, 95}, {325, 72}, {389, 65}, {467, 61},
+                    {536, 71}, {605, 85}, {672, 113}, {717, 159}, {758, 226},
+                    {757, 303}, {707, 360}, {770, 280}, {647, 397}, {583, 427},
+                    {514, 440}, {446, 449}, {379, 449}, {307, 436}, {242, 420},
+                    {179, 397}, {122, 355}, {85, 289}, {86, 211}, {128, 150}
+            };
+
+        }
+
+
+        for (int i = 0; i < Objects.requireNonNull(cellPositions).length; i++) {
             double x = cellPositions[i][0];
             double y = cellPositions[i][1];
 
@@ -106,6 +125,7 @@ public class TravelView {
             cell.setLayoutX(x);
             cell.setLayoutY(y);
 
+
             cellsGroup.getChildren().add(cell);
             boardCells.add(cell);
         }
@@ -115,6 +135,29 @@ public class TravelView {
         boardImage.setImage(image);
 
     }
+
+
+    /**
+     * Ask the player if he wants to continue travel
+     *
+     * @author Lorenzo
+     */
+    public void askToContinue(){
+        Alerts.showYesNoPopup(trackPane,"Continue?","Do you want to continue travel?",yesResponse(),noResponse());
+    }
+
+    private Runnable yesResponse(){
+        Sender sender = GameData.getSender();
+        sender.responseContinueTravel("YES");
+        return null;
+    }
+
+    private Runnable noResponse(){
+        Sender sender = GameData.getSender();
+        sender.responseContinueTravel("NO");
+        return null;
+    }
+
 
     /**
      * Initializes the players list
@@ -227,8 +270,6 @@ public class TravelView {
             if (player != null) {
                 Rectangle cell = boardCells.get(i);
 
-                System.out.println(i);
-
                 String rocketImage = getRocketImagePath(player.getColor());
                 Image rocket = new Image(String.valueOf(MainClient.class.getResource(rocketImage)));
                 ImageView rocketView = new ImageView(rocket);
@@ -262,5 +303,13 @@ public class TravelView {
             default -> "";
         };
     }
+
+
+    public void showEventView() throws IOException {
+        PageController.initEvent(GameData.getLevelGame());
+        PageController.switchScene("gamePage.fxml", "Game");
+
+    }
+
 
 }

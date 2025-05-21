@@ -83,7 +83,7 @@
                     </children>
                 </StackPane>
 
-                <Button fx:id="showBoardButton" styleClass="yellow-button" text="Show Board" onAction="#showGameTrack" />
+                <Button fx:id="showBoardButton" styleClass="yellow-button" text="Go to Travel" onAction="#showGameTrack" />
             </children>
         </VBox>
     </right>

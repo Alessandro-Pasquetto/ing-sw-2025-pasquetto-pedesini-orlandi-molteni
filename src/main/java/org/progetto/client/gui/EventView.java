@@ -845,8 +845,6 @@ public class EventView {
                 printToTerminal("Landed on planet number " + response.toString());
                 StackPane targetStack = (StackPane) overlayContainer.getChildren().get(response);
                 ImageView pawnView = (ImageView) targetStack.getChildren().getFirst();
-                System.out.println(pawnView.getParent());
-                System.out.println(GameData.getColor());
                 switch (GameData.getColor()) {
                     case 0 ->
                             pawnView.setImage(new Image(String.valueOf(MainClient.class.getResource("img/items/green_pawn.png"))));
