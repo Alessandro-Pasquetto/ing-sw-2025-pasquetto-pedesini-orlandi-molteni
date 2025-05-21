@@ -76,7 +76,6 @@ public class TravelView {
 
         Background background = new Background(backgroundImage);
         trackPane.setBackground(background);
-
     }
 
     /**
@@ -89,42 +88,38 @@ public class TravelView {
         boardCells.clear();
 
         double[][] cellPositions = null;
+
         if(levelGame == 1) {
+
             cellPositions = new double[][]{
-                    {223, 118}, {306, 82}, {389, 69}, {480, 79},
-                    {566, 89}, {647, 113}, {723, 167}, {763, 264},
-                    {716, 343}, {640, 391}, {555, 419}, {470, 433},
-                    {385, 431}, {299, 419}, {215, 393}, {142, 342},
-                    {99, 246}, {148, 165}
+                    {233, 112}, {311, 89}, {391, 79}, {472, 78},
+                    {550, 88}, {629, 111}, {697, 160}, {736, 248},
+                    {693, 325}, {621, 370}, {542, 396}, {461, 409},
+                    {382, 409}, {302,395}, {225, 372}, {155, 321},
+                    {118, 231}, {159, 157}
 
             };
 
-        }
-        else if(levelGame == 2){
+        } else if(levelGame == 2){
 
             cellPositions = new double[][]{
-                    {197, 115}, {259, 95}, {325, 72}, {389, 65}, {467, 61},
-                    {536, 71}, {605, 85}, {672, 113}, {717, 159}, {758, 226},
-                    {757, 303}, {707, 360}, {770, 280}, {647, 397}, {583, 427},
-                    {514, 440}, {446, 449}, {379, 449}, {307, 436}, {242, 420},
-                    {179, 397}, {122, 355}, {85, 289}, {86, 211}, {128, 150}
+                    {196, 97}, {259, 72}, {325, 60}, {389, 51}, {464, 51},
+                    {536, 57}, {597, 73}, {661, 97}, {717, 141}, {758, 207},
+                    {757, 285}, {712, 342}, {651, 381}, {586, 407}, {518, 423},
+                    {449, 432}, {382, 430}, {313, 423}, {247, 407}, {184, 380},
+                    {127, 338}, {85, 270}, {88, 192}, {134, 135}
             };
 
         }
-
 
         for (int i = 0; i < Objects.requireNonNull(cellPositions).length; i++) {
             double x = cellPositions[i][0];
             double y = cellPositions[i][1];
 
-            Rectangle cell = new Rectangle();
-            cell.setHeight(50);
-            cell.setWidth(50);
-            cell.setStyle("-fx-background-color: rgba(255,255,255,0.2); -fx-border-color: white; -fx-background-radius: 50; -fx-border-radius: 50;");
+            Rectangle cell = new Rectangle(50, 50);
             cell.setFill(Color.TRANSPARENT);
-            cell.setLayoutX(x);
-            cell.setLayoutY(y);
-
+            cell.setTranslateX(x);
+            cell.setTranslateY(y);
 
             cellsGroup.getChildren().add(cell);
             boardCells.add(cell);
@@ -133,9 +128,7 @@ public class TravelView {
         // Set the board image
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/board" + levelGame + ".png")));
         boardImage.setImage(image);
-
     }
-
 
     /**
      * Ask the player if he wants to continue travel
@@ -147,17 +140,18 @@ public class TravelView {
     }
 
     private Runnable yesResponse(){
-        Sender sender = GameData.getSender();
-        sender.responseContinueTravel("YES");
-        return null;
+        return () -> {
+            Sender sender = GameData.getSender();
+            sender.responseContinueTravel("YES");
+        };
     }
 
     private Runnable noResponse(){
-        Sender sender = GameData.getSender();
-        sender.responseContinueTravel("NO");
-        return null;
+        return () -> {
+            Sender sender = GameData.getSender();
+            sender.responseContinueTravel("NO");
+        };
     }
-
 
     /**
      * Initializes the players list
@@ -278,9 +272,8 @@ public class TravelView {
                 rocketView.setFitHeight(50);
                 rocketView.setPreserveRatio(true);
 
-                rocketView.setTranslateX(cell.getLayoutX());
-                rocketView.setTranslateY(cell.getLayoutY());
-
+                rocketView.setTranslateX(cell.getTranslateX() + (cell.getWidth() - rocketView.getFitWidth()) / 2);
+                rocketView.setTranslateY(cell.getTranslateY() + (cell.getHeight() - rocketView.getFitHeight()) / 2);
 
                 cellsGroup.getChildren().add(rocketView);
             }
@@ -304,12 +297,9 @@ public class TravelView {
         };
     }
 
-
     public void showEventView() throws IOException {
         PageController.initEvent(GameData.getLevelGame());
         PageController.switchScene("gamePage.fxml", "Game");
 
     }
-
-
 }
