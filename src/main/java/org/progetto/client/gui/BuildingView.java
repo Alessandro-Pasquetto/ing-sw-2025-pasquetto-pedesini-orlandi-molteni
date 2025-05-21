@@ -109,7 +109,6 @@ public class BuildingView {
     private ImageView deck2Image;
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
-
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
 
     // =======================
@@ -349,16 +348,15 @@ public class BuildingView {
         ObservableList<Player> playersWithSeparators = FXCollections.observableArrayList();
         for (int i = 0; i < playersList.size(); i++) {
             playersWithSeparators.add(playersList.get(i));
-            // Add null separator between players (but not after the last one)
+
             if (i < playersList.size() - 1) {
                 playersWithSeparators.add(null);
             }
         }
 
-        // Use the new list with separators
         playerListView.setItems(playersWithSeparators);
 
-        playerListView.setCellFactory(listView -> new ListCell<>() {
+        playerListView.setCellFactory(listView -> new ListCell<Player>() {
             private final VBox content = new VBox(5);
             private final Label nameLabel = new Label();
             private final GridPane shipGrid = new GridPane();
@@ -489,8 +487,6 @@ public class BuildingView {
         GridPane shipGrid = getShipGridByPlayer(player.getName());
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
         if (shipGrid == null || bookedGrid == null) return;
-
-        System.out.println("GINOOOOO");
 
         shipGrid.getChildren().clear();
         for (int row = 0; row < shipMatrix.length; row++) {

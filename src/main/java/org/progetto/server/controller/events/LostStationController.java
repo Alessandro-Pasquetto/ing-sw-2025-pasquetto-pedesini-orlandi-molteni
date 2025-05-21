@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerMovedBackwardMessage;
@@ -74,6 +75,8 @@ public class LostStationController extends EventControllerAbstract {
                 if (player.getSpaceship().getTotalCrewCount() >= lostStation.getRequiredCrew()) {
                     sender.sendMessage("LandRequest");
                     phase = EventPhase.LAND;
+
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
 

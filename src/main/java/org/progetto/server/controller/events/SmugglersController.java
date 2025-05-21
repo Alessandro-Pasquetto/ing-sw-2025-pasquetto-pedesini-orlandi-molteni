@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.server.connection.Sender;
@@ -94,6 +95,8 @@ public class SmugglersController extends EventControllerAbstract {
                     sender.sendMessage("YouWon");
                     sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
 
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
                     continue;
                 }
@@ -118,6 +121,8 @@ public class SmugglersController extends EventControllerAbstract {
                             phase = EventPhase.PENALTY_EFFECT;
                             penaltyEffect(player, sender);
 
+                            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                             gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                         } else {
@@ -131,6 +136,8 @@ public class SmugglersController extends EventControllerAbstract {
 
                 phase = EventPhase.CANNON_NUMBER;
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

@@ -39,7 +39,7 @@ public class PageController {
     private static AdjustingView adjustingView;
     private static PopulatingView populatingView;
     private static PositioningView positioningView;
-    private static EventView eventView;
+    private static NewEventView eventView;
     private static TravelView travelView;
     private static GameOverView gameOverView;
 
@@ -79,7 +79,7 @@ public class PageController {
         return positioningView;
     }
 
-    public static EventView getEventView() {
+    public static NewEventView getEventView() {
         return eventView;
     }
 
@@ -161,7 +161,7 @@ public class PageController {
         positioningRoot = loader.load();
         positioningView = loader.getController();
 
-        loader = new FXMLLoader(MainClient.class.getResource("gamePage.fxml"));
+        loader = new FXMLLoader(MainClient.class.getResource("newEventPage.fxml"));
         eventRoot = loader.load();
         eventView = loader.getController();
 
@@ -190,7 +190,7 @@ public class PageController {
             case "adjustingPage.fxml" -> adjustingRoot;
             case "populatingPage.fxml" -> populatingRoot;
             case "positioningPage.fxml" -> positioningRoot;
-            case "gamePage.fxml" -> eventRoot;
+            case "newEventPage.fxml" -> eventRoot;
             case "travelPage.fxml" -> travelRoot;
             case "gameOverPage.fxml" -> gameOverRoot;
 
@@ -256,8 +256,14 @@ public class PageController {
     }
 
     public static void initEvent(int levelGame) {
+        /* OLD
         BuildingData.initMask(levelGame);
-        eventView.initEvent();
+        eventView.initEvent(); */
+
+        eventView.initBackground(levelGame);
+        eventView.initSpaceship(levelGame);
+        eventView.initPlayersList();
+        eventView.initBoard(levelGame);
     }
 
     public static void initTravel(int levelGame) {

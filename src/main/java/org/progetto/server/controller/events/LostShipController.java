@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.server.connection.Sender;
@@ -77,6 +78,9 @@ public class LostShipController extends EventControllerAbstract  {
                 if (maxCrewCount > lostShip.getPenaltyCrew()) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                 } else {

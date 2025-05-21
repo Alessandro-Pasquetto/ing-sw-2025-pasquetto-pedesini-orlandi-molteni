@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
 import org.progetto.messages.toClient.EventCommon.HowManyDoubleEnginesMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
@@ -72,12 +73,11 @@ public class OpenSpaceController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
-        System.out.println("Asking engines");
-
         ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
+
             // Gets the sender reference to send a message to player
             Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -88,9 +88,10 @@ public class OpenSpaceController extends EventControllerAbstract {
             if (maxUsable == 0)
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
             else {
-                System.out.println("Waiting for HowManyDoubleEngines");
                 phase = EventPhase.ENGINE_NUMBER;
                 sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
@@ -78,6 +79,8 @@ public class PlanetsController extends EventControllerAbstract {
             // If there is at least a free planet
             phase = EventPhase.LAND;
             sender.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()));
+
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
             gameManager.getGameThread().resetAndWaitPlayerReady(player);
         }

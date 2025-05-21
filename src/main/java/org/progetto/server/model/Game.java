@@ -240,8 +240,8 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-//                while(!lv2Deck.getFirst().getType().equals(CardType.BATTLEZONE))
-//                   Collections.shuffle(lv2Deck);
+                while(!lv2Deck.getFirst().getType().equals(CardType.OPENSPACE))
+                   Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -472,41 +472,44 @@ public class Game {
      */
     public EventCard pickEventCard() throws IllegalStateException {
         EventCard pickedEventCard = null;
+
         synchronized (hiddenEventDeck) {
-            if(hiddenEventDeck.isEmpty())
+
+            if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
+//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
             //forzare eventCard, todo da rimuovere
+            int randomPos = 0;
 
-//            do{
-//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            }while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SMUGGLERS));
-//
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
+            do {
+                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.OPENSPACE));
+
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
         }
 
-        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
-
-        ArrayList<Box> planet1 = new ArrayList<>();
-        planet1.add(Box.GREEN);
-        planet1.add(Box.GREEN);
-
-        ArrayList<Box> planet2 = new ArrayList<>();
-        planet2.add(Box.YELLOW);
-
-        ArrayList<Box> planet3 = new ArrayList<>();
-        planet3.add(Box.BLUE);
-        planet3.add(Box.BLUE);
-        planet3.add(Box.BLUE);
-
-        rewardsForPlanets.add(planet1);
-        rewardsForPlanets.add(planet2);
-        rewardsForPlanets.add(planet3);
-
-        pickedEventCard = new Planets(CardType.PLANETS, 1, "card6-lv1.jpg", rewardsForPlanets,1);
+//        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
+//
+//        ArrayList<Box> planet1 = new ArrayList<>();
+//        planet1.add(Box.GREEN);
+//        planet1.add(Box.GREEN);
+//
+//        ArrayList<Box> planet2 = new ArrayList<>();
+//        planet2.add(Box.YELLOW);
+//
+//        ArrayList<Box> planet3 = new ArrayList<>();
+//        planet3.add(Box.BLUE);
+//        planet3.add(Box.BLUE);
+//        planet3.add(Box.BLUE);
+//
+//        rewardsForPlanets.add(planet1);
+//        rewardsForPlanets.add(planet2);
+//        rewardsForPlanets.add(planet3);
+//
+//        pickedEventCard = new Planets(CardType.PLANETS, 1, "card6-lv1.jpg", rewardsForPlanets,1);
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;

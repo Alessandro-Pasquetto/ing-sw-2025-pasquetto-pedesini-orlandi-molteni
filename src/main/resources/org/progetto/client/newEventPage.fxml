@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.Group?>
+<StackPane fx:id="eventPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.NewEventView">
+
+    <stylesheets>
+        <URL value="@style/style.css"/>
+    </stylesheets>
+
+    <ScrollPane fx:id="eventScrollPane" fitToWidth="true" fitToHeight="true" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+        <BorderPane maxHeight="Infinity" maxWidth="Infinity" fx:id="eventBorderPane">
+
+            <left>
+                <VBox alignment="CENTER" minWidth="345.0" spacing="15" BorderPane.alignment="CENTER">
+                    <VBox fx:id="playerListViewContainer" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS">
+                        <Label fx:id="activePlayersLabel" text="Players" />
+                        <ListView fx:id="playerListView" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
+
+                        <VBox.margin>
+                            <Insets bottom="15.0" />
+                        </VBox.margin>
+                    </VBox>
+                </VBox>
+            </left>
+
+            <right>
+                <VBox alignment="CENTER" minWidth="345.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="eventSidebarWrapper" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS" maxWidth="345.0">
+                        <Label fx:id="eventSectionTitle" text="Current event" wrapText="true" />
+                        <ImageView fx:id="eventCard" fitHeight="338.0" fitWidth="220.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                    </VBox>
+
+                    <StackPane alignment="CENTER">
+                        <ImageView fx:id="boardImage" fitWidth="345.0" fitHeight="209.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                        <Pane fx:id="cellsPane"
+                              minWidth="345.0"
+                              minHeight="209.0"
+                              maxWidth="345.0"
+                              maxHeight="209.0">
+                            <Group fx:id="cellsGroup" />
+                        </Pane>
+                    </StackPane>
+                </VBox>
+            </right>
+
+            <center>
+                <VBox spacing="30" alignment="CENTER" VBox.vgrow="ALWAYS">
+                    <Label fx:id="eventMainTitle" text="EVENT PHASE!" wrapText="true" />
+
+                    <VBox BorderPane.alignment="CENTER" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                        <StackPane alignment="CENTER">
+                            <ImageView fx:id="spaceShipImage" fitHeight="443.0" fitWidth="606.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
+                        </StackPane>
+                    </VBox>
+
+                    <Label fx:id="eventMainDesc" text="Event description..." wrapText="true" />
+                    <VBox fx:id="btnContainer" spacing="30" alignment="CENTER"/>
+                </VBox>
+            </center>
+
+        </BorderPane>
+    </ScrollPane>
+
+</StackPane>

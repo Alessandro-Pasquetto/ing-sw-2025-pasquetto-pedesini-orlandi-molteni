@@ -43,7 +43,7 @@ public class RmiClientSender implements Sender {
                 try{
                     server.ping();
                 }catch (RemoteException e){
-                    System.err.println("RmiServer unreachable");
+                    System.err.println("RMI server unreachable");
 
                     Platform.runLater(() -> {
                         try {

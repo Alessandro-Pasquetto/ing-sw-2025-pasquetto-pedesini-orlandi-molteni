@@ -201,7 +201,9 @@ public class GuiHandlerMessage {
             else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                 try {
                     PageController.initEvent(GameData.getLevelGame());
-                    PageController.switchScene("gamePage.fxml", "Game");
+                    PageController.switchScene("newEventPage.fxml", "Event");
+
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
 
                 } catch (IOException e) {
                     Alerts.showWarning("Error loading the page");
@@ -245,7 +247,10 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EVENT":
-                    PageController.getEventView().showPlayerShip(responseSpaceshipMessage.getOwner());
+                    if (!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                        PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                    else
+                        PageController.getEventView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
                     break;
             }
         }
@@ -259,7 +264,16 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof PlayersMessage playersMessage) {
-            PageController.getBuildingView().updatePlayersList(playersMessage.getPlayers());
+
+            switch (GameData.getPhaseGame()) {
+                case "BUILDING":
+                    PageController.getBuildingView().updatePlayersList(playersMessage.getPlayers());
+                    break;
+
+                case "EVENT":
+                    PageController.getEventView().updatePlayersList(playersMessage.getPlayers());
+                    break;
+            }
         }
 
         else if(messageObj instanceof PlayersInPositioningDecisionOrderMessage playersInPositioningDecisionOrderMessage) {
@@ -318,6 +332,10 @@ public class GuiHandlerMessage {
                     PageController.getPositioningView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
                     break;
 
+                case "EVENT":
+                    PageController.getEventView().updateActivePlayer(activePlayerMessage.getPlayerName());
+                    break;
+
                 case "TRAVEL":
                     PageController.getTravelView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
                     break;
@@ -345,75 +363,75 @@ public class GuiHandlerMessage {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
 
-            PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
+            PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
         }
-
-        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
-           PageController.getEventView().responseHowManyDoubleCannons(
-                   howManyDoubleCannonsMessage.getFirePowerRequired(),
-                   howManyDoubleCannonsMessage.getMaxUsable(),
-                   howManyDoubleCannonsMessage.getShootingPower(),
-                   false
-           );
-        }
-
-        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
-            PageController.getEventView().responseHowManyDoubleEngines(
-                    howManyDoubleEnginesMessage.getMaxUsable(),
-                    howManyDoubleEnginesMessage.getEnginePower(),
-                    false
-            );
-        }
-
-        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
-            PageController.getEventView().responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
-        }
-
-        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
-            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
-        }
-
-        else if(messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
-            PageController.getEventView().responseBoxToDiscard(boxToDiscardMessage.getBoxToDiscard());
-        }
-
-        else if(messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
-            PageController.getEventView().responseAcceptRewardCreditsAndPenalties(
-                    acceptRewardCreditsAndPenaltiesMessage.getRewardCredits(),
-                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays(),
-                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew(),
-                    false
-            );
-        }
-
-        else if(messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
-            PageController.getEventView().responseAcceptRewardCreditsAndPenaltyDays(
-                    acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits(),
-                    acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays(),
-                    false
-            );
-        }
-
-        else if(messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
-            PageController.getEventView().responseAcceptRewardBoxesAndPenaltyDays(
-                    acceptRewardBoxesAndPenaltyDaysMessage.getRewardBoxes(),
-                    acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays(),
-                    false
-            );
-        }
-
-        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-            PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
-            PageController.getEventView().responseRewardBox(availableBoxesMessage.getBoxes());
-        }
-
-        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
-           PageController.getEventView().responsePlanetLandRequest(
-                   availablePlanetsMessage.getRewardsForPlanets(),
-                   availablePlanetsMessage.getPlanetsTaken(),
-                   false
-           );
-        }
+//
+//        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
+//           PageController.getEventView().responseHowManyDoubleCannons(
+//                   howManyDoubleCannonsMessage.getFirePowerRequired(),
+//                   howManyDoubleCannonsMessage.getMaxUsable(),
+//                   howManyDoubleCannonsMessage.getShootingPower(),
+//                   false
+//           );
+//        }
+//
+//        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
+//            PageController.getEventView().responseHowManyDoubleEngines(
+//                    howManyDoubleEnginesMessage.getMaxUsable(),
+//                    howManyDoubleEnginesMessage.getEnginePower(),
+//                    false
+//            );
+//        }
+//
+//        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
+//            PageController.getEventView().responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
+//        }
+//
+//        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
+//            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
+//        }
+//
+//        else if(messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
+//            PageController.getEventView().responseBoxToDiscard(boxToDiscardMessage.getBoxToDiscard());
+//        }
+//
+//        else if(messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
+//            PageController.getEventView().responseAcceptRewardCreditsAndPenalties(
+//                    acceptRewardCreditsAndPenaltiesMessage.getRewardCredits(),
+//                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays(),
+//                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew(),
+//                    false
+//            );
+//        }
+//
+//        else if(messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
+//            PageController.getEventView().responseAcceptRewardCreditsAndPenaltyDays(
+//                    acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits(),
+//                    acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays(),
+//                    false
+//            );
+//        }
+//
+//        else if(messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
+//            PageController.getEventView().responseAcceptRewardBoxesAndPenaltyDays(
+//                    acceptRewardBoxesAndPenaltyDaysMessage.getRewardBoxes(),
+//                    acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays(),
+//                    false
+//            );
+//        }
+//
+//        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
+//            PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
+//            PageController.getEventView().responseRewardBox(availableBoxesMessage.getBoxes());
+//        }
+//
+//        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
+//           PageController.getEventView().responsePlanetLandRequest(
+//                   availablePlanetsMessage.getRewardsForPlanets(),
+//                   availablePlanetsMessage.getPlanetsTaken(),
+//                   false
+//           );
+//        }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
@@ -559,13 +577,13 @@ public class GuiHandlerMessage {
                     Alerts.showWarning("Not enough batteries!");
                     break;
 
-                case "AskToUseShield":
-                    PageController.getEventView().responseChooseToUseShield(false);
-                    break;
-
-                case "LandRequest":
-                    PageController.getEventView().responseLandRequest(false);
-                    break;
+//                case "AskToUseShield":
+//                    PageController.getEventView().responseChooseToUseShield(false);
+//                    break;
+//
+//                case "LandRequest":
+//                    PageController.getEventView().responseLandRequest(false);
+//                    break;
 
                 case "AskContinueTravel":
                     PageController.getTravelView().askToContinue();

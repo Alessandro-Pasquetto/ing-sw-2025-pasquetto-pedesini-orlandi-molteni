@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -94,6 +95,8 @@ public class SlaversController extends EventControllerAbstract {
                     sender.sendMessage("YouWon");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
 
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
                     continue;
                 }
@@ -111,7 +114,10 @@ public class SlaversController extends EventControllerAbstract {
                         sender.sendMessage("YouLost");
                         penaltyEffect(player, sender);
 
+                        gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                         gameManager.getGameThread().resetAndWaitPlayerReady(player);
+
                     } else {
                         sender.sendMessage("YouDrew");
                     }
@@ -120,6 +126,8 @@ public class SlaversController extends EventControllerAbstract {
 
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
                 phase = EventPhase.CANNON_NUMBER;
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

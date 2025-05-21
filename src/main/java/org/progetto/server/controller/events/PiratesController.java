@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -109,6 +110,8 @@ public class PiratesController extends EventControllerAbstract {
                     sender.sendMessage("YouWon");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
 
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                     gameManager.getGameThread().resetAndWaitPlayerReady(player);
                     continue;
                 }
@@ -132,6 +135,8 @@ public class PiratesController extends EventControllerAbstract {
                     sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()));
                     phase = EventPhase.CANNON_NUMBER;
                 }
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -157,6 +158,8 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
                 phase = EventPhase.ENGINE_NUMBER;
 
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }
         }
@@ -239,6 +242,8 @@ public class BattlezoneController extends EventControllerAbstract {
             } else {
                 sender.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()));
                 phase = EventPhase.CANNON_NUMBER;
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
             }

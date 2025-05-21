@@ -359,8 +359,8 @@ public class DragAndDrop {
         if(GameData.getPhaseGame().equals("BUILDING"))
             view = PageController.getBuildingView().getSpaceshipMatrix().getChildren();
 
-        else if(GameData.getPhaseGame().equals("EVENT"))
-            view = PageController.getEventView().getSpaceshipMatrix().getChildren();
+//        else if(GameData.getPhaseGame().equals("EVENT"))
+//            view = PageController.getEventView().getSpaceshipMatrix().getChildren();
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : view) {

@@ -616,6 +616,56 @@
 }
 
 /* ============================
+   NEW EVENT VIEW
+   ============================ */
+
+#eventScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#eventBorderPane {
+    -fx-padding: 25;
+}
+
+#activePlayersLabel,
+#eventSectionTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 24;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
+}
+
+#eventCardDisplay {
+    -fx-background-color: rgba(0, 0, 0, 0.85);
+    -fx-padding: 0;
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
+#eventSidebarWrapper {
+    -fx-padding: 25;
+}
+
+#discardedComponentsList {
+    -fx-background-color: transparent !important;
+    -fx-border-color: transparent !important;
+}
+
+#eventMainTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
+}
+
+#eventMainDesc {
+    -fx-text-fill: rgb(230, 230, 230);
+    -fx-font-size: 18;
+    -fx-font-weight: 500;
+}
+
+/* ============================
    EVENT VIEW
    ============================ */
 
@@ -634,7 +684,6 @@
     -fx-background-color: rgba(6, 12, 17, 0.70);
     -fx-background-radius: 21;
     -fx-border-radius: 21;
-
 }
 
 #boxScrollPane{

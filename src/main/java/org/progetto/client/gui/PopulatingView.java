@@ -55,11 +55,6 @@ public class PopulatingView {
     // METHODS
     // =======================
 
-
-    public void clearBtnContainer() {
-        btnContainer.getChildren().clear();
-    }
-
     /**
      * Initializes the background
      *
@@ -240,6 +235,15 @@ public class PopulatingView {
         Button btn = new Button("Skip");
         btn.setOnAction(e -> GameData.getSender().responsePlaceAlien(-1, -1, alienColor));
         btnContainer.getChildren().add(btn);
+    }
+
+    /**
+     * Clears the button container
+     *
+     * @author Alessandro
+     */
+    public void clearBtnContainer() {
+        btnContainer.getChildren().clear();
     }
 
     /**
