@@ -41,17 +41,38 @@ public class BoxStorage extends Component {
      * @author Gabriele
      * @param box Box to add
      * @param idx Storage index where to add it
-     * @return true if the box is added, otherwise false
      */
-    public boolean addBox(Spaceship spaceship, Box box, int idx) {
-        if (box != null && idx >= 0 && idx < boxStorage.length && boxStorage[idx] == null) {
-            if (box != Box.RED || type.equals(ComponentType.RED_BOX_STORAGE)) {  // Checks in case of red box if its is possible
-                boxStorage[idx] = box;
-                spaceship.addBoxCount(1, box);
-                return true;
-            }
-        }
-        return false;
+    public void addBox(Spaceship spaceship, Box box, int idx) throws IllegalStateException{
+
+        if(box == null)
+            throw new IllegalStateException("NullBox");
+
+        if(idx < 0 || idx >= boxStorage.length)
+            throw new IllegalStateException("InvalidBoxIdx");
+
+        if(boxStorage[idx] != null)
+            throw new IllegalStateException("FullBoxSlot");
+
+        if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
+            throw new IllegalStateException("CantStoreInANonRedStorage");
+
+        boxStorage[idx] = box;
+        spaceship.addBoxCount(1, box);
+    }
+
+    public void tryToAddBox(Box box, int idx) throws IllegalStateException{
+
+        if(box == null)
+            throw new IllegalStateException("NullBox");
+
+        if(idx < 0 || idx >= boxStorage.length)
+            throw new IllegalStateException("InvalidBoxIdx");
+
+        if(boxStorage[idx] != null)
+            throw new IllegalStateException("FullBoxSlot");
+
+        if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
+            throw new IllegalStateException("CantStoreInANonRedStorage");
     }
 
     /**
@@ -59,20 +80,16 @@ public class BoxStorage extends Component {
      *
      * @author Gabriele
      * @param idx Storage index to remove
-     * @return true if the box is deleted, otherwise false
      */
-    public boolean removeBox(Spaceship spaceship, int idx) {
-        if(idx >= 0 && idx < boxStorage.length) {
-            if (boxStorage[idx] != null) {
-                spaceship.addBoxCount(-1, boxStorage[idx]);
-                boxStorage[idx] = null;
-                System.gc();
-                return true;
-            } else {
-                return false;
-            }
-        }else{
-            return false;
-        }
+    public void removeBox(Spaceship spaceship, int idx) throws IllegalStateException {
+
+        if(idx < 0 || idx >= boxStorage.length)
+            throw new IllegalStateException("InvalidBoxIdx");
+
+        if(boxStorage[idx] == null)
+            throw new IllegalStateException("EmptyBoxSlot");
+
+        spaceship.addBoxCount(-1, boxStorage[idx]);
+        boxStorage[idx] = null;
     }
 }

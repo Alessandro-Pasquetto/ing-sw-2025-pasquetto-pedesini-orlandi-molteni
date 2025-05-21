@@ -103,54 +103,26 @@ public class SpaceshipController {
             return;
         }
 
-        // Checks if start position and end position are the same
-        if (startX == endX && startY == endY && startIdx == endIdx) {
-            sender.sendMessage("BoxAlreadyThere");
-            return;
-        }
-
         try {
             BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[startY][startX];
             BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[endY][endX];
 
             Box box = startComponent.getBoxStorage()[startIdx];
 
-            // Checks if the box to move is a red one
-            if (box.getValue() == 4) {
-                if (endComponent.getType().equals(ComponentType.RED_BOX_STORAGE)) {
+            endComponent.tryToAddBox(box, endIdx);
+            startComponent.removeBox(player.getSpaceship(), startIdx);
+            endComponent.addBox(player.getSpaceship(), box, endIdx); // safe, already validated by tryToAddBox
 
-                    if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
-
-                        if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
-                            sender.sendMessage("RedBoxMoved");
-                        }
-
-                    } else {
-                        sender.sendMessage("RedBoxNotMoved");
-                    }
-
-                } else {
-                    sender.sendMessage("CantStoreInANonRedStorage");
-                }
-
-            } else {
-
-                if (endComponent.addBox(player.getSpaceship(), box, endIdx)) {
-
-                    if (startComponent.removeBox(player.getSpaceship(), startIdx)) {
-                        sender.sendMessage("BoxMoved");
-                    }
-
-                } else {
-                    sender.sendMessage("BoxNotMoved");
-                }
-            }
+            sender.sendMessage("BoxMoved");
 
         } catch (ClassCastException e) {
             sender.sendMessage("NotAStorageComponent");
 
         } catch (ArrayIndexOutOfBoundsException e) {
             sender.sendMessage("InvalidCoordinates");
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
         }
     }
 
@@ -180,18 +152,18 @@ public class SpaceshipController {
         try {
             BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[yBoxStorage][xBoxStorage];
 
-            // Removes selected box
-            if (component.removeBox(player.getSpaceship(), idx)) {
-                sender.sendMessage("BoxRemoved");
-            } else {
-                sender.sendMessage("BoxNotRemoved");
-            }
+            component.removeBox(player.getSpaceship(), idx);
+
+            sender.sendMessage("BoxRemoved");
 
         } catch (ClassCastException e) {
             sender.sendMessage("NotAStorageComponent");
 
         } catch (ArrayIndexOutOfBoundsException e) {
             sender.sendMessage("InvalidCoordinates");
+
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
         }
     }
 

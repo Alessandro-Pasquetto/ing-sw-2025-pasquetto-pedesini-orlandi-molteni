@@ -71,22 +71,22 @@ class SmugglersTest {
         Box boxB = Box.BLUE;
 
         //adds a red box to a red box storage
-        assertTrue(smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
+        smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, boxR, 0);
 
         //tries to add a red box to a box storage
-        assertFalse(smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage2, 0, boxR));
+        assertThrows(IllegalStateException.class, () -> smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage2, boxR, 0));
 
         //tries to add a red box to a red box storage in an already taken place
-        assertFalse(smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 0, boxR));
+        assertThrows(IllegalStateException.class, () -> smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, boxR, 0));
 
         //adds a green box to a red box storage
-        assertTrue(smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, 1, boxG));
+        smugglers1.chooseRewardBox(player1.getSpaceship(), boxStorage1, boxG, 1);
 
         //adds a yellow box in a box storage
-        assertTrue(smugglers2.chooseRewardBox(player1.getSpaceship(), boxStorage2, 0, boxY));
+        smugglers2.chooseRewardBox(player1.getSpaceship(), boxStorage2, boxY, 0);
 
         //adds a blue box in a box storage
-        assertTrue(smugglers2.chooseRewardBox(player1.getSpaceship(), boxStorage2, 1, boxB));
+        smugglers2.chooseRewardBox(player1.getSpaceship(), boxStorage2, boxB, 1);
     }
 
     @Test

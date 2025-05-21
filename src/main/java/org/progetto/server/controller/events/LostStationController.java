@@ -197,13 +197,13 @@ public class LostStationController extends EventControllerAbstract {
         Box box = rewardBoxes.get(idxBox);
 
         // Checks that reward box is placed correctly in given storage
-        if (lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, idx, box)) {
-            sender.sendMessage("BoxChosen");
+        try{
+            lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-
-        } else {
-            sender.sendMessage("BoxNotChosen");
+            sender.sendMessage("BoxChosen");
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
         }
 
         // Checks if all boxes were chosen

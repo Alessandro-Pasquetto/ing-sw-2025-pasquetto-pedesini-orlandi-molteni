@@ -82,12 +82,12 @@ public class Planets extends EventCard {
      * @author Gabriele
      * @author Stefano
      * @param component BoxStorageComponent to which the box should be added
-     * @param boxIdx Index in the storage where the box will be placed
      * @param box Box to be added
+     * @param boxIdx Index in the storage where the box will be placed
      * @return true if the box was successfully added, false otherwise
      */
-    public boolean chooseRewardBox(Spaceship spaceship, BoxStorage component, int boxIdx, Box box) {
-        return component.addBox(spaceship, box, boxIdx);
+    public void chooseRewardBox(Spaceship spaceship, BoxStorage component, Box box, int boxIdx) throws IllegalStateException{
+        component.addBox(spaceship, box, boxIdx);
     }
 
     /**

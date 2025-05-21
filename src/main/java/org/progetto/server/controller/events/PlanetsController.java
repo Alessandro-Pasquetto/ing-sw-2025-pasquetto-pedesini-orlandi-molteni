@@ -203,14 +203,14 @@ public class PlanetsController extends EventControllerAbstract {
         Box box = rewardBoxes.get(idxBox);
 
         // Checks that reward box is placed correctly in given storage
-        if (!planets.chooseRewardBox(player.getSpaceship(), (BoxStorage) boxStorage, idx, box)) {
-            sender.sendMessage("NotValidBoxContainer");
-            sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
-            return;
-        }
+        try{
+            planets.chooseRewardBox(player.getSpaceship(), (BoxStorage) boxStorage, box, idx);
 
-        rewardBoxes.remove(idxBox);
-        sender.sendMessage("BoxChosen");
+            rewardBoxes.remove(box);
+            sender.sendMessage("BoxChosen");
+        } catch (IllegalStateException e) {
+            sender.sendMessage(e.getMessage());
+        }
 
         // All the boxes are chosen
         if (rewardBoxes.isEmpty()) {

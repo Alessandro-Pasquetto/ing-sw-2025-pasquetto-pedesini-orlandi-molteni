@@ -59,7 +59,7 @@ class SpaceshipControllerTest {
         buildingBoard.placeComponent(3, 2, 0);
 
         //place a housing unit on the top of central-unit
-        buildingBoard.setHandComponent(new Component(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgSrc"));
+        buildingBoard.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgSrc", 3));
         buildingBoard.placeComponent(2, 1, 0);
 
 
@@ -69,7 +69,7 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("PermissionDenied", message);}
         };
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 0, 2, 3, 0, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
         //set correct phase
         gameManager.getEventController().setPhase(EventPhase.CHOOSE_BOX);
@@ -78,43 +78,43 @@ class SpaceshipControllerTest {
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("NotAStorageComponent", message);
+                assertEquals("FullBoxSlot", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 0, 1, 2, 0, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
         //test move in the same component
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("BoxAlreadyThere", message);
+                assertEquals("BoxMoved", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 0, 2, 1, 0, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
         //test move redBox in a non RedBoxStorage component
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("CantStoreInANonRedStorage", message);
+                assertEquals("NullBox", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 1, 2, 3, 1, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
 
         //test invalid idx in endBox for red_box
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("RedBoxNotMoved", message);
+                assertEquals("CantStoreInANonRedStorage", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 1, 3, 2, 5, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 3, 2, 1, sender);
 
 
         //test invalid idx in endBox for box
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("BoxNotMoved", message);
+                assertEquals("BoxMoved", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 0, 2, 3, 5, sender);
+        SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 2, 3, 2, sender);
 
        //test invalid coordinates
         sender = new Sender() {
@@ -129,18 +129,18 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 if(!message.equals("SpaceshipUpdated"))
-                    assertEquals("BoxMoved", message);
+                    assertEquals("CantStoreInANonRedStorage", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 0, 3, 2, 1, sender);
+        SpaceshipController.moveBox(gameManager, player, 2, 3, 0, 3, 2, 1, sender);
 
         //test correct movement of a red_box
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
                 if(!message.equals("SpaceshipUpdated"))
-                    assertEquals("RedBoxMoved", message);
+                    assertEquals("BoxMoved", message);
             }};
-        SpaceshipController.moveBox(gameManager, player, 2, 1, 1, 3, 2, 2, sender);
+        SpaceshipController.moveBox(gameManager, player, 2, 3, 1, 3, 2, 2, sender);
     }
 
     @Test
@@ -210,16 +210,22 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("NotAStorageComponent", message);
             }};
-        SpaceshipController.removeBox(gameManager, player, 1, 2, 0, sender);
+        SpaceshipController.removeBox(gameManager, player, 2, 1, 0, sender);
 
+        sender = new Sender() {
+            @Override
+            public void sendMessage(Object message) {
+                assertEquals("BoxRemoved", message);
+            }};
+        SpaceshipController.removeBox(gameManager, player, 1, 2, 0, sender);
 
         //test invalid idx for box
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-                assertEquals("BoxNotRemoved", message);
+                assertEquals("InvalidBoxIdx", message);
             }};
-        SpaceshipController.removeBox(gameManager, player, 2, 1, 100, sender);
+        SpaceshipController.removeBox(gameManager, player, 1, 2, 100, sender);
 
         //test valid removal of a box
         sender = new Sender() {
@@ -228,7 +234,7 @@ class SpaceshipControllerTest {
                 if(!message.equals("SpaceshipUpdated"))
                     assertEquals("BoxRemoved", message);
             }};
-        SpaceshipController.removeBox(gameManager, player, 2, 1, 1, sender);
+        SpaceshipController.removeBox(gameManager, player, 1, 2, 1, sender);
     }
 
     @Test
