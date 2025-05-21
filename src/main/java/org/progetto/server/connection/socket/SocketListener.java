@@ -450,7 +450,7 @@ public class SocketListener extends Thread {
                     break;
 
                 case "ShowVisibleComponents":
-                    BuildingController.showVisibleComponents(gameManager, player, socketWriter);
+                    BuildingController.showVisibleComponents(gameManager, socketWriter);
                     break;
 
                 case "ShowBookedComponents":

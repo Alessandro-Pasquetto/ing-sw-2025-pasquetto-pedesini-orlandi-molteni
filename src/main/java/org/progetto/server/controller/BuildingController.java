@@ -404,11 +404,10 @@ public class BuildingController {
      *
      * @author Gabriele
      * @param gameManager current gameManager
-     * @param player current player
      * @param sender current sender
      * @throws RemoteException
      */
-    public static void showVisibleComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+    public static void showVisibleComponents(GameManager gameManager, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             sender.sendMessage("IncorrectPhase");
@@ -682,7 +681,7 @@ public class BuildingController {
     }
 
     /**
-     * Handles player decision to pick-up a specific eventCard deck, and place current hand component
+     * Handles player decision to pick up a specific eventCard deck, and place current hand component
      *
      * @author Gabriele
      * @param gameManager current gameManager
@@ -1059,7 +1058,7 @@ public class BuildingController {
     }
 
     /**
-     * Handles player decision to pick-up a specific eventCard deck
+     * Handles player decision to pick up a specific eventCard deck
      *
      * @author Gabriele
      * @param gameManager current gameManager

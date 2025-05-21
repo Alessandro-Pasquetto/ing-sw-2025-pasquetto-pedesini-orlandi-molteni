@@ -256,10 +256,7 @@ public class PageController {
     }
 
     public static void initEvent(int levelGame) {
-        /* OLD
         BuildingData.initMask(levelGame);
-        eventView.initEvent(); */
-
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
         eventView.initPlayersList();

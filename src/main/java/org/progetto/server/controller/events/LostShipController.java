@@ -6,7 +6,6 @@ import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltie
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
@@ -22,8 +21,8 @@ public class LostShipController extends EventControllerAbstract  {
     // ATTRIBUTES
     // =======================
 
-    private LostShip lostShip;
-    private ArrayList<Player> activePlayers;
+    private final LostShip lostShip;
+    private final ArrayList<Player> activePlayers;
     private int requestedCrew;
     private boolean someoneLanded;
 
@@ -231,7 +230,6 @@ public class LostShipController extends EventControllerAbstract  {
     private void eventEffect() throws RemoteException {
         if (phase.equals(EventPhase.EFFECT)) {
             Player player = gameManager.getGame().getActivePlayer();
-            Board board = gameManager.getGame().getBoard();
 
             // Gets sender reference related to current player
             Sender sender = gameManager.getSenderByPlayer(player);

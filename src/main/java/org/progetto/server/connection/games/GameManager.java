@@ -11,7 +11,6 @@ import org.progetto.server.controller.PopulatingController;
 import org.progetto.server.controller.PositioningController;
 import org.progetto.server.controller.TimerController;
 import org.progetto.server.controller.events.*;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
@@ -233,7 +232,6 @@ public class GameManager {
         System.out.println(player.getName() + " has disconnected");
 
         Game game = getGame();
-        Board board = game.getBoard();
 
         game.removePlayer(player);
         removeSender(player);

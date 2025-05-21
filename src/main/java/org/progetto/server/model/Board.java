@@ -89,7 +89,6 @@ public class Board {
      * @author Gabriele
      * @param player reference to the player
      * @param position the starting position of the player
-     * @return the starting position of the player
      */
     public synchronized void decideStartingPositionOnTrack(Player player, int position) {
         if (position < 0 || position >= startingPositions.length) {
@@ -118,9 +117,9 @@ public class Board {
 
         travelers.clear();
 
-        for (int i = 0; i < startingPositions.length; i++) {
-            if (startingPositions[i] != null) {
-                travelers.add(startingPositions[i]);
+        for (Player player : startingPositions) {
+            if (player != null) {
+                travelers.add(player);
             }
         }
     }

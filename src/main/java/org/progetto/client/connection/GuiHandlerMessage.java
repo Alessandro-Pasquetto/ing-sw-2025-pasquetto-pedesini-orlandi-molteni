@@ -5,20 +5,15 @@ import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
-import org.progetto.client.tui.EventCommands;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventCommon.*;
-import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
-import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
-import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -110,7 +105,9 @@ public class GuiHandlerMessage {
 
                     case "EVENT":
                         PageController.initEvent(GameData.getLevelGame());
-                        PageController.switchScene("gamePage.fxml", "Game");
+                        PageController.switchScene("newEventPage.fxml", "Event");
+
+                        sender.showSpaceship(GameData.getNamePlayer());
                         break;
                 }
 
@@ -141,91 +138,57 @@ public class GuiHandlerMessage {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
 
-            if(GameData.getPhaseGame().equalsIgnoreCase("WAITING"))
-                PageController.getWaitingRoomView().disableReadyBtn(true);
+            try{
+                if(GameData.getPhaseGame().equalsIgnoreCase("WAITING"))
+                    PageController.getWaitingRoomView().disableReadyBtn(true);
 
-            if(GameData.getPhaseGame().equalsIgnoreCase("INIT"))
-                PageController.getWaitingRoomView().disableReadyBtn(false);
+                if(GameData.getPhaseGame().equalsIgnoreCase("INIT"))
+                    PageController.getWaitingRoomView().disableReadyBtn(false);
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
                     GameData.saveGameData();
 
                     PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("buildingPage.fxml", "Building");
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
-
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
                     PageController.initAdjusting(GameData.getLevelGame());
                     PageController.switchScene("adjustingPage.fxml", "Adjusting");
 
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
-
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
                     PageController.initPopulating(GameData.getLevelGame());
                     PageController.switchScene("populatingPage.fxml", "Populating");
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("POSITIONING")) {
-
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("POSITIONING")) {
                     PageController.initPositioning(GameData.getLevelGame());
                     PageController.switchScene("positioningPage.fxml", "Positioning");
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
                     PageController.switchScene("newEventPage.fxml", "Event");
 
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
-            else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
-                try {
+                else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
                     Sender sender = GameData.getSender();
 
                     PageController.initTravel(GameData.getLevelGame());
                     PageController.switchScene("travelPage.fxml", "Travel");
-                   // PageController.getTravelView().askToContinue();
+                    // PageController.getTravelView().askToContinue();
                     sender.showTrack();
-
-                } catch (IOException e) {
-                    Alerts.showWarning("Error loading the page");
-                    System.err.println("Error loading the page");
                 }
-            }
 
+            } catch (IOException e) {
+                Alerts.showWarning("Error loading the page");
+                System.err.println("Error loading the page");
+            }
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
@@ -440,10 +403,6 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof DestroyedComponentMessage) {
             GameData.getSender().showSpaceship(GameData.getNamePlayer());
-        }
-
-        else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
-            System.out.println("Current card: " + pickedEventCardMessage.getImgSrc());
         }
 
         else if (messageObj instanceof String messageString) {

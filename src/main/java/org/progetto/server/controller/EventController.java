@@ -4,7 +4,6 @@ import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
-import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;

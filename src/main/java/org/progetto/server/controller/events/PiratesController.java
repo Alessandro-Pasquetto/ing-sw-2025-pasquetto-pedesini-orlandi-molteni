@@ -6,7 +6,6 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
@@ -26,18 +25,18 @@ public class PiratesController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Pirates pirates;
-    private ArrayList<Player> activePlayers;
+    private final Pirates pirates;
+    private final ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
-    private ArrayList<Player> defeatedPlayers;
+    private final ArrayList<Player> defeatedPlayers;
     private int diceResult;
     private boolean defeated;
-    private ArrayList<Projectile> penaltyShots;
+    private final ArrayList<Projectile> penaltyShots;
     private Projectile currentShot;
-    private ArrayList<Player> protectedPlayers;
-    private ArrayList<Player> notProtectedPlayers;
-    private ArrayList<Player> discardedBattery;
+    private final ArrayList<Player> protectedPlayers;
+    private final ArrayList<Player> notProtectedPlayers;
+    private final ArrayList<Player> discardedBattery;
 
     // =======================
     // CONSTRUCTORS
@@ -387,7 +386,6 @@ public class PiratesController extends EventControllerAbstract {
         if (phase.equals(EventPhase.EFFECT)) {
 
             Player player = gameManager.getGame().getActivePlayer();
-            Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
             pirates.rewardPenalty(gameManager.getGame().getBoard(), player);

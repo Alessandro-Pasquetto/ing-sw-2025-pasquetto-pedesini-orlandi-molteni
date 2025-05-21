@@ -112,7 +112,6 @@ public class LobbyController {
      *
      * @author Alessandro
      * @param messageObj
-     * @throws RemoteException
      */
     public synchronized static void broadcastLobbyMessage(Object messageObj) {
 
@@ -133,7 +132,6 @@ public class LobbyController {
      * @author Alessandro
      * @param messageObj
      * @param sender
-     * @throws RemoteException
      */
     public synchronized static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
 
@@ -223,6 +221,7 @@ public class LobbyController {
      * @author Alessandro
      * @param idGame
      * @param name
+     * @param sender
      * @return
      */
     public static GameManager joinGame(int idGame, String name, Sender sender) throws IllegalStateException, RemoteException {

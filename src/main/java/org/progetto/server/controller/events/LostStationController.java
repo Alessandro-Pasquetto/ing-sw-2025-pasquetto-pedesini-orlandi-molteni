@@ -25,8 +25,8 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
 
     private final GameManager gameManager;
-    private LostStation lostStation;
-    private ArrayList<Player> activePlayers;
+    private final LostStation lostStation;
+    private final ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
     private boolean someoneLanded;
 

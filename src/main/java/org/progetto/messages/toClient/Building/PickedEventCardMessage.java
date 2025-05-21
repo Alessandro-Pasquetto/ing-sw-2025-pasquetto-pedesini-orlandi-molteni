@@ -1,7 +1,6 @@
 package org.progetto.messages.toClient.Building;
 
 import org.progetto.server.model.events.EventCard;
-
 import java.io.Serializable;
 
 public class PickedEventCardMessage implements Serializable {
@@ -18,7 +17,6 @@ public class PickedEventCardMessage implements Serializable {
 
     public PickedEventCardMessage(EventCard eventCard) {
         this.eventCard = eventCard;
-
     }
 
     // =======================
@@ -32,5 +30,4 @@ public class PickedEventCardMessage implements Serializable {
     public String getImgSrc() {
         return eventCard.getImgSrc();
     }
-
 }

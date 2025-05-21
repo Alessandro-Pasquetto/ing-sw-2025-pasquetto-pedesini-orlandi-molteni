@@ -16,6 +16,7 @@ import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.MeteorsRain;
 import org.progetto.server.model.events.Projectile;
 import org.progetto.server.model.events.ProjectileSize;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -44,10 +45,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
         this.discardedBattery = new ArrayList<>();
-    }
-
-    public int getDiceResult() {
-        return diceResult;
     }
 
     // =======================

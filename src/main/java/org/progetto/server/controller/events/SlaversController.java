@@ -5,7 +5,6 @@ import org.progetto.messages.toClient.EventCommon.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
@@ -23,8 +22,8 @@ public class SlaversController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Slavers slavers;
-    private ArrayList<Player> activePlayers;
+    private final Slavers slavers;
+    private final ArrayList<Player> activePlayers;
     private boolean defeated;
     private float playerFirePower;
     private int requestedBatteries;
@@ -38,7 +37,7 @@ public class SlaversController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.slavers = (Slavers) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();;
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.defeated = false;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
@@ -415,7 +414,6 @@ public class SlaversController extends EventControllerAbstract {
         if (phase.equals(EventPhase.EFFECT)) {
 
             Player player = gameManager.getGame().getActivePlayer();
-            Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
             slavers.rewardPenalty(gameManager.getGame().getBoard(), player);

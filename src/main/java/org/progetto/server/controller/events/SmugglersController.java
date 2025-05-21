@@ -6,7 +6,6 @@ import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysM
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
-import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
@@ -21,13 +20,13 @@ public class SmugglersController extends EventControllerAbstract {
     // ATTRIBUTES
     // =======================
 
-    private Smugglers smugglers;
-    private ArrayList<Player> activePlayers;
+    private final Smugglers smugglers;
+    private final ArrayList<Player> activePlayers;
     private boolean defeated;
     private float playerFirePower;
     private int requestedBatteries;
     private int requestedBoxes;
-    private ArrayList<Box> rewardBoxes;
+    private final ArrayList<Box> rewardBoxes;
 
     // =======================
     // CONSTRUCTORS
@@ -37,7 +36,7 @@ public class SmugglersController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.smugglers = (Smugglers) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();;
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.defeated = false;
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
@@ -533,7 +532,7 @@ public class SmugglersController extends EventControllerAbstract {
 
         // Checks if player wants to leave
         if (idxBox == -1) {
-            leaveReward(player, sender);
+            leaveReward(player);
             return;
         }
 
@@ -570,7 +569,7 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if all boxes were chosen
         if (rewardBoxes.isEmpty()) {
             sender.sendMessage("EmptyReward");
-            leaveReward(player, sender);
+            leaveReward(player);
 
         } else {
             sender.sendMessage(new AvailableBoxesMessage(rewardBoxes));
@@ -582,11 +581,10 @@ public class SmugglersController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player current player
-     * @param sender current sender
      * @throws RemoteException
      * @throws IllegalStateException
      */
-    private void leaveReward(Player player, Sender sender) throws RemoteException, IllegalStateException {
+    private void leaveReward(Player player) throws RemoteException, IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
@@ -609,7 +607,6 @@ public class SmugglersController extends EventControllerAbstract {
         if (phase.equals(EventPhase.PENALTY_DAYS)) {
 
             Player player = gameManager.getGame().getActivePlayer();
-            Board board = gameManager.getGame().getBoard();
 
             // Event effect applied for single player
             smugglers.penalty(gameManager.getGame().getBoard(), player);

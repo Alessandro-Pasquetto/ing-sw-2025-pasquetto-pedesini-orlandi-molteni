@@ -114,7 +114,7 @@ public class ConnectionView {
             }else{
                 GameData.restoreSavedGameData();
                 System.out.println("A saved game was found and the data has been restored.");
-                System.out.println("Id: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
+                System.out.println("GameId: " + GameData.getIdGame() + ", Name: " + GameData.getNamePlayer());
 
                 GameData.getSender().reconnectToGame();
             }
