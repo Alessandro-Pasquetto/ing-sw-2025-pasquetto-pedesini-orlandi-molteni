@@ -1,8 +1,9 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerLeftMessage;
+import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
+import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -108,6 +109,7 @@ public class EventController {
             switch (upperCaseResponse) {
                 case "YES":
                     sender.sendMessage("YouAreContinuingTravel");
+                    gameManager.broadcastGameMessageToOthers(new PlayerIsContinuingMessage(player.getName()), sender);
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();

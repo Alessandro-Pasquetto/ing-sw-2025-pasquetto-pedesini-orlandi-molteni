@@ -1,24 +1,18 @@
 package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.client.connection.socket.SocketWriter;
-import org.progetto.messages.toClient.EventCommon.CrewToDiscardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.LostShip;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

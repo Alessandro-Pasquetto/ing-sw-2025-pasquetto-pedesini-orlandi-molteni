@@ -1,8 +1,8 @@
-package org.progetto.messages.toClient.EventCommon;
+package org.progetto.messages.toClient.Travel;
 
 import java.io.Serializable;
 
-public class PlayerDefeatedMessage implements Serializable {
+public class PlayerLeftMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -14,7 +14,7 @@ public class PlayerDefeatedMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PlayerDefeatedMessage(String playerName) {
+    public PlayerLeftMessage(String playerName) {
         this.playerName = playerName;
     }
 

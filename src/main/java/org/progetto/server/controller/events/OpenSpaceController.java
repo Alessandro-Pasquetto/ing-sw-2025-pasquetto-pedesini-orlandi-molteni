@@ -1,9 +1,9 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
-import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
-import org.progetto.messages.toClient.EventCommon.HowManyDoubleEnginesMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.EventGeneric.BatteriesToDiscardMessage;
+import org.progetto.messages.toClient.EventGeneric.HowManyDoubleEnginesMessage;
+import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.server.connection.Sender;

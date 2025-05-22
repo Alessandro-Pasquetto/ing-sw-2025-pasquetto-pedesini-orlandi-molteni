@@ -7,12 +7,14 @@ import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
-import org.progetto.messages.toClient.EventCommon.*;
+import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
+import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.components.Component;
 
@@ -258,13 +260,7 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().loadVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
         }
 
-        else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
-            System.out.println(playerLeftMessage.getPlayerName() + " left travel");
-            GameData.getSender().showPlayers();
-        }
-
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
-
             String playerName = anotherPlayerPlacedComponentMessage.getNamePlayer();
             Component component = anotherPlayerPlacedComponentMessage.getComponent();
             int x = anotherPlayerPlacedComponentMessage.getX();
@@ -322,10 +318,6 @@ public class GuiHandlerMessage {
                 case "EVENT":
                     PageController.getEventView().updateActivePlayer(activePlayerMessage.getPlayerName());
                     break;
-
-                case "TRAVEL":
-                    PageController.getTravelView().highlightsActivePlayer(activePlayerMessage.getPlayerName());
-                    break;
             }
         }
 
@@ -352,7 +344,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
         }
-//
+
 //        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
 //           PageController.getEventView().responseHowManyDoubleCannons(
 //                   howManyDoubleCannonsMessage.getFirePowerRequired(),
@@ -361,7 +353,7 @@ public class GuiHandlerMessage {
 //                   false
 //           );
 //        }
-//
+
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
             PageController.getEventView().askForQuantity(
                     "How many double engines do you want to use?",
@@ -379,7 +371,7 @@ public class GuiHandlerMessage {
                     (x, y) -> GameData.getSender().responseBatteryToDiscard(x, y)
             );
         }
-//
+
 //        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
 //            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
 //        }
@@ -433,6 +425,14 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof DestroyedComponentMessage) {
             GameData.getSender().showSpaceship(GameData.getNamePlayer());
+        }
+
+        else if (messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
+            PageController.getTravelView().setPlayerStatus(playerIsContinuingMessage.getPlayerName(), false);
+        }
+
+        else if (messageObj instanceof PlayerLeftMessage playerLeftMessage) {
+            PageController.getTravelView().setPlayerStatus(playerLeftMessage.getPlayerName(), true);
         }
 
         else if (messageObj instanceof String messageString) {
@@ -575,17 +575,23 @@ public class GuiHandlerMessage {
 //                    break;
 
                 case "AskContinueTravel":
-                    PageController.getTravelView().askToContinue();
-                    break;
-
-                case "YouLeftTravel":
-                    System.out.println( "You left travel");
+                    PageController.getTravelView().askYesNo(
+                            "DO YOU WANT TO CONTINUE THE TRAVEL?",
+                            "Select your choice...",
+                            response -> {
+                                Sender sender = GameData.getSender();
+                                sender.responseContinueTravel(response ? "YES" : "NO");
+                            }
+                    );
                     break;
 
                 case "YouAreContinuingTravel":
-                    System.out.println("You are continuing travel");
+                    PageController.getTravelView().setPlayerStatus(GameData.getNamePlayer(), false);
                     break;
 
+                case "YouLeftTravel":
+                    PageController.getTravelView().setPlayerStatus(GameData.getNamePlayer(), true);
+                    break;
 
                 default:
                     System.out.println(messageString);

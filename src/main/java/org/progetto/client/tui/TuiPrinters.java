@@ -1,7 +1,7 @@
 package org.progetto.client.tui;
 
 import org.progetto.client.model.GameData;
-import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
+import org.progetto.messages.toClient.EventGeneric.IncomingProjectileMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;

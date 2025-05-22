@@ -1,4 +1,4 @@
-package org.progetto.messages.toClient.EventCommon;
+package org.progetto.messages.toClient.EventGeneric;
 
 import java.io.Serializable;
 

@@ -5,7 +5,7 @@ import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
-import org.progetto.messages.toClient.EventCommon.*;
+import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
@@ -17,6 +17,7 @@ import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 
 /**
  * Handles messages coming from server

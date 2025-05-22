@@ -1,11 +1,11 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
-import org.progetto.messages.toClient.EventCommon.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
+import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventGeneric.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;

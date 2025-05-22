@@ -735,9 +735,20 @@ public class NewEventView {
             onConfirm.accept(counter[0]);
         });
 
+        counterLabel.setStyle("-fx-text-fill: #e2e2e2; -fx-font-size: 20; -fx-font-weight: bold;");
+        minusButton.setStyle("-fx-font-size: 18;");
+        plusButton.setStyle("-fx-font-size: 18;");
+
+        minusButton.setMinWidth(50);
+        plusButton.setMinWidth(50);
+        counterLabel.setMinWidth(40);
+        counterLabel.setAlignment(Pos.CENTER);
+
         HBox counterBox = new HBox(10, minusButton, counterLabel, plusButton);
-        counterBox.setStyle("-fx-alignment: center;");
-        VBox container = new VBox(20, counterBox, confirmButton);
+        counterBox.setStyle("-fx-alignment: center; -fx-padding: 5; -fx-background-color: rgba(255,255,255,0.1); " + "-fx-border-color: rgba(43, 50, 57, 0.5); " + "-fx-border-radius: 8; -fx-background-radius: 8;");
+        counterBox.setMaxWidth(150.00);
+
+        HBox container = new HBox(30, counterBox, confirmButton);
         container.setStyle("-fx-alignment: center;");
 
         btnContainer.getChildren().clear();

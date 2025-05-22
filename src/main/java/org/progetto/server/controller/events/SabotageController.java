@@ -1,8 +1,8 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.EventCommon.AnotherPlayerDiceResultMessage;
-import org.progetto.messages.toClient.EventCommon.DiceResultMessage;
-import org.progetto.messages.toClient.EventCommon.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.EventGeneric.AnotherPlayerDiceResultMessage;
+import org.progetto.messages.toClient.EventGeneric.DiceResultMessage;
+import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;

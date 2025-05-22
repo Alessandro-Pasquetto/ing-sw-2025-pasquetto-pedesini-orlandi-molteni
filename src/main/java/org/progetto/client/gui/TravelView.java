@@ -3,8 +3,8 @@ package org.progetto.client.gui;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,11 +17,10 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class TravelView {
 
@@ -34,6 +33,15 @@ public class TravelView {
 
     @FXML
     public VBox playerListContainer;
+
+    @FXML
+    public Label travelMainTitle;
+
+    @FXML
+    public Label travelMainDesc;
+
+    @FXML
+    public VBox btnContainer;
 
     @FXML
     private Group cellsGroup;
@@ -89,18 +97,17 @@ public class TravelView {
 
         double[][] cellPositions = null;
 
-        if(levelGame == 1) {
+        if (levelGame == 1) {
 
-            cellPositions = new double[][]{
+            cellPositions = new double[][] {
                     {233, 112}, {311, 89}, {391, 79}, {472, 78},
                     {550, 88}, {629, 111}, {697, 160}, {736, 248},
                     {693, 325}, {621, 370}, {542, 396}, {461, 409},
                     {382, 409}, {302,395}, {225, 372}, {155, 321},
                     {118, 231}, {159, 157}
-
             };
 
-        } else if(levelGame == 2){
+        } else if (levelGame == 2) {
 
             cellPositions = new double[][]{
                     {196, 97}, {259, 72}, {325, 60}, {389, 51}, {464, 51},
@@ -133,24 +140,45 @@ public class TravelView {
     /**
      * Ask the player if he wants to continue travel
      *
-     * @author Lorenzo
+     * @author Gabriele
+     * @param title is the title of the question
+     * @param description is the description of the question
+     * @param onResponse is the callback function to execute when the player responds
      */
-    public void askToContinue(){
-        Alerts.showYesNoPopup(trackPane,"Continue?","Do you want to continue travel?",yesResponse(),noResponse());
+    public void askYesNo(String title, String description, Consumer<Boolean> onResponse) {
+        resetTravelLabels();
+
+        travelMainTitle.setText(title);
+        travelMainDesc.setText(description);
+
+        // Yes/No buttons
+        Button yesButton = new Button("Yes");
+        Button noButton = new Button("No");
+
+        yesButton.setOnAction(e -> {
+            onResponse.accept(true);
+        });
+
+        noButton.setOnAction(e -> {
+            onResponse.accept(false);
+        });
+
+        HBox buttonBox = new HBox(15, yesButton, noButton);
+        buttonBox.setStyle("-fx-alignment: center;");
+
+        btnContainer.getChildren().clear();
+        btnContainer.getChildren().add(buttonBox);
     }
 
-    private Runnable yesResponse(){
-        return () -> {
-            Sender sender = GameData.getSender();
-            sender.responseContinueTravel("YES");
-        };
-    }
-
-    private Runnable noResponse(){
-        return () -> {
-            Sender sender = GameData.getSender();
-            sender.responseContinueTravel("NO");
-        };
+    /**
+     * Resets the travel labels
+     *
+     * @author Gabriele
+     */
+    public void resetTravelLabels() {
+        travelMainTitle.setText("");
+        travelMainDesc.setText("");
+        btnContainer.getChildren().clear();
     }
 
     /**
@@ -170,17 +198,39 @@ public class TravelView {
     }
 
     /**
-     * Update the players list with colors and highlight the active player
+     * Updates the player status in the list
      *
      * @author Gabriele
-     * @param activePlayer The currently active player's name
+     * @param player the player to update
+     * @param hasLeft true if the player has left, false otherwise
      */
-    public void highlightsActivePlayer(String activePlayer) {
-        playerListContainer.getChildren().clear();
+    public void setPlayerStatus(String player, boolean hasLeft) {
 
-        for (Player player : players) {
-            HBox playerBox = createPlayerItem(player, activePlayer);
-            playerListContainer.getChildren().add(playerBox);
+        for (int i = 0; i < players.size(); i++) {
+            Player p = players.get(i);
+
+            if (p.getName().equals(player) || p.getName().equals(player + " (You)")) {
+                HBox playerBox = (HBox) playerListContainer.getChildren().get(i);
+
+                if (hasLeft) {
+                    playerBox.setStyle("-fx-background-color: rgba(255,0,0,0.2); " + "-fx-background-radius: 8;");
+                } else {
+                    playerBox.setStyle("-fx-background-color: rgba(0,255,0,0.2); " + "-fx-background-radius: 8;");
+                }
+            }
+        }
+
+        // Update the main title and description if the player is the current player
+        if (player.equals(GameData.getNamePlayer())) {
+            btnContainer.getChildren().clear();
+
+            if (hasLeft) {
+                travelMainTitle.setText("YOU LEFT TRAVEL");
+                travelMainDesc.setText("Wait for the other players to take their decision...");
+            } else {
+                travelMainTitle.setText("YOU ARE CONTINUING TRAVEL");
+                travelMainDesc.setText("Wait for the other players to take their decision...");
+            }
         }
     }
 
@@ -235,17 +285,7 @@ public class TravelView {
 
         playerBox.getChildren().addAll(colorIndicator, nameLabel);
 
-        // Highlight active player
-        if (activePlayer != null && player.getName().equals(activePlayer)) {
-            playerBox.setStyle("-fx-border-color: white; " +
-                    "-fx-border-width: 2; " +
-                    "-fx-border-radius: 8; " +
-                    "-fx-background-radius: 8; " +
-                    "-fx-background-color: rgba(255,255,255,0.2); ");
-        } else {
-            playerBox.setStyle("-fx-background-color: rgba(0,0,0,0.2); " +
-                    "-fx-background-radius: 8;");
-        }
+        playerBox.setStyle("-fx-background-color: rgba(0,0,0,0.2); " + "-fx-background-radius: 8;");
 
         return playerBox;
     }
@@ -295,11 +335,5 @@ public class TravelView {
             case 3 -> "img/items/yellow_pawn.png";
             default -> "";
         };
-    }
-
-    public void showEventView() throws IOException {
-        PageController.initEvent(GameData.getLevelGame());
-        PageController.switchScene("gamePage.fxml", "Game");
-
     }
 }

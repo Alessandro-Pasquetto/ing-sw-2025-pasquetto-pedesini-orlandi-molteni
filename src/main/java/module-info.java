@@ -37,7 +37,7 @@ module org.progetto{
     exports org.progetto.server.connection.games;
     exports org.progetto.client.model;
     exports org.progetto.messages.toClient.LostStation;
-    exports org.progetto.messages.toClient.EventCommon;
+    exports org.progetto.messages.toClient.EventGeneric;
     exports org.progetto.messages.toClient.Building;
     exports org.progetto.client.tui;
     exports org.progetto.client.connection;
@@ -49,4 +49,5 @@ module org.progetto{
     exports org.progetto.messages.toClient.Populating;
     opens org.progetto.messages.toClient to com.google.gson, javafx.fxml;
     exports org.progetto.messages.toClient.Positioning;
+    exports org.progetto.messages.toClient.Travel;
 }

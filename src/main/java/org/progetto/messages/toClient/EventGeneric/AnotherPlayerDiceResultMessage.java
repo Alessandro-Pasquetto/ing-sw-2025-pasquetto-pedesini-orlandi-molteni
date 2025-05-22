@@ -1,26 +1,32 @@
-package org.progetto.messages.toClient.EventCommon;
+package org.progetto.messages.toClient.EventGeneric;
 
 import java.io.Serializable;
 
-public class DiceResultMessage implements Serializable {
+public class AnotherPlayerDiceResultMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private final int diceResult;
+    private String namePlayer;
+    private int diceResult;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public DiceResultMessage(int diceResult) {
+    public AnotherPlayerDiceResultMessage(String namePlayer, int diceResult) {
+        this.namePlayer = namePlayer;
         this.diceResult = diceResult;
     }
 
     // =======================
     // GETTERS
     // =======================
+
+    public String getNamePlayer() {
+        return namePlayer;
+    }
 
     public int getDiceResult() {
         return diceResult;

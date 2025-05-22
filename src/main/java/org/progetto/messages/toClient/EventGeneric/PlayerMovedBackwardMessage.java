@@ -1,32 +1,26 @@
-package org.progetto.messages.toClient.EventCommon;
+package org.progetto.messages.toClient.EventGeneric;
 
 import java.io.Serializable;
 
-public class AnotherPlayerMovedBackwardMessage implements Serializable {
+public class PlayerMovedBackwardMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int stepsCount;
+    private final int stepsCount;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerMovedBackwardMessage(String namePlayer, int stepsCount) {
-        this.namePlayer = namePlayer;
+    public PlayerMovedBackwardMessage(int stepsCount) {
         this.stepsCount = stepsCount;
     }
 
     // =======================
     // GETTERS
     // =======================
-
-    public String getNamePlayer() {
-        return namePlayer;
-    }
 
     public int getStepsCount() {
         return stepsCount;

@@ -1,9 +1,6 @@
 package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.EventCommon.AvailableBoxesMessage;
-import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
@@ -15,7 +12,6 @@ import org.progetto.server.model.events.*;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,9 +1,9 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.EventCommon.AnotherPlayerDiceResultMessage;
-import org.progetto.messages.toClient.EventCommon.BatteriesToDiscardMessage;
-import org.progetto.messages.toClient.EventCommon.DiceResultMessage;
-import org.progetto.messages.toClient.EventCommon.IncomingProjectileMessage;
+import org.progetto.messages.toClient.EventGeneric.AnotherPlayerDiceResultMessage;
+import org.progetto.messages.toClient.EventGeneric.BatteriesToDiscardMessage;
+import org.progetto.messages.toClient.EventGeneric.DiceResultMessage;
+import org.progetto.messages.toClient.EventGeneric.IncomingProjectileMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
