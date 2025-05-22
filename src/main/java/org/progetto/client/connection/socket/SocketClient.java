@@ -1,5 +1,6 @@
 package org.progetto.client.connection.socket;
 
+import javafx.application.Platform;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -221,21 +222,6 @@ public class SocketClient implements Sender {
     }
 
     @Override
-    public void close() {
-        SocketListener.stopListener();
-        SocketWriter.stopWriter();
-        try {
-            socket.close();
-            System.out.println("You have disconnected!");
-            if(GameData.getUIType().equals("GUI"))
-                PageController.switchScene("connection.fxml", "Page1");
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void responsePlaceAlien(int x, int y, String color) {
         SocketWriter.sendMessage(new ResponsePlaceAlienMessage(x, y, color));
     }
@@ -328,5 +314,10 @@ public class SocketClient implements Sender {
     @Override
     public void responseSelectSpaceshipPart(int x, int y) {
         SocketWriter.sendMessage(new ResponseSelectSpaceshipPartMessage(x, y));
+    }
+
+    @Override
+    public void leaveGame() {
+        SocketWriter.sendMessage("LeaveGame");
     }
 }

@@ -6,12 +6,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import org.progetto.client.MainClient;
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 
 import java.io.IOException;
 
 public class GameOverView {
-
 
     @FXML
     private StackPane gameOverRoomPane;
@@ -21,7 +21,6 @@ public class GameOverView {
 
     @FXML
     private ImageView resultImage;
-
 
 
     /**
@@ -52,7 +51,6 @@ public class GameOverView {
 
         Background background = new Background(backgroundImage);
         gameOverRoomPane.setBackground(background);
-
     }
 
     /**
@@ -74,11 +72,9 @@ public class GameOverView {
                 endGameTitle.setText("OH NO, YOU LOST!");
                 img = new Image(String.valueOf(MainClient.class.getResource("img/lost.png")));
                 break;
-
         }
 
         resultImage.setImage(img);
-
     }
 
     /**
@@ -88,11 +84,15 @@ public class GameOverView {
      * @throws IOException
      */
     public void returnToLobby() throws IOException {
+        Sender sender = GameData.getSender();
+        sender.leaveGame();
+
+        GameData.resetData();
+       // PageController.loadControllers();
+
+        PageController.loadControllers();
+
         PageController.switchScene("chooseGame.fxml", "ChooseGame");
-        GameData.getSender().updateGameList();
-
+        sender.updateGameList();
     }
-
-
-
 }

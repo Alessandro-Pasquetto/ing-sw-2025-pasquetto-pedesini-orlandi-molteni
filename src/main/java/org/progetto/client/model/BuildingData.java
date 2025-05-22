@@ -66,6 +66,11 @@ public class BuildingData {
     // SETTERS
     // =======================
 
+
+    public static void setHandComponent(Pane handComponent) {
+        BuildingData.handComponent = handComponent;
+    }
+
     public static void setNewHandComponent(Pane handComponent) {
         resetHandComponent();
 
@@ -82,6 +87,10 @@ public class BuildingData {
         BuildingData.tempXPickingBooked = tempXPickingBooked;
     }
 
+    public static void setRHandComponent(int rHandComponent) {
+        BuildingData.rHandComponent = rHandComponent;
+    }
+
     public static void setXHandComponent(int xHandComponent){
         BuildingData.xHandComponent = xHandComponent;
     }
@@ -90,8 +99,16 @@ public class BuildingData {
         BuildingData.yHandComponent = yHandComponent;
     }
 
+    public static void setIsRotating(boolean isRotating) {
+        BuildingData.isRotating = isRotating;
+    }
+
     public static void setIsTimerExpired(boolean isTimerExpired){
         BuildingData.isTimerExpired = isTimerExpired;
+    }
+
+    public static void setShipMask(int[][] shipMask) {
+        BuildingData.shipMask = shipMask;
     }
 
     public static void setCurrentDeckIdx(int currentDeckIdx) {
@@ -155,5 +172,18 @@ public class BuildingData {
         xHandComponent = -1; // If it has not been placed in the matrix yet
         yHandComponent = 0;
         rHandComponent = 0;
+    }
+
+    public static void resetBuildingData(){
+        setHandComponent(null);
+        setTempPickingBookedComponent(null);
+        setTempXPickingBooked(0);
+        setRHandComponent(0);
+        setXHandComponent(-1);
+        setYHandComponent(0);
+        setIsRotating(false);
+        setIsTimerExpired(false);
+        setShipMask(null);
+        setCurrentDeckIdx(-1);
     }
 }

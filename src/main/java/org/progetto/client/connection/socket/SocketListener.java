@@ -49,13 +49,7 @@ public class SocketListener extends Thread {
             if(e instanceof SocketException){
                 System.err.println("SocketServer unreachable");
 
-                Platform.runLater(() -> {
-                    try {
-                        PageController.switchScene("connection.fxml", "Connection");
-                    } catch (IOException e2) {
-                        throw new RuntimeException(e2);
-                    }
-                });
+                close();
             }
             else
                 e.printStackTrace();
@@ -114,6 +108,22 @@ public class SocketListener extends Thread {
                 in.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        SocketListener.stopListener();
+        SocketWriter.stopWriter();
+
+        System.out.println("You have disconnected!");
+        if(GameData.getUIType().equals("GUI")) {
+            Platform.runLater(() -> {
+                try {
+                    PageController.switchScene("connection.fxml", "Connection");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 }

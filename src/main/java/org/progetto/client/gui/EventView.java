@@ -508,7 +508,7 @@ public class EventView {
      * @author Lorenzo
      * @param required is the needed amount of batteries
      */
-    public  void responseBatteryToDiscard(int required) {
+    public void responseBatteryToDiscard(int required) {
 
         printToTerminal("Select the battery storage from which to remove the battery");
         printToTerminal("You need to discard " + required + " batteries");

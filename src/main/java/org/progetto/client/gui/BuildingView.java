@@ -3,7 +3,6 @@ package org.progetto.client.gui;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,6 +37,7 @@ public class BuildingView {
     // =======================
 
     final int COMPONENT_SIZE = 80;
+    final int OTHER_COMPONENT_SIZE = 35;
     final int BOX_SLOT_SIZE = 28;
     final int CREW_SLOT_SIZE = 28;
     final int BATTERY_SLOT_WIDTH = 14;
@@ -235,7 +235,7 @@ public class BuildingView {
     }
 
     /**
-     * Allows to setup the booked array with a given size
+     * Allows to set up the booked array with a given size
      *
      * @author Alessandro, Lorenzo
      * @param levelGame is the game level
@@ -287,8 +287,8 @@ public class BuildingView {
 
             Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
             ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(80);
-            imageView.setFitHeight(80);
+            imageView.setFitWidth(COMPONENT_SIZE);
+            imageView.setFitHeight(COMPONENT_SIZE);
             imageView.setPreserveRatio(true);
             imageView.setPickOnBounds(true);
             imageView.setStyle("-fx-cursor: hand;");
@@ -489,13 +489,13 @@ public class BuildingView {
             for (int col = 0; col < shipMatrix[row].length; col++) {
                 Component comp = shipMatrix[row][col];
                 Pane cell = new Pane();
-                cell.setPrefSize(35, 35);
+                cell.setPrefSize(OTHER_COMPONENT_SIZE, OTHER_COMPONENT_SIZE);
 
                 if (comp != null) {
                     Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
                     ImageView iv = new ImageView(img);
-                    iv.setFitWidth(35);
-                    iv.setFitHeight(35);
+                    iv.setFitWidth(OTHER_COMPONENT_SIZE);
+                    iv.setFitHeight(OTHER_COMPONENT_SIZE);
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
                     switch (comp.getRotation()){
@@ -522,13 +522,13 @@ public class BuildingView {
         for (int i = 0; i < bookedComponents.length; i++) {
             Component comp = bookedComponents[i];
             Pane cell = new Pane();
-            cell.setPrefSize(35, 35);
+            cell.setPrefSize(OTHER_COMPONENT_SIZE, OTHER_COMPONENT_SIZE);
 
             if (comp != null) {
                 Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
                 ImageView iv = new ImageView(img);
-                iv.setFitWidth(35);
-                iv.setFitHeight(35);
+                iv.setFitWidth(OTHER_COMPONENT_SIZE);
+                iv.setFitHeight(OTHER_COMPONENT_SIZE);
                 iv.setPreserveRatio(true);
                 cell.getChildren().add(iv);
             }
@@ -565,8 +565,8 @@ public class BuildingView {
                 cell.getChildren().clear();
                 Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
                 ImageView iv = new ImageView(img);
-                iv.setFitWidth(35);
-                iv.setFitHeight(35);
+                iv.setFitWidth(OTHER_COMPONENT_SIZE);
+                iv.setFitHeight(OTHER_COMPONENT_SIZE);
                 iv.setPreserveRatio(true);
                 cell.getChildren().add(iv);
                 switch (component.getRotation()){
@@ -608,8 +608,8 @@ public class BuildingView {
 
                 Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
                 ImageView iv = new ImageView(img);
-                iv.setFitWidth(35);
-                iv.setFitHeight(35);
+                iv.setFitWidth(OTHER_COMPONENT_SIZE);
+                iv.setFitHeight(OTHER_COMPONENT_SIZE);
                 iv.setPreserveRatio(true);
                 cell.getChildren().add(iv);
                 switch (component.getRotation()){

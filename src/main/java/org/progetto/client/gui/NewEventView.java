@@ -346,7 +346,7 @@ public class NewEventView {
      * @param cell is the cell to render
      * @param comp is the component to render
      */
-    public void renderHousingUnit(Pane cell, Component comp) {
+    private void renderHousingUnit(Pane cell, Component comp) {
         HousingUnit housingUnit = (HousingUnit) comp;
 
         if (housingUnit.getHasPurpleAlien()) {
@@ -416,7 +416,7 @@ public class NewEventView {
      * @param cell is the cell to render
      * @param comp is the component to render
      */
-    public void renderBatteryStorage(Pane cell, Component comp) {
+    private void renderBatteryStorage(Pane cell, Component comp) {
         BatteryStorage batteryStorage = (BatteryStorage) comp;
         Image batteryImage = new Image(String.valueOf(MainClient.class.getResource("img/items/Battery_icon.png")));
 
@@ -482,15 +482,6 @@ public class NewEventView {
                 }
             }
         }
-    }
-
-    /**
-     * First call to server for players list
-     *
-     * @author Lorenzo
-     */
-    public void initPlayersList() {
-        GameData.getSender().showPlayers();
     }
 
     /**
@@ -856,11 +847,16 @@ public class NewEventView {
      * @param typeToHighlight is the type of component to highlight (BATTERY or CREW)
      * @param onClick is the action to perform when clicking on a component
      */
-    public void selectComponentOnTheShip(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
+    public void highlightComponentsOnTheShip(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
         resetEventLabels();
         clearHighlightedCells();
 
-        Component[][] spaceship = GameData.getSpaceship();
+        Component[][] spaceship = GameData.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
+
+        if(spaceship == null){
+            System.err.println("Null spaceship");
+            return;
+        }
 
         eventMainTitle.setText(title);
         eventMainDesc.setText(description);
@@ -917,7 +913,7 @@ public class NewEventView {
             Integer nodeCol = GridPane.getColumnIndex(node);
             Integer nodeRow = GridPane.getRowIndex(node);
 
-            if (nodeCol != null && nodeRow != null && nodeCol == col && nodeRow == row) {
+            if (nodeCol == col && nodeRow == row) {
                 return (Pane) node;
             }
         }

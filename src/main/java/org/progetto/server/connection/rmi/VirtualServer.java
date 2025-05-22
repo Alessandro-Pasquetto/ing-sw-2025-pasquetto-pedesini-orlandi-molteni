@@ -117,4 +117,6 @@ public interface VirtualServer extends Remote {
     void responseRollDice(VirtualClient virtualClient, int idGame) throws RemoteException;
 
     void responseSelectSpaceshipPart(VirtualClient virtualClient, int idGame, int x, int y) throws RemoteException;
+
+    void leaveGame(VirtualClient virtualClient, int idGame) throws RemoteException;
 }

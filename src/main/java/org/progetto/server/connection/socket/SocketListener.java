@@ -495,6 +495,12 @@ public class SocketListener extends Thread {
                     eventController.rollDice(player, socketWriter);
                     break;
 
+                case "LeaveGame":
+                    gameManager.leaveGame(player, socketWriter);
+                    clientHandler.setGameManager(null);
+                    clientHandler.setPlayer(null);
+                    break;
+
                 default:
 
                     System.out.println(messageString + " not allowed");

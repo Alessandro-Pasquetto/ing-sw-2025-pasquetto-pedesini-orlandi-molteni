@@ -116,6 +116,14 @@ public class GuiHandlerMessage {
                         PageController.switchScene("newEventPage.fxml", "Event");
 
                         sender.showSpaceship(GameData.getNamePlayer());
+                        sender.showPlayers();
+                        break;
+
+                    case "TRAVEL":
+                        PageController.initTravel(GameData.getLevelGame());
+                        PageController.switchScene("travelPage.fxml", "Travel");
+
+                        GameData.getSender().showTrack();
                         break;
                 }
 
@@ -146,6 +154,8 @@ public class GuiHandlerMessage {
             System.out.println();
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
 
+            Sender sender = GameData.getSender();
+
             try{
                 if(GameData.getPhaseGame().equalsIgnoreCase("WAITING"))
                     PageController.getWaitingRoomView().disableReadyBtn(true);
@@ -158,13 +168,15 @@ public class GuiHandlerMessage {
 
                     PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("buildingPage.fxml", "Building");
+
+                    GameData.getSender().showPlayers();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
                     PageController.initAdjusting(GameData.getLevelGame());
                     PageController.switchScene("adjustingPage.fxml", "Adjusting");
 
-                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
+                    sender.showSpaceship(GameData.getNamePlayer());
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
@@ -180,11 +192,16 @@ public class GuiHandlerMessage {
                 else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
                     PageController.switchScene("newEventPage.fxml", "Event");
+
+                    sender.showSpaceship(GameData.getNamePlayer());
+                    sender.showPlayers();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
                     PageController.initTravel(GameData.getLevelGame());
                     PageController.switchScene("travelPage.fxml", "Travel");
+
+                    sender.showTrack();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ENDGAME")){
@@ -202,7 +219,7 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
 
             if (updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                GameData.setSpaceship(updateSpaceshipMessage.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy());
+                GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
 
             PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
         }
@@ -214,7 +231,7 @@ public class GuiHandlerMessage {
                     if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
                         PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship()); // This is used only for reconnection
                     else
-                        PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                        PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship()); // This is used only for reconnection and getCentralUnit
                     break;
 
                 case "ADJUSTING":
@@ -227,10 +244,10 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EVENT":
-                    if (!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                        PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
-                    else
+                    if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
                         PageController.getEventView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    else
+                        PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
                     break;
             }
         }
@@ -414,7 +431,7 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
-            PageController.getEventView().selectComponentOnTheShip(
+            PageController.getEventView().highlightComponentsOnTheShip(
                     "You need to discard a battery",
                     "Select battery to discard...",
                     "BATTERY",

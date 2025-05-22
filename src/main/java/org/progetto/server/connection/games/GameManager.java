@@ -462,4 +462,14 @@ public class GameManager {
     public void startTimer() {
         timer.startTimer();
     }
+
+    public void leaveGame(Player player, Sender sender) {
+        game.removePlayer(player);
+        removeSender(player);
+
+        if(game.getPlayersSize() == 0)
+            GameManagerMaps.removeGameManager(game.getId());
+
+        LobbyController.addSender(sender);
+    }
 }

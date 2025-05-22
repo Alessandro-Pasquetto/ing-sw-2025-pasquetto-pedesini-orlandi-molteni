@@ -1,10 +1,9 @@
 package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
-import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
 
 import java.io.*;
@@ -30,7 +29,7 @@ public class GameData {
     private static String namePlayer;
     private static String activePlayer;
     private static int color;
-    private static Component[][] spaceship;
+    private static Spaceship spaceship = null;
     private static Player[] track;
     private static ArrayList<Player> travelers;
     private static String UIType;
@@ -71,7 +70,7 @@ public class GameData {
         return activePlayer;
     }
 
-    public static Component[][] getSpaceship() {
+    public static Spaceship getSpaceship() {
         return spaceship;
     }
 
@@ -130,7 +129,7 @@ public class GameData {
         GameData.activePlayer = activePlayer;
     }
 
-    public static void setSpaceship(Component[][] spaceship) {
+    public static void setSpaceship(Spaceship spaceship) {
         GameData.spaceship = spaceship;
     }
 
@@ -288,5 +287,23 @@ public class GameData {
 
         int finalPos = modulus(position, track.length);
         track[finalPos] = player;
+    }
+
+
+    public static void resetData(){
+        clearSaveFile();
+
+        setIdGame(0);
+        setLevelGame(0);
+        setPhaseGame("LOBBY");
+        setActiveCard(null);
+        setNamePlayer(null);
+        setActivePlayer(null);
+        setColor(0);
+        setSpaceship(null);
+        setTrack(null);
+        setTravelers(null);
+
+        BuildingData.resetBuildingData();
     }
 }

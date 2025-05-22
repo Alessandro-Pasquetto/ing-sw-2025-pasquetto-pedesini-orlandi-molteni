@@ -118,11 +118,7 @@ public class PageController {
 
         loadControllers();
 
-        // Execute this when the GUI thread is ready
-        stage.setScene(new Scene(connectionRoot));
-        stage.setTitle("Connection");
-        stage.setMaximized(true);
-        stage.show();
+        switchScene("connection.fxml", "Connection");
     }
 
     /**
@@ -130,7 +126,7 @@ public class PageController {
      *
      * @throws IOException if the FXML files cannot be loaded
      */
-    private static void loadControllers() throws IOException {
+    public static void loadControllers() throws IOException {
         FXMLLoader loader;
 
         // Load the controllers for each FXML view
@@ -233,7 +229,6 @@ public class PageController {
         buildingView.initSpaceship(levelGame, color);
         buildingView.initTimer(levelGame);
         buildingView.initEventCardDecks(levelGame);
-        GameData.getSender().showPlayers();
     }
 
     public static void initAdjusting(int levelGame) {
@@ -257,7 +252,6 @@ public class PageController {
         BuildingData.initMask(levelGame);
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
-        eventView.initPlayersList();
         eventView.initTrack(levelGame);
         eventView.resetEventLabels();
     }
@@ -265,6 +259,7 @@ public class PageController {
     public static void initTravel(int levelGame) {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
+        //travelView.askToContinue();  //debug purpose
     }
 
     public static void initEndGame(int levelGame) {

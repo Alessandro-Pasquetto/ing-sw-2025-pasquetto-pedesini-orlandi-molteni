@@ -364,10 +364,6 @@ public class Game {
     public void removePlayer(Player player) throws IllegalStateException {
         synchronized (players) {
             players.remove(player);
-
-            if (players.isEmpty()) {
-                //todo da fare
-            }
         }
     }
 

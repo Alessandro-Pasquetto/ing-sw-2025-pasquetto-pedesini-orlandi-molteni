@@ -11,10 +11,10 @@ public class WaitingGameInfoMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int id;
-    private int level;
-    private int maxPlayers;
-    private ArrayList<Player> players;
+    private final int id;
+    private final int level;
+    private final int maxPlayers;
+    private final ArrayList<Player> players;
 
     // =======================
     // CONSTRUCTORS

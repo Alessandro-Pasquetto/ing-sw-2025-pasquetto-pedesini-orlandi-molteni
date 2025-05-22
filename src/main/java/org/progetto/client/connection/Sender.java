@@ -70,8 +70,6 @@ public interface Sender {
 
     void showTrack();
 
-    void close();
-
     void responsePlaceAlien(int x, int y, String color);
 
     void responseStartingPosition(int startingPosition);
@@ -109,4 +107,6 @@ public interface Sender {
     void responseRollDice();
 
     void responseSelectSpaceshipPart(int x, int y);
+
+    void leaveGame();
 }

@@ -144,6 +144,6 @@ public class GameCommands {
      */
     public static void close(String[] commandParts){
         Sender sender = GameData.getSender();
-        sender.close();
+        sender.leaveGame();
     }
 }

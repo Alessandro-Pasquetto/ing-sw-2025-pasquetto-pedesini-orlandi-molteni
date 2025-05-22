@@ -45,13 +45,7 @@ public class RmiClientSender implements Sender {
                 }catch (RemoteException e){
                     System.err.println("RMI server unreachable");
 
-                    Platform.runLater(() -> {
-                        try {
-                            PageController.switchScene("connection.fxml", "Connection");
-                        } catch (IOException e2) {
-                            throw new RuntimeException(e2);
-                        }
-                    });
+                    close();
                     return;
                 }
 
@@ -380,19 +374,6 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void close() {
-        server = null;
-        System.out.println("You have disconnected!");
-
-        try {
-            if(GameData.getUIType().equals("GUI"))
-                PageController.switchScene("connection.fxml", "Page1");
-        } catch (IOException e) {
-            System.err.println("RMI client unreachable");
-        }
-    }
-
-    @Override
     public void responsePlaceAlien(int x, int y, String color) {
         try {
             server.responsePlaceAlien(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y, color);
@@ -560,6 +541,30 @@ public class RmiClientSender implements Sender {
             server.responseSelectSpaceshipPart(RmiClientReceiver.getInstance(), GameData.getIdGame(), x, y);
         } catch (RemoteException e) {
             System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
+    public void leaveGame() {
+        try {
+            server.leaveGame(RmiClientReceiver.getInstance(), GameData.getIdGame());
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    public void close() {
+        server = null;
+        System.out.println("You have disconnected!");
+
+        if(GameData.getUIType().equals("GUI")) {
+            Platform.runLater(() -> {
+                try {
+                    PageController.switchScene("connection.fxml", "Connection");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 }

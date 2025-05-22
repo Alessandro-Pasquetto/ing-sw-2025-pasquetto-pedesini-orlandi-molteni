@@ -860,4 +860,19 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
         SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, x, y, virtualClient);
     }
+
+    @Override
+    public void leaveGame(VirtualClient virtualClient, int idGame) throws RemoteException {
+        GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+        Player player;
+        try{
+            player = gameManager.getPlayerBySender(virtualClient);
+        }catch (IllegalStateException e){
+            if(e.getMessage().equals("PlayerNotFound"))
+                virtualClient.sendMessage("PlayerNotFound");
+            return;
+        }
+
+        gameManager.leaveGame(player, virtualClient);
+    }
 }

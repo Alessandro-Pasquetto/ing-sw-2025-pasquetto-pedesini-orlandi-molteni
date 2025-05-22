@@ -147,7 +147,7 @@ public class TuiCommandFilter {
             tuiMessageQueue.offer(command);
         }
 
-        GameData.getSender().close();
+        GameData.getSender().leaveGame();
     }
 
     public static void messageDispatcher() {
