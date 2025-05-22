@@ -14,10 +14,16 @@ import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
+import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
+import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
+import org.progetto.server.model.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles messages coming from server
@@ -168,6 +174,10 @@ public class TuiHandlerMessage {
             System.out.println(anotherPlayerBookedComponentMessage.getPlayerName() + " booked a component at " + anotherPlayerBookedComponentMessage.getIdx());
         }
 
+        else if(messageObj instanceof AnotherPlayerPickedBookedComponentMessage anotherPlayerPickedBookedComponentMessage){
+            System.out.println(anotherPlayerPickedBookedComponentMessage.getPlayerName() + " picked a booked component at " + anotherPlayerPickedBookedComponentMessage.getIdx());
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             if (timer == 10)
@@ -197,7 +207,19 @@ public class TuiHandlerMessage {
             System.out.println();
         }
 
-        else if (messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
+        else if(messageObj instanceof PlayersInPositioningDecisionOrderMessage playersInPositioningDecisionOrderMessage) {
+            List<String> playersNames = new ArrayList<>();
+            for (Player player: playersInPositioningDecisionOrderMessage.getPlayers()){
+                playersNames.add(player.getName());
+            }
+            System.out.println("Players in decision order: " + playersNames);
+        }
+
+        else if(messageObj instanceof ActivePlayerMessage activePlayerMessage) {
+            System.out.println("Active player: " + activePlayerMessage.getPlayerName());
+        }
+
+        else if(messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
             BuildingCommands.responseStartingPosition(askStartingPositionMessage.getStartingPositions());
         }
 
