@@ -109,6 +109,7 @@ public class BuildingView {
     @FXML
     private ImageView deck2Image;
 
+
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
 

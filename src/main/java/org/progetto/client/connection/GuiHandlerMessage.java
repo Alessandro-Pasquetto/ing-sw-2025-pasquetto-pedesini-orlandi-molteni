@@ -188,6 +188,13 @@ public class GuiHandlerMessage {
                     sender.showTrack();
                 }
 
+                else if(GameData.getPhaseGame().equalsIgnoreCase("ENDGAME")){
+
+                    PageController.initEndGame(GameData.getLevelGame());
+                    PageController.switchScene("gameOverPage.fxml","EndGame");
+                }
+
+
             } catch (IOException e) {
                 Alerts.showWarning("Error loading the page");
                 System.err.println("Error loading the page");
@@ -591,6 +598,18 @@ public class GuiHandlerMessage {
 
                 case "YouLeftTravel":
                     PageController.getTravelView().setPlayerStatus(GameData.getNamePlayer(), true);
+                    break;
+
+                case "YouWon":
+                    PageController.getGameOverView().initGameOver(0);
+                    break;
+
+                case "You have lost":
+                    PageController.getGameOverView().initGameOver(1);
+                    break;
+
+                case "YouDrew":
+                    PageController.getGameOverView().initGameOver(2);
                     break;
 
                 default:

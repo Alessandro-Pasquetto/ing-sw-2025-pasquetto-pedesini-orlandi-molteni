@@ -782,3 +782,29 @@
     -fx-font-size: 18;
     -fx-font-weight: 500;
 }
+
+
+/* ============================
+   ENDGAME VIEW
+   ============================ */
+
+#endGameScrollPane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+#endGameBorderPane {
+    -fx-padding: 25;
+}
+
+#endGameTitle {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 28;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
+}
+#endGameContainer {
+    -fx-fill: rgba(6, 12, 17, 0.75);
+    -fx-arc-width: 42;
+    -fx-arc-height: 42;
+}
