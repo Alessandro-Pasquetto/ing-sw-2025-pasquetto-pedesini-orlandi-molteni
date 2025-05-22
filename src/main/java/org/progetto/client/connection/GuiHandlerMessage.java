@@ -193,6 +193,10 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
 
+            // TODO: delete (just for testing)
+            if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                GameData.setSpaceship(responseSpaceshipMessage.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix());
+
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
                     if (!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
@@ -338,17 +342,23 @@ public class GuiHandlerMessage {
 //           );
 //        }
 //
-//        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
-//            PageController.getEventView().responseHowManyDoubleEngines(
-//                    howManyDoubleEnginesMessage.getMaxUsable(),
-//                    howManyDoubleEnginesMessage.getEnginePower(),
-//                    false
-//            );
-//        }
-//
-//        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
-//            PageController.getEventView().responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
-//        }
+        else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
+            PageController.getEventView().askForQuantity(
+                    "How many double engines do you want to use?",
+                    "Select number of engines to use, you have " + howManyDoubleEnginesMessage.getMaxUsable() + " double engines available and an engine power of " + howManyDoubleEnginesMessage.getEnginePower() + "...",
+                    howManyDoubleEnginesMessage.getMaxUsable(),
+                    count -> GameData.getSender().responseHowManyDoubleEngines(count)
+            );
+        }
+
+        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
+            PageController.getEventView().selectComponentOnTheShip(
+                    "You need to discard a battery",
+                    "Select battery to discard...",
+                    "BATTERY",
+                    (x, y) -> GameData.getSender().responseBatteryToDiscard(x, y)
+            );
+        }
 //
 //        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
 //            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());

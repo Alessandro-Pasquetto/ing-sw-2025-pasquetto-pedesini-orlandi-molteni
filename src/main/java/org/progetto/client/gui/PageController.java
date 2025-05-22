@@ -261,6 +261,7 @@ public class PageController {
         eventView.initSpaceship(levelGame);
         eventView.initPlayersList();
         eventView.initBoard(levelGame);
+        eventView.resetEventLabels();
     }
 
     public static void initTravel(int levelGame) {

@@ -6,26 +6,34 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.IntConsumer;
 
 public class NewEventView {
 
@@ -34,6 +42,7 @@ public class NewEventView {
     // =======================
 
     final int COMPONENT_SIZE = 80;
+    final String HIGHLIGHT_ID = "highlight";
 
     @FXML
     public StackPane eventPane;
@@ -52,6 +61,12 @@ public class NewEventView {
 
     @FXML
     public GridPane spaceshipMatrix;
+
+    @FXML
+    public Label eventMainTitle;
+
+    @FXML
+    public Label eventMainDesc;
 
     @FXML
     public VBox btnContainer;
@@ -182,70 +197,48 @@ public class NewEventView {
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
 
-                    switch (comp.getRotation()) {
-                        case 0:
-                            iv.setRotate(0);
-                            break;
-                        case 1:
-                            iv.setRotate(90);
-                            break;
-                        case 2:
-                            iv.setRotate(180);
-                            break;
-                        case 3:
-                            iv.setRotate(270);
-                            break;
+                    if (comp instanceof HousingUnit) {
+                        renderHousingUnit(cell, comp);
                     }
 
-                    // Adds alien if present
+                    if (comp instanceof BatteryStorage) {
+                        renderBatteryStorage(cell, comp);
+                    }
+
                     if (comp instanceof HousingUnit) {
-                        HousingUnit housingUnit = (HousingUnit) comp;
 
-                        if (housingUnit.getHasPurpleAlien()) {
-                            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/PurpleAlien.png")));
-                            ImageView alienImageView = new ImageView(alienImage);
-                            alienImageView.setFitWidth(COMPONENT_SIZE * 0.6);
-                            alienImageView.setFitHeight(COMPONENT_SIZE * 0.6);
-                            alienImageView.setLayoutX((COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
-                            alienImageView.setLayoutY((COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
-                            alienImageView.setPreserveRatio(true);
-                            cell.getChildren().add(alienImageView);
-
-                        } else if (housingUnit.getHasOrangeAlien()) {
-                            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/OrangeAlien.png")));
-                            ImageView alienImageView = new ImageView(alienImage);
-                            alienImageView.setFitWidth(COMPONENT_SIZE * 0.6);
-                            alienImageView.setFitHeight(COMPONENT_SIZE * 0.6);
-                            alienImageView.setLayoutX((COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
-                            alienImageView.setLayoutY((COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
-                            alienImageView.setPreserveRatio(true);
-                            cell.getChildren().add(alienImageView);
+                        switch (comp.getRotation()) {
+                            case 0:
+                                iv.setRotate(0);
+                                break;
+                            case 1:
+                                iv.setRotate(90);
+                                break;
+                            case 2:
+                                iv.setRotate(180);
+                                break;
+                            case 3:
+                                iv.setRotate(270);
+                                break;
                         }
 
-                        else if (housingUnit.getCrewCount() == 2) {
-                            Image crewImage = new Image(String.valueOf(MainClient.class.getResource("img/items/CrewMate_icon.png")));
+                    } else {
 
-                            double imageSize = COMPONENT_SIZE * 0.4;
-                            double spacing = COMPONENT_SIZE * 0;
-
-                            double totalWidth = imageSize * 2 + spacing;
-                            double startX = (COMPONENT_SIZE - totalWidth) / 2;
-                            double centerY = (COMPONENT_SIZE - (imageSize * 3/2)) / 2;
-
-                            ImageView crewImageView1 = new ImageView(crewImage);
-                            crewImageView1.setFitWidth(imageSize);
-                            crewImageView1.setPreserveRatio(true);
-                            crewImageView1.setLayoutX(startX);
-                            crewImageView1.setLayoutY(centerY);
-                            cell.getChildren().add(crewImageView1);
-
-                            ImageView crewImageView2 = new ImageView(crewImage);
-                            crewImageView2.setFitWidth(imageSize);
-                            crewImageView2.setPreserveRatio(true);
-                            crewImageView2.setLayoutX(startX + imageSize + spacing);
-                            crewImageView2.setLayoutY(centerY);
-                            cell.getChildren().add(crewImageView2);
+                        switch (comp.getRotation()) {
+                            case 0:
+                                cell.setRotate(0);
+                                break;
+                            case 1:
+                                cell.setRotate(90);
+                                break;
+                            case 2:
+                                cell.setRotate(180);
+                                break;
+                            case 3:
+                                cell.setRotate(270);
+                                break;
                         }
+
                     }
                 }
 
@@ -255,43 +248,148 @@ public class NewEventView {
     }
 
     /**
-     * Asks the player if they want to place an alien
-     *
-     * @author Stefano
-     * @param alienColor is the color of the alien
-     * @param ship is the spaceship where the alien will be placed
-     */
-    public void askForAlien(String alienColor, Spaceship ship) {
-
-//        populatingSectionDesc.setText("Select a component to fill it with the " + alienColor + " alien clicking on it...");
-//
-//        PageController.getPopulatingView().updateSpaceship(ship);
-//        highlightCellsForAlien(ship, alienColor);
-//
-//        clearBtnContainer();
-//
-//        Button btn = new Button("Skip");
-//        btn.setOnAction(e -> GameData.getSender().responsePlaceAlien(-1, -1, alienColor));
-//        btnContainer.getChildren().add(btn);
-    }
-
-    /**
-     * Clears the button container
-     *
-     * @author Alessandro
-     */
-    public void clearBtnContainer() {
-        btnContainer.getChildren().clear();
-    }
-
-    /**
-     * Updates scene labels
+     * Renders the housing unit
      *
      * @author Gabriele
+     * @param cell is the cell to render
+     * @param comp is the component to render
      */
-    public void updateLabels() {
-//        populatingSectionTitle.setText("YOUR SPACESHIP IS POPULATED");
-//        populatingSectionDesc.setText("Please wait while the other players do so...");
+    public void renderHousingUnit(Pane cell, Component comp) {
+        HousingUnit housingUnit = (HousingUnit) comp;
+
+        if (housingUnit.getHasPurpleAlien()) {
+            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/PurpleAlien.png")));
+            ImageView alienImageView = new ImageView(alienImage);
+            alienImageView.setFitWidth(COMPONENT_SIZE * 0.6);
+            alienImageView.setFitHeight(COMPONENT_SIZE * 0.6);
+            alienImageView.setLayoutX((COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
+            alienImageView.setLayoutY((COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
+            alienImageView.setPreserveRatio(true);
+            cell.getChildren().add(alienImageView);
+
+        } else if (housingUnit.getHasOrangeAlien()) {
+            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/OrangeAlien.png")));
+            ImageView alienImageView = new ImageView(alienImage);
+            alienImageView.setFitWidth(COMPONENT_SIZE * 0.6);
+            alienImageView.setFitHeight(COMPONENT_SIZE * 0.6);
+            alienImageView.setLayoutX((COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
+            alienImageView.setLayoutY((COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
+            alienImageView.setPreserveRatio(true);
+            cell.getChildren().add(alienImageView);
+
+        } else {
+            int crewCount = housingUnit.getCrewCount();
+
+            if (crewCount == 0) {
+                return;
+            }
+
+            Image crewImage = new Image(String.valueOf(MainClient.class.getResource("img/items/CrewMate_icon.png")));
+            double imageSize = COMPONENT_SIZE * 0.4;
+            double centerY = (COMPONENT_SIZE - (imageSize * 3/2)) / 2;
+
+            if (crewCount == 1) {
+                double centerX = (COMPONENT_SIZE - imageSize) / 2;
+
+                ImageView crewImageView = new ImageView(crewImage);
+                crewImageView.setFitWidth(imageSize);
+                crewImageView.setPreserveRatio(true);
+                crewImageView.setLayoutX(centerX);
+                crewImageView.setLayoutY(centerY);
+                cell.getChildren().add(crewImageView);
+
+            } else if (crewCount == 2) {
+                double spacing = 0;
+                double totalWidth = imageSize * 2 + spacing;
+                double startX = (COMPONENT_SIZE - totalWidth) / 2;
+
+                for (int i = 0; i < 2; i++) {
+                    double x = startX + i * (imageSize + spacing);
+
+                    ImageView crewImageView = new ImageView(crewImage);
+                    crewImageView.setFitWidth(imageSize);
+                    crewImageView.setPreserveRatio(true);
+                    crewImageView.setLayoutX(x);
+                    crewImageView.setLayoutY(centerY);
+                    cell.getChildren().add(crewImageView);
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders the battery storage
+     *
+     * @author Gabriele
+     * @param cell is the cell to render
+     * @param comp is the component to render
+     */
+    public void renderBatteryStorage(Pane cell, Component comp) {
+        BatteryStorage batteryStorage = (BatteryStorage) comp;
+        Image batteryImage = new Image(String.valueOf(MainClient.class.getResource("img/items/Battery_icon.png")));
+
+        if (batteryStorage.getCapacity() == 2) {
+            int count = batteryStorage.getItemsCount();
+            double imageSizeX = 16;
+            double imageSizeY = 36;
+            double spacing = 0;
+
+            double startX = 24;
+            double centerY = 23;
+
+            for (int i = 0; i < 2; i++) {
+                double x = startX + i * (imageSizeX + spacing);
+
+                if (i < count) {
+                    // Render battery image
+                    ImageView batteryImageView = new ImageView(batteryImage);
+                    batteryImageView.setFitWidth(imageSizeX);
+                    batteryImageView.setFitHeight(imageSizeY);
+                    batteryImageView.setLayoutX(x);
+                    batteryImageView.setLayoutY(centerY);
+                    batteryImageView.setPreserveRatio(false);
+                    cell.getChildren().add(batteryImageView);
+
+                } else {
+                    // Render empty slot as black rectangle
+                    Rectangle placeholder = new Rectangle(imageSizeX, imageSizeY, Color.BLACK);
+                    placeholder.setLayoutX(x);
+                    placeholder.setLayoutY(centerY);
+                    cell.getChildren().add(placeholder);
+                }
+            }
+        }
+
+        if (batteryStorage.getCapacity() == 3) {
+            int count = batteryStorage.getItemsCount();
+            double imageSizeX = 16;
+            double imageSizeY = 36;
+            double spacing = 0;
+
+            double startX = 16;
+            double centerY = 23;
+
+            for (int i = 0; i < 3; i++) {
+                double x = startX + i * (imageSizeX + spacing);
+
+                if (i < count) {
+                    // Render battery image
+                    ImageView batteryImageView = new ImageView(batteryImage);
+                    batteryImageView.setFitWidth(imageSizeX);
+                    batteryImageView.setFitHeight(imageSizeY);
+                    batteryImageView.setLayoutX(x);
+                    batteryImageView.setLayoutY(centerY);
+                    batteryImageView.setPreserveRatio(false);
+                    cell.getChildren().add(batteryImageView);
+                } else {
+                    // Render empty slot as black rectangle
+                    Rectangle placeholder = new Rectangle(imageSizeX, imageSizeY, Color.BLACK);
+                    placeholder.setLayoutX(x);
+                    placeholder.setLayoutY(centerY);
+                    cell.getChildren().add(placeholder);
+                }
+            }
+        }
     }
 
     /**
@@ -479,6 +577,8 @@ public class NewEventView {
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
         if (shipGrid == null || bookedGrid == null) return;
 
+        clearHighlightedCells();
+
         shipGrid.getChildren().clear();
         for (int row = 0; row < shipMatrix.length; row++) {
             for (int col = 0; col < shipMatrix[row].length; col++) {
@@ -587,5 +687,175 @@ public class NewEventView {
                 }
             }
         }
+
+        if (!name.equals(GameData.getNamePlayer())) {
+            eventMainTitle.setText("WAIT FOR YOUR TURN");
+            eventMainDesc.setText("Another player is taking his decisions, please wait...");
+        }
+    }
+
+    /**
+     * Asks the player for a quantity
+     *
+     * @author Gabriele
+     * @param title is the title of the request
+     * @param description is the description of the request
+     * @param maxCount is the maximum number of items to select
+     * @param onConfirm is the action to perform when confirming
+     */
+    public void askForQuantity(String title, String description, int maxCount, IntConsumer onConfirm) {
+        resetEventLabels();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+
+        // Counter controls
+        Label counterLabel = new Label("0");
+        Button minusButton = new Button("-");
+        Button plusButton = new Button("+");
+        Button confirmButton = new Button("Confirm");
+
+        final int[] counter = {0};
+
+        minusButton.setOnAction(e -> {
+            if (counter[0] > 0) {
+                counter[0]--;
+                counterLabel.setText(String.valueOf(counter[0]));
+            }
+        });
+
+        plusButton.setOnAction(e -> {
+            if (counter[0] < maxCount) {
+                counter[0]++;
+                counterLabel.setText(String.valueOf(counter[0]));
+            }
+        });
+
+        confirmButton.setOnAction(e -> {
+            onConfirm.accept(counter[0]);
+        });
+
+        HBox counterBox = new HBox(10, minusButton, counterLabel, plusButton);
+        counterBox.setStyle("-fx-alignment: center;");
+        VBox container = new VBox(20, counterBox, confirmButton);
+        container.setStyle("-fx-alignment: center;");
+
+        btnContainer.getChildren().clear();
+        btnContainer.getChildren().add(container);
+    }
+
+    public void selectComponentOnTheShip(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
+        resetEventLabels();
+        clearHighlightedCells();
+
+        Component[][] spaceship = GameData.getSpaceship();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+
+        ArrayList<ComponentType> types = new ArrayList<>();
+
+        // Defines which components to highlight
+        if (typeToHighlight.equals("BATTERY")) {
+            types.add(ComponentType.BATTERY_STORAGE);
+        }
+        else if (typeToHighlight.equals("CREW")) {
+            types.add(ComponentType.CENTRAL_UNIT);
+            types.add(ComponentType.HOUSING_UNIT);
+        }
+
+        for (int row = 0; row < spaceship.length; row++) {
+            for (int col = 0; col < spaceship[row].length; col++) {
+                Component comp = spaceship[row][col];
+                Pane cell = getCellFromSpaceshipMatrix(col, row);
+
+                if (comp != null && types.contains(comp.getType())) {
+                    final int finalRow = row;
+                    final int finalCol = col;
+
+                    if (typeToHighlight.equals("BATTERY") && ((BatteryStorage) comp).getItemsCount() > 0) {
+                        highlightCell(cell, comp, Color.rgb(95, 228, 43, 0.3));
+
+                        cell.setOnMouseClicked(e -> {
+                            onClick.accept(finalCol, finalRow);
+                        });
+                    }
+                    else if (typeToHighlight.equals("CREW") && ((HousingUnit) comp).getCrewCount() > 0) {
+                        highlightCell(cell, comp, Color.rgb(0, 178, 255, 0.3));
+
+                        cell.setOnMouseClicked(e -> {
+                            onClick.accept(finalCol, finalRow);
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the cell from the spaceship matrix
+     *
+     * @author Gabriele
+     * @param col column index
+     * @param row row index
+     * @return the Pane at the specified coordinates
+     */
+    private Pane getCellFromSpaceshipMatrix(int col, int row) {
+        for (Node node : spaceshipMatrix.getChildren()) {
+            Integer nodeCol = GridPane.getColumnIndex(node);
+            Integer nodeRow = GridPane.getRowIndex(node);
+
+            if (nodeCol != null && nodeRow != null && nodeCol == col && nodeRow == row) {
+                return (Pane) node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Highlights the cell with a color
+     *
+     * @author Gabriele
+     * @param cell is the cell to highlight
+     * @param comp is the component to highlight
+     * @param color is the color to use for highlighting
+     */
+    private void highlightCell(Pane cell, Component comp, Color color) {
+        cell.getChildren().removeIf(node -> HIGHLIGHT_ID.equals(node.getId()));
+
+        Rectangle overlay = new Rectangle(COMPONENT_SIZE, COMPONENT_SIZE);
+        overlay.setFill(color);
+        overlay.setId("highlight");
+        overlay.setMouseTransparent(true);
+
+        cell.getChildren().add(overlay);
+        overlay.toFront();
+        cell.setCursor(Cursor.HAND);
+    }
+
+    /**
+     * Clears the highlighted cells
+     *
+     * @author Stefano
+     */
+    private void clearHighlightedCells() {
+        spaceshipMatrix.getChildren().forEach(node -> {
+            if (node instanceof Pane) {
+                Pane cell = (Pane) node;
+                cell.getChildren().removeIf(child -> HIGHLIGHT_ID.equals(child.getId()));
+                cell.setStyle("");
+            }
+        });
+    }
+
+    /**
+     * Resets the event labels
+     *
+     * @author Gabriele
+     */
+    public void resetEventLabels() {
+        eventMainTitle.setText("");
+        eventMainDesc.setText("");
+        btnContainer.getChildren().clear();
     }
 }

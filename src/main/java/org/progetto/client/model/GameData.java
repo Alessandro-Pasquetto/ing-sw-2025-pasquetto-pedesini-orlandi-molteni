@@ -2,6 +2,7 @@ package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
 
@@ -27,6 +28,7 @@ public class GameData {
     private static String namePlayer;
     private static String activePlayer;
     private static int color;
+    private static Component[][] spaceship;
     private static String UIType;
 
     // =======================
@@ -63,6 +65,10 @@ public class GameData {
 
     public static String getActivePlayer() {
         return activePlayer;
+    }
+
+    public static Component[][] getSpaceship() {
+        return spaceship;
     }
 
     public static String getUIType(){
@@ -107,6 +113,10 @@ public class GameData {
 
     public static void setActivePlayer(String activePlayer) {
         GameData.activePlayer = activePlayer;
+    }
+
+    public static void setSpaceship(Component[][] spaceship) {
+        GameData.spaceship = spaceship;
     }
 
     public static void setUIType(String UIType){
