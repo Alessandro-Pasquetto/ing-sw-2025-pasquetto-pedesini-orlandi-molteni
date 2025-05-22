@@ -179,7 +179,7 @@ public class LostStationController extends EventControllerAbstract {
             return;
         }
 
-        Component[][] matrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         // Checks if component index is correct
         if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {

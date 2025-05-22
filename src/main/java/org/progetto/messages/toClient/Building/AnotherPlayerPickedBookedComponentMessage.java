@@ -7,29 +7,26 @@ public class AnotherPlayerPickedBookedComponentMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    String name;
-    String imgSrc;
-    int idx;
+    private final String playerName;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
-    public AnotherPlayerPickedBookedComponentMessage(String name, int idx, String imgSrc) {
-        this.name = name;
+    public AnotherPlayerPickedBookedComponentMessage(String playerName, int idx) {
+        this.playerName = playerName;
         this.idx = idx;
-        this.imgSrc = imgSrc;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public String getName() {
-        return name;
+
+    public String getPlayerName() {
+        return playerName;
     }
-    public String getImgSrc() {
-        return imgSrc;
-    }
+
     public int getIdx() {
         return idx;
     }

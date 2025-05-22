@@ -1,7 +1,5 @@
 package org.progetto.server.controller.events;
 import org.junit.jupiter.api.Test;
-import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.EventCommon.DiceResultMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
@@ -129,8 +127,8 @@ class MeteorsRainControllerTest {
         controller.rollDice(p1, sender);
 
         Thread.sleep(200);
-        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
-        assertNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
+        assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p1, "YES", sender);
 
@@ -138,34 +136,34 @@ class MeteorsRainControllerTest {
         controller.receiveDiscardedBatteries(p1, 2, 3, sender);
 
         Thread.sleep(200);
-        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[1][2]);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
 
         // Second meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
         Thread.sleep(200);
-        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[3][2]);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[3][2]);
 
         // Third meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
         Thread.sleep(200);
-        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
-        assertNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
+        assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p1, "NO", sender);
 
         Thread.sleep(200);
-        assertNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][3]);
+        assertNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
 
         // Fourth meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
         Thread.sleep(200);
-        assertNotNull(p1.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][1]);
-        assertNotNull(p2.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[2][1]);
+        assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][1]);
+        assertNotNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][1]);
     }
 }

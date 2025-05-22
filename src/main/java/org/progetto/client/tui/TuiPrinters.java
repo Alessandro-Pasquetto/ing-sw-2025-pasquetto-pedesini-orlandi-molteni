@@ -637,7 +637,7 @@ public class TuiPrinters {
         }
         System.out.println();
 
-        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
         int rows = spaceshipMatrix.length;
         int cols = spaceshipMatrix[0].length;
 

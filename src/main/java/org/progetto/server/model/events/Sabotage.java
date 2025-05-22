@@ -59,7 +59,7 @@ public class Sabotage extends EventCard {
      * @return the component to destroy, null otherwise
      */
     public Component penalty(int y, int x, Player player) {
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         if (y >= 0 && y < spaceshipMatrix.length && x >= 0 && x < spaceshipMatrix[0].length) {
             if (spaceshipMatrix[y][x] != null) {

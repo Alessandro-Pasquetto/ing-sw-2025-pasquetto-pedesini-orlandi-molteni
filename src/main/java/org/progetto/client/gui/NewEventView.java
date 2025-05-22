@@ -178,7 +178,7 @@ public class NewEventView {
      * @param ship is the spaceship to be updated
      */
     public void updateSpaceship(Spaceship ship) {
-        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         GridPane shipGrid = spaceshipMatrix;
 
@@ -570,7 +570,7 @@ public class NewEventView {
      * @param ship is the spaceship to show
      */
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
-        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
         Component[] bookedComponents = ship.getBuildingBoard().getBookedCopy();
 
         GridPane shipGrid = getShipGridByPlayer(player.getName());

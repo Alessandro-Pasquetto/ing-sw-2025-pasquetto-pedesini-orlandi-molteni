@@ -10,6 +10,7 @@ import org.progetto.client.model.BuildingData;
 import java.io.IOException;
 import java.util.Objects;
 import javafx.scene.text.Font;
+import org.progetto.client.model.GameData;
 
 /**
  * GUI page controller
@@ -232,10 +233,7 @@ public class PageController {
         buildingView.initSpaceship(levelGame, color);
         buildingView.initTimer(levelGame);
         buildingView.initEventCardDecks(levelGame);
-        buildingView.initPlayersList();
-        // todo
-        // gameView.loadBoardImg(imgSrcBoard);
-        // gameView.loadShipImg(imgSrcSpaceship);
+        GameData.getSender().showPlayers();
     }
 
     public static void initAdjusting(int levelGame) {

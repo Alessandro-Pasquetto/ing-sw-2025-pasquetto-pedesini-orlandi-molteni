@@ -4,7 +4,6 @@ import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMe
 import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
-import org.progetto.messages.toClient.Spaceship.UpdatedSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -104,8 +103,8 @@ public class SpaceshipController {
         }
 
         try {
-            BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[startY][startX];
-            BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[endY][endX];
+            BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[startY][startX];
+            BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[endY][endX];
 
             Box box = startComponent.getBoxStorage()[startIdx];
 
@@ -150,7 +149,7 @@ public class SpaceshipController {
         }
 
         try {
-            BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix()[yBoxStorage][xBoxStorage];
+            BoxStorage component = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[yBoxStorage][xBoxStorage];
 
             component.removeBox(player.getSpaceship(), idx);
 
@@ -222,19 +221,19 @@ public class SpaceshipController {
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-            if (buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent] == null){
+            if (buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent] == null){
                 sender.sendMessage("EmptyComponentCell");
                 return;
             }
 
             // Checks if player is trying to destroy central unit
-            if (buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
+            if (buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
                 sender.sendMessage("ImpossibleToDestroyCentralUnit");
                 return;
             }
 
             // Checks if player is trying to destroy a correct component
-            if (!buildingBoard.getCopySpaceshipMatrix()[yComponent][xComponent].getIncorrectlyPlaced()) {
+            if (!buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent].getIncorrectlyPlaced()) {
                 sender.sendMessage("ImpossibleToDestroyCorrectlyPlaced");
                 return;
             }

@@ -14,6 +14,8 @@ import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
+import org.progetto.server.model.components.Component;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -53,7 +55,6 @@ public class GuiHandlerMessage {
 
             GameData.setIdGame(gameId);
             GameData.setLevelGame(levelGame);
-
         }
 
         else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
@@ -195,18 +196,20 @@ public class GuiHandlerMessage {
 
             // TODO: delete (just for testing)
             if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                GameData.setSpaceship(responseSpaceshipMessage.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix());
+                GameData.setSpaceship(responseSpaceshipMessage.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy());
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
-                    if (!responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                        PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                    if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                        PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship()); // This is used only for reconnection
                     else
-                        PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                        PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+
                     break;
 
                 case "ADJUSTING":
-                    PageController.getAdjustingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    if(responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                        PageController.getAdjustingView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
                     break;
 
                 case "POPULATING":
@@ -261,11 +264,28 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
-            GameData.getSender().showSpaceship(anotherPlayerPlacedComponentMessage.getNamePlayer());
+
+            String playerName = anotherPlayerPlacedComponentMessage.getNamePlayer();
+            Component component = anotherPlayerPlacedComponentMessage.getComponent();
+            int x = anotherPlayerPlacedComponentMessage.getX();
+            int y = anotherPlayerPlacedComponentMessage.getY();
+
+            PageController.getBuildingView().updateOtherPlayerPlacedComponent(playerName, component, x, y);
         }
 
         else if (messageObj instanceof AnotherPlayerBookedComponentMessage anotherPlayerBookedComponentMessage) {
-            GameData.getSender().showSpaceship(anotherPlayerBookedComponentMessage.getNamePlayer());
+            String playerName = anotherPlayerBookedComponentMessage.getPlayerName();
+            Component component = anotherPlayerBookedComponentMessage.getComponent();
+            int idx = anotherPlayerBookedComponentMessage.getIdx();
+
+            PageController.getBuildingView().updateOtherPlayerBookedComponent(playerName, component, idx);
+        }
+
+        else if (messageObj instanceof AnotherPlayerPickedBookedComponentMessage anotherPlayerPickedBookedComponentMessage) {
+            String playerName = anotherPlayerPickedBookedComponentMessage.getPlayerName();
+            int idx = anotherPlayerPickedBookedComponentMessage.getIdx();
+
+            PageController.getBuildingView().updateOtherPlayerBookedComponent(playerName, null, idx);
         }
 
         else if (messageObj instanceof AnotherPlayerDiscardComponentMessage) {

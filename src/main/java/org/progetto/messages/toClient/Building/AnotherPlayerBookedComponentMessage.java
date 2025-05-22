@@ -1,37 +1,37 @@
 package org.progetto.messages.toClient.Building;
 
+import org.progetto.server.model.components.Component;
 import java.io.Serializable;
 
 public class AnotherPlayerBookedComponentMessage implements Serializable {
 
-    private String namePlayer;
-    private int bookedIndex;
-    private String imgSrcBookedComponent;
+    private final String playerName;
+    private final Component component;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerBookedComponentMessage(String namePlayer, String imgSrcBookedComponent, int bookedIndex) {
-        this.namePlayer = namePlayer;
-        this.imgSrcBookedComponent = imgSrcBookedComponent;
-        this.bookedIndex = bookedIndex;
+    public AnotherPlayerBookedComponentMessage(String playerName, Component component, int idx) {
+        this.playerName = playerName;
+        this.component = component;
+        this.idx = idx;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public String getNamePlayer() {
-        return namePlayer;
-    }
-    public String getImgSrcBookedComponent() {
-        return imgSrcBookedComponent;
-    }
-    public int getBookedIndex() {
-        return bookedIndex;
+    public String getPlayerName() {
+        return playerName;
     }
 
+    public Component getComponent() {
+        return component;
+    }
 
-
+    public int getIdx() {
+        return idx;
+    }
 }

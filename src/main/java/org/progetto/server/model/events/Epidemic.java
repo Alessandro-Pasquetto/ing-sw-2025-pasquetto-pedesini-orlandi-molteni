@@ -36,7 +36,7 @@ public class Epidemic extends EventCard {
      * @param infectedComponents Set of all the infected components
      */
     private void dfsInfectedComponents(int i, int j, boolean firstIteration, HousingUnit prevComponent, BuildingBoard buildingBoard, boolean[][] visitedCells, Set<HousingUnit> infectedComponents) {
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
         HousingUnit currComponent;
 
         if (!firstIteration) {
@@ -94,7 +94,7 @@ public class Epidemic extends EventCard {
      * @return amount of crew members removed
      */
     public int epidemicResult(Player player) {
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         boolean[][] visitedCells = new boolean[spaceshipMatrix.length][spaceshipMatrix[0].length];
 

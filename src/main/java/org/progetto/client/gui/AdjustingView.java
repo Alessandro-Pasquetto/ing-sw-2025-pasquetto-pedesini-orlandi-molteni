@@ -1,8 +1,6 @@
 package org.progetto.client.gui;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -112,7 +110,7 @@ public class AdjustingView {
      * @param ship is the spaceship to be updated
      */
     public void updateSpaceship(Spaceship ship) {
-        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         GridPane shipGrid = spaceshipMatrix;
 

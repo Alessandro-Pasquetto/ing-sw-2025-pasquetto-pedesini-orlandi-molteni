@@ -3,6 +3,7 @@ package org.progetto.client.gui;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -309,15 +310,6 @@ public class BuildingView {
     }
 
     /**
-     * First call to server for players list
-     *
-     * @author Lorenzo
-     */
-    public void initPlayersList() {
-        GameData.getSender().showPlayers();
-    }
-
-    /**
      * Populate the list of active players
      *
      * @author Gabriele
@@ -481,12 +473,16 @@ public class BuildingView {
      * @param ship is the spaceship to show
      */
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
-        Component[][] shipMatrix = ship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
         Component[] bookedComponents = ship.getBuildingBoard().getBookedCopy();
 
         GridPane shipGrid = getShipGridByPlayer(player.getName());
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
-        if (shipGrid == null || bookedGrid == null) return;
+
+        if (shipGrid == null || bookedGrid == null){
+            System.err.println("Null shipGrid");
+            return;
+        }
 
         shipGrid.getChildren().clear();
         for (int row = 0; row < shipMatrix.length; row++) {
@@ -538,6 +534,90 @@ public class BuildingView {
             }
 
             bookedGrid.add(cell, i, 0);
+        }
+    }
+
+    public void updateOtherPlayerPlacedComponent(String playerName, Component component, int x, int y) {
+
+        GridPane shipGrid = getShipGridByPlayer(playerName);
+
+        if (shipGrid == null){
+            System.err.println("Null shipGrid");
+            return;
+        }
+
+        for (Node node : shipGrid.getChildren()) {
+            Integer column = GridPane.getColumnIndex(node);
+            Integer row = GridPane.getRowIndex(node);
+
+            Pane cell = (Pane) node;
+
+            if (column == x && row == y) {
+                cell.getChildren().clear();
+                Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(35);
+                iv.setFitHeight(35);
+                iv.setPreserveRatio(true);
+                cell.getChildren().add(iv);
+                switch (component.getRotation()){
+                    case 0:
+                        cell.setRotate(0);
+                        break;
+                    case 1:
+                        cell.setRotate(90);
+                        break;
+                    case 2:
+                        cell.setRotate(180);
+                        break;
+                    case 3:
+                        cell.setRotate(270);
+                        break;
+                }
+            }
+        }
+    }
+
+    public void updateOtherPlayerBookedComponent(String playerName, Component component, int idx){
+        GridPane bookedGrid = getBookedGridByPlayer(playerName);
+
+        if (bookedGrid == null){
+            System.err.println("Null shipGrid");
+            return;
+        }
+
+        for (Node node : bookedGrid.getChildren()) {
+            Integer column = GridPane.getColumnIndex(node);
+
+            Pane cell = (Pane) node;
+
+            if (column == idx) {
+                cell.getChildren().clear();
+
+                if(component == null)
+                    return;
+
+                Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
+                ImageView iv = new ImageView(img);
+                iv.setFitWidth(35);
+                iv.setFitHeight(35);
+                iv.setPreserveRatio(true);
+                cell.getChildren().add(iv);
+                switch (component.getRotation()){
+                    case 0:
+                        cell.setRotate(0);
+                        break;
+                    case 1:
+                        cell.setRotate(90);
+                        break;
+                    case 2:
+                        cell.setRotate(180);
+                        break;
+                    case 3:
+                        cell.setRotate(270);
+                        break;
+                }
+            }
         }
     }
 
@@ -1244,7 +1324,7 @@ public class BuildingView {
      */
     public void updateSpaceship(Spaceship spaceship) {
 
-        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         for (Node node : this.spaceshipMatrix.getChildren()) {
             if (node instanceof Pane cell) {

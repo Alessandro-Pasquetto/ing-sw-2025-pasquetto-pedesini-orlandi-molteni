@@ -1,5 +1,4 @@
 package org.progetto.client.gui;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,17 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import org.progetto.client.MainClient;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
-import org.progetto.client.tui.TuiCommandFilter;
-import org.progetto.client.tui.TuiPrinters;
-import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.*;
-import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
 import org.progetto.server.model.events.Planets;
 
@@ -192,7 +186,7 @@ public class EventView {
             }
         }
 
-        renderShipComponents(currentPlayer.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix());
+        renderShipComponents(currentPlayer.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy());
     }
 
     private void renderShipComponents(Component[][] layout) {

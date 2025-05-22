@@ -49,7 +49,7 @@ public class MeteorsRain extends EventCard {
      * @return first component in his trajectory if it has any exposed connector, otherwise null
      */
     public Component checkImpactComponent(Game game, Player player, Projectile shot, int position) {
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
         int row, column;
 
         switch (shot.getFrom()) {

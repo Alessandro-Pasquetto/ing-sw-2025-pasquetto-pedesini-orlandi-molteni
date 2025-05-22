@@ -291,7 +291,7 @@ public class Spaceship implements Serializable {
      */
     public boolean checkShipAllowPurpleAlien() {
 
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
 
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
@@ -316,7 +316,7 @@ public class Spaceship implements Serializable {
      */
     public boolean checkShipAllowOrangeAlien() {
 
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
 
         for (int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {

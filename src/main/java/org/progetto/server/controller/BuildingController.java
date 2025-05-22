@@ -509,10 +509,11 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             sender.sendMessage("AllowedToPlaceComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
@@ -546,10 +547,11 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             sender.sendMessage("AllowedToPlaceComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
@@ -597,11 +599,12 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             sender.sendMessage("AllowedToPlaceComponent");
             try{
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
                 Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
                 sender.sendMessage(new PickedComponentMessage(pickedComponent));
 
@@ -655,11 +658,12 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             sender.sendMessage("AllowedToPlaceComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
             try{
                 gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
@@ -713,13 +717,15 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
+
             buildingBoard.tryToPlaceComponent(xPlaceComponent, yPlaceComponent);
 
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
             sender.sendMessage("AllowedToPlaceComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
             sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
@@ -772,17 +778,19 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
+
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             sender.sendMessage("AllowedToPlaceComponent");
             try{
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
                 gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
                 String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
                 sender.sendMessage("PickedBookedComponent");
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, pickedComponentImg), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
             } catch (IllegalStateException e) {
                 if(e.getMessage().equals("FullHandComponent"))
@@ -834,10 +842,12 @@ public class BuildingController {
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try{
+            Component component = buildingBoard.getHandComponent();
+
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
             sender.sendMessage("AllowedToPlaceComponent");
 
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName()), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
             sender.sendMessage("YouAreReady");
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
@@ -954,10 +964,10 @@ public class BuildingController {
         }
 
         try {
-            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
+            Component component = player.getSpaceship().getBuildingBoard().getHandComponent();
             player.getSpaceship().getBuildingBoard().setAsBooked(idx);
             sender.sendMessage("ComponentBooked");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(), imgSrc, idx), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(), component, idx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
@@ -1042,10 +1052,9 @@ public class BuildingController {
 
         try{
             player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
-            String imgSrc = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
             sender.sendMessage("PickedBookedComponent");
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx, imgSrc), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))

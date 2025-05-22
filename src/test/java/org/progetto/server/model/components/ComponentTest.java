@@ -77,7 +77,7 @@ class ComponentTest {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
 
         // Standard rotation
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgSrc"));
@@ -124,7 +124,7 @@ class ComponentTest {
         Spaceship spaceship = new Spaceship(2, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
 
         // Rotate one time
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 3}, "imgPath"));

@@ -19,11 +19,11 @@ class BuildingBoardTest {
         for (int i = 0; i < 5; i++) {
             System.out.printf("%-20s", 5 + i);
         }
-        for (int i = 0; i < buildingBoard.getCopySpaceshipMatrix().length; i++) {
+        for (int i = 0; i < buildingBoard.getSpaceshipMatrixCopy().length; i++) {
             System.out.println();
             System.out.printf("%-20s", 5 + i);
-            for (int j = 0; j < buildingBoard.getCopySpaceshipMatrix()[0].length; j++) {
-                String value = (buildingBoard.getCopySpaceshipMatrix()[i][j] == null) ? "NULL" : buildingBoard.getCopySpaceshipMatrix()[i][j].getType().toString() + "-" + buildingBoard.getCopySpaceshipMatrix()[i][j].getRotation();
+            for (int j = 0; j < buildingBoard.getSpaceshipMatrixCopy()[0].length; j++) {
+                String value = (buildingBoard.getSpaceshipMatrixCopy()[i][j] == null) ? "NULL" : buildingBoard.getSpaceshipMatrixCopy()[i][j].getType().toString() + "-" + buildingBoard.getSpaceshipMatrixCopy()[i][j].getRotation();
                 System.out.printf("%-20s", value);
             }
         }
@@ -62,11 +62,11 @@ class BuildingBoardTest {
     }
 
     @Test
-    void getCopySpaceshipMatrix() {
+    void getSpaceshipMatrixCopy() {
         // Create board for level 1
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
 
-        Component[][] matrix = board.getCopySpaceshipMatrix();
+        Component[][] matrix = board.getSpaceshipMatrixCopy();
 
         // Test matrix is not null
         assertNotNull(matrix);
@@ -224,7 +224,7 @@ class BuildingBoardTest {
         Spaceship spaceship = new Spaceship(1, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
-        Component[][] spaceshipMatrix = buildingBoard.getCopySpaceshipMatrix();
+        Component[][] spaceshipMatrix = buildingBoard.getSpaceshipMatrixCopy();
 
         Component c;
 
