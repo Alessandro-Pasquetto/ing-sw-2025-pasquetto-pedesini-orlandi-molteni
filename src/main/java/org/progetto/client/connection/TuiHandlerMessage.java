@@ -656,15 +656,15 @@ public class TuiHandlerMessage {
                     System.out.println(GREEN + "Nothing got destroyed!" + RESET);
                     break;
 
-                case "YouWon":
+                case "YouWonBattle":
                     System.out.println(GREEN + "You won against raiders!" + RESET);
                     break;
 
-                case "YouLost":
+                case "YouLostBattle":
                     System.out.println(RED + "You lost against raiders!" + RESET);
                     break;
 
-                case "YouDrew":
+                case "YouDrewBattle":
                     System.out.println(YELLOW + "You drew against raiders!" + RESET);
                     break;
 

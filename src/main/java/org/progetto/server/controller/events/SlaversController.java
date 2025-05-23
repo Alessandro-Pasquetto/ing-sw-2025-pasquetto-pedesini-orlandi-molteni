@@ -91,7 +91,7 @@ public class SlaversController extends EventControllerAbstract {
                 // Checks if players is able to win without double cannons
                 if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
-                    sender.sendMessage("YouWon");
+                    sender.sendMessage("YouWonBattle");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -110,7 +110,7 @@ public class SlaversController extends EventControllerAbstract {
                     // Checks if player lose
                     if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
                         phase = EventPhase.PENALTY_EFFECT;
-                        sender.sendMessage("YouLost");
+                        sender.sendMessage("YouLostBattle");
                         penaltyEffect(player, sender);
 
                         gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -118,7 +118,7 @@ public class SlaversController extends EventControllerAbstract {
                         gameManager.getGameThread().resetAndWaitPlayerReady(player);
 
                     } else {
-                        sender.sendMessage("YouDrew");
+                        sender.sendMessage("YouDrewBattle");
                     }
                     continue;
                 }
@@ -262,20 +262,20 @@ public class SlaversController extends EventControllerAbstract {
                 // Calls the battleResult function
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
-                        sender.sendMessage("YouWon");
+                        sender.sendMessage("YouWonBattle");
                         phase = EventPhase.REWARD_DECISION;
                         sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
                         defeated = true;
                         break;
 
                     case -1:
-                        sender.sendMessage("YouLost");
+                        sender.sendMessage("YouLostBattle");
                         phase = EventPhase.PENALTY_EFFECT;
                         penaltyEffect(player, sender);
                         break;
 
                     case 0:
-                        sender.sendMessage("YouDrew");
+                        sender.sendMessage("YouDrewBattle");
                         phase = EventPhase.ASK_CANNONS;
 
                         player.setIsReady(true, gameManager.getGame());

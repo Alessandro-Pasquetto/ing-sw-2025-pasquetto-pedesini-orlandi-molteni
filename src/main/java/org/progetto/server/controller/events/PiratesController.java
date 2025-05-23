@@ -106,7 +106,7 @@ public class PiratesController extends EventControllerAbstract {
                 // Checks if players is able to win without double cannons
                 if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
-                    sender.sendMessage("YouWon");
+                    sender.sendMessage("YouWonBattle");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -123,10 +123,10 @@ public class PiratesController extends EventControllerAbstract {
                     playerFirePower = spaceship.getNormalShootingPower();
 
                     if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
-                        sender.sendMessage("YouLost");
+                        sender.sendMessage("YouLostBattle");
                         defeatedPlayers.add(player);
                     } else {
-                        sender.sendMessage("YouDrew");
+                        sender.sendMessage("YouDrewBattle");
                     }
                     continue;
 
@@ -312,7 +312,7 @@ public class PiratesController extends EventControllerAbstract {
             switch (pirates.battleResult(player, playerFirePower)) {
                 case 1:
                     phase = EventPhase.REWARD_DECISION;
-                    sender.sendMessage("YouWon");
+                    sender.sendMessage("YouWonBattle");
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                     defeated = true;
                     break;
@@ -320,14 +320,14 @@ public class PiratesController extends EventControllerAbstract {
                 case -1:
                     defeatedPlayers.add(player);
 
-                    sender.sendMessage("YouLost");
+                    sender.sendMessage("YouLostBattle");
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;
 
                 case 0:
-                    sender.sendMessage("YouDrew");
+                    sender.sendMessage("YouDrewBattle");
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;

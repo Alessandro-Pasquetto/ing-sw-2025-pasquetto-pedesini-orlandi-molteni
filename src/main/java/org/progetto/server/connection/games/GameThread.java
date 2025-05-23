@@ -205,10 +205,10 @@ public class GameThread extends Thread {
                         for (Player player : gameManager.getGame().scoreBoard()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
-                            if(player.getCredits() > 0)
-                                sender.sendMessage("You have won");
+                            if (player.getCredits() > 0)
+                                sender.sendMessage("YouWon");
                             else
-                                sender.sendMessage("You have lost");
+                                sender.sendMessage("YouLost");
                         }
                         return;
                 }

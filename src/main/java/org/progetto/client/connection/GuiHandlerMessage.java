@@ -600,23 +600,23 @@ public class GuiHandlerMessage {
                     PageController.getTravelView().setPlayerStatus(GameData.getNamePlayer(), true);
                     break;
 
-                case "YouLost":
+                case "YouLostBattle":
                     System.out.println("You lost");
                     break;
 
-                case "YouWon":
+                case "YouWonBattle":
                     System.out.println("You win");
                     break;
 
-                case "YouDrew":
+                case "YouDrewBattle":
                     System.out.println("You drew");
                     break;
 
-                case "You have lost":
+                case "YouLost":
                     PageController.getGameOverView().initGameOver(1);
                     break;
 
-                case "You have won":
+                case "YouWon":
                     PageController.getGameOverView().initGameOver(0);
                     break;
 
