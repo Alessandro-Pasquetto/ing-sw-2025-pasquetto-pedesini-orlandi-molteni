@@ -59,7 +59,7 @@ public class GameOverView {
      * Initialize the gameOver page
      *
      * @author Lorenzo
-     * @param resultGame is the result of the game. win(1), lose(1), draw(2)
+     * @param resultGame is the result of the game. win(1), lose(1)
      */
     public void initGameOver(int resultGame) {
 
@@ -73,11 +73,6 @@ public class GameOverView {
             case 1:
                 endGameTitle.setText("OH NO, YOU LOST!");
                 img = new Image(String.valueOf(MainClient.class.getResource("img/lost.png")));
-                break;
-
-            case 2:
-                endGameTitle.setText("YOU DRAW!");
-                img = new Image(String.valueOf(MainClient.class.getResource("img/draw.png")));
                 break;
 
         }
