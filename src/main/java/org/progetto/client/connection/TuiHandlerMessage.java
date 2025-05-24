@@ -1,10 +1,14 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.Alerts;
+import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
+import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
+import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
@@ -16,12 +20,14 @@ import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
+import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.server.model.Player;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +72,48 @@ public class TuiHandlerMessage {
             GameData.setLevelGame(initGameMessage.getLevelGame());
         }
 
+        else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
+            Sender sender = GameData.getSender();
+
+            int levelGame = reconnectionGameData.getLevelGame();
+            String gamePhase = reconnectionGameData.getGamePhase();
+            int playerColor = reconnectionGameData.getPlayerColor();
+
+            GameData.setActivePlayer(reconnectionGameData.getNameActivePlayer());
+
+            GameData.setLevelGame(levelGame);
+            GameData.setPhaseGame(gamePhase);
+            GameData.setColor(playerColor);
+
+            switch (gamePhase) {
+                case "BUILDING":
+                    sender.showHandComponent();
+                    sender.showBookedComponents();
+                    sender.showSpaceship(GameData.getNamePlayer());
+                    sender.showPlayers();
+                    sender.showVisibleComponents();
+                    break;
+
+                case "ADJUSTING":
+                    sender.showSpaceship(GameData.getNamePlayer());
+                    break;
+
+                case "POPULATING":
+                    break;
+
+                case "POSITIONING":
+                    sender.showPlayersInPositioningDecisionOrder();
+                    sender.showStartingPositions();
+                    break;
+
+                case "EVENT":
+                    sender.showSpaceship(GameData.getNamePlayer());
+                    break;
+            }
+            System.out.println("You reconnected to the game, welcome back!");
+            System.out.println("You are in " + gamePhase + " phase");
+        }
+
         else if (messageObj instanceof WaitingPlayersMessage waitingPlayersMessage) {
 
         }
@@ -76,7 +124,7 @@ public class TuiHandlerMessage {
             GameData.setPhaseGame(newGamePhaseMessage.getPhaseGame());
             switch (newGamePhaseMessage.getPhaseGame()) {
                 case "WAITING":
-
+                    System.out.println("Waiting players...");
                     break;
 
                 case "INIT":
@@ -150,6 +198,10 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
         }
 
+        else if (messageObj instanceof AnotherPlayerPickedVisibleComponentMessage anotherPlayerPickedVisibleComponentMessage) {
+            System.out.println(anotherPlayerPickedVisibleComponentMessage.getPlayerName() + " picked " + anotherPlayerPickedVisibleComponentMessage.getPickedComponent() + "from visible component");
+        }
+
         else if (messageObj instanceof ShowVisibleComponentsMessage pickedVisibleComponentsMessage) {
             TuiPrinters.printVisibleComponents(pickedVisibleComponentsMessage.getVisibleComponentDeck());
         }
@@ -216,11 +268,34 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof ActivePlayerMessage activePlayerMessage) {
-            System.out.println("Active player: " + activePlayerMessage.getPlayerName());
+            if(activePlayerMessage.getPlayerName().equals(GameData.getNamePlayer()))
+                System.out.println("You are the active player");
+            else
+                System.out.println("It's " + activePlayerMessage.getPlayerName() + "'s turn");
         }
 
         else if(messageObj instanceof AskStartingPositionMessage askStartingPositionMessage) {
             BuildingCommands.responseStartingPosition(askStartingPositionMessage.getStartingPositions());
+        }
+
+        else if (messageObj instanceof StartingPositionsMessage startingPositionsMessage) {
+            Player[] players = startingPositionsMessage.getStartingPositions();
+
+            boolean allChosen = true;
+            for (Player p : players) {
+                if (p == null) {
+                    allChosen = false;
+                    break;
+                }
+            }
+
+            if (allChosen) {
+                System.out.println("Starting positions are:");
+                for (int i = 0; i < players.length; i++) {
+                    String slotContent = (players[i] == null) ? "EMPTY" : players[i].getName();
+                    System.out.println("[" + (i + 1) + "] Slot: " + slotContent);
+                }
+            }
         }
 
         else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -345,6 +420,22 @@ public class TuiHandlerMessage {
 
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
             System.out.println(RED + playerDefeatedMessage.getPlayerName() + " was defeated by !" + RESET);
+        }
+
+        else if(messageObj instanceof CrewInfectedAmountMessage crewInfectedAmountMessage) {
+            System.out.println("You have " + crewInfectedAmountMessage.getInfectedCrew() + " infected crew members");
+        }
+
+        else if(messageObj instanceof AnotherPlayerCrewInfectedMessage anotherPlayerCrewInfectedMessage) {
+            if(!anotherPlayerCrewInfectedMessage.getNamePlayer().equals(GameData.getNamePlayer())) {}
+                System.out.println(anotherPlayerCrewInfectedMessage.getNamePlayer() + " has " + anotherPlayerCrewInfectedMessage.getInfectedCrew() + " infected crew members");
+        }
+
+        else if(messageObj instanceof LessPopulatedPlayerMessage lessPopulatedPlayerMessage) {
+            if(lessPopulatedPlayerMessage.getPlayerName().equals(GameData.getNamePlayer()))
+                System.out.println("You have the least amount of crew");
+            else
+                System.out.println(lessPopulatedPlayerMessage.getPlayerName() + " has the least amount of crew");
         }
 
         else if(messageObj instanceof ScoreBoardMessage scoreBoardMessage) {
