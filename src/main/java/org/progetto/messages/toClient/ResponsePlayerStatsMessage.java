@@ -2,7 +2,7 @@ package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class PlayerStatsMessage implements Serializable {
+public class ResponsePlayerStatsMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -17,7 +17,7 @@ public class PlayerStatsMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public PlayerStatsMessage(String playerName, int credits, int position, boolean hasLeft) {
+    public ResponsePlayerStatsMessage(String playerName, int credits, int position, boolean hasLeft) {
         this.playerName = playerName;
         this.credits = credits;
         this.position = position;

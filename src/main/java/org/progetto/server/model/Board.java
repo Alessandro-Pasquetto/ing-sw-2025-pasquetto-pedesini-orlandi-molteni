@@ -209,7 +209,7 @@ public class Board {
     }
 
     /**
-     * Moves the player forward/backwards on the board
+     * Moves the player forward/backwards on the track
      *
      * @author Alessandro
      * @param player the moving player

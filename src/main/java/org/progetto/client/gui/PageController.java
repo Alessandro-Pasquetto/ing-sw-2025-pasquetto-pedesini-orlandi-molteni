@@ -258,14 +258,13 @@ public class PageController {
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
         eventView.initPlayersList();
-        eventView.initBoard(levelGame);
+        eventView.initTrack(levelGame);
         eventView.resetEventLabels();
     }
 
     public static void initTravel(int levelGame) {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
-        //travelView.askToContinue();  //debug purpose
     }
 
     public static void initEndGame(int levelGame) {

@@ -1,7 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.Alerts;
-import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -24,10 +22,10 @@ import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.server.model.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,11 +171,11 @@ public class TuiHandlerMessage {
             TuiPrinters.printSpaceshipStats(responseSpaceshipStatsMessage.getSpaceship());
         }
 
-        else if (messageObj instanceof PlayerStatsMessage playerStatsMessage) {
+        else if (messageObj instanceof ResponsePlayerStatsMessage playerStatsMessage) {
             TuiPrinters.printPlayerStats(playerStatsMessage.getPlayerName(), playerStatsMessage.getCredits(), playerStatsMessage.getPosition(), playerStatsMessage.getHasLeft());
         }
 
-        else if (messageObj instanceof TrackMessage trackMessage) {
+        else if (messageObj instanceof ResponseTrackMessage trackMessage) {
             TuiPrinters.printTrack(trackMessage.getTravelers(), trackMessage.getTrack());
         }
 

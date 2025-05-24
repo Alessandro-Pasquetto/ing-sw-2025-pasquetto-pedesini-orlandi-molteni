@@ -192,7 +192,7 @@ public class TravelView {
         this.players = players;
 
         for (Player player : players) {
-            HBox playerBox = createPlayerItem(player, GameData.getActivePlayer());
+            HBox playerBox = createPlayerItem(player);
             playerListContainer.getChildren().add(playerBox);
         }
     }
@@ -239,10 +239,9 @@ public class TravelView {
      *
      * @author Gabriele
      * @param player The player to create an item for
-     * @param activePlayer The currently active player's name (can be null)
      * @return HBox containing the player item
      */
-    private HBox createPlayerItem(Player player, String activePlayer) {
+    private HBox createPlayerItem(Player player) {
         HBox playerBox = new HBox(10);
         playerBox.setAlignment(Pos.CENTER_LEFT);
         playerBox.setPadding(new Insets(8, 12, 8, 12));
@@ -296,7 +295,7 @@ public class TravelView {
      * @author Lorenzo
      * @param  playersPosition The current positions of the players
      */
-    public void updateTrack(Player[]  playersPosition) {
+    public void updateTrack(Player[] playersPosition) {
         cellsGroup.getChildren().removeIf(node -> node instanceof ImageView);
 
         for (int i = 0; i <  playersPosition.length; i++) {

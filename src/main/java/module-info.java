@@ -50,4 +50,6 @@ module org.progetto{
     opens org.progetto.messages.toClient to com.google.gson, javafx.fxml;
     exports org.progetto.messages.toClient.Positioning;
     exports org.progetto.messages.toClient.Travel;
+    exports org.progetto.messages.toClient.Track;
+    opens org.progetto.messages.toClient.Track to com.google.gson, javafx.fxml;
 }

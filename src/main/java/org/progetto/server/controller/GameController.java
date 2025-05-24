@@ -1,7 +1,7 @@
 package org.progetto.server.controller;
 
-import org.progetto.messages.toClient.PlayerStatsMessage;
-import org.progetto.messages.toClient.TrackMessage;
+import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
+import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.PlayersMessage;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
@@ -63,7 +63,7 @@ public class GameController {
             int credits = player.getCredits();
             int position = player.getPosition();
             boolean hasLeft = player.getHasLeft();
-            sender.sendMessage(new PlayerStatsMessage(name, credits, position, hasLeft));
+            sender.sendMessage(new ResponsePlayerStatsMessage(name, credits, position, hasLeft));
 
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
@@ -110,13 +110,19 @@ public class GameController {
         try {
             ArrayList<Player> travelers = gameManager.getGame().getBoard().getCopyTravelers();
             Player[] track = gameManager.getGame().getBoard().getTrack();
-            sender.sendMessage(new TrackMessage(travelers, track));
+            sender.sendMessage(new ResponseTrackMessage(travelers, track));
 
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }
     }
 
+    /**
+     * Removes all disconnected players from the game board
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     */
     public static void removeDisconnectedPlayersFromTravelers(GameManager gameManager){
 
         for(Player player : gameManager.getDisconnectedPlayersCopy()){

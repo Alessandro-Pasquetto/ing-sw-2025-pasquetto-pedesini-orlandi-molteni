@@ -8,11 +8,16 @@ import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
+import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.ResponseTrackMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
@@ -175,21 +180,14 @@ public class GuiHandlerMessage {
                 else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
                     PageController.switchScene("newEventPage.fxml", "Event");
-
-                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
-                    Sender sender = GameData.getSender();
-
                     PageController.initTravel(GameData.getLevelGame());
                     PageController.switchScene("travelPage.fxml", "Travel");
-                    // PageController.getTravelView().askToContinue();
-                    sender.showTrack();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ENDGAME")){
-
                     PageController.initEndGame(GameData.getLevelGame());
                     PageController.switchScene("gameOverPage.fxml","EndGame");
                 }
@@ -201,11 +199,15 @@ public class GuiHandlerMessage {
             }
         }
 
-        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
+        else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
 
-            // TODO: delete (just for testing)
-            if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                GameData.setSpaceship(responseSpaceshipMessage.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy());
+            if (updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                GameData.setSpaceship(updateSpaceshipMessage.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy());
+
+            PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
@@ -213,7 +215,6 @@ public class GuiHandlerMessage {
                         PageController.getBuildingView().updateSpaceship(responseSpaceshipMessage.getSpaceship()); // This is used only for reconnection
                     else
                         PageController.getBuildingView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
-
                     break;
 
                 case "ADJUSTING":
@@ -340,9 +341,21 @@ public class GuiHandlerMessage {
             PageController.getPopulatingView().askForAlien(askAlienMessage.getColor(), askAlienMessage.getSpaceship());
         }
 
-        else if (messageObj instanceof TrackMessage trackMessage) {
-            PageController.getTravelView().updateTrack(trackMessage.getTrack());
-            PageController.getTravelView().initPlayersList(trackMessage.getTravelers());
+        else if (messageObj instanceof UpdateTrackMessage updateTrackMessage) {
+            GameData.setTrack(updateTrackMessage.getTrack());
+            GameData.setTravelers(updateTrackMessage.getTravelers());
+
+            switch (GameData.getPhaseGame()) {
+
+                case "EVENT":
+                    PageController.getEventView().updateTrack(updateTrackMessage.getTrack());
+                    break;
+
+                case "TRAVEL":
+                    PageController.getTravelView().updateTrack(updateTrackMessage.getTrack());
+                    PageController.getTravelView().initPlayersList(updateTrackMessage.getTravelers());
+                    break;
+            }
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
@@ -360,6 +373,36 @@ public class GuiHandlerMessage {
 //                   false
 //           );
 //        }
+
+        else if (messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {
+            int steps = playerMovedAheadMessage.getStepsCount();
+            GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
+
+            PageController.getEventView().updateTrack(GameData.getTrack());
+        }
+
+        else if (messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
+            int steps = playerMovedBackwardMessage.getStepsCount();
+            GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
+
+            PageController.getEventView().updateTrack(GameData.getTrack());
+        }
+
+        else if (messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
+            String playerName = anotherPlayerMovedAheadMessage.getNamePlayer();
+            int steps = anotherPlayerMovedAheadMessage.getStepsCount();
+            GameData.movePlayerByDistance(playerName, steps);
+
+            PageController.getEventView().updateTrack(GameData.getTrack());
+        }
+
+        else if (messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
+            String playerName = anotherPlayerMovedBackwardMessage.getNamePlayer();
+            int steps = anotherPlayerMovedBackwardMessage.getStepsCount();
+            GameData.movePlayerByDistance(playerName, steps);
+
+            PageController.getEventView().updateTrack(GameData.getTrack());
+        }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
             PageController.getEventView().askForQuantity(

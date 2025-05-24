@@ -1,11 +1,11 @@
-package org.progetto.messages.toClient;
+package org.progetto.messages.toClient.Track;
 
 import org.progetto.server.model.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TrackMessage implements Serializable {
+public class UpdateTrackMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -18,7 +18,7 @@ public class TrackMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public TrackMessage(ArrayList<Player> travelers, Player[] track) {
+    public UpdateTrackMessage(ArrayList<Player> travelers, Player[] track) {
         this.travelers = travelers;
         this.track = track;
     }

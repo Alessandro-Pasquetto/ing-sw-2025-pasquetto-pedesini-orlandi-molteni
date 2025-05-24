@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
@@ -29,9 +30,7 @@ import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
 
@@ -75,10 +74,15 @@ public class NewEventView {
     public ImageView boardImage;
 
     @FXML
+    public Group cellsGroup;
+
+    @FXML
     public ImageView eventCard;
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
+
+    private List<Rectangle> boardCells = new ArrayList<>();
 
     // =======================
     // METHODS
@@ -115,22 +119,110 @@ public class NewEventView {
     }
 
     /**
-     * Initializes the board image
+     * Initializes the track
      *
      * @author Gabriele
      * @param levelGame is the game level
      */
-    public void initBoard(int levelGame) {
-        Image img = null;
-        if(levelGame == 1)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/board1.png")));
+    public void initTrack(int levelGame) {
+        cellsGroup.getChildren().clear();
+        boardCells.clear();
 
-        else if(levelGame == 2)
-            img = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/board2.png")));
+        double[][] cellPositions = null;
 
-        boardImage.setImage(img);
+        if (levelGame == 1) {
+
+            cellPositions = new double[][] {
+                    {88.54, 42.56}, {118.18, 33.82}, {148.58, 30.02}, {179.36, 29.64},
+                    {209.0, 33.44}, {239.02, 42.18}, {264.86, 60.8}, {279.68, 94.24},
+                    {263.34, 123.5}, {235.98, 140.6}, {205.96, 150.48}, {175.18, 155.42},
+                    {145.16, 155.42}, {114.76, 150.1}, {85.5, 141.36}, {58.9, 121.98},
+                    {44.84, 87.78}, {60.42, 59.66}
+            };
+
+        } else if (levelGame == 2) {
+
+            cellPositions = new double[][] {
+                    {74.48, 36.86}, {98.42, 27.36}, {123.5, 22.8}, {147.82, 19.38}, {176.32, 19.38},
+                    {203.68, 21.66}, {226.86, 27.74}, {251.18, 36.86}, {272.46, 53.58}, {287.04, 78.66},
+                    {287.66, 108.3}, {270.56, 129.96}, {247.38, 144.78}, {222.68, 154.66}, {196.84, 160.74},
+                    {170.62, 164.16}, {145.16, 163.4}, {118.94, 160.74}, {93.86, 154.66}, {69.92, 144.4},
+                    {48.26, 128.44}, {32.3, 102.6}, {33.44, 72.96}, {50.92, 51.3}
+            };
+
+        }
+
+        for (int i = 0; i < Objects.requireNonNull(cellPositions).length; i++) {
+            double x = cellPositions[i][0];
+            double y = cellPositions[i][1];
+
+            Rectangle cell = new Rectangle(19, 19);
+            cell.setFill(Color.TRANSPARENT);
+            cell.setTranslateX(x);
+            cell.setTranslateY(y);
+
+            cellsGroup.getChildren().add(cell);
+            boardCells.add(cell);
+        }
+
+        // Set the board image
+        Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/board" + levelGame + ".png")));
+        boardImage.setImage(image);
     }
 
+    /**
+     * Updates the track with the current positions of the players
+     *
+     * @author Lorenzo
+     * @param  playersPosition The current positions of the players
+     */
+    public void updateTrack(Player[] playersPosition) {
+        cellsGroup.getChildren().removeIf(node -> node instanceof ImageView);
+
+        for (int i = 0; i <  playersPosition.length; i++) {
+            Player player =  playersPosition[i];
+            if (player != null) {
+                Rectangle cell = boardCells.get(i);
+
+                String rocketImage = getRocketImagePath(player.getColor());
+                Image rocket = new Image(String.valueOf(MainClient.class.getResource(rocketImage)));
+                ImageView rocketView = new ImageView(rocket);
+
+                rocketView.setFitWidth(14.25);
+                rocketView.setFitHeight(19);
+                rocketView.setPreserveRatio(true);
+
+                rocketView.setTranslateX(cell.getTranslateX() + (cell.getWidth() - rocketView.getFitWidth()) / 2);
+                rocketView.setTranslateY(cell.getTranslateY() + (cell.getHeight() - rocketView.getFitHeight()) / 2);
+
+                cellsGroup.getChildren().add(rocketView);
+            }
+        }
+    }
+
+    /**
+     * Returns the image path of the rocket based on the color
+     *
+     * @author Gabriele
+     * @param color The color of the rocket
+     * @return The image path of the rocket
+     */
+    private String getRocketImagePath(int color) {
+        return switch (color) {
+            case 0 -> "img/items/blue_pawn.png";
+            case 1 -> "img/items/green_pawn.png";
+            case 2 -> "img/items/red_pawn.png";
+            case 3 -> "img/items/yellow_pawn.png";
+            default -> "";
+        };
+    }
+
+    /**
+     * Initializes the event card
+     *
+     * @author Gabriele
+     * @param card is the event card to initialize
+     */
     public void initEventCard(EventCard card) {
         String imgSource = card.getImgSrc();
 
@@ -755,6 +847,15 @@ public class NewEventView {
         btnContainer.getChildren().add(container);
     }
 
+    /**
+     * Aks player to select a component on the ship
+     *
+     * @author Gabriele
+     * @param title is the title of the selection
+     * @param description is the description of the selection
+     * @param typeToHighlight is the type of component to highlight (BATTERY or CREW)
+     * @param onClick is the action to perform when clicking on a component
+     */
     public void selectComponentOnTheShip(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
         resetEventLabels();
         clearHighlightedCells();

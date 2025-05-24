@@ -2,6 +2,9 @@ package org.progetto.server.connection.games;
 
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.ResponseTrackMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -141,6 +144,15 @@ public class GameThread extends Thread {
 
                         GameController.removeDisconnectedPlayersFromTravelers(gameManager);
 
+                        // Updates the track
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
+
+                        // Updates the spaceship
+                        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+                            Sender sender = gameManager.getSenderByPlayer(player);
+                            sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                        }
+
                         EventController.pickEventCard(gameManager);
 
                         System.out.println(gameManager.getGame().getActiveEventCard().getType().toString());
@@ -176,6 +188,9 @@ public class GameThread extends Thread {
                         System.out.println("Travel phase started...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
                         EventController.handleDefeatedPlayers(gameManager);
+
+                        // Updates the track
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
 
                         if(gameManager.getGame().getEventDeckSize() > 0){
                             // Asks for each traveler if he wants to continue travel

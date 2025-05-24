@@ -109,7 +109,6 @@ public class BuildingView {
     @FXML
     private ImageView deck2Image;
 
-
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
 
@@ -538,6 +537,15 @@ public class BuildingView {
         }
     }
 
+    /**
+     * Updates the placed component of another player
+     *
+     * @author Alessandro
+     * @param playerName is the name of the player
+     * @param component is the component to place
+     * @param x is the x coordinate
+     * @param y is the y coordinate
+     */
     public void updateOtherPlayerPlacedComponent(String playerName, Component component, int x, int y) {
 
         GridPane shipGrid = getShipGridByPlayer(playerName);

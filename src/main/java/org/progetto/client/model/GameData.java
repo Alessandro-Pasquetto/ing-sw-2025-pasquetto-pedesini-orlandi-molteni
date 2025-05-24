@@ -2,11 +2,13 @@ package org.progetto.client.model;
 
 import org.progetto.client.connection.Sender;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.EventCard;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Client data useful to track game evolution
@@ -29,6 +31,8 @@ public class GameData {
     private static String activePlayer;
     private static int color;
     private static Component[][] spaceship;
+    private static Player[] track;
+    private static ArrayList<Player> travelers;
     private static String UIType;
 
     // =======================
@@ -69,6 +73,17 @@ public class GameData {
 
     public static Component[][] getSpaceship() {
         return spaceship;
+    }
+
+    public static Player[] getTrack() {
+        return track;
+    }
+
+    public static ArrayList<Player> getTravelers() {
+        if (travelers == null) {
+            travelers = new ArrayList<>();
+        }
+        return travelers;
     }
 
     public static String getUIType(){
@@ -119,6 +134,14 @@ public class GameData {
         GameData.spaceship = spaceship;
     }
 
+    public static void setTrack(Player[] track) {
+        GameData.track = track;
+    }
+
+    public static void setTravelers(ArrayList<Player> travelers) {
+        GameData.travelers = travelers;
+    }
+
     public static void setUIType(String UIType){
         GameData.UIType = UIType;
     }
@@ -135,6 +158,12 @@ public class GameData {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Creates a save file for the current client
+     * The file is created in the "saves" directory with the name "<clientId>.save"
+     *
+     * @author Alessandro
+     */
     public static void createSaveFile() {
 
         File saveDir = new File("saves");
@@ -151,6 +180,12 @@ public class GameData {
         }
     }
 
+    /**
+     * Saves the game data to the save file
+     * The data saved includes the game ID and player name
+     *
+     * @author Alessandro
+     */
     public static void saveGameData() {
         try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(saveFile))) {
             dos.writeInt(idGame);
@@ -161,6 +196,12 @@ public class GameData {
         }
     }
 
+    /**
+     * Restores the game data from the save file
+     * The data restored includes the game ID and player name
+     *
+     * @author Alessandro
+     */
     public static void restoreSavedGameData(){
         try (DataInputStream dis = new DataInputStream(new FileInputStream(saveFile))) {
             idGame = dis.readInt();
@@ -171,6 +212,12 @@ public class GameData {
         }
     }
 
+    /**
+     * Clears the save file by writing an empty string to it
+     * This method also resets the game ID and player name
+     *
+     * @author Alessandro
+     */
     public static void clearSaveFile() {
         if (saveFile != null && saveFile.exists()) {
             try (FileWriter writer = new FileWriter(saveFile, false)) {
@@ -182,5 +229,64 @@ public class GameData {
                 throw new RuntimeException("Error while clearing the save file", e);
             }
         }
+    }
+
+    /**
+     * Calculate the modulus
+     *
+     * @author Alessandro
+     * @param a the dividend
+     * @param b the divisor
+     * @return the modulus
+     */
+    private static int modulus(int a, int b) {
+        int result = a % b;
+        return (result < 0) ? result + b : result;
+    }
+
+    /**
+     * Moves the player forward/backward on the track, identified by name
+     *
+     * @author Gabriele
+     * @param playerName the name of the player to move
+     * @param distance the number of steps to move (can be negative)
+     * @throws IllegalArgumentException if player with the given name is not found
+     */
+    public static synchronized void movePlayerByDistance(String playerName, int distance) {
+        Player[] track = GameData.getTrack();
+        int currentPosition = -1;
+
+        // Find the player's current position by name
+        for (int i = 0; i < track.length; i++) {
+            if (track[i] != null && playerName.equals(track[i].getName())) {
+                currentPosition = i;
+                break;
+            }
+        }
+
+        // If the player is not found
+        if (currentPosition == -1) {
+            return;
+        }
+
+        Player player = track[currentPosition];
+        track[currentPosition] = null;  // Removes player from current cell
+
+        int sign = (distance < 0) ? -1 : 1;
+        distance = Math.abs(distance);
+        int position = currentPosition;
+
+        // Moves step by step, skipping occupied cells
+        while (distance != 0) {
+            position += sign;
+            int wrapped = modulus(position, track.length);
+
+            if (track[wrapped] == null) {
+                distance--;
+            }
+        }
+
+        int finalPos = modulus(position, track.length);
+        track[finalPos] = player;
     }
 }
