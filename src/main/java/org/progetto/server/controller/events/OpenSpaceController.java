@@ -6,6 +6,8 @@ import org.progetto.messages.toClient.EventGeneric.HowManyDoubleEnginesMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -29,6 +31,7 @@ public class OpenSpaceController extends EventControllerAbstract {
     private final OpenSpace openSpace;
     private int playerEnginePower;
     private int requestedNumber;
+    private final ArrayList<BatteryStorage> batteryStorages;
 
     // =======================
     // CONSTRUCTORS
@@ -40,6 +43,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         this.phase = EventPhase.START;
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
+        this.batteryStorages = new ArrayList<>();
     }
 
     // =======================
@@ -77,6 +81,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
+            batteryStorages.clear();
 
             // Gets the sender reference to send a message to player
             Sender sender = gameManager.getSenderByPlayer(player);
@@ -96,6 +101,21 @@ public class OpenSpaceController extends EventControllerAbstract {
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitPlayerReady(player);
+
+                // If the player is not disconnected
+                if(player.getIsReady()){
+                    for (BatteryStorage component : batteryStorages) {
+                        component.decrementItemsCount(player.getSpaceship(), 1);
+                    }
+
+                    if(!batteryStorages.isEmpty()){
+                        gameManager.broadcastGameMessageToOthers(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+                        sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                    }
+                }else{
+                    playerEnginePower = player.getSpaceship().getNormalEnginePower();
+                    player.setIsReady(true, gameManager.getGame());
+                }
             }
 
             phase = EventPhase.EFFECT;
@@ -181,21 +201,23 @@ public class OpenSpaceController extends EventControllerAbstract {
             return;
         }
 
-        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+        Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
-        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+        if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
             sender.sendMessage("InvalidCoordinates");
             sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
             return;
         }
 
+        BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
         // Checks if a battery has been discarded
-        if (!((BatteryStorage) batteryStorage).decrementItemsCount(player.getSpaceship(), 1)) {
+        if(batteryStorage.getItemsCount() == 0) {
             sender.sendMessage("EmptyBatteryStorage");
             sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
             return;
         }
 
+        batteryStorages.add(batteryStorage);
         requestedNumber--;
         sender.sendMessage("BatteryDiscarded");
 
@@ -219,7 +241,6 @@ public class OpenSpaceController extends EventControllerAbstract {
         Player player = gameManager.getGame().getActivePlayer();
         Board board = gameManager.getGame().getBoard();
 
-        // Sends update message
         Sender sender = gameManager.getSenderByPlayer(player);
 
         // Checks if player has an engine power greater than zero
@@ -228,11 +249,13 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
-            sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
+            if(sender != null)
+                sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
         } else {
-            sender.sendMessage("NoEnginePower");
+            if(sender != null)
+                sender.sendMessage("NoEnginePower");
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
             board.leaveTravel(player);
         }

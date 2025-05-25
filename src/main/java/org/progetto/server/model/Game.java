@@ -384,11 +384,13 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-
+        /*
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
 
-            /*
+         */
+
+
             // forzare componente, todo da rimuovere
             int randomPos = 0;
             ComponentType type;
@@ -397,10 +399,10 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT));
+            } while (!type.equals(ComponentType.BATTERY_STORAGE) && !type.equals(ComponentType.DOUBLE_ENGINE) && !type.equals(ComponentType.ENGINE));
 
             pickedComponent = componentDeck.remove(randomPos);
-             */
+
 
         }
 

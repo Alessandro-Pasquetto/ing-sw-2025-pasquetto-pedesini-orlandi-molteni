@@ -117,9 +117,6 @@ public class GuiHandlerMessage {
                     case "EVENT":
                         PageController.initEvent(GameData.getLevelGame());
                         PageController.switchScene("newEventPage.fxml", "Event");
-
-                        sender.showSpaceship(GameData.getNamePlayer());
-                        sender.showPlayers();
                         break;
 
                     case "TRAVEL":
@@ -214,9 +211,7 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
 
-            if (updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
-                GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
-
+            GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
             PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
         }
 
@@ -240,8 +235,10 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EVENT":
-                    if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer()))
+                    if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
+                        GameData.setSpaceship(responseSpaceshipMessage.getSpaceship());
                         PageController.getEventView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
+                    }
                     else
                         PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
                     break;
@@ -286,7 +283,16 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EVENT":
+                    //todo: serve?
                     PageController.getEventView().updatePlayersList(playersMessage.getPlayers());
+
+                    Map<String, Spaceship> otherSpaceships = new HashMap<>();
+                    for (Player player : playersMessage.getPlayers()) {
+                        if (!player.getName().equals(GameData.getNamePlayer())) {
+                            otherSpaceships.put(player.getName(), player.getSpaceship());
+                        }
+                    }
+                    GameData.setOtherSpaceships(otherSpaceships);
                     break;
             }
         }

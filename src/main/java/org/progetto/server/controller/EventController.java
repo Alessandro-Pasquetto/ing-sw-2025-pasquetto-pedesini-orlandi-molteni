@@ -133,4 +133,14 @@ public class EventController {
             sender.sendMessage("NotAllowedToDoThat");
         }
     }
+
+    public static void continueDisconnectedTravelers(GameManager gameManager) throws RemoteException {
+        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+            if (!player.getIsReady()){
+                gameManager.broadcastGameMessage(new PlayerIsContinuingMessage(player.getName()));
+
+                player.setIsReady(true, gameManager.getGame());
+            }
+        }
+    }
 }

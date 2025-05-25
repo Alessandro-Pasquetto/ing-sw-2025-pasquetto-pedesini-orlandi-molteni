@@ -116,18 +116,4 @@ public class GameController {
             sender.sendMessage(e.getMessage());
         }
     }
-
-    /**
-     * Removes all disconnected players from the game board
-     *
-     * @author Alessandro
-     * @param gameManager current gameManager
-     */
-    public static void removeDisconnectedPlayersFromTravelers(GameManager gameManager){
-
-        for(Player player : gameManager.getDisconnectedPlayersCopy()){
-
-            gameManager.getGame().getBoard().removeTraveler(player);
-        }
-    }
 }

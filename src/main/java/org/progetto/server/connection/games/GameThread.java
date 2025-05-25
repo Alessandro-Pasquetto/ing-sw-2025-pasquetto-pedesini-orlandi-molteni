@@ -146,16 +146,17 @@ public class GameThread extends Thread {
                         System.out.println("New event...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
-                        GameController.removeDisconnectedPlayersFromTravelers(gameManager);
-
                         // Updates the track
                         gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
 
                         // Updates the spaceship and other players spaceships
                         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
-                            sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                            sender.sendMessage(new UpdatePlayersMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+
+                            if(sender != null){
+                                sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                                sender.sendMessage(new UpdatePlayersMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+                            }
                         }
 
                         EventController.pickEventCard(gameManager);
@@ -201,10 +202,14 @@ public class GameThread extends Thread {
                             // Asks for each traveler if he wants to continue travel
                             for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);
-                                sender.sendMessage("AskContinueTravel");
+
+                                if(sender != null)
+                                    sender.sendMessage("AskContinueTravel");
                             }
 
                             resetAndWaitTravelersReady();
+
+                            EventController.continueDisconnectedTravelers(gameManager);
 
                             // Checks if there is at least a traveler remaining
                             if (gameManager.getGame().getBoard().getNumTravelers() > 0) {

@@ -11,8 +11,8 @@ public class ResponseTrackMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Player> travelers;
-    private Player[] track;
+    private final ArrayList<Player> travelers;
+    private final Player[] track;
 
     // =======================
     // CONSTRUCTORS

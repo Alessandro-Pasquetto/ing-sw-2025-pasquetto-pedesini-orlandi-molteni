@@ -1,10 +1,9 @@
 package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
-import org.progetto.messages.toClient.PlayerColorMessage;
-import org.progetto.messages.toClient.NewGamePhaseMessage;
-import org.progetto.messages.toClient.ReconnectionGameData;
-import org.progetto.messages.toClient.WaitingPlayersMessage;
+import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.LobbyController;
 import org.progetto.server.controller.PopulatingController;
@@ -284,6 +283,7 @@ public class GameManager {
             if(player == null)
                 throw new IllegalStateException("FailedToReconnect");
 
+            removeDisconnectedPlayer(player);
             addSender(player, sender);
 
             System.out.println(player.getName() + " has reconnected");
@@ -303,17 +303,26 @@ public class GameManager {
                 return;
             }
 
-            if(!game.getPhase().equals(GamePhase.EVENT))
-                game.addPlayer(player);
+            // todo: va bene aggiungere subito o all'evento successivo?
+            //if(!game.getPhase().equals(GamePhase.EVENT))
+
+            game.addPlayer(player);
 
             if(game.getPhase().equals(GamePhase.POPULATING))
                 PopulatingController.askAliensToSinglePlayer(this, player);
 
             if(game.getPhase().equals(GamePhase.EVENT)){
-                //todo reconnect in events
+                sender.sendMessage(new UpdateTrackMessage(game.getBoard().getCopyTravelers(), game.getBoard().getTrack()));
+                sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                sender.sendMessage(new UpdatePlayersMessage(game.getBoard().getCopyTravelers()));
+
+
             }
 
-            removeDisconnectedPlayer(player);
+            if(game.getPhase().equals(GamePhase.TRAVEL)){
+                sender.sendMessage("AskContinueTravel");
+            }
+
 
         }catch (RemoteException e) {
             System.err.println("RMI client unreachable");
