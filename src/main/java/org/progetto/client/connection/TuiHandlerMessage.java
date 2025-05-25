@@ -22,7 +22,10 @@ import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
+import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.server.model.Player;
 
@@ -169,6 +172,25 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof ResponseSpaceshipStatsMessage responseSpaceshipStatsMessage) {
             TuiPrinters.printSpaceshipStats(responseSpaceshipStatsMessage.getSpaceship());
+        }
+
+        else if( messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage ) {
+            //TuiPrinters.printSpaceship(updateSpaceshipMessage.getOwner().getName(),updateSpaceshipMessage.getSpaceship(),updateSpaceshipMessage.getOwner().getColor());
+        }
+
+        else if(messageObj instanceof UpdateTrackMessage updateTrackMessage ) {
+            System.out.println("Current track board");
+            TuiPrinters.printTrack(updateTrackMessage.getTravelers(), updateTrackMessage.getTrack());
+            System.out.println();
+        }
+
+
+        else if (messageObj instanceof UpdatePlayersMessage updatePlayersMessage) {
+            TuiPrinters.printPlayers(updatePlayersMessage.getPlayers());
+        }
+
+        else if(messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
+            System.out.println(playerIsContinuingMessage.getPlayerName()+" is continuing...");
         }
 
         else if (messageObj instanceof ResponsePlayerStatsMessage playerStatsMessage) {

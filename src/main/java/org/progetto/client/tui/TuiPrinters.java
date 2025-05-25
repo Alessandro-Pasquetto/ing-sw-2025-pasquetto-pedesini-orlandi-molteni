@@ -102,6 +102,16 @@ public class TuiPrinters {
         System.out.printf("│ Has left : %s%n", hasLeft ? "YES" : "NO");
     }
 
+    public static void printPlayers(ArrayList<Player> players) {
+
+        System.out.println("\uD83E\uDDCD Active players:");
+        for(Player player: players) {
+            System.out.printf("│ Name     : %s%n", player.getName());
+        }
+    }
+
+
+
     // =======================
     // COMPONENTS
     // =======================

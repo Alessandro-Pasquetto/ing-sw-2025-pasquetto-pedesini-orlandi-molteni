@@ -474,7 +474,7 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//           int randomPos = (int) (Math.random() * hiddenEventDeck.size());
 //            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
             //forzare eventCard, todo da rimuovere
@@ -485,7 +485,7 @@ public class Game {
             } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.OPENSPACE));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-        }
+       }
 
 //        ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 //
