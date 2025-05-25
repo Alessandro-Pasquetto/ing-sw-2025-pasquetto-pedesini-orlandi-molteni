@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
+import org.progetto.messages.toClient.UpdatePlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -77,6 +78,9 @@ public class GameThread extends Thread {
                         GameController.startBuilding(gameManager);
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
 
+                        // Updates players list and spaceships
+                        gameManager.broadcastGameMessage(new UpdatePlayersMessage(gameManager.getGame().getPlayersCopy()));
+
                         gameManager.getGame().resetReadyPlayers();
                         synchronized (gameThreadLock) {
                             while (game.getNumReadyPlayers() != game.getPlayersSize() && !gameManager.getTimerExpired())
@@ -147,10 +151,11 @@ public class GameThread extends Thread {
                         // Updates the track
                         gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
 
-                        // Updates the spaceship
+                        // Updates the spaceship and other players spaceships
                         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
                             sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                            sender.sendMessage(new UpdatePlayersMessage(gameManager.getGame().getBoard().getCopyTravelers()));
                         }
 
                         EventController.pickEventCard(gameManager);

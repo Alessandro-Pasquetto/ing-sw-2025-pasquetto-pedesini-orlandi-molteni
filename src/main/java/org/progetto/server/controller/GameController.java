@@ -2,7 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
-import org.progetto.messages.toClient.PlayersMessage;
+import org.progetto.messages.toClient.ResponsePlayersMessage;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -86,7 +86,7 @@ public class GameController {
             return;
         }
         try {
-            sender.sendMessage(new PlayersMessage(gameManager.getGame().getPlayersCopy()));
+            sender.sendMessage(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()));
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }

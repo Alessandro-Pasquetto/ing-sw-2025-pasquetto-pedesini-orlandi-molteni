@@ -1,6 +1,7 @@
 package org.progetto.client.gui;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,10 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -30,6 +28,8 @@ import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
@@ -41,6 +41,8 @@ public class NewEventView {
     // =======================
 
     final int COMPONENT_SIZE = 80;
+    final int OTHER_COMPONENT_SIZE = 35;
+
     final String HIGHLIGHT_ID = "highlight";
 
     @FXML
@@ -79,10 +81,18 @@ public class NewEventView {
     @FXML
     public ImageView eventCard;
 
+    @FXML
+    private VBox chatMessagesContainer;
+
+    @FXML
+    private ScrollPane chatScrollPane;
+
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
 
     private List<Rectangle> boardCells = new ArrayList<>();
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     // =======================
     // METHODS
@@ -639,7 +649,7 @@ public class NewEventView {
         PauseTransition delay = new PauseTransition(Duration.millis(250));
         delay.setOnFinished(event -> {
             for (Player player : playersList) {
-                GameData.getSender().showSpaceship(player.getName());
+                updateOtherPlayerSpaceship(player, player.getSpaceship());
             }
         });
         delay.play();
@@ -654,7 +664,6 @@ public class NewEventView {
      */
     public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
-        Component[] bookedComponents = ship.getBuildingBoard().getBookedCopy();
 
         GridPane shipGrid = getShipGridByPlayer(player.getName());
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
@@ -672,46 +681,168 @@ public class NewEventView {
                 if (comp != null) {
                     Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
                     ImageView iv = new ImageView(img);
-                    iv.setFitWidth(35);
-                    iv.setFitHeight(35);
+                    iv.setFitWidth(OTHER_COMPONENT_SIZE);
+                    iv.setFitHeight(OTHER_COMPONENT_SIZE);
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
-                    switch (comp.getRotation()){
-                        case 0:
-                            cell.setRotate(0);
-                            break;
-                        case 1:
-                            cell.setRotate(90);
-                            break;
-                        case 2:
-                            cell.setRotate(180);
-                            break;
-                        case 3:
-                            cell.setRotate(270);
-                            break;
+
+                    // Add rendering for specific component types
+                    if (comp instanceof HousingUnit) {
+                        renderOtherPlayerHousingUnit(cell, comp);
+                    }
+
+                    if (comp instanceof BatteryStorage) {
+                        renderOtherPlayerBatteryStorage(cell, comp);
+                    }
+
+                    // Handle rotation (same logic as original but cleaner)
+                    if (comp instanceof HousingUnit) {
+                        iv.setRotate(comp.getRotation() * 90);
+                    } else {
+                        cell.setRotate(comp.getRotation() * 90);
                     }
                 }
 
                 shipGrid.add(cell, col, row);
             }
         }
+    }
 
-        bookedGrid.getChildren().clear();
-        for (int i = 0; i < bookedComponents.length; i++) {
-            Component comp = bookedComponents[i];
-            Pane cell = new Pane();
-            cell.setPrefSize(35, 35);
+    /**
+     * Renders the housing unit for other players (scaled down)
+     *
+     * @param cell is the cell to render
+     * @param comp is the component to render
+     */
+    private void renderOtherPlayerHousingUnit(Pane cell, Component comp) {
+        HousingUnit housingUnit = (HousingUnit) comp;
 
-            if (comp != null) {
-                Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
-                ImageView iv = new ImageView(img);
-                iv.setFitWidth(35);
-                iv.setFitHeight(35);
-                iv.setPreserveRatio(true);
-                cell.getChildren().add(iv);
+        if (housingUnit.getHasPurpleAlien()) {
+            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/PurpleAlien.png")));
+            ImageView alienImageView = new ImageView(alienImage);
+            alienImageView.setFitWidth(OTHER_COMPONENT_SIZE * 0.6);
+            alienImageView.setFitHeight(OTHER_COMPONENT_SIZE * 0.6);
+            alienImageView.setLayoutX((OTHER_COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
+            alienImageView.setLayoutY((OTHER_COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
+            alienImageView.setPreserveRatio(true);
+            cell.getChildren().add(alienImageView);
+
+        } else if (housingUnit.getHasOrangeAlien()) {
+            Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/OrangeAlien.png")));
+            ImageView alienImageView = new ImageView(alienImage);
+            alienImageView.setFitWidth(OTHER_COMPONENT_SIZE * 0.6);
+            alienImageView.setFitHeight(OTHER_COMPONENT_SIZE * 0.6);
+            alienImageView.setLayoutX((OTHER_COMPONENT_SIZE - alienImageView.getFitWidth()) / 2);
+            alienImageView.setLayoutY((OTHER_COMPONENT_SIZE - alienImageView.getFitHeight()) / 2);
+            alienImageView.setPreserveRatio(true);
+            cell.getChildren().add(alienImageView);
+
+        } else {
+            int crewCount = housingUnit.getCrewCount();
+
+            if (crewCount == 0) {
+                return;
             }
 
-            bookedGrid.add(cell, i, 0);
+            Image crewImage = new Image(String.valueOf(MainClient.class.getResource("img/items/CrewMate_icon.png")));
+            double imageSize = OTHER_COMPONENT_SIZE * 0.4;
+            double centerY = (OTHER_COMPONENT_SIZE - (imageSize * 3/2)) / 2;
+
+            if (crewCount == 1) {
+                double centerX = (OTHER_COMPONENT_SIZE - imageSize) / 2;
+
+                ImageView crewImageView = new ImageView(crewImage);
+                crewImageView.setFitWidth(imageSize);
+                crewImageView.setPreserveRatio(true);
+                crewImageView.setLayoutX(centerX);
+                crewImageView.setLayoutY(centerY);
+                cell.getChildren().add(crewImageView);
+
+            } else if (crewCount == 2) {
+                double spacing = 0;
+                double totalWidth = imageSize * 2 + spacing;
+                double startX = (OTHER_COMPONENT_SIZE - totalWidth) / 2;
+
+                for (int i = 0; i < 2; i++) {
+                    double x = startX + i * (imageSize + spacing);
+
+                    ImageView crewImageView = new ImageView(crewImage);
+                    crewImageView.setFitWidth(imageSize);
+                    crewImageView.setPreserveRatio(true);
+                    crewImageView.setLayoutX(x);
+                    crewImageView.setLayoutY(centerY);
+                    cell.getChildren().add(crewImageView);
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders the battery storage for other players (scaled down)
+     *
+     * @param cell is the cell to render
+     * @param comp is the component to render
+     */
+    private void renderOtherPlayerBatteryStorage(Pane cell, Component comp) {
+        BatteryStorage batteryStorage = (BatteryStorage) comp;
+        Image batteryImage = new Image(String.valueOf(MainClient.class.getResource("img/items/Battery_icon.png")));
+
+        if (batteryStorage.getCapacity() == 2) {
+            int count = batteryStorage.getItemsCount();
+
+            double imageSizeX = 7;
+            double imageSizeY = 15.75;
+            double spacing = 0;
+            double startX = 10.5;
+            double centerY = 10;
+
+            for (int i = 0; i < 2; i++) {
+                double x = startX + i * (imageSizeX + spacing);
+
+                if (i < count) {
+                    ImageView batteryImageView = new ImageView(batteryImage);
+                    batteryImageView.setFitWidth(imageSizeX);
+                    batteryImageView.setFitHeight(imageSizeY);
+                    batteryImageView.setLayoutX(x);
+                    batteryImageView.setLayoutY(centerY);
+                    batteryImageView.setPreserveRatio(false);
+                    cell.getChildren().add(batteryImageView);
+                } else {
+                    Rectangle placeholder = new Rectangle(imageSizeX, imageSizeY, Color.BLACK);
+                    placeholder.setLayoutX(x);
+                    placeholder.setLayoutY(centerY);
+                    cell.getChildren().add(placeholder);
+                }
+            }
+        }
+
+        if (batteryStorage.getCapacity() == 3) {
+            int count = batteryStorage.getItemsCount();
+
+            double imageSizeX = 7;
+            double imageSizeY = 15.75;
+            double spacing = 0;
+            double startX = 7;
+            double centerY = 10;
+
+            for (int i = 0; i < 3; i++) {
+                double x = startX + i * (imageSizeX + spacing);
+
+                if (i < count) {
+                    ImageView batteryImageView = new ImageView(batteryImage);
+                    batteryImageView.setFitWidth(imageSizeX);
+                    batteryImageView.setFitHeight(imageSizeY);
+                    batteryImageView.setLayoutX(x);
+                    batteryImageView.setLayoutY(centerY);
+                    batteryImageView.setPreserveRatio(false);
+                    cell.getChildren().add(batteryImageView);
+                } else {
+                    Rectangle placeholder = new Rectangle(imageSizeX, imageSizeY, Color.BLACK);
+                    placeholder.setLayoutX(x);
+                    placeholder.setLayoutY(centerY);
+                    cell.getChildren().add(placeholder);
+                }
+            }
         }
     }
 
@@ -965,5 +1096,87 @@ public class NewEventView {
         eventMainTitle.setText("");
         eventMainDesc.setText("");
         btnContainer.getChildren().clear();
+    }
+
+    /**
+     * Adds a message to the activity chat with timestamp and type styling
+     *
+     * @author Gabriele
+     * @param message The message to display
+     * @param messageType Type of message
+     */
+    public void addChatMessage(String message, String messageType) {
+        Platform.runLater(() -> {
+            String timestamp = LocalDateTime.now().format(TIME_FORMATTER);
+            String fullMessage = String.format("[%s] %s", timestamp, message);
+
+            // Create the message label
+            Label messageLabel = new Label(fullMessage);
+            messageLabel.setWrapText(true);
+            messageLabel.setMaxWidth(Double.MAX_VALUE);
+
+            VBox messageContainer = new VBox();
+            messageContainer.getChildren().add(messageLabel);
+            messageContainer.setMaxWidth(Double.MAX_VALUE);
+
+            messageContainer.setPadding(new Insets(8, 12, 8, 12));
+
+            String baseContainerStyle = "-fx-background-radius: 4; -fx-border-width: 1; -fx-border-radius: 4;";
+            String baseTextStyle = "-fx-font-size: 12px;";
+
+            // Color variables
+            String backgroundColor = "";
+            String borderColor = "";
+            String textColor = "";
+
+            switch (messageType.toUpperCase()) {
+                case "RED":
+                    backgroundColor = "rgba(255, 89, 89, 0.15)";
+                    borderColor = "#ff5959";
+                    textColor = "#ff4242";
+                    break;
+
+                case "ORANGE":
+                    backgroundColor = "rgba(255, 165, 0, 0.15)";
+                    borderColor = "#ffa500";
+                    textColor = "#ff8c00";
+                    break;
+
+                case "GREEN":
+                    backgroundColor = "rgba(76, 175, 80, 0.15)";
+                    borderColor = "#4CAF50";
+                    textColor = "#2e7d32";
+                    break;
+
+                case "INFO":
+                default:
+                    backgroundColor = "rgba(240, 240, 245, 0.12)";
+                    borderColor = "#9BA1A6";
+                    textColor = "#E1E3E6";
+                    break;
+            }
+
+            String containerStyle = String.format("-fx-background-color: %s; -fx-border-color: %s; %s", backgroundColor, borderColor, baseContainerStyle);
+            String textStyle = String.format("-fx-text-fill: %s; %s", textColor, baseTextStyle);
+
+            messageContainer.setStyle(containerStyle);
+            messageLabel.setStyle(textStyle);
+
+            chatMessagesContainer.getChildren().add(messageContainer);
+
+            // Auto-scroll to bottom
+            Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
+        });
+    }
+
+    /**
+     * Clears all messages from the chat
+     *
+     * @author Gabriele
+     */
+    public void clearChatMessages() {
+        Platform.runLater(() -> {
+            chatMessagesContainer.getChildren().clear();
+        });
     }
 }

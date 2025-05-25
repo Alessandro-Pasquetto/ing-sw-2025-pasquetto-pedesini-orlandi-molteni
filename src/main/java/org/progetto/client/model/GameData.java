@@ -8,6 +8,8 @@ import org.progetto.server.model.events.EventCard;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Client data useful to track game evolution
@@ -30,8 +32,8 @@ public class GameData {
     private static String activePlayer;
     private static int color;
     private static Spaceship spaceship = null;
+    private static Map<String, Spaceship> otherSpaceships = new HashMap<String, Spaceship>();
     private static Player[] track;
-    private static ArrayList<Player> travelers;
     private static String UIType;
 
     // =======================
@@ -74,15 +76,12 @@ public class GameData {
         return spaceship;
     }
 
-    public static Player[] getTrack() {
-        return track;
+    public static Map<String, Spaceship> getOtherSpaceships() {
+        return otherSpaceships;
     }
 
-    public static ArrayList<Player> getTravelers() {
-        if (travelers == null) {
-            travelers = new ArrayList<>();
-        }
-        return travelers;
+    public static Player[] getTrack() {
+        return track;
     }
 
     public static String getUIType(){
@@ -133,12 +132,12 @@ public class GameData {
         GameData.spaceship = spaceship;
     }
 
-    public static void setTrack(Player[] track) {
-        GameData.track = track;
+    public static void setOtherSpaceships(Map<String, Spaceship> otherSpaceships) {
+        GameData.otherSpaceships = otherSpaceships;
     }
 
-    public static void setTravelers(ArrayList<Player> travelers) {
-        GameData.travelers = travelers;
+    public static void setTrack(Player[] track) {
+        GameData.track = track;
     }
 
     public static void setUIType(String UIType){
@@ -302,7 +301,6 @@ public class GameData {
         setColor(0);
         setSpaceship(null);
         setTrack(null);
-        setTravelers(null);
 
         BuildingData.resetBuildingData();
     }

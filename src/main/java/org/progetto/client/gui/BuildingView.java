@@ -459,7 +459,7 @@ public class BuildingView {
         PauseTransition delay = new PauseTransition(Duration.millis(250));
         delay.setOnFinished(event -> {
             for (Player player : playersList) {
-                GameData.getSender().showSpaceship(player.getName());
+                updateOtherPlayerSpaceship(player, player.getSpaceship());
             }
         });
         delay.play();
@@ -480,7 +480,7 @@ public class BuildingView {
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
 
         if (shipGrid == null || bookedGrid == null){
-            System.err.println("Null shipGrid");
+            System.err.println("Ship grid is null");
             return;
         }
 
@@ -551,7 +551,7 @@ public class BuildingView {
         GridPane shipGrid = getShipGridByPlayer(playerName);
 
         if (shipGrid == null){
-            System.err.println("Null shipGrid");
+            System.err.println("Ship grid is null");
             return;
         }
 
@@ -587,11 +587,19 @@ public class BuildingView {
         }
     }
 
+    /**
+     * Updates the booked component of another player
+     *
+     * @author Alessandro
+     * @param playerName is the name of the player
+     * @param component is the component to place
+     * @param idx is the index of the booked component
+     */
     public void updateOtherPlayerBookedComponent(String playerName, Component component, int idx){
         GridPane bookedGrid = getBookedGridByPlayer(playerName);
 
         if (bookedGrid == null){
-            System.err.println("Null shipGrid");
+            System.err.println("Ship grid is null");
             return;
         }
 

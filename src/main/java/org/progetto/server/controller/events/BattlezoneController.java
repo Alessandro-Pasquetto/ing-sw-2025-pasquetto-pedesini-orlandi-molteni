@@ -666,7 +666,6 @@ public class BattlezoneController extends EventControllerAbstract {
         }
 
         // Checks if a crew member has been discarded
-
         try {
             battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;

@@ -5,8 +5,8 @@
 <?import java.net.URL?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.Group?>
+
 <StackPane fx:id="eventPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.NewEventView">
 
     <stylesheets>
@@ -21,21 +21,12 @@
                     <VBox fx:id="playerListViewContainer" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS">
                         <Label fx:id="activePlayersLabel" text="Players" />
                         <ListView fx:id="playerListView" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
-
-                        <VBox.margin>
-                            <Insets bottom="15.0" />
-                        </VBox.margin>
                     </VBox>
                 </VBox>
             </left>
 
             <right>
-                <VBox alignment="CENTER" minWidth="345.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="eventSidebarWrapper" alignment="TOP_CENTER" spacing="20" VBox.vgrow="ALWAYS" maxWidth="345.0">
-                        <Label fx:id="eventSectionTitle" text="Current event" wrapText="true" />
-                        <ImageView fx:id="eventCard" fitHeight="338.0" fitWidth="220.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
-                    </VBox>
-
+                <VBox alignment="CENTER" minWidth="345.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="30">
                     <StackPane alignment="CENTER">
                         <ImageView fx:id="boardImage" fitWidth="345.0" fitHeight="209.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
                         <Pane fx:id="cellsPane"
@@ -46,6 +37,23 @@
                             <Group fx:id="cellsGroup" />
                         </Pane>
                     </StackPane>
+
+                    <VBox fx:id="eventSidebarWrapper" alignment="TOP_CENTER" spacing="20" maxWidth="345.0">
+                        <Label fx:id="eventSectionTitle" text="Current event" wrapText="true" />
+                        <ImageView fx:id="eventCard" fitHeight="292.0" fitWidth="190.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+
+                        <VBox.margin>
+                            <Insets top="0" right="0" bottom="10" left="0"/>
+                        </VBox.margin>
+                    </VBox>
+
+                    <VBox fx:id="activityChatContainer" VBox.vgrow="ALWAYS" spacing="15" alignment="TOP_CENTER" >
+                        <Label text="Activity Log" fx:id="activityChatLabel" />
+                        <ScrollPane fx:id="chatScrollPane" fitToWidth="true" maxHeight="Infinity"
+                                    style="-fx-background-color: transparent; -fx-background: transparent;">
+                            <VBox fx:id="chatMessagesContainer" VBox.vgrow="ALWAYS" spacing="5" />
+                        </ScrollPane>
+                    </VBox>
                 </VBox>
             </right>
 

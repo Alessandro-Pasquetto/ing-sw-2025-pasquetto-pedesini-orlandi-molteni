@@ -16,15 +16,18 @@ import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
-import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
+import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handles messages coming from server
@@ -168,8 +171,6 @@ public class GuiHandlerMessage {
 
                     PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
                     PageController.switchScene("buildingPage.fxml", "Building");
-
-                    GameData.getSender().showPlayers();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
@@ -192,16 +193,11 @@ public class GuiHandlerMessage {
                 else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
                     PageController.switchScene("newEventPage.fxml", "Event");
-
-                    sender.showSpaceship(GameData.getNamePlayer());
-                    sender.showPlayers();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
                     PageController.initTravel(GameData.getLevelGame());
                     PageController.switchScene("travelPage.fxml", "Travel");
-
-                    sender.showTrack();
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ENDGAME")){
@@ -260,7 +256,29 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
-        else if(messageObj instanceof PlayersMessage playersMessage) {
+        else if (messageObj instanceof UpdatePlayersMessage updatePlayersMessage) {
+
+            switch (GameData.getPhaseGame()) {
+                case "BUILDING":
+                    PageController.getBuildingView().updatePlayersList(updatePlayersMessage.getPlayers());
+                    break;
+
+                case "EVENT":
+                    PageController.getEventView().updatePlayersList(updatePlayersMessage.getPlayers());
+
+                    Map<String, Spaceship> otherSpaceships = new HashMap<>();
+                    for (Player player : updatePlayersMessage.getPlayers()) {
+                        if (!player.getName().equals(GameData.getNamePlayer())) {
+                            otherSpaceships.put(player.getName(), player.getSpaceship());
+                        }
+                    }
+                    GameData.setOtherSpaceships(otherSpaceships);
+
+                    break;
+            }
+        }
+
+        else if(messageObj instanceof ResponsePlayersMessage playersMessage) {
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
@@ -342,6 +360,7 @@ public class GuiHandlerMessage {
 
                 case "EVENT":
                     PageController.getEventView().updateActivePlayer(activePlayerMessage.getPlayerName());
+                    PageController.getEventView().addChatMessage(activePlayerMessage.getPlayerName() + " is the active player now", "INFO");
                     break;
             }
         }
@@ -360,12 +379,12 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof UpdateTrackMessage updateTrackMessage) {
             GameData.setTrack(updateTrackMessage.getTrack());
-            GameData.setTravelers(updateTrackMessage.getTravelers());
 
             switch (GameData.getPhaseGame()) {
 
                 case "EVENT":
                     PageController.getEventView().updateTrack(updateTrackMessage.getTrack());
+                    PageController.getEventView().updatePlayersList(updateTrackMessage.getTravelers());
                     break;
 
                 case "TRAVEL":

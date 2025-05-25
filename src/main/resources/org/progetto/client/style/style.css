@@ -422,7 +422,7 @@
 #activePlayersLabel,
 #buildingSectionTitle {
     -fx-text-fill: rgb(223, 154, 0);
-    -fx-font-size: 24;
+    -fx-font-size: 20;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -631,7 +631,7 @@
 #activePlayersLabel,
 #eventSectionTitle {
     -fx-text-fill: rgb(223, 154, 0);
-    -fx-font-size: 24;
+    -fx-font-size: 20;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }
@@ -663,6 +663,22 @@
     -fx-text-fill: rgb(230, 230, 230);
     -fx-font-size: 18;
     -fx-font-weight: 500;
+}
+
+#activityChatContainer {
+    -fx-padding: 25;
+    -fx-background-color: rgba(255,255,255,0.1);
+    -fx-border-color: rgba(43, 50, 57, 0.5);
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+#activityChatLabel {
+    -fx-text-fill: rgb(223, 154, 0);
+    -fx-font-size: 20;
+    -fx-font-weight: 700;
+    -fx-font-family: 'Orgovan';
 }
 
 /* ============================
@@ -759,7 +775,7 @@
 
 #playerListWrapper #playerListTitle {
     -fx-text-fill: rgb(223, 154, 0);
-    -fx-font-size: 24;
+    -fx-font-size: 20;
     -fx-font-weight: 700;
     -fx-font-family: 'Orgovan';
 }

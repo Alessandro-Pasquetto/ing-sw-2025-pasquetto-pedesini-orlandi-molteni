@@ -5,7 +5,7 @@ import org.progetto.server.model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class PlayersMessage implements Serializable {
+public class ResponsePlayersMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -13,12 +13,11 @@ public class PlayersMessage implements Serializable {
 
     private final ArrayList<Player> players;
 
-
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public PlayersMessage(ArrayList<Player> players) {
+    public ResponsePlayersMessage(ArrayList<Player> players) {
         this.players = players;
     }
 
@@ -29,5 +28,4 @@ public class PlayersMessage implements Serializable {
     public ArrayList<Player> getPlayers() {
         return players;
     }
-
 }
