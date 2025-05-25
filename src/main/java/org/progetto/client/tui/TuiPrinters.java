@@ -11,6 +11,12 @@ import org.progetto.server.model.events.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Contains all the printing methods used by the TUI
+ *
+ * @author Lorenzo,Gabriele
+ */
+
 public class TuiPrinters {
 
     // =======================

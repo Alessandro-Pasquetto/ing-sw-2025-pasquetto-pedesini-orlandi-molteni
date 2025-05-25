@@ -19,7 +19,13 @@ public class DragAndDrop {
     // COMPONENT
     // =======================
 
-    // DragAndDrop functions
+    /**
+     * Enables the drag of a component pane when it's clicked
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component pane
+     * @param event is the MouseEvent to read for the pick
+     */
     private static void onMousePressedFunctionComponent(Pane componentPane, MouseEvent event){
 
         if (event.getButton() != MouseButton.PRIMARY)
@@ -61,6 +67,14 @@ public class DragAndDrop {
         event.consume();
     }
 
+
+    /**
+     * Allows a component pane to be dragged on the left-key clicked
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component pane
+     * @param event is the MouseEvent to read for the drag
+     */
     private static void onMouseDraggedFunctionComponent(Pane componentPane, MouseEvent event){
 
         Boolean startedWithPrimary = (Boolean) componentPane.getProperties().get("dragStartedWithPrimary");
@@ -82,6 +96,13 @@ public class DragAndDrop {
         event.consume();  // Consume the event to prevent default behavior
     }
 
+    /**
+     * Allows a component pane to be placed on the left-key released
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component pane
+     * @param event is the MouseEvent to read for the release
+     */
     private static void onMouseReleasedFunctionComponent(Pane componentPane, MouseEvent event){
 
         if (event.getButton() != MouseButton.PRIMARY)
@@ -200,6 +221,12 @@ public class DragAndDrop {
         event.consume();  // Consume the event to prevent default behavior
     }
 
+    /**
+     * Allows the drag for booked component pane
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component pane
+     */
     public static void setOnMousePressedForBookedComponent(Pane componentPane) {
         // Set his pressFunction
         componentPane.setOnMousePressed(event2 -> {
@@ -243,7 +270,12 @@ public class DragAndDrop {
         componentPane.setOnMouseReleased(null);
     }
 
-    // Make draggable
+    /**
+     * Makes a component draggable
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component
+     */
     public static void enableDragAndDropComponent(Pane componentPane) {
         // Make sure the image responds to mouse events
         componentPane.setPickOnBounds(true);
@@ -266,7 +298,12 @@ public class DragAndDrop {
         componentPane.getStyleClass().add("draggable");
     }
 
-    // Method to disable drag-and-drop for a Pane
+    /**
+     * Disable the drag and drop for component pane
+     *
+     * @author Alessandro
+     * @param componentPane is the dragged component pane
+     */
     public static void disableDragAndDropComponent(Pane componentPane) {
         componentPane.setOnMousePressed(null);
         componentPane.setOnMouseDragged(null);
@@ -278,7 +315,13 @@ public class DragAndDrop {
     // BOXES
     // =======================
 
-    // DragAndDrop functions
+    /**
+     * Enables the drag of an item ImageView when it's clicked
+     *
+     * @author Alessandro
+     * @param itemImage is the ImageView of the item to be dragged
+     * @param event is the MouseEvent to read for the pick
+     */
     private static void onMousePressedFunctionItems(ImageView itemImage, MouseEvent event){
 
         if (event.getButton() != MouseButton.PRIMARY)
@@ -320,6 +363,14 @@ public class DragAndDrop {
         event.consume();
     }
 
+
+    /**
+     * Allows an item ImageView to be dragged on the left-key clicked
+     *
+     * @author Alessandro
+     * @param itemImage is the ImageView of the item to be dragged
+     * @param event is the MouseEvent to read for the drag
+     */
     private static void onMouseDraggedFunctionItems(ImageView itemImage, MouseEvent event){
 
         Boolean startedWithPrimary = (Boolean) itemImage.getProperties().get("dragStartedWithPrimary");
@@ -341,6 +392,15 @@ public class DragAndDrop {
         event.consume();  // Consume the event to prevent default behavior
     }
 
+
+    /**
+     * Allows an item ImageView to be placed on the left-key released
+     *
+     * @author Alessandro
+     * @param itemImage is the ImageView of the item to be dragged
+     * @param event is the MouseEvent to read for the release
+     * @param targetId is the FXML id of the final Object
+     */
     private static void onMouseReleasedFunctionItems(ImageView itemImage, MouseEvent event, String targetId){
 
         if (event.getButton() != MouseButton.PRIMARY)
@@ -468,7 +528,13 @@ public class DragAndDrop {
         event.consume();  // Consume the event to prevent default behavior
     }
 
-    // Make draggable
+    /**
+     * Makes an item draggable
+     *
+     * @author Alessandro
+     * @param itemImage is the ImageView of the item to be dragged
+     * @param targetId is the FXML id of the final Object
+     */
     public static void enableDragAndDropItems(ImageView itemImage, String targetId) {
         // Make sure the image responds to mouse events
         itemImage.setPickOnBounds(true);
@@ -491,7 +557,12 @@ public class DragAndDrop {
         itemImage.getStyleClass().add("draggable");
     }
 
-    // Method to disable drag-and-drop for a Pane
+    /**
+     * Disable drag and drop for an Item
+     *
+     * @author Alessandro
+     * @param itemImage is the ImageView of the item to be dragged
+     */
     public static void disableDragAndDropItems(ImageView itemImage) {
         itemImage.setOnMousePressed(null);
         itemImage.setOnMouseDragged(null);

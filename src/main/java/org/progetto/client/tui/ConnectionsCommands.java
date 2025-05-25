@@ -64,7 +64,7 @@ public class ConnectionsCommands {
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
-     * @throws InterruptedException
+     * @throws InterruptedException if the connection will be interrupted
      */
     public static void autoCreate(String[] commandParts) throws InterruptedException {
 
@@ -87,7 +87,7 @@ public class ConnectionsCommands {
      *
      * @author Lorenzo
      * @param commandParts are segments of the command
-     * @throws InterruptedException
+     * @throws InterruptedException if the connection will be interrupted
      */
     public static void autoJoin(String[] commandParts) throws InterruptedException {
 

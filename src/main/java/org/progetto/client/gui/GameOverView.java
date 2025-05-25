@@ -81,7 +81,7 @@ public class GameOverView {
      * Connected to the button, allows the player to return to the lobby page
      *
      * @author Lorenzo
-     * @throws IOException
+     * @throws IOException if the page cannot be loaded
      */
     public void returnToLobby() throws IOException {
         Sender sender = GameData.getSender();

@@ -289,6 +289,11 @@ public class GameData {
     }
 
 
+    /**
+     * Reset variables used during the game to the default values
+     *
+     * @author Alessandro
+     */
     public static void resetData(){
         clearSaveFile();
 

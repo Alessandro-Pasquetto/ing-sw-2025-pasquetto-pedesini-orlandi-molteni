@@ -54,6 +54,7 @@ public class EventCommands {
      *
      * @author Lorenzo, Alessandro
      * @param max is the total amount of usable double engines
+     * @param enginePower is the required engine power
      */
     public static void responseHowManyDoubleEngines(int max, int enginePower) {
 
@@ -526,6 +527,12 @@ public class EventCommands {
         }
     }
 
+
+    /**
+     * Handles player decision to keep a spaceship branch
+     *
+     * @author Alessandro
+     */
     public static void responseSelectSpaceshipPart() {
 
         while (true) {

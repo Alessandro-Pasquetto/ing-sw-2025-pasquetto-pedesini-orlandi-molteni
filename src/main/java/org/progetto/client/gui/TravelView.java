@@ -90,6 +90,7 @@ public class TravelView {
      * Initializes the track
      *
      * @author Lorenzo
+     * @param levelGame is the game level
      */
     public void initTrack(int levelGame) {
         cellsGroup.getChildren().clear();

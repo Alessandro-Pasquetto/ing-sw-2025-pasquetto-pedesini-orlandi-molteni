@@ -150,6 +150,11 @@ public class TuiCommandFilter {
         GameData.getSender().leaveGame();
     }
 
+    /**
+     * Takes the first command in the queue
+     *
+     * @autrhor Alessandro
+     */
     public static void messageDispatcher() {
         new Thread(() -> {
             while (true) {
@@ -173,6 +178,12 @@ public class TuiCommandFilter {
         }).start();
     }
 
+    /**
+     * Handles the player response
+     *
+     * @author Alessandro
+     * @param input is the response
+     */
     public static void setResponse(String input) {
         synchronized (responseLock) {
             response = input;
@@ -181,6 +192,12 @@ public class TuiCommandFilter {
         }
     }
 
+    /**
+     * Handles the phase of waiting for a player response
+     *
+     * @author Alessandro
+     * @return the given response
+     */
     public static String waitResponse() {
         synchronized (responseLock) {
             isWaitingResponse = true;
@@ -272,8 +289,8 @@ public class TuiCommandFilter {
      *
      * @author Alessandro
      * @param command is the command name red in input
-     * @throws IllegalStateException
-     * @throws InterruptedException
+     * @throws IllegalStateException  if a command invoke a method in a wrong time
+     * @throws InterruptedException if the connection will be lost
      */
     public static void handleCommand(String command) throws IllegalStateException, InterruptedException {
         command = command.trim();

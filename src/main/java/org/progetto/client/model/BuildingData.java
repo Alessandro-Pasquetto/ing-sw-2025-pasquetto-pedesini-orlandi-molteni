@@ -119,6 +119,12 @@ public class BuildingData {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Initialize the building mask based on the given game level
+     *
+     * @author Alessandro
+     * @param levelShip is the game level
+     */
     public static void initMask(int levelShip){
         shipMask =  switch (levelShip) {
                         case 1 -> new int[][]{
@@ -139,6 +145,11 @@ public class BuildingData {
                     };
     }
 
+    /**
+     * Allows a component image to be rotated
+     *
+     * @author Alessandro
+     */
     public static void rotateComponent(){
         if (isRotating) return;
 
@@ -161,6 +172,11 @@ public class BuildingData {
         rotateTransition.play();
     }
 
+    /**
+     * Reset the position of a component if the player cannot place it
+     *
+     * @author Alessandro
+     */
     public static void resetHandComponent(){
         if (BuildingData.getHandComponent() != null && (BuildingData.getYHandComponent() != -1 || BuildingData.getIsTimerExpired())){
             if(GameData.getUIType().equals("GUI")) {
@@ -174,6 +190,11 @@ public class BuildingData {
         rHandComponent = 0;
     }
 
+    /**
+     * Reset variables used during the building phase to the default values
+     *
+     * @author Alessandro
+     */
     public static void resetBuildingData(){
         setHandComponent(null);
         setTempPickingBookedComponent(null);

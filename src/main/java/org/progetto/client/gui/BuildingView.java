@@ -117,7 +117,7 @@ public class BuildingView {
     // =======================
 
     /**
-     * Initializes the building view
+     * Initializes the Building view
      *
      * @author Alessandro, Gabriele
      */

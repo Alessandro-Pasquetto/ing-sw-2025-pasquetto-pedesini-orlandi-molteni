@@ -25,6 +25,13 @@ public class Alerts {
     // OTHER METHODS
     // =======================
 
+
+    /**
+     * Creates and displays a visual warnings
+     *
+     * @author Lorenzo
+     * @param message is the warning message
+     */
     public static void showWarning(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
         alert.showAndWait();

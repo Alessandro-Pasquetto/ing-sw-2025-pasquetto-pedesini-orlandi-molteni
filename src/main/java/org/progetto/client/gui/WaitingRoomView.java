@@ -94,8 +94,6 @@ public class WaitingRoomView {
     private void onReadyPressed() {
         GameData.getSender().readyPlayer();
         readyButton.setDisable(true);
-
-        //TODO: maybe add a feature to remove ready state
     }
 
     /**

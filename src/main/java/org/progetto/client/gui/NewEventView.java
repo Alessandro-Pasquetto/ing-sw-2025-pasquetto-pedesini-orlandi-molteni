@@ -184,7 +184,7 @@ public class NewEventView {
      * Updates the track with the current positions of the players
      *
      * @author Lorenzo
-     * @param  playersPosition The current positions of the players
+     * @param  playersPosition is the current positions of the players
      */
     public void updateTrack(Player[] playersPosition) {
         cellsGroup.getChildren().removeIf(node -> node instanceof ImageView);

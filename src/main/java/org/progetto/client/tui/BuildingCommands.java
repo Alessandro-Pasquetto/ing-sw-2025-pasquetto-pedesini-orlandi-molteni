@@ -31,7 +31,7 @@ public class BuildingCommands {
      * usage : ShowHand
      *
      * @author Gabriele
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void showHandComponent(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -55,7 +55,7 @@ public class BuildingCommands {
      * usage : ShowVisible
      *
      * @author Gabriele
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void showVisibleComponents(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -139,7 +139,7 @@ public class BuildingCommands {
      * usage : ShowBooked
      *
      * @author Gabriele
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void showBookedComponents(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -233,8 +233,8 @@ public class BuildingCommands {
      * Handles player response to place an alien
      *
      * @author Alessandro
-     * @param alienColor
-     * @param spaceship
+     * @param alienColor is the color of the alien
+     * @param spaceship are segments of the command
      */
     public static void responsePlaceAlien(String alienColor, Spaceship spaceship) {
 

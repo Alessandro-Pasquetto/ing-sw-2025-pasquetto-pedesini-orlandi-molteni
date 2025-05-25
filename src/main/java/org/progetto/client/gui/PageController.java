@@ -107,6 +107,7 @@ public class PageController {
     /**
      * Initializes the GUI
      *
+     * @author Alessandro
      * @throws IOException if the FXML files cannot be loaded
      */
     public static void start() throws IOException {
@@ -124,6 +125,7 @@ public class PageController {
     /**
      * Loads the FXML files and their corresponding controllers
      *
+     * @author Alessandro
      * @throws IOException if the FXML files cannot be loaded
      */
     public static void loadControllers() throws IOException {
@@ -174,6 +176,7 @@ public class PageController {
     /**
      * Switches the scene to the specified FXML file
      *
+     * @author Alessandro
      * @param fxmlFile the name of the FXML file
      * @param title    the title of the window
      * @throws IOException if the FXML file cannot be loaded
@@ -217,8 +220,9 @@ public class PageController {
     }
 
     /**
-     * Initializes the building view with the specified level and color
+     * Initializes the Building view with the specified level and color
      *
+     * @author Alessandro
      * @param levelGame the level of the game
      * @param color the color of the spaceship
      */
@@ -231,23 +235,47 @@ public class PageController {
         buildingView.initEventCardDecks(levelGame);
     }
 
+    /**
+     * Initializes the Adjusting view with the specific game level
+     *
+     * @author Gabriele
+     * @param levelGame the level of the game
+     */
     public static void initAdjusting(int levelGame) {
         BuildingData.initMask(levelGame);
         adjustingView.initBackground(levelGame);
         adjustingView.initSpaceship(levelGame);
     }
 
+    /**
+     * Initializes the Populating view with the specific game level
+     *
+     * @author Stefano
+     * @param levelGame the level of the game
+     */
     public static void initPopulating(int levelGame) {
         BuildingData.initMask(levelGame);
         populatingView.initBackground(levelGame);
         populatingView.initSpaceship(levelGame);
     }
 
+    /**
+     * Initializes the Positioning view with the specific game level
+     *
+     * @author Gabriele
+     * @param levelGame the level of the game
+     */
     public static void initPositioning(int levelGame) {
         positioningView.initBackground(levelGame);
         positioningView.initTrack(levelGame);
     }
 
+    /**
+     * Initializes the Event view with the specific game level
+     *
+     * @author Lorenzo
+     * @param levelGame the level of the game
+     */
     public static void initEvent(int levelGame) {
         BuildingData.initMask(levelGame);
         eventView.initBackground(levelGame);
@@ -256,12 +284,23 @@ public class PageController {
         eventView.resetEventLabels();
     }
 
+    /**
+     * Initializes the Travel view with the specific game level
+     *
+     * @author Lorenzo
+     * @param levelGame the level of the game
+     */
     public static void initTravel(int levelGame) {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
-        //travelView.askToContinue();  //debug purpose
     }
 
+    /**
+     * Initializes the EndGame view with the specific game level
+     *
+     * @author Lorenzo
+     * @param levelGame the level of the game
+     */
     public static void initEndGame(int levelGame) {
         gameOverView.initBackground(levelGame);
     }

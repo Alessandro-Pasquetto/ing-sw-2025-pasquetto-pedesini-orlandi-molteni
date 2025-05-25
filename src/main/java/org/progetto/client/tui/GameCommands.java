@@ -28,7 +28,7 @@ public class GameCommands {
      * usage: PlayerStats
      *
      * @author Lorenzo
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void playerStats(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -41,7 +41,7 @@ public class GameCommands {
      * usage: ShowSpaceship player_name
      *
      * @author Lorenzo
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void showSpaceship(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -57,7 +57,7 @@ public class GameCommands {
      * usage: ShipStats
      *
      * @author Gabriele
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void spaceshipStats(String[] commandParts){
         Sender sender = GameData.getSender();
@@ -69,7 +69,7 @@ public class GameCommands {
      * usage: ShowTrack
      *
      * @author Gabriele
-     * @param commandParts
+     * @param commandParts are segments of the command
      */
     public static void showTrack(String[] commandParts){
         Sender sender = GameData.getSender();
