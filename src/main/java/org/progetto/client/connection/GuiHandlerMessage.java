@@ -405,7 +405,19 @@ public class GuiHandlerMessage {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
 
-            PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
+            switch (pickedEventCardMessage.getEventCard().getType()){
+
+                case PLANETS:
+                    PageController.getPlanetsView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
+                    break;
+
+                case OPENSPACE:
+                    PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
+                    break;
+
+            }
+
+
         }
 
 //        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {

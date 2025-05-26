@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 
-public class EventView {
+public class PlanetsView {
 
     @FXML
     private StackPane shipContainerPane;

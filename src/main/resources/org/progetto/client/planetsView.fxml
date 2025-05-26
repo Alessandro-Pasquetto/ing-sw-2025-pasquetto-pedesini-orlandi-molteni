@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="eventPane" prefHeight="1080" prefWidth="1920" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.EventView">
+<BorderPane fx:id="eventPane" prefHeight="1080" prefWidth="1920" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.PlanetsView">
 
     <stylesheets>
         <URL value="@style/style.css" />
