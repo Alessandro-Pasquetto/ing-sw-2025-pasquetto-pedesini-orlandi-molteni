@@ -252,7 +252,8 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 requestedBatteries--;
-                sender.sendMessage("BatteryDiscarded");
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (requestedBatteries == 0) {
                     phase = EventPhase.BATTLE_RESULT;
@@ -272,7 +273,9 @@ public class SmugglersController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 requestedBoxes--;
-                sender.sendMessage("BatteryDiscarded");
+
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (requestedBoxes == 0) {
                     player.setIsReady(true, gameManager.getGame());

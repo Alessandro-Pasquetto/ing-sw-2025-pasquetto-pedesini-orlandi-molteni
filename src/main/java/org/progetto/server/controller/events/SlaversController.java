@@ -229,7 +229,9 @@ public class SlaversController extends EventControllerAbstract {
         // Checks if a battery has been discarded
         if (slavers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
             requestedBatteries--;
-            sender.sendMessage("BatteryDiscarded");
+
+            sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
             if (requestedBatteries == 0) {
                 phase = EventPhase.BATTLE_RESULT;

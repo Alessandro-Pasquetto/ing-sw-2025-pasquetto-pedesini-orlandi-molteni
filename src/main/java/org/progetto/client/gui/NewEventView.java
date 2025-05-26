@@ -649,7 +649,7 @@ public class NewEventView {
         PauseTransition delay = new PauseTransition(Duration.millis(250));
         delay.setOnFinished(event -> {
             for (Player player : playersList) {
-                updateOtherPlayerSpaceship(player, player.getSpaceship());
+                updateOtherPlayerSpaceship(player.getName(), player.getSpaceship());
             }
         });
         delay.play();
@@ -659,14 +659,14 @@ public class NewEventView {
      * Updates other player's spaceship view
      *
      * @author Gabriele
-     * @param player is the player to update
+     * @param playerName is the player to update
      * @param ship is the spaceship to show
      */
-    public void updateOtherPlayerSpaceship(Player player, Spaceship ship) {
+    public void updateOtherPlayerSpaceship(String playerName, Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-        GridPane shipGrid = getShipGridByPlayer(player.getName());
-        GridPane bookedGrid = getBookedGridByPlayer(player.getName());
+        GridPane shipGrid = getShipGridByPlayer(playerName);
+        GridPane bookedGrid = getBookedGridByPlayer(playerName);
         if (shipGrid == null || bookedGrid == null) return;
 
         clearHighlightedCells();
@@ -695,7 +695,7 @@ public class NewEventView {
                         renderOtherPlayerBatteryStorage(cell, comp);
                     }
 
-                    // Handle rotation (same logic as original but cleaner)
+                    // Component rotation
                     if (comp instanceof HousingUnit) {
                         iv.setRotate(comp.getRotation() * 90);
                     } else {
@@ -978,7 +978,7 @@ public class NewEventView {
      * @param typeToHighlight is the type of component to highlight (BATTERY or CREW)
      * @param onClick is the action to perform when clicking on a component
      */
-    public void highlightComponentsOnTheShip(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
+    public void askToSelectShipComponent(String title, String description, String typeToHighlight, BiConsumer<Integer, Integer> onClick) {
         resetEventLabels();
         clearHighlightedCells();
 

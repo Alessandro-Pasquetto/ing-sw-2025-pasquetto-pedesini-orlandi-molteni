@@ -1,9 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
-import org.progetto.messages.toClient.EventGeneric.BatteriesToDiscardMessage;
-import org.progetto.messages.toClient.EventGeneric.HowManyDoubleEnginesMessage;
-import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -219,7 +217,9 @@ public class OpenSpaceController extends EventControllerAbstract {
 
         batteryStorages.add(batteryStorage);
         requestedNumber--;
-        sender.sendMessage("BatteryDiscarded");
+
+        sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
         if (requestedNumber == 0) {
             player.setIsReady(true, gameManager.getGame());

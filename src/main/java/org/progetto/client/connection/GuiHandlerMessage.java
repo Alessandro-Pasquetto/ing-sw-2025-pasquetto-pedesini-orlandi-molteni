@@ -22,6 +22,7 @@ import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 
 import java.io.IOException;
@@ -240,7 +241,7 @@ public class GuiHandlerMessage {
                         PageController.getEventView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
                     }
                     else
-                        PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner(), responseSpaceshipMessage.getSpaceship());
+                        PageController.getEventView().updateOtherPlayerSpaceship(responseSpaceshipMessage.getOwner().getName(), responseSpaceshipMessage.getSpaceship());
                     break;
             }
         }
@@ -455,13 +456,33 @@ public class GuiHandlerMessage {
             );
         }
 
-        else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
-            PageController.getEventView().highlightComponentsOnTheShip(
+        else if (messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
+            PageController.getEventView().askToSelectShipComponent(
                     "You need to discard a battery",
                     "Select battery to discard...",
                     "BATTERY",
                     (x, y) -> GameData.getSender().responseBatteryToDiscard(x, y)
             );
+        }
+
+        else if (messageObj instanceof BatteryDiscardedMessage batteryDiscardedMessage) {
+            Spaceship spaceship = GameData.getSpaceship();
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            BatteryStorage bs = (BatteryStorage) spaceshipMatrix[batteryDiscardedMessage.getYBatteryStorage()][batteryDiscardedMessage.getXBatteryStorage()];
+            bs.decrementItemsCount(spaceship, 1);
+
+            PageController.getEventView().updateSpaceship(spaceship);
+        }
+
+        else if (messageObj instanceof AnotherPlayerBatteryDiscardedMessage anotherPlayerBatteryDiscardedMessage) {
+            Spaceship spaceship = GameData.getOtherSpaceships().get(anotherPlayerBatteryDiscardedMessage.getNamePlayer());
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            BatteryStorage bs = (BatteryStorage) spaceshipMatrix[anotherPlayerBatteryDiscardedMessage.getYBatteryStorage()][anotherPlayerBatteryDiscardedMessage.getXBatteryStorage()];
+            bs.decrementItemsCount(spaceship, 1);
+
+            PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerBatteryDiscardedMessage.getNamePlayer(), spaceship);
         }
 
 //        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {

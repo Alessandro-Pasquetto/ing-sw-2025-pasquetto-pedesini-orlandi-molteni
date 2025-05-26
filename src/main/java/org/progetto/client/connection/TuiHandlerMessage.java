@@ -175,22 +175,19 @@ public class TuiHandlerMessage {
         }
 
         else if( messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage ) {
-            //TuiPrinters.printSpaceship(updateSpaceshipMessage.getOwner().getName(),updateSpaceshipMessage.getSpaceship(),updateSpaceshipMessage.getOwner().getColor());
+            // TuiPrinters.printSpaceship(updateSpaceshipMessage.getOwner().getName(),updateSpaceshipMessage.getSpaceship(),updateSpaceshipMessage.getOwner().getColor());
         }
 
         else if(messageObj instanceof UpdateTrackMessage updateTrackMessage ) {
-            System.out.println("Current track board");
             TuiPrinters.printTrack(updateTrackMessage.getTravelers(), updateTrackMessage.getTrack());
-            System.out.println();
         }
 
-
         else if (messageObj instanceof UpdatePlayersMessage updatePlayersMessage) {
-            TuiPrinters.printPlayers(updatePlayersMessage.getPlayers());
+            // TuiPrinters.printPlayers(updatePlayersMessage.getPlayers());
         }
 
         else if(messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
-            System.out.println(playerIsContinuingMessage.getPlayerName()+" is continuing...");
+            System.out.println(playerIsContinuingMessage.getPlayerName() + " is continuing...");
         }
 
         else if (messageObj instanceof ResponsePlayerStatsMessage playerStatsMessage) {
@@ -332,6 +329,10 @@ public class TuiHandlerMessage {
 
         else if(messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
             EventCommands.responseBatteryToDiscard(batteriesToDiscardMessage.getBatteriesToDiscard());
+        }
+
+        else if (messageObj instanceof BatteryDiscardedMessage batteryDiscardedMessage) {
+            System.out.println("Battery discarded successfully!");
         }
 
         else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {

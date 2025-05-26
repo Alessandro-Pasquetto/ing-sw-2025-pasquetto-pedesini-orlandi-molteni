@@ -384,7 +384,9 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 requestedBatteries--;
-                sender.sendMessage("BatteryDiscarded");
+
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (requestedBatteries == 0) {
 
@@ -405,7 +407,9 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 requestedBoxes--;
-                sender.sendMessage("BatteryDiscarded");
+
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (requestedBoxes == 0) {
 
@@ -438,7 +442,8 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
 
-                sender.sendMessage("BatteryDiscarded");
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 phase = EventPhase.HANDLE_SHOT;
                 gameManager.broadcastGameMessage("NothingGotDestroyed");

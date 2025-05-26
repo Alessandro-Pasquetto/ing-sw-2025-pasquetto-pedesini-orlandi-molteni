@@ -1,9 +1,6 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.EventGeneric.AnotherPlayerDiceResultMessage;
-import org.progetto.messages.toClient.EventGeneric.BatteriesToDiscardMessage;
-import org.progetto.messages.toClient.EventGeneric.DiceResultMessage;
-import org.progetto.messages.toClient.EventGeneric.IncomingProjectileMessage;
+import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -369,7 +366,10 @@ public class MeteorsRainController extends EventControllerAbstract {
         // Checks if a battery has been discarded
         if (meteorsRain.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
             discardedBattery.remove(player);
-            sender.sendMessage("BatteryDiscarded");
+
+            sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+
             sender.sendMessage("YouAreSafe");
 
             player.setIsReady(true, gameManager.getGame());

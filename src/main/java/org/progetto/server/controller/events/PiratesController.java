@@ -260,10 +260,13 @@ public class PiratesController extends EventControllerAbstract {
         }
 
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+
             // Checks if a battery has been discarded
             if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 requestedBatteries--;
-                sender.sendMessage("BatteryDiscarded");
+
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (requestedBatteries == 0) {
                     phase = EventPhase.BATTLE_RESULT;
@@ -283,7 +286,9 @@ public class PiratesController extends EventControllerAbstract {
             // Checks if a battery has been discarded
             if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
                 discardedBattery.remove(player);
-                sender.sendMessage("BatteryDiscarded");
+
+                sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
                 if (discardedBattery.isEmpty()) {
                     phase = EventPhase.HANDLE_SHOT;
