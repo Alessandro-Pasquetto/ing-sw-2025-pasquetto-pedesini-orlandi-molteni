@@ -304,6 +304,11 @@ public class BuildingBoard implements Serializable {
         return boardMask;
     }
 
+    /**
+     * Returns the spaceship's image
+     *
+     * @author Alessandro
+     */
     private String loadImgShip(){
         return "spaceship" + spaceship.getLevelShip() + ".jpg";
     }
@@ -316,6 +321,24 @@ public class BuildingBoard implements Serializable {
      */
     private Component[][] createSpaceshipMatrix() {
         return new Component[boardMask.length][boardMask[0].length];
+    }
+
+    /**
+     * Remove a component from the spaceship
+     *
+     * @author Alessandro
+     * @param y is the y coordinate of the component to remove
+     * @param x is the x coordinate of the component to remove
+     */
+    public void startDestroyComponent(int x, int y) throws IllegalStateException {
+        if(boardMask[y][x] != -1)
+            throw new IllegalStateException("EmptyComponentCell");
+
+        spaceship.addComponentsShipCount(-1);
+
+        spaceship.addDestroyedCount(1);
+        boardMask[y][x] = 1;
+        spaceshipMatrix[y][x] = null;
     }
 
     /**
@@ -631,7 +654,7 @@ public class BuildingBoard implements Serializable {
         dfsValidity(getCentralUnit().getX(), getCentralUnit().getY(), visited, numComponentsChecked, exposedConnectorsCount);
 
         if(numComponentsChecked.get() != spaceship.getShipComponentsCount()){
-            deleteDisconnectedComponents(visited);
+            startDeleteDisconnectedComponents(visited);
             disconnectedComponents = true;
         }
 
@@ -727,7 +750,7 @@ public class BuildingBoard implements Serializable {
     }
 
     /**
-     * Delete disconnected components
+     * Delete disconnected components and updating the spaceship's counters
      *
      * @author Alessandro
      * @param visited the already visited component list
@@ -742,6 +765,27 @@ public class BuildingBoard implements Serializable {
 
                 if(!visited[y][x]) {
                     destroyComponent(x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete disconnected components
+     *
+     * @author Alessandro
+     * @param visited the already visited component list
+     */
+    private void startDeleteDisconnectedComponents(boolean[][] visited){
+
+        for(int y = 0; y < spaceshipMatrix.length; y++) {
+            for(int x = 0; x < spaceshipMatrix[y].length; x++) {
+
+                if (spaceshipMatrix[y][x] == null)
+                    continue;
+
+                if(!visited[y][x]) {
+                    startDestroyComponent(x, y);
                 }
             }
         }

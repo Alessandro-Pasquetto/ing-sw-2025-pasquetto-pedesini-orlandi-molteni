@@ -390,7 +390,6 @@ public class Game {
 
          */
 
-
             // forzare componente, todo da rimuovere
             int randomPos = 0;
             ComponentType type;

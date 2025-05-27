@@ -324,13 +324,10 @@ public class GameManager {
                 return;
             }
 
-            // todo: va bene aggiungere subito o all'evento successivo?
-            //if(!game.getPhase().equals(GamePhase.EVENT))
-
             game.addPlayer(player);
 
             if(game.getPhase().equals(GamePhase.POPULATING))
-                PopulatingController.askAliensToSinglePlayer(this, player);
+                PopulatingController.askAliensToSinglePlayer(this, player); // No need to set the player as not ready, the initialization method already did
 
             else if(game.getPhase().equals(GamePhase.EVENT)){
                 sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
@@ -345,6 +342,7 @@ public class GameManager {
                 GameController.sendUpdateTrack(this, sender);
 
                 if(!player.getHasLeft()){
+                    player.setIsReady(false, game);
                     game.getBoard().addTraveler(player);
                     game.getBoard().updateTurnOrder();
                     broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));

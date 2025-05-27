@@ -238,7 +238,7 @@ public class SpaceshipController {
                 return;
             }
 
-            buildingBoard.destroyComponent(xComponent, yComponent);
+            buildingBoard.startDestroyComponent(xComponent, yComponent);
 
             sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
@@ -272,7 +272,7 @@ public class SpaceshipController {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
-            // todo notificare spaceship: serve updateSpaceship con nome per GUI
+            gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
 
         } catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());

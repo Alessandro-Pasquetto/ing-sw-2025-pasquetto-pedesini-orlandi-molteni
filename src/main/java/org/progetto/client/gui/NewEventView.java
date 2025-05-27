@@ -417,15 +417,18 @@ public class NewEventView {
             }
         }
 
+        enginePowerValue.setStyle("-fx-text-fill: white;");
+        enginePowerValue.setStyle("-fx-text-fill: white;");
+
         // Update spaceship stats
         float power = ship.getNormalShootingPower();
-        if (power == (int) power) {
-            firePowerValue.setText(String.valueOf((int) power));
-        } else {
-            firePowerValue.setText(String.valueOf(power));
-        }
+        if (power == (int) power)
+            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienOrange() ? 2 : 0)));
+        else
+            firePowerValue.setText(String.valueOf(power + 2 * (ship.getAlienOrange() ? 2 : 0)));
 
-        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower()));
+
+        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0)));
 
         destroyedValue.setText(String.valueOf(ship.getDestroyedCount()));
 
@@ -768,20 +771,17 @@ public class NewEventView {
                     cell.getChildren().add(iv);
 
                     // Add rendering for specific component types
-                    if (comp instanceof HousingUnit) {
+                    if (comp instanceof HousingUnit)
                         renderOtherPlayerHousingUnit(cell, comp);
-                    }
 
-                    if (comp instanceof BatteryStorage) {
+                    else if (comp instanceof BatteryStorage)
                         renderOtherPlayerBatteryStorage(cell, comp);
-                    }
 
                     // Component rotation
-                    if (comp instanceof HousingUnit) {
+                    if (comp instanceof HousingUnit)
                         iv.setRotate(comp.getRotation() * 90);
-                    } else {
+                    else
                         cell.setRotate(comp.getRotation() * 90);
-                    }
                 }
 
                 shipGrid.add(cell, col, row);
@@ -1016,7 +1016,7 @@ public class NewEventView {
      * @param maxCount is the maximum number of items to select
      * @param onConfirm is the action to perform when confirming
      */
-    public void askForQuantity(String title, String description, int maxCount, IntConsumer onConfirm) {
+    public void askForQuantity(String type, String title, String description, int maxCount, IntConsumer onConfirm) {
         resetEventLabels();
 
         eventMainTitle.setText(title);
@@ -1031,16 +1031,63 @@ public class NewEventView {
         final int[] counter = {0};
 
         minusButton.setOnAction(e -> {
+
+            Spaceship ship = GameData.getSpaceship();
+
             if (counter[0] > 0) {
                 counter[0]--;
                 counterLabel.setText(String.valueOf(counter[0]));
+
+                switch (type) {
+                    case "DoubleEngines":
+                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                        enginePowerValue.setStyle("-fx-text-fill: green;");
+                        break;
+                    case "DoubleCannons":
+                        float power = ship.getNormalShootingPower();
+                        if (power == (int) power)
+                            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        else
+                            firePowerValue.setText(String.valueOf(power + 2 * (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        firePowerValue.setStyle("-fx-text-fill: green;");
+                        break;
+                }
+            }
+
+            if(counter[0] == 0) {
+                switch (type) {
+                    case "DoubleEngines":
+                        enginePowerValue.setStyle("-fx-text-fill: white;");
+                        break;
+                    case "DoubleCannons":
+                        firePowerValue.setStyle("-fx-text-fill: white;");
+                        break;
+                }
             }
         });
 
         plusButton.setOnAction(e -> {
+
+            Spaceship ship = GameData.getSpaceship();
+
             if (counter[0] < maxCount) {
                 counter[0]++;
                 counterLabel.setText(String.valueOf(counter[0]));
+
+                switch (type) {
+                    case "DoubleEngines":
+                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                        enginePowerValue.setStyle("-fx-text-fill: green;");
+                        break;
+                    case "DoubleCannons":
+                        float power = ship.getNormalShootingPower();
+                        if (power == (int) power)
+                            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        else
+                            firePowerValue.setText(String.valueOf(power + 2 * (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        firePowerValue.setStyle("-fx-text-fill: green;");
+                        break;
+                }
             }
         });
 

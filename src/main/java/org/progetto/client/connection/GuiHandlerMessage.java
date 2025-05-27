@@ -451,6 +451,7 @@ public class GuiHandlerMessage {
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
             PageController.getEventView().askForQuantity(
+                    "DoubleEngines",
                     "How many double engines do you want to use?",
                     "Select number of double engines to use, you have " + howManyDoubleEnginesMessage.getMaxUsable() + " double engines available...",
                     howManyDoubleEnginesMessage.getMaxUsable(),
