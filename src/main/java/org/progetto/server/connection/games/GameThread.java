@@ -199,6 +199,7 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
 
                         if(gameManager.getGame().getEventDeckSize() > 0){
+
                             // Asks for each traveler if he wants to continue travel
                             for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);

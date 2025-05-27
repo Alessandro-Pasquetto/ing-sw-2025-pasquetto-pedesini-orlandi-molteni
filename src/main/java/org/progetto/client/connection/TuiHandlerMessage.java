@@ -333,7 +333,11 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof BatteryDiscardedMessage batteryDiscardedMessage) {
-            System.out.println("Battery discarded successfully!");
+            System.out.println("Battery discarded successfully");
+        }
+
+        else if (messageObj instanceof CrewDiscardedMessage crewDiscardedMessage) {
+            System.out.println("Crew member discarded successfully");
         }
 
         else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
@@ -637,10 +641,6 @@ public class TuiHandlerMessage {
 
                 case "NotEnoughCrew":
                     System.out.println("Not enough crew!");
-                    break;
-
-                case "CrewMemberDiscarded":
-                    System.out.println("Crew member discarded");
                     break;
 
                 case "CrewMemberNotDiscarded":

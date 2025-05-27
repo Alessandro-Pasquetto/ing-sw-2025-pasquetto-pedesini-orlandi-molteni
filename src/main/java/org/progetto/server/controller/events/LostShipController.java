@@ -203,11 +203,13 @@ public class LostShipController extends EventControllerAbstract  {
         }
 
         // Checks if a crew member has been discarded
-
         try{
             lostShip.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;
-            sender.sendMessage("CrewMemberDiscarded");
+
+            sender.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
+
 
             if (requestedCrew == 0) {
                 phase = EventPhase.EFFECT;

@@ -87,6 +87,28 @@ public class TravelView {
     }
 
     /**
+     * Initializes the travel labels
+     *
+     * @author Gabriele
+     */
+    public void initTravelLabels() {
+        travelMainTitle.setText("YOU LEFT THE TRAVEL");
+        travelMainDesc.setText("You can no longer interact with the game...");
+        btnContainer.getChildren().clear();
+    }
+
+    /**
+     * Resets the travel labels
+     *
+     * @author Gabriele
+     */
+    public void resetTravelLabels() {
+        travelMainTitle.setText("");
+        travelMainDesc.setText("");
+        btnContainer.getChildren().clear();
+    }
+
+    /**
      * Initializes the track
      *
      * @author Lorenzo
@@ -169,17 +191,6 @@ public class TravelView {
 
         btnContainer.getChildren().clear();
         btnContainer.getChildren().add(buttonBox);
-    }
-
-    /**
-     * Resets the travel labels
-     *
-     * @author Gabriele
-     */
-    public void resetTravelLabels() {
-        travelMainTitle.setText("");
-        travelMainDesc.setText("");
-        btnContainer.getChildren().clear();
     }
 
     /**

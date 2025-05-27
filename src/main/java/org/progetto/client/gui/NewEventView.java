@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 public class NewEventView {
@@ -238,6 +239,44 @@ public class NewEventView {
 
         Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSource)));
         eventCard.setImage(img);
+    }
+
+    /**
+     * Initializes the event labels
+     *
+     * @author Gabriele
+     */
+    public void initEventLabels() {
+        if (GameData.getHasLeft()) {
+            eventMainTitle.setText("YOU LEFT THE TRAVEL");
+            eventMainDesc.setText("You can no longer interact with the game...");
+            btnContainer.getChildren().clear();
+        } else {
+            eventMainTitle.setText("");
+            eventMainDesc.setText("");
+            btnContainer.getChildren().clear();
+        }
+    }
+
+    /**
+     * Sets the event labels
+     *
+     * @author Gabriele
+     */
+    public void setEventLabels(String title, String description) {
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+    }
+
+    /**
+     * Resets the event labels
+     *
+     * @author Gabriele
+     */
+    public void resetEventLabels() {
+        eventMainTitle.setText("");
+        eventMainDesc.setText("");
+        btnContainer.getChildren().clear();
     }
 
     /**
@@ -902,11 +941,47 @@ public class NewEventView {
             }
         }
 
-        if (!name.equals(GameData.getNamePlayer())) {
+        // Update event labels based on active player
+        if (!name.equals(GameData.getNamePlayer()) && !GameData.getHasLeft()) {
             eventMainTitle.setText("WAIT FOR YOUR TURN");
             eventMainDesc.setText("Another player is taking his decisions, please wait...");
+            btnContainer.getChildren().clear();
         }
     }
+
+    /**
+     * Ask the player to response yes or no
+     *
+     * @author Gabriele
+     * @param title is the title of the question
+     * @param description is the description of the question
+     * @param onResponse is the callback function to execute when the player responds
+     */
+    public void askYesNo(String title, String description, Consumer<Boolean> onResponse) {
+        resetEventLabels();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+
+        // Yes/No buttons
+        Button yesButton = new Button("Yes");
+        Button noButton = new Button("No");
+
+        yesButton.setOnAction(e -> {
+            onResponse.accept(true);
+        });
+
+        noButton.setOnAction(e -> {
+            onResponse.accept(false);
+        });
+
+        HBox buttonBox = new HBox(15, yesButton, noButton);
+        buttonBox.setStyle("-fx-alignment: center;");
+
+        btnContainer.getChildren().clear();
+        btnContainer.getChildren().add(buttonBox);
+    }
+
 
     /**
      * Asks the player for a quantity
@@ -1085,17 +1160,6 @@ public class NewEventView {
                 cell.setStyle("");
             }
         });
-    }
-
-    /**
-     * Resets the event labels
-     *
-     * @author Gabriele
-     */
-    public void resetEventLabels() {
-        eventMainTitle.setText("");
-        eventMainDesc.setText("");
-        btnContainer.getChildren().clear();
     }
 
     /**

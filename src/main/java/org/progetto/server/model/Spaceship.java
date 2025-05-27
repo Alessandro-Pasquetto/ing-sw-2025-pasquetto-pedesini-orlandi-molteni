@@ -9,6 +9,7 @@ public class Spaceship implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
+
     private final int levelShip;
     private int shipComponentsCount;
     private int destroyedCount;
@@ -120,9 +121,7 @@ public class Spaceship implements Serializable {
     }
 
     public int getTotalCrewCount() {
-        int orangeAlienCount = alienOrange ? 1 : 0;
-        int purpleAlienCount = alienPurple ? 1 : 0;
-        return orangeAlienCount + purpleAlienCount + crewCount;
+        return crewCount;
     }
 
     // =======================

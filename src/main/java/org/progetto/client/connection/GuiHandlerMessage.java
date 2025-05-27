@@ -8,6 +8,7 @@ import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
@@ -24,6 +25,7 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.HousingUnit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -468,9 +470,20 @@ public class GuiHandlerMessage {
             );
         }
 
+        else if (messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
+            PageController.getEventView().askYesNo(
+                    "DO YOU WANT TO ACCEPT CREDITS?",
+                    "You will get " + acceptRewardCreditsAndPenaltiesMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays() + " days and " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew() + " crew members...",
+                    response -> {
+                        Sender sender = GameData.getSender();
+                        sender.responseAcceptRewardCreditsAndPenalties(response ? "YES" : "NO");
+                    }
+            );
+        }
+
         else if (messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
             PageController.getEventView().askToSelectShipComponent(
-                    "You need to discard a battery",
+                    "You need to discard " + batteriesToDiscardMessage.getBatteriesToDiscard() + " batteries",
                     "Select battery to discard...",
                     "BATTERY",
                     (x, y) -> GameData.getSender().responseBatteryToDiscard(x, y)
@@ -495,6 +508,39 @@ public class GuiHandlerMessage {
             bs.decrementItemsCount(spaceship, 1);
 
             PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerBatteryDiscardedMessage.getNamePlayer(), spaceship);
+        }
+
+        else if (messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
+            PageController.getEventView().askToSelectShipComponent(
+                    "You need to discard " + crewToDiscardMessage.getCrewToDiscard() + " crew members",
+                    "Select crew to discard...",
+                    "CREW",
+                    (x, y) -> GameData.getSender().responseCrewToDiscard(x, y)
+            );
+        }
+
+        else if (messageObj instanceof CrewDiscardedMessage crewDiscardedMessage) {
+            Spaceship spaceship = GameData.getSpaceship();
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            HousingUnit hu = (HousingUnit) spaceshipMatrix[crewDiscardedMessage.getYHousingUnit()][crewDiscardedMessage.getXHousingUnit()];
+            hu.decrementCrewCount(spaceship, 1);
+            hu.setAlienOrange(false);
+            hu.setAlienPurple(false);
+
+            PageController.getEventView().updateSpaceship(spaceship);
+        }
+
+        else if (messageObj instanceof AnotherPlayerCrewDiscardedMessage anotherPlayerCrewDiscardedMessage) {
+            Spaceship spaceship = GameData.getOtherSpaceships().get(anotherPlayerCrewDiscardedMessage.getPlayerName());
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            HousingUnit hu = (HousingUnit) spaceshipMatrix[anotherPlayerCrewDiscardedMessage.getYHousingUnit()][anotherPlayerCrewDiscardedMessage.getXHousingUnit()];
+            hu.decrementCrewCount(spaceship, 1);
+            hu.setAlienOrange(false);
+            hu.setAlienPurple(false);
+
+            PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerCrewDiscardedMessage.getPlayerName(), spaceship);
         }
 
 //        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
@@ -716,6 +762,12 @@ public class GuiHandlerMessage {
 
                 case "YouLeftTravel":
                     PageController.getTravelView().setPlayerStatus(GameData.getNamePlayer(), true);
+                    GameData.setHasLeft(true);
+                    break;
+
+                case "NoEnginePower":
+                    PageController.getEventView().setEventLabels("YOU HAVE NO ENGINE POWER", "You cannot continue the travel, wait for other players to finish their turn...");
+                    GameData.setHasLeft(true);
                     break;
 
                 case "YouLostBattle":

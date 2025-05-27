@@ -292,7 +292,7 @@ public class PageController {
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
         eventView.initTrack(levelGame);
-        eventView.resetEventLabels();
+        eventView.initEventLabels();
     }
 
 
@@ -317,6 +317,7 @@ public class PageController {
     public static void initTravel(int levelGame) {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
+        travelView.initTravelLabels();
     }
 
     /**

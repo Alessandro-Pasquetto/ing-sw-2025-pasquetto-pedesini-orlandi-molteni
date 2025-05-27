@@ -29,6 +29,7 @@ public class GameData {
     private static String phaseGame = "LOBBY";
     private static EventCard activeCard;
     private static String namePlayer;
+    private static boolean hasLeft = false;
     private static String activePlayer;
     private static int color;
     private static Spaceship spaceship = null;
@@ -66,6 +67,10 @@ public class GameData {
 
     public static String getNamePlayer(){
         return namePlayer;
+    }
+
+    public static boolean getHasLeft() {
+        return hasLeft;
     }
 
     public static String getActivePlayer() {
@@ -122,6 +127,10 @@ public class GameData {
 
     public static void setNamePlayer(String namePlayer){
         GameData.namePlayer = namePlayer;
+    }
+
+    public static void setHasLeft(boolean hasLeft) {
+        GameData.hasLeft = hasLeft;
     }
 
     public static void setActivePlayer(String activePlayer) {

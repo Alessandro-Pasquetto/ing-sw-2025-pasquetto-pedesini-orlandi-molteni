@@ -674,7 +674,9 @@ public class BattlezoneController extends EventControllerAbstract {
         try {
             battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;
-            sender.sendMessage("CrewMemberDiscarded");
+
+            sender.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit));
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
             if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
 
