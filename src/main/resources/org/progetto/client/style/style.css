@@ -467,11 +467,13 @@
 #playerListView .list-cell {
     -fx-background-radius: 8;
     -fx-padding: 0 0 5 0;
+    -fx-text-background-color: transparent;
 }
 
 #playerListView .list-cell:filled:selected {
     -fx-background-color: rgba(226, 226, 226, 0.4);
     -fx-text-fill: black;
+    -fx-text-background-color: transparent;
 }
 
 #trash {

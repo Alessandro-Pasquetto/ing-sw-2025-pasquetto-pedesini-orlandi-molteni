@@ -1,6 +1,7 @@
 package org.progetto.client.gui;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -224,6 +225,8 @@ public class PageController {
         stage.setWidth(screenWidth);
         stage.setHeight(screenHeight);
 
+        stage.setMaximized(true);
+
         stage.setScene(scene);
         stage.setTitle(title);
 
@@ -295,7 +298,6 @@ public class PageController {
         eventView.initEventLabels();
     }
 
-
     /**
      * Initializes the Event view for the card Planets with the specific game level
      *
@@ -306,7 +308,6 @@ public class PageController {
         BuildingData.initMask(levelGame);
         planetsView.initEvent();
     }
-
 
     /**
      * Initializes the Travel view with the specific game level
@@ -329,5 +330,4 @@ public class PageController {
     public static void initEndGame(int levelGame) {
         gameOverView.initBackground(levelGame);
     }
-
 }
