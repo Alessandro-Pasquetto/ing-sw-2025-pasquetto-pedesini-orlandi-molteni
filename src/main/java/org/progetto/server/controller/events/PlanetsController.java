@@ -82,7 +82,7 @@ public class PlanetsController extends EventControllerAbstract {
 
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-            gameManager.getGameThread().resetAndWaitPlayerReady(player);
+            gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
             // If it disconnects
             if(!player.getIsReady()){

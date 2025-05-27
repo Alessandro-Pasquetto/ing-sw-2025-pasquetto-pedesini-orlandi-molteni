@@ -315,8 +315,7 @@ public class BuildingView {
      * @author Gabriele
      * @param players is the list of players
      */
-    public void updatePlayersList(ArrayList<Player> players) {
-        players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
+    public void initPlayersSpaceshipList(ArrayList<Player> players) {
 
         if (players.isEmpty()) {
             playerListViewContainer.getChildren().removeAll(activePlayersLabel, playerListView);
@@ -480,7 +479,7 @@ public class BuildingView {
         GridPane bookedGrid = getBookedGridByPlayer(player.getName());
 
         if (shipGrid == null || bookedGrid == null){
-            System.err.println("Ship grid is null");
+            System.err.println("Spaceship or booked grid not ready");
             return;
         }
 

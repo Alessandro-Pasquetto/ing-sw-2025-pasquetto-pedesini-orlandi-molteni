@@ -96,7 +96,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
                     continue;
                 }
 
@@ -115,7 +115,7 @@ public class SlaversController extends EventControllerAbstract {
 
                         gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                        gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                        gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                     } else {
                         sender.sendMessage("YouDrewBattle");
@@ -128,7 +128,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             }
         }
     }

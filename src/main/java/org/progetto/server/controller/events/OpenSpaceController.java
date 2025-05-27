@@ -98,7 +98,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                 // If the player is not disconnected
                 if(player.getIsReady()){

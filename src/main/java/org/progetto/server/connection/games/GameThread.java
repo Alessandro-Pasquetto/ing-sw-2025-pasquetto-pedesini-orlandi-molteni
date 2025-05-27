@@ -3,9 +3,7 @@ package org.progetto.server.connection.games;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
-import org.progetto.messages.toClient.Track.ResponseTrackMessage;
-import org.progetto.messages.toClient.Track.UpdateTrackMessage;
-import org.progetto.messages.toClient.UpdatePlayersMessage;
+import org.progetto.messages.toClient.UpdateTravelersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -49,39 +47,39 @@ public class GameThread extends Thread {
             Game game = gameManager.getGame();
 
             while (isRunning) {
-                switch (gameManager.getGame().getPhase()) {
+                switch (game.getPhase()) {
 
                     case WAITING:
                         System.out.println("Waiting for players...");
 
                         resetAndWaitPlayersReady();
 
-                        gameManager.getGame().setPhase(GamePhase.INIT);
+                        game.setPhase(GamePhase.INIT);
                         break;
 
                     case INIT:
                         System.out.println("Waiting for ready players...");
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
                         resetAndWaitWaitingPlayersReady();
 
-                        if(gameManager.getGame().getPhase().equals(GamePhase.WAITING))
+                        if(game.getPhase().equals(GamePhase.WAITING))
                             continue;
 
                         gameManager.setAndSendPlayersColor();
-                        gameManager.getGame().initPlayersSpaceship();
-                        gameManager.getGame().setPhase(GamePhase.BUILDING);
+                        game.initPlayersSpaceship();
+                        game.setPhase(GamePhase.BUILDING);
                         break;
 
                     case BUILDING:
                         System.out.println("Start building...");
                         GameController.startBuilding(gameManager);
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
                         // Updates players list and spaceships
-                        gameManager.broadcastGameMessage(new UpdatePlayersMessage(gameManager.getGame().getPlayersCopy()));
+                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getPlayersCopy()));
 
-                        gameManager.getGame().resetReadyPlayers();
+                        game.resetReadyPlayers();
                         synchronized (gameThreadLock) {
                             while (game.getNumReadyPlayers() != game.getPlayersSize() && !gameManager.getTimerExpired())
                                 gameThreadLock.wait();
@@ -100,7 +98,7 @@ public class GameThread extends Thread {
                         if(!BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             game.setPhase(GamePhase.ADJUSTING);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
                             // Waiting for adjusting spaceship
                             waitPlayersReady();
@@ -109,7 +107,7 @@ public class GameThread extends Thread {
 
                         if(!BuildingController.initializeAllSpaceship(game)){
                             game.setPhase(GamePhase.POPULATING);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
                             System.out.println("Waiting for the players to populate their ships...");
 
                             PopulatingController.askAliens(gameManager);
@@ -124,7 +122,7 @@ public class GameThread extends Thread {
                             game.getBoard().addTravelersOnTrack(game.getLevel());
                         else {
                             game.setPhase(GamePhase.POSITIONING);
-                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                            gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
                             System.out.println("Waiting for the players to decide their starting position...");
 
                             PositioningController.askForStartingPosition(gameManager);
@@ -144,27 +142,27 @@ public class GameThread extends Thread {
                     case EVENT:
                         System.out.println();
                         System.out.println("New event...");
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
-                        // Updates the track
-                        gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
+                        // Updates mini tracks and other spaceships
+                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+                        GameController.sendBroadcastUpdateTrack(gameManager);
 
                         // Updates the spaceship and other players spaceships
-                        for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+                        for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
                             if(sender != null){
                                 sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                                sender.sendMessage(new UpdatePlayersMessage(gameManager.getGame().getBoard().getCopyTravelers()));
                             }
                         }
 
                         EventController.pickEventCard(gameManager);
 
-                        System.out.println(gameManager.getGame().getActiveEventCard().getType().toString());
+                        System.out.println(game.getActiveEventCard().getType().toString());
 
-                        String eventType = gameManager.getGame().getActiveEventCard().getType().toString();
-                        int travelersCount = gameManager.getGame().getBoard().getNumTravelers();
+                        String eventType = game.getActiveEventCard().getType().toString();
+                        int travelersCount = game.getBoard().getNumTravelers();
 
                         // Checks if remains only a traveler and picked event is battlezone
                         if (eventType.equals(CardType.BATTLEZONE.toString()) && travelersCount == 1) {
@@ -178,30 +176,33 @@ public class GameThread extends Thread {
                         gameManager.getEventController().start();
 
                         // After event
-                        gameManager.getGame().setActiveEventCard(null);
+                        game.setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
 
                         // Checks if there isn't any traveler remaining
-                        if (gameManager.getGame().getBoard().getNumTravelers() == 0)
+                        if (game.getBoard().getNumTravelers() == 0)
                             game.setPhase(GamePhase.ENDGAME);
                         else{
-                            gameManager.getGame().getBoard().updateTurnOrder();
                             game.setPhase(GamePhase.TRAVEL);
                         }
                         break;
 
                     case TRAVEL:
                         System.out.println("Travel phase started...");
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
                         EventController.handleDefeatedPlayers(gameManager);
 
-                        // Updates the track
-                        gameManager.broadcastGameMessage(new UpdateTrackMessage(gameManager.getGame().getBoard().getCopyTravelers(), gameManager.getGame().getBoard().getTrack()));
+                        gameManager.addReconnectingPlayersToTravelers();
+                        game.getBoard().updateTurnOrder();
 
-                        if(gameManager.getGame().getEventDeckSize() > 0){
+                        // Updates the track
+                        GameController.sendBroadcastUpdateTrack(gameManager);
+                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+
+                        if(game.getEventDeckSize() > 0){
 
                             // Asks for each traveler if he wants to continue travel
-                            for (Player player : gameManager.getGame().getBoard().getCopyTravelers()) {
+                            for (Player player : game.getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);
 
                                 if(sender != null)
@@ -210,10 +211,10 @@ public class GameThread extends Thread {
 
                             resetAndWaitTravelersReady();
 
-                            EventController.continueDisconnectedTravelers(gameManager);
+                            game.getBoard().updateTurnOrder();
 
                             // Checks if there is at least a traveler remaining
-                            if (gameManager.getGame().getBoard().getNumTravelers() > 0) {
+                            if (game.getBoard().getNumTravelers() > 0) {
                                 game.setPhase(GamePhase.EVENT);
                                 break;
                             }
@@ -224,11 +225,11 @@ public class GameThread extends Thread {
 
                     case ENDGAME:
                         System.out.println("Game over");
-                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(gameManager.getGame().getPhase().toString()));
+                        gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
-                        gameManager.broadcastGameMessage(new ScoreBoardMessage(gameManager.getGame().scoreBoard()));
+                        gameManager.broadcastGameMessage(new ScoreBoardMessage(game.scoreBoard()));
 
-                        for (Player player : gameManager.getGame().scoreBoard()) {
+                        for (Player player : game.scoreBoard()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
                             if (player.getCredits() > 0)
@@ -274,25 +275,11 @@ public class GameThread extends Thread {
 
         synchronized (gameThreadLock) {
             while (game.getNumReadyPlayers() < game.getMaxNumPlayers()){
-                if(gameManager.getGame().getPhase() == GamePhase.WAITING)
+                if(game.getPhase() == GamePhase.WAITING)
                     return;
 
                 gameThreadLock.wait();
             }
-        }
-    }
-
-    /**
-     * Pauses the game thread until the player is ready or disconnected
-     *
-     * @author Alessandro
-     */
-    public void resetAndWaitPlayerReady(Player player) throws InterruptedException {
-        player.setIsReady(false, gameManager.getGame());
-
-        synchronized (gameThreadLock) {
-            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
-                gameThreadLock.wait();
         }
     }
 
@@ -306,6 +293,20 @@ public class GameThread extends Thread {
 
         synchronized (gameThreadLock) {
             while (game.getNumReadyPlayers() < game.getPlayersSize())
+                gameThreadLock.wait();
+        }
+    }
+
+    /**
+     * Pauses the game thread until the player is ready or disconnected
+     *
+     * @author Alessandro
+     */
+    public void resetAndWaitTravelerReady(Player player) throws InterruptedException {
+        player.setIsReady(false, gameManager.getGame());
+
+        synchronized (gameThreadLock) {
+            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
                 gameThreadLock.wait();
         }
     }

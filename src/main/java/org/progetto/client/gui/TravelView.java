@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.progetto.client.MainClient;
-import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 
@@ -199,7 +198,7 @@ public class TravelView {
      * @author Gabriele
      * @param players is the list of players
      */
-    public void initPlayersList(ArrayList<Player> players) {
+    public void updatePlayersInTrackList(ArrayList<Player> players) {
         playerListContainer.getChildren().clear();
         this.players = players;
 

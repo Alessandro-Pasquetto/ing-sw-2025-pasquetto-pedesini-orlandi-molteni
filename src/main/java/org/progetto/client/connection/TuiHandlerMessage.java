@@ -1,6 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -180,10 +179,10 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof UpdateTrackMessage updateTrackMessage ) {
-            TuiPrinters.printTrack(updateTrackMessage.getTravelers(), updateTrackMessage.getTrack());
+            TuiPrinters.printTrack(updateTrackMessage.getPlayersInTrack(), updateTrackMessage.getTrack());
         }
 
-        else if (messageObj instanceof UpdatePlayersMessage updatePlayersMessage) {
+        else if (messageObj instanceof UpdateTravelersMessage updateTravelersMessage) {
             // TuiPrinters.printPlayers(updatePlayersMessage.getPlayers());
         }
 

@@ -11,15 +11,15 @@ public class UpdateTrackMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Player> travelers;
-    private Player[] track;
+    private final ArrayList<Player> playersInTrack;
+    private final Player[] track;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public UpdateTrackMessage(ArrayList<Player> travelers, Player[] track) {
-        this.travelers = travelers;
+    public UpdateTrackMessage(ArrayList<Player> playersInTrack, Player[] track) {
+        this.playersInTrack = playersInTrack;
         this.track = track;
     }
 
@@ -27,8 +27,8 @@ public class UpdateTrackMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public ArrayList<Player> getTravelers() {
-        return travelers;
+    public ArrayList<Player> getPlayersInTrack() {
+        return playersInTrack;
     }
 
     public Player[] getTrack() {

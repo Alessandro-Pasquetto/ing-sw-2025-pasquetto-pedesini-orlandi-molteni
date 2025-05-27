@@ -914,13 +914,13 @@ public class TuiPrinters {
     // TRACK
     // =======================
 
-    public static void printTrack(ArrayList<Player> travelers, Player[] track) {
+    public static void printTrack(ArrayList<Player> playersInTrack, Player[] track) {
 
         System.out.println("♟\uFE0F Current Track:\n");
 
-        if (!travelers.isEmpty()) {
-            for (int i = 0; i < travelers.size(); i++) {
-                System.out.println("P" + (i + 1) + ": " + travelers.get(i).getName());
+        if (!playersInTrack.isEmpty()) {
+            for (int i = 0; i < playersInTrack.size(); i++) {
+                System.out.println("P" + (i + 1) + ": " + playersInTrack.get(i).getName());
             }
         } else {
             System.err.println("No travelers found");
@@ -935,7 +935,7 @@ public class TuiPrinters {
                 System.out.print("[  ] ");
 
             } else {
-                int playerIndex = travelers.indexOf(current);
+                int playerIndex = playersInTrack.indexOf(current);
                 System.out.print("[P" + (playerIndex + 1) + "] ");
             }
         }

@@ -49,7 +49,7 @@ public class PositioningController {
                     System.err.println("RMI client unreachable");
                 }
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
             }else
                 insertAtFurthestStartPosition(gameManager, player);

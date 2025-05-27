@@ -161,7 +161,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             }
         }
 
@@ -246,7 +246,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             }
         }
 
@@ -621,7 +621,7 @@ public class BattlezoneController extends EventControllerAbstract {
         sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
         phase = EventPhase.DISCARDED_CREW;
 
-        gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
+        gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
         // Next Couple
         couples.removeFirst();
@@ -715,7 +715,7 @@ public class BattlezoneController extends EventControllerAbstract {
             sender.sendMessage(new BoxToDiscardMessage(requestedBoxes));
             phase = EventPhase.DISCARDED_BOXES;
 
-            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
+            gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
         } else {
 
@@ -725,7 +725,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 sender.sendMessage(new BatteriesToDiscardMessage(requestedBoxes));
                 phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
+                gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
             } else {
                 sender.sendMessage("NotEnoughBatteries");
@@ -844,7 +844,7 @@ public class BattlezoneController extends EventControllerAbstract {
             phase = EventPhase.ASK_ROLL_DICE;
             askToRollDice();
 
-            gameManager.getGameThread().resetAndWaitPlayerReady(penaltyPlayer);
+            gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
         }
 
         // Next Couple

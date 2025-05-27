@@ -257,46 +257,63 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateBookedComponents(pickedBookedComponentsMessage.getBookedComponents());
         }
 
-        else if (messageObj instanceof UpdatePlayersMessage updatePlayersMessage) {
+        else if(messageObj instanceof ResponsePlayersMessage playersMessage) {
+
+            ArrayList<Player> players = playersMessage.getPlayers();
+            players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
-                    PageController.getBuildingView().updatePlayersList(updatePlayersMessage.getPlayers());
+                    PageController.getBuildingView().initPlayersSpaceshipList(playersMessage.getPlayers());
                     break;
 
+                //todo: serve? (nella gui non dovrebbe essere mai chiamato)
                 case "EVENT":
-                    PageController.getEventView().updatePlayersList(updatePlayersMessage.getPlayers());
+                    PageController.getEventView().initTravelersSpaceshipList(playersMessage.getPlayers());
 
                     Map<String, Spaceship> otherSpaceships = new HashMap<>();
-                    for (Player player : updatePlayersMessage.getPlayers()) {
-                        if (!player.getName().equals(GameData.getNamePlayer())) {
-                            otherSpaceships.put(player.getName(), player.getSpaceship());
-                        }
+                    for (Player player : playersMessage.getPlayers()) {
+                        otherSpaceships.put(player.getName(), player.getSpaceship());
                     }
                     GameData.setOtherSpaceships(otherSpaceships);
-
                     break;
             }
         }
 
-        else if(messageObj instanceof ResponsePlayersMessage playersMessage) {
+        else if (messageObj instanceof UpdateTravelersMessage updateTravelersMessage) {
+
+            ArrayList<Player> travelers = updateTravelersMessage.getTravelers();
+            travelers.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
-                    PageController.getBuildingView().updatePlayersList(playersMessage.getPlayers());
+                    PageController.getBuildingView().initPlayersSpaceshipList(updateTravelersMessage.getTravelers());
                     break;
 
                 case "EVENT":
-                    //todo: serve?
-                    PageController.getEventView().updatePlayersList(playersMessage.getPlayers());
+                    PageController.getEventView().initTravelersSpaceshipList(updateTravelersMessage.getTravelers());
 
                     Map<String, Spaceship> otherSpaceships = new HashMap<>();
-                    for (Player player : playersMessage.getPlayers()) {
-                        if (!player.getName().equals(GameData.getNamePlayer())) {
-                            otherSpaceships.put(player.getName(), player.getSpaceship());
-                        }
+                    for (Player player : updateTravelersMessage.getTravelers()) {
+                        otherSpaceships.put(player.getName(), player.getSpaceship());
                     }
                     GameData.setOtherSpaceships(otherSpaceships);
+                    break;
+            }
+        }
+
+        else if (messageObj instanceof UpdateTrackMessage updateTrackMessage) {
+            GameData.setTrack(updateTrackMessage.getTrack());
+
+            switch (GameData.getPhaseGame()) {
+
+                case "EVENT":
+                    PageController.getEventView().updateMiniTrack(updateTrackMessage.getTrack());
+                    break;
+
+                case "TRAVEL":
+                    PageController.getTravelView().updateTrack(updateTrackMessage.getTrack());
+                    PageController.getTravelView().updatePlayersInTrackList(updateTrackMessage.getPlayersInTrack());
                     break;
             }
         }
@@ -387,23 +404,6 @@ public class GuiHandlerMessage {
             PageController.getPopulatingView().askForAlien(askAlienMessage.getColor(), askAlienMessage.getSpaceship());
         }
 
-        else if (messageObj instanceof UpdateTrackMessage updateTrackMessage) {
-            GameData.setTrack(updateTrackMessage.getTrack());
-
-            switch (GameData.getPhaseGame()) {
-
-                case "EVENT":
-                    PageController.getEventView().updateTrack(updateTrackMessage.getTrack());
-                    PageController.getEventView().updatePlayersList(updateTrackMessage.getTravelers());
-                    break;
-
-                case "TRAVEL":
-                    PageController.getTravelView().updateTrack(updateTrackMessage.getTrack());
-                    PageController.getTravelView().initPlayersList(updateTrackMessage.getTravelers());
-                    break;
-            }
-        }
-
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
@@ -423,14 +423,14 @@ public class GuiHandlerMessage {
             int steps = playerMovedAheadMessage.getStepsCount();
             GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
 
-            PageController.getEventView().updateTrack(GameData.getTrack());
+            PageController.getEventView().updateMiniTrack(GameData.getTrack());
         }
 
         else if (messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
             int steps = playerMovedBackwardMessage.getStepsCount();
             GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
 
-            PageController.getEventView().updateTrack(GameData.getTrack());
+            PageController.getEventView().updateMiniTrack(GameData.getTrack());
         }
 
         else if (messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
@@ -438,7 +438,7 @@ public class GuiHandlerMessage {
             int steps = anotherPlayerMovedAheadMessage.getStepsCount();
             GameData.movePlayerByDistance(playerName, steps);
 
-            PageController.getEventView().updateTrack(GameData.getTrack());
+            PageController.getEventView().updateMiniTrack(GameData.getTrack());
         }
 
         else if (messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
@@ -446,7 +446,7 @@ public class GuiHandlerMessage {
             int steps = anotherPlayerMovedBackwardMessage.getStepsCount();
             GameData.movePlayerByDistance(playerName, steps);
 
-            PageController.getEventView().updateTrack(GameData.getTrack());
+            PageController.getEventView().updateMiniTrack(GameData.getTrack());
         }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {

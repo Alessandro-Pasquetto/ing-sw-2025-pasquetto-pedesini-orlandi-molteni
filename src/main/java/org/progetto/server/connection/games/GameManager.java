@@ -5,10 +5,7 @@ import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.Sender;
-import org.progetto.server.controller.LobbyController;
-import org.progetto.server.controller.PopulatingController;
-import org.progetto.server.controller.PositioningController;
-import org.progetto.server.controller.TimerController;
+import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
@@ -28,14 +25,16 @@ public class GameManager {
     // ATTRIBUTES
     // =======================
 
-    private final HashMap<Player, Sender> playerSenders = new HashMap<>();
+    private final HashMap<Player, Sender> playerSenders;
 
-    private final ArrayList<Player> disconnectedPlayers = new ArrayList<>();
+    private final ArrayList<Player> disconnectedPlayers;
 
-    private final ArrayList<Player> losingPlayers = new ArrayList<>();
+    private final ArrayList<Player> reconnectingPlayers;
+
+    private final ArrayList<Player> losingPlayers;
 
     // List to save playersOrder after building
-    private final ArrayList<Player> notCheckedReadyPlayers = new ArrayList<>();
+    private final ArrayList<Player> notCheckedReadyPlayers;
 
     GameThread gameThread;
     private final Game game;
@@ -49,6 +48,13 @@ public class GameManager {
     // =======================
 
     public GameManager(int idGame, int numPlayers, int level) {
+
+        this.playerSenders = new HashMap<>();
+        this.disconnectedPlayers = new ArrayList<>();
+        this.reconnectingPlayers = new ArrayList<>();
+        this.losingPlayers = new ArrayList<>();
+        this.notCheckedReadyPlayers = new ArrayList<>();
+
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
         this.timer = new TimerController(this, 120, 2);
@@ -65,13 +71,13 @@ public class GameManager {
     // =======================
 
     public ArrayList<Sender> getSendersCopy() {
-        ArrayList<Sender> socketWritersCopy;
+        ArrayList<Sender> sendersCopy;
 
         synchronized (playerSenders) {
-            socketWritersCopy = new ArrayList<>(playerSenders.values());
+            sendersCopy = new ArrayList<>(playerSenders.values());
         }
 
-        return socketWritersCopy;
+        return sendersCopy;
     }
 
     public ArrayList<Player> getCheckedNotReadyPlayersCopy() {
@@ -142,6 +148,15 @@ public class GameManager {
     public ArrayList<Player> getLosingPlayersCopy() {
         synchronized (losingPlayers) {
             return new ArrayList<>(losingPlayers);
+        }
+    }
+
+    public ArrayList<Player> getAndClearReconnectingPlayersCopy() {
+        synchronized (reconnectingPlayers) {
+            ArrayList<Player> reconnectedPlayersCopy = new ArrayList<>(reconnectingPlayers);
+            reconnectingPlayers.clear();
+
+            return reconnectedPlayersCopy;
         }
     }
 
@@ -234,6 +249,7 @@ public class GameManager {
 
         game.removePlayer(player);
         removeSender(player);
+        removeReconnectingPlayers(player);
 
         if(game.getPhase().equals(GamePhase.INIT)){
             game.setPhase(GamePhase.WAITING);
@@ -256,6 +272,7 @@ public class GameManager {
         }
 
         addDisconnectedPlayers(player);
+        game.getBoard().removeTraveler(player);
         // todo notificare la disconnessione del player agli altri
 
         if(game.getPhase().equals(GamePhase.POSITIONING)) {
@@ -264,10 +281,14 @@ public class GameManager {
                 PositioningController.insertAtFurthestStartPosition(this, player);
         }
 
-        if(game.getPhase().equals(GamePhase.EVENT)){
+        else if(game.getPhase().equals(GamePhase.EVENT)){
+            broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
 
             //todo
+        }
 
+        else if(game.getPhase().equals(GamePhase.TRAVEL)){
+            broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
         }
 
         //todo gestire il resto
@@ -311,18 +332,25 @@ public class GameManager {
             if(game.getPhase().equals(GamePhase.POPULATING))
                 PopulatingController.askAliensToSinglePlayer(this, player);
 
-            if(game.getPhase().equals(GamePhase.EVENT)){
-                sender.sendMessage(new UpdateTrackMessage(game.getBoard().getCopyTravelers(), game.getBoard().getTrack()));
+            else if(game.getPhase().equals(GamePhase.EVENT)){
                 sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                sender.sendMessage(new UpdatePlayersMessage(game.getBoard().getCopyTravelers()));
+                sender.sendMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+                GameController.sendUpdateTrack(this, sender);
 
-
+                if(!player.getHasLeft())
+                    addReconnectingPlayer(player);
             }
 
-            if(game.getPhase().equals(GamePhase.TRAVEL)){
-                sender.sendMessage("AskContinueTravel");
-            }
+            else if(game.getPhase().equals(GamePhase.TRAVEL)){
+                GameController.sendUpdateTrack(this, sender);
 
+                if(!player.getHasLeft()){
+                    game.getBoard().addTraveler(player);
+                    game.getBoard().updateTurnOrder();
+                    broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+                    sender.sendMessage("AskContinueTravel");
+                }
+            }
 
         }catch (RemoteException e) {
             System.err.println("RMI client unreachable");
@@ -333,6 +361,20 @@ public class GameManager {
         removeLosingPlayer(player);
         removeDisconnectedPlayer(player);
         removeSender(player);
+    }
+
+    public void addReconnectingPlayer(Player player) {
+        synchronized (reconnectingPlayers) {
+            reconnectingPlayers.add(player);
+        }
+    }
+
+    public void addReconnectingPlayersToTravelers() {
+        ArrayList<Player> reconnectingPlayersCopy = getAndClearReconnectingPlayersCopy();
+
+        for (Player player : reconnectingPlayersCopy) {
+            game.getBoard().addTraveler(player);
+        }
     }
 
     public void addSender(Player player, Sender socketWriter){
@@ -359,6 +401,12 @@ public class GameManager {
         }
     }
 
+    public void removeReconnectingPlayers(Player player){
+        synchronized (reconnectingPlayers){
+            reconnectingPlayers.remove(player);
+        }
+    }
+
     public void addNotCheckedReadyPlayer(Player player){
         synchronized (notCheckedReadyPlayers){
             notCheckedReadyPlayers.add(player);
@@ -372,9 +420,9 @@ public class GameManager {
     }
 
     public synchronized void broadcastGameMessage(Object messageObj) {
-        ArrayList<Sender> socketWritersCopy = getSendersCopy();
+        ArrayList<Sender> sendersCopy = getSendersCopy();
 
-        for (Sender sender : socketWritersCopy) {
+        for (Sender sender : sendersCopy) {
             try{
                 sender.sendMessage(messageObj);
             } catch (RemoteException e) {

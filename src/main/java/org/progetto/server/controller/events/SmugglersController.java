@@ -96,7 +96,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
                     continue;
                 }
 
@@ -122,7 +122,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                            gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                            gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                         } else {
                             sender.sendMessage("NotEnoughBoxesAndBatteries");
@@ -138,7 +138,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             }
         }
     }

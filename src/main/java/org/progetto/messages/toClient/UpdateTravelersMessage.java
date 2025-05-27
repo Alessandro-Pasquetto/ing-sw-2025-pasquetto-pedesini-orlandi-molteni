@@ -5,27 +5,27 @@ import org.progetto.server.model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UpdatePlayersMessage implements Serializable {
+public class UpdateTravelersMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private final ArrayList<Player> players;
+    private final ArrayList<Player> travelers;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public UpdatePlayersMessage(ArrayList<Player> players) {
-        this.players = players;
+    public UpdateTravelersMessage(ArrayList<Player> travelers) {
+        this.travelers = travelers;
     }
 
     // =======================
     // GETTERS
     // =======================
 
-    public ArrayList<Player> getPlayers() {
-        return players;
+    public ArrayList<Player> getTravelers() {
+        return travelers;
     }
 }

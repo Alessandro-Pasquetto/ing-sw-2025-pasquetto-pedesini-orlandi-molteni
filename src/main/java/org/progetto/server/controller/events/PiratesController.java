@@ -111,7 +111,7 @@ public class PiratesController extends EventControllerAbstract {
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                    gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
                     continue;
                 }
 
@@ -137,7 +137,7 @@ public class PiratesController extends EventControllerAbstract {
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitPlayerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             }
 
             phase = EventPhase.HANDLE_DEFEATED_PLAYERS;

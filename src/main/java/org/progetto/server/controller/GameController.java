@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.ResponsePlayersMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -10,6 +11,7 @@ import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Game controller class
@@ -115,5 +117,29 @@ public class GameController {
         }catch (IllegalStateException e) {
             sender.sendMessage(e.getMessage());
         }
+    }
+
+    public static void sendUpdateTrack(GameManager gameManager, Sender sender) throws RemoteException {
+        ArrayList<Player> playersInTrack = gameManager.getGame().getBoard().getCopyTravelers();
+        playersInTrack.addAll(
+                gameManager.getDisconnectedPlayersCopy()
+                        .stream()
+                        .filter(player -> !player.getHasLeft())
+                        .toList()
+        );
+
+        sender.sendMessage(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()));
+    }
+
+    public static void sendBroadcastUpdateTrack(GameManager gameManager){
+        ArrayList<Player> playersInTrack = gameManager.getGame().getBoard().getCopyTravelers();
+        playersInTrack.addAll(
+                gameManager.getDisconnectedPlayersCopy()
+                        .stream()
+                        .filter(player -> !player.getHasLeft())
+                        .toList()
+        );
+
+        gameManager.broadcastGameMessage(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()));
     }
 }

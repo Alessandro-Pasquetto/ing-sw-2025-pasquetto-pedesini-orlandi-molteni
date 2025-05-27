@@ -240,7 +240,7 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.LOSTSHIP))
+                while(!lv2Deck.getFirst().getType().equals(CardType.OPENSPACE))
                    Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -399,7 +399,7 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.ENGINE) && !type.equals(ComponentType.HOUSING_UNIT));
+            } while (!type.equals(ComponentType.ENGINE) && !type.equals(ComponentType.DOUBLE_ENGINE) && !type.equals(ComponentType.BATTERY_STORAGE));
 
             pickedComponent = componentDeck.remove(randomPos);
         }
@@ -482,7 +482,7 @@ public class Game {
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.LOSTSHIP));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.OPENSPACE));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
        }

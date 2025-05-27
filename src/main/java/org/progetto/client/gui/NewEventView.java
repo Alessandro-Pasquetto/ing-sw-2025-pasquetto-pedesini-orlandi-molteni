@@ -113,9 +113,8 @@ public class NewEventView {
     private ScrollPane chatScrollPane;
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
-    private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
 
-    private List<Rectangle> boardCells = new ArrayList<>();
+    private final List<Rectangle> boardCells = new ArrayList<>();
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -211,7 +210,7 @@ public class NewEventView {
      * @author Lorenzo
      * @param  playersPosition is the current positions of the players
      */
-    public void updateTrack(Player[] playersPosition) {
+    public void updateMiniTrack(Player[] playersPosition) {
         cellsGroup.getChildren().removeIf(node -> node instanceof ImageView);
 
         for (int i = 0; i <  playersPosition.length; i++) {
@@ -579,27 +578,24 @@ public class NewEventView {
     }
 
     /**
-     * Populate the list of active players
+     * Populate the list of travelers
      *
      * @author Gabriele
-     * @param players is the list of players
+     * @param travelers is the list of travelers
      */
-    public void updatePlayersList(ArrayList<Player> players) {
-        players.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
+    public void initTravelersSpaceshipList(ArrayList<Player> travelers) {
 
-        if (players.isEmpty()) {
-            playerListViewContainer.getChildren().removeAll(activePlayersLabel, playerListView);
-            playerListViewContainer.setMaxHeight(0);
-            VBox.setVgrow(playerListViewContainer, Priority.NEVER);
+        if (travelers.isEmpty()) {
             playerListViewContainer.setVisible(false);
-            playerListViewContainer.setManaged(false);
             return;
         }
 
-        ObservableList<Player> playersList = FXCollections.observableArrayList(players);
-        playerListView.setItems(playersList);
+        playerListViewContainer.setVisible(true);
 
-        if (playersList.isEmpty()) {
+        ObservableList<Player> travelersList = FXCollections.observableArrayList(travelers);
+        playerListView.setItems(travelersList);
+
+        if (travelersList.isEmpty()) {
             playerListViewContainer.getChildren().removeAll(activePlayersLabel, playerListView);
             playerListViewContainer.setMaxHeight(0);
             VBox.setVgrow(playerListViewContainer, Priority.NEVER);
@@ -607,10 +603,10 @@ public class NewEventView {
 
         // Create a blank separator item between each player
         ObservableList<Player> playersWithSeparators = FXCollections.observableArrayList();
-        for (int i = 0; i < playersList.size(); i++) {
-            playersWithSeparators.add(playersList.get(i));
+        for (int i = 0; i < travelersList.size(); i++) {
+            playersWithSeparators.add(travelersList.get(i));
 
-            if (i < playersList.size() - 1) {
+            if (i < travelersList.size() - 1) {
                 playersWithSeparators.add(null);
             }
         }
@@ -724,7 +720,6 @@ public class NewEventView {
 
                     setGraphic(content);
                     registerPlayerShipGrid(player.getName(), shipGrid);
-                    registerPlayerBookedGrid(player.getName(), bookedGrid);
                 }
             }
         });
@@ -732,7 +727,7 @@ public class NewEventView {
         // Add a delay to show the spaceship
         PauseTransition delay = new PauseTransition(Duration.millis(250));
         delay.setOnFinished(event -> {
-            for (Player player : playersList) {
+            for (Player player : travelersList) {
                 updateOtherPlayerSpaceship(player.getName(), player.getSpaceship());
             }
         });
@@ -750,8 +745,10 @@ public class NewEventView {
         Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         GridPane shipGrid = getShipGridByPlayer(playerName);
-        GridPane bookedGrid = getBookedGridByPlayer(playerName);
-        if (shipGrid == null || bookedGrid == null) return;
+        if (shipGrid == null){
+            System.err.println("Spaceship grid not ready");
+            return;
+        }
 
         clearHighlightedCells();
 
@@ -760,7 +757,7 @@ public class NewEventView {
             for (int col = 0; col < shipMatrix[row].length; col++) {
                 Component comp = shipMatrix[row][col];
                 Pane cell = new Pane();
-                cell.setPrefSize(35, 35);
+                cell.setPrefSize(OTHER_COMPONENT_SIZE, OTHER_COMPONENT_SIZE);
 
                 if (comp != null) {
                     Image img = new Image(String.valueOf(MainClient.class.getResource("img/components/" + comp.getImgSrc())));
@@ -946,24 +943,6 @@ public class NewEventView {
      */
     public static GridPane getShipGridByPlayer(String playerName) {
         return shipGridsByPlayer.get(playerName);
-    }
-
-    /**
-     * Register the booked grid for a player
-     *
-     * @author Gabriele
-     */
-    public static void registerPlayerBookedGrid(String playerName, GridPane grid) {
-        bookedGridsByPlayer.put(playerName, grid);
-    }
-
-    /**
-     * Get the booked grid for a player
-     *
-     * @author Gabriele
-     */
-    public static GridPane getBookedGridByPlayer(String playerName) {
-        return bookedGridsByPlayer.get(playerName);
     }
 
     /**
