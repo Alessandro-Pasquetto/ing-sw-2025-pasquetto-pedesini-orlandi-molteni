@@ -213,8 +213,8 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
-
             GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
+            GameData.setCredits(updateSpaceshipMessage.getOwner().getCredits());
             PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
         }
 
@@ -240,6 +240,7 @@ public class GuiHandlerMessage {
                 case "EVENT":
                     if (responseSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
                         GameData.setSpaceship(responseSpaceshipMessage.getSpaceship());
+                        GameData.setCredits(responseSpaceshipMessage.getOwner().getCredits());
                         PageController.getEventView().updateSpaceship(responseSpaceshipMessage.getSpaceship());
                     }
                     else
@@ -406,20 +407,7 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
-
-            switch (pickedEventCardMessage.getEventCard().getType()){
-
-                case PLANETS:
-                    PageController.getPlanetsView().initEventCard(pickedEventCardMessage.getEventCard().getImgSrc());
-                    break;
-
-                case OPENSPACE:
-                    PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
-                    break;
-
-            }
-
-
+            PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
         }
 
 //        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
@@ -464,7 +452,7 @@ public class GuiHandlerMessage {
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
             PageController.getEventView().askForQuantity(
                     "How many double engines do you want to use?",
-                    "Select number of engines to use, you have " + howManyDoubleEnginesMessage.getMaxUsable() + " double engines available and an engine power of " + howManyDoubleEnginesMessage.getEnginePower() + "...",
+                    "Select number of double engines to use, you have " + howManyDoubleEnginesMessage.getMaxUsable() + " double engines available...",
                     howManyDoubleEnginesMessage.getMaxUsable(),
                     count -> GameData.getSender().responseHowManyDoubleEngines(count)
             );
@@ -479,6 +467,12 @@ public class GuiHandlerMessage {
                         sender.responseAcceptRewardCreditsAndPenalties(response ? "YES" : "NO");
                     }
             );
+        }
+
+        else if (messageObj instanceof PlayerGetsCreditsMessage playerGetsCreditsMessage) {
+            int credits = playerGetsCreditsMessage.getCredits();
+            GameData.setCredits(GameData.getCredits() + credits);
+            PageController.getEventView().updateSpaceship(GameData.getSpaceship());
         }
 
         else if (messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {

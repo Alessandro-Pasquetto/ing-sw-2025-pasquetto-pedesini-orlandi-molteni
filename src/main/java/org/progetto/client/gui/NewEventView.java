@@ -83,6 +83,30 @@ public class NewEventView {
     public ImageView eventCard;
 
     @FXML
+    public ImageView firePowerSymbol;
+
+    @FXML
+    public Label firePowerValue;
+
+    @FXML
+    public ImageView enginePowerSymbol;
+
+    @FXML
+    public Label enginePowerValue;
+
+    @FXML
+    public ImageView destroyedSymbol;
+
+    @FXML
+    public Label destroyedValue;
+
+    @FXML
+    public ImageView creditsSymbol;
+
+    @FXML
+    public Label creditsValue;
+
+    @FXML
     private VBox chatMessagesContainer;
 
     @FXML
@@ -310,6 +334,12 @@ public class NewEventView {
 
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
+
+        // Set spaceship stats images
+        firePowerSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/fire-power.png"))));
+        enginePowerSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/engine-power.png"))));
+        destroyedSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/destroyed.png"))));
+        creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
     }
 
     /**
@@ -324,6 +354,7 @@ public class NewEventView {
         GridPane shipGrid = spaceshipMatrix;
 
         shipGrid.getChildren().clear();
+
         for (int row = 0; row < shipMatrix.length; row++) {
             for (int col = 0; col < shipMatrix[row].length; col++) {
                 Component comp = shipMatrix[row][col];
@@ -386,6 +417,20 @@ public class NewEventView {
                 shipGrid.add(cell, col, row);
             }
         }
+
+        // Update spaceship stats
+        float power = ship.getNormalShootingPower();
+        if (power == (int) power) {
+            firePowerValue.setText(String.valueOf((int) power));
+        } else {
+            firePowerValue.setText(String.valueOf(power));
+        }
+
+        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower()));
+
+        destroyedValue.setText(String.valueOf(ship.getDestroyedCount()));
+
+        creditsValue.setText(String.valueOf(GameData.getCredits()));
     }
 
     /**

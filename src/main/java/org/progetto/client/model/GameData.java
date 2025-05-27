@@ -32,6 +32,7 @@ public class GameData {
     private static boolean hasLeft = false;
     private static String activePlayer;
     private static int color;
+    private static int credits = 0;
     private static Spaceship spaceship = null;
     private static Map<String, Spaceship> otherSpaceships = new HashMap<String, Spaceship>();
     private static Player[] track;
@@ -97,6 +98,10 @@ public class GameData {
         return color;
     }
 
+    public static int getCredits() {
+        return credits;
+    }
+
     public static EventCard getActiveCard() {
         return activeCard;
     }
@@ -155,6 +160,10 @@ public class GameData {
 
     public static void setColor(int color) {
         GameData.color = color;
+    }
+
+    public static void setCredits(int credits) {
+        GameData.credits = credits;
     }
 
     public static void setActiveCard(EventCard activeCard) {

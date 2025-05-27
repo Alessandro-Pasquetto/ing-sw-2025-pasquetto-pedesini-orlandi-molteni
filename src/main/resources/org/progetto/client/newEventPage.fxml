@@ -61,11 +61,33 @@
                 <VBox spacing="30" alignment="CENTER" VBox.vgrow="ALWAYS">
                     <Label fx:id="eventMainTitle" text="EVENT PHASE!" wrapText="true" />
 
-                    <VBox BorderPane.alignment="CENTER" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                    <VBox BorderPane.alignment="CENTER" spacing="15" alignment="CENTER" style="-fx-padding: 25px">
                         <StackPane alignment="CENTER">
                             <ImageView fx:id="spaceShipImage" fitHeight="443.0" fitWidth="606.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
                             <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
                         </StackPane>
+
+                        <HBox spacing="40" alignment="CENTER">
+                            <HBox spacing="3" alignment="CENTER_LEFT">
+                                <ImageView fitWidth="50" fitHeight="50" preserveRatio="true" fx:id="firePowerSymbol" />
+                                <Label fx:id="firePowerValue"  text="" />
+                            </HBox>
+
+                            <HBox spacing="3" alignment="CENTER_LEFT">
+                                <ImageView fitWidth="50" fitHeight="50" preserveRatio="true" fx:id="enginePowerSymbol" />
+                                <Label fx:id="enginePowerValue" text="" />
+                            </HBox>
+
+                            <HBox spacing="3" alignment="CENTER_LEFT">
+                                <ImageView fitWidth="50" fitHeight="50" preserveRatio="true" fx:id="destroyedSymbol" />
+                                <Label fx:id="destroyedValue" text="" />
+                            </HBox>
+
+                            <HBox spacing="3" alignment="CENTER_LEFT">
+                                <ImageView fitWidth="50" fitHeight="50" preserveRatio="true" fx:id="creditsSymbol" />
+                                <Label fx:id="creditsValue" text="" />
+                            </HBox>
+                        </HBox>
                     </VBox>
 
                     <Label fx:id="eventMainDesc" text="Event description..." wrapText="true" />

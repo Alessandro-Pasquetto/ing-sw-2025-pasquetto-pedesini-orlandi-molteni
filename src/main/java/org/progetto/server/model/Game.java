@@ -399,11 +399,9 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT));
+            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.ENGINE) && !type.equals(ComponentType.HOUSING_UNIT));
 
             pickedComponent = componentDeck.remove(randomPos);
-
-
         }
 
 

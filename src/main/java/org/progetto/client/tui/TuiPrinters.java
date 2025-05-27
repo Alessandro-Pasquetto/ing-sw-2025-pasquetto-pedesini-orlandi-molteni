@@ -719,7 +719,7 @@ public class TuiPrinters {
         System.out.printf("│ Orange alien         : %b%n", spaceship.getAlienOrange());
 
         System.out.println("\nCannons");
-        System.out.printf("│ Normal power         : %.1f%n", spaceship.getNormalShootingPower());
+        System.out.printf("│ Normal shooting power         : %.1f%n", spaceship.getNormalShootingPower());
         System.out.printf("│ Half double cannons  : %d%n", spaceship.getHalfDoubleCannonCount());
         System.out.printf("│ Full double cannons  : %d%n", spaceship.getFullDoubleCannonCount());
 
