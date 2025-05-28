@@ -395,7 +395,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
-            System.out.println(GREEN + anotherPlayerMovedAheadMessage.getNamePlayer() + " have moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions" + RESET);
+            System.out.println(GREEN + anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
@@ -403,7 +403,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
-            System.out.println(BLUE + anotherPlayerMovedBackwardMessage.getNamePlayer() + " have moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions" + RESET);
+            System.out.println(BLUE + anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions" + RESET);
         }
 
         else if(messageObj instanceof PlayerGetsCreditsMessage playerGetsCreditsMessage) {
@@ -444,7 +444,7 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
-            System.out.println(RED + playerDefeatedMessage.getPlayerName() + " was defeated by !" + RESET);
+            System.out.println(RED + playerDefeatedMessage.getPlayerName() + " was defeated!" + RESET);
         }
 
         else if(messageObj instanceof CrewInfectedAmountMessage crewInfectedAmountMessage) {

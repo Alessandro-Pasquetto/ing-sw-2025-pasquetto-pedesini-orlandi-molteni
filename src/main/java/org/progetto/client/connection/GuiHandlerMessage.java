@@ -424,6 +424,8 @@ public class GuiHandlerMessage {
             GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
+
+            PageController.getEventView().addChatMessage("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions", "INFO");
         }
 
         else if (messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
@@ -431,6 +433,8 @@ public class GuiHandlerMessage {
             GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
+
+            PageController.getEventView().addChatMessage("You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions", "INFO");
         }
 
         else if (messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
@@ -439,6 +443,8 @@ public class GuiHandlerMessage {
             GameData.movePlayerByDistance(playerName, steps);
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
+
+            PageController.getEventView().addChatMessage(anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + "positions", "INFO");
         }
 
         else if (messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
@@ -447,6 +453,8 @@ public class GuiHandlerMessage {
             GameData.movePlayerByDistance(playerName, steps);
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
+
+            PageController.getEventView().addChatMessage(anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + "positions", "INFO");
         }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
@@ -495,6 +503,12 @@ public class GuiHandlerMessage {
             int credits = playerGetsCreditsMessage.getCredits();
             GameData.setCredits(GameData.getCredits() + credits);
             PageController.getEventView().updateSpaceship(GameData.getSpaceship());
+
+            PageController.getEventView().addChatMessage("You received " + playerGetsCreditsMessage.getCredits() + " credits", "INFO");
+        }
+
+        else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherplayerGetsCreditsMessage) {
+            PageController.getEventView().addChatMessage(anotherplayerGetsCreditsMessage.getNamePlayer() + " received " + anotherplayerGetsCreditsMessage.getCredits() + " credits", "INFO");
         }
 
         else if (messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
@@ -616,10 +630,18 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
             PageController.getTravelView().setPlayerStatus(playerIsContinuingMessage.getPlayerName(), false);
+
+            PageController.getEventView().addChatMessage("You gets " + playerIsContinuingMessage.getPlayerName() + " is continuing travel", "INFO");
         }
 
         else if (messageObj instanceof PlayerLeftMessage playerLeftMessage) {
             PageController.getTravelView().setPlayerStatus(playerLeftMessage.getPlayerName(), true);
+
+            PageController.getEventView().addChatMessage(playerLeftMessage.getPlayerName() + " left travel", "INFO");
+        }
+
+        else if (messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
+            PageController.getEventView().addChatMessage(playerDefeatedMessage.getPlayerName() + " was defeated!", "INFO");
         }
 
         else if (messageObj instanceof String messageString) {
