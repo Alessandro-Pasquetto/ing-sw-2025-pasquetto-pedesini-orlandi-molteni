@@ -37,14 +37,14 @@ public class EventCommands {
             try{
                 int amount = Integer.parseInt(response);
                 if (amount > max)
-                    System.out.println("You have exceeded the maximum number of double cannons!");
+                    System.err.println("You have exceeded the maximum number of double cannons!");
                 else{
                     sender.responseHowManyDoubleCannons(amount);
                     break;
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -67,7 +67,7 @@ public class EventCommands {
             try{
                 int amount = Integer.parseInt(response);
                 if (amount > max)
-                    System.out.println("You have exceeded the maximum number of double engines!");
+                    System.err.println("You have exceeded the maximum number of double engines!");
                 else{
                     Sender sender = GameData.getSender();
                     sender.responseHowManyDoubleEngines(amount);
@@ -75,7 +75,7 @@ public class EventCommands {
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -103,7 +103,7 @@ public class EventCommands {
                 sender.responseBatteryToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -131,7 +131,7 @@ public class EventCommands {
                 sender.responseCrewToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -161,7 +161,7 @@ public class EventCommands {
                 sender.responseBoxToDiscard(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5, Integer.parseInt(idx));
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -183,7 +183,7 @@ public class EventCommands {
                 sender.responseChooseToUseShield(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -208,7 +208,7 @@ public class EventCommands {
                 sender.responseAcceptRewardCreditsAndPenalties(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -232,7 +232,7 @@ public class EventCommands {
                 sender.responseAcceptRewardCreditsAndPenaltyDays(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -263,7 +263,7 @@ public class EventCommands {
                 sender.responseAcceptRewardCreditsAndPenaltyDays(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -312,11 +312,11 @@ public class EventCommands {
                     sender.responseRewardBox(box_idx, x - 6 + levelGame, y - 5, storage_idx);
                     break;
                 }else{
-                    System.out.println("Box index out of bounds!");
+                    System.err.println("Box index out of bounds!");
                 }
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -347,7 +347,7 @@ public class EventCommands {
             idxEnd = Integer.parseInt(commandParts[6]);
 
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
 
         sender.moveBox(xStart, yStart, idxStart, xEnd, yEnd, idxEnd);
@@ -373,7 +373,7 @@ public class EventCommands {
             idx = Integer.parseInt(commandParts[3]);
 
         } catch (NumberFormatException e){
-            System.out.println("You must insert a number!");
+            System.err.println("You must insert a number!");
         }
 
         sender.removeBox(x, y, idx);
@@ -396,7 +396,7 @@ public class EventCommands {
                 sender.responseLandRequest(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -415,7 +415,7 @@ public class EventCommands {
             String response = TuiCommandFilter.waitResponse();
 
             if(!response.equalsIgnoreCase("YES") && !response.equalsIgnoreCase("NO")){
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
                 continue;
             }
 
@@ -451,12 +451,12 @@ public class EventCommands {
                 int planet_idx = Integer.parseInt(idx);
 
                 if(planet_idx < 0 || planet_idx >= planetsTaken.length){
-                    System.out.println("Invalid planet index");
+                    System.err.println("Invalid planet index");
                     continue;
                 }
 
                 if(planetsTaken[planet_idx]){
-                    System.out.println("Planet already taken");
+                    System.err.println("Planet already taken");
                     continue;
                 }
 
@@ -464,7 +464,7 @@ public class EventCommands {
                 break;
 
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }
@@ -485,7 +485,7 @@ public class EventCommands {
                 sender.responseUseDoubleCannonRequest(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -505,7 +505,7 @@ public class EventCommands {
                 sender.responseContinueTravel(response);
                 break;
             }else
-                System.out.println("You must choose between YES or NO");
+                System.err.println("You must choose between YES or NO");
         }
     }
 
@@ -523,7 +523,7 @@ public class EventCommands {
                 sender.responseRollDice();
                 break;
             } else
-                System.out.println("You must say ROLL");
+                System.err.println("You must say ROLL");
         }
     }
 
@@ -549,7 +549,7 @@ public class EventCommands {
                 sender.responseSelectSpaceshipPart(Integer.parseInt(x) - 6 + levelGame, Integer.parseInt(y) - 5);
                 break;
             }catch (NumberFormatException e){
-                System.out.println("You must insert a number!");
+                System.err.println("You must insert a number!");
             }
         }
     }

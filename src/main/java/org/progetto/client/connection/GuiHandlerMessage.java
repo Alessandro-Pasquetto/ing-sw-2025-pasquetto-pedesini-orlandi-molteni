@@ -631,13 +631,25 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
             PageController.getTravelView().setPlayerStatus(playerIsContinuingMessage.getPlayerName(), false);
 
-            PageController.getEventView().addChatMessage("You gets " + playerIsContinuingMessage.getPlayerName() + " is continuing travel", "INFO");
+            PageController.getEventView().addChatMessage(playerIsContinuingMessage.getPlayerName() + " is continuing travel", "INFO");
         }
 
         else if (messageObj instanceof PlayerLeftMessage playerLeftMessage) {
             PageController.getTravelView().setPlayerStatus(playerLeftMessage.getPlayerName(), true);
 
             PageController.getEventView().addChatMessage(playerLeftMessage.getPlayerName() + " left travel", "INFO");
+        }
+
+        else if(messageObj instanceof AnotherPlayerWonBattleMessage anotherPlayerWonBattleMessage) {
+            PageController.getEventView().addChatMessage(anotherPlayerWonBattleMessage.getPlayerName() + " won battle", "INFO");
+        }
+
+        else if(messageObj instanceof AnotherPlayerLostBattleMessage anotherPlayerLostBattleMessage) {
+            PageController.getEventView().addChatMessage(anotherPlayerLostBattleMessage.getPlayerName() + " lost battle", "INFO");
+        }
+
+        else if(messageObj instanceof AnotherPlayerDrewBattleMessage anotherPlayerDrewBattleMessage){
+            PageController.getEventView().addChatMessage(anotherPlayerDrewBattleMessage.getPlayerName() + " drew battle", "INFO");
         }
 
         else if (messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
