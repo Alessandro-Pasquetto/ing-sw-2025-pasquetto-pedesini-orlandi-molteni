@@ -450,18 +450,11 @@ public class BuildingView {
                     setGraphic(content);
                     registerPlayerShipGrid(player.getName(), shipGrid);
                     registerPlayerBookedGrid(player.getName(), bookedGrid);
+
+                    updateOtherPlayerSpaceship(player, player.getSpaceship());
                 }
             }
         });
-
-        // Add a delay to show the spaceship
-        PauseTransition delay = new PauseTransition(Duration.millis(250));
-        delay.setOnFinished(event -> {
-            for (Player player : playersList) {
-                updateOtherPlayerSpaceship(player, player.getSpaceship());
-            }
-        });
-        delay.play();
     }
 
     /**

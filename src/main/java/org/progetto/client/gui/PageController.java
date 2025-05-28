@@ -171,7 +171,7 @@ public class PageController {
         eventView = loader.getController();
 
 
-        loader = new FXMLLoader(MainClient.class.getResource("planetsView.fxml"));
+        loader = new FXMLLoader(MainClient.class.getResource("planetsPage.fxml"));
         planetsRoot = loader.load();
         planetsView = loader.getController();
 
@@ -202,7 +202,7 @@ public class PageController {
             case "populatingPage.fxml" -> populatingRoot;
             case "positioningPage.fxml" -> positioningRoot;
             case "newEventPage.fxml" -> eventRoot;
-            case "planetsView.fxml" -> planetsRoot;
+            case "planetsPage.fxml" -> planetsRoot;
             case "travelPage.fxml" -> travelRoot;
             case "gameOverPage.fxml" -> gameOverRoot;
 

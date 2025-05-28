@@ -3,7 +3,7 @@ package org.progetto.server.connection.games;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
-import org.progetto.messages.toClient.UpdateTravelersMessage;
+import org.progetto.messages.toClient.UpdateOtherTravelersShipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -77,7 +77,7 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
                         // Updates players list and spaceships
-                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getPlayersCopy()));
+                        gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getPlayersCopy()));
 
                         game.resetReadyPlayers();
                         synchronized (gameThreadLock) {
@@ -145,7 +145,7 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
                         // Updates mini tracks and other spaceships
-                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+                        gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
                         GameController.sendBroadcastUpdateTrack(gameManager);
 
                         // Updates the spaceship and other players spaceships
@@ -196,11 +196,9 @@ public class GameThread extends Thread {
                         EventController.handleDefeatedPlayers(gameManager);
 
                         gameManager.addReconnectingPlayersToTravelers();
-                        game.getBoard().updateTurnOrder();
 
                         // Updates the track
                         GameController.sendBroadcastUpdateTrack(gameManager);
-                        gameManager.broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
 
                         if(game.getEventDeckSize() > 0){
 

@@ -102,14 +102,16 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 // If the player is not disconnected
                 if(player.getIsReady()){
-                    for (BatteryStorage component : batteryStorages) {
-                        component.decrementItemsCount(player.getSpaceship(), 1);
+                    if(!batteryStorages.isEmpty()){
+                        for (BatteryStorage component : batteryStorages) {
+                            component.decrementItemsCount(player.getSpaceship(), 1);
+                        }
+
+                        // Update spaceship to remove highlight components when it's not my turn.
+                        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+                        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
                     }
 
-                    if(!batteryStorages.isEmpty()){
-                        gameManager.broadcastGameMessageToOthers(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
-                        sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                    }
                 }else{
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
                     player.setIsReady(true, gameManager.getGame());

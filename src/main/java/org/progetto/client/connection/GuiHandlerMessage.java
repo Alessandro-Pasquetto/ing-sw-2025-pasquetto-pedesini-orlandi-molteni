@@ -213,9 +213,15 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
-            GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
-            GameData.setCredits(updateSpaceshipMessage.getOwner().getCredits());
-            PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
+
+            if(updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
+                GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
+                GameData.setCredits(updateSpaceshipMessage.getOwner().getCredits());
+                PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
+            }
+            else{
+                PageController.getEventView().updateOtherPlayerSpaceship(updateSpaceshipMessage.getOwner().getName(), updateSpaceshipMessage.getSpaceship());
+            }
         }
 
         else if (messageObj instanceof ResponseSpaceshipMessage responseSpaceshipMessage) {
@@ -280,21 +286,21 @@ public class GuiHandlerMessage {
             }
         }
 
-        else if (messageObj instanceof UpdateTravelersMessage updateTravelersMessage) {
+        else if (messageObj instanceof UpdateOtherTravelersShipMessage updateOtherTravelersShipMessage) {
 
-            ArrayList<Player> travelers = updateTravelersMessage.getTravelers();
+            ArrayList<Player> travelers = updateOtherTravelersShipMessage.getTravelers();
             travelers.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 
             switch (GameData.getPhaseGame()) {
                 case "BUILDING":
-                    PageController.getBuildingView().initPlayersSpaceshipList(updateTravelersMessage.getTravelers());
+                    PageController.getBuildingView().initPlayersSpaceshipList(updateOtherTravelersShipMessage.getTravelers());
                     break;
 
                 case "EVENT":
-                    PageController.getEventView().initTravelersSpaceshipList(updateTravelersMessage.getTravelers());
+                    PageController.getEventView().initTravelersSpaceshipList(updateOtherTravelersShipMessage.getTravelers());
 
                     Map<String, Spaceship> otherSpaceships = new HashMap<>();
-                    for (Player player : updateTravelersMessage.getTravelers()) {
+                    for (Player player : updateOtherTravelersShipMessage.getTravelers()) {
                         otherSpaceships.put(player.getName(), player.getSpaceship());
                     }
                     GameData.setOtherSpaceships(otherSpaceships);

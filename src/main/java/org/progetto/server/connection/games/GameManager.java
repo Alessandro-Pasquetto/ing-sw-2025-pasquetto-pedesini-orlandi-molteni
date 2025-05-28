@@ -3,7 +3,6 @@ package org.progetto.server.connection.games;
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
-import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.*;
@@ -282,13 +281,13 @@ public class GameManager {
         }
 
         else if(game.getPhase().equals(GamePhase.EVENT)){
-            broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+            broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
 
             //todo
         }
 
         else if(game.getPhase().equals(GamePhase.TRAVEL)){
-            broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+
         }
 
         //todo gestire il resto
@@ -331,7 +330,7 @@ public class GameManager {
 
             else if(game.getPhase().equals(GamePhase.EVENT)){
                 sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                sender.sendMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
+                sender.sendMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
                 GameController.sendUpdateTrack(this, sender);
 
                 if(!player.getHasLeft())
@@ -344,8 +343,6 @@ public class GameManager {
                 if(!player.getHasLeft()){
                     player.setIsReady(false, game);
                     game.getBoard().addTraveler(player);
-                    game.getBoard().updateTurnOrder();
-                    broadcastGameMessage(new UpdateTravelersMessage(game.getBoard().getCopyTravelers()));
                     sender.sendMessage("AskContinueTravel");
                 }
             }

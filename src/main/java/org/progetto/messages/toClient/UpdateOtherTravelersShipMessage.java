@@ -5,7 +5,7 @@ import org.progetto.server.model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UpdateTravelersMessage implements Serializable {
+public class UpdateOtherTravelersShipMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
@@ -17,7 +17,7 @@ public class UpdateTravelersMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public UpdateTravelersMessage(ArrayList<Player> travelers) {
+    public UpdateOtherTravelersShipMessage(ArrayList<Player> travelers) {
         this.travelers = travelers;
     }
 

@@ -721,18 +721,11 @@ public class NewEventView {
 
                     setGraphic(content);
                     registerPlayerShipGrid(player.getName(), shipGrid);
+
+                    updateOtherPlayerSpaceship(player.getName(), player.getSpaceship());
                 }
             }
         });
-
-        // Add a delay to show the spaceship
-        PauseTransition delay = new PauseTransition(Duration.millis(250));
-        delay.setOnFinished(event -> {
-            for (Player player : travelersList) {
-                updateOtherPlayerSpaceship(player.getName(), player.getSpaceship());
-            }
-        });
-        delay.play();
     }
 
     /**
@@ -743,7 +736,6 @@ public class NewEventView {
      * @param ship is the spaceship to show
      */
     public void updateOtherPlayerSpaceship(String playerName, Spaceship ship) {
-        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         GridPane shipGrid = getShipGridByPlayer(playerName);
         if (shipGrid == null){
@@ -751,9 +743,10 @@ public class NewEventView {
             return;
         }
 
-        clearHighlightedCells();
-
         shipGrid.getChildren().clear();
+
+        Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
+
         for (int row = 0; row < shipMatrix.length; row++) {
             for (int col = 0; col < shipMatrix[row].length; col++) {
                 Component comp = shipMatrix[row][col];
@@ -1046,7 +1039,6 @@ public class NewEventView {
                 switch (type) {
                     case "DoubleEngines":
                         enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
-                        enginePowerValue.setStyle("-fx-text-fill: green;");
                         break;
 
                     case "DoubleCannons":
@@ -1055,7 +1047,6 @@ public class NewEventView {
                             firePowerValue.setText(String.valueOf((int) power + (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
                         else
                             firePowerValue.setText(String.valueOf(power + 2 * (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
-                        firePowerValue.setStyle("-fx-text-fill: green;");
                         break;
                 }
             }

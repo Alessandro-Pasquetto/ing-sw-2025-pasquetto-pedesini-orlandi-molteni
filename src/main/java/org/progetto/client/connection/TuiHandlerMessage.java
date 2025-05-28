@@ -182,7 +182,7 @@ public class TuiHandlerMessage {
             TuiPrinters.printTrack(updateTrackMessage.getPlayersInTrack(), updateTrackMessage.getTrack());
         }
 
-        else if (messageObj instanceof UpdateTravelersMessage updateTravelersMessage) {
+        else if (messageObj instanceof UpdateOtherTravelersShipMessage updateOtherTravelersShipMessage) {
             // TuiPrinters.printPlayers(updatePlayersMessage.getPlayers());
         }
 

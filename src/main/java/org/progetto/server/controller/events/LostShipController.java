@@ -3,10 +3,13 @@ package org.progetto.server.controller.events;
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
+import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
@@ -24,7 +27,7 @@ public class LostShipController extends EventControllerAbstract  {
     private final LostShip lostShip;
     private final ArrayList<Player> activePlayers;
     private int requestedCrew;
-    private boolean someoneLanded;
+    private final ArrayList<HousingUnit> housingUnits;
 
     // =======================
     // CONSTRUCTORS
@@ -36,7 +39,7 @@ public class LostShipController extends EventControllerAbstract  {
         this.phase = EventPhase.START;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.requestedCrew = 0;
-        this.someoneLanded = false;
+        this.housingUnits = new ArrayList<>();
     }
 
     // =======================
@@ -63,31 +66,50 @@ public class LostShipController extends EventControllerAbstract  {
      * @throws InterruptedException
      */
     private void askToLand() throws RemoteException, InterruptedException {
-        if(phase.equals(EventPhase.ASK_TO_LAND)) {
+        if(!phase.equals(EventPhase.ASK_TO_LAND))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
+        for (Player player : activePlayers) {
 
-                gameManager.getGame().setActivePlayer(player);
+            gameManager.getGame().setActivePlayer(player);
+            housingUnits.clear();
 
-                Sender sender = gameManager.getSenderByPlayer(player);
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                // Calculates max crew number available to discard
-                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+            // Calculates max crew number available to discard
+            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
-                if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                    phase = EventPhase.REWARD_DECISION;
-                    sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+            if (maxCrewCount > lostShip.getPenaltyCrew()) {
+                phase = EventPhase.REWARD_DECISION;
+                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
 
-                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-                } else {
-                    sender.sendMessage("NotEnoughCrew");
+                // If the player is not disconnected
+                if(player.getIsReady()){
+                    if(!housingUnits.isEmpty()){
+                        for (HousingUnit housingUnit : housingUnits) {
+                            lostShip.chooseDiscardedCrew(player.getSpaceship(), housingUnit);
+                        }
+
+                        // Update spaceship to remove highlight components when it's not my turn.
+                        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+                        if(!housingUnits.isEmpty())
+                            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+                        phase = EventPhase.EFFECT;
+                        eventEffect();
+                        return;
+                    }
+
+                }else{
+                    player.setIsReady(true, gameManager.getGame());
                 }
 
-                // Checks if someone landed on the station
-                if (someoneLanded) return;
+            } else {
+                sender.sendMessage("NotEnoughCrew");
             }
         }
     }
@@ -119,13 +141,10 @@ public class LostShipController extends EventControllerAbstract  {
         switch (upperCaseResponse) {
             case "YES":
                 phase = EventPhase.PENALTY_EFFECT;
-                someoneLanded = true;
                 penaltyEffect(player, sender);
                 break;
 
             case "NO":
-                phase = EventPhase.ASK_TO_LAND;
-
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
                 break;
@@ -194,26 +213,27 @@ public class LostShipController extends EventControllerAbstract  {
             return;
         }
 
-        Component housingUnit = spaceshipMatrix[yHousingUnit][xHousingUnit];
+        Component housingUnitComp = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
-        if (housingUnit == null || (!housingUnit.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnit.getType().equals(ComponentType.CENTRAL_UNIT))) {
+        if (housingUnitComp == null || (!housingUnitComp.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnitComp.getType().equals(ComponentType.CENTRAL_UNIT))) {
             sender.sendMessage("InvalidComponent");
             sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
             return;
         }
 
+        HousingUnit housingUnit = (HousingUnit) housingUnitComp;
+
         // Checks if a crew member has been discarded
         try{
-            lostShip.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
+            housingUnits.add(housingUnit);
             requestedCrew--;
 
             sender.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-
             if (requestedCrew == 0) {
-                phase = EventPhase.EFFECT;
-                eventEffect();
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
             } else
                 sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
 
