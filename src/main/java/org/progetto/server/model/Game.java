@@ -384,11 +384,11 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-        /*
+            /*
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
+            */
 
-         */
 
             // forzare componente, todo da rimuovere
             int randomPos = 0;
