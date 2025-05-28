@@ -107,6 +107,8 @@ public class PiratesController extends EventControllerAbstract {
                 if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage("YouWonBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -124,9 +126,13 @@ public class PiratesController extends EventControllerAbstract {
 
                     if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
                         sender.sendMessage("YouLostBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
                         defeatedPlayers.add(player);
+
                     } else {
                         sender.sendMessage("YouDrewBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
                     }
                     continue;
 
@@ -318,6 +324,8 @@ public class PiratesController extends EventControllerAbstract {
                 case 1:
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage("YouWonBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()));
                     defeated = true;
                     break;
@@ -326,6 +334,7 @@ public class PiratesController extends EventControllerAbstract {
                     defeatedPlayers.add(player);
 
                     sender.sendMessage("YouLostBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
@@ -333,6 +342,8 @@ public class PiratesController extends EventControllerAbstract {
 
                 case 0:
                     sender.sendMessage("YouDrewBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;

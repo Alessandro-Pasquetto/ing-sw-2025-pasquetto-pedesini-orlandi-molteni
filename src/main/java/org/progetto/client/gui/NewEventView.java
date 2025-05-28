@@ -289,6 +289,7 @@ public class NewEventView {
     public void setEventLabels(String title, String description) {
         eventMainTitle.setText(title);
         eventMainDesc.setText(description);
+        btnContainer.getChildren().clear();
     }
 
     /**
@@ -417,9 +418,6 @@ public class NewEventView {
             }
         }
 
-        enginePowerValue.setStyle("-fx-text-fill: white;");
-        enginePowerValue.setStyle("-fx-text-fill: white;");
-
         // Update spaceship stats
         float power = ship.getNormalShootingPower();
         if (power == (int) power)
@@ -427,12 +425,12 @@ public class NewEventView {
         else
             firePowerValue.setText(String.valueOf(power + 2 * (ship.getAlienOrange() ? 2 : 0)));
 
-
         enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0)));
-
         destroyedValue.setText(String.valueOf(ship.getDestroyedCount()));
-
         creditsValue.setText(String.valueOf(GameData.getCredits()));
+
+        firePowerValue.setStyle("-fx-text-fill: white;");
+        enginePowerValue.setStyle("-fx-text-fill: white;");
     }
 
     /**
@@ -957,10 +955,17 @@ public class NewEventView {
                 ListCell<?> listCell = (ListCell<?>) cell;
                 Object item = listCell.getItem();
 
-                if (item instanceof Player player && player.getName().equals(name)) {
-                    Label nameLabel = (Label) ((VBox) listCell.getGraphic()).getChildren().get(0);
-                    nameLabel.setText(player.getName() + " (active)");
-                    break;
+                if (item instanceof Player player) {
+                    VBox graphic = (VBox) listCell.getGraphic();
+                    if (graphic != null && !graphic.getChildren().isEmpty()) {
+                        Label nameLabel = (Label) graphic.getChildren().get(0);
+
+                        nameLabel.setText(player.getName());
+
+                        if (player.getName().equals(name)) {
+                            nameLabel.setText(player.getName() + " (active)");
+                        }
+                    }
                 }
             }
         }
@@ -1043,6 +1048,7 @@ public class NewEventView {
                         enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
                         enginePowerValue.setStyle("-fx-text-fill: green;");
                         break;
+
                     case "DoubleCannons":
                         float power = ship.getNormalShootingPower();
                         if (power == (int) power)

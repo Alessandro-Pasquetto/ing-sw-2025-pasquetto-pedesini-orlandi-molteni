@@ -179,6 +179,9 @@ public class GameThread extends Thread {
                         game.setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
 
+                        // Sleep for a while to let players read the results of the event
+                        Thread.sleep(5000);
+
                         // Checks if there isn't any traveler remaining
                         if (game.getBoard().getNumTravelers() == 0)
                             game.setPhase(GamePhase.ENDGAME);

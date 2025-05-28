@@ -92,6 +92,8 @@ public class SlaversController extends EventControllerAbstract {
                 if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage("YouWonBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                     sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -111,6 +113,8 @@ public class SlaversController extends EventControllerAbstract {
                     if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
                         phase = EventPhase.PENALTY_EFFECT;
                         sender.sendMessage("YouLostBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
                         penaltyEffect(player, sender);
 
                         gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -119,6 +123,7 @@ public class SlaversController extends EventControllerAbstract {
 
                     } else {
                         sender.sendMessage("YouDrewBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
                     }
                     continue;
                 }
@@ -265,6 +270,8 @@ public class SlaversController extends EventControllerAbstract {
                 switch (slavers.battleResult(player, playerFirePower)){
                     case 1:
                         sender.sendMessage("YouWonBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                         phase = EventPhase.REWARD_DECISION;
                         sender.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()));
                         defeated = true;
@@ -272,12 +279,16 @@ public class SlaversController extends EventControllerAbstract {
 
                     case -1:
                         sender.sendMessage("YouLostBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
                         phase = EventPhase.PENALTY_EFFECT;
                         penaltyEffect(player, sender);
                         break;
 
                     case 0:
                         sender.sendMessage("YouDrewBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+
                         phase = EventPhase.ASK_CANNONS;
 
                         player.setIsReady(true, gameManager.getGame());
@@ -350,7 +361,6 @@ public class SlaversController extends EventControllerAbstract {
         }
 
         // Checks if a crew member has been discarded
-
         try{
             slavers.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
             requestedCrew--;

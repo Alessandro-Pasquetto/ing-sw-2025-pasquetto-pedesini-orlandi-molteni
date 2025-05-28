@@ -92,6 +92,8 @@ public class SmugglersController extends EventControllerAbstract {
                 if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     sender.sendMessage("YouWonBattle");
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                     sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -110,6 +112,7 @@ public class SmugglersController extends EventControllerAbstract {
                     if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
 
                         sender.sendMessage("YouLostBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                         // Checks if he has more than a box/battery
                         int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
@@ -129,6 +132,7 @@ public class SmugglersController extends EventControllerAbstract {
                         }
                     } else {
                         sender.sendMessage("YouDrewBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
                     }
                     continue;
                 }
@@ -318,6 +322,8 @@ public class SmugglersController extends EventControllerAbstract {
                 switch (smugglers.battleResult(player, playerFirePower)){
                     case 1:
                         sender.sendMessage("YouWonBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+
                         phase = EventPhase.REWARD_DECISION;
                         defeated = true;
                         sender.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()));
@@ -325,6 +331,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                     case -1:
                         sender.sendMessage("YouLostBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                         // Checks if he has more than a box/battery
                         int maxBoxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
@@ -346,6 +353,8 @@ public class SmugglersController extends EventControllerAbstract {
 
                     case 0:
                         sender.sendMessage("YouDrewBattle");
+                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+
                         defeated = false;
                         player.setIsReady(true, gameManager.getGame());
                         gameManager.getGameThread().notifyThread();

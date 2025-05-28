@@ -57,7 +57,7 @@ public class GameManager {
 
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
-        this.timer = new TimerController(this, 120, 2);
+        this.timer = new TimerController(this, 90, 2);
         GameManagerMaps.addWaitingGameManager(idGame, this);
 
         gameThread = new GameThread(this);

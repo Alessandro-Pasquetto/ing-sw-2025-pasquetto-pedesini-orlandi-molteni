@@ -459,6 +459,16 @@ public class GuiHandlerMessage {
             );
         }
 
+        else if (messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
+            PageController.getEventView().askForQuantity(
+                    "DoubleCannons",
+                    "How many double cannons do you want to use?",
+                    "Select number of double cannons to use, you have " + howManyDoubleCannonsMessage.getMaxUsable() + " double cannons available...",
+                    howManyDoubleCannonsMessage.getMaxUsable(),
+                    count -> GameData.getSender().responseHowManyDoubleCannons(count)
+            );
+        }
+
         else if (messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
             PageController.getEventView().askYesNo(
                     "DO YOU WANT TO ACCEPT CREDITS?",
@@ -466,6 +476,17 @@ public class GuiHandlerMessage {
                     response -> {
                         Sender sender = GameData.getSender();
                         sender.responseAcceptRewardCreditsAndPenalties(response ? "YES" : "NO");
+                    }
+            );
+        }
+
+        else if (messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
+            PageController.getEventView().askYesNo(
+                    "DO YOU WANT TO ACCEPT CREDITS?",
+                    "You will get " + acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays() + " days...",
+                    response -> {
+                        Sender sender = GameData.getSender();
+                        sender.responseAcceptRewardCreditsAndPenaltyDays(response ? "YES" : "NO");
                     }
             );
         }
@@ -766,15 +787,15 @@ public class GuiHandlerMessage {
                     break;
 
                 case "YouLostBattle":
-                    System.out.println("You lost");
+                    PageController.getEventView().setEventLabels("YOU LOST THE BATTLE", "You lost the battle, wait for other players to finish their turn...");
                     break;
 
                 case "YouWonBattle":
-                    System.out.println("You win");
+                    PageController.getEventView().setEventLabels("YOU WON THE BATTLE", "You won the battle, wait for other players to finish their turn...");
                     break;
 
                 case "YouDrewBattle":
-                    System.out.println("You drew");
+                    PageController.getEventView().setEventLabels("YOU DREW THE BATTLE", "You drew the battle, wait for other players to finish their turn...");
                     break;
 
                 case "YouLost":
