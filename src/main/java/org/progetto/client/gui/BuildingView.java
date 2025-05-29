@@ -806,13 +806,7 @@ public class BuildingView {
                     imageView.setFitWidth(COMPONENT_SIZE);
                     imageView.setFitHeight(COMPONENT_SIZE);
 
-                    Pane componentPane = new Pane();
-                    componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-
-                    componentPane.getChildren().add(imageView);
-
-                    cell.getChildren().add(componentPane);
-
+                    cell.getChildren().add(imageView);
                     break;
                 }
             }
@@ -940,8 +934,8 @@ public class BuildingView {
             if (node instanceof Pane cell) {
                 if (!cell.getChildren().isEmpty()) {
                     Node child = cell.getChildren().get(0);
-                    if (child instanceof Pane componentPane) {
-                        DragAndDrop.disableDragAndDropComponent(componentPane);
+                    if (child instanceof ImageView componentImage) {
+                        DragAndDrop.disableDragAndDropComponent(componentImage);
                     }
                 }
             }
@@ -967,7 +961,7 @@ public class BuildingView {
     }
 
     /**
-     * Removes the handComponentPane wherever it is
+     * Removes the handComponentImageView wherever it is
      *
      * @author Alessandro
      */
@@ -981,28 +975,7 @@ public class BuildingView {
     }
 
     /**
-     * Generates a component pane
-     *
-     * @author Alessandro
-     * @param component is the component to generate
-     * @return the generated component pane
-     */
-    private Pane generateComponentPane(Component component) {
-        Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(COMPONENT_SIZE);
-        imageView.setFitHeight(COMPONENT_SIZE);
-
-        Pane componentPane = new Pane();
-        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-
-        componentPane.getChildren().add(imageView);
-
-        return componentPane;
-    }
-
-    /**
-     * Generates a draggable paneComponent
+     * Generates a draggable imageViewComponent
      *
      * @author Alessandro
      */
@@ -1013,12 +986,7 @@ public class BuildingView {
         imageView.setFitWidth(COMPONENT_SIZE);
         imageView.setFitHeight(COMPONENT_SIZE);
 
-        Pane componentPane = new Pane();
-        componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
-
-        componentPane.getChildren().add(imageView);
-
-        BuildingData.setNewHandComponent(componentPane);
+        BuildingData.setNewHandComponent(imageView);
         handComponentBox.getChildren().add(BuildingData.getHandComponent());
     }
 
@@ -1058,9 +1026,14 @@ public class BuildingView {
                     cell.getChildren().clear();
 
                 if (component != null){
-                    Pane componentPane = generateComponentPane(component);
-                    componentPane.setRotate(90 * component.getRotation());
-                    cell.getChildren().add(componentPane);
+
+                    Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(COMPONENT_SIZE);
+                    imageView.setFitHeight(COMPONENT_SIZE);
+
+                    imageView.setRotate(90 * component.getRotation());
+                    cell.getChildren().add(imageView);
                 }
             }
         }
@@ -1079,17 +1052,21 @@ public class BuildingView {
             if(component == null)
                 continue;
 
-            Pane componentPane = generateComponentPane(component);
-            DragAndDrop.enableDragAndDropComponent(componentPane);
-            DragAndDrop.setOnMousePressedForBookedComponent(componentPane);
+            Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(COMPONENT_SIZE);
+            imageView.setFitHeight(COMPONENT_SIZE);
+
+            DragAndDrop.enableDragAndDropComponent(imageView);
+            DragAndDrop.setOnMousePressedForBookedComponent(imageView);
 
             Pane bookedCell = (Pane) bookedArray.getChildren().get(i);
-            bookedCell.getChildren().add(componentPane);
+            bookedCell.getChildren().add(imageView);
         }
     }
 
     /**
-     * Rotates the paneComponent
+     * Rotates the imageViewComponent
      *
      * @author Alessandro
      */

@@ -1,6 +1,8 @@
 package org.progetto.client.model;
 
 import javafx.animation.RotateTransition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import org.progetto.client.gui.DragAndDrop;
@@ -11,8 +13,8 @@ public class BuildingData {
     // ATTRIBUTES
     // =======================
 
-    private static Pane handComponent = null;
-    private static Pane tempPickingBookedComponent = null;
+    private static ImageView handComponent = null;
+    private static ImageView tempPickingBookedComponent = null;
     private static int tempXPickingBooked = 0;
     private static int rHandComponent = 0;
     private static int xHandComponent = -1;
@@ -26,11 +28,11 @@ public class BuildingData {
     // GETTERS
     // =======================
 
-    public static Pane getHandComponent() {
+    public static ImageView getHandComponent() {
         return handComponent;
     }
 
-    public static Pane getTempPickingBookedComponent() {
+    public static ImageView getTempPickingBookedComponent() {
         return tempPickingBookedComponent;
     }
 
@@ -67,11 +69,11 @@ public class BuildingData {
     // =======================
 
 
-    public static void setHandComponent(Pane handComponent) {
+    public static void setHandComponent(ImageView handComponent) {
         BuildingData.handComponent = handComponent;
     }
 
-    public static void setNewHandComponent(Pane handComponent) {
+    public static void setNewHandComponent(ImageView handComponent) {
         resetHandComponent();
 
         BuildingData.handComponent = handComponent;
@@ -79,7 +81,7 @@ public class BuildingData {
             DragAndDrop.enableDragAndDropComponent(BuildingData.handComponent);
     }
 
-    public static void setTempPickingBookedComponent(Pane tempPickingBookedComponent) {
+    public static void setTempPickingBookedComponent(ImageView tempPickingBookedComponent) {
         BuildingData.tempPickingBookedComponent = tempPickingBookedComponent;
     }
 

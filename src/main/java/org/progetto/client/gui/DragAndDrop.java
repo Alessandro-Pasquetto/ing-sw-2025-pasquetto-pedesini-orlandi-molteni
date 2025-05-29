@@ -18,49 +18,49 @@ public class DragAndDrop {
     // =======================
 
     /**
-     * Enables the drag of a component pane when it's clicked
+     * Enables the drag of a component image when it's clicked
      *
      * @author Alessandro
-     * @param componentPane is the dragged component pane
+     * @param componentImage is the dragged component imageView
      * @param event is the MouseEvent to read for the pick
      */
-    private static void onMousePressedFunctionComponent(Pane componentPane, MouseEvent event){
+    private static void onMousePressedFunctionComponent(ImageView componentImage, MouseEvent event){
 
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
-        componentPane.getProperties().put("dragStartedWithPrimary", true);
+        componentImage.getProperties().put("dragStartedWithPrimary", true);
 
         // Store initial scene coordinates to detect drag
-        componentPane.getProperties().put("initialSceneX", event.getSceneX());
-        componentPane.getProperties().put("initialSceneY", event.getSceneY());
+        componentImage.getProperties().put("initialSceneX", event.getSceneX());
+        componentImage.getProperties().put("initialSceneY", event.getSceneY());
 
         // Store the original parent and local layout coordinates
-        componentPane.getProperties().put("originalParent", componentPane.getParent());
-        componentPane.getProperties().put("originalLayoutX", componentPane.getLayoutX());
-        componentPane.getProperties().put("originalLayoutY", componentPane.getLayoutY());
+        componentImage.getProperties().put("originalParent", componentImage.getParent());
+        componentImage.getProperties().put("originalLayoutX", componentImage.getLayoutX());
+        componentImage.getProperties().put("originalLayoutY", componentImage.getLayoutY());
 
         // Calculate the position in the scene's coordinate system
-        Bounds boundsInScene = componentPane.localToScene(componentPane.getBoundsInLocal());
+        Bounds boundsInScene = componentImage.localToScene(componentImage.getBoundsInLocal());
 
-        Pane root = (Pane) componentPane.getScene().getRoot();
+        Pane root = (Pane) componentImage.getScene().getRoot();
 
-        componentPane.setManaged(false);
+        componentImage.setManaged(false);
 
         // If the node is not already in the root, move it there
-        if (componentPane.getParent() != root) {
-            ((Pane) componentPane.getParent()).getChildren().remove(componentPane);
-            root.getChildren().add(componentPane);
+        if (componentImage.getParent() != root) {
+            ((Pane) componentImage.getParent()).getChildren().remove(componentImage);
+            root.getChildren().add(componentImage);
         }
 
         // Convert the scene coordinates to root's local coordinates
         Point2D localPos = root.sceneToLocal(boundsInScene.getMinX(), boundsInScene.getMinY());
-        componentPane.setLayoutX(localPos.getX());
-        componentPane.setLayoutY(localPos.getY());
+        componentImage.setLayoutX(localPos.getX());
+        componentImage.setLayoutY(localPos.getY());
 
         // Store the drag offset (distance from mouse to top-left of the node)
-        componentPane.getProperties().put("dragOffsetX", event.getSceneX() - boundsInScene.getMinX());
-        componentPane.getProperties().put("dragOffsetY", event.getSceneY() - boundsInScene.getMinY());
+        componentImage.getProperties().put("dragOffsetX", event.getSceneX() - boundsInScene.getMinX());
+        componentImage.getProperties().put("dragOffsetY", event.getSceneY() - boundsInScene.getMinY());
 
         event.consume();
     }
@@ -70,52 +70,50 @@ public class DragAndDrop {
      * Allows a component pane to be dragged on the left-key clicked
      *
      * @author Alessandro
-     * @param componentPane is the dragged component pane
+     * @param componentView is the dragged component imageView
      * @param event is the MouseEvent to read for the drag
      */
-    private static void onMouseDraggedFunctionComponent(Pane componentPane, MouseEvent event){
+    private static void onMouseDraggedFunctionComponent(ImageView componentView, MouseEvent event){
 
-        Boolean startedWithPrimary = (Boolean) componentPane.getProperties().get("dragStartedWithPrimary");
+        Boolean startedWithPrimary = (Boolean) componentView.getProperties().get("dragStartedWithPrimary");
         if (startedWithPrimary == null || !startedWithPrimary)
             return;
 
         // Get the initial offset saved during MousePressed
-        double offsetX = (double) componentPane.getProperties().get("dragOffsetX");
-        double offsetY = (double) componentPane.getProperties().get("dragOffsetY");
+        double offsetX = (double) componentView.getProperties().get("dragOffsetX");
+        double offsetY = (double) componentView.getProperties().get("dragOffsetY");
 
         // Calculate the new position of the image based on the mouse's current position
         double newX = event.getSceneX() - offsetX;
         double newY = event.getSceneY() - offsetY;
 
         // Set the new position of the image
-        componentPane.setLayoutX(newX);
-        componentPane.setLayoutY(newY);
+        componentView.setLayoutX(newX);
+        componentView.setLayoutY(newY);
 
         event.consume();  // Consume the event to prevent default behavior
     }
 
     /**
-     * Allows a component pane to be placed on the left-key released
+     * Allows a component image to be placed on the left-key released
      *
      * @author Alessandro
-     * @param componentPane is the dragged component pane
+     * @param componentImageView is the dragged component imageView
      * @param event is the MouseEvent to read for the release
      */
-    private static void onMouseReleasedFunctionComponent(Pane componentPane, MouseEvent event){
+    private static void onMouseReleasedFunctionComponent(ImageView componentImageView, MouseEvent event){
 
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
-        componentPane.getProperties().put("dragStartedWithPrimary", false);
+        componentImageView.getProperties().put("dragStartedWithPrimary", false);
 
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        Pane root = (Pane) componentPane.getScene().getRoot();
+        Pane root = (Pane) componentImageView.getScene().getRoot();
 
-        componentPane.setManaged(false);
-
-        //TODO: Check if i'm trying to to discard a booked component, in this case revert its positoin in its booking cell
+        componentImageView.setManaged(false);
 
         ImageView trash = PageController.getBuildingView().getTrash();
         if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
@@ -125,6 +123,7 @@ public class DragAndDrop {
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getBuildingView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
+
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
                     // Check if the cell is already occupied by a Pane (component)
@@ -143,12 +142,12 @@ public class DragAndDrop {
                         break;
 
                     // If dropped inside a cell and the cell is not occupied, move the image into the cell
-                    root.getChildren().remove(componentPane);
-                    cell.getChildren().add(componentPane);
+                    root.getChildren().remove(componentImageView);
+                    cell.getChildren().add(componentImageView);
 
                     // Center the image inside the cell
-                    componentPane.setLayoutX((cell.getWidth() - componentPane.getPrefWidth()) / 2);
-                    componentPane.setLayoutY((cell.getHeight() - componentPane.getPrefHeight()) / 2);
+                    componentImageView.setLayoutX((cell.getWidth() - componentImageView.getFitWidth()) / 2);
+                    componentImageView.setLayoutY((cell.getHeight() - componentImageView.getFitHeight()) / 2);
 
                     // save the row and column index of the dropped cell
                     BuildingData.setXHandComponent(colIndex);
@@ -179,12 +178,12 @@ public class DragAndDrop {
                     }
 
                     // If dropped inside a cell and the cell is not occupied, move the image into the cell
-                    root.getChildren().remove(componentPane);
-                    cell.getChildren().add(componentPane);
+                    root.getChildren().remove(componentImageView);
+                    cell.getChildren().add(componentImageView);
 
                     // Center the image inside the cell
-                    componentPane.setLayoutX((cell.getWidth() - componentPane.getPrefWidth()) / 2);
-                    componentPane.setLayoutY((cell.getHeight() - componentPane.getPrefHeight()) / 2);
+                    componentImageView.setLayoutX((cell.getWidth() - componentImageView.getFitWidth()) / 2);
+                    componentImageView.setLayoutY((cell.getHeight() - componentImageView.getFitHeight()) / 2);
 
                     // save the row and column index of the dropped cell
                     BuildingData.setXHandComponent(colIndex);
@@ -198,7 +197,7 @@ public class DragAndDrop {
 
         // If the drop was inside a booking cell or the booked component drop is not valid
         if(BuildingData.getYHandComponent() == -1){
-            componentPane.setRotate(componentPane.getRotate() - 90 * BuildingData.getRHandComponent());
+            componentImageView.setRotate(componentImageView.getRotate() - 90 * BuildingData.getRHandComponent());
 
             GameData.getSender().bookComponent(BuildingData.getXHandComponent());
         }
@@ -207,35 +206,35 @@ public class DragAndDrop {
         if (!isValidDrop){
 
             // If the drop was not inside any cell, return the image to its original position
-            Object originalParent = componentPane.getProperties().get("originalParent");
-            if (componentPane.getParent() != originalParent && originalParent instanceof Pane) {
-                root.getChildren().remove(componentPane);
-                ((Pane) originalParent).getChildren().add(componentPane);
+            Object originalParent = componentImageView.getProperties().get("originalParent");
+            if (componentImageView.getParent() != originalParent && originalParent instanceof Pane) {
+                root.getChildren().remove(componentImageView);
+                ((Pane) originalParent).getChildren().add(componentImageView);
             }
-            componentPane.setLayoutX((double) componentPane.getProperties().get("originalLayoutX"));
-            componentPane.setLayoutY((double) componentPane.getProperties().get("originalLayoutY"));
+            componentImageView.setLayoutX((double) componentImageView.getProperties().get("originalLayoutX"));
+            componentImageView.setLayoutY((double) componentImageView.getProperties().get("originalLayoutY"));
         }
 
         event.consume();  // Consume the event to prevent default behavior
     }
 
     /**
-     * Allows the drag for booked component pane
+     * Allows the drag for booked component ImageView
      *
      * @author Alessandro
-     * @param componentPane is the dragged component pane
+     * @param componentImage is the dragged component ImageView
      */
-    public static void setOnMousePressedForBookedComponent(Pane componentPane) {
+    public static void setOnMousePressedForBookedComponent(ImageView componentImage) {
         // Set his pressFunction
-        componentPane.setOnMousePressed(event2 -> {
+        componentImage.setOnMousePressed(event2 -> {
 
             if (event2.getButton() != MouseButton.PRIMARY)
                 return;
 
-            componentPane.getProperties().put("dragStartedWithPrimary", true);
+            componentImage.getProperties().put("dragStartedWithPrimary", true);
 
-            BuildingData.setTempPickingBookedComponent(componentPane);
-            onMousePressedFunctionComponent(componentPane, event2);
+            BuildingData.setTempPickingBookedComponent(componentImage);
+            onMousePressedFunctionComponent(componentImage, event2);
 
             double sceneX2 = event2.getSceneX();
             double sceneY2 = event2.getSceneY();
@@ -264,49 +263,49 @@ public class DragAndDrop {
         });
 
         // Disable dragged and released
-        componentPane.setOnMouseDragged(null);
-        componentPane.setOnMouseReleased(null);
+        componentImage.setOnMouseDragged(null);
+        componentImage.setOnMouseReleased(null);
     }
 
     /**
      * Makes a component draggable
      *
      * @author Alessandro
-     * @param componentPane is the dragged component
+     * @param componentImage is the dragged component
      */
-    public static void enableDragAndDropComponent(Pane componentPane) {
+    public static void enableDragAndDropComponent(ImageView componentImage) {
         // Make sure the image responds to mouse events
-        componentPane.setPickOnBounds(true);
+        componentImage.setPickOnBounds(true);
 
         // MousePressed: save initial coordinates and layout details
-        componentPane.setOnMousePressed(event -> {
-            onMousePressedFunctionComponent(componentPane, event);
+        componentImage.setOnMousePressed(event -> {
+            onMousePressedFunctionComponent(componentImage, event);
         });
 
         // MouseDragged: update image position based on drag
-        componentPane.setOnMouseDragged(event -> {
-            onMouseDraggedFunctionComponent(componentPane, event);
+        componentImage.setOnMouseDragged(event -> {
+            onMouseDraggedFunctionComponent(componentImage, event);
         });
 
         // MouseReleased: drop the image onto the grid
-        componentPane.setOnMouseReleased(event -> {
-            onMouseReleasedFunctionComponent(componentPane, event);
+        componentImage.setOnMouseReleased(event -> {
+            onMouseReleasedFunctionComponent(componentImage, event);
         });
 
-        componentPane.getStyleClass().add("draggable");
+        componentImage.getStyleClass().add("draggable");
     }
 
     /**
-     * Disable the drag and drop for component pane
+     * Disable the drag and drop for component imageView
      *
      * @author Alessandro
-     * @param componentPane is the dragged component pane
+     * @param componentImageView is the dragged component imageView
      */
-    public static void disableDragAndDropComponent(Pane componentPane) {
-        componentPane.setOnMousePressed(null);
-        componentPane.setOnMouseDragged(null);
-        componentPane.setOnMouseReleased(null);
-        componentPane.getStyleClass().remove("draggable");
+    public static void disableDragAndDropComponent(ImageView componentImageView) {
+        componentImageView.setOnMousePressed(null);
+        componentImageView.setOnMouseDragged(null);
+        componentImageView.setOnMouseReleased(null);
+        componentImageView.getStyleClass().remove("draggable");
     }
 
     // =======================
@@ -527,8 +526,6 @@ public class DragAndDrop {
      * @param targetSlotId the FXML id of the slot container
      */
     public static void enableDragAndDropItem(ImageView itemImage, String targetSlotId) {
-
-        System.out.println("enableDragAndDropItem!!!");
 
         // Make sure the image responds to mouse events
         itemImage.setPickOnBounds(true);

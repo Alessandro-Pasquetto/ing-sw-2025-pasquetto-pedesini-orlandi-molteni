@@ -592,7 +592,14 @@ public class NewEventView {
         }
     }
 
-    private void renderBoxStorage(Pane componentPane, BoxStorage boxStorage) {
+    /**
+     * Renders the box storage
+     *
+     * @author Alessandro
+     * @param cell is the cell to render
+     * @param boxStorage is the component to render
+     */
+    private void renderBoxStorage(Pane cell, BoxStorage boxStorage) {
 
         switch (boxStorage.getCapacity()) {
             case 1:
@@ -605,7 +612,7 @@ public class NewEventView {
 
                 renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
+                cell.getChildren().add(slot1);
                 break;
 
             case 2:
@@ -627,8 +634,8 @@ public class NewEventView {
 
                 renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
+                cell.getChildren().add(slot1);
+                cell.getChildren().add(slot2);
 
                 break;
 
@@ -660,16 +667,24 @@ public class NewEventView {
 
                 renderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
-                componentPane.getChildren().add(slot3);
+                cell.getChildren().add(slot1);
+                cell.getChildren().add(slot2);
+                cell.getChildren().add(slot3);
                 break;
         }
     }
 
+    /**
+     * Renders the box in the slot
+     *
+     * @author Alessandro
+     * @param boxSlot is the slot
+     * @param box is the box to render
+     * @param componentRotation is the rotation to adjust
+     */
     private void renderBox(Pane boxSlot, Box box, int componentRotation){
 
-        if(box == null) box = Box.RED;
+        if(box == null) return;
 
         Image boxImage = switch (box) {
             case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
@@ -906,6 +921,7 @@ public class NewEventView {
     /**
      * Renders the housing unit for other players (scaled down)
      *
+     * @author Gabriele
      * @param cell is the cell to render
      * @param comp is the component to render
      */
@@ -975,6 +991,7 @@ public class NewEventView {
     /**
      * Renders the battery storage for other players (scaled down)
      *
+     * @author Gabriele
      * @param cell is the cell to render
      * @param comp is the component to render
      */
@@ -1041,7 +1058,14 @@ public class NewEventView {
         }
     }
 
-    private void renderOtherPlayerBoxStorage(Pane componentPane, BoxStorage boxStorage) {
+    /**
+     * Renders the box storage for other players (scaled down)
+     *
+     * @author Alessandro
+     * @param cell is the cell to render
+     * @param boxStorage is the component to render
+     */
+    private void renderOtherPlayerBoxStorage(Pane cell, BoxStorage boxStorage) {
 
         switch (boxStorage.getCapacity()) {
             case 1:
@@ -1054,7 +1078,7 @@ public class NewEventView {
 
                 otherPlayerRenderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
+                cell.getChildren().add(slot1);
                 break;
 
             case 2:
@@ -1076,8 +1100,8 @@ public class NewEventView {
 
                 otherPlayerRenderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
+                cell.getChildren().add(slot1);
+                cell.getChildren().add(slot2);
 
                 break;
 
@@ -1109,16 +1133,24 @@ public class NewEventView {
 
                 otherPlayerRenderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
 
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
-                componentPane.getChildren().add(slot3);
+                cell.getChildren().add(slot1);
+                cell.getChildren().add(slot2);
+                cell.getChildren().add(slot3);
                 break;
         }
     }
 
+    /**
+     * Renders the box in the slot for other players (scaled down)
+     *
+     * @author Alessandro
+     * @param boxSlot is the slot
+     * @param box is the box to render
+     * @param componentRotation is the rotation to adjust
+     */
     private void otherPlayerRenderBox(Pane boxSlot, Box box, int componentRotation){
 
-        if(box == null) box = Box.RED;
+        if(box == null) return;
 
         Image boxImage = switch (box) {
             case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
