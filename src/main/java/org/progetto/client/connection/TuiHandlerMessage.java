@@ -22,6 +22,7 @@ import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;

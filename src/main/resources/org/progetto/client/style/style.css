@@ -480,33 +480,33 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.5, 0, 0);
 }
 
-#spaceshipCell {
-    -fx-border-color: black;
-    -fx-background-color: rgba(255, 255, 255, 0.25);
-}
+/*#spaceshipCell {*/
+/*    -fx-border-color: black;*/
+/*    -fx-background-color: rgba(255, 255, 255, 0.25);*/
+/*}*/
 
 #handComponentBox {
     -fx-border-color: rgba(128, 128, 128, 0.5);
     -fx-background-color: rgba(0, 0, 0, 0.25);
 }
 
-#bookedArray {
-    -fx-background-color: rgba(0, 0, 0, 0.25) !important;
-}
+/*#bookedArray {*/
+/*    -fx-background-color: rgba(0, 0, 0, 0.25) !important;*/
+/*}*/
 
-#bookedArray Pane {
-    -fx-border-color: black !important;
-    -fx-background-color: rgba(0, 0, 0, 0.25) !important;
-}
+/*#bookedArray Pane {*/
+/*    -fx-border-color: black !important;*/
+/*    -fx-background-color: rgba(0, 0, 0, 0.25) !important;*/
+/*}*/
 
 #timerLabel {
     -fx-font-size: 24;
 }
 
-#batterySlot, #crewSlot, #boxSlot {
-    -fx-border-color: gray;
-    -fx-background-color: rgba(0, 0, 0, 0.25);
-}
+/*#batterySlot, #crewSlot, #boxSlot {*/
+/*    -fx-border-color: gray;*/
+/*    -fx-background-color: rgba(0, 0, 0, 0.25);*/
+/*}*/
 
 #deck0Image, #deck1Image, #deck2Image {
     -fx-cursor: hand;

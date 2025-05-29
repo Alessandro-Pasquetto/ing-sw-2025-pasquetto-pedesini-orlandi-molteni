@@ -1,21 +1,21 @@
-package org.progetto.messages.toClient.Building;
+package org.progetto.messages.toClient;
 
 import java.io.Serializable;
 
-public class DestroyedComponentMessage implements Serializable {
+public class AffectedComponentMessage implements Serializable {
 
     // =======================
     // ATTRIBUTES
     // =======================
 
-    private final int xComponent;
-    private final int yComponent;
+    private int xComponent;
+    private int yComponent;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public DestroyedComponentMessage(int xComponent, int yComponent) {
+    public AffectedComponentMessage(int xComponent, int yComponent) {
         this.xComponent = xComponent;
         this.yComponent = yComponent;
     }
@@ -24,11 +24,11 @@ public class DestroyedComponentMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public int getxComponent() {
+    public int getXComponent() {
         return xComponent;
     }
 
-    public int getyComponent() {
+    public int getYComponent() {
         return yComponent;
     }
 }

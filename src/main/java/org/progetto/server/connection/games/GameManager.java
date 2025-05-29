@@ -2,6 +2,7 @@ package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;

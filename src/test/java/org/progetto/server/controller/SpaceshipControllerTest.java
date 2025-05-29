@@ -1,7 +1,7 @@
 package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
+import org.progetto.messages.toClient.DestroyedComponentMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;

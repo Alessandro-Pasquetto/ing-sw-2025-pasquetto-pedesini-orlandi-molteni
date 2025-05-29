@@ -1,6 +1,6 @@
 package org.progetto.client.gui;
 
-import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -290,6 +290,16 @@ public class NewEventView {
         eventMainTitle.setText(title);
         eventMainDesc.setText(description);
         btnContainer.getChildren().clear();
+    }
+
+    /**
+     * Sets the event title
+     *
+     * @author Gabriele
+     * @param title is the title to set
+     */
+    public void setEventTitle(String title) {
+        eventMainTitle.setText(title);
     }
 
     /**
@@ -1171,27 +1181,216 @@ public class NewEventView {
                 Component comp = spaceship[row][col];
                 Pane cell = getCellFromSpaceshipMatrix(col, row);
 
-                if (comp != null && types.contains(comp.getType())) {
+                if (comp != null) {
                     final int finalRow = row;
                     final int finalCol = col;
 
-                    if (typeToHighlight.equals("BATTERY") && ((BatteryStorage) comp).getItemsCount() > 0) {
-                        highlightCell(cell, comp, Color.rgb(95, 228, 43, 0.3));
-
-                        cell.setOnMouseClicked(e -> {
-                            onClick.accept(finalCol, finalRow);
-                        });
+                    if (typeToHighlight.equals("BATTERY") && types.contains(comp.getType()) && ((BatteryStorage) comp).getItemsCount() > 0) {
+                        highlightCell(cell, Color.rgb(95, 228, 43, 0.3));
+                        cell.setCursor(Cursor.HAND);
+                        cell.setOnMouseClicked(e -> onClick.accept(finalCol, finalRow));
                     }
-                    else if (typeToHighlight.equals("CREW") && ((HousingUnit) comp).getCrewCount() > 0) {
-                        highlightCell(cell, comp, Color.rgb(0, 178, 255, 0.3));
-
-                        cell.setOnMouseClicked(e -> {
-                            onClick.accept(finalCol, finalRow);
-                        });
+                    else if (typeToHighlight.equals("CREW") && types.contains(comp.getType()) && ((HousingUnit) comp).getCrewCount() > 0) {
+                        highlightCell(cell, Color.rgb(0, 178, 255, 0.3));
+                        cell.setCursor(Cursor.HAND);
+                        cell.setOnMouseClicked(e -> onClick.accept(finalCol, finalRow));
+                    }
+                    else if (typeToHighlight.equals("ANY")) {
+                        cell.setCursor(Cursor.HAND);
+                        cell.setOnMouseClicked(e -> onClick.accept(finalCol, finalRow));
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Asks the player to roll the dice
+     *
+     * @author Gabriele
+     * @param title is the title of the request
+     * @param description is the description of the request
+     */
+    public void askToRollDice(String title, String description) {
+        eventMainDesc.setText(description);
+
+        // Roll button
+        Button rollButton = new Button("Roll Dice");
+
+        rollButton.setOnAction(e -> {
+            GameData.getSender().responseRollDice();
+        });
+
+        HBox buttonBox = new HBox(15, rollButton);
+        buttonBox.setStyle("-fx-alignment: center;");
+
+        btnContainer.getChildren().clear();
+        btnContainer.getChildren().add(buttonBox);
+    }
+
+    /**
+     * Updates the dice result in the event view
+     *
+     * @author Gabriele
+     * @param result is the result of the dice roll
+     * @param name is the name of the player who rolled the dice (can be null for self)
+     */
+    public void updateDiceResult(int result, String name) {
+        eventMainTitle.setText("Dice result");
+
+        if (name != null) {
+            eventMainDesc.setText(name + " rolled...");
+        } else {
+            eventMainDesc.setText("You rolled...");
+        }
+
+        btnContainer.getChildren().clear();
+
+        // Display dice result via images
+        int firstDice;
+        int secondDice;
+
+        switch (result) {
+            case 2 -> {
+                firstDice = 1;
+                secondDice = 1;
+            }
+            case 3 -> {
+                firstDice = 1;
+                secondDice = 2;
+            }
+            case 4 -> {
+                firstDice = 1;
+                secondDice = 3;
+            }
+            case 5 -> {
+                firstDice = 2;
+                secondDice = 3;
+            }
+            case 6 -> {
+                firstDice = 2;
+                secondDice = 4;
+            }
+            case 7 -> {
+                firstDice = 3;
+                secondDice = 4;
+            }
+            case 8 -> {
+                firstDice = 4;
+                secondDice = 4;
+            }
+            case 9 -> {
+                firstDice = 5;
+                secondDice = 4;
+            }
+            case 10 -> {
+                firstDice = 5;
+                secondDice = 5;
+            }
+            case 11 -> {
+                firstDice = 6;
+                secondDice = 5;
+            }
+            case 12 -> {
+                firstDice = 6;
+                secondDice = 6;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + result);
+        }
+
+        Image firstDiceImage = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/dice" + firstDice + ".png")));
+        Image secondDiceImage = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/dice" + secondDice + ".png")));
+
+        ImageView firstDiceView = new ImageView(firstDiceImage);
+        firstDiceView.setFitWidth(80);
+        firstDiceView.setFitHeight(80);
+        firstDiceView.setPreserveRatio(true);
+
+        ImageView secondDiceView = new ImageView(secondDiceImage);
+        secondDiceView.setFitWidth(80);
+        secondDiceView.setFitHeight(80);
+        secondDiceView.setPreserveRatio(true);
+
+        HBox diceBox = new HBox(10, firstDiceView, secondDiceView);
+        diceBox.setStyle("-fx-alignment: center;");
+
+        btnContainer.getChildren().add(diceBox);
+
+        animateDiceEntrance(firstDiceView, secondDiceView);
+    }
+
+    /**
+     * Animates the entrance of the dice with a bounce effect
+     *
+     * @author Lorenzo
+     * @param firstDice is the first dice ImageView
+     * @param secondDice is the second dice ImageView
+     */
+    private void animateDiceEntrance(ImageView firstDice, ImageView secondDice) {
+        firstDice.setOpacity(0);
+        firstDice.setScaleX(0.1);
+        firstDice.setScaleY(0.1);
+        firstDice.setRotate(-180);
+
+        secondDice.setOpacity(0);
+        secondDice.setScaleX(0.1);
+        secondDice.setScaleY(0.1);
+        secondDice.setRotate(180);
+
+        FadeTransition fadeIn1 = new FadeTransition(Duration.millis(800), firstDice);
+        fadeIn1.setFromValue(0);
+        fadeIn1.setToValue(1);
+
+        FadeTransition fadeIn2 = new FadeTransition(Duration.millis(800), secondDice);
+        fadeIn2.setFromValue(0);
+        fadeIn2.setToValue(1);
+
+        ScaleTransition scale1 = new ScaleTransition(Duration.millis(800), firstDice);
+        scale1.setFromX(0.1);
+        scale1.setFromY(0.1);
+        scale1.setToX(1.2);
+        scale1.setToY(1.2);
+        scale1.setInterpolator(Interpolator.EASE_OUT);
+
+        ScaleTransition scale2 = new ScaleTransition(Duration.millis(800), secondDice);
+        scale2.setFromX(0.1);
+        scale2.setFromY(0.1);
+        scale2.setToX(1.2);
+        scale2.setToY(1.2);
+        scale2.setInterpolator(Interpolator.EASE_OUT);
+
+        RotateTransition rotate1 = new RotateTransition(Duration.millis(800), firstDice);
+        rotate1.setFromAngle(-180);
+        rotate1.setToAngle(0);
+        rotate1.setInterpolator(Interpolator.EASE_OUT);
+
+        RotateTransition rotate2 = new RotateTransition(Duration.millis(800), secondDice);
+        rotate2.setFromAngle(180);
+        rotate2.setToAngle(0);
+        rotate2.setInterpolator(Interpolator.EASE_OUT);
+
+        ScaleTransition bounceBack1 = new ScaleTransition(Duration.millis(200), firstDice);
+        bounceBack1.setFromX(1.2);
+        bounceBack1.setFromY(1.2);
+        bounceBack1.setToX(1.0);
+        bounceBack1.setToY(1.0);
+
+        ScaleTransition bounceBack2 = new ScaleTransition(Duration.millis(200), secondDice);
+        bounceBack2.setFromX(1.2);
+        bounceBack2.setFromY(1.2);
+        bounceBack2.setToX(1.0);
+        bounceBack2.setToY(1.0);
+
+        ParallelTransition firstDiceAnim = new ParallelTransition(fadeIn1, scale1, rotate1);
+        SequentialTransition firstDiceSequence = new SequentialTransition(firstDiceAnim, bounceBack1);
+
+        ParallelTransition secondDiceAnim = new ParallelTransition(fadeIn2, scale2, rotate2);
+        SequentialTransition secondDiceSequence = new SequentialTransition(secondDiceAnim, bounceBack2);
+
+        firstDiceSequence.play();
+
+        Timeline delayTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> secondDiceSequence.play()));
+        delayTimeline.play();
     }
 
     /**
@@ -1202,7 +1401,7 @@ public class NewEventView {
      * @param row row index
      * @return the Pane at the specified coordinates
      */
-    private Pane getCellFromSpaceshipMatrix(int col, int row) {
+    public Pane getCellFromSpaceshipMatrix(int col, int row) {
         for (Node node : spaceshipMatrix.getChildren()) {
             Integer nodeCol = GridPane.getColumnIndex(node);
             Integer nodeRow = GridPane.getRowIndex(node);
@@ -1219,10 +1418,9 @@ public class NewEventView {
      *
      * @author Gabriele
      * @param cell is the cell to highlight
-     * @param comp is the component to highlight
      * @param color is the color to use for highlighting
      */
-    private void highlightCell(Pane cell, Component comp, Color color) {
+    public void highlightCell(Pane cell, Color color) {
         cell.getChildren().removeIf(node -> HIGHLIGHT_ID.equals(node.getId()));
 
         Rectangle overlay = new Rectangle(COMPONENT_SIZE, COMPONENT_SIZE);
@@ -1232,7 +1430,6 @@ public class NewEventView {
 
         cell.getChildren().add(overlay);
         overlay.toFront();
-        cell.setCursor(Cursor.HAND);
     }
 
     /**

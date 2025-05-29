@@ -3,7 +3,7 @@ package org.progetto.server.connection.games;
 import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
-import org.progetto.messages.toClient.UpdateOtherTravelersShipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -148,7 +148,7 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
                         GameController.sendBroadcastUpdateTrack(gameManager);
 
-                        // Updates the spaceship and other players spaceships
+                        // Updates the spaceship
                         for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -179,8 +179,11 @@ public class GameThread extends Thread {
                         game.setActiveEventCard(null);
                         gameManager.broadcastGameMessage("This event card is finished");
 
+                        // Handles defeated players
+                        EventController.handleDefeatedPlayers(gameManager);
+
                         // Sleep for a while to let players read the results of the event
-                        Thread.sleep(5000);
+                        Thread.sleep(3000);
 
                         // Checks if there isn't any traveler remaining
                         if (game.getBoard().getNumTravelers() == 0)
@@ -193,7 +196,6 @@ public class GameThread extends Thread {
                     case TRAVEL:
                         System.out.println("Travel phase started...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
-                        EventController.handleDefeatedPlayers(gameManager);
 
                         gameManager.addReconnectingPlayersToTravelers();
 

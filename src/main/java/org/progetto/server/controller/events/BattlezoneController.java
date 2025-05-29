@@ -901,6 +901,13 @@ public class BattlezoneController extends EventControllerAbstract {
 
         sender.sendMessage(new DiceResultMessage(diceResult));
 
+        // Delay to show the dice result
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SHIELDS;
             askToUseShields();

@@ -1,5 +1,7 @@
 package org.progetto.client.connection;
 
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import org.progetto.client.gui.Alerts;
 import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
@@ -16,6 +18,7 @@ import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
@@ -26,6 +29,8 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.events.Projectile;
+import org.progetto.server.model.events.ProjectileSize;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -214,12 +219,13 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
 
-            if(updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
+            if (updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
                 GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
                 GameData.setCredits(updateSpaceshipMessage.getOwner().getCredits());
                 PageController.getEventView().updateSpaceship(updateSpaceshipMessage.getSpaceship());
             }
-            else{
+            else {
+                GameData.getOtherSpaceships().put(updateSpaceshipMessage.getOwner().getName(), updateSpaceshipMessage.getSpaceship());
                 PageController.getEventView().updateOtherPlayerSpaceship(updateSpaceshipMessage.getOwner().getName(), updateSpaceshipMessage.getSpaceship());
             }
         }
@@ -579,6 +585,34 @@ public class GuiHandlerMessage {
             PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerCrewDiscardedMessage.getPlayerName(), spaceship);
         }
 
+        else if (messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
+            Projectile projectile = incomingProjectileMessage.getProjectile();
+
+            String dimension = projectile.getSize() == ProjectileSize.BIG ? "BIG" : "SMALL";
+            String from = switch (projectile.getFrom()) {
+                case 0 -> "TOP";
+                case 1 -> "RIGHT";
+                case 2 -> "BOTTOM";
+                case 3 -> "LEFT";
+                default -> "UNKNOWN";
+            };
+
+            PageController.getEventView().setEventLabels("A " + dimension + " projectile is incoming from " + from + "!", "Wait for the first player to roll dice to decide where will it hit...");
+        }
+
+        else if (messageObj instanceof DiceResultMessage diceResultMessage) {
+            PageController.getEventView().updateDiceResult(diceResultMessage.getDiceResult(), null);
+        }
+
+        else if (messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
+            PageController.getEventView().updateDiceResult(anotherPlayerDiceResultMessage.getDiceResult(), anotherPlayerDiceResultMessage.getNamePlayer());
+        }
+
+        else if (messageObj instanceof AffectedComponentMessage affectedComponentMessage) {
+            Pane affectedComponent = PageController.getEventView().getCellFromSpaceshipMatrix(affectedComponentMessage.getXComponent(), affectedComponentMessage.getYComponent());
+            PageController.getEventView().highlightCell(affectedComponent, Color.rgb(255, 0, 0, 0.3));
+        }
+
 //        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
 //            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
 //        }
@@ -630,8 +664,25 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateTimer(timer);
         }
 
-        else if (messageObj instanceof DestroyedComponentMessage) {
-            GameData.getSender().showSpaceship(GameData.getNamePlayer());
+        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage) {
+
+            switch (GameData.getPhaseGame()) {
+
+                case "ADJUSTING":
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
+                    break;
+
+                case "EVENT":
+                    // TODO: what to print
+                    break;
+            }
+        }
+
+        else if (messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage) {
+
+            if (GameData.getPhaseGame().equals("EVENT")) {
+                // TODO: what to print
+            }
         }
 
         else if (messageObj instanceof PlayerIsContinuingMessage playerIsContinuingMessage) {
@@ -789,17 +840,79 @@ public class GuiHandlerMessage {
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
                     break;
 
+                case "ResetActivePlayer":
+                    GameData.setActivePlayer("");
+                    PageController.getEventView().updateActivePlayer("");
+                    break;
+
                 case "NotEnoughBatteries":
                     Alerts.showWarning("Not enough batteries!");
                     break;
 
-//                case "AskToUseShield":
-//                    PageController.getEventView().responseChooseToUseShield(false);
-//                    break;
-//
+                case "AskToUseShield":
+                    PageController.getEventView().askYesNo(
+                            "DO YOU WANT TO USE SHIELD?",
+                            "You can use shield to avoid damage, select your choice...",
+                            response -> {
+                                Sender sender = GameData.getSender();
+                                sender.responseChooseToUseShield(response ? "YES" : "NO");
+                            }
+                    );
+                    break;
+
+                case "AskToUseDoubleCannon":
+                    PageController.getEventView().askYesNo(
+                            "DO YOU WANT TO USE DOUBLE CANNON?",
+                            "You can use double cannon to avoid damage, select your choice...",
+                            response -> {
+                                Sender sender = GameData.getSender();
+                                sender.responseUseDoubleCannonRequest(response ? "YES" : "NO");
+                            }
+                    );
+                    break;
+
 //                case "LandRequest":
 //                    PageController.getEventView().responseLandRequest(false);
 //                    break;
+
+                case "RollDiceToFindColumn":
+                    PageController.getEventView().askToRollDice(
+                            "Roll dice",
+                            "Find impact column rolling the dice..."
+                    );
+                    break;
+
+                case "RollDiceToFindRow":
+                    PageController.getEventView().askToRollDice(
+                            "Roll dice",
+                            "Find impact row rolling the dice..."
+                    );
+                    break;
+
+                case "NoComponentHit":
+                    PageController.getEventView().setEventLabels("NO COMPONENT HIT", "Wait for other players to finish their turn...");
+                    break;
+
+                case "NoComponentDamaged":
+                    PageController.getEventView().setEventLabels("NO COMPONENT DAMAGED", "Wait for other players to finish their turn...");
+                    break;
+
+                case "MeteorDestroyed":
+                    PageController.getEventView().setEventLabels("METEOR DESTROYED", "You destroyed the meteor, wait for other players to finish their turn...");
+                    break;
+
+                case "AskSelectSpaceshipPart":
+                    PageController.getEventView().askToSelectShipComponent(
+                            "Select the spaceship part to keep",
+                            "Select spaceship part to maintain clicking on a component...",
+                            "ANY",
+                            (x, y) -> GameData.getSender().responseSelectSpaceshipPart(x, y)
+                    );
+                    break;
+
+                case "YouAreSafe":
+                    PageController.getEventView().setEventLabels("YOU ARE SAFE", "Wait for other players to finish their turn...");
+                    break;
 
                 case "AskContinueTravel":
                     PageController.getTravelView().askYesNo(
@@ -824,6 +937,14 @@ public class GuiHandlerMessage {
                 case "NoEnginePower":
                     PageController.getEventView().setEventLabels("YOU HAVE NO ENGINE POWER", "You cannot continue the travel, wait for other players to finish their turn...");
                     GameData.setHasLeft(true);
+                    break;
+
+                case "YouGotLapped":
+                    PageController.getEventView().setEventLabels("YOU GOT LAPPED", "You cannot continue the travel...");
+                    break;
+
+                case "YouHaveNoCrew":
+                    PageController.getEventView().setEventLabels("YOU HAVE NO CREW", "You cannot continue the travel...");
                     break;
 
                 case "YouLostBattle":

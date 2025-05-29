@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -24,7 +25,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     // =======================
 
     private final MeteorsRain meteorsRain;
-    private final ArrayList<Player> activePlayers;
+    private ArrayList<Player> activePlayers;
     private int diceResult;
     private Projectile comingMeteor;
     private final ArrayList<Player> decisionPlayers;
@@ -60,6 +61,8 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
+        gameManager.broadcastGameMessage("ResetActivePlayer");
+
         phase = EventPhase.SEND_METEOR;
         sendMeteor();
     }
@@ -79,6 +82,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         for (Projectile meteor : meteors) {
             comingMeteor = meteor;
+            activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
             // Sends to each player information about incoming meteor
             for (Player player : activePlayers) {
@@ -145,6 +149,13 @@ public class MeteorsRainController extends EventControllerAbstract {
         sender.sendMessage(new DiceResultMessage(diceResult));
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(activePlayers.getFirst().getName(), diceResult), sender);
 
+        // Delay to show the dice result
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.HANDLE_SMALL_METEOR;
             handleSmallMeteor();
@@ -192,6 +203,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks for shields in that direction and at least a battery
             if (meteorsRain.checkShields(player, comingMeteor) && player.getSpaceship().getBatteriesCount() > 0) {
                 decisionPlayers.add(player);
+                sender.sendMessage(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()));
 
             // Notifies component destruction
             } else {
@@ -248,6 +260,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if component is a double cannon positioned in the same direction as the meteor, and at least a battery
             if (affectedComponent.getType().equals(ComponentType.DOUBLE_CANNON) && affectedComponent.getRotation() == comingMeteor.getFrom() && player.getSpaceship().getBatteriesCount() > 0) {
                 decisionPlayers.add(player);
+                sender.sendMessage(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()));
 
             // Notifies component destruction
             } else {

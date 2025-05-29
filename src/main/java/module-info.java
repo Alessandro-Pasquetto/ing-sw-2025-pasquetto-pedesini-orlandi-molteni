@@ -52,4 +52,6 @@ module org.progetto{
     exports org.progetto.messages.toClient.Travel;
     exports org.progetto.messages.toClient.Track;
     opens org.progetto.messages.toClient.Track to com.google.gson, javafx.fxml;
+    exports org.progetto.messages.toClient.Spaceship;
+    opens org.progetto.messages.toClient.Spaceship to com.google.gson, javafx.fxml;
 }

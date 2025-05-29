@@ -1,9 +1,10 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
-import org.progetto.messages.toClient.Building.DestroyedComponentMessage;
+import org.progetto.messages.toClient.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -186,6 +187,8 @@ public class SpaceshipController {
             sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
             // Checks ship validity
             if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()) {
                 sender.sendMessage("AskSelectSpaceshipPart");
@@ -268,6 +271,8 @@ public class SpaceshipController {
             buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
             sender.sendMessage("SpaceshipPartKept");
+
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();

@@ -506,9 +506,15 @@ public class PiratesController extends EventControllerAbstract {
         sender.sendMessage(new DiceResultMessage(diceResult));
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
 
+        // Delay to show the dice result
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         // Checks projectile dimensions
         if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
-
             phase = EventPhase.ASK_SHIELDS;
             askToUseShields();
 
