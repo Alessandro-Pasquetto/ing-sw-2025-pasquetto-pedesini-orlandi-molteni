@@ -875,6 +875,10 @@ public class GuiHandlerMessage {
                     PageController.getEventView().removeStackPanes();
                     break;
 
+                case "EmptyReward":
+                    PageController.getEventView().resetEvent();
+                    break;
+
                 case "RollDiceToFindColumn":
                     PageController.getEventView().askToRollDice(
                             "Roll dice",
