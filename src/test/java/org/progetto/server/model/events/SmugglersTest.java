@@ -108,11 +108,11 @@ class SmugglersTest {
 
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 0));
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 1));
-        assertNotEquals(null, (bs1.getBoxStorage()[1]));
+        assertNotEquals(null, (bs1.getBoxes()[1]));
         assertTrue(smugglers.chooseDiscardedBox(s, bs1, 2));
         assertFalse(smugglers.chooseDiscardedBox(s, bs1, 3));
         assertTrue(smugglers.chooseDiscardedBox(s, bs1, 1));
-        assertNull(bs1.getBoxStorage()[2]);
+        assertNull(bs1.getBoxes()[2]);
 
 //        for (int i = 0; i < bs1.getCapacity(); i++) {
 //            if(bs1.getBoxStorage()[i] == null)

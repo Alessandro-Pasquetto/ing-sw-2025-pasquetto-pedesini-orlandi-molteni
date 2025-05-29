@@ -706,7 +706,7 @@ public class PlanetsView {
 
             for(Node node: boxContainer.getChildren()){
                 ImageView frame = (ImageView) node;
-                DragAndDrop.enableDragAndDropItems(frame,"boxSlot");
+                DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
             }
 
         }

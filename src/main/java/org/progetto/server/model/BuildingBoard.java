@@ -436,7 +436,7 @@ public class BuildingBoard implements Serializable {
 
             case RED_BOX_STORAGE:
                 BoxStorage bsc = (BoxStorage) destroyedComponent;
-                Box[] boxes = bsc.getBoxStorage();
+                Box[] boxes = bsc.getBoxes();
 
                 for (Box box : boxes) {
                     if (box != null)
@@ -446,7 +446,7 @@ public class BuildingBoard implements Serializable {
 
             case BOX_STORAGE:
                 bsc = (BoxStorage) destroyedComponent;
-                boxes = bsc.getBoxStorage();
+                boxes = bsc.getBoxes();
 
                 for (Box box : boxes) {
                     if (box != null)

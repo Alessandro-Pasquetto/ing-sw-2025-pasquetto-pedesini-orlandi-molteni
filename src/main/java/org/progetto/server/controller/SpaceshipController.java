@@ -107,7 +107,7 @@ public class SpaceshipController {
             BoxStorage startComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[startY][startX];
             BoxStorage endComponent = (BoxStorage) player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[endY][endX];
 
-            Box box = startComponent.getBoxStorage()[startIdx];
+            Box box = startComponent.getBoxes()[startIdx];
 
             endComponent.tryToAddBox(box, endIdx);
             startComponent.removeBox(player.getSpaceship(), startIdx);

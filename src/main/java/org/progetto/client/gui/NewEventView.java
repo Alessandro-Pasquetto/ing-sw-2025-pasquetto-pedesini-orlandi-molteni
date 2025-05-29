@@ -22,10 +22,7 @@ import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
 
 import java.time.LocalDateTime;
@@ -43,6 +40,10 @@ public class NewEventView {
 
     final int COMPONENT_SIZE = 80;
     final int OTHER_COMPONENT_SIZE = 35;
+    final int BOX_SLOT_SIZE = 28;
+    final int OTHER_BOX_SLOT_SIZE = 12;
+    final int BOX_IMAGE_SIZE = 34;
+    final int OTHER_BOX_IMAGE_SIZE = 14;
 
     final String HIGHLIGHT_ID = "highlight";
 
@@ -117,6 +118,10 @@ public class NewEventView {
     private final List<Rectangle> boardCells = new ArrayList<>();
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+    public GridPane getSpaceshipMatrix(){
+        return spaceshipMatrix;
+    }
 
     // =======================
     // METHODS
@@ -379,13 +384,14 @@ public class NewEventView {
                     iv.setPreserveRatio(true);
                     cell.getChildren().add(iv);
 
-                    if (comp instanceof HousingUnit) {
-                        renderHousingUnit(cell, comp);
-                    }
+                    if (comp instanceof HousingUnit housingUnit)
+                        renderHousingUnit(cell, housingUnit);
 
-                    if (comp instanceof BatteryStorage) {
-                        renderBatteryStorage(cell, comp);
-                    }
+                    else if (comp instanceof BatteryStorage batteryStorage)
+                        renderBatteryStorage(cell, batteryStorage);
+
+                    else if(comp instanceof BoxStorage boxStorage)
+                        renderBoxStorage(cell, boxStorage);
 
                     if (comp instanceof HousingUnit) {
 
@@ -448,10 +454,9 @@ public class NewEventView {
      *
      * @author Gabriele
      * @param cell is the cell to render
-     * @param comp is the component to render
+     * @param housingUnit is the component to render
      */
-    private void renderHousingUnit(Pane cell, Component comp) {
-        HousingUnit housingUnit = (HousingUnit) comp;
+    private void renderHousingUnit(Pane cell, HousingUnit housingUnit) {
 
         if (housingUnit.getHasPurpleAlien()) {
             Image alienImage = new Image(String.valueOf(MainClient.class.getResource("img/items/PurpleAlien.png")));
@@ -518,10 +523,9 @@ public class NewEventView {
      *
      * @author Gabriele
      * @param cell is the cell to render
-     * @param comp is the component to render
+     * @param batteryStorage is the component to render
      */
-    private void renderBatteryStorage(Pane cell, Component comp) {
-        BatteryStorage batteryStorage = (BatteryStorage) comp;
+    private void renderBatteryStorage(Pane cell, BatteryStorage batteryStorage) {
         Image batteryImage = new Image(String.valueOf(MainClient.class.getResource("img/items/Battery_icon.png")));
 
         if (batteryStorage.getCapacity() == 2) {
@@ -586,6 +590,112 @@ public class NewEventView {
                 }
             }
         }
+    }
+
+    private void renderBoxStorage(Pane componentPane, BoxStorage boxStorage) {
+
+        switch (boxStorage.getCapacity()) {
+            case 1:
+                Pane slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(24.0);
+                slot1.setLayoutY(24.0);
+                slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                break;
+
+            case 2:
+                slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(24.0);
+                slot1.setLayoutY(8.0);
+                slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                Pane slot2 = new Pane();
+                slot2.setId("boxSlot");
+                slot2.setLayoutX(24.0);
+                slot2.setLayoutY(40.0);
+                slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+
+                break;
+
+            case 3:
+                slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(8.0);
+                slot1.setLayoutY(24.0);
+                slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                slot2 = new Pane();
+                slot2.setId("boxSlot");
+                slot2.setLayoutX(40.0);
+                slot2.setLayoutY(8.0);
+                slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
+
+                Pane slot3 = new Pane();
+                slot3.setId("boxSlot");
+                slot3.setLayoutX(40.0);
+                slot3.setLayoutY(40.0);
+                slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
+                slot3.getProperties().put("idx", 2);
+
+                renderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+                componentPane.getChildren().add(slot3);
+                break;
+        }
+    }
+
+    private void renderBox(Pane boxSlot, Box box, int componentRotation){
+
+        if(box == null) box = Box.RED;
+
+        Image boxImage = switch (box) {
+            case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
+            case GREEN -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
+            case YELLOW -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
+            case RED -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
+        };
+
+        ImageView boxImageView = new ImageView(boxImage);
+        boxImageView.setFitWidth(BOX_IMAGE_SIZE);
+        boxImageView.setFitHeight(BOX_IMAGE_SIZE);
+        boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
+        boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
+        boxImageView.setPreserveRatio(false);
+
+        boxImageView.setRotate(-90 * componentRotation);
+
+        boxSlot.getChildren().add(boxImageView);
+    }
+
+    public void enableDragAndDropBoxesSpaceship(){
+        DragAndDrop.enableDragAndDropItemsSpaceship("box", "boxSlot");
+    }
+
+    public void disableDragAndDropBoxesSpaceship(){
+        DragAndDrop.disableDragAndDropItemsSpaceship("box");
     }
 
     /**
@@ -778,6 +888,9 @@ public class NewEventView {
                     else if (comp instanceof BatteryStorage)
                         renderOtherPlayerBatteryStorage(cell, comp);
 
+                    else if(comp instanceof BoxStorage boxStorage)
+                        renderOtherPlayerBoxStorage(cell, boxStorage);
+
                     // Component rotation
                     if (comp instanceof HousingUnit)
                         iv.setRotate(comp.getRotation() * 90);
@@ -928,6 +1041,104 @@ public class NewEventView {
         }
     }
 
+    private void renderOtherPlayerBoxStorage(Pane componentPane, BoxStorage boxStorage) {
+
+        switch (boxStorage.getCapacity()) {
+            case 1:
+                Pane slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(11.0);
+                slot1.setLayoutY(11.0);
+                slot1.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                otherPlayerRenderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                break;
+
+            case 2:
+                slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(11.0);
+                slot1.setLayoutY(4.0);
+                slot1.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                otherPlayerRenderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                Pane slot2 = new Pane();
+                slot2.setId("boxSlot");
+                slot2.setLayoutX(11.0);
+                slot2.setLayoutY(17.0);
+                slot2.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                otherPlayerRenderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+
+                break;
+
+            case 3:
+                slot1 = new Pane();
+                slot1.setId("boxSlot");
+                slot1.setLayoutX(5.0);
+                slot1.setLayoutY(11.0);
+                slot1.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot1.getProperties().put("idx", 0);
+
+                otherPlayerRenderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
+
+                slot2 = new Pane();
+                slot2.setId("boxSlot");
+                slot2.setLayoutX(17.0);
+                slot2.setLayoutY(4.0);
+                slot2.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot2.getProperties().put("idx", 1);
+
+                otherPlayerRenderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
+
+                Pane slot3 = new Pane();
+                slot3.setId("boxSlot");
+                slot3.setLayoutX(17.0);
+                slot3.setLayoutY(16.0);
+                slot3.setPrefSize(OTHER_BOX_SLOT_SIZE, OTHER_BOX_SLOT_SIZE);
+                slot3.getProperties().put("idx", 2);
+
+                otherPlayerRenderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
+
+                componentPane.getChildren().add(slot1);
+                componentPane.getChildren().add(slot2);
+                componentPane.getChildren().add(slot3);
+                break;
+        }
+    }
+
+    private void otherPlayerRenderBox(Pane boxSlot, Box box, int componentRotation){
+
+        if(box == null) box = Box.RED;
+
+        Image boxImage = switch (box) {
+            case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
+            case GREEN -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
+            case YELLOW -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
+            case RED -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
+        };
+
+        ImageView boxImageView = new ImageView(boxImage);
+        boxImageView.setFitWidth(OTHER_BOX_IMAGE_SIZE);
+        boxImageView.setFitHeight(OTHER_BOX_IMAGE_SIZE);
+        boxImageView.setLayoutX((OTHER_BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
+        boxImageView.setLayoutY((OTHER_BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
+        boxImageView.setPreserveRatio(false);
+
+        boxImageView.setRotate(-90 * componentRotation);
+
+        boxSlot.getChildren().add(boxImageView);
+    }
+
     /**
      * Register the ship grid for a player
      *
@@ -1055,11 +1266,10 @@ public class NewEventView {
                     case "DoubleCannons":
                         float power;
 
-                        if (counter[0] <= ship.getFullDoubleCannonCount()) {
+                        if (counter[0] <= ship.getFullDoubleCannonCount())
                             power = ship.getNormalShootingPower() + 2 * counter[0];
-                        } else {
-                            power = ship.getNormalShootingPower() + 2 * ship.getFullDoubleCannonCount() + (counter[0] - ship.getFullDoubleCannonCount());
-                        }
+                        else
+                            power = ship.getNormalShootingPower() + ship.getFullDoubleCannonCount() + counter[0];
 
                         if (power == (int) power)
                             firePowerValue.setText(String.valueOf((int) power));
@@ -1101,11 +1311,10 @@ public class NewEventView {
                     case "DoubleCannons":
                         float power;
 
-                        if (counter[0] <= ship.getFullDoubleCannonCount()) {
+                        if (counter[0] <= ship.getFullDoubleCannonCount())
                             power = ship.getNormalShootingPower() + 2 * counter[0];
-                        } else {
-                            power = ship.getNormalShootingPower() + 2 * ship.getFullDoubleCannonCount() + (counter[0] - ship.getFullDoubleCannonCount());
-                        }
+                        else
+                            power = ship.getNormalShootingPower() + ship.getFullDoubleCannonCount() + counter[0];
 
                         if (power == (int) power)
                             firePowerValue.setText(String.valueOf((int) power));

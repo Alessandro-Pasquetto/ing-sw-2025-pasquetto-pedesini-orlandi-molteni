@@ -1,6 +1,5 @@
 package org.progetto.client.gui;
 
-import javafx.collections.ObservableList;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -11,7 +10,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
-import org.progetto.server.model.Game;
 
 public class DragAndDrop {
 
@@ -415,97 +413,90 @@ public class DragAndDrop {
 
         itemImage.setManaged(false);
 
-        ObservableList<Node> view = null;
-        if(GameData.getPhaseGame().equals("BUILDING"))
-            view = PageController.getBuildingView().getSpaceshipMatrix().getChildren();
-
-//        else if(GameData.getPhaseGame().equals("EVENT"))
-//            view = PageController.getEventView().getSpaceshipMatrix().getChildren();
-
         // Check if the drop is inside any cell of the spaceship
-        for (Node node : view) {
+        for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
             if (node instanceof Pane cell) {
+
                 // Check if the drop is inside of that cell
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
 
                     // Check if the cell contains a component
                     if (!cell.getChildren().isEmpty()) {
-
                         Integer rowIndex = GridPane.getRowIndex(cell);
                         Integer colIndex = GridPane.getColumnIndex(cell);
 
-                        Node node2 = cell.getChildren().get(0);
-                        if(node2 instanceof Pane componentPane) {
-                            for (Node node3 : componentPane.getChildren()) {
-                                if(node3 instanceof Pane slot) {
-                                    // Check if the drop is inside of that slot
-                                    Bounds slotBounds = slot.localToScene(slot.getBoundsInLocal());
-                                    if (slotBounds.contains(sceneX, sceneY)) {
+                        for (Node node3 : cell.getChildren()) {
+                            if(node3 instanceof Pane slot) {
 
-                                        if(!slot.getChildren().isEmpty()){
-                                            System.out.println("Slot already occupied.");
-                                            break;
-                                        }
+                                // Check if the drop is inside of that slot
+                                Bounds slotBounds = slot.localToScene(slot.getBoundsInLocal());
+                                if (slotBounds.contains(sceneX, sceneY)) {
 
-                                        if(targetId.equals("boxSlot") && slot.getId().equals("boxSlot")){
-                                            // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                            root.getChildren().remove(itemImage);
-                                            slot.getChildren().add(itemImage);
-
-
-                                            if(GameData.getPhaseGame().equals("EVENT")) {
-                                                itemImage.setFitWidth(50);
-                                                itemImage.setPreserveRatio(true);
-
-                                                // Center the image inside the slot
-                                                itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                                itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
-
-                                            }
-
-                                            else{
-                                                // Center the image inside the slot
-                                                itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                                itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
-                                            }
-
-                                            //todo handle idx
-                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
-
-                                            isValidDrop = true;
-                                        }
-                                        else if(targetId.equals("crewSlot") && slot.getId().equals("crewSlot")){
-                                            // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                            root.getChildren().remove(itemImage);
-                                            slot.getChildren().add(itemImage);
-
-                                            // Center the image inside the slot
-                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
-
-                                            //todo handle idx
-                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released crew in slot " + slot.getProperties().get("idx"));
-
-                                            isValidDrop = true;
-                                        }
-                                        else if(targetId.equals("batterySlot") && slot.getId().equals("batterySlot")){
-                                            // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                            root.getChildren().remove(itemImage);
-                                            slot.getChildren().add(itemImage);
-
-                                            // Center the image inside the slot
-                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
-
-                                            //todo handle idx
-                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released battery in slot " + slot.getProperties().get("idx"));
-
-                                            isValidDrop = true;
-                                        }
-
+                                    if(!slot.getChildren().isEmpty()){
+                                        System.out.println("Slot already occupied.");
                                         break;
                                     }
+
+                                    if(targetId.equals("boxSlot") && slot.getId().equals("boxSlot")){
+                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
+                                        root.getChildren().remove(itemImage);
+                                        slot.getChildren().add(itemImage);
+
+
+                                        if(GameData.getPhaseGame().equals("EVENT")) {
+                                            itemImage.setFitWidth(50);
+                                            itemImage.setPreserveRatio(true);
+
+                                            // Center the image inside the slot
+                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
+
+                                        }
+
+                                        else{
+                                            // Center the image inside the slot
+                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+                                        }
+
+                                        //todo handle idx
+                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
+
+                                        isValidDrop = true;
+                                    }
+                                    /*
+                                    else if(targetId.equals("crewSlot") && slot.getId().equals("crewSlot")){
+                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
+                                        root.getChildren().remove(itemImage);
+                                        slot.getChildren().add(itemImage);
+
+                                        // Center the image inside the slot
+                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+
+                                        // handle idx
+                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released crew in slot " + slot.getProperties().get("idx"));
+
+                                        isValidDrop = true;
+                                    }
+                                    else if(targetId.equals("batterySlot") && slot.getId().equals("batterySlot")){
+                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
+                                        root.getChildren().remove(itemImage);
+                                        slot.getChildren().add(itemImage);
+
+                                        // Center the image inside the slot
+                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+
+                                        // handle idx
+                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released battery in slot " + slot.getProperties().get("idx"));
+
+                                        isValidDrop = true;
+                                    }
+                                     */
+
+                                    break;
                                 }
                             }
                         }
@@ -533,9 +524,12 @@ public class DragAndDrop {
      *
      * @author Alessandro
      * @param itemImage is the ImageView of the item to be dragged
-     * @param targetId is the FXML id of the final Object
+     * @param targetSlotId the FXML id of the slot container
      */
-    public static void enableDragAndDropItems(ImageView itemImage, String targetId) {
+    public static void enableDragAndDropItem(ImageView itemImage, String targetSlotId) {
+
+        System.out.println("enableDragAndDropItem!!!");
+
         // Make sure the image responds to mouse events
         itemImage.setPickOnBounds(true);
 
@@ -551,10 +545,45 @@ public class DragAndDrop {
 
         // MouseReleased: drop the image onto the grid
         itemImage.setOnMouseReleased(event -> {
-            onMouseReleasedFunctionItems(itemImage, event, targetId);
+            onMouseReleasedFunctionItems(itemImage, event, targetSlotId);
         });
 
         itemImage.getStyleClass().add("draggable");
+    }
+
+    /**
+     * Enable drag and drop for all items in the spaceship
+     *
+     * @author Alessandro
+     * @param itemId is the item id
+     * @param targetSlotId the FXML id of the slot container
+     */
+    public static void enableDragAndDropItemsSpaceship(String itemId, String targetSlotId) {
+        for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
+            if (node instanceof Pane cell) {
+
+                // Check if the cell contains a component
+                if (!cell.getChildren().isEmpty()) {
+
+                    for (Node node2 : cell.getChildren()) {
+                        if(node2 instanceof Pane slot) {
+                            switch(itemId){
+                                case "box":
+                                    if(slot.getId().equals("boxSlot")) {
+
+                                        if(slot.getChildren().isEmpty()) continue;
+
+                                        Node node4 = slot.getChildren().get(0);
+                                        if(node4 instanceof ImageView itemImage)
+                                            enableDragAndDropItem(itemImage, targetSlotId);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -563,11 +592,45 @@ public class DragAndDrop {
      * @author Alessandro
      * @param itemImage is the ImageView of the item to be dragged
      */
-    public static void disableDragAndDropItems(ImageView itemImage) {
+    public static void disableDragAndDropItem(ImageView itemImage) {
         itemImage.setOnMousePressed(null);
         itemImage.setOnMouseDragged(null);
         itemImage.setOnMouseReleased(null);
 
         itemImage.getStyleClass().remove("draggable");
+    }
+
+    /**
+     * Disable drag and drop for all items in the spaceship
+     *
+     * @author Alessandro
+     * @param itemId is the item id
+     */
+    public static void disableDragAndDropItemsSpaceship(String itemId) {
+        for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
+            if (node instanceof Pane cell) {
+
+                // Check if the cell contains a component
+                if (!cell.getChildren().isEmpty()) {
+
+                    for (Node node2 : cell.getChildren()) {
+                        if(node2 instanceof Pane slot) {
+                            switch(itemId){
+                                case "box":
+                                    if(slot.getId().equals("boxSlot")) {
+
+                                        if(slot.getChildren().isEmpty()) continue;
+
+                                        Node node4 = slot.getChildren().get(0);
+                                        if(node4 instanceof ImageView itemImage)
+                                            disableDragAndDropItem(itemImage);
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

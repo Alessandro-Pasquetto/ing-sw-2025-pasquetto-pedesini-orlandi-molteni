@@ -8,7 +8,7 @@ public class BoxStorage extends Component {
     // ATTRIBUTES
     // =======================
 
-    private final Box[] boxStorage;
+    private final Box[] boxes;
 
     // =======================
     // CONSTRUCTORS
@@ -16,7 +16,7 @@ public class BoxStorage extends Component {
 
     public BoxStorage(ComponentType type, int[] connections, String imgSrc, int capacity) {
         super(type, connections, imgSrc);
-        this.boxStorage = new Box[capacity];
+        this.boxes = new Box[capacity];
     }
 
     // =======================
@@ -24,11 +24,11 @@ public class BoxStorage extends Component {
     // =======================
 
     public int getCapacity() {
-        return boxStorage.length;
+        return boxes.length;
     }
 
-    public Box[] getBoxStorage() {
-        return boxStorage;
+    public Box[] getBoxes() {
+        return boxes;
     }
 
     // =======================
@@ -47,16 +47,16 @@ public class BoxStorage extends Component {
         if(box == null)
             throw new IllegalStateException("NullBox");
 
-        if(idx < 0 || idx >= boxStorage.length)
+        if(idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxStorage[idx] != null)
+        if(boxes[idx] != null)
             throw new IllegalStateException("FullBoxSlot");
 
         if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
             throw new IllegalStateException("CantStoreInANonRedStorage");
 
-        boxStorage[idx] = box;
+        boxes[idx] = box;
         spaceship.addBoxCount(1, box);
     }
 
@@ -65,10 +65,10 @@ public class BoxStorage extends Component {
         if(box == null)
             throw new IllegalStateException("NullBox");
 
-        if(idx < 0 || idx >= boxStorage.length)
+        if(idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxStorage[idx] != null)
+        if(boxes[idx] != null)
             throw new IllegalStateException("FullBoxSlot");
 
         if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
@@ -83,13 +83,13 @@ public class BoxStorage extends Component {
      */
     public void removeBox(Spaceship spaceship, int idx) throws IllegalStateException {
 
-        if(idx < 0 || idx >= boxStorage.length)
+        if(idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxStorage[idx] == null)
+        if(boxes[idx] == null)
             throw new IllegalStateException("EmptyBoxSlot");
 
-        spaceship.addBoxCount(-1, boxStorage[idx]);
-        boxStorage[idx] = null;
+        spaceship.addBoxCount(-1, boxes[idx]);
+        boxes[idx] = null;
     }
 }

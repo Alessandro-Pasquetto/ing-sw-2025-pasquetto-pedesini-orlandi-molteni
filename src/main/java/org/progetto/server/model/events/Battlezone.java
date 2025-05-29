@@ -92,12 +92,12 @@ public class Battlezone extends EventCard {
         if (component.getHasOrangeAlien()) {  // if it contains an orange alien
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
-            spaceship.addNormalShootingPower(-2);
+            spaceship.addNormalEnginePower(-2);
 
         } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
-            spaceship.addNormalEnginePower(-2);
+            spaceship.addNormalShootingPower(-2);
         }
 
         component.decrementCrewCount(spaceship, 1);
@@ -198,7 +198,7 @@ public class Battlezone extends EventCard {
      * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
      */
     public boolean chooseDiscardedBox(Spaceship spaceship, BoxStorage component, int boxIdx) {
-        Box[] componentsBoxes = component.getBoxStorage();
+        Box[] componentsBoxes = component.getBoxes();
 
         if(boxIdx >= component.getCapacity())
             return false;

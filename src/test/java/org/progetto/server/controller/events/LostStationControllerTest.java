@@ -1,7 +1,6 @@
 package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
@@ -12,7 +11,6 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.LostStation;
-import org.progetto.server.model.events.OpenSpace;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -103,19 +101,19 @@ class LostStationControllerTest {
 
         Thread.sleep(200);
         controller.receiveRewardBox(p3, 0, 2, 1, 0, sender);
-        assertNull(boxStorage.getBoxStorage()[0]);
+        assertNull(boxStorage.getBoxes()[0]);
 
         Thread.sleep(200);
         controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
-        assertEquals(Box.YELLOW, boxStorage.getBoxStorage()[0]);
+        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
 
         Thread.sleep(200);
         controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
-        assertEquals(Box.YELLOW, boxStorage.getBoxStorage()[0]);
+        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
 
         Thread.sleep(200);
         controller.receiveRewardBox(p3, 1, 2, 1, 1, sender);
-        assertEquals(Box.GREEN, boxStorage.getBoxStorage()[1]);
+        assertEquals(Box.GREEN, boxStorage.getBoxes()[1]);
 
         Thread.sleep(200);
         controller.receiveRewardBox(p3, -1, 2, 1, 1, sender);

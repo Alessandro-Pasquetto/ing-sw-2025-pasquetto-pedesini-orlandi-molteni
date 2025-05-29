@@ -448,7 +448,7 @@ public class TuiPrinters {
                 case RED_BOX_STORAGE:
                     BoxStorage redBoxStorage = (BoxStorage) component;
                     capacity = redBoxStorage.getCapacity();
-                    boxes = redBoxStorage.getBoxStorage();
+                    boxes = redBoxStorage.getBoxes();
                     boxesStr = new String[boxes.length];
 
                     for (int i = 0; i < boxes.length; i++) {
@@ -478,7 +478,7 @@ public class TuiPrinters {
                 case BOX_STORAGE:
                     BoxStorage boxStorage = (BoxStorage) component;
                     capacity = boxStorage.getCapacity();
-                    boxes = boxStorage.getBoxStorage();
+                    boxes = boxStorage.getBoxes();
                     boxesStr = new String[boxes.length];
 
                     for (int i = 0; i < boxes.length; i++) {

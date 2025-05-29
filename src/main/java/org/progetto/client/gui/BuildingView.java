@@ -1,7 +1,6 @@
 package org.progetto.client.gui;
 
 import javafx.animation.Interpolator;
-import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,16 +18,12 @@ import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.EventCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class BuildingView {
 
@@ -38,10 +33,6 @@ public class BuildingView {
 
     final int COMPONENT_SIZE = 80;
     final int OTHER_COMPONENT_SIZE = 35;
-    final int BOX_SLOT_SIZE = 28;
-    final int CREW_SLOT_SIZE = 28;
-    final int BATTERY_SLOT_WIDTH = 14;
-    final int BATTERY_SLOT_HEIGHT = 36;
 
     @FXML
     public ImageView spaceShipImage;
@@ -818,23 +809,7 @@ public class BuildingView {
                     Pane componentPane = new Pane();
                     componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
 
-                    Pane slot1 = new Pane();
-                    slot1.setId("crewSlot");
-                    slot1.setLayoutX(8.0);
-                    slot1.setLayoutY(24.0);
-                    slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                    slot1.getProperties().put("idx", 0);
-
-                    Pane slot2 = new Pane();
-                    slot2.setId("crewSlot");
-                    slot2.setLayoutX(40.0);
-                    slot2.setLayoutY(24.0);
-                    slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                    slot2.getProperties().put("idx", 1);
-
                     componentPane.getChildren().add(imageView);
-                    componentPane.getChildren().add(slot1);
-                    componentPane.getChildren().add(slot2);
 
                     cell.getChildren().add(componentPane);
 
@@ -1023,138 +998,6 @@ public class BuildingView {
 
         componentPane.getChildren().add(imageView);
 
-        switch (component) {
-            case BoxStorage boxStorage -> {
-
-                switch (boxStorage.getCapacity()) {
-                    case 1:
-                        Pane slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        componentPane.getChildren().add(slot1);
-                        break;
-
-                    case 2:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(8.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(24.0);
-                        slot2.setLayoutY(40.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        break;
-
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(8.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(8.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("boxSlot");
-                        slot3.setLayoutX(40.0);
-                        slot3.setLayoutY(40.0);
-                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            case HousingUnit housingUnit -> {
-                Pane slot1 = new Pane();
-                slot1.setId("crewSlot");
-                slot1.setLayoutX(8.0);
-                slot1.setLayoutY(24.0);
-                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot1.getProperties().put("idx", 0);
-
-                Pane slot2 = new Pane();
-                slot2.setId("crewSlot");
-                slot2.setLayoutX(40.0);
-                slot2.setLayoutY(24.0);
-                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot2.getProperties().put("idx", 1);
-
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
-            }
-            case BatteryStorage batteryStorage -> {
-                switch (batteryStorage.getCapacity()) {
-                    case 2:
-                        Pane slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(24.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-
-                        break;
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(16.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(32.0);
-                        slot2.setLayoutY(24.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("batterySlot");
-                        slot3.setLayoutX(48.0);
-                        slot3.setLayoutY(24.0);
-                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            default -> {}
-        }
-
         return componentPane;
     }
 
@@ -1174,139 +1017,6 @@ public class BuildingView {
         componentPane.setPrefSize(COMPONENT_SIZE, COMPONENT_SIZE);
 
         componentPane.getChildren().add(imageView);
-
-        switch (component) {
-            case BoxStorage boxStorage -> {
-
-                switch (boxStorage.getCapacity()) {
-                    case 1:
-                        Pane slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        componentPane.getChildren().add(slot1);
-                        break;
-
-                    case 2:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(8.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(24.0);
-                        slot2.setLayoutY(40.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        break;
-
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("boxSlot");
-                        slot1.setLayoutX(8.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("boxSlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(8.0);
-                        slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("boxSlot");
-                        slot3.setLayoutX(40.0);
-                        slot3.setLayoutY(40.0);
-                        slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            case HousingUnit housingUnit -> {
-                Pane slot1 = new Pane();
-                slot1.setId("crewSlot");
-                slot1.setLayoutX(8.0);
-                slot1.setLayoutY(24.0);
-                slot1.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot1.getProperties().put("idx", 0);
-
-                Pane slot2 = new Pane();
-                slot2.setId("crewSlot");
-                slot2.setLayoutX(40.0);
-                slot2.setLayoutY(24.0);
-                slot2.setPrefSize(CREW_SLOT_SIZE, CREW_SLOT_SIZE);
-                slot2.getProperties().put("idx", 1);
-
-                componentPane.getChildren().add(slot1);
-                componentPane.getChildren().add(slot2);
-            }
-            case BatteryStorage batteryStorage -> {
-                switch (batteryStorage.getCapacity()) {
-                    case 2:
-                        Pane slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(24.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        Pane slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(40.0);
-                        slot2.setLayoutY(24.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-
-                        break;
-
-                    case 3:
-                        slot1 = new Pane();
-                        slot1.setId("batterySlot");
-                        slot1.setLayoutX(16.0);
-                        slot1.setLayoutY(24.0);
-                        slot1.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot1.getProperties().put("idx", 0);
-
-                        slot2 = new Pane();
-                        slot2.setId("batterySlot");
-                        slot2.setLayoutX(32.0);
-                        slot2.setLayoutY(24.0);
-                        slot2.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot2.getProperties().put("idx", 1);
-
-                        Pane slot3 = new Pane();
-                        slot3.setId("batterySlot");
-                        slot3.setLayoutX(48.0);
-                        slot3.setLayoutY(24.0);
-                        slot3.setPrefSize(BATTERY_SLOT_WIDTH, BATTERY_SLOT_HEIGHT);
-                        slot3.getProperties().put("idx", 2);
-
-                        componentPane.getChildren().add(slot1);
-                        componentPane.getChildren().add(slot2);
-                        componentPane.getChildren().add(slot3);
-                        break;
-                }
-            }
-            default -> {}
-        }
 
         BuildingData.setNewHandComponent(componentPane);
         handComponentBox.getChildren().add(BuildingData.getHandComponent());
