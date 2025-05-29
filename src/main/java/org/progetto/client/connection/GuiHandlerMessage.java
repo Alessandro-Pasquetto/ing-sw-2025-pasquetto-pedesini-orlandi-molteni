@@ -460,7 +460,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage(anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + "positions", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions", "INFO");
         }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {

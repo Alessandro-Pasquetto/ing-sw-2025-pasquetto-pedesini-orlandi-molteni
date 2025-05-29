@@ -421,11 +421,11 @@ public class NewEventView {
         // Update spaceship stats
         float power = ship.getNormalShootingPower();
         if (power == (int) power)
-            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienPurple() ? 2 : 0)));
+            firePowerValue.setText(String.valueOf((int) power));
         else
-            firePowerValue.setText(String.valueOf(power + (ship.getAlienPurple() ? 2 : 0)));
+            firePowerValue.setText(String.valueOf(power));
 
-        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienOrange() ? 2 : 0)));
+        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower()));
         destroyedValue.setText(String.valueOf(ship.getDestroyedCount()));
         creditsValue.setText(String.valueOf(GameData.getCredits()));
 
@@ -1038,24 +1038,35 @@ public class NewEventView {
 
                 switch (type) {
                     case "DoubleEngines":
-                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + 2 * counter[0]));
+                        enginePowerValue.setStyle("-fx-text-fill: green;");
                         break;
 
                     case "DoubleCannons":
-                        float power = ship.getNormalShootingPower();
+                        float power;
+
+                        if (counter[0] <= ship.getFullDoubleCannonCount()) {
+                            power = ship.getNormalShootingPower() + 2 * counter[0];
+                        } else {
+                            power = ship.getNormalShootingPower() + 2 * ship.getFullDoubleCannonCount() + (counter[0] - ship.getFullDoubleCannonCount());
+                        }
+
                         if (power == (int) power)
-                            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                            firePowerValue.setText(String.valueOf((int) power));
                         else
-                            firePowerValue.setText(String.valueOf(power + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                            firePowerValue.setText(String.valueOf(power));
+
+                        firePowerValue.setStyle("-fx-text-fill: green;");
                         break;
                 }
             }
 
-            if(counter[0] == 0) {
+            if (counter[0] == 0) {
                 switch (type) {
                     case "DoubleEngines":
                         enginePowerValue.setStyle("-fx-text-fill: white;");
                         break;
+
                     case "DoubleCannons":
                         firePowerValue.setStyle("-fx-text-fill: white;");
                         break;
@@ -1073,15 +1084,24 @@ public class NewEventView {
 
                 switch (type) {
                     case "DoubleEngines":
-                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + (ship.getAlienOrange() ? 2 : 0) + 2 * counter[0]));
+                        enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower() + 2 * counter[0]));
                         enginePowerValue.setStyle("-fx-text-fill: green;");
                         break;
+
                     case "DoubleCannons":
-                        float power = ship.getNormalShootingPower();
+                        float power;
+
+                        if (counter[0] <= ship.getFullDoubleCannonCount()) {
+                            power = ship.getNormalShootingPower() + 2 * counter[0];
+                        } else {
+                            power = ship.getNormalShootingPower() + 2 * ship.getFullDoubleCannonCount() + (counter[0] - ship.getFullDoubleCannonCount());
+                        }
+
                         if (power == (int) power)
-                            firePowerValue.setText(String.valueOf((int) power + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                            firePowerValue.setText(String.valueOf((int) power));
                         else
-                            firePowerValue.setText(String.valueOf(power + (ship.getAlienPurple() ? 2 : 0) + 2 * counter[0]));
+                            firePowerValue.setText(String.valueOf(power));
+
                         firePowerValue.setStyle("-fx-text-fill: green;");
                         break;
                 }

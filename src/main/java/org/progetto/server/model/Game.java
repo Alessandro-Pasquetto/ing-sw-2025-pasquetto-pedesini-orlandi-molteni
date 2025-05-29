@@ -240,7 +240,7 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SLAVERS) && !lv2Deck.get(1).getType().equals(CardType.SLAVERS))
+                while(!lv2Deck.getFirst().getType().equals(CardType.SLAVERS))
                    Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -384,11 +384,11 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-            /*
+        /*
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
-            */
 
+         */
 
             // forzare componente, todo da rimuovere
             int randomPos = 0;
@@ -398,7 +398,7 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.CANNON) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.BATTERY_STORAGE));
+            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.BATTERY_STORAGE) && !type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT));
 
             pickedComponent = componentDeck.remove(randomPos);
         }
