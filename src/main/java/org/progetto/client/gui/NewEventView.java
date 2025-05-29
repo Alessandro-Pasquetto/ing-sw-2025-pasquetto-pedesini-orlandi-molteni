@@ -18,16 +18,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.progetto.client.MainClient;
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
+import org.progetto.server.model.events.Planets;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
@@ -42,7 +45,7 @@ public class NewEventView {
     final int OTHER_COMPONENT_SIZE = 35;
     final int BOX_SLOT_SIZE = 28;
     final int OTHER_BOX_SLOT_SIZE = 12;
-    final int BOX_IMAGE_SIZE = 34;
+    final int BOX_IMAGE_SIZE = 50;
     final int OTHER_BOX_IMAGE_SIZE = 14;
 
     final String HIGHLIGHT_ID = "highlight";
@@ -112,6 +115,16 @@ public class NewEventView {
 
     @FXML
     private ScrollPane chatScrollPane;
+
+    @FXML
+    private VBox overlayContainer;
+
+    @FXML
+    private VBox boxesViewContainer;
+
+    @FXML
+    private Button eventButton;
+
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
@@ -267,6 +280,7 @@ public class NewEventView {
 
         Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSource)));
         eventCard.setImage(img);
+
     }
 
     /**
@@ -1769,4 +1783,134 @@ public class NewEventView {
             chatMessagesContainer.getChildren().clear();
         });
     }
+
+    public void resetEvent() {
+        boxesViewContainer.getChildren().clear();
+        eventButton.setText("New Event");
+        eventButton.setOnAction(event -> {});
+        eventButton.setDisable(false);
+    }
+
+
+
+    public void placeStackPanes(boolean[] chosen){
+
+        double cardHeight = 292;
+        double rowHeight = cardHeight / chosen.length ;
+
+        overlayContainer.getChildren().clear();
+
+        for (int i = 0; i < chosen.length; i++) {
+            StackPane stack_zone = new StackPane();
+            stack_zone.setPrefSize(eventCard.getFitWidth(), rowHeight);
+            stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+            int planetIndex = i;
+            stack_zone.setUserData(planetIndex);
+            stack_zone.setOnMouseClicked(e -> {
+                eventButton.setVisible(false);
+                askYesNo("Landing",
+                        "Do you really want to land on planet "+(planetIndex+1),
+                        response -> {
+                            Sender sender = GameData.getSender();
+                            if(response)
+                                sender.responsePlanetLandRequest(planetIndex);
+                            else
+                                eventButton.setVisible(true);
+                            resetEventLabels();
+                            });
+            });
+
+            ImageView pawnView = new ImageView();
+            pawnView.setFitHeight(60);
+            pawnView.setFitWidth(60);
+            pawnView.setMouseTransparent(true);
+
+            StackPane.setAlignment(pawnView, Pos.BOTTOM_LEFT);
+            StackPane.setMargin(pawnView, new Insets(5));
+
+            stack_zone.getChildren().add(pawnView);
+            overlayContainer.getChildren().add(stack_zone);
+        }
+
+
+        eventButton.setText("Leve site");
+        eventButton.setOnAction(e -> {
+            Sender sender = GameData.getSender();
+            sender.responsePlanetLandRequest(-1);
+            eventButton.setVisible(false);
+        });
+        eventButton.setVisible(true);
+
+        resetEventLabels();
+        setEventLabels("Planets in sight!","Click on the planet were you want to to land");
+
+    }
+
+    public void removeStackPanes(){
+        overlayContainer.getChildren().clear();
+    }
+
+
+    /**
+     * Render the available boxes on the view
+     *
+     * @author Lorenzo
+     * @param availableBoxes
+     */
+    public void renderBoxes(ArrayList<Box> availableBoxes){
+
+        boxesViewContainer.getChildren().clear();
+
+        FlowPane boxContainer = new FlowPane(10, 10);
+        ScrollPane boxScrollPane = new ScrollPane(boxContainer);
+        boxScrollPane.setFitToWidth(true);
+        boxScrollPane.setMaxWidth(420);
+        boxScrollPane.setMaxHeight(250);
+        VBox.setMargin(boxScrollPane, new Insets(0, 0, 0, 0));
+
+        boxesViewContainer.getChildren().add(boxScrollPane);
+
+        boxContainer.getChildren().clear();
+
+        int idx = 0;
+        for (Box box : availableBoxes) {
+            Image img = switch (box.getValue()) {
+                case 1 -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
+                case 2 -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
+                case 3 -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
+                case 4 -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
+                default -> null;
+            };
+
+            ImageView boxImage = new ImageView(img);
+            boxImage.setUserData(idx);
+            boxImage.setFitWidth(80);
+            boxImage.setPreserveRatio(true);
+            boxImage.setSmooth(true);
+            boxImage.setCache(true);
+
+            boxContainer.getChildren().add(boxImage);
+
+            for(Node node: boxContainer.getChildren()){
+                ImageView frame = (ImageView) node;
+                DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
+            }
+
+            idx++;
+        }
+
+        eventButton.setText("Leve planet");
+        eventButton.setOnAction(e -> {
+            Sender sender = GameData.getSender();
+            sender.responseRewardBox(-1, -1, -1, -1);
+            resetEvent();
+            eventButton.setVisible(false);
+        });
+        eventButton.setVisible(true);
+
+
+    }
+
+
+
 }

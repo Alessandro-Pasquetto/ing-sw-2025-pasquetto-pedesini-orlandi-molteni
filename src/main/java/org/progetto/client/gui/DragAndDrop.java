@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
+import org.progetto.server.connection.Sender;
 
 public class DragAndDrop {
 
@@ -400,6 +401,7 @@ public class DragAndDrop {
      */
     private static void onMouseReleasedFunctionItems(ImageView itemImage, MouseEvent event, String targetId){
 
+
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
@@ -459,7 +461,9 @@ public class DragAndDrop {
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
                                         }
 
-                                        //todo handle idx
+
+                                        //todo handle drop on a nonred storage
+                                        GameData.getSender().responseRewardBox((int)itemImage.getUserData(),colIndex,rowIndex,(int)slot.getProperties().get("idx"));
                                         System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
 
                                         isValidDrop = true;

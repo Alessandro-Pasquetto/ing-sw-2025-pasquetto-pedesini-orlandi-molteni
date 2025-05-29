@@ -29,7 +29,6 @@ public class PageController {
     private static Parent populatingRoot;
     private static Parent positioningRoot;
     private static Parent eventRoot;
-    private static Parent planetsRoot;
     private static Parent travelRoot;
     private static Parent gameOverRoot;
 
@@ -42,7 +41,6 @@ public class PageController {
     private static PopulatingView populatingView;
     private static PositioningView positioningView;
     private static NewEventView eventView;
-    private static PlanetsView planetsView;
     private static TravelView travelView;
     private static GameOverView gameOverView;
 
@@ -84,10 +82,6 @@ public class PageController {
 
     public static NewEventView getEventView() {
         return eventView;
-    }
-
-    public static PlanetsView getPlanetsView() {
-        return planetsView;
     }
 
     public static TravelView getTravelView() {
@@ -170,11 +164,6 @@ public class PageController {
         eventRoot = loader.load();
         eventView = loader.getController();
 
-
-        loader = new FXMLLoader(MainClient.class.getResource("planetsPage.fxml"));
-        planetsRoot = loader.load();
-        planetsView = loader.getController();
-
         loader = new FXMLLoader(MainClient.class.getResource("travelPage.fxml"));
         travelRoot = loader.load();
         travelView = loader.getController();
@@ -202,7 +191,6 @@ public class PageController {
             case "populatingPage.fxml" -> populatingRoot;
             case "positioningPage.fxml" -> positioningRoot;
             case "newEventPage.fxml" -> eventRoot;
-            case "planetsPage.fxml" -> planetsRoot;
             case "travelPage.fxml" -> travelRoot;
             case "gameOverPage.fxml" -> gameOverRoot;
 
@@ -296,17 +284,6 @@ public class PageController {
         eventView.initSpaceship(levelGame);
         eventView.initTrack(levelGame);
         eventView.initEventLabels();
-    }
-
-    /**
-     * Initializes the Event view for the card Planets with the specific game level
-     *
-     * @author Lorenzo
-     * @param levelGame the level of the game
-     */
-    public static void initPlanets(int levelGame) {
-        BuildingData.initMask(levelGame);
-        planetsView.initEvent();
     }
 
     /**

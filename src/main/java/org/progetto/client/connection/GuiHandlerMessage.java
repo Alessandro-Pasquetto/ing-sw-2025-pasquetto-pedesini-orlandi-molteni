@@ -13,6 +13,7 @@ import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
@@ -646,18 +647,13 @@ public class GuiHandlerMessage {
 //            );
 //        }
 //
-//        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-//            PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
-//            PageController.getEventView().responseRewardBox(availableBoxesMessage.getBoxes());
-//        }
-//
-//        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
-//           PageController.getEventView().responsePlanetLandRequest(
-//                   availablePlanetsMessage.getRewardsForPlanets(),
-//                   availablePlanetsMessage.getPlanetsTaken(),
-//                   false
-//           );
-//        }
+        else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
+           PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
+        }
+
+        else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
+           PageController.getEventView().placeStackPanes(availablePlanetsMessage.getPlanetsTaken());
+        }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
@@ -874,6 +870,10 @@ public class GuiHandlerMessage {
 //                case "LandRequest":
 //                    PageController.getEventView().responseLandRequest(false);
 //                    break;
+
+                case "LandingCompleted":
+                    PageController.getEventView().removeStackPanes();
+                    break;
 
                 case "RollDiceToFindColumn":
                     PageController.getEventView().askToRollDice(

@@ -707,13 +707,13 @@
 #leftPane{
     -fx-background-color: rgba(6, 12, 17, 0.85);
 }
-
+/*
 #cardContainer{
     -fx-background-color: rgba(6, 12, 17, 0.70);
     -fx-background-radius: 21;
     -fx-border-radius: 21;
 }
-
+*/
 #boxScrollPane{
     -fx-background-color: transparent;
     -fx-background: rgba(15, 25, 25, 0.5);;

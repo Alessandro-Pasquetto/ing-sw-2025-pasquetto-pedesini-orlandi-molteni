@@ -791,7 +791,7 @@ public class PlanetsView {
     }
 
     /**
-     *Handles planet decision
+     * Handles planet decision
      *
      * @author Lorenzo
      * @param planets
