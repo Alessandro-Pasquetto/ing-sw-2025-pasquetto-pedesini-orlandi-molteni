@@ -152,8 +152,10 @@ public class GameThread extends Thread {
                         for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
-                            if(sender != null){
+                            try{
                                 sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                            }catch(Exception e){
+                                System.err.println("Client unreachable");
                             }
                         }
 
@@ -208,8 +210,11 @@ public class GameThread extends Thread {
                             for (Player player : game.getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                                if(sender != null)
+                                try {
                                     sender.sendMessage("AskContinueTravel");
+                                }catch(Exception e){
+                                    System.err.println("Client unreachable");
+                                }
                             }
 
                             resetAndWaitTravelersReady();

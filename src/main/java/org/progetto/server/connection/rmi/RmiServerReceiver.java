@@ -608,7 +608,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-
         eventController.receiveDiscardedCrew(player, xHousingUnit, yHousingUnit, virtualClient);
     }
 

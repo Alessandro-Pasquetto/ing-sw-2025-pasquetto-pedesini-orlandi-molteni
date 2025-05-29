@@ -4,7 +4,6 @@ import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
-import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -52,11 +51,9 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
-     * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException{
+    public void start(){
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -68,10 +65,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Asks current player how many double engines he wants to use
      *
      * @author Gabriele
-     * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
+    private void askHowManyEnginesToUse() {
         if (!phase.equals(EventPhase.ASK_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -92,29 +87,21 @@ public class OpenSpaceController extends EventControllerAbstract {
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0)
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
-            else {
-                phase = EventPhase.ENGINE_NUMBER;
-                sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
-
+            else{
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitTravelerReady(player);
+                try{
+                    phase = EventPhase.ENGINE_NUMBER;
+                    sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
 
-                // If the player is not disconnected
-                if(player.getIsReady()){
-                    if(!batteryStorages.isEmpty()){
-                        for (BatteryStorage component : batteryStorages) {
-                            component.decrementItemsCount(player.getSpaceship(), 1);
-                        }
+                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-                        // Update spaceship to remove highlight components when it's not my turn.
-                        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                    }
+                    // If the player is disconnected
+                    if(!player.getIsReady())
+                        playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
-                }else{
+                }catch (Exception e){
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
-                    player.setIsReady(true, gameManager.getGame());
                 }
             }
 
@@ -134,6 +121,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      */
     @Override
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
+
         if (!phase.equals(EventPhase.ENGINE_NUMBER)) {
             sender.sendMessage("IncorrectPhase");
             return;
@@ -166,6 +154,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
             System.out.println("Waiting for BatteriesToDiscard");
             phase = EventPhase.DISCARDED_BATTERIES;
+
             sender.sendMessage(new BatteriesToDiscardMessage(num));
         }
     }
@@ -224,6 +213,17 @@ public class OpenSpaceController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
         if (requestedNumber == 0) {
+
+            if(!batteryStorages.isEmpty()){
+                for (BatteryStorage component : batteryStorages) {
+                    component.decrementItemsCount(player.getSpaceship(), 1);
+                }
+
+                // Update spaceship to remove highlight components when it's not my turn.
+                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+            }
+
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         } else
@@ -234,9 +234,8 @@ public class OpenSpaceController extends EventControllerAbstract {
      * Applies event effect for current player
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
+    private void eventEffect() {
         if (!phase.equals(EventPhase.EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -251,13 +250,19 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
-            if(sender != null)
+            try {
                 sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
+            }catch (Exception e){
+                System.err.println("Client unreachable");
+            }
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
         } else {
-            if(sender != null)
+            try {
                 sender.sendMessage("NoEnginePower");
+            }catch (Exception e){
+                System.err.println("Client unreachable");
+            }
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
             board.leaveTravel(player);
         }

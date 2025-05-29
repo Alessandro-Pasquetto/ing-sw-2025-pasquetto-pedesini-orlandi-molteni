@@ -50,10 +50,9 @@ public class LostShipController extends EventControllerAbstract  {
      * Starts event card effect
      *
      * @author Stefano
-     * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() {
         phase = EventPhase.ASK_TO_LAND;
         askToLand();
     }
@@ -62,10 +61,8 @@ public class LostShipController extends EventControllerAbstract  {
      * Asks to land on the ship
      *
      * @author Gabriele
-     * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void askToLand() throws RemoteException, InterruptedException {
+    private void askToLand() {
         if(!phase.equals(EventPhase.ASK_TO_LAND))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -76,19 +73,23 @@ public class LostShipController extends EventControllerAbstract  {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            // Calculates max crew number available to discard
-            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+            try{
+                // Calculates max crew number available to discard
+                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
-            if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                phase = EventPhase.REWARD_DECISION;
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                if (maxCrewCount > lostShip.getPenaltyCrew()) {
+                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                gameManager.getGameThread().resetAndWaitTravelerReady(player);
+                    phase = EventPhase.REWARD_DECISION;
+                    sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
 
-                // If the player is not disconnected
-                if(player.getIsReady()){
+                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                    // If the player is disconnected
+                    if(!player.getIsReady())
+                        continue;
+
                     if(!housingUnits.isEmpty()){
                         for (HousingUnit housingUnit : housingUnits) {
                             lostShip.chooseDiscardedCrew(player.getSpaceship(), housingUnit);
@@ -96,20 +97,18 @@ public class LostShipController extends EventControllerAbstract  {
 
                         // Update spaceship to remove highlight components when it's not my turn.
                         // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                        if(!housingUnits.isEmpty())
-                            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+                        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
                         phase = EventPhase.EFFECT;
                         eventEffect();
                         return;
                     }
 
-                }else{
-                    player.setIsReady(true, gameManager.getGame());
-                }
+                } else
+                    sender.sendMessage("NotEnoughCrew");
 
-            } else {
-                sender.sendMessage("NotEnoughCrew");
+            } catch (Exception e) {
+                System.err.println("Client unreachable");
             }
         }
     }
@@ -247,9 +246,8 @@ public class LostShipController extends EventControllerAbstract  {
      * If the player accepted, he receives the reward and loses the penalty days
      *
      * @author Stefano
-     * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
+    private void eventEffect() {
         if (phase.equals(EventPhase.EFFECT)) {
             Player player = gameManager.getGame().getActivePlayer();
 
@@ -259,8 +257,13 @@ public class LostShipController extends EventControllerAbstract  {
             // Event effect applied for single player
             lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
 
-            sender.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()));
-            sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
+            try{
+                sender.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()));
+                sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
+            } catch (Exception e) {
+                System.err.println("Client unreachable");
+            }
+
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);
 

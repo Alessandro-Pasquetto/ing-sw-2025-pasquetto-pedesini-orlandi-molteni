@@ -243,13 +243,14 @@ public class GameManager {
     }
 
     public void disconnectPlayer(Player player) {
-        System.out.println(player.getName() + " has disconnected");
 
         Game game = getGame();
 
         game.removePlayer(player);
         removeSender(player);
         removeReconnectingPlayers(player);
+
+        broadcastGameMessage(new AnotherPlayerDisconnectMessage(player.getName()));
 
         if(game.getPhase().equals(GamePhase.INIT)){
             game.setPhase(GamePhase.WAITING);
@@ -273,7 +274,6 @@ public class GameManager {
 
         addDisconnectedPlayers(player);
         game.getBoard().removeTraveler(player);
-        // todo notificare la disconnessione del player agli altri
 
         if(game.getPhase().equals(GamePhase.POSITIONING)) {
 
@@ -307,7 +307,7 @@ public class GameManager {
             removeDisconnectedPlayer(player);
             addSender(player, sender);
 
-            System.out.println(player.getName() + " has reconnected");
+            broadcastGameMessageToOthers(new AnotherPlayerReconnectMessage(player.getName()), sender);
 
             Game game = getGame();
 

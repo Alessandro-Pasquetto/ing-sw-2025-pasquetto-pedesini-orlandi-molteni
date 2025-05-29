@@ -25,27 +25,28 @@ public class PopulatingController {
      *
      * @author Alessandro
      * @param gameManager the game manager
-     * @throws RemoteException if there is a remote exception
      */
-    public static void askAliens(GameManager gameManager) throws RemoteException {
+    public static void askAliens(GameManager gameManager) {
 
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            if (sender == null)
-                continue;
+            try{
+                if(player.getIsReady()){
+                    sender.sendMessage("PopulatingComplete");
+                    continue;
+                }
 
-            if(player.getIsReady()){
-                sender.sendMessage("PopulatingComplete");
-                continue;
+                if (player.getSpaceship().checkShipAllowPurpleAlien())
+                    sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+
+                else if (player.getSpaceship().checkShipAllowOrangeAlien())
+                    sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+
+            } catch (Exception e) {
+                System.err.println("Client unreachable");
             }
-
-            if (player.getSpaceship().checkShipAllowPurpleAlien())
-                sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
-
-            else if (player.getSpaceship().checkShipAllowOrangeAlien())
-                sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
         }
     }
 

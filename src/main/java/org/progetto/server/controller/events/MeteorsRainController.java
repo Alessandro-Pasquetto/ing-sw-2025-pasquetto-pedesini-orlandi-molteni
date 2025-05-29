@@ -54,10 +54,9 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
-     * @throws InterruptedException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws RemoteException {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -72,9 +71,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @throws RemoteException
-     * @throws InterruptedException
      */
-    private void sendMeteor() throws RemoteException, InterruptedException {
+    private void sendMeteor() throws RemoteException {
         if (!phase.equals(EventPhase.SEND_METEOR))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -88,7 +86,11 @@ public class MeteorsRainController extends EventControllerAbstract {
             for (Player player : activePlayers) {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                sender.sendMessage(new IncomingProjectileMessage(meteor));
+                try{
+                    sender.sendMessage(new IncomingProjectileMessage(meteor));
+                }catch(Exception e){
+                    System.err.println("Client unreachable");
+                }
             }
 
             phase = EventPhase.ASK_ROLL_DICE;
@@ -106,21 +108,25 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Asks the leader to trow the dices
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void askToRollDice() throws RemoteException {
+    private void askToRollDice() {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
-        Sender sender = gameManager.getSenderByPlayer(activePlayers.getFirst());
+        try{
+            Sender sender = gameManager.getSenderByPlayer(activePlayers.getFirst());
 
-        if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2)
-            sender.sendMessage("RollDiceToFindColumn");
+            if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2)
+                sender.sendMessage("RollDiceToFindColumn");
 
-        else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3)
-            sender.sendMessage("RollDiceToFindRow");
+            else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3)
+                sender.sendMessage("RollDiceToFindRow");
 
-        phase = EventPhase.ROLL_DICE;
+            phase = EventPhase.ROLL_DICE;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

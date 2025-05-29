@@ -120,10 +120,10 @@ public class SmugglersController extends EventControllerAbstract {
                         if (maxBoxCount > 0 || player.getSpaceship().getBatteriesCount() > 0) {
                             requestedBoxes = smugglers.getPenaltyBoxes();
 
+                            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
                             phase = EventPhase.PENALTY_EFFECT;
                             penaltyEffect(player, sender);
-
-                            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                             gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
