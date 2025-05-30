@@ -52,6 +52,7 @@ public class PositioningController {
                     insertAtFurthestStartPosition(gameManager, player);
 
             } catch (Exception e) {
+                e.printStackTrace();
                 insertAtFurthestStartPosition(gameManager, player);
             }
         }

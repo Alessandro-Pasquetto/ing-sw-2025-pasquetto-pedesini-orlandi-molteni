@@ -122,9 +122,8 @@ public class BuildingController {
      * @param player that required the spaceship to be build
      * @param idShip type of spaceship to be build
      * @param sender
-     * @throws RemoteException
      */
-    public static void buildShip(GameManager gameManager, Player player, int idShip, Sender sender) throws RemoteException {
+    public static void buildShip(GameManager gameManager, Player player, int idShip, Sender sender) {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -578,9 +577,8 @@ public class BuildingController {
      * @param yPlaceComponent y coordinate of the position in the spaceship matrix
      * @param rPlaceComponent rotation
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -637,9 +635,8 @@ public class BuildingController {
      * @param rPlaceComponent rotation
      * @param idxVisibleComponent idx of visible component's array
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -696,9 +693,8 @@ public class BuildingController {
      * @param rPlaceComponent rotation
      * @param deckIdx idx of event card deck
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) {
 
         if(player.getIsReady()){
             MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
@@ -757,9 +753,8 @@ public class BuildingController {
      * @param rPlaceComponent rotation
      * @param idx idx of booked component's array
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
+    public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -788,7 +783,6 @@ public class BuildingController {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
                 gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
-                String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
                 MessageSenderService.sendOptional("PickedBookedComponent", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
@@ -874,9 +868,8 @@ public class BuildingController {
      * @param gameManager current gameManager
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException{
+    public static void readyBuilding(GameManager gameManager, Player player, Sender sender){
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);

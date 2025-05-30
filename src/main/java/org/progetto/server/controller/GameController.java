@@ -3,7 +3,6 @@ package org.progetto.server.controller;
 import org.progetto.messages.toClient.ResponsePlayerStatsMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.ResponsePlayersMessage;
-import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -12,7 +11,6 @@ import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 /**
  * Game controller class
@@ -23,12 +21,12 @@ public class GameController {
     // OTHER METHODS
     // =======================
 
-    public static void startBuilding(GameManager gameManager) throws RemoteException {
+    public static void startBuilding(GameManager gameManager) {
         if(gameManager.getGame().getLevel() != 1)
             gameManager.startTimer();
     }
 
-    public static void ready(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+    public static void ready(GameManager gameManager, Player player, Sender sender) {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -52,9 +50,8 @@ public class GameController {
      * @author Gabriele
      * @param gameManager current gameManager
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void playerStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+    public static void playerStats(GameManager gameManager, Player player, Sender sender){
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -80,9 +77,8 @@ public class GameController {
      * @author Lorenzo
      * @param gameManager current gameManager
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void showPlayers(GameManager gameManager, Sender sender) throws RemoteException {
+    public static void showPlayers(GameManager gameManager, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -101,9 +97,8 @@ public class GameController {
      * @author Gabriele
      * @param gameManager current gameManager
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void showTrack(GameManager gameManager, Sender sender) throws RemoteException {
+    public static void showTrack(GameManager gameManager, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -120,7 +115,7 @@ public class GameController {
         }
     }
 
-    public static void sendUpdateTrack(GameManager gameManager, Sender sender) throws RemoteException {
+    public static ArrayList<Player> getPlayersInTrackCopy(GameManager gameManager) {
         ArrayList<Player> playersInTrack = gameManager.getGame().getBoard().getCopyTravelers();
         playersInTrack.addAll(
                 gameManager.getDisconnectedPlayersCopy()
@@ -128,19 +123,6 @@ public class GameController {
                         .filter(player -> !player.getHasLeft())
                         .toList()
         );
-
-        MessageSenderService.sendOptional(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()), sender);
-    }
-
-    public static void sendBroadcastUpdateTrack(GameManager gameManager){
-        ArrayList<Player> playersInTrack = gameManager.getGame().getBoard().getCopyTravelers();
-        playersInTrack.addAll(
-                gameManager.getDisconnectedPlayersCopy()
-                        .stream()
-                        .filter(player -> !player.getHasLeft())
-                        .toList()
-        );
-
-        gameManager.broadcastGameMessage(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()));
+        return playersInTrack;
     }
 }

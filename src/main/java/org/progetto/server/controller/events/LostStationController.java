@@ -16,7 +16,6 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.LostStation;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class LostStationController extends EventControllerAbstract {
@@ -49,7 +48,7 @@ public class LostStationController extends EventControllerAbstract {
     // =======================
 
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws InterruptedException {
         if (phase.equals(EventPhase.START)) {
             phase = EventPhase.ASK_TO_LAND;
             askForLand();
@@ -60,11 +59,9 @@ public class LostStationController extends EventControllerAbstract {
      * Ask each player if they want to land on the lost ship, only if the preconditions are satisfied
      *
      * @author Lorenzo
-     * @throws RemoteException
-     * @throws IllegalStateException
      * @throws InterruptedException
      */
-    private void askForLand() throws RemoteException, IllegalStateException, InterruptedException {
+    private void askForLand() throws InterruptedException {
         if (phase.equals(EventPhase.ASK_TO_LAND)) {
 
             for (Player player : activePlayers) {
@@ -99,10 +96,9 @@ public class LostStationController extends EventControllerAbstract {
      * @param player current player
      * @param sender current sender
      * @param decision player's decision
-     * @throws RemoteException
      */
     @Override
-    public void receiveDecisionToLand(Player player, String decision, Sender sender) throws RemoteException {
+    public void receiveDecisionToLand(Player player, String decision, Sender sender) {
         if (!phase.equals(EventPhase.LAND)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -152,10 +148,9 @@ public class LostStationController extends EventControllerAbstract {
      * @param y coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -226,9 +221,8 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void leaveStation(Player player, Sender sender) throws RemoteException {
+    private void leaveStation(Player player, Sender sender) {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;

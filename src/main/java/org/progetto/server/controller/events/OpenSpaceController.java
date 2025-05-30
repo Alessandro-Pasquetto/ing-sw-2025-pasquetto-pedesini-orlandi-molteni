@@ -191,13 +191,13 @@ public class OpenSpaceController extends EventControllerAbstract {
         Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
         if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
+            MessageSenderService.sendOptional("InvalidComponent", sender);
             MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
-        // Checks if a battery has been discarded
+
         if(batteryStorage.getItemsCount() == 0) {
             MessageSenderService.sendOptional("EmptyBatteryStorage", sender);
             MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);

@@ -12,7 +12,7 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 
 /**
@@ -29,10 +29,9 @@ public class EventController {
      *
      * @author Lorenzo
      * @param gameManager is the class that manage the current game
-     * @throws RemoteException if the eventCard can't be picked
      * @throws IllegalStateException
      */
-    public static void pickEventCard(GameManager gameManager) throws RemoteException, IllegalStateException {
+    public static void pickEventCard(GameManager gameManager) throws IllegalStateException {
 
         EventCard card = gameManager.getGame().pickEventCard();
         for(Player player : gameManager.getGame().getPlayersCopy()){
@@ -49,15 +48,19 @@ public class EventController {
      *
      * @author Gabriele
      * @param gameManager current gameManager
-     * @throws RemoteException
      * @throws IllegalStateException
      */
-    public static void handleDefeatedPlayers(GameManager gameManager) throws RemoteException, IllegalStateException {
+    public static void handleDefeatedPlayers(GameManager gameManager) throws IllegalStateException {
 
         Board board = gameManager.getGame().getBoard();
 
+        ArrayList<Player> playersInTrack = GameController.getPlayersInTrackCopy(gameManager);
+
+        if(playersInTrack.isEmpty())
+            return;
+
         // Checks for lapped player
-        ArrayList<Player> lappedPlayers = board.checkLappedPlayers();
+        ArrayList<Player> lappedPlayers = board.checkLappedPlayers(playersInTrack);
 
         if (lappedPlayers != null) {
             for (Player lappedPlayer : lappedPlayers) {
@@ -67,12 +70,11 @@ public class EventController {
 
                 MessageSenderService.sendOptional("YouGotLapped", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), sender);
-                board.leaveTravel(lappedPlayer);
             }
         }
 
         // Checks for players without crew
-        ArrayList<Player> noCrewPlayers = board.checkNoCrewPlayers();
+        ArrayList<Player> noCrewPlayers = board.checkNoCrewPlayers(playersInTrack);
 
         if (noCrewPlayers != null) {
             for (Player noCrewPlayer : noCrewPlayers) {
@@ -82,7 +84,6 @@ public class EventController {
 
                 MessageSenderService.sendOptional("YouHaveNoCrew", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(noCrewPlayer.getName()), sender);
-                board.leaveTravel(noCrewPlayer);
             }
         }
     }
@@ -95,9 +96,8 @@ public class EventController {
      * @param response player's response
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void chooseToContinueTravel(GameManager gameManager, String response, Player player, Sender sender) throws RemoteException {
+    public static void chooseToContinueTravel(GameManager gameManager, String response, Player player, Sender sender) {
 
         GamePhase gamePhase = gameManager.getGame().getPhase();
         Board board = gameManager.getGame().getBoard();

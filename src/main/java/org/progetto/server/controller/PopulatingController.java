@@ -38,16 +38,24 @@ public class PopulatingController {
                 continue;
             }
 
-            // If sending fails (and sender is not null), we should forcibly disconnect the player //todo put critical and handle
-            if (player.getSpaceship().checkShipAllowPurpleAlien())
-                MessageSenderService.sendOptional(new AskAlienMessage("purple", player.getSpaceship()), sender);
+            try{
+                // If sending fails (and sender is not null), we should forcibly disconnect the player //todo put critical and handle
+                if (player.getSpaceship().checkShipAllowPurpleAlien())
+                    MessageSenderService.sendCritical(new AskAlienMessage("purple", player.getSpaceship()), sender);
 
-            else if (player.getSpaceship().checkShipAllowOrangeAlien())
-                MessageSenderService.sendOptional(new AskAlienMessage("orange", player.getSpaceship()), sender);
+                else if (player.getSpaceship().checkShipAllowOrangeAlien())
+                    MessageSenderService.sendCritical(new AskAlienMessage("orange", player.getSpaceship()), sender);
+            } catch (Exception e) {
+                player.getSpaceship().getBuildingBoard().fillHumans();
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+
+                MessageSenderService.sendOptional("PopulatingComplete", sender);
+            }
         }
     }
 
-    public static void askAliensToSinglePlayer(GameManager gameManager, Player player) throws RemoteException {
+    public static void askAliensToSinglePlayer(GameManager gameManager, Player player) {
 
         Sender sender = gameManager.getSenderByPlayer(player);
 

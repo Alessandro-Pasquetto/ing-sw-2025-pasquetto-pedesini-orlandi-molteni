@@ -268,11 +268,21 @@ public class Board {
      * Checks if there is any lapped player
      *
      * @author Gabriele
+     * @param playersInTrack
      * @return list of lapped players
      */
-    public ArrayList<Player> checkLappedPlayers() {
+    public ArrayList<Player> checkLappedPlayers(ArrayList<Player> playersInTrack) {
+
+
+        Player leader = playersInTrack.getFirst();
+
+        for (Player player : playersInTrack) {
+            if(player.getPosition() > leader.getPosition()) {
+                leader = player;
+            }
+        }
+
         ArrayList<Player> lappedPlayers = new ArrayList<>();
-        Player leader = travelers.getFirst();
 
         for (Player player : new ArrayList<>(travelers)) {
             if (leader.getPosition() >= player.getPosition() + track.length) {
@@ -281,19 +291,20 @@ public class Board {
             }
         }
 
-        return !lappedPlayers.isEmpty() ? lappedPlayers : null;
+        return lappedPlayers.isEmpty() ? null : lappedPlayers;
     }
 
     /**
      * Checks if there is any player with no crew
      *
      * @author Alessandro
+     * @param playersInTrack
      * @return list of players with no crew
      */
-    public ArrayList<Player> checkNoCrewPlayers() {
+    public ArrayList<Player> checkNoCrewPlayers(ArrayList<Player> playersInTrack) {
         ArrayList<Player> noCrewPlayers = new ArrayList<>();
 
-        for (Player player : new ArrayList<>(travelers)) {
+        for (Player player : playersInTrack) {
             if (player.getSpaceship().getTotalCrewCount() == 0) {
                 noCrewPlayers.add(player);
                 leaveTravel(player);

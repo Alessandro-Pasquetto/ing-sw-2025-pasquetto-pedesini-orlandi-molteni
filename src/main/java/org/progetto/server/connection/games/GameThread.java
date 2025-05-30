@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
@@ -147,7 +148,8 @@ public class GameThread extends Thread {
 
                         // Updates mini tracks and other spaceships
                         gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
-                        GameController.sendBroadcastUpdateTrack(gameManager);
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
+
 
                         // Updates the spaceship
                         for (Player player : game.getBoard().getCopyTravelers()) {
@@ -184,12 +186,7 @@ public class GameThread extends Thread {
                         // Sleep for a while to let players read the results of the event
                         Thread.sleep(3000);
 
-                        // Checks if there isn't any traveler remaining
-                        if (game.getBoard().getNumTravelers() == 0)
-                            game.setPhase(GamePhase.ENDGAME);
-                        else{
-                            game.setPhase(GamePhase.TRAVEL);
-                        }
+                        game.setPhase(GamePhase.TRAVEL);
                         break;
 
                     case TRAVEL:
@@ -199,7 +196,7 @@ public class GameThread extends Thread {
                         gameManager.addReconnectingPlayersToTravelers();
 
                         // Updates the track
-                        GameController.sendBroadcastUpdateTrack(gameManager);
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
 
                         if(game.getEventDeckSize() > 0){
 

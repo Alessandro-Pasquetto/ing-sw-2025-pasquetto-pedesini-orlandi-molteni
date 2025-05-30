@@ -3,6 +3,7 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
+import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 
@@ -76,6 +77,29 @@ public class Slavers extends EventCard {
         component.decrementCrewCount(spaceship, 1);
     }
 
+    public void randomDiscardCrew(Spaceship spaceship, int crewMembersToDiscard) {
+
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+
+                Component component = spaceshipMatrix[row][col];
+
+                if(component instanceof HousingUnit housingUnit){
+
+                    while(crewMembersToDiscard != 0 && housingUnit.getCrewCount() > 0){
+                        chooseDiscardedCrew(spaceship, housingUnit);
+                        crewMembersToDiscard--;
+                    }
+
+                    if(crewMembersToDiscard == 0 || spaceship.getCrewCount() == 0)
+                        return;
+                }
+            }
+        }
+    }
+
     /**
      * Checks if the StorageComponent chosen by player is a battery storage
      * If that is true, the battery will be removed
@@ -86,9 +110,7 @@ public class Slavers extends EventCard {
      * @return true if the battery was successfully discarded, false if the battery storage is empty
      */
     public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship, 1);
-        } else return false;
+        return component.decrementItemsCount(spaceship, 1);
     }
 
     /**

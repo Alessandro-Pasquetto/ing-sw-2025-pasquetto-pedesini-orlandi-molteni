@@ -4,6 +4,7 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
@@ -240,7 +241,7 @@ public class GameManager {
         }
     }
 
-    public void disconnectPlayer(Player player) {
+    public synchronized void disconnectPlayer(Player player) {
 
         Game game = getGame();
 
@@ -248,7 +249,20 @@ public class GameManager {
         removeSender(player);
         removeReconnectingPlayers(player);
 
+        if(game.getPlayersSize() == 0){
+            GameManagerMaps.removeGameManager(game.getId());
+            LobbyController.broadcastLobbyMessage("UpdateGameList");
+            return;
+        }
+
         broadcastGameMessage(new AnotherPlayerDisconnectMessage(player.getName()));
+
+        if(game.getPhase().equals(GamePhase.WAITING)){
+            broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
+
+            LobbyController.broadcastLobbyMessage("UpdateGameList");
+            return;
+        }
 
         if(game.getPhase().equals(GamePhase.INIT)){
             game.setPhase(GamePhase.WAITING);
@@ -257,13 +271,6 @@ public class GameManager {
             gameThread.notifyThread();
 
             GameManagerMaps.addWaitingGameManager(game.getId(), this);
-        }
-
-        if(game.getPhase().equals(GamePhase.WAITING)){
-            if(game.getPlayersSize() == 0)
-                GameManagerMaps.removeGameManager(game.getId());
-            else
-                broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
             LobbyController.broadcastLobbyMessage("UpdateGameList");
 
@@ -271,32 +278,20 @@ public class GameManager {
         }
 
         addDisconnectedPlayers(player);
-        game.getBoard().removeTraveler(player);
 
-        if(game.getPhase().equals(GamePhase.POSITIONING)) {
+        if(game.getPhase().equals(GamePhase.EVENT)){
 
-            if(game.getActivePlayer().equals(player))
-                PositioningController.insertAtFurthestStartPosition(this, player);
-        }
+            game.getBoard().removeTraveler(player);
 
-        else if(game.getPhase().equals(GamePhase.EVENT)){
             broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
-
-            //todo
         }
 
-        else if(game.getPhase().equals(GamePhase.TRAVEL)){
-
-        }
-
-        //todo gestire il resto
+        //todo gestire il resto?
 
         gameThread.notifyThread();
     }
 
-    public void reconnectPlayer(String namePlayer, Sender sender) {
-        try {
-
+    public synchronized void reconnectPlayer(String namePlayer, Sender sender) {
             Player player = getDisconnectedPlayerByName(namePlayer);
 
             if(player == null)
@@ -327,17 +322,22 @@ public class GameManager {
             if(game.getPhase().equals(GamePhase.POPULATING))
                 PopulatingController.askAliensToSinglePlayer(this, player); // No need to set the player as not ready, the initialization method already did
 
+            else if (game.getPhase().equals(GamePhase.POSITIONING)) {
+                PositioningController.showPlayersInPositioningDecisionOrder(this, sender);
+                PositioningController.showStartingPositions(this, sender);
+            }
+
             else if(game.getPhase().equals(GamePhase.EVENT)){
                 MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
                 MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
-                GameController.sendUpdateTrack(this, sender);
+                MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
 
                 if(!player.getHasLeft())
                     addReconnectingPlayer(player);
             }
 
             else if(game.getPhase().equals(GamePhase.TRAVEL)){
-                GameController.sendUpdateTrack(this, sender);
+                MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
 
                 if(!player.getHasLeft()){
                     player.setIsReady(false, game);
@@ -345,10 +345,6 @@ public class GameManager {
                     MessageSenderService.sendOptional("AskContinueTravel", sender);
                 }
             }
-
-        }catch (RemoteException e) {
-            System.err.println("RMI client unreachable");
-        }
     }
 
     public void kickOutDisconnectedPlayer(Player player) {
@@ -514,5 +510,10 @@ public class GameManager {
             GameManagerMaps.removeGameManager(game.getId());
 
         LobbyController.addSender(sender);
+    }
+
+    public void losePlayer(Player player) {
+        game.getBoard().leaveTravel(player);
+        addLosingPlayer(player);
     }
 }

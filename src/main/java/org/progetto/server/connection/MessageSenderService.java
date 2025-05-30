@@ -7,6 +7,7 @@ public class MessageSenderService {
             sender.sendMessage(messageObj);
         }catch(Exception e) {
             System.err.println("Client unreachable");
+            e.printStackTrace();
             throw e;
         }
     }
@@ -16,6 +17,7 @@ public class MessageSenderService {
             sender.sendMessage(messageObj);
         } catch (Exception e) {
             System.err.println("Client unreachable");
+            e.printStackTrace();
         }
     }
 }

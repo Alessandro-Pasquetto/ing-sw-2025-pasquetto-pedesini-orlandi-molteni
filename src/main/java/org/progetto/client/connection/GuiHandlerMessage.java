@@ -120,9 +120,6 @@ public class GuiHandlerMessage {
                     case "POSITIONING":
                         PageController.initPositioning(GameData.getLevelGame());
                         PageController.switchScene("positioningPage.fxml", "Positioning");
-
-                        sender.showPlayersInPositioningDecisionOrder();
-                        sender.showStartingPositions();
                         break;
 
                     case "EVENT":

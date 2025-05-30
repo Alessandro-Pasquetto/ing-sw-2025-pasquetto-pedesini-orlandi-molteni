@@ -1,9 +1,7 @@
 package org.progetto.client.connection.socket;
 
-import javafx.application.Platform;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
-import org.progetto.client.gui.PageController;
 import org.progetto.messages.toServer.*;
 import java.io.*;
 import java.net.InetSocketAddress;

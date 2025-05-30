@@ -294,7 +294,7 @@ class BoardTest {
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 30);
 
-        board.checkLappedPlayers();
+        board.checkLappedPlayers(new ArrayList<>());
 
         assertTrue(p2.getHasLeft());
 
@@ -308,7 +308,7 @@ class BoardTest {
         board2.addTravelersOnTrack(1);
         board2.movePlayerByDistance(p3, 3);
 
-        assertNull(board2.checkLappedPlayers());
+        assertNull(board2.checkLappedPlayers(new ArrayList<>()));
     }
 
     @Test

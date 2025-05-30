@@ -9,6 +9,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
@@ -216,24 +217,34 @@ public class LostShipController extends EventControllerAbstract  {
 
         HousingUnit housingUnit = (HousingUnit) housingUnitComp;
 
-        // Checks if a crew member has been discarded
-        try{
-            housingUnits.add(housingUnit);
-            requestedCrew--;
-
-            MessageSenderService.sendOptional(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
-
-            if (requestedCrew == 0) {
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-            } else
-                MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
-
-        }catch (IllegalStateException e){
-            MessageSenderService.sendOptional("CrewMemberNotDiscarded", sender);
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+        if(housingUnit.getCrewCount() == 0) {
+            MessageSenderService.sendOptional("EmptyHousingUnit", sender);
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedCrew), sender);
+            return;
         }
+
+        housingUnits.add(housingUnit);
+        requestedCrew--;
+
+        MessageSenderService.sendOptional(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
+
+        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
+
+            if(!housingUnits.isEmpty()){
+                for (HousingUnit component : housingUnits) {
+                    lostShip.chooseDiscardedCrew(player.getSpaceship(), component);
+                }
+
+                // Update spaceship to remove highlight components when it's not my turn.
+                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+            }
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+        } else
+            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
     }
 
     /**
