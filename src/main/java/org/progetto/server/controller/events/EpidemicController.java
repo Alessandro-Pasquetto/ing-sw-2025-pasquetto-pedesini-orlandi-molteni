@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -62,6 +63,7 @@ public class EpidemicController extends EventControllerAbstract {
         ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
+
             // Calculates amount of crew infected, so removed
             int infectedCount = epidemic.epidemicResult(player);
 
@@ -69,6 +71,9 @@ public class EpidemicController extends EventControllerAbstract {
 
             MessageSenderService.sendOptional(new CrewInfectedAmountMessage(infectedCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
+
+            // Updates player spaceship
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
         }
     }
 }

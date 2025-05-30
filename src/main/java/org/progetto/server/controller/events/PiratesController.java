@@ -297,6 +297,8 @@ public class PiratesController extends EventControllerAbstract {
                 MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
+                MessageSenderService.sendOptional("YouAreSafe", sender);
+
                 if (discardedBattery.isEmpty()) {
                     phase = EventPhase.HANDLE_SHOT;
                     handleShot();
@@ -429,6 +431,8 @@ public class PiratesController extends EventControllerAbstract {
      */
     private void handleDefeatedPlayers() throws RemoteException, InterruptedException {
         if (phase.equals(EventPhase.HANDLE_DEFEATED_PLAYERS)) {
+
+            gameManager.broadcastGameMessage("ResetActivePlayer");
 
             for (Projectile shot : penaltyShots) {
 
@@ -592,10 +596,12 @@ public class PiratesController extends EventControllerAbstract {
             case "YES":
                 protectedPlayers.add(player);
                 discardedBattery.add(player);
+                MessageSenderService.sendOptional("YouAnsweredYes", sender);
                 break;
 
             case "NO":
                 notProtectedPlayers.add(player);
+                MessageSenderService.sendOptional("YouAnsweredNo", sender);
                 break;
 
             default:

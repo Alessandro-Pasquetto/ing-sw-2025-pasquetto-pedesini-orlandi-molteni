@@ -284,6 +284,7 @@ public class PageController {
         eventView.initSpaceship(levelGame);
         eventView.initTrack(levelGame);
         eventView.initEventLabels();
+        eventView.clearChatMessages();
     }
 
     /**

@@ -665,6 +665,7 @@
     -fx-text-fill: rgb(230, 230, 230);
     -fx-font-size: 18;
     -fx-font-weight: 500;
+    -fx-text-alignment: center;
 }
 
 #activityChatContainer {

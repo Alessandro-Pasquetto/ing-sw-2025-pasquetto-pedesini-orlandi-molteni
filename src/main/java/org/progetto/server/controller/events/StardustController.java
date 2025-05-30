@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.Stardust.ExposedConnectorsMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -68,10 +69,13 @@ public class StardustController extends EventControllerAbstract {
         System.out.println("Evaluating stardust consequences");
 
         for (Player player : reversedPlayers) {
+
             // Calculates exposed connector count
             int exposedConnectorsCount = stardust.penalty(board, player);
 
             Sender sender = gameManager.getSenderByPlayer(player);
+
+            MessageSenderService.sendOptional(new ExposedConnectorsMessage(exposedConnectorsCount), sender);
 
             MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(exposedConnectorsCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);

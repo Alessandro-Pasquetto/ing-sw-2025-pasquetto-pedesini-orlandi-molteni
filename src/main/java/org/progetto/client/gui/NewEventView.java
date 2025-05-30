@@ -280,7 +280,6 @@ public class NewEventView {
 
         Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSource)));
         eventCard.setImage(img);
-
     }
 
     /**

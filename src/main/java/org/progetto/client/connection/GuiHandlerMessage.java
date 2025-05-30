@@ -9,6 +9,7 @@ import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.*;
+import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
@@ -21,6 +22,7 @@ import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOr
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Stardust.ExposedConnectorsMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
@@ -423,15 +425,6 @@ public class GuiHandlerMessage {
             PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
         }
 
-//        else if(messageObj instanceof HowManyDoubleCannonsMessage howManyDoubleCannonsMessage) {
-//           PageController.getEventView().responseHowManyDoubleCannons(
-//                   howManyDoubleCannonsMessage.getFirePowerRequired(),
-//                   howManyDoubleCannonsMessage.getMaxUsable(),
-//                   howManyDoubleCannonsMessage.getShootingPower(),
-//                   false
-//           );
-//        }
-
         else if (messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {
             int steps = playerMovedAheadMessage.getStepsCount();
             GameData.movePlayerByDistance(GameData.getNamePlayer(), steps);
@@ -567,6 +560,10 @@ public class GuiHandlerMessage {
             Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
             HousingUnit hu = (HousingUnit) spaceshipMatrix[crewDiscardedMessage.getYHousingUnit()][crewDiscardedMessage.getXHousingUnit()];
+
+            if (hu.getHasOrangeAlien()) spaceship.addNormalEnginePower(-2);
+            if (hu.getHasPurpleAlien()) spaceship.addNormalShootingPower(-2);
+
             hu.decrementCrewCount(spaceship, 1);
             hu.setAlienOrange(false);
             hu.setAlienPurple(false);
@@ -614,39 +611,6 @@ public class GuiHandlerMessage {
             PageController.getEventView().highlightCell(affectedComponent, Color.rgb(255, 0, 0, 0.3));
         }
 
-//        else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
-//            PageController.getEventView().responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
-//        }
-//
-//        else if(messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
-//            PageController.getEventView().responseBoxToDiscard(boxToDiscardMessage.getBoxToDiscard());
-//        }
-//
-//        else if(messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
-//            PageController.getEventView().responseAcceptRewardCreditsAndPenalties(
-//                    acceptRewardCreditsAndPenaltiesMessage.getRewardCredits(),
-//                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays(),
-//                    acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew(),
-//                    false
-//            );
-//        }
-//
-//        else if(messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
-//            PageController.getEventView().responseAcceptRewardCreditsAndPenaltyDays(
-//                    acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits(),
-//                    acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays(),
-//                    false
-//            );
-//        }
-//
-//        else if(messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
-//            PageController.getEventView().responseAcceptRewardBoxesAndPenaltyDays(
-//                    acceptRewardBoxesAndPenaltyDaysMessage.getRewardBoxes(),
-//                    acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays(),
-//                    false
-//            );
-//        }
-//
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
            PageController.getEventView().renderBoxes(
                    "Select your reward boxes",
@@ -687,6 +651,26 @@ public class GuiHandlerMessage {
 
             if (GameData.getPhaseGame().equals("EVENT")) {
                 // TODO: what to print
+            }
+        }
+
+        else if (messageObj instanceof CrewInfectedAmountMessage crewInfectedAmountMessage) {
+            int infectedCount = crewInfectedAmountMessage.getInfectedCrew();
+
+            if (infectedCount == 0) {
+                PageController.getEventView().setEventLabels("NO CREW MEMBER GOT INFECTED", "You have no crew members infected, very lucky...");
+            } else {
+                PageController.getEventView().setEventLabels("CREW MEMBERS GOT INFECTED", "You have " + infectedCount + " crew members infected, you lost them...");
+            }
+        }
+
+        else if (messageObj instanceof ExposedConnectorsMessage exposedConnectorsMessage) {
+            int exposedConnectorsCount = exposedConnectorsMessage.getExposedConnectorsCount();
+
+            if (exposedConnectorsCount == 0) {
+                PageController.getEventView().setEventLabels("YOU HAVE NO EXPOSED CONNECTOR", "You have no exposed connectors, your ship is well built...");
+            } else {
+                PageController.getEventView().setEventLabels("YOU HAVE SOME EXPOSED CONNECTORS", "You have " + exposedConnectorsCount + " exposed connectors, so you will move back by the same number of positions...");
             }
         }
 
@@ -865,6 +849,10 @@ public class GuiHandlerMessage {
                     );
                     break;
 
+                case "NoShieldAvailable":
+                    PageController.getEventView().setEventLabels("NO SHIELD AVAILABLE", "You cannot use shield, wait for other players to finish their turn...");
+                    break;
+
                 case "AskToUseDoubleCannon":
                     PageController.getEventView().askYesNo(
                             "DO YOU WANT TO USE DOUBLE CANNON?",
@@ -913,6 +901,10 @@ public class GuiHandlerMessage {
                     PageController.getEventView().setEventLabels("NO COMPONENT DAMAGED", "Wait for other players to finish their turn...");
                     break;
 
+                case "NothingGotDestroyed":
+                    PageController.getEventView().setEventLabels("NOTHING GOT DESTROYED", "Wait for other players to finish their turn...");
+                    break;
+
                 case "MeteorDestroyed":
                     PageController.getEventView().setEventLabels("METEOR DESTROYED", "You destroyed the meteor, wait for other players to finish their turn...");
                     break;
@@ -928,6 +920,14 @@ public class GuiHandlerMessage {
 
                 case "YouAreSafe":
                     PageController.getEventView().setEventLabels("YOU ARE SAFE", "Wait for other players to finish their turn...");
+                    break;
+
+                case "YouAnsweredYes":
+                    PageController.getEventView().setEventLabels("YOU ANSWERED YES", "Wait for other players to finish their turn...");
+                    break;
+
+                case "YouAnsweredNo":
+                    PageController.getEventView().setEventLabels("YOU ANSWERED NO", "Wait for other players to finish their turn...");
                     break;
 
                 case "AskContinueTravel":
@@ -965,14 +965,17 @@ public class GuiHandlerMessage {
 
                 case "YouLostBattle":
                     PageController.getEventView().setEventLabels("YOU LOST THE BATTLE", "You lost the battle, wait for other players to finish their turn...");
+                    PageController.getEventView().addChatMessage("You lost the battle", "INFO");
                     break;
 
                 case "YouWonBattle":
                     PageController.getEventView().setEventLabels("YOU WON THE BATTLE", "You won the battle, wait for other players to finish their turn...");
+                    PageController.getEventView().addChatMessage("You won the battle", "INFO");
                     break;
 
                 case "YouDrewBattle":
                     PageController.getEventView().setEventLabels("YOU DREW THE BATTLE", "You drew the battle, wait for other players to finish their turn...");
+                    PageController.getEventView().addChatMessage("You drew the battle", "INFO");
                     break;
 
                 case "YouLost":

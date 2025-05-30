@@ -2,6 +2,7 @@ package org.progetto.server.model.events;
 
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
@@ -108,17 +109,21 @@ public class Epidemic extends EventCard {
 
                     dfsInfectedComponents(i, j, true, null, player.getSpaceship().getBuildingBoard(), visitedCells, infectedComponents);
 
+                    Spaceship spaceship = player.getSpaceship();
+
                     // Deletes for each infected component found one crew mate/alien
                     for (HousingUnit component : infectedComponents) {
-                        if (component.getHasOrangeAlien()) {
-                            player.getSpaceship().setAlienOrange(false);
+                        if (component.getHasOrangeAlien()) {  // if it contains an orange alien
+                            spaceship.setAlienOrange(false);
                             component.setAlienOrange(false);
-                        } else if (component.getHasPurpleAlien()) {
-                            player.getSpaceship().setAlienPurple(false);
+                            spaceship.addNormalEnginePower(-2);
+
+                        } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
+                            spaceship.setAlienPurple(false);
                             component.setAlienPurple(false);
-                        } else if (component.getCrewCount() > 0) {
-                            component.decrementCrewCount(player.getSpaceship(), 1);
+                            spaceship.addNormalShootingPower(-2);
                         }
+                        component.decrementCrewCount(spaceship, 1);
                     }
 
                     infectedCrew += infectedComponents.size();
