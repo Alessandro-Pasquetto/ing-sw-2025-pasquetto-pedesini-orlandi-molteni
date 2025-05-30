@@ -1460,6 +1460,142 @@ public class NewEventView {
     }
 
     /**
+     * Asks on which planet to land to player
+     *
+     * @author Gabriele
+     * @param title is the title of the request
+     * @param description is the description of the request
+     * @param planets is an array of booleans indicating which planets are occupied
+     * @param onResponse is the action to perform when the player selects a planet
+     */
+    public void askPlanetSelection(String title, String description, boolean[] planets, Consumer<Integer> onResponse) {
+        resetEventLabels();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+
+        VBox mainContainer = new VBox(15);
+        mainContainer.setStyle("-fx-alignment: center;");
+
+        // Buttons for each planet
+        HBox planetButtonBox = new HBox(10);
+        planetButtonBox.setStyle("-fx-alignment: center;");
+
+        for (int i = 0; i < planets.length; i++) {
+            final int planetIndex = i;
+            Button planetButton = new Button("Planet " + (i + 1));
+
+            if (planets[i]) {
+                planetButton.setDisable(true);
+                planetButton.setStyle(
+                        "-fx-background-color: linear-gradient(to bottom right, #cd2929, #ab1b1b);" +
+                                "-fx-text-fill: #ffffff;" +
+                                "-fx-font-size: 14;" +
+                                "-fx-font-weight: 700;" +
+                                "-fx-border-color: #c92a2a;" +
+                                "-fx-border-width: 2;" +
+                                "-fx-border-radius: 8;" +
+                                "-fx-background-radius: 8;" +
+                                "-fx-opacity: 1;" +
+                                "-fx-cursor: default;"
+                );
+            } else {
+                planetButton.setStyle(
+                        "-fx-background-color: linear-gradient(to bottom right, #1ba431, #0d7923);" +
+                                "-fx-text-fill: #ffffff;" +
+                                "-fx-font-size: 14;" +
+                                "-fx-font-weight: 700;" +
+                                "-fx-border-color: #2f9e44;" +
+                                "-fx-border-width: 2;" +
+                                "-fx-border-radius: 8;" +
+                                "-fx-background-radius: 8;"
+                );
+                planetButton.setOnAction(e -> {
+                    onResponse.accept(planetIndex);
+                });
+            }
+
+            planetButtonBox.getChildren().add(planetButton);
+        }
+
+        // "Don't Land" button (uses default button style)
+        Button dontLandButton = new Button("Don't Land");
+        dontLandButton.setOnAction(e -> {
+            onResponse.accept(-1);
+        });
+
+        mainContainer.getChildren().addAll(planetButtonBox, dontLandButton);
+
+        btnContainer.getChildren().clear();
+        btnContainer.getChildren().add(mainContainer);
+    }
+
+    /**
+     * Render the available boxes on the view
+     *
+     * @author Lorenzo
+     * @param availableBoxes is the list of available boxes to render
+     */
+    public void renderBoxes(String title, String description, ArrayList<Box> availableBoxes) {
+        resetEventLabels();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+        btnContainer.getChildren().clear();
+
+        VBox mainContainer = new VBox(15);
+        mainContainer.setStyle("-fx-alignment: center;");
+
+        // Create boxes container
+        FlowPane boxContainer = new FlowPane(10, 10);
+        ScrollPane boxScrollPane = new ScrollPane(boxContainer);
+        boxScrollPane.setFitToWidth(true);
+        boxScrollPane.setMaxWidth(420);
+        boxScrollPane.setMaxHeight(250);
+        VBox.setMargin(boxScrollPane, new Insets(0, 0, 0, 0));
+
+        boxContainer.getChildren().clear();
+
+        int idx = 0;
+        for (Box box : availableBoxes) {
+            Image img = switch (box.getValue()) {
+                case 1 -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
+                case 2 -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
+                case 3 -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
+                case 4 -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
+                default -> null;
+            };
+
+            ImageView boxImage = new ImageView(img);
+            boxImage.setUserData(idx);
+            boxImage.setFitWidth(80);
+            boxImage.setPreserveRatio(true);
+            boxImage.setSmooth(true);
+            boxImage.setCache(true);
+
+            boxContainer.getChildren().add(boxImage);
+
+            for(Node node: boxContainer.getChildren()){
+                ImageView frame = (ImageView) node;
+                DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
+            }
+
+            idx++;
+        }
+
+        // Leave planet button
+        Button leavePlanetButton = new Button("Leave planet");
+        leavePlanetButton.setOnAction(e -> {
+            Sender sender = GameData.getSender();
+            sender.responseRewardBox(-1, -1, -1, -1);
+        });
+
+        mainContainer.getChildren().addAll(boxScrollPane, leavePlanetButton);
+
+        btnContainer.getChildren().add(mainContainer);
+    }
+
+    /**
      * Asks the player to roll the dice
      *
      * @author Gabriele
@@ -1784,133 +1920,60 @@ public class NewEventView {
         });
     }
 
-    public void resetEvent() {
-        boxesViewContainer.getChildren().clear();
-        eventButton.setText("New Event");
-        eventButton.setOnAction(event -> {});
-        eventButton.setDisable(false);
-    }
-
-
-
-    public void placeStackPanes(boolean[] chosen){
-
-        double cardHeight = 292;
-        double rowHeight = cardHeight / chosen.length ;
-
-        overlayContainer.getChildren().clear();
-
-        for (int i = 0; i < chosen.length; i++) {
-            StackPane stack_zone = new StackPane();
-            stack_zone.setPrefSize(eventCard.getFitWidth(), rowHeight);
-            stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-            int planetIndex = i;
-            stack_zone.setUserData(planetIndex);
-            stack_zone.setOnMouseClicked(e -> {
-                eventButton.setVisible(false);
-                askYesNo("Landing",
-                        "Do you really want to land on planet "+(planetIndex+1),
-                        response -> {
-                            Sender sender = GameData.getSender();
-                            if(response)
-                                sender.responsePlanetLandRequest(planetIndex);
-                            else
-                                eventButton.setVisible(true);
-                            resetEventLabels();
-                            });
-            });
-
-            ImageView pawnView = new ImageView();
-            pawnView.setFitHeight(60);
-            pawnView.setFitWidth(60);
-            pawnView.setMouseTransparent(true);
-
-            StackPane.setAlignment(pawnView, Pos.BOTTOM_LEFT);
-            StackPane.setMargin(pawnView, new Insets(5));
-
-            stack_zone.getChildren().add(pawnView);
-            overlayContainer.getChildren().add(stack_zone);
-        }
-
-
-        eventButton.setText("Leve site");
-        eventButton.setOnAction(e -> {
-            Sender sender = GameData.getSender();
-            sender.responsePlanetLandRequest(-1);
-            eventButton.setVisible(false);
-        });
-        eventButton.setVisible(true);
-
-        resetEventLabels();
-        setEventLabels("Planets in sight!","Click on the planet were you want to to land");
-
-    }
-
-    public void removeStackPanes(){
-        overlayContainer.getChildren().clear();
-    }
-
-
-    /**
-     * Render the available boxes on the view
-     *
-     * @author Lorenzo
-     * @param availableBoxes
-     */
-    public void renderBoxes(ArrayList<Box> availableBoxes){
-
-        boxesViewContainer.getChildren().clear();
-
-        FlowPane boxContainer = new FlowPane(10, 10);
-        ScrollPane boxScrollPane = new ScrollPane(boxContainer);
-        boxScrollPane.setFitToWidth(true);
-        boxScrollPane.setMaxWidth(420);
-        boxScrollPane.setMaxHeight(250);
-        VBox.setMargin(boxScrollPane, new Insets(0, 0, 0, 0));
-
-        boxesViewContainer.getChildren().add(boxScrollPane);
-
-        boxContainer.getChildren().clear();
-
-        int idx = 0;
-        for (Box box : availableBoxes) {
-            Image img = switch (box.getValue()) {
-                case 1 -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
-                case 2 -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
-                case 3 -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
-                case 4 -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
-                default -> null;
-            };
-
-            ImageView boxImage = new ImageView(img);
-            boxImage.setUserData(idx);
-            boxImage.setFitWidth(80);
-            boxImage.setPreserveRatio(true);
-            boxImage.setSmooth(true);
-            boxImage.setCache(true);
-
-            boxContainer.getChildren().add(boxImage);
-
-            for(Node node: boxContainer.getChildren()){
-                ImageView frame = (ImageView) node;
-                DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
-            }
-
-            idx++;
-        }
-
-        eventButton.setText("Leve planet");
-        eventButton.setOnAction(e -> {
-            Sender sender = GameData.getSender();
-            sender.responseRewardBox(-1, -1, -1, -1);
-            resetEvent();
-            eventButton.setVisible(false);
-        });
-        eventButton.setVisible(true);
-
-
-    }
-
-
-
+//    public void placeStackPanes(boolean[] chosen){
+//
+//        double cardHeight = 292;
+//        double rowHeight = cardHeight / chosen.length ;
+//
+//        overlayContainer.getChildren().clear();
+//
+//        for (int i = 0; i < chosen.length; i++) {
+//            StackPane stack_zone = new StackPane();
+//            stack_zone.setPrefSize(eventCard.getFitWidth(), rowHeight);
+//            stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+//            int planetIndex = i;
+//            stack_zone.setUserData(planetIndex);
+//            stack_zone.setOnMouseClicked(e -> {
+//                eventButton.setVisible(false);
+//                askYesNo("Landing",
+//                        "Do you really want to land on planet "+(planetIndex+1),
+//                        response -> {
+//                            Sender sender = GameData.getSender();
+//                            if(response)
+//                                sender.responsePlanetLandRequest(planetIndex);
+//                            else
+//                                eventButton.setVisible(true);
+//                            resetEventLabels();
+//                            });
+//            });
+//
+//            ImageView pawnView = new ImageView();
+//            pawnView.setFitHeight(60);
+//            pawnView.setFitWidth(60);
+//            pawnView.setMouseTransparent(true);
+//
+//            StackPane.setAlignment(pawnView, Pos.BOTTOM_LEFT);
+//            StackPane.setMargin(pawnView, new Insets(5));
+//
+//            stack_zone.getChildren().add(pawnView);
+//            overlayContainer.getChildren().add(stack_zone);
+//        }
+//
+//
+//        eventButton.setText("Leve site");
+//        eventButton.setOnAction(e -> {
+//            Sender sender = GameData.getSender();
+//            sender.responsePlanetLandRequest(-1);
+//            eventButton.setVisible(false);
+//        });
+//        eventButton.setVisible(true);
+//
+//        resetEventLabels();
+//        setEventLabels("Planets in sight!","Click on the planet were you want to to land");
+//
+//    }
+//
+//    public void removeStackPanes(){
+//        overlayContainer.getChildren().clear();
+//    }
 }

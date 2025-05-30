@@ -648,11 +648,20 @@ public class GuiHandlerMessage {
 //        }
 //
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-           PageController.getEventView().renderBoxes(availableBoxesMessage.getBoxes());
+           PageController.getEventView().renderBoxes(
+                   "Select your reward boxes",
+                   "Select the boxes you want to keep...",
+                   availableBoxesMessage.getBoxes()
+           );
         }
 
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
-           PageController.getEventView().placeStackPanes(availablePlanetsMessage.getPlanetsTaken());
+           PageController.getEventView().askPlanetSelection(
+                     "Select a planet",
+                     "Select a planet to land on...",
+                     availablePlanetsMessage.getPlanetsTaken(),
+                     (planet) -> GameData.getSender().responsePlanetLandRequest(planet)
+           );
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
@@ -669,7 +678,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EVENT":
-                    // TODO: what to print
+                    PageController.getEventView().setEventLabels("COMPONENT DESTROYED", "Wait for other players to finish their turn...");
                     break;
             }
         }
@@ -872,11 +881,14 @@ public class GuiHandlerMessage {
 //                    break;
 
                 case "LandingCompleted":
-                    PageController.getEventView().removeStackPanes();
                     break;
 
                 case "EmptyReward":
-                    PageController.getEventView().resetEvent();
+                    PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");
+                    break;
+
+                case "PlanetLeft":
+                    PageController.getEventView().setEventLabels("YOU LEFT THE PLANET", "Wait for other players to finish their turn...");
                     break;
 
                 case "RollDiceToFindColumn":

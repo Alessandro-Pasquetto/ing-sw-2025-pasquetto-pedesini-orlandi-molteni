@@ -180,6 +180,7 @@ public class PlanetsController extends EventControllerAbstract {
         }
 
         if(idxBox == -1){
+            sender.sendMessage("PlanetLeft");
             leavePlanet(player, sender);
             return;
         }
