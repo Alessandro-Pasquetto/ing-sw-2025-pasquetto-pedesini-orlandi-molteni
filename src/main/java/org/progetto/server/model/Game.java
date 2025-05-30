@@ -398,7 +398,7 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.SHIELD) && !type.equals(ComponentType.BATTERY_STORAGE));
+            } while (!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE) && !type.equals(ComponentType.SHIELD) && !type.equals(ComponentType.BATTERY_STORAGE));
 
             pickedComponent = componentDeck.remove(randomPos);
         }
@@ -481,7 +481,7 @@ public class Game {
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PIRATES));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
        }

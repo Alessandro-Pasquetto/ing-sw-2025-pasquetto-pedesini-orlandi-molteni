@@ -625,6 +625,8 @@ public class NewEventView {
 
                 renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
+                slot1.setUserData(boxStorage.getType());
+
                 cell.getChildren().add(slot1);
                 break;
 
@@ -647,6 +649,8 @@ public class NewEventView {
 
                 renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
 
+                slot1.setUserData(boxStorage.getType());
+                slot2.setUserData(boxStorage.getType());
                 cell.getChildren().add(slot1);
                 cell.getChildren().add(slot2);
 
@@ -680,6 +684,10 @@ public class NewEventView {
 
                 renderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
 
+                slot1.setUserData(boxStorage.getType());
+                slot2.setUserData(boxStorage.getType());
+                slot3.setUserData(boxStorage.getType());
+
                 cell.getChildren().add(slot1);
                 cell.getChildren().add(slot2);
                 cell.getChildren().add(slot3);
@@ -712,9 +720,7 @@ public class NewEventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
-
         boxImageView.setRotate(-90 * componentRotation);
-
         boxSlot.getChildren().add(boxImageView);
     }
 
@@ -1548,10 +1554,9 @@ public class NewEventView {
         // Create boxes container
         FlowPane boxContainer = new FlowPane(10, 10);
         ScrollPane boxScrollPane = new ScrollPane(boxContainer);
-        boxScrollPane.setFitToWidth(true);
+        boxScrollPane.setId("boxScrollPane");
         boxScrollPane.setMaxWidth(420);
-        boxScrollPane.setMaxHeight(250);
-        VBox.setMargin(boxScrollPane, new Insets(0, 0, 0, 0));
+        boxScrollPane.setMinHeight(110);
 
         boxContainer.getChildren().clear();
 
@@ -1566,7 +1571,8 @@ public class NewEventView {
             };
 
             ImageView boxImage = new ImageView(img);
-            boxImage.setUserData(idx);
+            Object[] data = {idx,box.getValue()};
+            boxImage.setUserData(data);
             boxImage.setFitWidth(80);
             boxImage.setPreserveRatio(true);
             boxImage.setSmooth(true);

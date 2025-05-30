@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.model.Game;
 
 public class DragAndDrop {
 
@@ -412,6 +413,7 @@ public class DragAndDrop {
         double sceneY = event.getSceneY();
         Pane root = (Pane) itemImage.getScene().getRoot();
 
+
         itemImage.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
@@ -439,13 +441,32 @@ public class DragAndDrop {
                                         break;
                                     }
 
+
                                     if(targetId.equals("boxSlot") && slot.getId().equals("boxSlot")){
+
+                                        String storageType = cell.getChildren().get(1).getUserData().toString();
+
+                                        Object[] data = (Object[]) itemImage.getUserData();
+                                        int boxIdx = (int) data[0];
+                                        int boxVal = (int) data[1];
+
                                         // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                        root.getChildren().remove(itemImage);
-                                        slot.getChildren().add(itemImage);
-
-
                                         if(GameData.getPhaseGame().equals("EVENT")) {
+                                            if(boxVal == 4){
+                                                if(storageType.equals("RED_BOX_STORAGE")){
+                                                    root.getChildren().remove(itemImage);
+                                                    slot.getChildren().add(itemImage);
+                                                }
+                                                else{
+                                                    break;
+                                                }
+
+                                            }
+                                            else {
+                                                root.getChildren().remove(itemImage);
+                                                slot.getChildren().add(itemImage);
+                                            }
+
                                             itemImage.setFitWidth(50);
                                             itemImage.setPreserveRatio(true);
 
@@ -461,9 +482,7 @@ public class DragAndDrop {
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
                                         }
 
-
-                                        //todo handle drop on a nonred storage
-                                        GameData.getSender().responseRewardBox((int)itemImage.getUserData(),colIndex,rowIndex,(int)slot.getProperties().get("idx"));
+                                        GameData.getSender().responseRewardBox(boxIdx,colIndex,rowIndex,(int)slot.getProperties().get("idx"));
                                         System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
 
                                         isValidDrop = true;
@@ -514,7 +533,7 @@ public class DragAndDrop {
             Object originalParent = itemImage.getProperties().get("originalParent");
             if (itemImage.getParent() != originalParent && originalParent instanceof Pane) {
                 root.getChildren().remove(itemImage);
-                ((Pane) originalParent).getChildren().add(itemImage);
+                ((Pane) originalParent).getChildren().addLast(itemImage);
             }
             itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
             itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));

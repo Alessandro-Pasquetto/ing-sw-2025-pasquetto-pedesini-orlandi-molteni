@@ -871,6 +871,10 @@ public class GuiHandlerMessage {
                 case "LandingCompleted":
                     break;
 
+                case "BoxChosen":
+                    PageController.getEventView().disableDragAndDropBoxesSpaceship();
+                    break;
+
                 case "EmptyReward":
                     PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");
                     break;
