@@ -3,19 +3,17 @@ package org.progetto.server.controller.events;
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
-import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.LostShip;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class LostShipController extends EventControllerAbstract  {
@@ -73,16 +71,15 @@ public class LostShipController extends EventControllerAbstract  {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            try{
-                // Calculates max crew number available to discard
-                int maxCrewCount = player.getSpaceship().getTotalCrewCount();
+            // Calculates max crew number available to discard
+            int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
-                if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+            if (maxCrewCount > lostShip.getPenaltyCrew()) {
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-
+                try{
                     phase = EventPhase.REWARD_DECISION;
-                    sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                    MessageSenderService.sendCritical(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -104,12 +101,12 @@ public class LostShipController extends EventControllerAbstract  {
                         return;
                     }
 
-                } else
-                    sender.sendMessage("NotEnoughCrew");
+                } catch (Exception e) {
+                    continue;
+                }
 
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
-            }
+            } else
+                MessageSenderService.sendOptional("NotEnoughCrew", sender);
         }
     }
 
@@ -120,18 +117,17 @@ public class LostShipController extends EventControllerAbstract  {
      * @param player current player
      * @param response player's response
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveRewardAndPenaltiesDecision(Player player, String response, Sender sender) throws RemoteException {
+    public void receiveRewardAndPenaltiesDecision(Player player, String response, Sender sender) {
         if (!phase.equals(EventPhase.REWARD_DECISION)) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         // Checks if active player is correct
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
@@ -149,8 +145,8 @@ public class LostShipController extends EventControllerAbstract  {
                 break;
 
             default:
-                sender.sendMessage("IncorrectResponse");
-                sender.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()));
+                MessageSenderService.sendOptional("IncorrectResponse", sender);
+                MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
                 break;
         }
     }
@@ -161,23 +157,22 @@ public class LostShipController extends EventControllerAbstract  {
      * @author Stefano
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) {
         if (!phase.equals(EventPhase.PENALTY_EFFECT)) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
         requestedCrew = lostShip.getPenaltyCrew();
         phase = EventPhase.DISCARDED_CREW;
-        sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+        MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
     }
 
     /**
@@ -188,18 +183,17 @@ public class LostShipController extends EventControllerAbstract  {
      * @param xHousingUnit x coordinate of chosen housing unit
      * @param yHousingUnit y coordinate of chosen housing unit
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
+    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_CREW)) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
@@ -207,16 +201,16 @@ public class LostShipController extends EventControllerAbstract  {
 
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
-            sender.sendMessage("InvalidCoordinates");
-            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+            MessageSenderService.sendOptional("InvalidCoordinates", sender);
+            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         Component housingUnitComp = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
         if (housingUnitComp == null || (!housingUnitComp.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnitComp.getType().equals(ComponentType.CENTRAL_UNIT))) {
-            sender.sendMessage("InvalidComponent");
-            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+            MessageSenderService.sendOptional("InvalidComponent", sender);
+            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
@@ -227,18 +221,18 @@ public class LostShipController extends EventControllerAbstract  {
             housingUnits.add(housingUnit);
             requestedCrew--;
 
-            sender.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit));
+            MessageSenderService.sendOptional(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
             if (requestedCrew == 0) {
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
             } else
-                sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+                MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
 
         }catch (IllegalStateException e){
-            sender.sendMessage("CrewMemberNotDiscarded");
-            sender.sendMessage(new CrewToDiscardMessage(requestedCrew));
+            MessageSenderService.sendOptional("CrewMemberNotDiscarded", sender);
+            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
         }
     }
 
@@ -257,12 +251,8 @@ public class LostShipController extends EventControllerAbstract  {
             // Event effect applied for single player
             lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
 
-            try{
-                sender.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()));
-                sender.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()));
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()), sender);
+            MessageSenderService.sendOptional(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()), sender);
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);

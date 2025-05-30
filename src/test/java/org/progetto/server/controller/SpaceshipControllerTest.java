@@ -378,7 +378,7 @@ class SpaceshipControllerTest {
         try{
             SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, -1, 66, sender);
         } catch (RemoteException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
 
 
@@ -392,7 +392,7 @@ class SpaceshipControllerTest {
         try {
             assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, 2, 2, finalSender));
         }catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
 
     }

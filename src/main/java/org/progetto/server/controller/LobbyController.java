@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
@@ -118,11 +119,7 @@ public class LobbyController {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            try {
-                sender.sendMessage(messageObj);
-            } catch (RemoteException e) {
-                System.err.println("RMI client unreachable");
-            }
+            MessageSenderService.sendOptional(messageObj, sender);
         }
     }
 
@@ -167,7 +164,7 @@ public class LobbyController {
             waitingGameInfoMessages.add(waitingGameInfoMessage);
         }
 
-        sender.sendMessage(new WaitingGamesMessage(waitingGameInfoMessages));
+        MessageSenderService.sendOptional(new WaitingGamesMessage(waitingGameInfoMessages), sender);
     }
 
     /**
@@ -201,9 +198,9 @@ public class LobbyController {
         gameManager.addSender(player, sender);
 
         // Messages
-        sender.sendMessage(new GameInfoMessage(idGame, levelGame, numPlayers));
-        sender.sendMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
-        sender.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()));
+        MessageSenderService.sendOptional(new GameInfoMessage(idGame, levelGame, numPlayers), sender);
+        MessageSenderService.sendOptional(new WaitingPlayersMessage(game.getPlayersCopy()), sender);
+        MessageSenderService.sendOptional(new NewGamePhaseMessage(game.getPhase().toString()), sender);
 
         if(numPlayers != 1){
             GameManagerMaps.addWaitingGameManager(idGame, gameManager);
@@ -244,7 +241,7 @@ public class LobbyController {
         gameManager.addSender(player, sender);
 
         broadcastLobbyMessage("UpdateGameList");
-        sender.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()));
+        MessageSenderService.sendOptional(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()), sender);
         gameManager.broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
         gameManager.getGameThread().notifyThread();

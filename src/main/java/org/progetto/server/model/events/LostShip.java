@@ -10,9 +10,9 @@ public class LostShip extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private int penaltyCrew;
-    private int rewardCredits;
-    private int penaltyDays;
+    private final int penaltyCrew;
+    private final int rewardCredits;
+    private final int penaltyDays;
 
     // =======================
     // CONSTRUCTORS

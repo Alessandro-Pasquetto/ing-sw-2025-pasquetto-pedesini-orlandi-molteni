@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.DestroyedComponentMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -38,17 +39,17 @@ public class SpaceshipController {
     public static void showSpaceship(GameManager gameManager, String player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         try {
             Player owner = gameManager.getGame().getPlayerByName(player);
-            sender.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner));
+            MessageSenderService.sendOptional(new ResponseSpaceshipMessage(owner.getSpaceship(), owner), sender);
 
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))
-                sender.sendMessage("PlayerNameNotFound");
+                MessageSenderService.sendOptional("PlayerNameNotFound", sender);
         }
     }
 
@@ -63,17 +64,17 @@ public class SpaceshipController {
     public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         try {
             Spaceship spaceship = player.getSpaceship();
-            sender.sendMessage(new ResponseSpaceshipStatsMessage(spaceship));
+            MessageSenderService.sendOptional(new ResponseSpaceshipStatsMessage(spaceship), sender);
 
         }catch (IllegalStateException e) {
             if(e.getMessage().equals("PlayerNameNotFound"))
-                sender.sendMessage("PlayerNameNotFound");
+                MessageSenderService.sendOptional("PlayerNameNotFound", sender);
         }
     }
 
@@ -99,7 +100,7 @@ public class SpaceshipController {
 
         // Checks if current player in event card during "CHOOSE_BOX" phase is calling this method
         if (!activePlayer.equals(player) || !phase.equals(EventPhase.CHOOSE_BOX)) {
-            sender.sendMessage("PermissionDenied");
+            MessageSenderService.sendOptional("PermissionDenied", sender);
             return;
         }
 
@@ -113,16 +114,16 @@ public class SpaceshipController {
             startComponent.removeBox(player.getSpaceship(), startIdx);
             endComponent.addBox(player.getSpaceship(), box, endIdx); // safe, already validated by tryToAddBox
 
-            sender.sendMessage("BoxMoved");
+            MessageSenderService.sendOptional("BoxMoved", sender);
 
         } catch (ClassCastException e) {
-            sender.sendMessage("NotAStorageComponent");
+            MessageSenderService.sendOptional("NotAStorageComponent", sender);
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            sender.sendMessage("InvalidCoordinates");
+            MessageSenderService.sendOptional("InvalidCoordinates", sender);
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -145,7 +146,7 @@ public class SpaceshipController {
 
         // Checks if current player in event card during "CHOOSE_BOX" phase is calling this method
         if (!activePlayer.equals(player) || !phase.equals(EventPhase.CHOOSE_BOX)) {
-            sender.sendMessage("PermissionDenied");
+            MessageSenderService.sendOptional("PermissionDenied", sender);
             return;
         }
 
@@ -154,16 +155,16 @@ public class SpaceshipController {
 
             component.removeBox(player.getSpaceship(), idx);
 
-            sender.sendMessage("BoxRemoved");
+            MessageSenderService.sendOptional("BoxRemoved", sender);
 
         } catch (ClassCastException e) {
-            sender.sendMessage("NotAStorageComponent");
+            MessageSenderService.sendOptional("NotAStorageComponent", sender);
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            sender.sendMessage("InvalidCoordinates");
+            MessageSenderService.sendOptional("InvalidCoordinates", sender);
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -184,14 +185,14 @@ public class SpaceshipController {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
             buildingBoard.destroyComponent(xComponent, yComponent);
 
-            sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
+            MessageSenderService.sendOptional(new DestroyedComponentMessage(xComponent, yComponent), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             // Checks ship validity
             if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()) {
-                sender.sendMessage("AskSelectSpaceshipPart");
+                MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
 
             } else {
                 player.setIsReady(true, gameManager.getGame());
@@ -199,7 +200,7 @@ public class SpaceshipController {
             }
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -217,7 +218,7 @@ public class SpaceshipController {
     public static void startDestroyComponent(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
@@ -225,31 +226,31 @@ public class SpaceshipController {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             if (buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent] == null){
-                sender.sendMessage("EmptyComponentCell");
+                MessageSenderService.sendOptional("EmptyComponentCell", sender);
                 return;
             }
 
             // Checks if player is trying to destroy central unit
             if (buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent].getType().equals(ComponentType.CENTRAL_UNIT)) {
-                sender.sendMessage("ImpossibleToDestroyCentralUnit");
+                MessageSenderService.sendOptional("ImpossibleToDestroyCentralUnit", sender);
                 return;
             }
 
             // Checks if player is trying to destroy a correct component
             if (!buildingBoard.getSpaceshipMatrixCopy()[yComponent][xComponent].getIncorrectlyPlaced()) {
-                sender.sendMessage("ImpossibleToDestroyCorrectlyPlaced");
+                MessageSenderService.sendOptional("ImpossibleToDestroyCorrectlyPlaced", sender);
                 return;
             }
 
             buildingBoard.startDestroyComponent(xComponent, yComponent);
 
-            sender.sendMessage(new DestroyedComponentMessage(xComponent, yComponent));
+            MessageSenderService.sendOptional(new DestroyedComponentMessage(xComponent, yComponent), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
             BuildingController.checkStartShipValidityControllerAndAddToTravelers(gameManager, player);
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -270,7 +271,7 @@ public class SpaceshipController {
 
             buildingBoard.keepSpaceshipPart(xComponent, yComponent);
 
-            sender.sendMessage("SpaceshipPartKept");
+            MessageSenderService.sendOptional("SpaceshipPartKept", sender);
 
             gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
@@ -280,7 +281,7 @@ public class SpaceshipController {
             gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 }

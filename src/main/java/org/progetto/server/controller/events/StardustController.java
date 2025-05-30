@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -72,7 +73,7 @@ public class StardustController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            sender.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount));
+            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(exposedConnectorsCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
         }
     }

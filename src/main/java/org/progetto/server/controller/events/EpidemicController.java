@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -66,7 +67,7 @@ public class EpidemicController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            sender.sendMessage(new CrewInfectedAmountMessage(infectedCount));
+            MessageSenderService.sendOptional(new CrewInfectedAmountMessage(infectedCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
         }
     }

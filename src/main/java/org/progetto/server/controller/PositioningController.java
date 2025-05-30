@@ -4,13 +4,13 @@ import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +28,7 @@ public class PositioningController {
      * @author Gabriele
      * @param gameManager current gameManager
      */
-    public static void askForStartingPosition(GameManager gameManager) throws InterruptedException, RemoteException {
+    public static void askForStartingPosition(GameManager gameManager){
 
         gameManager.broadcastGameMessage(new PlayersInPositioningDecisionOrderMessage(gameManager.getGame().getBoard().getCopyTravelers()));
 
@@ -41,18 +41,19 @@ public class PositioningController {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            if (sender != null) {
-                try {
-                    Player[] startingPositions = board.getStartingPositionsCopy();
-                    sender.sendMessage(new AskStartingPositionMessage(startingPositions));
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
+            try {
+                Player[] startingPositions = board.getStartingPositionsCopy();
+                MessageSenderService.sendCritical(new AskStartingPositionMessage(startingPositions), sender);
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-            }else
+                // If the player is disconnected
+                if(!player.getIsReady())
+                    insertAtFurthestStartPosition(gameManager, player);
+
+            } catch (Exception e) {
                 insertAtFurthestStartPosition(gameManager, player);
+            }
         }
     }
 
@@ -64,23 +65,22 @@ public class PositioningController {
      * @param player current player
      * @param startingPosition the starting position of the player
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void receiveStartingPosition(GameManager gameManager, Player player, int startingPosition, Sender sender) throws RemoteException {
+    public static void receiveStartingPosition(GameManager gameManager, Player player, int startingPosition, Sender sender){
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
         try {
             gameManager.getGame().getBoard().decideStartingPositionOnTrack(player, startingPosition);
-            sender.sendMessage("ValidStartingPosition");
+            MessageSenderService.sendOptional("ValidStartingPosition", sender);
             gameManager.broadcastGameMessage(new StartingPositionsMessage(gameManager.getGame().getBoard().getStartingPositionsCopy()));
 
             player.setIsReady(true, gameManager.getGame());
@@ -88,13 +88,13 @@ public class PositioningController {
 
         } catch (IllegalStateException e) {
             if (e.getMessage().equals("StartingPositionAlreadyTaken"))
-                sender.sendMessage("StartingPositionAlreadyTaken");
+                MessageSenderService.sendOptional("StartingPositionAlreadyTaken", sender);
             else if (e.getMessage().equals("InvalidStartingPosition"))
-                sender.sendMessage("InvalidStartingPosition");
+                MessageSenderService.sendOptional("InvalidStartingPosition", sender);
             else if (e.getMessage().equals("PlayerAlreadyHasAStartingPosition"))
-                sender.sendMessage("PlayerAlreadyHasAStartingPosition");
+                MessageSenderService.sendOptional("PlayerAlreadyHasAStartingPosition", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -111,13 +111,13 @@ public class PositioningController {
         }
     }
 
-    public static void showStartingPositions(GameManager gameManager, Sender sender) throws RemoteException {
+    public static void showStartingPositions(GameManager gameManager, Sender sender){
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
-        sender.sendMessage(new StartingPositionsMessage(gameManager.getGame().getBoard().getStartingPositionsCopy()));
+        MessageSenderService.sendOptional(new StartingPositionsMessage(gameManager.getGame().getBoard().getStartingPositionsCopy()), sender);
     }
 
     /**
@@ -126,16 +126,15 @@ public class PositioningController {
      * @author Gabriele
      * @param gameManager current gameManager
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void showPlayersInPositioningDecisionOrder(GameManager gameManager, Sender sender) throws RemoteException {
+    public static void showPlayersInPositioningDecisionOrder(GameManager gameManager, Sender sender){
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         ArrayList<Player> players = gameManager.getGame().getBoard().getCopyTravelers();
 
-        sender.sendMessage(new PlayersInPositioningDecisionOrderMessage(players));
+        MessageSenderService.sendOptional(new PlayersInPositioningDecisionOrderMessage(players), sender);
     }
 }

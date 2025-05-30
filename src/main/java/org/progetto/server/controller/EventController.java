@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Board;
@@ -37,9 +38,9 @@ public class EventController {
         for(Player player : gameManager.getGame().getPlayersCopy()){
 
             Sender sender = gameManager.getSenderByPlayer(player);
-            sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+            MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
         }
-        
+
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
     }
 
@@ -64,7 +65,7 @@ public class EventController {
                 // Gets lapped player sender reference
                 Sender sender = gameManager.getSenderByPlayer(lappedPlayer);
 
-                sender.sendMessage("YouGotLapped");
+                MessageSenderService.sendOptional("YouGotLapped", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), sender);
                 board.leaveTravel(lappedPlayer);
             }
@@ -79,7 +80,7 @@ public class EventController {
                 // Gets lapped player sender reference
                 Sender sender = gameManager.getSenderByPlayer(noCrewPlayer);
 
-                sender.sendMessage("YouHaveNoCrew");
+                MessageSenderService.sendOptional("YouHaveNoCrew", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(noCrewPlayer.getName()), sender);
                 board.leaveTravel(noCrewPlayer);
             }
@@ -108,7 +109,7 @@ public class EventController {
 
             switch (upperCaseResponse) {
                 case "YES":
-                    sender.sendMessage("YouAreContinuingTravel");
+                    MessageSenderService.sendOptional("YouAreContinuingTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerIsContinuingMessage(player.getName()), sender);
 
                     player.setIsReady(true, gameManager.getGame());
@@ -116,7 +117,7 @@ public class EventController {
                     break;
 
                 case "NO":
-                    sender.sendMessage("YouLeftTravel");
+                    MessageSenderService.sendOptional("YouLeftTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
                     board.leaveTravel(player);
 
@@ -125,12 +126,12 @@ public class EventController {
                     break;
 
                 default:
-                    sender.sendMessage("IncorrectResponse");
+                    MessageSenderService.sendOptional("IncorrectResponse", sender);
                     break;
             }
 
         } else {
-            sender.sendMessage("NotAllowedToDoThat");
+            MessageSenderService.sendOptional("NotAllowedToDoThat", sender);
         }
     }
 }

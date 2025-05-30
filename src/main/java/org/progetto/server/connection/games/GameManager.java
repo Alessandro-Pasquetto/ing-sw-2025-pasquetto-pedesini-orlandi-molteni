@@ -4,6 +4,7 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.*;
@@ -216,11 +217,8 @@ public class GameManager {
             player.setColor(i);
 
             Sender sender = getSenderByPlayer(player);
-            try {
-                sender.sendMessage(new PlayerColorMessage(player.getColor()));
-            } catch (RemoteException e) {
-                System.err.println("RMI client unreachable");
-            }
+
+            MessageSenderService.sendOptional(new PlayerColorMessage(player.getColor()), sender);
         }
     }
 
@@ -317,10 +315,10 @@ public class GameManager {
             if(activePlayer != null)
                 nameActivePlayer = activePlayer.getName();
 
-            sender.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer));
+            MessageSenderService.sendOptional(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer), sender);
 
             if(isLosingPlayer(player)){
-                sender.sendMessage("GameOver");
+                MessageSenderService.sendOptional("GameOver", sender);
                 return;
             }
 
@@ -330,8 +328,8 @@ public class GameManager {
                 PopulatingController.askAliensToSinglePlayer(this, player); // No need to set the player as not ready, the initialization method already did
 
             else if(game.getPhase().equals(GamePhase.EVENT)){
-                sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                sender.sendMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
+                MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
+                MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
                 GameController.sendUpdateTrack(this, sender);
 
                 if(!player.getHasLeft())
@@ -344,7 +342,7 @@ public class GameManager {
                 if(!player.getHasLeft()){
                     player.setIsReady(false, game);
                     game.getBoard().addTraveler(player);
-                    sender.sendMessage("AskContinueTravel");
+                    MessageSenderService.sendOptional("AskContinueTravel", sender);
                 }
             }
 
@@ -419,11 +417,7 @@ public class GameManager {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            try{
-                sender.sendMessage(messageObj);
-            } catch (RemoteException e) {
-                System.err.println("RMI client unreachable");
-            }
+            MessageSenderService.sendOptional(messageObj, sender);
         }
     }
 
@@ -431,11 +425,7 @@ public class GameManager {
         ArrayList<Player> playersCopy = game.getPlayersCopy();
 
         for (Player p : playersCopy) {
-            try{
-                getSenderByPlayer(p).sendMessage(messageObj);
-            } catch (RemoteException e) {
-                System.err.println("RMI client unreachable");
-            }
+            MessageSenderService.sendOptional(messageObj, getSenderByPlayer(p));
         }
     }
 

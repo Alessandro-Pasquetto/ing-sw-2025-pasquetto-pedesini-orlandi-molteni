@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import javafx.util.Pair;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -38,17 +39,17 @@ public class BuildingController {
     public static void showHandComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if (player.getIsReady()) {
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if (gameManager.getTimerExpired()) {
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -56,13 +57,13 @@ public class BuildingController {
             Component handComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
 
             if (handComponent != null) {
-                sender.sendMessage(new ShowHandComponentMessage(handComponent));
+                MessageSenderService.sendOptional(new ShowHandComponentMessage(handComponent), sender);
             } else {
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             }
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -78,37 +79,37 @@ public class BuildingController {
     public static void pickHiddenComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if(player.equals(playerCheck)) {
-                sender.sendMessage("FullHandEventDeck");
+                MessageSenderService.sendOptional("FullHandEventDeck", sender);
                 return;
             }
         }
 
         try{
             Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
-            sender.sendMessage(new PickedComponentMessage(pickedComponent));
+            MessageSenderService.sendOptional(new PickedComponentMessage(pickedComponent), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
-                sender.sendMessage("FullHandComponent");
+                MessageSenderService.sendOptional("FullHandComponent", sender);
 
             if(e.getMessage().equals("EmptyComponentDeck"))
-                sender.sendMessage("EmptyComponentDeck");
+                MessageSenderService.sendOptional("EmptyComponentDeck", sender);
 
             System.out.println(e.getMessage());
         }
@@ -125,17 +126,17 @@ public class BuildingController {
      */
     public static void buildShip(GameManager gameManager, Player player, int idShip, Sender sender) throws RemoteException {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -200,7 +201,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
                         bb.placeComponent(4, 4, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     case 2:
@@ -243,11 +244,11 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
                         bb.placeComponent(4, 3, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     default:
-                        sender.sendMessage("IDShipOutOfBounds");
+                        MessageSenderService.sendOptional("IDShipOutOfBounds", sender);
                 }
 
             // Level 2 ships
@@ -321,7 +322,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 1));
                         bb.placeComponent(6, 3, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     case 2:
@@ -385,11 +386,11 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
                         bb.placeComponent(6, 4, 0);
 
-                        sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     default:
-                        sender.sendMessage("IDShipOutOfBounds");
+                        MessageSenderService.sendOptional("IDShipOutOfBounds", sender);
                 }
 
             }
@@ -410,21 +411,21 @@ public class BuildingController {
     public static void showVisibleComponents(GameManager gameManager, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         try {
             ArrayList<Component> visibleDeck = gameManager.getGame().getVisibleComponentDeckCopy();
-            sender.sendMessage(new ShowVisibleComponentsMessage(visibleDeck));
+            MessageSenderService.sendOptional(new ShowVisibleComponentsMessage(visibleDeck), sender);
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -441,23 +442,23 @@ public class BuildingController {
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if (player.equals(playerCheck)) {
-                sender.sendMessage("FullHandEventDeck");
+                MessageSenderService.sendOptional("FullHandEventDeck", sender);
                 return;
             }
         }
@@ -465,15 +466,15 @@ public class BuildingController {
         try{
             gameManager.getGame().pickVisibleComponent(componentIdx, player);
             Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
-            sender.sendMessage(new PickedComponentMessage(pickedComponent));
+            MessageSenderService.sendOptional(new PickedComponentMessage(pickedComponent), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedVisibleComponentMessage(player.getName(), pickedComponent), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
-                sender.sendMessage("FullHandComponent");
+                MessageSenderService.sendOptional("FullHandComponent", sender);
 
             if(e.getMessage().equals("IllegalIndexComponent"))
-                sender.sendMessage("IllegalIndexComponent");
+                MessageSenderService.sendOptional("IllegalIndexComponent", sender);
         }
     }
 
@@ -492,17 +493,17 @@ public class BuildingController {
     public static void placeComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if (player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if (gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -512,16 +513,16 @@ public class BuildingController {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -540,7 +541,7 @@ public class BuildingController {
     public static void placeLastComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
@@ -550,16 +551,16 @@ public class BuildingController {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
 
         player.setIsReady(true, gameManager.getGame());
@@ -582,17 +583,17 @@ public class BuildingController {
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -602,26 +603,26 @@ public class BuildingController {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
                 Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
-                sender.sendMessage(new PickedComponentMessage(pickedComponent));
+                MessageSenderService.sendOptional(new PickedComponentMessage(pickedComponent), sender);
 
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("FullHandComponent"))
-                    sender.sendMessage("FullHandComponent");
+                    MessageSenderService.sendOptional("FullHandComponent", sender);
 
                 if (e.getMessage().equals("EmptyComponentDeck"))
-                    sender.sendMessage("EmptyComponentDeck");
+                    MessageSenderService.sendOptional("EmptyComponentDeck", sender);
             }
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -641,17 +642,17 @@ public class BuildingController {
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -662,25 +663,25 @@ public class BuildingController {
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
             try{
                 gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
-                sender.sendMessage(new PickedComponentMessage(pickedComponent));
+                MessageSenderService.sendOptional(new PickedComponentMessage(pickedComponent), sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedVisibleComponentMessage(player.getName(), pickedComponent), sender);
 
             } catch (IllegalStateException e) {
                 if (e.getMessage().equals("IllegalIndexComponent"))
-                    sender.sendMessage("IllegalIndexComponent");
+                    MessageSenderService.sendOptional("IllegalIndexComponent", sender);
             }
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -700,17 +701,17 @@ public class BuildingController {
     public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) throws RemoteException {
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         if(gameManager.getGame().getLevel() == 1){
-            sender.sendMessage("CannotPickUpEventCardDeck");
+            MessageSenderService.sendOptional("CannotPickUpEventCardDeck", sender);
             return;
         }
 
@@ -724,24 +725,24 @@ public class BuildingController {
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
-            sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
+            MessageSenderService.sendOptional(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck), sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
 
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
 
             else if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
-                sender.sendMessage("EventCardDeckIsAlreadyTaken");
+                MessageSenderService.sendOptional("EventCardDeckIsAlreadyTaken", sender);
 
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -761,17 +762,17 @@ public class BuildingController {
     public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -782,31 +783,31 @@ public class BuildingController {
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
                 gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
                 String pickedComponentImg = player.getSpaceship().getBuildingBoard().getHandComponent().getImgSrc();
 
-                sender.sendMessage("PickedBookedComponent");
+                MessageSenderService.sendOptional("PickedBookedComponent", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
             } catch (IllegalStateException e) {
                 if(e.getMessage().equals("FullHandComponent"))
-                    sender.sendMessage("FullHandComponent");
+                    MessageSenderService.sendOptional("FullHandComponent", sender);
                 else if (e.getMessage().equals("IllegalIndex"))
-                    sender.sendMessage("IllegalIndex");
+                    MessageSenderService.sendOptional("IllegalIndex", sender);
                 else if (e.getMessage().equals("EmptyBookedCell"))
-                    sender.sendMessage("EmptyBookedCell");
+                    MessageSenderService.sendOptional("EmptyBookedCell", sender);
             }
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -825,17 +826,17 @@ public class BuildingController {
     public static void placeHandComponentAndReady(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
@@ -845,11 +846,11 @@ public class BuildingController {
             Component component = buildingBoard.getHandComponent();
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
-            sender.sendMessage("AllowedToPlaceComponent");
+            MessageSenderService.sendOptional("AllowedToPlaceComponent", sender);
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
-            sender.sendMessage("YouAreReady");
+            MessageSenderService.sendOptional("YouAreReady", sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
             player.setIsReady(true, gameManager.getGame());
@@ -858,11 +859,11 @@ public class BuildingController {
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NotAllowedToPlaceComponent"))
-                sender.sendMessage("NotAllowedToPlaceComponent");
+                MessageSenderService.sendOptional("NotAllowedToPlaceComponent", sender);
             else if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -878,16 +879,16 @@ public class BuildingController {
     public static void readyBuilding(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        sender.sendMessage("YouAreReady");
+        MessageSenderService.sendOptional("YouAreReady", sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
         player.setIsReady(true, gameManager.getGame());
@@ -907,32 +908,32 @@ public class BuildingController {
     public static void discardComponent(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         try{
             String imgSrc = gameManager.getGame().discardComponent(player);
-            sender.sendMessage("HandComponentDiscarded");
+            MessageSenderService.sendOptional("HandComponentDiscarded", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             if(e.getMessage().equals("HasBeenBooked"))
-                sender.sendMessage("HasBeenBooked");
+                MessageSenderService.sendOptional("HasBeenBooked", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -949,33 +950,33 @@ public class BuildingController {
     public static void bookComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         try {
             Component component = player.getSpaceship().getBuildingBoard().getHandComponent();
             player.getSpaceship().getBuildingBoard().setAsBooked(idx);
-            sender.sendMessage("ComponentBooked");
+            MessageSenderService.sendOptional("ComponentBooked", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(), component, idx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))
-                sender.sendMessage("EmptyHandComponent");
+                MessageSenderService.sendOptional("EmptyHandComponent", sender);
             else if (e.getMessage().equals("IllegalBookIndex"))
-                sender.sendMessage("IllegalBookIndex");
+                MessageSenderService.sendOptional("IllegalBookIndex", sender);
             else if (e.getMessage().equals("BookedCellOccupied"))
-                sender.sendMessage("BookedCellOccupied");
+                MessageSenderService.sendOptional("BookedCellOccupied", sender);
         }
     }
 
@@ -991,26 +992,26 @@ public class BuildingController {
     public static void showBookedComponents(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         try {
             Component[] bookedComponents = player.getSpaceship().getBuildingBoard().getBookedCopy();
-            sender.sendMessage(new ShowBookedComponentsMessage(bookedComponents));
+            MessageSenderService.sendOptional(new ShowBookedComponentsMessage(bookedComponents), sender);
 
         } catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -1027,24 +1028,24 @@ public class BuildingController {
     public static void pickBookedComponent(GameManager gameManager, Player player, int idx, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if(playerCheck != null) {
                 if (playerCheck.equals(player)) {
-                    sender.sendMessage("FullHandEventDeck");
+                    MessageSenderService.sendOptional("FullHandEventDeck", sender);
                     return;
                 }
             }
@@ -1053,16 +1054,16 @@ public class BuildingController {
         try{
             player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
 
-            sender.sendMessage("PickedBookedComponent");
+            MessageSenderService.sendOptional("PickedBookedComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("FullHandComponent"))
-                sender.sendMessage("FullHandComponent");
+                MessageSenderService.sendOptional("FullHandComponent", sender);
             else if (e.getMessage().equals("IllegalIndex"))
-                sender.sendMessage("IllegalIndex");
+                MessageSenderService.sendOptional("IllegalIndex", sender);
             else if (e.getMessage().equals("EmptyBookedCell"))
-                sender.sendMessage("EmptyBookedCell");
+                MessageSenderService.sendOptional("EmptyBookedCell", sender);
         }
     }
 
@@ -1079,56 +1080,56 @@ public class BuildingController {
     public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         if(player.getSpaceship().getBuildingBoard().getHandComponent() != null){
-            sender.sendMessage("FullHandComponent");
+            MessageSenderService.sendOptional("FullHandComponent", sender);
             return;
         }
 
         for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if(playerCheck != null) {
                 if (playerCheck.equals(player)) {
-                    sender.sendMessage("FullHandEventDeck");
+                    MessageSenderService.sendOptional("FullHandEventDeck", sender);
                     return;
                 }
             }
         }
 
         if(gameManager.getGame().getLevel() == 1){
-            sender.sendMessage("CannotPickUpEventCardDeck");
+            MessageSenderService.sendOptional("CannotPickUpEventCardDeck", sender);
             return;
         }
 
         if(player.getSpaceship().getShipComponentsCount() == 1){
-            sender.sendMessage("RequirePlacedComponent");
+            MessageSenderService.sendOptional("RequirePlacedComponent", sender);
             return;
         }
 
         try{
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
-            sender.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck));
+            MessageSenderService.sendOptional(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
-                sender.sendMessage("EventCardDeckIsAlreadyTaken");
+                MessageSenderService.sendOptional("EventCardDeckIsAlreadyTaken", sender);
             if(e.getMessage().equals("IllegalIndexEventCardDeck"))
-                sender.sendMessage("IllegalIndexEventCardDeck");
+                MessageSenderService.sendOptional("IllegalIndexEventCardDeck", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -1144,30 +1145,30 @@ public class BuildingController {
     public static void putDownEventCardDeck(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(player.getIsReady()){
-            sender.sendMessage("ActionNotAllowedInReadyState");
+            MessageSenderService.sendOptional("ActionNotAllowedInReadyState", sender);
             return;
         }
 
         if(gameManager.getTimerExpired()){
-            sender.sendMessage("TimerExpired");
+            MessageSenderService.sendOptional("TimerExpired", sender);
             return;
         }
 
         try{
             int deckIdx = gameManager.getGame().putDownEventCardDeck(player);
-            sender.sendMessage("EventCardDeckPutDown");
+            MessageSenderService.sendOptional("EventCardDeckPutDown", sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("NoEventCardDeckTaken"))
-                sender.sendMessage("NoEventCardDeckTaken");
+                MessageSenderService.sendOptional("NoEventCardDeckTaken", sender);
             else
-                sender.sendMessage(e.getMessage());
+                MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -1182,12 +1183,12 @@ public class BuildingController {
     public static void resetTimer(GameManager gameManager, Player player, Sender sender) throws RemoteException{
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         if(gameManager.getTimerController().getTimerFlipsAllowed() == 1 && !player.getIsReady()){
-            sender.sendMessage("FinalResetNotAllowed");
+            MessageSenderService.sendOptional("FinalResetNotAllowed", sender);
             return;
         }
 
@@ -1195,7 +1196,7 @@ public class BuildingController {
             gameManager.getTimerController().resetTimer();
         }catch (IllegalStateException e){
             if(e.getMessage().equals("ImpossibleToResetTimer"))
-                sender.sendMessage("ImpossibleToResetTimer");
+                MessageSenderService.sendOptional("ImpossibleToResetTimer", sender);
         }
     }
 
@@ -1217,11 +1218,7 @@ public class BuildingController {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             if (result.getValue()) {
-                try {
-                    sender.sendMessage("Some components not connected to the central unit have been removed");
-                } catch (Exception e) {
-                    System.err.println("Client unreachable");
-                }
+                MessageSenderService.sendOptional("Some components not connected to the central unit have been removed", sender);
             }
 
             if (result.getKey()) {
@@ -1229,23 +1226,15 @@ public class BuildingController {
                 gameManager.removeNotCheckedReadyPlayer(player);
                 game.getBoard().addTraveler(player);
 
-                try {
-                    sender.sendMessage("ValidSpaceShip");
-                } catch (Exception e) {
-                    System.err.println("Client unreachable");
-                }
+                MessageSenderService.sendOptional("ValidSpaceShip", sender);
 
             } else {
 
                 areAllValid = false;
                 player.setIsReady(false, game);
 
-                try {
-                    sender.sendMessage("NotValidSpaceShip");
-                    sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
-                } catch (Exception e) {
-                    System.err.println("Client unreachable");
-                }
+                MessageSenderService.sendOptional("NotValidSpaceShip", sender);
+                MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
             }
         }
         return areAllValid;
@@ -1266,11 +1255,7 @@ public class BuildingController {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if (result.getValue()) {
-            try {
-                sender.sendMessage("Some components not connected to the central unit have been removed");
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional("Some components not connected to the central unit have been removed", sender);
         }
 
         if (result.getKey()) {
@@ -1279,23 +1264,15 @@ public class BuildingController {
             gameManager.removeNotCheckedReadyPlayer(player);
             game.getBoard().addTraveler(player);
 
-            try {
-                sender.sendMessage("ValidSpaceShip");
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional("ValidSpaceShip", sender);
 
             gameManager.getGameThread().notifyThread();
 
         } else {
             player.setIsReady(false, game);
 
-            try {
-                sender.sendMessage("NotValidSpaceShip");
-                sender.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional("NotValidSpaceShip", sender);
+            MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
         }
     }
 

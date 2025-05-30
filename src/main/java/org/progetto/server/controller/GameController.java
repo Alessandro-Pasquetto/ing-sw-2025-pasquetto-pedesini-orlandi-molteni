@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.ResponsePlayersMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.WaitingPlayersMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.GamePhase;
@@ -29,11 +30,11 @@ public class GameController {
 
     public static void ready(GameManager gameManager, Player player, Sender sender) throws RemoteException {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
-        sender.sendMessage("YouAreReady");
+        MessageSenderService.sendOptional("YouAreReady", sender);
 
         if(!player.getIsReady()){
             player.setIsReady(true, gameManager.getGame());
@@ -56,7 +57,7 @@ public class GameController {
     public static void playerStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
@@ -65,10 +66,10 @@ public class GameController {
             int credits = player.getCredits();
             int position = player.getPosition();
             boolean hasLeft = player.getHasLeft();
-            sender.sendMessage(new ResponsePlayerStatsMessage(name, credits, position, hasLeft));
+            MessageSenderService.sendOptional(new ResponsePlayerStatsMessage(name, credits, position, hasLeft), sender);
 
         }catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -84,13 +85,13 @@ public class GameController {
     public static void showPlayers(GameManager gameManager, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
         try {
-            sender.sendMessage(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()));
+            MessageSenderService.sendOptional(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()), sender);
         }catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -105,17 +106,17 @@ public class GameController {
     public static void showTrack(GameManager gameManager, Sender sender) throws RemoteException {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         try {
             ArrayList<Player> travelers = gameManager.getGame().getBoard().getCopyTravelers();
             Player[] track = gameManager.getGame().getBoard().getTrack();
-            sender.sendMessage(new ResponseTrackMessage(travelers, track));
+            MessageSenderService.sendOptional(new ResponseTrackMessage(travelers, track), sender);
 
         }catch (IllegalStateException e) {
-            sender.sendMessage(e.getMessage());
+            MessageSenderService.sendOptional(e.getMessage(), sender);
         }
     }
 
@@ -128,7 +129,7 @@ public class GameController {
                         .toList()
         );
 
-        sender.sendMessage(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()));
+        MessageSenderService.sendOptional(new UpdateTrackMessage(playersInTrack, gameManager.getGame().getBoard().getTrack()), sender);
     }
 
     public static void sendBroadcastUpdateTrack(GameManager gameManager){

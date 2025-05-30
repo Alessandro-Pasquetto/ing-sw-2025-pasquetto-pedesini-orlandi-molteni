@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.NewGamePhaseMessage;
 import org.progetto.messages.toClient.ScoreBoardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.controller.*;
 import org.progetto.server.model.Board;
@@ -152,11 +153,7 @@ public class GameThread extends Thread {
                         for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
-                            try{
-                                sender.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-                            }catch(Exception e){
-                                System.err.println("Client unreachable");
-                            }
+                            MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
                         }
 
                         EventController.pickEventCard(gameManager);
@@ -210,11 +207,7 @@ public class GameThread extends Thread {
                             for (Player player : game.getBoard().getCopyTravelers()) {
                                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                                try {
-                                    sender.sendMessage("AskContinueTravel");
-                                }catch(Exception e){
-                                    System.err.println("Client unreachable");
-                                }
+                                MessageSenderService.sendOptional("AskContinueTravel", sender);
                             }
 
                             resetAndWaitTravelersReady();
@@ -241,9 +234,9 @@ public class GameThread extends Thread {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
                             if (player.getCredits() > 0)
-                                sender.sendMessage("YouWon");
+                                MessageSenderService.sendOptional("YouWon", sender);
                             else
-                                sender.sendMessage("YouLost");
+                                MessageSenderService.sendOptional("YouLost", sender);
                         }
                         return;
                 }

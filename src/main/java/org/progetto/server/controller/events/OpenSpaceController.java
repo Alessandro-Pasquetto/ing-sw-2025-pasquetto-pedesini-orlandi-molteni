@@ -5,6 +5,7 @@ import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
@@ -16,7 +17,6 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.OpenSpace;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class OpenSpaceController extends EventControllerAbstract {
@@ -92,7 +92,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 try{
                     phase = EventPhase.ENGINE_NUMBER;
-                    sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
+                    MessageSenderService.sendCritical(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -117,27 +117,26 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @param player current player
      * @param num number of double engines player want to use
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) {
 
         if (!phase.equals(EventPhase.ENGINE_NUMBER)) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
         Spaceship spaceship = player.getSpaceship();
         if(num < 0 || num > spaceship.getDoubleEngineCount() || num > spaceship.getBatteriesCount()){
-            sender.sendMessage("IncorrectNumber");
+            MessageSenderService.sendOptional("IncorrectNumber", sender);
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
-            sender.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()));
+            MessageSenderService.sendOptional(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
             return;
         }
 
@@ -155,7 +154,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             System.out.println("Waiting for BatteriesToDiscard");
             phase = EventPhase.DISCARDED_BATTERIES;
 
-            sender.sendMessage(new BatteriesToDiscardMessage(num));
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(num), sender);
         }
     }
 
@@ -167,49 +166,48 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @param xBatteryStorage x coordinate of chosen battery storage
      * @param yBatteryStorage y coordinate of chosen battery storage
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            sender.sendMessage("NotYourTurn");
+            MessageSenderService.sendOptional("NotYourTurn", sender);
             return;
         }
 
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         if(xBatteryStorage < 0 || yBatteryStorage < 0 || xBatteryStorage >= spaceshipMatrix[0].length || yBatteryStorage >= spaceshipMatrix.length){
-            sender.sendMessage("InvalidCoordinates");
-            sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+            MessageSenderService.sendOptional("InvalidCoordinates", sender);
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
         if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            sender.sendMessage("InvalidCoordinates");
-            sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+            MessageSenderService.sendOptional("InvalidCoordinates", sender);
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
         // Checks if a battery has been discarded
         if(batteryStorage.getItemsCount() == 0) {
-            sender.sendMessage("EmptyBatteryStorage");
-            sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+            MessageSenderService.sendOptional("EmptyBatteryStorage", sender);
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         batteryStorages.add(batteryStorage);
         requestedNumber--;
 
-        sender.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage));
+        MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
         if (requestedNumber == 0) {
@@ -227,7 +225,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         } else
-            sender.sendMessage(new BatteriesToDiscardMessage(requestedNumber));
+            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
     }
 
     /**
@@ -250,21 +248,20 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
-            try {
-                sender.sendMessage(new PlayerMovedAheadMessage(playerEnginePower));
-            }catch (Exception e){
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional(new PlayerMovedAheadMessage(playerEnginePower), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
         } else {
-            try {
-                sender.sendMessage("NoEnginePower");
-            }catch (Exception e){
-                System.err.println("Client unreachable");
-            }
+            MessageSenderService.sendOptional("NoEnginePower", sender);
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
             board.leaveTravel(player);
         }
     }
 }
+
+
+/*
+    In the ask operations, the send must be critical (and errors should be handled), while in the receive operations,
+    the send can be optional since the sender is unlikely to be null. Even if it does throw an error, it won't block the GameThread.
+    Later, the pinger will detect that the client is not receiving messages and will handle the disconnection.
+ */

@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Game;
@@ -32,21 +33,17 @@ public class PopulatingController {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            try{
-                if(player.getIsReady()){
-                    sender.sendMessage("PopulatingComplete");
-                    continue;
-                }
-
-                if (player.getSpaceship().checkShipAllowPurpleAlien())
-                    sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
-
-                else if (player.getSpaceship().checkShipAllowOrangeAlien())
-                    sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
-
-            } catch (Exception e) {
-                System.err.println("Client unreachable");
+            if(player.getIsReady()){
+                MessageSenderService.sendOptional("PopulatingComplete", sender);
+                continue;
             }
+
+            // If sending fails (and sender is not null), we should forcibly disconnect the player //todo put critical and handle
+            if (player.getSpaceship().checkShipAllowPurpleAlien())
+                MessageSenderService.sendOptional(new AskAlienMessage("purple", player.getSpaceship()), sender);
+
+            else if (player.getSpaceship().checkShipAllowOrangeAlien())
+                MessageSenderService.sendOptional(new AskAlienMessage("orange", player.getSpaceship()), sender);
         }
     }
 
@@ -55,17 +52,17 @@ public class PopulatingController {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if(player.getIsReady()){
-            sender.sendMessage("PopulatingComplete");
+            MessageSenderService.sendOptional("PopulatingComplete", sender);
             return;
         }
 
         Spaceship spaceship = player.getSpaceship();
 
         if (!spaceship.getAlienPurple() && spaceship.checkShipAllowPurpleAlien())
-            sender.sendMessage(new AskAlienMessage("purple", spaceship));
+            MessageSenderService.sendOptional(new AskAlienMessage("purple", spaceship), sender);
 
         else if (!spaceship.getAlienOrange() && spaceship.checkShipAllowOrangeAlien())
-            sender.sendMessage(new AskAlienMessage("orange", spaceship));
+            MessageSenderService.sendOptional(new AskAlienMessage("orange", spaceship), sender);
     }
 
     /**
@@ -77,9 +74,8 @@ public class PopulatingController {
      * @param x the x coordinate of the alien
      * @param y the y coordinate of the alien
      * @param color the color of the alien
-     * @throws RemoteException if there is a remote exception
      */
-    public static void receivePlaceAlien(GameManager gameManager, Player player, int x, int y, String color) throws RemoteException {
+    public static void receivePlaceAlien(GameManager gameManager, Player player, int x, int y, String color) {
         if(color.equals("purple"))
             receivePurpleAlien(gameManager, player, x, y);
         else
@@ -94,37 +90,36 @@ public class PopulatingController {
      * @param player the player who placed the alien
      * @param x the x coordinate of the alien
      * @param y the y coordinate of the alien
-     * @throws RemoteException if there is a remote exception
      */
-    private static void receivePurpleAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
+    private static void receivePurpleAlien(GameManager gameManager, Player player, int x, int y) {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)))
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
 
         if (x != -1 || y != -1) {
             try{
                 player.getSpaceship().getBuildingBoard().placeAlienComponent("purple", x, y);
-                sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
+                MessageSenderService.sendOptional(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5), sender);
 
             } catch (IllegalStateException e) {
 
                 if(!e.getMessage().equals("PurpleAlienAlreadyPlaced")){
-                    sender.sendMessage(e.getMessage());
-                    sender.sendMessage(new AskAlienMessage("purple", player.getSpaceship()));
+                    MessageSenderService.sendOptional(e.getMessage(), sender);
+                    MessageSenderService.sendOptional(new AskAlienMessage("purple", player.getSpaceship()), sender);
                     return;
                 }
             }
         }
 
         if (player.getSpaceship().checkShipAllowOrangeAlien())
-            sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+            MessageSenderService.sendOptional(new AskAlienMessage("orange", player.getSpaceship()), sender);
         else {
             player.getSpaceship().getBuildingBoard().fillHumans();
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
-            sender.sendMessage("PopulatingComplete");
+            MessageSenderService.sendOptional("PopulatingComplete", sender);
         }
     }
 
@@ -136,26 +131,25 @@ public class PopulatingController {
      * @param player the player who placed the alien
      * @param x the x coordinate of the alien
      * @param y the y coordinate of the alien
-     * @throws RemoteException if there is a remote exception
      */
-    private static void receiveOrangeAlien(GameManager gameManager, Player player, int x, int y) throws RemoteException {
+    private static void receiveOrangeAlien(GameManager gameManager, Player player, int x, int y) {
         Game game = gameManager.getGame();
 
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)))
-            sender.sendMessage("IncorrectPhase");
+            MessageSenderService.sendOptional("IncorrectPhase", sender);
 
         if(x != -1 || y != -1){
             try{
                 player.getSpaceship().getBuildingBoard().placeAlienComponent("orange", x, y);
-                sender.sendMessage(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5));
+                MessageSenderService.sendOptional(new AlienPlacedMessage(x + 6 - gameManager.getGame().getLevel(), y + 5), sender);
 
             } catch (IllegalStateException e) {
 
                 if(!e.getMessage().equals("OrangeAlienAlreadyPlaced")){
-                    sender.sendMessage(e.getMessage());
-                    sender.sendMessage(new AskAlienMessage("orange", player.getSpaceship()));
+                    MessageSenderService.sendOptional(e.getMessage(), sender);
+                    MessageSenderService.sendOptional(new AskAlienMessage("orange", player.getSpaceship()), sender);
                     return;
                 }
             }
@@ -165,7 +159,7 @@ public class PopulatingController {
         player.setIsReady(true, game);
         gameManager.getGameThread().notifyThread();
 
-        sender.sendMessage("PopulatingComplete");
+        MessageSenderService.sendOptional("PopulatingComplete", sender);
     }
 
     /**
