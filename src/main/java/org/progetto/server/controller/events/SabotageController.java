@@ -11,7 +11,7 @@ import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Sabotage;
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 
 public class SabotageController extends EventControllerAbstract{
@@ -48,10 +48,9 @@ public class SabotageController extends EventControllerAbstract{
      * Starts event card effect
      *
      * @author Gabriele
-     * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start() {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -63,9 +62,8 @@ public class SabotageController extends EventControllerAbstract{
      * Finds penalized player and collects him
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void lessPopulatedSpaceship() throws RemoteException {
+    private void lessPopulatedSpaceship() {
         if (!phase.equals(EventPhase.LESS_POPULATED))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -83,9 +81,8 @@ public class SabotageController extends EventControllerAbstract{
      * Asks penalized player to roll dice
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void askToRollDice() throws RemoteException {
+    private void askToRollDice() {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -106,10 +103,9 @@ public class SabotageController extends EventControllerAbstract{
      * @author Gabriele
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void rollDice(Player player, Sender sender) throws RemoteException {
+    public void rollDice(Player player, Sender sender) {
         if (!phase.equals(EventPhase.ROLL_DICE))
             MessageSenderService.sendOptional("IncorrectPhase", sender);
 
@@ -144,9 +140,8 @@ public class SabotageController extends EventControllerAbstract{
      *
      * @author Gabriele
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void eventEffect(Sender sender) throws RemoteException {
+    private void eventEffect(Sender sender) {
         if (!phase.equals(EventPhase.EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -193,9 +188,8 @@ public class SabotageController extends EventControllerAbstract{
      *
      * @author Gabriele
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void end(Sender sender) throws RemoteException {
+    private void end(Sender sender) {
         if (!phase.equals(EventPhase.END))
             throw new IllegalStateException("IncorrectPhase");
 

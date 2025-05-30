@@ -67,11 +67,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws InterruptedException {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -83,10 +82,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles current condition
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void condition() throws RemoteException, InterruptedException {
+    private void condition() throws InterruptedException {
         if (!phase.equals(EventPhase.CONDITION))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -117,10 +115,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Finds player with fewer crew
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void chooseFewerCrew() throws RemoteException, InterruptedException {
+    private void chooseFewerCrew() throws InterruptedException {
         if (!phase.equals(EventPhase.CREW_COUNT))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -135,10 +132,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Asks current player how many double engines he wants to use
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void askHowManyEnginesToUse() throws RemoteException, InterruptedException {
+    private void askHowManyEnginesToUse() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -177,10 +173,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param player current player
      * @param num number of double engines player want to use
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) {
         if (!phase.equals(EventPhase.ENGINE_NUMBER)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -218,10 +213,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Asks current player how many double cannons he wants to use
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
+    private void askHowManyCannonsToUse() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_CANNONS))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -261,11 +255,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Stefano
      * @param player current player
      * @param num number of cannon player want to use
-     * @param sender current sender
-     * @throws RemoteException
+     * @param sender current sende
      */
     @Override
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender){
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -312,11 +305,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param player current player
      * @param xBatteryStorage x coordinate of chosen battery storage
      * @param yBatteryStorage y coordinate of chosen battery storage
-     * @param sender current sender
-     * @throws RemoteException
+     * @param sender current sende
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender){
         switch (phase) {
             case DISCARDED_BATTERIES:
                 if (!player.equals(gameManager.getGame().getActivePlayer())) {
@@ -463,10 +455,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Finds player with less engine power
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void chooseWeakestEngines() throws RemoteException, InterruptedException {
+    private void chooseWeakestEngines() throws InterruptedException {
         if (!phase.equals(EventPhase.CHOOSE_WEAKEST_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -496,10 +487,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Finds player with less firepower
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void chooseWeakestCannons() throws RemoteException, InterruptedException {
+    private void chooseWeakestCannons() throws InterruptedException {
         if (!phase.equals(EventPhase.CHOOSE_WEAKEST_CANNONS))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -529,10 +519,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Chooses the next phase based on the PenaltyType
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void penalty() throws RemoteException, InterruptedException {
+    private void penalty() throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -577,10 +566,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Player loses penaltyDays
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void penaltyDays() throws RemoteException, InterruptedException {
+    private void penaltyDays() throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY_DAYS))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -608,10 +596,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles crew penalty
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void penaltyCrew() throws RemoteException, InterruptedException {
+    private void penaltyCrew() throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY_CREW))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -638,10 +625,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param xHousingUnit x coordinate of chosen housing unit
      * @param yHousingUnit y coordinate of chosen housing unit
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) throws RemoteException {
+    public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_CREW)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -696,10 +682,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles box penalty
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void penaltyBoxes() throws RemoteException, InterruptedException {
+    private void penaltyBoxes() throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY_BOXES))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -746,11 +731,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * @param player current player
      * @param xBoxStorage x coordinate of chosen box storage
      * @param yBoxStorage y coordinate of chosen box storage
-     * @param sender current sender
-     * @throws RemoteException
+     * @param sender current sende
      */
     @Override
-    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -825,10 +809,9 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles penalty shots
      *
      * @author Gabriele
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void penaltyShot() throws RemoteException, InterruptedException {
+    private void penaltyShot() throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY_SHOTS))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -857,10 +840,9 @@ public class BattlezoneController extends EventControllerAbstract {
     /**
      * Asks first penalized player to roll dice
      *
-     * @author Stefano
-     * @throws RemoteException
+     * @author Stefan
      */
-    private void askToRollDice() throws RemoteException {
+    private void askToRollDice(){
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -882,11 +864,10 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param sender current sender
-     * @throws RemoteException
+     * @param sender current sende
      */
     @Override
-    public void rollDice(Player player, Sender sender) throws RemoteException {
+    public void rollDice(Player player, Sender sender){
         if (!phase.equals(EventPhase.ROLL_DICE)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -922,10 +903,9 @@ public class BattlezoneController extends EventControllerAbstract {
     /**
      * Asks penalty players if they want to use shields to protect
      *
-     * @author Stefano
-     * @throws RemoteException
+     * @author Stefan
      */
-    private void askToUseShields() throws RemoteException {
+    private void askToUseShields(){
         if (!phase.equals(EventPhase.ASK_SHIELDS))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -952,11 +932,10 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Gabriele
      * @param player current player
      * @param response player's response
-     * @param sender current sender
-     * @throws RemoteException
+     * @param sender current sende
      */
     @Override
-    public void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
+    public void receiveProtectionDecision(Player player, String response, Sender sender){
         if (!phase.equals(EventPhase.SHIELD_DECISION)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -990,10 +969,9 @@ public class BattlezoneController extends EventControllerAbstract {
     /**
      * Handles current shot
      *
-     * @author Stefano
-     * @throws RemoteException
+     * @author Stefan
      */
-    private void handleShot() throws RemoteException {
+    private void handleShot(){
         if (!phase.equals(EventPhase.HANDLE_SHOT))
             throw new IllegalStateException("IncorrectPhase");
 

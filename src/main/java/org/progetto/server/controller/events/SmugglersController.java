@@ -53,11 +53,10 @@ public class SmugglersController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws InterruptedException {
         if (phase.equals(EventPhase.START)) {
             phase = EventPhase.ASK_CANNONS;
             askHowManyCannonsToUse();
@@ -68,10 +67,9 @@ public class SmugglersController extends EventControllerAbstract {
      * Asks current player how many double cannons he wants to use
      *
      * @author Stefano
-     * @throws RemoteException
      * @throws InterruptedException
      */
-    private void askHowManyCannonsToUse() throws RemoteException, InterruptedException {
+    private void askHowManyCannonsToUse() throws InterruptedException {
         if (phase.equals(EventPhase.ASK_CANNONS)) {
 
             for (Player player : activePlayers) {
@@ -155,10 +153,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param player current player
      * @param num number of double cannon player want to use
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) throws RemoteException {
+    public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -207,10 +204,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param xBatteryStorage x coordinate of chosen battery storage
      * @param yBatteryStorage y coordinate of chosen battery storage
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES) && !phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -311,9 +307,8 @@ public class SmugglersController extends EventControllerAbstract {
      * @author Stefano
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void battleResult(Player player, Sender sender) throws RemoteException {
+    private void battleResult(Player player, Sender sender) {
         if (phase.equals(EventPhase.BATTLE_RESULT)) {
 
             // Checks if the player that calls the methods is also the current one in the controller
@@ -371,9 +366,8 @@ public class SmugglersController extends EventControllerAbstract {
      * @author Stefano
      * @param player current player
      * @param sender current sender
-     * @throws RemoteException
      */
-    private void penaltyEffect(Player player, Sender sender) throws RemoteException {
+    private void penaltyEffect(Player player, Sender sender) {
         if (phase.equals(EventPhase.PENALTY_EFFECT)) {
 
             // Box currently owned
@@ -400,10 +394,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param xBoxStorage x coordinate of chosen box storage
      * @param yBoxStorage y coordinate of chosen box storage
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+    public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -477,9 +470,8 @@ public class SmugglersController extends EventControllerAbstract {
      * @param player current player
      * @param response player's response
      * @param sender current sender
-     * @throws RemoteException
      */
-    public void receiveRewardDecision(Player player, String response, Sender sender) throws RemoteException {
+    public void receiveRewardDecision(Player player, String response, Sender sender) {
         if (!phase.equals(EventPhase.REWARD_DECISION)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -521,10 +513,9 @@ public class SmugglersController extends EventControllerAbstract {
      * @param xBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -594,10 +585,9 @@ public class SmugglersController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player current player
-     * @throws RemoteException
      * @throws IllegalStateException
      */
-    private void leaveReward(Player player) throws RemoteException, IllegalStateException {
+    private void leaveReward(Player player) throws IllegalStateException {
         if (phase.equals(EventPhase.CHOOSE_BOX)) {
 
             // Checks that current player is trying to get reward the reward box
@@ -614,9 +604,8 @@ public class SmugglersController extends EventControllerAbstract {
      * If the player accepted, he receives the reward and loses the penalty days
      *
      * @author Stefano
-     * @throws RemoteException
      */
-    private void penaltyDays() throws RemoteException {
+    private void penaltyDays() {
         if (phase.equals(EventPhase.PENALTY_DAYS)) {
 
             Player player = gameManager.getGame().getActivePlayer();

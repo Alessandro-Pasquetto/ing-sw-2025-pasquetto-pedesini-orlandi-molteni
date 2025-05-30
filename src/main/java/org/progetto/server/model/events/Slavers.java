@@ -4,7 +4,6 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
 
 public class Slavers extends EventCard {
@@ -13,10 +12,10 @@ public class Slavers extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private int firePowerRequired;
-    private int penaltyCrew;
-    private int penaltyDays;
-    private int rewardCredits;
+    private final int firePowerRequired;
+    private final int penaltyCrew;
+    private final int penaltyDays;
+    private final int rewardCredits;
 
     // =======================
     // CONSTRUCTORS
@@ -131,11 +130,10 @@ public class Slavers extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param player Current player
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int battleResult(Player player, float firePower) {
+    public int battleResult(float firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {

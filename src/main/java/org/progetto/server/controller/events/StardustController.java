@@ -11,7 +11,6 @@ import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Stardust;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -41,10 +40,9 @@ public class StardustController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
-     * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start(){
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -56,9 +54,8 @@ public class StardustController extends EventControllerAbstract {
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
+    private void eventEffect() {
         if (!phase.equals(EventPhase.EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 

@@ -137,9 +137,8 @@ public class SpaceshipController {
      * @param xBoxStorage x coordinate of chosen box storage
      * @param idx idx of chosen box storage
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void removeBox(GameManager gameManager, Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws RemoteException {
+    public static void removeBox(GameManager gameManager, Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
 
         EventPhase phase = gameManager.getEventController().getPhase();
         Player activePlayer = gameManager.getGame().getActivePlayer();
@@ -176,10 +175,9 @@ public class SpaceshipController {
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
      * @param sender current sender
-     * @throws RemoteException
      * @author Lorenzo, Alessandro
      */
-    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
 
         try{
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
@@ -213,9 +211,8 @@ public class SpaceshipController {
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void startDestroyComponent(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException {
+    public static void startDestroyComponent(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -262,9 +259,8 @@ public class SpaceshipController {
      * @param player that needs to fix the spaceship
      * @param xComponent x coordinate of chosen component
      * @param yComponent y coordinate of chosen component
-     * @throws RemoteException
      */
-    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws RemoteException, IllegalStateException {
+    public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws IllegalStateException {
 
         try {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();

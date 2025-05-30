@@ -94,7 +94,7 @@ public class SlaversController extends EventControllerAbstract {
             }
 
             // Checks if players is able to win without double cannons
-            if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
+            if (slavers.battleResult(spaceship.getNormalShootingPower()) == 1) {
                 phase = EventPhase.REWARD_DECISION;
                 MessageSenderService.sendOptional("YouWonBattle", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
@@ -120,15 +120,16 @@ public class SlaversController extends EventControllerAbstract {
                 playerFirePower = spaceship.getNormalShootingPower();
 
                 // Checks if player lose
-                if (slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
-                    phase = EventPhase.PENALTY_EFFECT;
+                if (slavers.battleResult(spaceship.getNormalShootingPower()) == -1) {
+
                     MessageSenderService.sendOptional("YouLostBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
+                    phase = EventPhase.PENALTY_EFFECT;
                     try{
-                        penaltyEffect(sender);
+                        criticalPenalityEffect(sender);
 
                         gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -148,11 +149,11 @@ public class SlaversController extends EventControllerAbstract {
                 continue;
             }
 
+            phase = EventPhase.CANNON_NUMBER;
             try{
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 MessageSenderService.sendCritical(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
-                phase = EventPhase.CANNON_NUMBER;
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -174,7 +175,7 @@ public class SlaversController extends EventControllerAbstract {
     }
 
     private void handleDisconnection(Player player, Spaceship spaceship, Sender sender) {
-        if(slavers.battleResult(player, spaceship.getNormalShootingPower()) == -1){
+        if(slavers.battleResult(spaceship.getNormalShootingPower()) == -1){
             MessageSenderService.sendOptional("YouLostBattle", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
             slavers.randomDiscardCrew(spaceship, slavers.getPenaltyCrew());
@@ -324,7 +325,7 @@ public class SlaversController extends EventControllerAbstract {
         if (player.equals(gameManager.getGame().getActivePlayer())) {
 
             // Calls the battleResult function
-            switch (slavers.battleResult(player, playerFirePower)){
+            switch (slavers.battleResult(playerFirePower)){
                 case 1:
                     MessageSenderService.sendOptional("YouWonBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
@@ -353,6 +354,16 @@ public class SlaversController extends EventControllerAbstract {
                     break;
             }
         }
+    }
+
+    private void criticalPenalityEffect(Sender sender) throws Exception{
+        if (!phase.equals(EventPhase.PENALTY_EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
+
+        requestedCrew = slavers.getPenaltyCrew();
+
+        MessageSenderService.sendCritical(new CrewToDiscardMessage(requestedCrew), sender);
+        phase = EventPhase.DISCARDED_CREW;
     }
 
     /**

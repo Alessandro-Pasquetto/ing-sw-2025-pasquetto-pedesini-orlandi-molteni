@@ -39,10 +39,9 @@ public class EpidemicController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
-     * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException{
+    public void start(){
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -54,9 +53,8 @@ public class EpidemicController extends EventControllerAbstract {
      * Resolves event effect for each active traveler
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
+    private void eventEffect() {
         if (!phase.equals(EventPhase.EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 

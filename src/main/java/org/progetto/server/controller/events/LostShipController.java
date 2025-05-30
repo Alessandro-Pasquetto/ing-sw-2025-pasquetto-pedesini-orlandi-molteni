@@ -9,7 +9,6 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
@@ -78,8 +77,8 @@ public class LostShipController extends EventControllerAbstract  {
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
+                phase = EventPhase.REWARD_DECISION;
                 try{
-                    phase = EventPhase.REWARD_DECISION;
                     MessageSenderService.sendCritical(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);

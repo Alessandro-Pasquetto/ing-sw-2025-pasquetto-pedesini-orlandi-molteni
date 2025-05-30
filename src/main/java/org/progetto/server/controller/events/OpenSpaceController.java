@@ -90,8 +90,8 @@ public class OpenSpaceController extends EventControllerAbstract {
             else{
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
+                phase = EventPhase.ENGINE_NUMBER;
                 try{
-                    phase = EventPhase.ENGINE_NUMBER;
                     MessageSenderService.sendCritical(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);

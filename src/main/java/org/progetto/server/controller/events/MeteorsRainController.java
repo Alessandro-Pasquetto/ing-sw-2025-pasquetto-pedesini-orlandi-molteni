@@ -16,7 +16,6 @@ import org.progetto.server.model.events.MeteorsRain;
 import org.progetto.server.model.events.Projectile;
 import org.progetto.server.model.events.ProjectileSize;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class MeteorsRainController extends EventControllerAbstract {
@@ -54,10 +53,9 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Starts event card effect
      *
      * @author Gabriele
-     * @throws RemoteException
      */
     @Override
-    public void start() throws RemoteException {
+    public void start() throws InterruptedException {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -71,17 +69,16 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Send broadcast the incoming meteor information
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void sendMeteor() throws RemoteException {
+    private void sendMeteor() throws InterruptedException {
         if (!phase.equals(EventPhase.SEND_METEOR))
             throw new IllegalStateException("IncorrectPhase");
 
         ArrayList<Projectile> meteors = meteorsRain.getMeteors();
+        activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Projectile meteor : meteors) {
             comingMeteor = meteor;
-            activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
             // Sends to each player information about incoming meteor
             for (Player player : activePlayers) {
@@ -92,12 +89,6 @@ public class MeteorsRainController extends EventControllerAbstract {
 
             phase = EventPhase.ASK_ROLL_DICE;
             askToRollDice();
-
-            try {//todo try catch a caso
-                gameManager.getGameThread().resetAndWaitTravelersReady();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
 
             // Resets elaboration attributes
             decisionPlayers.clear();
@@ -110,23 +101,35 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    private void askToRollDice() throws RemoteException {
+    private void askToRollDice() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
-        Sender sender = gameManager.getSenderByPlayer(activePlayers.getFirst());
+        Player activePlayer = activePlayers.getFirst();
+
+        Sender sender = gameManager.getSenderByPlayer(activePlayer);
+
+        phase = EventPhase.ROLL_DICE;
         try{
+            if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2) {
+                MessageSenderService.sendCritical("RollDiceToFindColumn", sender);
+            }
 
-            if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2)
-                MessageSenderService.sendOptional("RollDiceToFindColumn", sender);
+            else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3) {
+                MessageSenderService.sendCritical("RollDiceToFindRow", sender);
+            }
 
-            else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3)
-                MessageSenderService.sendOptional("RollDiceToFindRow", sender);
+            gameManager.getGameThread().resetAndWaitTravelersReady();
 
-            phase = EventPhase.ROLL_DICE;
+            // If the player is disconnected
+            if(!activePlayer.getIsReady()){
+                rollDice(activePlayer, sender);
+                gameManager.getGameThread().resetAndWaitTravelersReady();
+            }
 
         } catch (Exception e) {
-            rollDice(activePlayers.getFirst(), sender);
+            rollDice(activePlayer, sender);
+            gameManager.getGameThread().resetAndWaitTravelersReady();
         }
     }
 
@@ -136,10 +139,9 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @author Gabriele
      * @param player is the one that needs to trow the dices
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public void rollDice(Player player, Sender sender) throws RemoteException {
+    public void rollDice(Player player, Sender sender) {
         if (!phase.equals(EventPhase.ROLL_DICE)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -176,9 +178,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Handles current small meteor for each player
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void handleSmallMeteor() throws RemoteException {
+    private void handleSmallMeteor() {
         if (!phase.equals(EventPhase.HANDLE_SMALL_METEOR))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -233,9 +234,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Handles current small meteor for each player
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void handleBigMeteor() throws RemoteException {
+    private void handleBigMeteor() {
         if (!phase.equals(EventPhase.HANDLE_BIG_METEOR))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -290,9 +290,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Asks players if they want to protect (shield or double cannon)
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void askToProtect() throws RemoteException {
+    private void askToProtect() {
         if (!phase.equals(EventPhase.ASK_TO_PROTECT))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -317,10 +316,9 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @param player is the one that send the decision
      * @param response is the given decision
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) throws RemoteException {
+    public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) {
 
         // Checks if it is not part of non-protected player, and it is not already contained in protected one list
         if (!decisionPlayers.contains(player)) {
@@ -354,10 +352,9 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @param xBatteryStorage coordinate of the storage
      * @param yBatteryStorage coordinate of the storage
      * @param sender current sender
-     * @throws RemoteException
      */
     @Override
-    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) throws RemoteException {
+    public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
 
         // Checks if the player that calls the methods has to discard a battery to activate protection
         if (!discardedBattery.contains(player)) {
@@ -405,9 +402,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Function called to handle current shot
      *
      * @author Gabriele
-     * @throws RemoteException
      */
-    private void handleCurrentMeteor(Player player) throws RemoteException {
+    private void handleCurrentMeteor(Player player) {
 
         Game game = gameManager.getGame();
 

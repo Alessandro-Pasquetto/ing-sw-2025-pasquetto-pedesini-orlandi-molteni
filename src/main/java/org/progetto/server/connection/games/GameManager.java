@@ -426,15 +426,11 @@ public class GameManager {
     }
 
     public synchronized void broadcastGameMessageToOthers(Object messageObj, Sender sender) {
-        ArrayList<Sender> socketWritersCopy = getSendersCopy();
+        ArrayList<Sender> sendersCopy = getSendersCopy();
 
-        for (Sender s : socketWritersCopy) {
+        for (Sender s : sendersCopy) {
             if (!s.equals(sender)) {
-                try {
-                    s.sendMessage(messageObj);
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
+                MessageSenderService.sendOptional(messageObj, s);
             }
         }
     }

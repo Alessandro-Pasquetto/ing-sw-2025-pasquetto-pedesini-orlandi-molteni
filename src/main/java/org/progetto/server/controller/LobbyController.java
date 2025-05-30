@@ -124,28 +124,6 @@ public class LobbyController {
     }
 
     /**
-     * Send message to all clients in lobby except the sender
-     *
-     * @author Alessandro
-     * @param messageObj
-     * @param sender
-     */
-    public synchronized static void broadcastLobbyMessageToOthers(Object messageObj, Sender sender) {
-
-        ArrayList<Sender> sendersCopy = getSendersCopy();
-
-        for (Sender s : sendersCopy) {
-            if(!s.equals(sender)) {
-                try {
-                    s.sendMessage(messageObj);
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
-            }
-        }
-    }
-
-    /**
      * Show all waiting games
      *
      * @author Gabriele

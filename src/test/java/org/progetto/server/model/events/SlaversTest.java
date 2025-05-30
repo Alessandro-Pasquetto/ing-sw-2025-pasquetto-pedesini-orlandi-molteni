@@ -135,12 +135,12 @@ class SlaversTest {
         Slavers slavers2 = new Slavers(CardType.SLAVERS, 2, "imgPath", 6, 3, -2, 4);
 
         //compares a power equal to the one required
-        assertEquals(0, slavers1.battleResult(player1, 5));
+        assertEquals(0, slavers1.battleResult(5));
 
         //compares a lower power than required
-        assertEquals(-1, slavers2.battleResult(player1, 5));
+        assertEquals(-1, slavers2.battleResult(5));
 
         //compares a higher power than required
-        assertEquals(1, slavers1.battleResult(player2, 8));
+        assertEquals(1, slavers1.battleResult(8));
     }
 }

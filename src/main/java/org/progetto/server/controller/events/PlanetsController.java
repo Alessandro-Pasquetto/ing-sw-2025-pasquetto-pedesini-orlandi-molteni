@@ -17,7 +17,6 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.events.Planets;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class PlanetsController extends EventControllerAbstract {
@@ -45,7 +44,7 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
 
     @Override
-    public void start() throws RemoteException, InterruptedException {
+    public void start() throws InterruptedException {
         if(phase.equals(EventPhase.START)){
             phase = EventPhase.ASK_TO_LAND;
             askForLand();
@@ -57,11 +56,10 @@ public class PlanetsController extends EventControllerAbstract {
      * List of planets are sent only to the active player
      *
      * @author Lorenzo
-     * @throws RemoteException
      * @throws IllegalStateException
      * @throws InterruptedException
      */
-    private void askForLand() throws RemoteException, IllegalStateException, InterruptedException {
+    private void askForLand() throws IllegalStateException, InterruptedException {
         if (!phase.equals(EventPhase.ASK_TO_LAND))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -106,11 +104,10 @@ public class PlanetsController extends EventControllerAbstract {
      * @param player current player
      * @param planetIdx is the index of the planet chosen
      * @param sender current player
-     * @throws RemoteException
      * @throws IllegalStateException
      */
     @Override
-    public void receiveDecisionToLandPlanet(Player player, int planetIdx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveDecisionToLandPlanet(Player player, int planetIdx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.LAND)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -164,11 +161,10 @@ public class PlanetsController extends EventControllerAbstract {
      * @param x coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
-     * @throws RemoteException
      * @throws IllegalStateException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws RemoteException, IllegalStateException {
+    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
             return;
@@ -181,7 +177,7 @@ public class PlanetsController extends EventControllerAbstract {
         }
 
         if(idxBox == -1){
-            sender.sendMessage("PlanetLeft");
+            MessageSenderService.sendOptional("PlanetLeft", sender);
             leavePlanet(player, sender);
             return;
         }
@@ -240,7 +236,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @param sender current sender
      * @throws IllegalStateException
      */
-    private void leavePlanet(Player player, Sender sender) throws IllegalStateException, RemoteException {
+    private void leavePlanet(Player player, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -260,9 +256,8 @@ public class PlanetsController extends EventControllerAbstract {
      * Calculate the penalty for each landed player
      *
      * @author Lorenzo
-     * @throws RemoteException
      */
-    private void eventEffect() throws RemoteException {
+    private void eventEffect() {
         if (!phase.equals(EventPhase.EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 

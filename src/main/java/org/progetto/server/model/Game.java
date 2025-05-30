@@ -1,6 +1,7 @@
 package org.progetto.server.model;
 
 import com.google.gson.reflect.TypeToken;
+import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.controller.LobbyController;
@@ -292,16 +293,16 @@ public class Game {
      * Elaborates score board calculating final credits for each player
      *
      * @author Gabriele
+     * @param arrivalOrderPlayers
      * @return list of players sorted in order of credit number
      */
-    public ArrayList<Player> scoreBoard() {
-        ArrayList<Player> arrivalOrderPlayers = new ArrayList<>(players);
+    public ArrayList<Player> scoreBoard(ArrayList<Player> arrivalOrderPlayers) {
         arrivalOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getPosition(), p1.getPosition()));
 
         int minExposedConnectorsCount = Integer.MAX_VALUE;
 
         // Finds min amount of exposed connector among player's ships
-        for (Player player : players) {
+        for (Player player : arrivalOrderPlayers) {
             if (player.getSpaceship().getExposedConnectorsCount() < minExposedConnectorsCount) {
                 minExposedConnectorsCount = player.getSpaceship().getExposedConnectorsCount();
             }
@@ -310,8 +311,7 @@ public class Game {
         int rewardForPosition = 4;
 
         // Loop to update player's final score
-        for (int i = 0; i < players.size(); i++) {
-            Player player = arrivalOrderPlayers.get(i);
+        for (Player player : arrivalOrderPlayers) {
 
             boolean hasLeft = player.getHasLeft();
 
@@ -336,7 +336,7 @@ public class Game {
             player.addCredits(-destroyedComponents);
         }
 
-        ArrayList<Player> creditsOrderPlayers = new ArrayList<>(players);
+        ArrayList<Player> creditsOrderPlayers = new ArrayList<>(arrivalOrderPlayers);
         creditsOrderPlayers.sort((p1, p2) -> Integer.compare(p2.getCredits(), p1.getCredits()));
         return creditsOrderPlayers;
     }

@@ -15,6 +15,7 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.events.CardType;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class GameThread extends Thread {
 
@@ -225,9 +226,12 @@ public class GameThread extends Thread {
                         System.out.println("Game over");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
-                        gameManager.broadcastGameMessage(new ScoreBoardMessage(game.scoreBoard()));
+                        ArrayList<Player> allPlayers = game.getPlayersCopy();
+                        allPlayers.addAll(gameManager.getDisconnectedPlayersCopy());
 
-                        for (Player player : game.scoreBoard()) {
+                        gameManager.broadcastGameMessage(new ScoreBoardMessage(game.scoreBoard(allPlayers)));
+
+                        for (Player player : game.scoreBoard(allPlayers)) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
                             if (player.getCredits() > 0)
@@ -238,7 +242,7 @@ public class GameThread extends Thread {
                         return;
                 }
             }
-        } catch (InterruptedException | RemoteException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

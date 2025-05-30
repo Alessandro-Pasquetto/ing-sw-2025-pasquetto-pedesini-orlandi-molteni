@@ -504,7 +504,7 @@ class GameTest {
         p2.getSpaceship().addDestroyedCount(1);
         p3.getSpaceship().addDestroyedCount(3);
 
-        ArrayList<Player> result = game.scoreBoard();
+        ArrayList<Player> result = game.scoreBoard(game.getPlayersCopy());
 
         assertNotNull(result);
 
