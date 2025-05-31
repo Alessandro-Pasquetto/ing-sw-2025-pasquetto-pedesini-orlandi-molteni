@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import javafx.util.Pair;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -170,7 +171,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 0}, "single-engine10.jpg"));
                         bb.placeComponent(0, 4, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "blue-box-storage13.jpg", 2));
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 3}, "blue-box-storage13.jpg", 2));
                         bb.placeComponent(1, 4, 1);
 
                         bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
@@ -185,7 +186,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
                         bb.placeComponent(3, 3, 2);
 
-                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{1, 1, 0, 1}, "orange-alien-housing-unit.jpg"));
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{1, 1, 0, 1}, "orange-alien-housing-unit1.jpg"));
                         bb.placeComponent(4, 3, 3);
 
                         bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
@@ -200,14 +201,14 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon2.jpg"));
                         bb.placeComponent(1, 1, 0);
 
-                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     case 2:
                         bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 2, 1, 0}, "battery2.jpg", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon4.jpg"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 2, 0}, "single-cannon4.jpg"));
                         bb.placeComponent(2, 0, 0);
 
                         bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
@@ -243,7 +244,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
                         bb.placeComponent(4, 2, 0);
 
-                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     default:
@@ -279,13 +280,18 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 0, 0, 3}, "red-box-storage4.jpg", 1));
                         bb.placeComponent(0, 3, 1);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3));
+                        // TODO: remove
+                        BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3);
+                        bs.addBox(player.getSpaceship(), Box.YELLOW, 0);
+                        bs.addBox(player.getSpaceship(), Box.BLUE, 1);
+                        bs.addBox(player.getSpaceship(), Box.GREEN, 2);
+                        bb.setHandComponent(bs);
                         bb.placeComponent(0, 2, 3);
 
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 1, 0}, "single-engine12.jpg"));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 1, 0, 0}, "single-engine12.jpg"));
                         bb.placeComponent(1, 4, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{0, 0, 0, 3}, "double-engine2.jpg"));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{0, 3, 0, 3}, "double-engine2.jpg"));
                         bb.placeComponent(2, 4, 0);
 
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 2}, "shield4.jpg"));
@@ -321,7 +327,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 3}, "single-engine1.jpg"));
                         bb.placeComponent(5, 4, 0);
 
-                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     case 2:
@@ -346,7 +352,11 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 0, 1, 1}, "shield2.jpg"));
                         bb.placeComponent(1, 3, 1);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 0, 1, 2}, "blue-box-storage2.jpg", 3));
+                        bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 0, 1, 2}, "blue-box-storage2.jpg", 3);
+                        bs.addBox(player.getSpaceship(), Box.YELLOW, 0);
+                        bs.addBox(player.getSpaceship(), Box.BLUE, 1);
+                        bs.addBox(player.getSpaceship(), Box.GREEN, 2);
+                        bb.setHandComponent(bs);
                         bb.placeComponent(1, 2, 0);
 
                         bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 3, 2}, "double-cannon4.jpg"));
@@ -370,7 +380,7 @@ public class BuildingController {
                         bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{2, 3, 0, 0}, "single-engine20.jpg"));
                         bb.placeComponent(4, 4, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{1, 2, 0, 2}, "purple-housing-unit1.jpg"));
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{1, 2, 0, 2}, "purple-alien-housing-unit1.jpg"));
                         bb.placeComponent(5, 2, 2);
 
                         bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 3, 1}, "single-cannon15.jpg"));
@@ -385,7 +395,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 2));
                         bb.placeComponent(6, 4, 0);
 
-                        MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
                     default:
@@ -1211,7 +1221,7 @@ public class BuildingController {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             if (result.getValue()) {
-                MessageSenderService.sendOptional("Some components not connected to the central unit have been removed", sender);
+                MessageSenderService.sendOptional("ComponentsNotConnectedGotRemoved", sender);
             }
 
             if (result.getKey()) {
@@ -1248,7 +1258,7 @@ public class BuildingController {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if (result.getValue()) {
-            MessageSenderService.sendOptional("Some components not connected to the central unit have been removed", sender);
+            MessageSenderService.sendOptional("ComponentsNotConnectedGotRemoved", sender);
         }
 
         if (result.getKey()) {

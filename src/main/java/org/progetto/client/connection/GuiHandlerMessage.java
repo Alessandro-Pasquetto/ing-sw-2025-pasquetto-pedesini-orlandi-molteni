@@ -8,6 +8,8 @@ import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
+import org.progetto.messages.toClient.Battlezone.EvaluatingConditionMessage;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
@@ -30,6 +32,7 @@ import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.BatteryStorage;
+import org.progetto.server.model.components.BoxStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.HousingUnit;
 import org.progetto.server.model.events.Projectile;
@@ -124,7 +127,7 @@ public class GuiHandlerMessage {
 
                     case "EVENT":
                         PageController.initEvent(GameData.getLevelGame());
-                        PageController.switchScene("newEventPage.fxml", "Event");
+                        PageController.switchScene("eventPage.fxml", "Event");
                         break;
 
                     case "TRAVEL":
@@ -197,7 +200,7 @@ public class GuiHandlerMessage {
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
-                    PageController.switchScene("newEventPage.fxml", "Event");
+                    PageController.switchScene("eventPage.fxml", "Event");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
@@ -580,6 +583,60 @@ public class GuiHandlerMessage {
             PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerCrewDiscardedMessage.getPlayerName(), spaceship);
         }
 
+        else if (messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
+            PageController.getEventView().askToSelectBoxToDiscard(
+                    "You need to discard " + boxToDiscardMessage.getBoxToDiscard() + " boxes",
+                    "Select box to discard...",
+                    (int[] params) -> GameData.getSender().responseBoxToDiscard(params[0], params[1], params[2])
+            );
+        }
+
+        else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
+            Spaceship spaceship = GameData.getSpaceship();
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            int xBox = boxDiscardedMessage.getXBoxStorage();
+            int yBox = boxDiscardedMessage.getYBoxStorage();
+            int idxBox = boxDiscardedMessage.getBoxIdx();
+
+            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
+            bs.removeBox(spaceship, idxBox);
+
+            PageController.getEventView().updateSpaceship(spaceship);
+        }
+
+        else if (messageObj instanceof AnotherPlayerBoxDiscardedMessage anotherPlayerBoxDiscardedMessage) {
+            Spaceship spaceship = GameData.getOtherSpaceships().get(anotherPlayerBoxDiscardedMessage.getPlayerName());
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+            int xBox = anotherPlayerBoxDiscardedMessage.getXBoxStorage();
+            int yBox = anotherPlayerBoxDiscardedMessage.getYBoxStorage();
+            int idxBox = anotherPlayerBoxDiscardedMessage.getBoxIdx();
+
+            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
+            bs.removeBox(spaceship, idxBox);
+
+            PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerBoxDiscardedMessage.getPlayerName(), spaceship);
+        }
+
+        else if (messageObj instanceof EvaluatingConditionMessage evaluatingConditionMessage) {
+            String condition = switch (evaluatingConditionMessage.getCondition()) {
+                case "Crew" -> "less crew members";
+                case "Engine" -> "fewer engine power";
+                case "Cannon" -> "fewer shooting power";
+                default -> "";
+            };
+            PageController.getEventView().addChatMessage("Finding player with " + condition, "INFO");
+        }
+
+        else if (messageObj instanceof AnotherPlayerGotPenalizedMessage anotherPlayerGotPenalizedMessage) {
+            GameData.setActivePlayer(GameData.getNamePlayer());
+            PageController.getEventView().updateActivePlayer(GameData.getNamePlayer());
+
+            PageController.getEventView().setEventLabels("ANOTHER PLAYER GOT PENALIZED", "Wait for that player to finish his turn...");
+            PageController.getEventView().addChatMessage(anotherPlayerGotPenalizedMessage.getPlayerName() + " got penalized for current condition", "INFO");
+        }
+
         else if (messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
             Projectile projectile = incomingProjectileMessage.getProjectile();
 
@@ -609,7 +666,7 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof AvailableBoxesMessage availableBoxesMessage) {
-           PageController.getEventView().renderBoxes(
+           PageController.getEventView().renderRewardBoxes(
                    "Select your reward boxes",
                    "Select the boxes you want to keep...",
                    availableBoxesMessage.getBoxes()
@@ -647,7 +704,7 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof AnotherPlayerDestroyedComponentMessage anotherPlayerDestroyedComponentMessage) {
 
             if (GameData.getPhaseGame().equals("EVENT")) {
-                // TODO: what to print
+                PageController.getEventView().addChatMessage(anotherPlayerDestroyedComponentMessage.getNamePlayer() + " destroyed a component", "INFO");
             }
         }
 
@@ -788,6 +845,10 @@ public class GuiHandlerMessage {
                     }
                     break;
 
+                case "ComponentsNotConnectedGotRemoved":
+                    Alerts.showError("Some components not connected got removed!", true);
+                    break;
+
                 case "ActionNotAllowedInReadyState":
                     Alerts.showError("Action not allowed in ready state!", true);
                     break;
@@ -826,6 +887,18 @@ public class GuiHandlerMessage {
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
                     break;
 
+                case "YouArePenalizedPlayer":
+                    GameData.setActivePlayer(GameData.getNamePlayer());
+                    PageController.getEventView().updateActivePlayer(GameData.getNamePlayer());
+
+                    PageController.getEventView().setEventLabels("YOU ARE PENALIZED", "You are penalized for current condition...");
+                    PageController.getEventView().addChatMessage("You are penalized for current condition", "INFO");
+                    break;
+
+                case "BoxNotDiscarded":
+                    Alerts.showError("You cannot discard this box!", true);
+                    break;
+
                 case "ResetActivePlayer":
                     GameData.setActivePlayer("");
                     PageController.getEventView().updateActivePlayer("");
@@ -860,10 +933,6 @@ public class GuiHandlerMessage {
                             }
                     );
                     break;
-
-//                case "LandRequest":
-//                    PageController.getEventView().responseLandRequest(false);
-//                    break;
 
                 case "LandingCompleted":
                     break;
@@ -985,6 +1054,14 @@ public class GuiHandlerMessage {
 
                 case "YouWon":
                     PageController.getGameOverView().initGameOver(0);
+                    break;
+
+                case "EventCardSkipped":
+                    PageController.getEventView().setEventLabels("EVENT CARD GOT SKIPPED", "There aren’t enough travelers for that event...");
+                    break;
+
+                case "EventCardEnded":
+                    PageController.getEventView().setEventLabels("THE EVENT IS ENDED", "Get ready for the travel phase...");
                     break;
 
                 default:

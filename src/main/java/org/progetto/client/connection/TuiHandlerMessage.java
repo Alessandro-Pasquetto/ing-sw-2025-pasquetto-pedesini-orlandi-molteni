@@ -1,9 +1,12 @@
 package org.progetto.client.connection;
 
+import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
+import org.progetto.messages.toClient.Battlezone.EvaluatingConditionMessage;
 import org.progetto.messages.toClient.Building.*;
 import org.progetto.messages.toClient.Epidemic.AnotherPlayerCrewInfectedMessage;
 import org.progetto.messages.toClient.Epidemic.CrewInfectedAmountMessage;
@@ -340,6 +343,10 @@ public class TuiHandlerMessage {
             System.out.println("Crew member discarded successfully");
         }
 
+        else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
+            System.out.println("Box discarded successfully");
+        }
+
         else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
             EventCommands.responseCrewToDiscard(crewToDiscardMessage.getCrewToDiscard());
         }
@@ -426,6 +433,20 @@ public class TuiHandlerMessage {
 
         else if(messageObj instanceof AnotherPlayerDiceResultMessage anotherPlayerDiceResultMessage) {
             System.out.println("Dice result: " +  anotherPlayerDiceResultMessage.getDiceResult());
+        }
+
+        else if (messageObj instanceof EvaluatingConditionMessage evaluatingConditionMessage) {
+            String condition = switch (evaluatingConditionMessage.getCondition()) {
+                case "Crew" -> "less crew members";
+                case "Engine" -> "fewer engine power";
+                case "Cannon" -> "fewer shooting power";
+                default -> "";
+            };
+            System.out.println(PURPLE + "Finding player with " + condition + RESET);
+        }
+
+        else if (messageObj instanceof AnotherPlayerGotPenalizedMessage anotherPlayerGotPenalizedMessage) {
+            System.out.println(RED + anotherPlayerGotPenalizedMessage.getPlayerName() + " got penalized for this condition" + RESET);
         }
 
         else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
@@ -547,6 +568,10 @@ public class TuiHandlerMessage {
                     System.err.println("Action not allowed in ready state!");
                     break;
 
+                case "ComponentsNotConnectedGotRemoved":
+                    System.out.println("Some components not connected to the central unit have been removed!");
+                    break;
+
                 case "ValidStartingPosition":
                     System.out.println("Starting position set successfully!");
                     break;
@@ -659,10 +684,6 @@ public class TuiHandlerMessage {
                     System.err.println("Unable to discard the crew member!");
                     break;
 
-                case "BoxDiscarded":
-                    System.out.println("Box discarded");
-                    break;
-
                 case "BoxNotDiscarded":
                     System.err.println("Unable to discard the box!");
                     break;
@@ -737,6 +758,10 @@ public class TuiHandlerMessage {
 
                 case "AskContinueTravel":
                     EventCommands.responseContinueTravel();
+                    break;
+
+                case "YouArePenalizedPlayer":
+                    System.out.println(RED + "You got penalized for this condition!" + RESET);
                     break;
 
                 case "YouLeftTravel":
@@ -819,6 +844,14 @@ public class TuiHandlerMessage {
 
                 case "IDShipOutOfBounds":
                     System.err.println("Building configuration not present!");
+                    break;
+
+                case "EventCardSkipped":
+                    System.out.println("Next event card got skipped!");
+                    break;
+
+                case "EventCardEnded":
+                    System.out.println("Event card ended...");
                     break;
 
                 case "AskSelectSpaceshipPart":

@@ -54,7 +54,7 @@
     "couples": [
       {
         "type": "FIREPOWERREQUIREMENT",
-        "penalty": {"type": "PENALTYCREW", "neededAmount": 4, "shots": []}
+        "penalty": {"type": "PENALTYDAYS", "neededAmount": -4, "shots": []}
       },
       {
         "type": "ENGINEPOWERREQUIREMENT",

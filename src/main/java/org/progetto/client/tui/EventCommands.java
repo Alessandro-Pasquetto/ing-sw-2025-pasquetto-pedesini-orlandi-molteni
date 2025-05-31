@@ -245,7 +245,7 @@ public class EventCommands {
      */
     public static void responseAcceptRewardBoxesAndPenaltyDays(ArrayList<Box> reward, int penaltyDays){
 
-        while(true){
+        while (true) {
             System.out.println("Do you want to accept the reward and the days penalty? (YES or NO)");
             System.out.print("Days of penalty: " + penaltyDays + ", Reward boxes: ");
 
@@ -258,11 +258,11 @@ public class EventCommands {
 
             String response = TuiCommandFilter.waitResponse();
 
-            if(response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
+            if (response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
                 sender.responseAcceptRewardCreditsAndPenaltyDays(response);
                 break;
-            }else
+            } else
                 System.err.println("You must choose between YES or NO");
         }
     }
@@ -283,11 +283,12 @@ public class EventCommands {
             for (int i = 0; i < availableBoxes.size(); i++) {
                 String box = TuiPrinters.drawBox(availableBoxes.get(i));
 
-                System.out.printf("[%d] %s%n", i, box);
+                System.out.printf("[%d] %s%n", i + 1, box);
             }
 
             System.out.println("Select an available box by index from the list (-1 if you wanna leave)");
             String idx = TuiCommandFilter.waitResponse();
+
             try{
                 int box_idx = Integer.parseInt(idx);
 
@@ -299,7 +300,7 @@ public class EventCommands {
                     break;
                 }
 
-                else if (box_idx >= 0 && box_idx < availableBoxes.size()){
+                else if (box_idx > 0 && box_idx <= availableBoxes.size()){
                     System.out.println("Select a box storage were you want to insert the box: ");
                     System.out.print("X: ");
                     int x = Integer.parseInt(TuiCommandFilter.waitResponse());
@@ -309,7 +310,7 @@ public class EventCommands {
                     int storage_idx = Integer.parseInt(TuiCommandFilter.waitResponse());
 
                     int levelGame = GameData.getLevelGame();
-                    sender.responseRewardBox(box_idx, x - 6 + levelGame, y - 5, storage_idx);
+                    sender.responseRewardBox(box_idx - 1, x - 6 + levelGame, y - 5, storage_idx);
                     break;
                 }else{
                     System.err.println("Box index out of bounds!");
@@ -409,19 +410,19 @@ public class EventCommands {
      */
     public static void responsePlanetLandRequest(ArrayList<ArrayList<Box>> planets, boolean[] planetsTaken) {
 
-        while(true){
+        while (true) {
             System.out.println("Do you want to land? (YES or NO)");
 
             String response = TuiCommandFilter.waitResponse();
 
-            if(!response.equalsIgnoreCase("YES") && !response.equalsIgnoreCase("NO")){
+            if (!response.equalsIgnoreCase("YES") && !response.equalsIgnoreCase("NO")) {
                 System.err.println("You must choose between YES or NO");
                 continue;
             }
 
             Sender sender = GameData.getSender();
 
-            if(response.equalsIgnoreCase("NO")){
+            if (response.equalsIgnoreCase("NO")) {
                 sender.responsePlanetLandRequest(-1);
                 return;
             }
@@ -432,14 +433,13 @@ public class EventCommands {
 
             for (int i = 0; i < planetsTaken.length; i++) {
                 if (planetsTaken[i]) {
-                    System.out.println(String.format("[%d] Planet: TAKEN", i));
-
+                    System.out.println(String.format("[%d] Planet: TAKEN", i + 1));
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (var box : planets.get(currentPlanet)) {
                         sb.append(TuiPrinters.drawBox(box)).append(" ");
                     }
-                    System.out.println(String.format("[%d] Planet: %s", i, sb));
+                    System.out.println(String.format("[%d] Planet: %s", i + 1, sb));
                 }
 
                 currentPlanet++;
@@ -448,14 +448,14 @@ public class EventCommands {
             String idx = TuiCommandFilter.waitResponse();
 
             try {
-                int planet_idx = Integer.parseInt(idx);
+                int planet_idx = Integer.parseInt(idx) - 1;
 
-                if(planet_idx < 0 || planet_idx >= planetsTaken.length){
+                if (planet_idx < 0 || planet_idx >= planetsTaken.length) {
                     System.err.println("Invalid planet index");
                     continue;
                 }
 
-                if(planetsTaken[planet_idx]){
+                if (planetsTaken[planet_idx]) {
                     System.err.println("Planet already taken");
                     continue;
                 }
@@ -463,7 +463,7 @@ public class EventCommands {
                 sender.responsePlanetLandRequest(planet_idx);
                 break;
 
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.err.println("You must insert a number!");
             }
         }
@@ -526,7 +526,6 @@ public class EventCommands {
                 System.err.println("You must say ROLL");
         }
     }
-
 
     /**
      * Handles player decision to keep a spaceship branch

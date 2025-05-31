@@ -429,7 +429,9 @@ public class SmugglersController extends EventControllerAbstract {
         // Checks if a box has been discarded
         if (smugglers.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
             requestedBoxes--;
-            MessageSenderService.sendOptional("BoxDiscarded", sender);
+
+            MessageSenderService.sendOptional(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
 
             if (requestedBoxes == 0) {
                 player.setIsReady(true, gameManager.getGame());

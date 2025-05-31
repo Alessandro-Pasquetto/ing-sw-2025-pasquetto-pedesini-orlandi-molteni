@@ -1,7 +1,6 @@
 package org.progetto.client.gui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -40,7 +39,7 @@ public class PageController {
     private static AdjustingView adjustingView;
     private static PopulatingView populatingView;
     private static PositioningView positioningView;
-    private static NewEventView eventView;
+    private static eventView eventView;
     private static TravelView travelView;
     private static GameOverView gameOverView;
 
@@ -80,7 +79,7 @@ public class PageController {
         return positioningView;
     }
 
-    public static NewEventView getEventView() {
+    public static eventView getEventView() {
         return eventView;
     }
 
@@ -160,7 +159,7 @@ public class PageController {
         positioningRoot = loader.load();
         positioningView = loader.getController();
 
-        loader = new FXMLLoader(MainClient.class.getResource("newEventPage.fxml"));
+        loader = new FXMLLoader(MainClient.class.getResource("eventPage.fxml"));
         eventRoot = loader.load();
         eventView = loader.getController();
 
@@ -190,7 +189,7 @@ public class PageController {
             case "adjustingPage.fxml" -> adjustingRoot;
             case "populatingPage.fxml" -> populatingRoot;
             case "positioningPage.fxml" -> positioningRoot;
-            case "newEventPage.fxml" -> eventRoot;
+            case "eventPage.fxml" -> eventRoot;
             case "travelPage.fxml" -> travelRoot;
             case "gameOverPage.fxml" -> gameOverRoot;
 

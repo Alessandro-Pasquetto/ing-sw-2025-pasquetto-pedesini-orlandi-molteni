@@ -1,6 +1,8 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
+import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
+import org.progetto.messages.toClient.Battlezone.EvaluatingConditionMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -94,16 +96,22 @@ public class BattlezoneController extends EventControllerAbstract {
             switch (couples.getFirst().getCondition()){
 
                 case ConditionType.CREWREQUIREMENT:
+                    gameManager.broadcastGameMessage(new EvaluatingConditionMessage("Crew"));
+
                     phase = EventPhase.CREW_COUNT;
                     chooseFewerCrew();
                     break;
 
                 case ConditionType.ENGINEPOWERREQUIREMENT:
+                    gameManager.broadcastGameMessage(new EvaluatingConditionMessage("Engine"));
+
                     phase = EventPhase.ASK_ENGINES;
                     askHowManyEnginesToUse();
                     break;
 
                 case ConditionType.FIREPOWERREQUIREMENT:
+                    gameManager.broadcastGameMessage(new EvaluatingConditionMessage("Cannon"));
+
                     phase = EventPhase.ASK_CANNONS;
                     askHowManyCannonsToUse();
                     break;
@@ -525,6 +533,11 @@ public class BattlezoneController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.PENALTY))
             throw new IllegalStateException("IncorrectPhase");
 
+        // Notifies penalized player
+        Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+        MessageSenderService.sendOptional("YouArePenalizedPlayer", sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerGotPenalizedMessage(penaltyPlayer.getName()), sender);
+
         switch (couples.getFirst().getPenalty().getType()){
 
             case PenaltyType.PENALTYDAYS:
@@ -767,7 +780,9 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if a box has been discarded
         if (battlezone.chooseDiscardedBox(player.getSpaceship(), (BoxStorage) boxStorage, idx)) {
             requestedBoxes--;
-            MessageSenderService.sendOptional("BoxDiscarded", sender);
+
+            MessageSenderService.sendOptional(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
 
             if (requestedBoxes == 0) {
                 player.setIsReady(true, gameManager.getGame());
@@ -903,7 +918,7 @@ public class BattlezoneController extends EventControllerAbstract {
     /**
      * Asks penalty players if they want to use shields to protect
      *
-     * @author Stefan
+     * @author Stefano
      */
     private void askToUseShields(){
         if (!phase.equals(EventPhase.ASK_SHIELDS))
@@ -932,7 +947,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * @author Gabriele
      * @param player current player
      * @param response player's response
-     * @param sender current sende
+     * @param sender current sender
      */
     @Override
     public void receiveProtectionDecision(Player player, String response, Sender sender){

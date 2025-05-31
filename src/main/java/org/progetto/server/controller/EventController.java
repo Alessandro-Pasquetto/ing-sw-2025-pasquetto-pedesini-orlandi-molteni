@@ -34,8 +34,8 @@ public class EventController {
     public static void pickEventCard(GameManager gameManager) throws IllegalStateException {
 
         EventCard card = gameManager.getGame().pickEventCard();
-        for(Player player : gameManager.getGame().getPlayersCopy()){
 
+        for(Player player : gameManager.getGame().getPlayersCopy()){
             Sender sender = gameManager.getSenderByPlayer(player);
             MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
         }

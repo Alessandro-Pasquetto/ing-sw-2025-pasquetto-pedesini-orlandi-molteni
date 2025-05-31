@@ -61,8 +61,13 @@
                     <HBox fx:id="timerContainer" spacing="20" alignment="CENTER">
                         <Label fx:id="timerLabel" text="00:00" textFill="#eba52d" />
                         <Button fx:id="timerButton" onAction="#resetTimer" text="Reset Timer" />
-                        <Button fx:id="buildShip1Button" minHeight="34.0" minWidth="157.0" onAction="#placeHandComponentAndReady" text="BuildShip 1"></Button>
-                        <Button fx:id="buildShip2Button" minHeight="34.0" minWidth="157.0" onAction="#placeHandComponentAndReady" text="BuildShip 2"></Button>
+                    </HBox>
+
+                    <Region prefHeight="20.0"></Region>
+
+                    <HBox fx:id="buildShipContainer" spacing="20" alignment="CENTER">
+                        <Button fx:id="buildShip1Button" text="Ship 1"></Button>
+                        <Button fx:id="buildShip2Button" text="Ship 2"></Button>
                     </HBox>
 
                     <VBox BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
@@ -89,8 +94,6 @@
                             <Pane fx:id="handComponentBox" minWidth="80.0" minHeight="80.0" maxWidth="80.0" maxHeight="80.0" ></Pane>
                             <Region prefWidth="40.0"></Region>
                             <ImageView fx:id="rotateButton" fitHeight="80" fitWidth="80" />
-                            <Region prefWidth="65.0"></Region>
-                            <!-- <Button onAction="#discardComponent" text="Discard" />-->
                         </HBox>
                     </VBox>
                 </VBox>

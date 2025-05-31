@@ -168,24 +168,28 @@ public class GameThread extends Thread {
 
                         // Checks if remains only a traveler and picked event is battlezone
                         if (eventType.equals(CardType.BATTLEZONE.toString()) && travelersCount == 1) {
-                            gameManager.broadcastGameMessage("This event card had been skipped");
+                            gameManager.broadcastGameMessage("EventCardSkipped");
+
+                            // Sleep for a while to let players read the results of the event
+                            Thread.sleep(5000);
 
                             game.setPhase(GamePhase.TRAVEL);
                             break;
                         }
 
+                        // Starts the event
                         gameManager.createEventController();
                         gameManager.getEventController().start();
 
                         // After event
                         game.setActiveEventCard(null);
-                        gameManager.broadcastGameMessage("This event card is finished");
+                        gameManager.broadcastGameMessage("EventCardEnded");
 
                         // Handles defeated players
                         EventController.handleDefeatedPlayers(gameManager);
 
                         // Sleep for a while to let players read the results of the event
-                        Thread.sleep(3000);
+                        Thread.sleep(5000);
 
                         game.setPhase(GamePhase.TRAVEL);
                         break;

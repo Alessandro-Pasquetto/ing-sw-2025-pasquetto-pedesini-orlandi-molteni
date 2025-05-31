@@ -25,17 +25,15 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
-import org.progetto.server.model.events.Planets;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-public class NewEventView {
+public class eventView {
 
     // =======================
     // ATTRIBUTES
@@ -45,7 +43,7 @@ public class NewEventView {
     final int OTHER_COMPONENT_SIZE = 35;
     final int BOX_SLOT_SIZE = 28;
     final int OTHER_BOX_SLOT_SIZE = 12;
-    final int BOX_IMAGE_SIZE = 50;
+    final int BOX_IMAGE_SIZE = 30;
     final int OTHER_BOX_IMAGE_SIZE = 14;
 
     final String HIGHLIGHT_ID = "highlight";
@@ -406,41 +404,11 @@ public class NewEventView {
                     else if(comp instanceof BoxStorage boxStorage)
                         renderBoxStorage(cell, boxStorage);
 
-                    if (comp instanceof HousingUnit) {
-
-                        switch (comp.getRotation()) {
-                            case 0:
-                                iv.setRotate(0);
-                                break;
-                            case 1:
-                                iv.setRotate(90);
-                                break;
-                            case 2:
-                                iv.setRotate(180);
-                                break;
-                            case 3:
-                                iv.setRotate(270);
-                                break;
-                        }
-
-                    } else {
-
-                        switch (comp.getRotation()) {
-                            case 0:
-                                cell.setRotate(0);
-                                break;
-                            case 1:
-                                cell.setRotate(90);
-                                break;
-                            case 2:
-                                cell.setRotate(180);
-                                break;
-                            case 3:
-                                cell.setRotate(270);
-                                break;
-                        }
-
-                    }
+                    // Component rotation
+                    if (comp instanceof HousingUnit)
+                        iv.setRotate(comp.getRotation() * 90);
+                    else
+                        cell.setRotate(comp.getRotation() * 90);
                 }
 
                 shipGrid.add(cell, col, row);
@@ -653,7 +621,6 @@ public class NewEventView {
                 slot2.setUserData(boxStorage.getType());
                 cell.getChildren().add(slot1);
                 cell.getChildren().add(slot2);
-
                 break;
 
             case 3:
@@ -1541,7 +1508,7 @@ public class NewEventView {
      * @author Lorenzo
      * @param availableBoxes is the list of available boxes to render
      */
-    public void renderBoxes(String title, String description, ArrayList<Box> availableBoxes) {
+    public void renderRewardBoxes(String title, String description, ArrayList<Box> availableBoxes) {
         resetEventLabels();
 
         eventMainTitle.setText(title);
@@ -1787,6 +1754,56 @@ public class NewEventView {
 
         Timeline delayTimeline = new Timeline(new KeyFrame(Duration.millis(150), e -> secondDiceSequence.play()));
         delayTimeline.play();
+    }
+
+    /**
+     * Asks the player to select a box to discard
+     *
+     * @author Gabriele
+     * @param title the title to display during selection
+     * @param description the description to display during selection
+     * @param onClick the function to call when a component is clicked
+     */
+    public void askToSelectBoxToDiscard(String title, String description, Consumer<int[]> onClick) {
+        resetEventLabels();
+
+        eventMainTitle.setText(title);
+        eventMainDesc.setText(description);
+
+        Component[][] shipMatrix = GameData.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
+
+        spaceshipMatrix.getChildren().forEach(node -> {
+            if (node instanceof Pane cell) {
+
+                Integer col = GridPane.getColumnIndex(cell);
+                Integer row = GridPane.getRowIndex(cell);
+
+                if (col != null && row != null && row < shipMatrix.length && col < shipMatrix[row].length) {
+                    Component comp = shipMatrix[row][col];
+
+                    if (comp instanceof BoxStorage) {
+                        cell.getChildren().forEach(childNode -> {
+                            if (childNode instanceof Pane boxSlot && "boxSlot".equals(boxSlot.getId())) {
+
+                                // Check if the slot contains a box
+                                if (!boxSlot.getChildren().isEmpty()) {
+                                    Integer slotIndex = (Integer) boxSlot.getProperties().get("idx");
+
+                                    if (slotIndex != null) {
+                                        boxSlot.setStyle("-fx-cursor: hand;");
+
+                                        boxSlot.setOnMouseClicked(event -> {
+                                            onClick.accept(new int[]{col, row, slotIndex});
+                                            event.consume();
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     /**

@@ -217,10 +217,11 @@ public class BuildingView {
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
 
-        buildShip1Button.setOnAction(_ -> {
+        // TODO: remove, just for testing
+        buildShip1Button.setOnAction(x -> {
             GameData.getSender().buildShip(1);;
         });
-        buildShip2Button.setOnAction(_ -> {
+        buildShip2Button.setOnAction(x -> {
             GameData.getSender().buildShip(2);
         });
     }
@@ -1030,6 +1031,7 @@ public class BuildingView {
 
         for (Node node : this.spaceshipMatrix.getChildren()) {
             if (node instanceof Pane cell) {
+
                 // Check if the cell is already occupied by a Pane (component)
                 Integer rowIndex = GridPane.getRowIndex(cell);
                 Integer colIndex = GridPane.getColumnIndex(cell);
@@ -1041,7 +1043,6 @@ public class BuildingView {
                     cell.getChildren().clear();
 
                 if (component != null){
-
                     Image image = new Image(String.valueOf(MainClient.class.getResource("img/components/" + component.getImgSrc())));
                     ImageView imageView = new ImageView(image);
                     imageView.setFitWidth(COMPONENT_SIZE);
