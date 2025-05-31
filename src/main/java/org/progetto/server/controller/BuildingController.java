@@ -149,99 +149,99 @@ public class BuildingController {
 
                 switch (idShip) {
                     case 1:
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 2, 1, 0}, "battery2.jpg", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 2, 0}, "double-cannon10.jpg"));
                         bb.placeComponent(2, 0, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(1, 1, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{2, 1, 2, 1}, "shield3.jpg"));
                         bb.placeComponent(1, 2, 3);
 
-                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(0, 2, 0);
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{0, 0, 2, 3}, "purple-alien-housing-unit4.jpg"));
+                        bb.placeComponent(0, 2, 3);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(2, 3, 0);
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{2, 1, 0, 1}, "housing-unit5.jpg", 2));
+                        bb.placeComponent(0, 3, 1);
 
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(1, 3, 0);
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 2, 1, 0}, "battery15.jpg", 2));
+                        bb.placeComponent(1, 3, 2);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(0, 3, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 0}, "single-engine10.jpg"));
                         bb.placeComponent(0, 4, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(1, 4, 0);
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "blue-box-storage13.jpg", 2));
+                        bb.placeComponent(1, 4, 1);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(3, 2, 0);
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
+                        bb.placeComponent(2, 3, 2);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{2, 1, 0, 3}, "red-box-storage6.jpg", 1));
+                        bb.placeComponent(3, 2, 2);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 0, 3}, "double-cannon2.jpg"));
                         bb.placeComponent(3, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
                         bb.placeComponent(3, 3, 2);
 
-                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(4, 3, 0);
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{1, 1, 0, 1}, "orange-alien-housing-unit.jpg"));
+                        bb.placeComponent(4, 3, 3);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
                         bb.placeComponent(4, 2, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 0, 0, 2}, "double-engine3.jpg"));
+                        bb.placeComponent(4, 4, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 2, 0, 3}, "housing-unit13.jpg", 2));
                         bb.placeComponent(3, 4, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
-                        bb.placeComponent(4, 4, 0);
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon2.jpg"));
+                        bb.placeComponent(1, 1, 0);
 
                         MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     case 2:
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 2, 1, 0}, "battery2.jpg", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon4.jpg"));
                         bb.placeComponent(2, 0, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(1, 1, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(3, 1, 0);
-
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
                         bb.placeComponent(1, 2, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
-                        bb.placeComponent(1, 3, 0);
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon2.jpg"));
+                        bb.placeComponent(1, 1, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(3, 2, 0);
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 0, 1}, "battery13.jpg", 2));
+                        bb.placeComponent(0, 2, 2);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(3, 3, 0);
-
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(0, 2, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(4, 2, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
-                        bb.placeComponent(2, 3, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 1, 0, 0}, "single-engine12.jpg"));
                         bb.placeComponent(0, 3, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 0, 0, 3}, "blue-box-storage8.jpg", 2));
+                        bb.placeComponent(1, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{1, 3, 0, 0}, "double-engine8.jpg"));
+                        bb.placeComponent(2, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 2, 0, 1}, "red-box-storage2.jpg", 2));
+                        bb.placeComponent(3, 2, 2);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 0, 3}, "double-cannon2.jpg"));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 1, 0, 3}, "housing-unit11.jpg", 2));
+                        bb.placeComponent(3, 3, 2);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 3}, "single-engine1.jpg"));
                         bb.placeComponent(4, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
+                        bb.placeComponent(4, 2, 0);
 
                         MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
@@ -255,134 +255,134 @@ public class BuildingController {
 
                 switch (idShip) {
                     case 1:
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 2, 1, 2}, "double-cannon3.jpg"));
                         bb.placeComponent(3, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 0, 3}, "double-cannon2.jpg"));
                         bb.placeComponent(4, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(5, 1, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 2, 0, 3}, "single-cannon1.jpg"));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 0, 0}, "single-cannon6.jpg"));
                         bb.placeComponent(1, 1, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(2, 2, 0);
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{2, 1, 0, 1}, "housing-unit5.jpg", 2));
+                        bb.placeComponent(2, 2, 2);
 
-                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(1, 2, 0);
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{2, 0, 0, 3}, "purple-alien-housing-unit6.jpg"));
+                        bb.placeComponent(1, 2, 2);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(1, 3, 0);
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 1, 3, 2}, "housing-unit7.jpg", 2));
+                        bb.placeComponent(1, 3, 1);
 
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(4, 2, 0);
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 0, 0, 3}, "red-box-storage4.jpg", 1));
+                        bb.placeComponent(0, 3, 1);
 
-                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(5, 2, 0);
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3));
+                        bb.placeComponent(0, 2, 3);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(5, 3, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(2, 3, 2);
-
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
-                        bb.placeComponent(3, 3, 0);
-
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(4, 3, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
-                        bb.placeComponent(2, 4, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
-                        bb.placeComponent(4, 4, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 1, 0}, "single-engine12.jpg"));
                         bb.placeComponent(1, 4, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
-                        bb.placeComponent(5, 4, 0);
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{0, 0, 0, 3}, "double-engine2.jpg"));
+                        bb.placeComponent(2, 4, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
-                        bb.placeComponent(0, 2, 0);
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 2}, "shield4.jpg"));
+                        bb.placeComponent(2, 3, 2);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 2, 1, 0}, "battery2.jpg", 3));
+                        bb.placeComponent(3, 3, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 1, 1, 1}, "battery12.jpg", 2));
+                        bb.placeComponent(4, 3, 1);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
+                        bb.placeComponent(5, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{1, 1, 0, 1}, "orange-alien-housing-unit1.jpg"));
+                        bb.placeComponent(5, 2, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 1, 0}, "single-cannon2.jpg"));
+                        bb.placeComponent(5, 1, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 0, 0, 3}, "red-box-storage4.jpg", 1));
+                        bb.placeComponent(6, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 1, 3, 0}, "blue-box-storage1.jpg", 2));
                         bb.placeComponent(6, 2, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(0, 3, 0);
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 1, 0, 0}, "double-engine6.jpg"));
+                        bb.placeComponent(4, 4, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 1));
-                        bb.placeComponent(6, 3, 0);
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 3}, "single-engine1.jpg"));
+                        bb.placeComponent(5, 4, 0);
 
                         MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
                         break;
 
                     case 2:
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 2, 3, 1}, "single-cannon17.jpg"));
                         bb.placeComponent(3, 1, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 2}, "shield4.jpg"));
                         bb.placeComponent(4, 1, 0);
 
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 2, 0}, "battery5.jpg", 3));
                         bb.placeComponent(2, 1, 0);
 
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
-                        bb.placeComponent(2, 0, 0);
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{0, 0, 0, 1}, "battery1.jpg", 3));
+                        bb.placeComponent(2, 0, 3);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(1, 1, 0);
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{2, 1, 0, 3}, "red-box-storage6.jpg", 2));
+                        bb.placeComponent(2, 2, 1);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(2, 2, 0);
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
+                        bb.placeComponent(2, 3, 1);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 3));
-                        bb.placeComponent(1, 2, 0);
-
-                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(3, 3, 0);
-
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(2, 3, 0);
-
-                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{3, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 0, 1, 1}, "shield2.jpg"));
                         bb.placeComponent(1, 3, 1);
 
-                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(0, 3, 0);
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 0, 1, 2}, "blue-box-storage2.jpg", 3));
+                        bb.placeComponent(1, 2, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
-                        bb.placeComponent(0, 2, 0);
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 3, 2}, "double-cannon4.jpg"));
+                        bb.placeComponent(1, 1, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
+                        bb.placeComponent(0, 2, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{0, 0, 1, 3}, "orange-alien-housing-unit4.jpg"));
+                        bb.placeComponent(0, 3, 2);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 0, 0, 3}, "battery7.jpg", 2));
+                        bb.placeComponent(3, 3, 1);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
                         bb.placeComponent(4, 2, 0);
 
-                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 2, 1}, "housing-unit3.jpg", 2));
                         bb.placeComponent(4, 3, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{2, 3, 0, 0}, "single-engine20.jpg"));
                         bb.placeComponent(4, 4, 0);
 
-                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
-                        bb.placeComponent(5, 2, 0);
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{1, 2, 0, 2}, "purple-housing-unit1.jpg"));
+                        bb.placeComponent(5, 2, 2);
 
-                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 3, 1}, "single-cannon15.jpg"));
                         bb.placeComponent(5, 3, 1);
 
-                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{3, 3, 0, 3}, "imgPath"));
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{0, 3, 0, 3}, "double-engine2.jpg"));
                         bb.placeComponent(5, 4, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 1));
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 0, 0, 2}, "red-box-storage1.jpg", 2));
                         bb.placeComponent(6, 2, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2));
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 2));
                         bb.placeComponent(6, 4, 0);
 
                         MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);

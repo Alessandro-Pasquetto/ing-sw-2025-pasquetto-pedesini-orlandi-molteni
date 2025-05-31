@@ -61,6 +61,8 @@
                     <HBox fx:id="timerContainer" spacing="20" alignment="CENTER">
                         <Label fx:id="timerLabel" text="00:00" textFill="#eba52d" />
                         <Button fx:id="timerButton" onAction="#resetTimer" text="Reset Timer" />
+                        <Button fx:id="buildShip1Button" minHeight="34.0" minWidth="157.0" onAction="#placeHandComponentAndReady" text="BuildShip 1"></Button>
+                        <Button fx:id="buildShip2Button" minHeight="34.0" minWidth="157.0" onAction="#placeHandComponentAndReady" text="BuildShip 2"></Button>
                     </HBox>
 
                     <VBox BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="20" alignment="CENTER" style="-fx-padding: 25px">

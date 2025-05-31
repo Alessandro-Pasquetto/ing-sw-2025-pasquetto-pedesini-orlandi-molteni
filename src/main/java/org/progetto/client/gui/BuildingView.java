@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,9 +17,10 @@ import javafx.util.Duration;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
+import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.Component;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
 
 import java.util.ArrayList;
@@ -66,6 +68,12 @@ public class BuildingView {
 
     @FXML
     public Button buildingReadyButton;
+
+    @FXML
+    public Button buildShip1Button;
+
+    @FXML
+    public Button buildShip2Button;
 
     @FXML
     private Pane handComponentBox;
@@ -208,6 +216,13 @@ public class BuildingView {
         insertCentralUnitComponent(levelShip, getImgSrcCentralUnitFromColor(color));
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
+
+        buildShip1Button.setOnAction(_ -> {
+            GameData.getSender().buildShip(1);;
+        });
+        buildShip2Button.setOnAction(_ -> {
+            GameData.getSender().buildShip(2);
+        });
     }
 
     /**
