@@ -116,13 +116,22 @@ public class GameController {
     }
 
     public static ArrayList<Player> getPlayersInTrackCopy(GameManager gameManager) {
-        ArrayList<Player> playersInTrack = gameManager.getGame().getBoard().getCopyTravelers();
+        ArrayList<Player> playersInTrack = new ArrayList<>();
+
+        playersInTrack.addAll(
+                gameManager.getGame().getPlayersCopy()
+                        .stream()
+                        .filter(player -> !player.getHasLeft())
+                        .toList()
+        );
+
         playersInTrack.addAll(
                 gameManager.getDisconnectedPlayersCopy()
                         .stream()
                         .filter(player -> !player.getHasLeft())
                         .toList()
         );
+
         return playersInTrack;
     }
 }

@@ -30,6 +30,7 @@ public class SocketListener extends Thread {
 
     public SocketListener(ObjectInputStream in) {
         SocketListener.in = in;
+        this.setName("SocketListenerThread");
     }
 
     // =======================

@@ -14,7 +14,6 @@ import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.CardType;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class GameThread extends Thread {
@@ -33,6 +32,7 @@ public class GameThread extends Thread {
 
     public GameThread(GameManager gameManager) {
         this.gameManager = gameManager;
+        this.setName("GameThread");
     }
 
     // =======================
@@ -171,7 +171,12 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage("EventCardSkipped");
 
                             // Sleep for a while to let players read the results of the event
-                            Thread.sleep(5000);
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                                e.printStackTrace();
+                            }
 
                             game.setPhase(GamePhase.TRAVEL);
                             break;
@@ -189,7 +194,12 @@ public class GameThread extends Thread {
                         EventController.handleDefeatedPlayers(gameManager);
 
                         // Sleep for a while to let players read the results of the event
-                        Thread.sleep(5000);
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                            e.printStackTrace();
+                        }
 
                         game.setPhase(GamePhase.TRAVEL);
                         break;
@@ -329,6 +339,25 @@ public class GameThread extends Thread {
         for (Player player : board.getCopyTravelers()) {
             player.setIsReady(false, game);
         }
+
+        synchronized (gameThreadLock) {
+            while (!board.allTravelersReady())
+                gameThreadLock.wait();
+        }
+    }
+
+    public void resetTravelersReady() {
+        Game game = gameManager.getGame();
+        Board board = game.getBoard();
+
+        for (Player player : board.getCopyTravelers()) {
+            player.setIsReady(false, game);
+        }
+    }
+
+    public void waitTravelersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        Board board = game.getBoard();
 
         synchronized (gameThreadLock) {
             while (!board.allTravelersReady())

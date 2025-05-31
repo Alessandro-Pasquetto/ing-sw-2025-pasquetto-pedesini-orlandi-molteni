@@ -8,9 +8,9 @@ import java.net.*;
  */
 public class SocketServer extends Thread {
 
-    // =======================
-    // MAIN
-    // =======================
+    public SocketServer() {
+        this.setName("SocketServerThread");
+    }
 
     @Override
     public void run() {

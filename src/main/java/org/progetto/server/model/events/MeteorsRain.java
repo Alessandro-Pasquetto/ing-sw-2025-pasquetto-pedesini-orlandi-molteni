@@ -123,21 +123,6 @@ public class MeteorsRain extends EventCard {
         return spaceship.getIdxShieldCount(shot.getFrom()) > 0;
     }
 
-    /**
-     * Checks if the StorageComponent chosen by player is a battery storage
-     * If that is true, the battery will be removed
-     *
-     * @author Gabriele
-     * @author Stefano
-     * @param component StorageComponent from which the battery will be discarded
-     * @return true if the battery was successfully discarded, false if the battery storage is empty
-     */
-    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship, 1);
-        } else return false;
-    }
-
     // TODO: For each meteor, the controller let the leader throw the dices to find impact position.
     //  Each one of the players will be affected by that projectile simultaneously.
     //  There is two types of meteor:
@@ -146,7 +131,6 @@ public class MeteorsRain extends EventCard {
     //           Otherwise, the controller has to check if that component has any exposed connector in shot direction (connections[shotDirection] > 0).
     //           If it has any exposed connector, the controller checks if the player has a shield pointing in the projectile direction, calling checkShields().
     //           If returns true, the controller asks to player if he wants to use battery to enable it (if he has at least a battery).
-    //           If he wants to use it, it calls chooseDiscardedBattery().
     //           Otherwise, the meteor hits the exposed connector component, so controller destroys previously passed component.
     //  - big: the controller checks what's the first component in meteor's way (row/column), calling checkImpactComponent().
     //         That returns null if there's no component in its trajectory; otherwise returns component's reference.

@@ -162,6 +162,12 @@ public class GameManager {
         }
     }
 
+    public ArrayList<Player> getReconnectingPlayersCopy() {
+        synchronized (reconnectingPlayers) {
+            return new ArrayList<>(reconnectingPlayers);
+        }
+    }
+
     // =======================
     // SETTERS
     // =======================
@@ -191,6 +197,7 @@ public class GameManager {
                 }
             }
         });
+        pingThread.setName("GamePingerThread");
         pingThread.setDaemon(true);
         pingThread.start();
     }
@@ -288,63 +295,63 @@ public class GameManager {
 
         //todo gestire il resto?
 
+        player.setIsReady(false, game);
         gameThread.notifyThread();
     }
 
     public synchronized void reconnectPlayer(String namePlayer, Sender sender) {
-            Player player = getDisconnectedPlayerByName(namePlayer);
+        Player player = getDisconnectedPlayerByName(namePlayer);
 
-            if(player == null)
-                throw new IllegalStateException("FailedToReconnect");
+        if(player == null)
+            throw new IllegalStateException("FailedToReconnect");
 
-            removeDisconnectedPlayer(player);
-            addSender(player, sender);
+        removeDisconnectedPlayer(player);
+        addSender(player, sender);
+        game.addPlayer(player);
 
-            broadcastGameMessageToOthers(new AnotherPlayerReconnectMessage(player.getName()), sender);
+        broadcastGameMessageToOthers(new AnotherPlayerReconnectMessage(player.getName()), sender);
 
-            Game game = getGame();
+        Game game = getGame();
 
-            Player activePlayer = game.getActivePlayer();
-            String nameActivePlayer = "";
+        Player activePlayer = game.getActivePlayer();
+        String nameActivePlayer = "";
 
-            if(activePlayer != null)
-                nameActivePlayer = activePlayer.getName();
+        if(activePlayer != null)
+            nameActivePlayer = activePlayer.getName();
 
-            MessageSenderService.sendOptional(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer), sender);
+        MessageSenderService.sendOptional(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer), sender);
 
-            if(isLosingPlayer(player)){
-                MessageSenderService.sendOptional("GameOver", sender);
-                return;
+        if(isLosingPlayer(player)){
+            MessageSenderService.sendOptional("GameOver", sender);
+            return;
+        }
+
+        if(game.getPhase().equals(GamePhase.POPULATING))
+            PopulatingController.askAliensToSinglePlayer(this, player); // No need to set the player as not ready, the initialization method already did
+
+        else if (game.getPhase().equals(GamePhase.POSITIONING)) {
+            PositioningController.showPlayersInPositioningDecisionOrder(this, sender);
+            PositioningController.showStartingPositions(this, sender);
+        }
+
+        else if(game.getPhase().equals(GamePhase.EVENT)){
+            MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
+            MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
+            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+
+            if(!player.getHasLeft())
+                addReconnectingPlayer(player);
+        }
+
+        else if(game.getPhase().equals(GamePhase.TRAVEL)){
+            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+
+            if(!player.getHasLeft()){
+                player.setIsReady(false, game);
+                game.getBoard().addTraveler(player);
+                MessageSenderService.sendOptional("AskContinueTravel", sender);
             }
-
-            game.addPlayer(player);
-
-            if(game.getPhase().equals(GamePhase.POPULATING))
-                PopulatingController.askAliensToSinglePlayer(this, player); // No need to set the player as not ready, the initialization method already did
-
-            else if (game.getPhase().equals(GamePhase.POSITIONING)) {
-                PositioningController.showPlayersInPositioningDecisionOrder(this, sender);
-                PositioningController.showStartingPositions(this, sender);
-            }
-
-            else if(game.getPhase().equals(GamePhase.EVENT)){
-                MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
-                MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
-                MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
-
-                if(!player.getHasLeft())
-                    addReconnectingPlayer(player);
-            }
-
-            else if(game.getPhase().equals(GamePhase.TRAVEL)){
-                MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
-
-                if(!player.getHasLeft()){
-                    player.setIsReady(false, game);
-                    game.getBoard().addTraveler(player);
-                    MessageSenderService.sendOptional("AskContinueTravel", sender);
-                }
-            }
+        }
     }
 
     public void kickOutDisconnectedPlayer(Player player) {

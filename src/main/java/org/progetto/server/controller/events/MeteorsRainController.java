@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -30,6 +31,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     private Projectile comingMeteor;
     private final ArrayList<Player> decisionPlayers;
     private final ArrayList<Player> discardedBattery;
+    private final ArrayList<Player> meteoriteHandlers;
 
     // =======================
     // CONSTRUCTORS
@@ -43,6 +45,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
         this.discardedBattery = new ArrayList<>();
+        this.meteoriteHandlers = new ArrayList<>();
     }
 
     // =======================
@@ -78,6 +81,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Projectile meteor : meteors) {
+            meteoriteHandlers.clear();
             comingMeteor = meteor;
 
             // Sends to each player information about incoming meteor
@@ -90,9 +94,26 @@ public class MeteorsRainController extends EventControllerAbstract {
             phase = EventPhase.ASK_ROLL_DICE;
             askToRollDice();
 
+            // Delay to show the dice result
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                e.printStackTrace();
+            }
+
+            handleMeteor();
+
             // Resets elaboration attributes
             decisionPlayers.clear();
             discardedBattery.clear();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -101,7 +122,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    private void askToRollDice() throws InterruptedException {
+    private void askToRollDice() {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -119,17 +140,15 @@ public class MeteorsRainController extends EventControllerAbstract {
                 MessageSenderService.sendCritical("RollDiceToFindRow", sender);
             }
 
-            gameManager.getGameThread().resetAndWaitTravelersReady();
+            gameManager.getGameThread().resetAndWaitTravelerReady(activePlayer);
 
             // If the player is disconnected
             if(!activePlayer.getIsReady()){
                 rollDice(activePlayer, sender);
-                gameManager.getGameThread().resetAndWaitTravelersReady();
             }
 
         } catch (Exception e) {
             rollDice(activePlayer, sender);
-            gameManager.getGameThread().resetAndWaitTravelersReady();
         }
     }
 
@@ -158,12 +177,12 @@ public class MeteorsRainController extends EventControllerAbstract {
         MessageSenderService.sendOptional(new DiceResultMessage(diceResult), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(activePlayers.getFirst().getName(), diceResult), sender);
 
-        // Delay to show the dice result
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
+    }
+
+    private void handleMeteor() throws InterruptedException{
+        gameManager.getGameThread().resetTravelersReady();
 
         if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.HANDLE_SMALL_METEOR;
@@ -171,6 +190,35 @@ public class MeteorsRainController extends EventControllerAbstract {
         } else {
             phase = EventPhase.HANDLE_BIG_METEOR;
             handleBigMeteor();
+        }
+
+        gameManager.getGameThread().waitTravelersReady();
+
+        // Handle disconnected travelers
+        ArrayList<Player> disconnectedTravelers = new ArrayList<>();
+
+        disconnectedTravelers.addAll(
+                gameManager.getDisconnectedPlayersCopy()
+                        .stream()
+                        .filter(player -> !player.getHasLeft())
+                        .toList()
+        );
+
+        disconnectedTravelers.addAll(
+                gameManager.getReconnectingPlayersCopy()
+                        .stream()
+                        .filter(player -> !player.getHasLeft())
+                        .toList()
+        );
+
+        for (Player player : disconnectedTravelers) {
+            if(meteoriteHandlers.contains(player)){
+                if(!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
+                    gameManager.getGame().getBoard().leaveTravel(player);
+                }
+            }else{
+                handleCurrentMeteorForDisconnected(player);
+            }
         }
     }
 
@@ -195,6 +243,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if there is any affected component
             if (affectedComponent == null) {
                 MessageSenderService.sendOptional("NoComponentHit", sender);
+                meteoriteHandlers.add(player);
 
                 player.setIsReady(true, gameManager.getGame());
                 continue;
@@ -203,6 +252,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if component have any exposed connector in shot's direction
             if (affectedComponent.getConnections()[comingMeteor.getFrom()] == 0) {
                 MessageSenderService.sendOptional("NoComponentDamaged", sender);
+                meteoriteHandlers.add(player);
 
                 player.setIsReady(true, gameManager.getGame());
                 continue;
@@ -224,10 +274,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
-            return;
         }
-
-        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -251,6 +298,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if there is any affected component
             if (affectedComponent == null) {
                 MessageSenderService.sendOptional("NoComponentHit", sender);
+                meteoriteHandlers.add(player);
 
                 player.setIsReady(true, gameManager.getGame());
                 continue;
@@ -259,6 +307,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Checks if component is a cannon positioned in the same direction as the meteor
             if (affectedComponent.getType().equals(ComponentType.CANNON) && affectedComponent.getRotation() == comingMeteor.getFrom()) {
                 MessageSenderService.sendOptional("MeteorDestroyed", sender);
+                meteoriteHandlers.add(player);
 
                 player.setIsReady(true, gameManager.getGame());
                 continue;
@@ -280,10 +329,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!decisionPlayers.isEmpty()) {
             phase = EventPhase.ASK_TO_PROTECT;
             askToProtect();
-            return;
         }
-
-        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -300,12 +346,17 @@ public class MeteorsRainController extends EventControllerAbstract {
             // Asks current player if he wants to use a protection
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            if (comingMeteor.getSize().equals(ProjectileSize.SMALL))
-                MessageSenderService.sendOptional("AskToUseShield", sender);
-            else
-                MessageSenderService.sendOptional("AskToUseDoubleCannon", sender);
-
             phase = EventPhase.PROTECTION_DECISION;
+            try{
+                if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
+                    MessageSenderService.sendOptional("AskToUseShield", sender);
+                }
+                else {
+                    MessageSenderService.sendOptional("AskToUseDoubleCannon", sender);
+                }
+            } catch (Exception e) {
+                handleCurrentMeteor(player);
+            }
         }
     }
 
@@ -371,31 +422,37 @@ public class MeteorsRainController extends EventControllerAbstract {
             return;
         }
 
-        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+        Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
         // Checks if component is a battery storage
-        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
+        if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
             MessageSenderService.sendOptional("InvalidComponent", sender);
             MessageSenderService.sendOptional(new BatteriesToDiscardMessage(1), sender);
             return;
         }
 
-        // Checks if a battery has been discarded
-        if (meteorsRain.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-            discardedBattery.remove(player);
+        BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
 
-            MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
-
-            MessageSenderService.sendOptional("YouAreSafe", sender);
-
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
-
-        } else {
-            MessageSenderService.sendOptional("BatteryNotDiscarded", sender);
+        if(batteryStorage.getItemsCount() == 0) {
+            MessageSenderService.sendOptional("EmptyBatteryStorage", sender);
             MessageSenderService.sendOptional(new BatteriesToDiscardMessage(1), sender);
+            return;
         }
+
+        discardedBattery.remove(player);
+        batteryStorage.decrementItemsCount(player.getSpaceship(), 1);
+
+        MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+
+        // Update spaceship to remove highlight components when it's not my turn.
+        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+        MessageSenderService.sendOptional("YouAreSafe", sender);
+
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -414,6 +471,33 @@ public class MeteorsRainController extends EventControllerAbstract {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         // Destroys affected component
-        SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender);
+        if(SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
+            meteoriteHandlers.add(player);
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+        }else {
+            meteoriteHandlers.add(player);
+            try{
+                MessageSenderService.sendCritical("AskSelectSpaceshipPart", sender);
+            }catch (Exception e) {
+                gameManager.getGame().getBoard().leaveTravel(player);
+            }
+        }
+    }
+
+    private void handleCurrentMeteorForDisconnected(Player player) {
+
+        Game game = gameManager.getGame();
+
+        // Handles current meteor for player
+        Component affectedComponent = meteorsRain.checkImpactComponent(game, player, comingMeteor, diceResult);
+
+        // Gets current player sender reference
+        Sender sender = gameManager.getSenderByPlayer(player);
+
+        // Destroys affected component
+        if(!SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
+            gameManager.getGame().getBoard().leaveTravel(player);
+        }
     }
 }

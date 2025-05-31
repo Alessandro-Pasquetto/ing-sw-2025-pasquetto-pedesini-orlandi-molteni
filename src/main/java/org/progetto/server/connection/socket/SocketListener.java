@@ -21,6 +21,7 @@ public class SocketListener extends Thread {
     public SocketListener(ClientHandler clientHandler, ObjectInputStream in) {
         this.clientHandler = clientHandler;
         this.in = in;
+        this.setName("SocketListenerThread");
     }
 
     /**

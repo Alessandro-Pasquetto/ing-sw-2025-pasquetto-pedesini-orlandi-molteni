@@ -168,38 +168,28 @@ public class SpaceshipController {
     }
 
     /**
-     * Called after a component is destroyed by an event if it's possible auto adjustSpaceship otherwise send message to player to choose a spaceship part to keep
+     * Called after a component is destroyed by an event and return false if the player has to choose a spaceship part to keep
      *
+     * @author Lorenzo, Alessandro
      * @param gameManager of the current game
      * @param player owner of the spaceship
      * @param yComponent coordinate for the destroyed component
      * @param xComponent coordinate fot the destroyed component
      * @param sender current sender
-     * @author Lorenzo, Alessandro
+     * @return false if is required to select spaceship part
      */
-    public static void destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
+    public static boolean destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
 
-        try{
-            BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-            buildingBoard.destroyComponent(xComponent, yComponent);
+        BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
+        buildingBoard.destroyComponent(xComponent, yComponent);
 
-            MessageSenderService.sendOptional(new DestroyedComponentMessage(xComponent, yComponent), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
+        MessageSenderService.sendOptional(new DestroyedComponentMessage(xComponent, yComponent), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
-            // Checks ship validity
-            if (!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()) {
-                MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
-
-            } else {
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-            }
-
-        } catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
-        }
+        // Checks ship validity
+        return player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens();
     }
 
     /**

@@ -65,6 +65,7 @@ public class LobbyController {
                 }
             }
         });
+        pingThread.setName("LobbyPingerThread");
         pingThread.setDaemon(true);
         pingThread.start();
     }

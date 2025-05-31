@@ -8,9 +8,9 @@ import java.rmi.registry.LocateRegistry;
  */
 public class RmiServer extends Thread {
 
-    // =======================
-    // MAIN
-    // =======================
+    public RmiServer() {
+        this.setName("RmiServerThread");
+    }
 
     @Override
     public void run() {

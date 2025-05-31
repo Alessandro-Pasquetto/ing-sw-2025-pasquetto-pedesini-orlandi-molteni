@@ -100,19 +100,6 @@ public class Slavers extends EventCard {
     }
 
     /**
-     * Checks if the StorageComponent chosen by player is a battery storage
-     * If that is true, the battery will be removed
-     *
-     * @author Gabriele
-     * @author Stefano
-     * @param component StorageComponent from which the battery will be discarded
-     * @return true if the battery was successfully discarded, false if the battery storage is empty
-     */
-    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        return component.decrementItemsCount(spaceship, 1);
-    }
-
-    /**
      * If the player chooses to take the reward credits, they are moved back by a number of days equal to penaltyDays
      *
      * @author Gabriele

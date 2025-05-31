@@ -69,35 +69,6 @@ class SlaversTest {
     }
 
     @Test
-    void chooseDiscardedBattery() {
-        Game game = new Game(0, 3, 2);
-        Player mario = new Player("mario");
-
-        game.addPlayer(mario);
-        game.initPlayersSpaceship();
-
-        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
-        BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(), 2);
-
-        // Returns false if component is not a Housing Unit
-        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
-
-        // Removes one battery member from the Housing Unit
-        assertTrue(slavers.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(1, battery.getItemsCount());
-
-        // Remove another battery from the storage
-        assertTrue(slavers.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
-
-        // Tries to remove another battery from an empty storage
-        assertFalse(slavers.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
-    }
-
-    @Test
     void rewardPenalty() {
         Player player1 = new Player("Max");
         Player player2 = new Player("Mindy");
