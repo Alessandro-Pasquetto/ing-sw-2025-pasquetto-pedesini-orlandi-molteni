@@ -200,7 +200,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         // Checks that the box index is valid
         BoxStorage storage = (BoxStorage) boxStorage;
-        if(idxBox >= storage.getCapacity() || idxBox<0){
+        if(idx >= storage.getCapacity() || idx<0){
             MessageSenderService.sendOptional("InvalidStorageIndex", sender);
             MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
             return;

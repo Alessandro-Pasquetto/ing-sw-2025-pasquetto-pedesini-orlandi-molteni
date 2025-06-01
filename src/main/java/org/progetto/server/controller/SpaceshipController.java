@@ -8,10 +8,7 @@ import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
-import org.progetto.server.model.BuildingBoard;
-import org.progetto.server.model.GamePhase;
-import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.*;
 import org.progetto.server.model.components.*;
 
 

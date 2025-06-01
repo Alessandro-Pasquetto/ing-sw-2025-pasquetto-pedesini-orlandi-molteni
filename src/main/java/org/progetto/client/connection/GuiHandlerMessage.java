@@ -945,6 +945,11 @@ public class GuiHandlerMessage {
                     PageController.getEventView().disableDragAndDropBoxesSpaceship();
                     break;
 
+                case "BoxRemoved":
+                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
+                    break;
+
+
                 case "EmptyReward":
                     PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");
                     break;

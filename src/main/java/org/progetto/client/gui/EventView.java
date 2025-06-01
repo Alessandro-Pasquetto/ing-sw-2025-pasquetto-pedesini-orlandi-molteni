@@ -1592,7 +1592,7 @@ public class EventView {
                             if (!cell.getChildren().isEmpty()) {
                                 Integer rowIndex = GridPane.getRowIndex(cell);
                                 Integer colIndex = GridPane.getColumnIndex(cell);
-                                Integer slotIndex = GridPane.getRowIndex(cell);
+                                Integer slotIndex = (Integer) boxSlot.getProperties().get("idx");
                                 System.out.println("Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
                                 Sender sender = GameData.getSender();
                                 sender.removeBox(colIndex,rowIndex,slotIndex);
