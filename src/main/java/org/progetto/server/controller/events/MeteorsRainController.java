@@ -461,7 +461,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void handleCurrentMeteor(Player player) {
-
         Game game = gameManager.getGame();
 
         // Handles current meteor for player
@@ -471,22 +470,28 @@ public class MeteorsRainController extends EventControllerAbstract {
         Sender sender = gameManager.getSenderByPlayer(player);
 
         // Destroys affected component
-        if(SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
+        if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
             meteoriteHandlers.add(player);
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
-        }else {
+
+        } else {
             meteoriteHandlers.add(player);
-            try{
+            try {
                 MessageSenderService.sendCritical("AskSelectSpaceshipPart", sender);
-            }catch (Exception e) {
+            } catch (Exception e) {
                 gameManager.getGame().getBoard().leaveTravel(player);
             }
         }
     }
 
+    /**
+     * Handles current meteor for disconnected players
+     *
+     * @author Alessandro
+     * @param player is the one that needs to handle the current meteor
+     */
     private void handleCurrentMeteorForDisconnected(Player player) {
-
         Game game = gameManager.getGame();
 
         // Handles current meteor for player

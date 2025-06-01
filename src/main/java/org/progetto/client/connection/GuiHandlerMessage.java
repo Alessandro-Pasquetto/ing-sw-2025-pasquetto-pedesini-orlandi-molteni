@@ -756,6 +756,10 @@ public class GuiHandlerMessage {
             PageController.getEventView().addChatMessage(playerDefeatedMessage.getPlayerName() + " was defeated!", "INFO");
         }
 
+        else if (messageObj instanceof ScoreBoardMessage scoreBoardMessage) {
+            PageController.getGameOverView().initScoreboard(scoreBoardMessage.getScoreBoard());
+        }
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
