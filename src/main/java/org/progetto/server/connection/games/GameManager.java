@@ -2,6 +2,7 @@ package org.progetto.server.connection.games;
 
 import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
@@ -31,8 +32,6 @@ public class GameManager {
 
     private final ArrayList<Player> disconnectedPlayers;
 
-    private final ArrayList<Player> reconnectingPlayers;
-
     private final ArrayList<Player> losingPlayers;
 
     // List to save playersOrder after building
@@ -53,7 +52,6 @@ public class GameManager {
 
         this.playerSenders = new HashMap<>();
         this.disconnectedPlayers = new ArrayList<>();
-        this.reconnectingPlayers = new ArrayList<>();
         this.losingPlayers = new ArrayList<>();
         this.notCheckedReadyPlayers = new ArrayList<>();
 
@@ -153,21 +151,6 @@ public class GameManager {
         }
     }
 
-    public ArrayList<Player> getAndClearReconnectingPlayersCopy() {
-        synchronized (reconnectingPlayers) {
-            ArrayList<Player> reconnectedPlayersCopy = new ArrayList<>(reconnectingPlayers);
-            reconnectingPlayers.clear();
-
-            return reconnectedPlayersCopy;
-        }
-    }
-
-    public ArrayList<Player> getReconnectingPlayersCopy() {
-        synchronized (reconnectingPlayers) {
-            return new ArrayList<>(reconnectingPlayers);
-        }
-    }
-
     // =======================
     // SETTERS
     // =======================
@@ -254,7 +237,6 @@ public class GameManager {
 
         game.removePlayer(player);
         removeSender(player);
-        removeReconnectingPlayers(player);
 
         if(game.getPlayersSize() == 0){
             GameManagerMaps.removeGameManager(game.getId());
@@ -287,13 +269,19 @@ public class GameManager {
         addDisconnectedPlayers(player);
 
         if(game.getPhase().equals(GamePhase.EVENT)){
-
+            /*
             game.getBoard().removeTraveler(player);
 
             broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
+             */
+            broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
         }
 
-        //todo gestire il resto?
+        if(game.getPhase().equals(GamePhase.TRAVEL)){
+
+            game.getBoard().removeTraveler(player);
+
+        }
 
         player.setIsReady(false, game);
         gameThread.notifyThread();
@@ -304,6 +292,8 @@ public class GameManager {
 
         if(player == null)
             throw new IllegalStateException("FailedToReconnect");
+
+        player.setIsReady(false, game);
 
         removeDisconnectedPlayer(player);
         addSender(player, sender);
@@ -337,17 +327,17 @@ public class GameManager {
         else if(game.getPhase().equals(GamePhase.EVENT)){
             MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
             MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
-            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+            MessageSenderService.sendOptional(new PickedEventCardMessage(game.getActiveEventCard()), sender);
 
             if(!player.getHasLeft())
-                addReconnectingPlayer(player);
+                eventController.reconnectPlayer(player, sender);
         }
 
         else if(game.getPhase().equals(GamePhase.TRAVEL)){
-            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
 
             if(!player.getHasLeft()){
-                player.setIsReady(false, game);
                 game.getBoard().addTraveler(player);
                 MessageSenderService.sendOptional("AskContinueTravel", sender);
             }
@@ -358,20 +348,6 @@ public class GameManager {
         removeLosingPlayer(player);
         removeDisconnectedPlayer(player);
         removeSender(player);
-    }
-
-    public void addReconnectingPlayer(Player player) {
-        synchronized (reconnectingPlayers) {
-            reconnectingPlayers.add(player);
-        }
-    }
-
-    public void addReconnectingPlayersToTravelers() {
-        ArrayList<Player> reconnectingPlayersCopy = getAndClearReconnectingPlayersCopy();
-
-        for (Player player : reconnectingPlayersCopy) {
-            game.getBoard().addTraveler(player);
-        }
     }
 
     public void addSender(Player player, Sender socketWriter){
@@ -395,12 +371,6 @@ public class GameManager {
     public void removeDisconnectedPlayer(Player player){
         synchronized (disconnectedPlayers){
             disconnectedPlayers.remove(player);
-        }
-    }
-
-    public void removeReconnectingPlayers(Player player){
-        synchronized (reconnectingPlayers){
-            reconnectingPlayers.remove(player);
         }
     }
 

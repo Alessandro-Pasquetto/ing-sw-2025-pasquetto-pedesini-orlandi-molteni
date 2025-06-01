@@ -149,7 +149,7 @@ public class GameThread extends Thread {
 
                         // Updates mini tracks and other spaceships
                         gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
-                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
 
 
                         // Updates the spaceship
@@ -208,29 +208,32 @@ public class GameThread extends Thread {
                         System.out.println("Travel phase started...");
                         gameManager.broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
 
-                        gameManager.addReconnectingPlayersToTravelers();
+                        game.getBoard().clearTravelers();
 
                         // Updates the track
-                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
+                        gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
 
                         if(game.getEventDeckSize() > 0){
 
                             // Asks for each traveler if he wants to continue travel
-                            for (Player player : game.getBoard().getCopyTravelers()) {
+                            for (Player player : game.getPlayersCopy()) {
+                                if(player.getHasLeft())
+                                    continue;
+
                                 Sender sender = gameManager.getSenderByPlayer(player);
 
                                 MessageSenderService.sendOptional("AskContinueTravel", sender);
                             }
 
-                            resetAndWaitTravelersReady();
+                            resetTravelersAndWaitConnectedTravelersReady();
+
+                            game.setPhase(GamePhase.EVENT);
 
                             game.getBoard().updateTurnOrder();
 
                             // Checks if there is at least a traveler remaining
-                            if (game.getBoard().getNumTravelers() > 0) {
-                                game.setPhase(GamePhase.EVENT);
+                            if (game.getBoard().getNumTravelers() > 0)
                                 break;
-                            }
                         }
 
                         game.setPhase(GamePhase.ENDGAME);
@@ -327,7 +330,7 @@ public class GameThread extends Thread {
         }
     }
 
-    /**
+    /** //todo questo non dovrebbe servire (da vedere in pirati)
      * Pauses the game thread until all connected travelers are ready to continue
      *
      * @author Gabriele
@@ -341,7 +344,21 @@ public class GameThread extends Thread {
         }
 
         synchronized (gameThreadLock) {
-            while (!board.allTravelersReady())
+            while (!GameController.allConnectedTravelersReady(gameManager))
+                gameThreadLock.wait();
+        }
+    }
+
+    public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        Board board = game.getBoard();
+
+        for (Player player : board.getCopyTravelers()) {
+            player.setIsReady(false, game);
+        }
+
+        synchronized (gameThreadLock) {
+            while (!GameController.allConnectedTravelersReady(gameManager))
                 gameThreadLock.wait();
         }
     }
@@ -355,12 +372,9 @@ public class GameThread extends Thread {
         }
     }
 
-    public void waitTravelersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
-        Board board = game.getBoard();
-
+    public void waitConnectedTravelersReady() throws InterruptedException {
         synchronized (gameThreadLock) {
-            while (!board.allTravelersReady())
+            while (!GameController.allConnectedTravelersReady(gameManager))
                 gameThreadLock.wait();
         }
     }

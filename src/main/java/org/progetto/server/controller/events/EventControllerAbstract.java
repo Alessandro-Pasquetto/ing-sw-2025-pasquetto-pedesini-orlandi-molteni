@@ -96,4 +96,8 @@ abstract public class EventControllerAbstract {
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) {
         MessageSenderService.sendOptional("FunctionNotAvailable", sender);
     }
+
+    public void reconnectPlayer(Player player, Sender sender) {
+
+    }
 }

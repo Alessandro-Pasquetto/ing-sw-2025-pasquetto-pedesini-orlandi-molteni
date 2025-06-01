@@ -30,28 +30,7 @@ public class PopulatingController {
     public static void askAliens(GameManager gameManager) {
 
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
-
-            Sender sender = gameManager.getSenderByPlayer(player);
-
-            if(player.getIsReady()){
-                MessageSenderService.sendOptional("PopulatingComplete", sender);
-                continue;
-            }
-
-            try{
-                // If sending fails (and sender is not null), we should forcibly disconnect the player //todo put critical and handle
-                if (player.getSpaceship().checkShipAllowPurpleAlien())
-                    MessageSenderService.sendCritical(new AskAlienMessage("purple", player.getSpaceship()), sender);
-
-                else if (player.getSpaceship().checkShipAllowOrangeAlien())
-                    MessageSenderService.sendCritical(new AskAlienMessage("orange", player.getSpaceship()), sender);
-            } catch (Exception e) {
-                player.getSpaceship().getBuildingBoard().fillHumans();
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-
-                MessageSenderService.sendOptional("PopulatingComplete", sender);
-            }
+            askAliensToSinglePlayer(gameManager, player);
         }
     }
 

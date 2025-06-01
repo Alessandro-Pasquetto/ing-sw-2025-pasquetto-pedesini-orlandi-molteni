@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -29,6 +30,7 @@ public class OpenSpaceController extends EventControllerAbstract {
     private int playerEnginePower;
     private int requestedNumber;
     private final ArrayList<BatteryStorage> batteryStorages;
+    private ArrayList<Player> activePlayers;
 
     // =======================
     // CONSTRUCTORS
@@ -41,6 +43,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         this.playerEnginePower = 0;
         this.requestedNumber = 0;
         this.batteryStorages = new ArrayList<>();
+        this.activePlayers = new ArrayList<>();
     }
 
     // =======================
@@ -70,7 +73,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
-        ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
+        activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
@@ -255,6 +258,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             MessageSenderService.sendOptional("NoEnginePower", sender);
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
             board.leaveTravel(player);
+            gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
         }
     }
 }

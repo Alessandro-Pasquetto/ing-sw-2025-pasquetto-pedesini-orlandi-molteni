@@ -9,7 +9,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 
 /**
@@ -115,7 +115,7 @@ public class GameController {
         }
     }
 
-    public static ArrayList<Player> getPlayersInTrackCopy(GameManager gameManager) {
+    public static ArrayList<Player> getAllPlayersInTrackCopy(GameManager gameManager) {
         ArrayList<Player> playersInTrack = new ArrayList<>();
 
         playersInTrack.addAll(
@@ -133,5 +133,29 @@ public class GameController {
         );
 
         return playersInTrack;
+    }
+
+    public static ArrayList<Player> getConnectedTravelers(GameManager gameManager) {
+
+        return new ArrayList<>(gameManager.getGame().getPlayersCopy()
+                .stream()
+                .filter(player -> !player.getHasLeft())
+                .toList());
+    }
+
+    public static ArrayList<Player> getDisconnectedTravelers(GameManager gameManager) {
+        return new ArrayList<>(gameManager.getDisconnectedPlayersCopy()
+                .stream()
+                .filter(player -> !player.getHasLeft())
+                .toList());
+    }
+
+    public static boolean allConnectedTravelersReady(GameManager gameManager) {
+        for (Player traveler : getConnectedTravelers(gameManager)) {
+            if(!traveler.getIsReady())
+                return false;
+        }
+
+        return true;
     }
 }

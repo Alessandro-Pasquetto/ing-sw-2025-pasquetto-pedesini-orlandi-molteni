@@ -480,7 +480,7 @@ public class Game {
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
        }

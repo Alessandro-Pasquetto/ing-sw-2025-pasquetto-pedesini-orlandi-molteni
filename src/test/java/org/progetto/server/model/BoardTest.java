@@ -108,7 +108,7 @@ class BoardTest {
         p3.setIsReady(true, game);
         p4.setIsReady(true, game);
 
-        assertTrue(board.allTravelersReady());
+        assertTrue(board.allTravelersReadyOrDisconnected());
 
         board.addTravelersOnTrack(2);
         track = board.getTrack();

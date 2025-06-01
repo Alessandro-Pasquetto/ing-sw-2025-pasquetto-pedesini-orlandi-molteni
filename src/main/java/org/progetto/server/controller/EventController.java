@@ -54,7 +54,7 @@ public class EventController {
 
         Board board = gameManager.getGame().getBoard();
 
-        ArrayList<Player> playersInTrack = GameController.getPlayersInTrackCopy(gameManager);
+        ArrayList<Player> playersInTrack = GameController.getAllPlayersInTrackCopy(gameManager);
 
         if(playersInTrack.isEmpty())
             return;
@@ -112,6 +112,7 @@ public class EventController {
                     MessageSenderService.sendOptional("YouAreContinuingTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerIsContinuingMessage(player.getName()), sender);
 
+                    gameManager.getGame().getBoard().addTraveler(player);
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
                     break;

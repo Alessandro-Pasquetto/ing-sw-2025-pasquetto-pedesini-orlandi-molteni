@@ -2,11 +2,13 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.controller.GameController;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -192,29 +194,16 @@ public class MeteorsRainController extends EventControllerAbstract {
             handleBigMeteor();
         }
 
-        gameManager.getGameThread().waitTravelersReady();
+        gameManager.getGameThread().waitConnectedTravelersReady();
 
         // Handle disconnected travelers
-        ArrayList<Player> disconnectedTravelers = new ArrayList<>();
-
-        disconnectedTravelers.addAll(
-                gameManager.getDisconnectedPlayersCopy()
-                        .stream()
-                        .filter(player -> !player.getHasLeft())
-                        .toList()
-        );
-
-        disconnectedTravelers.addAll(
-                gameManager.getReconnectingPlayersCopy()
-                        .stream()
-                        .filter(player -> !player.getHasLeft())
-                        .toList()
-        );
+        ArrayList<Player> disconnectedTravelers = GameController.getDisconnectedTravelers(gameManager);
 
         for (Player player : disconnectedTravelers) {
             if(meteoriteHandlers.contains(player)){
                 if(!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
                     gameManager.getGame().getBoard().leaveTravel(player);
+                    gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
                 }
             }else{
                 handleCurrentMeteorForDisconnected(player);
@@ -342,22 +331,18 @@ public class MeteorsRainController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : decisionPlayers) {
-
-            // Asks current player if he wants to use a protection
-            Sender sender = gameManager.getSenderByPlayer(player);
-
-            phase = EventPhase.PROTECTION_DECISION;
-            try{
-                if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
-                    MessageSenderService.sendOptional("AskToUseShield", sender);
-                }
-                else {
-                    MessageSenderService.sendOptional("AskToUseDoubleCannon", sender);
-                }
-            } catch (Exception e) {
-                handleCurrentMeteor(player);
-            }
+            askToProtectToSinglePlayer(player);
         }
+    }
+
+    private void askToProtectToSinglePlayer(Player player) {
+        // Asks current player if he wants to use a protection
+        Sender sender = gameManager.getSenderByPlayer(player);
+
+        if (comingMeteor.getSize().equals(ProjectileSize.SMALL))
+            MessageSenderService.sendOptional("AskToUseShield", sender);
+        else
+            MessageSenderService.sendOptional("AskToUseDoubleCannon", sender);
     }
 
     /**
@@ -477,11 +462,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         } else {
             meteoriteHandlers.add(player);
-            try {
-                MessageSenderService.sendCritical("AskSelectSpaceshipPart", sender);
-            } catch (Exception e) {
-                gameManager.getGame().getBoard().leaveTravel(player);
-            }
+            MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
         }
     }
 
@@ -503,6 +484,30 @@ public class MeteorsRainController extends EventControllerAbstract {
         // Destroys affected component
         if(!SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
             gameManager.getGame().getBoard().leaveTravel(player);
+            gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+        }
+    }
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender){
+        if(!activePlayers.contains(player))
+            return;
+
+        if(meteoriteHandlers.contains(player)){
+            MessageSenderService.sendOptional("MeteorAlreadyHandled", sender);
+            return;
+        }
+
+        Component affectedComponent = meteorsRain.checkImpactComponent(gameManager.getGame(), player, comingMeteor, diceResult);
+
+        // Checks if component is a double cannon positioned in the same direction as the meteor, and at least a battery
+        if (affectedComponent.getType().equals(ComponentType.DOUBLE_CANNON) && affectedComponent.getRotation() == comingMeteor.getFrom() && player.getSpaceship().getBatteriesCount() > 0) {
+            MessageSenderService.sendOptional(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()), sender);
+            askToProtectToSinglePlayer(player);
+
+        } else {
+            MessageSenderService.sendOptional("NoCannonAvailable", sender);
+            handleCurrentMeteor(player);
         }
     }
 }

@@ -147,21 +147,6 @@ public class Board {
     }
 
     /**
-     * Checks if all travelers are ready
-     *
-     * @author Alessandro
-     * @return true if travelers are all ready; otherwise false
-     */
-    public synchronized boolean allTravelersReady() {
-        for (Player traveler : travelers){
-            if(!traveler.getIsReady())
-                return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Adds ready players to the list of players participating in the journey
      *
      * @author Alessandro
@@ -312,6 +297,12 @@ public class Board {
         }
 
         return !noCrewPlayers.isEmpty() ? noCrewPlayers : null;
+    }
+
+    public void clearTravelers() {
+        synchronized (travelers) {
+            travelers.clear();
+        }
     }
 
     /**
