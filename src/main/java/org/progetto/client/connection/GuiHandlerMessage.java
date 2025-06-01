@@ -1061,7 +1061,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "EventCardEnded":
-                    PageController.getEventView().setEventLabels("THE EVENT IS ENDED", "Get ready for the travel phase...");
+                    PageController.getEventView().setEventLabels("THE EVENT IS ENDED", "Get ready for the travel...");
                     break;
 
                 default:

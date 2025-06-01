@@ -1,6 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
+import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
 import org.progetto.messages.toClient.Battlezone.EvaluatingConditionMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
@@ -924,11 +925,25 @@ public class BattlezoneController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_SHIELDS))
             throw new IllegalStateException("IncorrectPhase");
 
-        // Checks if penalty player has a shield that covers that direction
-        boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
-
         // Asks penalty player if he wants to use a shield
         Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
+
+        // Finds impact component
+        Component affectedComponent = battlezone.penaltyShot(gameManager.getGame(), penaltyPlayer, currentShot, diceResult);
+
+        // Checks if there is any affected component
+        if (affectedComponent == null) {
+            MessageSenderService.sendOptional("NoComponentHit", sender);
+
+            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+            return;
+        }
+
+        MessageSenderService.sendOptional(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()), sender);
+
+        // Checks if penalty player has a shield that covers that direction
+        boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
 
         if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
             MessageSenderService.sendOptional("AskToUseShield", sender);

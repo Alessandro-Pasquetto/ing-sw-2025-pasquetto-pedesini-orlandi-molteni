@@ -1,6 +1,7 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
+import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -528,13 +529,27 @@ public class PiratesController extends EventControllerAbstract {
     private void askToUseShields() {
         if (phase.equals(EventPhase.ASK_SHIELDS)) {
 
-            for (Player defeatedPlayer : defeatedPlayers) {
+            ArrayList<Player> playersToRemove = new ArrayList<>();
 
-                // Checks if current player has a shield that covers that direction
-                boolean hasShield = pirates.checkShields(defeatedPlayer, currentShot);
+            for (Player defeatedPlayer : defeatedPlayers) {
 
                 // Asks current defeated player if he wants to use a shield
                 Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
+
+                // Finds impact component
+                Component affectedComponent = pirates.penaltyShot(gameManager.getGame(), defeatedPlayer, currentShot, diceResult);
+
+                // Checks if there is any affected component
+                if (affectedComponent == null) {
+                    MessageSenderService.sendOptional("NoComponentHit", sender);
+                    playersToRemove.add(defeatedPlayer);
+                    continue;
+                }
+
+                MessageSenderService.sendOptional(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()), sender);
+
+                // Checks if current player has a shield that covers that direction
+                boolean hasShield = pirates.checkShields(defeatedPlayer, currentShot);
 
                 if (hasShield && defeatedPlayer.getSpaceship().getBatteriesCount() > 0) {
                     MessageSenderService.sendOptional("AskToUseShield", sender);
@@ -545,12 +560,14 @@ public class PiratesController extends EventControllerAbstract {
                 }
             }
 
+            // Remove not affected players from defeated players list
+            defeatedPlayers.removeAll(playersToRemove);
+
             if (notProtectedPlayers.size() == defeatedPlayers.size()) {
                 phase = EventPhase.HANDLE_SHOT;
                 handleShot();
 
             } else {
-
                 phase = EventPhase.SHIELD_DECISION;
             }
         }
