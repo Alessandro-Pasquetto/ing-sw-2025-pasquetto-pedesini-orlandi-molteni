@@ -4,6 +4,7 @@ import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -204,6 +205,7 @@ public class MeteorsRainController extends EventControllerAbstract {
                 if(!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
                     gameManager.getGame().getBoard().leaveTravel(player);
                     gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+                    gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
                 }
             }else{
                 handleCurrentMeteorForDisconnected(player);
@@ -447,12 +449,19 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     private void handleCurrentMeteor(Player player) {
         Game game = gameManager.getGame();
+        Sender sender = gameManager.getSenderByPlayer(player);
 
         // Handles current meteor for player
         Component affectedComponent = meteorsRain.checkImpactComponent(game, player, comingMeteor, diceResult);
 
+        if(affectedComponent == null){
+            MessageSenderService.sendOptional("NothingGotDestroyed", sender);
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+            return;
+        }
+
         // Gets current player sender reference
-        Sender sender = gameManager.getSenderByPlayer(player);
 
         // Destroys affected component
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
@@ -478,6 +487,9 @@ public class MeteorsRainController extends EventControllerAbstract {
         // Handles current meteor for player
         Component affectedComponent = meteorsRain.checkImpactComponent(game, player, comingMeteor, diceResult);
 
+        if(affectedComponent == null)
+            return;
+
         // Gets current player sender reference
         Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -485,6 +497,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if(!SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
             gameManager.getGame().getBoard().leaveTravel(player);
             gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+            gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
         }
     }
 

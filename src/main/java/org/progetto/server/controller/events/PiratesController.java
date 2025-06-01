@@ -666,13 +666,17 @@ public class PiratesController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 // Sends two types of messages based on the shot's result
-                if (destroyedComponent != null) {
-                    SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender);
-
-                } else {
+                if (destroyedComponent == null) {
                     MessageSenderService.sendOptional("NothingGotDestroyed", sender);
                     player.setIsReady(true, gameManager.getGame());
+                    continue;
                 }
+
+                if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
+                    player.setIsReady(true, gameManager.getGame());
+
+                } else
+                    MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
             }
 
             gameManager.getGameThread().notifyThread();

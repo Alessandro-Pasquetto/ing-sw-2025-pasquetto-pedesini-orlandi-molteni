@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
 import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -120,7 +121,9 @@ public class EventController {
                 case "NO":
                     MessageSenderService.sendOptional("YouLeftTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
+
                     board.leaveTravel(player);
+                    gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();

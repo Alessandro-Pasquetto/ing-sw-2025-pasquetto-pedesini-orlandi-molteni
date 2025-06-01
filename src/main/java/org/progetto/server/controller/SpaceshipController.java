@@ -14,8 +14,6 @@ import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
-import java.rmi.RemoteException;
-
 
 /**
  * This controller handles:
@@ -34,9 +32,8 @@ public class SpaceshipController {
      * @author Lorenzo
      * @param gameManager of the current game
      * @param player owner of the spaceship requested
-     * @throws RemoteException
      */
-    public static void showSpaceship(GameManager gameManager, String player, Sender sender) throws RemoteException {
+    public static void showSpaceship(GameManager gameManager, String player, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -59,9 +56,8 @@ public class SpaceshipController {
      * @author Gabriele
      * @param gameManager of the current game
      * @param player owner of the spaceship requested
-     * @throws RemoteException
      */
-    public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) throws RemoteException {
+    public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendOptional("IncorrectPhase", sender);
@@ -91,9 +87,8 @@ public class SpaceshipController {
      * @param endX coordinate of final component
      * @param endIdx box index of final component
      * @param sender current sender
-     * @throws RemoteException
      */
-    public static void moveBox(GameManager gameManager, Player player, int startX, int startY, int startIdx, int endX, int endY, int endIdx, Sender sender) throws RemoteException {
+    public static void moveBox(GameManager gameManager, Player player, int startX, int startY, int startIdx, int endX, int endY, int endIdx, Sender sender) {
 
         EventPhase phase = gameManager.getEventController().getPhase();
         Player activePlayer = gameManager.getGame().getActivePlayer();

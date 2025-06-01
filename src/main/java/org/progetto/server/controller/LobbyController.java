@@ -129,9 +129,8 @@ public class LobbyController {
      *
      * @author Gabriele
      * @param sender
-     * @throws RemoteException
      */
-    public synchronized static void showWaitingGames(Sender sender) throws RemoteException {
+    public synchronized static void showWaitingGames(Sender sender) {
 
         ArrayList<GameManager> waitingGameManagers = new ArrayList<>(GameManagerMaps.getWaitingGamesMapCopy().values());
         ArrayList<WaitingGameInfoMessage> waitingGameInfoMessages = new ArrayList<>();
@@ -155,7 +154,7 @@ public class LobbyController {
      * @param numPlayers
      * @return
      */
-    public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException, RemoteException {
+    public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException{
         int idGame = currentIdGame.getAndIncrement();
 
         if (numPlayers <= 0 || numPlayers > 4) {
@@ -198,9 +197,9 @@ public class LobbyController {
      * @param idGame
      * @param name
      * @param sender
-     * @return
+     * @return gameManager
      */
-    public static GameManager joinGame(int idGame, String name, Sender sender) throws IllegalStateException, RemoteException {
+    public static GameManager joinGame(int idGame, String name, Sender sender) throws IllegalStateException{
 
         GameManager gameManager = GameManagerMaps.getWaitingGameManager(idGame);
 

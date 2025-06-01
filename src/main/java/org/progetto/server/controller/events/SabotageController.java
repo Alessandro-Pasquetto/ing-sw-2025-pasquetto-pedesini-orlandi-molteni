@@ -4,10 +4,13 @@ import org.progetto.messages.toClient.EventGeneric.AnotherPlayerDiceResultMessag
 import org.progetto.messages.toClient.EventGeneric.DiceResultMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerDefeatedMessage;
 import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.controller.GameController;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Sabotage;
@@ -157,7 +160,10 @@ public class SabotageController extends EventControllerAbstract{
 
             if (totalCrew == 0) {
                 gameManager.broadcastGameMessage(new PlayerDefeatedMessage(penalizedPlayer.getName()));
+
                 gameManager.getGame().getBoard().leaveTravel(penalizedPlayer);
+                gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+                gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
             }
 
             phase = EventPhase.END;

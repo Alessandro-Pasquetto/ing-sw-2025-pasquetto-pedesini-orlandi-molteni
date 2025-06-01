@@ -1013,14 +1013,18 @@ public class BattlezoneController extends EventControllerAbstract {
         Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
         // Sends two types of messages based on the shot's result
-        if (destroyedComponent != null) {
-            SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender);
-
-        } else {
+        if (destroyedComponent == null) {
             MessageSenderService.sendOptional("NothingGotDestroyed", sender);
             penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+            return;
         }
 
-        gameManager.getGameThread().notifyThread();
+        if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
+            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
+
+        } else
+            MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
     }
 }

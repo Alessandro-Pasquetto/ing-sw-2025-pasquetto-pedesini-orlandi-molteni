@@ -7,7 +7,8 @@ import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.rmi.RemoteException;
+import java.io.StreamCorruptedException;
+import java.io.UTFDataFormatException;
 
 /**
  * Socket message listener for messages coming from a single client
@@ -31,13 +32,19 @@ public class SocketListener extends Thread {
     public void run() {
         try {
             while (running) {
-                Object messageObj = in.readObject();
-                if(clientHandler.getGameManager() == null)
-                    handlerLobbyMessages(messageObj);
-                else
-                    handlerGameMessages(messageObj);
+
+                try {
+                    Object messageObj = in.readObject();
+                    if (clientHandler.getGameManager() == null)
+                        handlerLobbyMessages(messageObj);
+                    else
+                        handlerGameMessages(messageObj);
+                }catch (StreamCorruptedException | UTFDataFormatException | ClassNotFoundException e) {
+                    System.err.println("Error reading the object from the stream");
+                    e.printStackTrace();
+                }
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException e) {
+        } catch (IOException e) {
 
             if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
                 clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
@@ -53,7 +60,7 @@ public class SocketListener extends Thread {
     /**
      * Method that handle lobby requests
      */
-    private synchronized void handlerLobbyMessages(Object messageObj) throws RemoteException {
+    private synchronized void handlerLobbyMessages(Object messageObj) {
 
         if (messageObj instanceof CreateGameMessage createGameMessage) {
             int levelGame = createGameMessage.getLevelGame();
@@ -118,7 +125,7 @@ public class SocketListener extends Thread {
     /**
      * Method that handle game requests
      */
-    private void handlerGameMessages(Object messageObj) throws RemoteException, InterruptedException {
+    private void handlerGameMessages(Object messageObj) {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
         GameManager gameManager = clientHandler.getGameManager();
         Player player = clientHandler.getPlayer();

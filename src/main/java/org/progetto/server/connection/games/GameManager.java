@@ -256,6 +256,7 @@ public class GameManager {
         if(game.getPhase().equals(GamePhase.INIT)){
             game.setPhase(GamePhase.WAITING);
             broadcastGameMessage(new NewGamePhaseMessage(game.getPhase().toString()));
+            broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
             gameThread.notifyThread();
 
@@ -488,5 +489,7 @@ public class GameManager {
     public void losePlayer(Player player) {
         game.getBoard().leaveTravel(player);
         addLosingPlayer(player);
+
+        broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this),game.getBoard().getTrack()));
     }
 }

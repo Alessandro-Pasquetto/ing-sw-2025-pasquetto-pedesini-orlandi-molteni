@@ -45,7 +45,7 @@ public class RmiClientSender implements Sender {
                 }catch (RemoteException e){
                     System.err.println("RMI server unreachable");
 
-                    close();
+                    disconnected();
                     return;
                 }
 
@@ -553,7 +553,7 @@ public class RmiClientSender implements Sender {
         }
     }
 
-    public void close() {
+    public void disconnected() {
         server = null;
         System.out.println("You have disconnected!");
 

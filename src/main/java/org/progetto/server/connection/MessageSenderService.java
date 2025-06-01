@@ -8,7 +8,7 @@ public class MessageSenderService {
             sender.sendMessage(messageObj);
         }catch(Exception e) {
             System.err.println("Client unreachable");
-            e.printStackTrace();
+            //e.printStackTrace();
             throw e;
         }
     }

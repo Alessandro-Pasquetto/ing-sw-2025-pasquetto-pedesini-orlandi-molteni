@@ -39,21 +39,19 @@ public class SocketListener extends Thread {
 
     @Override
     public void run() {
-
-        try {
-            while (running) {
+        while (running) {
+            try {
                 Object messageObj = in.readObject();
                 messageDispatcher(messageObj);
-            }
-        } catch (IOException | ClassNotFoundException e) {
 
-            if(e instanceof SocketException){
-                System.err.println("SocketServer unreachable");
+            } catch (IOException | ClassNotFoundException e) {
 
-                close();
+                if(e instanceof SocketException){
+                    System.err.println("SocketServer unreachable");
+                }
+                else
+                    e.printStackTrace();
             }
-            else
-                e.printStackTrace();
         }
     }
 

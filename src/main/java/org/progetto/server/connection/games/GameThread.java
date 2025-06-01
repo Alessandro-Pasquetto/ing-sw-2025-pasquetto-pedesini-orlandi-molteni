@@ -151,7 +151,6 @@ public class GameThread extends Thread {
                         gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
                         gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
 
-
                         // Updates the spaceship
                         for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);

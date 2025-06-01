@@ -1,6 +1,5 @@
 package org.progetto.server.connection.rmi;
 
-import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.VirtualClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
