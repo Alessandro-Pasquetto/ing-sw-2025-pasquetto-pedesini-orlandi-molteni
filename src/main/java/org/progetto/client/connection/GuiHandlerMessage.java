@@ -586,7 +586,7 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof BoxToDiscardMessage boxToDiscardMessage) {
             PageController.getEventView().askToSelectBoxToDiscard(
                     "You need to discard " + boxToDiscardMessage.getBoxToDiscard() + " boxes",
-                    "Select box to discard...",
+                    "Select box to discard starting from the most valuable...",
                     (int[] params) -> GameData.getSender().responseBoxToDiscard(params[0], params[1], params[2])
             );
         }

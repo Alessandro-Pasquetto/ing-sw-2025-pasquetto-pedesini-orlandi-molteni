@@ -82,19 +82,19 @@ public class GameOverView {
 
         switch (resultGame){
             case 0:
-                endGameTitle.setText("CONGRATULATIONS, YOU WIN!");
+                endGameTitle.setText("CONGRATULATIONS, YOU WON!");
                 endGameDesc.setText("You ended the game with more than 0 credits, so you won!");
-                // img = new Image(String.valueOf(MainClient.class.getResource("img/win.png")));
+                img = new Image(String.valueOf(MainClient.class.getResource("img/win.png")));
                 break;
 
             case 1:
                 endGameTitle.setText("OH NO, YOU LOST!");
                 endGameDesc.setText("You ended the game with 0 credits, so you lost!");
-                // img = new Image(String.valueOf(MainClient.class.getResource("img/lost.png")));
+                img = new Image(String.valueOf(MainClient.class.getResource("img/lost.png")));
                 break;
         }
 
-        // resultImage.setImage(img);
+        resultImage.setImage(img);
     }
 
     /**

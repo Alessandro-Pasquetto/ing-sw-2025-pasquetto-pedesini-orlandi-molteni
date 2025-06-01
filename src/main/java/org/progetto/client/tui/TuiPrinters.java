@@ -773,7 +773,7 @@ public class TuiPrinters {
                 MeteorsRain meteorsRain = (MeteorsRain) card;
                 printEventCardLine("Meteors:");
                 for (int i = 0; i < meteorsRain.getMeteors().size(); i++) {
-                    printEventCardLine(String.format("  Meteor %d: %s", i, meteorsRain.getMeteors().get(i).toString()));
+                    printEventCardLine(String.format("  Meteor %d: %s", i + 1, meteorsRain.getMeteors().get(i).toString()));
                 }
             }
             case SLAVERS -> {
@@ -828,7 +828,7 @@ public class TuiPrinters {
 
                     if (couple.getPenalty().getType().toString().equals("PENALTYSHOTS")) {
                         for (int i = 0; i < couple.getPenalty().getShots().size(); i++) {
-                            printEventCardLine(String.format("  Shot %d: %s", i, couple.getPenalty().getShots().get(i)));
+                            printEventCardLine(String.format("  Shot %d: %s", i + 1, couple.getPenalty().getShots().get(i)));
                         }
                     } else {
                         printEventCardLine(String.format("  Amount discard: %d", couple.getPenalty().getNeededAmount()));
@@ -846,7 +846,7 @@ public class TuiPrinters {
                 printEventCardLine(String.format("Strength: %d", pirates.getFirePowerRequired()));
                 printEventCardLine("Shots:");
                 for (int i = 0; i < pirates.getPenaltyShots().size(); i++) {
-                    printEventCardLine(String.format("  Shot %d: %s", i, pirates.getPenaltyShots().get(i)));
+                    printEventCardLine(String.format("  Shot %d: %s", i + 1, pirates.getPenaltyShots().get(i)));
                 }
                 printEventCardLine(String.format("Penalty days: %d", pirates.getPenaltyDays()));
                 printEventCardLine(String.format("Credits reward: %d", pirates.getRewardCredits()));
@@ -859,7 +859,7 @@ public class TuiPrinters {
                     for (var box : planets.getRewardsForPlanets().get(i)) {
                         sb.append(TuiPrinters.drawBox(box)).append(" ");
                     }
-                    printEventCardLine(String.format("  Planet %d: %s", i, sb));
+                    printEventCardLine(String.format("  Planet %d: %s", i + 1, sb));
                 }
                 printEventCardLine(String.format("Penalty days: %d", planets.getPenaltyDays()));
             }

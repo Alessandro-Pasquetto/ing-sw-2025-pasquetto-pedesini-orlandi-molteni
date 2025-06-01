@@ -296,7 +296,6 @@ public class EventCommands {
 
                 if(box_idx == -1){
                     sender.responseRewardBox(box_idx, -1, -1, -1);
-                    System.out.println("You left the planet");
                     break;
                 }
 

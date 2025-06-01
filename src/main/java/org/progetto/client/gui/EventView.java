@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-public class eventView {
+public class EventView {
 
     // =======================
     // ATTRIBUTES
@@ -689,6 +689,7 @@ public class eventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
+        boxImageView.setRotate(-90 * componentRotation);
         boxImageView.setOnMouseClicked(event -> {removeBox(event,boxSlot);});
         boxSlot.getChildren().add(boxImageView);
     }
@@ -1570,12 +1571,12 @@ public class eventView {
     }
 
     /**
-     *Allows a player to remove a box from the spaceship
+     * Allows a player to remove a box from the spaceship
      *
      * @author Lorenzo
      * @param event is the click event
      */
-    public void removeBox(MouseEvent event,Pane boxSlot){
+    public void removeBox(MouseEvent event, Pane boxSlot){
         if(event.getSource() instanceof ImageView){
             if(event.getClickCount() == 2){
 
@@ -1584,7 +1585,6 @@ public class eventView {
 
                 for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
                     if (node instanceof Pane cell) {
-
 
                         Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                         if (cellBounds.contains(sceneX, sceneY)) {
@@ -1600,13 +1600,9 @@ public class eventView {
                         }
                     }
                 }
-
-
             }
         }
-
     }
-
 
     /**
      * Asks the player to roll the dice

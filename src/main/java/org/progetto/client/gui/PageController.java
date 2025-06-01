@@ -39,7 +39,7 @@ public class PageController {
     private static AdjustingView adjustingView;
     private static PopulatingView populatingView;
     private static PositioningView positioningView;
-    private static eventView eventView;
+    private static EventView eventView;
     private static TravelView travelView;
     private static GameOverView gameOverView;
 
@@ -79,7 +79,7 @@ public class PageController {
         return positioningView;
     }
 
-    public static eventView getEventView() {
+    public static EventView getEventView() {
         return eventView;
     }
 

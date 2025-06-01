@@ -68,6 +68,8 @@ public class PlanetsController extends EventControllerAbstract {
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
 
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
             Sender sender = gameManager.getSenderByPlayer(player);
 
             if (planets.getLandedPlayers().size() >= planets.getRewardsForPlanets().size()){
@@ -78,8 +80,6 @@ public class PlanetsController extends EventControllerAbstract {
             // If there is at least a free planet
             phase = EventPhase.LAND;
             MessageSenderService.sendOptional(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
-
-            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
             gameManager.getGameThread().resetAndWaitTravelerReady(player);
 

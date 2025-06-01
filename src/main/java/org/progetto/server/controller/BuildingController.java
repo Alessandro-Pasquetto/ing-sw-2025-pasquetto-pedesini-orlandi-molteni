@@ -392,7 +392,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 0, 0, 2}, "red-box-storage1.jpg", 2));
                         bb.placeComponent(6, 2, 0);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 2));
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3));
                         bb.placeComponent(6, 4, 0);
 
                         gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));

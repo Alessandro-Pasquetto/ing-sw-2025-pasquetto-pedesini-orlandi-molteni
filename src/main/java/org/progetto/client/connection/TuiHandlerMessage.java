@@ -1,5 +1,7 @@
 package org.progetto.client.connection;
 
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
@@ -27,6 +29,7 @@ import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Stardust.ExposedConnectorsMessage;
 import org.progetto.messages.toClient.Track.ResponseTrackMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.messages.toClient.Travel.PlayerIsContinuingMessage;
@@ -339,12 +342,21 @@ public class TuiHandlerMessage {
             System.out.println("Battery discarded successfully");
         }
 
+        else if (messageObj instanceof AnotherPlayerBatteryDiscardedMessage anotherPlayerBatteryDiscardedMessage) {
+        }
+
         else if (messageObj instanceof CrewDiscardedMessage crewDiscardedMessage) {
             System.out.println("Crew member discarded successfully");
         }
 
+        else if (messageObj instanceof AnotherPlayerCrewDiscardedMessage anotherPlayerCrewDiscardedMessage) {
+        }
+
         else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
             System.out.println("Box discarded successfully");
+        }
+
+        else if (messageObj instanceof AnotherPlayerBoxDiscardedMessage anotherPlayerBoxDiscardedMessage) {
         }
 
         else if(messageObj instanceof CrewToDiscardMessage crewToDiscardMessage) {
@@ -389,7 +401,7 @@ public class TuiHandlerMessage {
             String name = anotherPlayerLandedPlanetMessage.getPlayer().getName();
             int idxPlanet = anotherPlayerLandedPlanetMessage.getPlanetIdx();
 
-            System.out.println(name + " landed on planet: " + idxPlanet);
+            System.out.println(name + " landed on planet " + (idxPlanet + 1));
         }
 
         else if (messageObj instanceof AnotherPlayerLandedMessage anotherPlayerLandedMessage){
@@ -449,6 +461,12 @@ public class TuiHandlerMessage {
             System.out.println(RED + anotherPlayerGotPenalizedMessage.getPlayerName() + " got penalized for this condition" + RESET);
         }
 
+        else if (messageObj instanceof AffectedComponentMessage affectedComponentMessage) {
+            System.out.println("Incoming projectile has affected component positioned:");
+            System.out.printf ("│ X: %d %n", affectedComponentMessage.getXComponent());
+            System.out.printf ("│ Y: %d %n", affectedComponentMessage.getYComponent());
+        }
+
         else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage){
             TuiPrinters.printDestroyedComponent(null, destroyedComponentMessage.getxComponent(), destroyedComponentMessage.getyComponent());
         }
@@ -459,6 +477,16 @@ public class TuiHandlerMessage {
                     anotherPlayerDestroyedComponentMessage.getxComponent(),
                     anotherPlayerDestroyedComponentMessage.getyComponent()
             );
+        }
+
+        else if (messageObj instanceof ExposedConnectorsMessage exposedConnectorsMessage) {
+            int exposedConnectorsCount = exposedConnectorsMessage.getExposedConnectorsCount();
+
+            if (exposedConnectorsCount == 0) {
+                System.out.println(GREEN + "You have no exposed connectors, your ship is well built" + RESET);
+            } else {
+                System.out.println(RED + "You have " + exposedConnectorsCount + " exposed connectors, so you will move back by the same number of positions" + RESET);
+            }
         }
 
         else if(messageObj instanceof PlayerLeftMessage playerLeftMessage) {
@@ -592,6 +620,9 @@ public class TuiHandlerMessage {
                     System.err.println("Unable to find player");
                     break;
 
+                case "ResetActivePlayer":
+                    break;
+
                 case "AskToUseShield":
                     EventCommands.responseChooseToUseShield();
                     break;
@@ -606,6 +637,10 @@ public class TuiHandlerMessage {
 
                 case "LandingCompleted":
                     System.out.println("Landing completed!");
+                    break;
+
+                case "PlanetLeft":
+                    System.out.println("You left the planet");
                     break;
 
                 case "NotYourTurn":

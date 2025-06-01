@@ -21,7 +21,7 @@
             <center>
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50.0">
                     <Label fx:id="endGameTitle" text="OH NO, YOU LOST!" wrapText="true" />
-                    <!-- <ImageView fx:id="resultImage" fitHeight="266.0" fitWidth="460.0" pickOnBounds="true" preserveRatio="true" />-->
+                    <ImageView fx:id="resultImage" fitHeight="266.0" fitWidth="460.0" pickOnBounds="true" preserveRatio="true" />
 
                     <VBox fx:id="scoreboardContainer" spacing="10.0" maxWidth="600" />
 
