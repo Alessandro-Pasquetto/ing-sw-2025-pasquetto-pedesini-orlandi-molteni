@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -13,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -43,7 +45,7 @@ public class eventView {
     final int OTHER_COMPONENT_SIZE = 35;
     final int BOX_SLOT_SIZE = 28;
     final int OTHER_BOX_SLOT_SIZE = 12;
-    final int BOX_IMAGE_SIZE = 30;
+    final int BOX_IMAGE_SIZE = 35;
     final int OTHER_BOX_IMAGE_SIZE = 14;
 
     final String HIGHLIGHT_ID = "highlight";
@@ -687,7 +689,7 @@ public class eventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
-        boxImageView.setRotate(-90 * componentRotation);
+        boxImageView.setOnMouseClicked(event -> {removeBox(event,boxSlot);});
         boxSlot.getChildren().add(boxImageView);
     }
 
@@ -1540,7 +1542,7 @@ public class eventView {
             ImageView boxImage = new ImageView(img);
             Object[] data = {idx,box.getValue()};
             boxImage.setUserData(data);
-            boxImage.setFitWidth(80);
+            boxImage.setFitWidth(60);
             boxImage.setPreserveRatio(true);
             boxImage.setSmooth(true);
             boxImage.setCache(true);
@@ -1566,6 +1568,45 @@ public class eventView {
 
         btnContainer.getChildren().add(mainContainer);
     }
+
+    /**
+     *Allows a player to remove a box from the spaceship
+     *
+     * @author Lorenzo
+     * @param event is the click event
+     */
+    public void removeBox(MouseEvent event,Pane boxSlot){
+        if(event.getSource() instanceof ImageView){
+            if(event.getClickCount() == 2){
+
+                double sceneX = event.getSceneX();
+                double sceneY = event.getSceneY();
+
+                for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
+                    if (node instanceof Pane cell) {
+
+
+                        Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
+                        if (cellBounds.contains(sceneX, sceneY)) {
+
+                            if (!cell.getChildren().isEmpty()) {
+                                Integer rowIndex = GridPane.getRowIndex(cell);
+                                Integer colIndex = GridPane.getColumnIndex(cell);
+                                Integer slotIndex = GridPane.getRowIndex(cell);
+                                System.out.println("Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
+                                Sender sender = GameData.getSender();
+                                sender.removeBox(colIndex,rowIndex,slotIndex);
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+    }
+
 
     /**
      * Asks the player to roll the dice

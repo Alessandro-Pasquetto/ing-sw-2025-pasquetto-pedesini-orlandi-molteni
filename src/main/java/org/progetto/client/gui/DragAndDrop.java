@@ -341,7 +341,6 @@ public class DragAndDrop {
         Bounds boundsInScene = itemImage.localToScene(itemImage.getBoundsInLocal());
 
         Pane root = (Pane) itemImage.getScene().getRoot();
-
         itemImage.setManaged(false);
 
         // If the node is not already in the root, move it there
@@ -467,7 +466,7 @@ public class DragAndDrop {
                                                 slot.getChildren().add(itemImage);
                                             }
 
-                                            itemImage.setFitWidth(50);
+                                            itemImage.setFitWidth(35);
                                             itemImage.setPreserveRatio(true);
 
                                             // Center the image inside the slot
