@@ -55,6 +55,8 @@ public class TimerController {
         timer = defaultTimer;
         timerFlipsAllowed--;
         startTimer();
+
+        gameManager.broadcastGameMessage("TimerFlipped");
     }
 
     // =======================

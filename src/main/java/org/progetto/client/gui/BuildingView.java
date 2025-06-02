@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
@@ -74,6 +75,15 @@ public class BuildingView {
 
     @FXML
     public Button buildShip2Button;
+
+    @FXML
+    public Text remainingFlipsNumber;
+
+    @FXML
+    public Label buildingMainTitle;
+
+    @FXML
+    public VBox flipsContainer;
 
     @FXML
     private Pane handComponentBox;
@@ -236,9 +246,30 @@ public class BuildingView {
 
         // Remove timer if the game is level 1
         if (levelGame == 1) {
-            timerContainer.getChildren().remove(timerLabel);
+            timerContainer.getChildren().remove(flipsContainer);
             timerContainer.getChildren().remove(timerButton);
+            timerContainer.getChildren().remove(timerLabel);
         }
+    }
+
+    /**
+     * Updates the timer flips remaining
+     *
+     * @author Gabriele
+     * @param flipsRemaining is the number of flips remaining
+     */
+    public void updateTimerFlips(int flipsRemaining) {
+        remainingFlipsNumber.setText(String.valueOf(flipsRemaining));
+    }
+
+    /**
+     * Updates building title
+     *
+     * @author Gabriele
+     * @param title is the title to set
+     */
+    public void updateBuildingTitle(String title) {
+        buildingMainTitle.setText(title);
     }
 
     /**

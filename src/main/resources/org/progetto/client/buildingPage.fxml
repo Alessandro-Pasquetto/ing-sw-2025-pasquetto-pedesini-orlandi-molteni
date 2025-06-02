@@ -6,6 +6,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
 <StackPane fx:id="buildingPane" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.BuildingView">
 
     <stylesheets>
@@ -57,20 +59,29 @@
             </right>
 
             <center>
-                <VBox>
-                    <HBox fx:id="timerContainer" spacing="20" alignment="CENTER">
-                        <Label fx:id="timerLabel" text="00:00" textFill="#eba52d" />
-                        <Button fx:id="timerButton" onAction="#resetTimer" text="Reset Timer" />
-                    </HBox>
+                <VBox spacing="20" alignment="CENTER">
+                    <HBox fx:id="timerContainer" spacing="40" alignment="CENTER">
+                        <VBox fx:id="flipsContainer" alignment="CENTER">
+                            <TextFlow fx:id="remainingFlipsFlow">
+                                <Text text="Remaining flips: " styleClass="flips-text" />
+                                <Text fx:id="remainingFlipsNumber" text="2" styleClass="flips-number" />
+                            </TextFlow>
+                        </VBox>
 
-                    <Region prefHeight="20.0"></Region>
+                        <Label fx:id="timerLabel" text="00:00" />
+                        <Button fx:id="timerButton" onAction="#resetTimer" text="Flip Timer" />
 
-                    <HBox fx:id="buildShipContainer" spacing="20" alignment="CENTER">
-                        <Button fx:id="buildShip1Button" text="Ship 1"></Button>
-                        <Button fx:id="buildShip2Button" text="Ship 2"></Button>
+                        <HBox spacing="10">
+                            <Button fx:id="buildShip1Button" text="Ship 1"></Button>
+                            <Button fx:id="buildShip2Button" text="Ship 2"></Button>
+                        </HBox>
                     </HBox>
 
                     <VBox BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
+                        <Label fx:id="buildingMainTitle" text="BUILD YOUR SPACESHIP!" wrapText="true" />
+
+                        <Region prefHeight="5.0"></Region>
+
                         <StackPane alignment="CENTER">
                             <ImageView fx:id="spaceShipImage" fitHeight="443.0" fitWidth="606.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
                             <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
@@ -81,9 +92,9 @@
                         </StackPane>
 
                         <HBox fx:id="eventCardBox" alignment="CENTER" spacing="30">
-                            <ImageView fx:id="deck0Image" fitHeight="160" fitWidth="104" style="-fx-border-radius: 8; -fx-background-radius: 8" />
-                            <ImageView fx:id="deck1Image" fitHeight="160" fitWidth="104" style="-fx-border-radius: 8; -fx-background-radius: 8" />
-                            <ImageView fx:id="deck2Image" fitHeight="160" fitWidth="104" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <ImageView fx:id="deck0Image" fitHeight="135" fitWidth="88" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <ImageView fx:id="deck1Image" fitHeight="135" fitWidth="88" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <ImageView fx:id="deck2Image" fitHeight="135" fitWidth="88" style="-fx-border-radius: 8; -fx-background-radius: 8" />
                         </HBox>
                     </VBox>
 
@@ -94,6 +105,7 @@
                             <Pane fx:id="handComponentBox" minWidth="80.0" minHeight="80.0" maxWidth="80.0" maxHeight="80.0" ></Pane>
                             <Region prefWidth="40.0"></Region>
                             <ImageView fx:id="rotateButton" fitHeight="80" fitWidth="80" />
+                            <Region prefWidth="65.0"></Region>
                         </HBox>
                     </VBox>
                 </VBox>

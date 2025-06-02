@@ -828,11 +828,17 @@ public class GuiHandlerMessage {
                     break;
 
                 case "ImpossibleToResetTimer":
-                    Alerts.showError("Impossible to reset timer!", true);
+                    Alerts.showError("Impossible to flip timer!", true);
                     break;
 
                 case "FinalResetNotAllowed":
-                    Alerts.showError("Final reset not allowed: player not ready!", true);
+                    Alerts.showError("Final flip not allowed, player not ready!", true);
+                    break;
+
+                case "TimerFlipped":
+                    Alerts.showError("Timer flipped!", false);
+                    BuildingData.setFlipsRemaining(BuildingData.getFlipsRemaining() - 1);
+                    PageController.getBuildingView().updateTimerFlips(BuildingData.getFlipsRemaining());
                     break;
 
                 case "TimerExpired":
@@ -846,6 +852,7 @@ public class GuiHandlerMessage {
                     System.out.println("You are ready");
 
                     if (GameData.getPhaseGame().equalsIgnoreCase("BUILDING")) {
+                        PageController.getBuildingView().updateBuildingTitle("YOU ARE READY");
                         PageController.getBuildingView().setReadyButtonDisabled();
                     }
                     break;

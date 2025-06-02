@@ -21,6 +21,7 @@ public class BuildingData {
     private static int yHandComponent = 0;
     private static boolean isRotating = false;
     private static boolean isTimerExpired;
+    private static int flipsRemaining = 2;
     private static int[][] shipMask;
     private static int currentDeckIdx = -1;
 
@@ -54,6 +55,14 @@ public class BuildingData {
 
     public static boolean getIsTimerExpired(){
         return isTimerExpired;
+    }
+
+    public static boolean getIsRotating() {
+        return isRotating;
+    }
+
+    public static int getFlipsRemaining() {
+        return flipsRemaining;
     }
 
     public static boolean getCellMask(int x, int y){
@@ -107,6 +116,10 @@ public class BuildingData {
 
     public static void setIsTimerExpired(boolean isTimerExpired){
         BuildingData.isTimerExpired = isTimerExpired;
+    }
+
+    public static void setFlipsRemaining(int flipsRemaining) {
+        BuildingData.flipsRemaining = flipsRemaining;
     }
 
     public static void setShipMask(int[][] shipMask) {
@@ -206,6 +219,7 @@ public class BuildingData {
         setYHandComponent(0);
         setIsRotating(false);
         setIsTimerExpired(false);
+        setFlipsRemaining(2);
         setShipMask(null);
         setCurrentDeckIdx(-1);
     }

@@ -21,12 +21,14 @@
             <center>
                 <VBox spacing="30" alignment="CENTER" VBox.vgrow="ALWAYS">
                     <Label fx:id="populatingSectionTitle" text="YOU NEED TO POPULATE YOUR SPACESHIP!" wrapText="true" />
+
                     <VBox BorderPane.alignment="CENTER" spacing="20" alignment="CENTER" style="-fx-padding: 25px">
                         <StackPane alignment="CENTER">
                             <ImageView fx:id="spaceShipImage" fitHeight="443.0" fitWidth="606.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
                             <GridPane fx:id="spaceshipMatrix" alignment="CENTER" hgap="1.0" vgap="1.0" />
                         </StackPane>
                     </VBox>
+
                     <Label fx:id="populatingSectionDesc" text="Select a component to fill it with the alien of that color clicking on it..." wrapText="true" />
                     <VBox fx:id="btnContainer" spacing="30" alignment="CENTER"/>
                 </VBox>
