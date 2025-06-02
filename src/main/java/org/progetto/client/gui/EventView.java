@@ -689,7 +689,9 @@ public class EventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
+
         boxImageView.setRotate(-90 * componentRotation);
+
         boxImageView.setOnMouseClicked(event -> {removeBox(event,boxSlot);});
         boxSlot.getChildren().add(boxImageView);
     }

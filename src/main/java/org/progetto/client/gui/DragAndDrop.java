@@ -46,7 +46,6 @@ public class DragAndDrop {
         Bounds boundsInScene = componentImage.localToScene(componentImage.getBoundsInLocal());
 
         Pane root = (Pane) componentImage.getScene().getRoot();
-
         componentImage.setManaged(false);
 
         // If the node is not already in the root, move it there
@@ -128,7 +127,6 @@ public class DragAndDrop {
 
                 Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
                 if (cellBounds.contains(sceneX, sceneY)) {
-                    // Check if the cell is already occupied by a Pane (component)
                     Integer rowIndex = GridPane.getRowIndex(cell);
                     Integer colIndex = GridPane.getColumnIndex(cell);
 
@@ -412,7 +410,6 @@ public class DragAndDrop {
         double sceneY = event.getSceneY();
         Pane root = (Pane) itemImage.getScene().getRoot();
 
-
         itemImage.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
@@ -428,8 +425,8 @@ public class DragAndDrop {
                         Integer rowIndex = GridPane.getRowIndex(cell);
                         Integer colIndex = GridPane.getColumnIndex(cell);
 
-                        for (Node node3 : cell.getChildren()) {
-                            if(node3 instanceof Pane slot) {
+                        for (Node node2 : cell.getChildren()) {
+                            if(node2 instanceof Pane slot) {
 
                                 // Check if the drop is inside of that slot
                                 Bounds slotBounds = slot.localToScene(slot.getBoundsInLocal());
@@ -440,48 +437,58 @@ public class DragAndDrop {
                                         break;
                                     }
 
-
                                     if(targetId.equals("boxSlot") && slot.getId().equals("boxSlot")){
+                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
 
                                         String storageType = cell.getChildren().get(1).getUserData().toString();
-
                                         Object[] data = (Object[]) itemImage.getUserData();
-                                        int boxIdx = (int) data[0];
-                                        int boxVal = (int) data[1];
 
-                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                        if(GameData.getPhaseGame().equals("EVENT")) {
-                                            if(boxVal == 4){
-                                                if(storageType.equals("RED_BOX_STORAGE")){
-                                                    root.getChildren().remove(itemImage);
-                                                    slot.getChildren().add(itemImage);
-                                                }
-                                                else{
-                                                    break;
-                                                }
-
-                                            }
-                                            else {
-                                                root.getChildren().remove(itemImage);
-                                                slot.getChildren().add(itemImage);
-                                            }
+                                        if(data == null){
+                                            root.getChildren().remove(itemImage);
+                                            slot.getChildren().add(itemImage);
 
                                             itemImage.setFitWidth(35);
                                             itemImage.setPreserveRatio(true);
 
                                             // Center the image inside the slot
                                             itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
-
-                                        }
-
-                                        else{
-                                            // Center the image inside the slot
-                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+
+                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
+
+                                            isValidDrop = true;
+                                            break;
                                         }
 
-                                        GameData.getSender().responseRewardBox(boxIdx,colIndex,rowIndex,(int)slot.getProperties().get("idx"));
+                                        //todo non ho controllato il codice seguente
+
+                                        int boxIdx = (int) data[0];
+                                        int boxVal = (int) data[1];
+
+                                        if(boxVal == 4){
+                                            if(storageType.equals("RED_BOX_STORAGE")){
+                                                root.getChildren().remove(itemImage);
+                                                slot.getChildren().add(itemImage);
+                                            }
+                                            else{
+                                                break;
+                                            }
+
+                                        }
+                                        else {
+                                            root.getChildren().remove(itemImage);
+                                            slot.getChildren().add(itemImage);
+                                        }
+
+
+                                        itemImage.setFitWidth(35);
+                                        itemImage.setPreserveRatio(true);
+
+                                        // Center the image inside the slot
+                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
+
+                                        GameData.getSender().responseRewardBox(boxIdx, colIndex, rowIndex, (int) slot.getProperties().get("idx"));
                                         System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
 
                                         isValidDrop = true;

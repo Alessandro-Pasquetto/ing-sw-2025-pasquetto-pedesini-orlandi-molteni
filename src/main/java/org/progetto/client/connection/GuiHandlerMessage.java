@@ -671,6 +671,7 @@ public class GuiHandlerMessage {
                    "Select the boxes you want to keep...",
                    availableBoxesMessage.getBoxes()
            );
+           PageController.getEventView().enableDragAndDropBoxesSpaceship();
         }
 
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
