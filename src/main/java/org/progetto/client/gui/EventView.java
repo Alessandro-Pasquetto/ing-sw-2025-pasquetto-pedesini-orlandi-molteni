@@ -1577,6 +1577,7 @@ public class EventView {
      *
      * @author Lorenzo
      * @param event is the click event
+     * @param boxSlot is the slot were the box is contained
      */
     public void removeBox(MouseEvent event, Pane boxSlot){
         if(event.getSource() instanceof ImageView){

@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.progetto.client.model.BuildingData;
@@ -438,12 +439,50 @@ public class DragAndDrop {
                                     }
 
                                     if(targetId.equals("boxSlot") && slot.getId().equals("boxSlot")){
-                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
 
+                                        Object originalParent = itemImage.getProperties().get("originalParent");
                                         String storageType = cell.getChildren().get(1).getUserData().toString();
                                         Object[] data = (Object[]) itemImage.getUserData();
 
-                                        if(data == null){
+                                        if(originalParent instanceof FlowPane) {
+
+                                            int boxIdx = (int) data[0];
+                                            int boxVal = (int) data[1];
+
+                                            if (boxVal == 4) {
+                                                if (storageType.equals("RED_BOX_STORAGE")) {
+                                                    root.getChildren().remove(itemImage);
+                                                    slot.getChildren().add(itemImage);
+                                                } else {
+                                                    break;
+                                                }
+
+                                            } else {
+                                                root.getChildren().remove(itemImage);
+                                                slot.getChildren().add(itemImage);
+                                            }
+
+                                            itemImage.setFitWidth(35);
+                                            itemImage.setPreserveRatio(true);
+
+                                            // Center the image inside the slot
+                                            itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
+                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
+
+                                            GameData.getSender().responseRewardBox(boxIdx, colIndex, rowIndex, (int) slot.getProperties().get("idx"));
+                                            System.out.println("Placed box at x:" + colIndex + " y:" + rowIndex + " in slot " + slot.getProperties().get("idx"));
+
+                                            isValidDrop = true;
+                                        }
+
+                                        else if(originalParent instanceof Pane originalCell){
+
+                                            Integer startingX = GridPane.getRowIndex(originalCell.getParent());
+                                            Integer startingY = GridPane.getColumnIndex(originalCell.getParent());
+                                            Integer startingIdx = (Integer) originalCell.getProperties().get("idx");
+
+                                            Integer finalIdx = (Integer) slot.getProperties().get("idx");
+
                                             root.getChildren().remove(itemImage);
                                             slot.getChildren().add(itemImage);
 
@@ -454,45 +493,15 @@ public class DragAndDrop {
                                             itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
 
-                                            System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
+                                            GameData.getSender().moveBox(startingX,startingY,startingIdx,rowIndex,colIndex,finalIdx);
+                                            System.out.println("Moved box from x: " + startingX + " y: " + startingY + " idx: "+ startingIdx + " to " + "x: "+ rowIndex + " y: "+ colIndex+ " idx: " + finalIdx);
 
                                             isValidDrop = true;
-                                            break;
                                         }
-
-                                        //todo non ho controllato il codice seguente
-
-                                        int boxIdx = (int) data[0];
-                                        int boxVal = (int) data[1];
-
-                                        if(boxVal == 4){
-                                            if(storageType.equals("RED_BOX_STORAGE")){
-                                                root.getChildren().remove(itemImage);
-                                                slot.getChildren().add(itemImage);
-                                            }
-                                            else{
-                                                break;
-                                            }
-
-                                        }
-                                        else {
-                                            root.getChildren().remove(itemImage);
-                                            slot.getChildren().add(itemImage);
-                                        }
-
-
-                                        itemImage.setFitWidth(35);
-                                        itemImage.setPreserveRatio(true);
-
-                                        // Center the image inside the slot
-                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
-
-                                        GameData.getSender().responseRewardBox(boxIdx, colIndex, rowIndex, (int) slot.getProperties().get("idx"));
-                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released box in slot " + slot.getProperties().get("idx"));
-
-                                        isValidDrop = true;
                                     }
+
+
+
                                     /*
                                     else if(targetId.equals("crewSlot") && slot.getId().equals("crewSlot")){
                                         // If dropped inside a slot and the slot is not occupied, move the image into the slot
@@ -561,7 +570,9 @@ public class DragAndDrop {
 
         // MousePressed: save initial coordinates and layout details
         itemImage.setOnMousePressed(event -> {
-            onMousePressedFunctionItems(itemImage, event);
+            if(event.getClickCount() == 1) {
+                onMousePressedFunctionItems(itemImage, event);
+            }
         });
 
         // MouseDragged: update image position based on drag
