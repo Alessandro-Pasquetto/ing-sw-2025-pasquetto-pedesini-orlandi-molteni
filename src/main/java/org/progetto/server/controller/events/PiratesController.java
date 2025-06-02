@@ -3,10 +3,14 @@ package org.progetto.server.controller.events;
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.controller.GameController;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -30,15 +34,20 @@ public class PiratesController extends EventControllerAbstract {
     private final ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
-    private final ArrayList<Player> defeatedPlayers;
     private int diceResult;
     private boolean defeated;
     private final ArrayList<Projectile> penaltyShots;
     private Projectile currentShot;
+    private final ArrayList<Player> defeatedPlayers;
     private final ArrayList<Player> notAffectedPlayers;
     private final ArrayList<Player> protectedPlayers;
     private final ArrayList<Player> notProtectedPlayers;
-    private final ArrayList<Player> discardedBattery;
+
+    private final ArrayList<BatteryStorage> batteryStorages;
+    private final ArrayList<Player> discardedBatteryPlayers;
+    private final ArrayList<Player> handledPlayers;
+
+
 
     // =======================
     // CONSTRUCTORS
@@ -51,15 +60,109 @@ public class PiratesController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.playerFirePower = 0;
         this.requestedBatteries = 0;
-        this.defeatedPlayers = new ArrayList<>();
         this.penaltyShots = new ArrayList<>(pirates.getPenaltyShots());
         this.currentShot = null;
         this.diceResult = 0;
         this.defeated = false;
+        this.defeatedPlayers = new ArrayList<>();
         this.notAffectedPlayers = new ArrayList<>();
         this.protectedPlayers = new ArrayList<>();
         this.notProtectedPlayers = new ArrayList<>();
-        this.discardedBattery = new ArrayList<>();
+
+        this.batteryStorages = new ArrayList<>();
+        this.discardedBatteryPlayers = new ArrayList<>();
+        this.handledPlayers = new ArrayList<>();
+    }
+
+    private void addDefeatedPlayer(Player player) {
+        synchronized (defeatedPlayers) {
+            defeatedPlayers.add(player);
+        }
+    }
+
+    private void addProtectedPlayer(Player player) {
+        synchronized (protectedPlayers) {
+            protectedPlayers.add(player);
+        }
+    }
+
+    private void addNotProtectedPlayer(Player player) {
+        synchronized (notProtectedPlayers) {
+            notProtectedPlayers.add(player);
+        }
+    }
+
+    private void addDiscardedBatteryPlayer(Player player) {
+        synchronized (discardedBatteryPlayers) {
+            discardedBatteryPlayers.add(player);
+        }
+    }
+
+    @Override
+    public void addHandledPlayer(Player player) {
+        synchronized (handledPlayers) {
+            handledPlayers.add(player);
+        }
+    }
+
+    private void removeDefeatedPlayer(Player player) {
+        synchronized (defeatedPlayers) {
+            defeatedPlayers.remove(player);
+        }
+    }
+
+    private void removeProtectedPlayer(Player player) {
+        synchronized (protectedPlayers) {
+            protectedPlayers.remove(player);
+        }
+    }
+
+    private void removeNotProtectedPlayer(Player player) {
+        synchronized (notProtectedPlayers) {
+            notProtectedPlayers.remove(player);
+        }
+    }
+
+    private void removeDiscardedBatteryPlayer(Player player) {
+        synchronized (discardedBatteryPlayers) {
+            discardedBatteryPlayers.remove(player);
+        }
+    }
+
+    private void removeHandledPlayer(Player player) {
+        synchronized (handledPlayers) {
+            handledPlayers.remove(player);
+        }
+    }
+
+    private boolean containsDefeatedPlayer(Player player) {
+        synchronized (defeatedPlayers) {
+            return defeatedPlayers.contains(player);
+        }
+    }
+
+    private boolean containsProtectedPlayer(Player player) {
+        synchronized (protectedPlayers) {
+            return protectedPlayers.contains(player);
+        }
+    }
+
+    private boolean containsNotProtectedPlayer(Player player) {
+        synchronized (notProtectedPlayers) {
+            return notProtectedPlayers.contains(player);
+        }
+    }
+
+    private boolean containsDiscardedBatteryPlayer(Player player) {
+        synchronized (discardedBatteryPlayers) {
+            return discardedBatteryPlayers.contains(player);
+        }
+    }
+
+    private boolean containsHandledPlayer(Player player) {
+        synchronized (handledPlayers) {
+            return handledPlayers.contains(player);
+        }
     }
 
     // =======================
@@ -87,68 +190,88 @@ public class PiratesController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void askHowManyCannonsToUse() throws InterruptedException {
-        if (phase.equals(EventPhase.ASK_CANNONS)) {
+        if (!phase.equals(EventPhase.ASK_CANNONS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
+        for (Player player : activePlayers) {
 
-                gameManager.getGame().setActivePlayer(player);
+            gameManager.getGame().setActivePlayer(player);
 
-                Spaceship spaceship = player.getSpaceship();
+            Spaceship spaceship = player.getSpaceship();
 
-                // Retrieves sender reference
-                Sender sender = gameManager.getSenderByPlayer(player);
+            // Retrieves sender reference
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                // Checks if card got defeated
-                if (defeated) {
-                    gameManager.broadcastGameMessage("RaidersDefeated");
-                    break;
-                }
+            // Checks if card got defeated
+            if (defeated) {
+                gameManager.broadcastGameMessage("RaidersDefeated");
+                break;
+            }
 
-                // Checks if players is able to win without double cannons
-                if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
-                    phase = EventPhase.REWARD_DECISION;
-                    MessageSenderService.sendOptional("YouWonBattle", sender);
-                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+            // Checks if players is able to win without double cannons
+            if (pirates.battleResult(spaceship.getNormalShootingPower()) == 1) {
+                phase = EventPhase.REWARD_DECISION;
+                MessageSenderService.sendMessage("YouWonBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+                defeated = true;
 
-                    MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
-
-                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
-
-                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
-                    continue;
-                }
-
-                // Calculates max number of double cannons usable
-                int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-
-                // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
-                if (maxUsable == 0) {
-                    playerFirePower = spaceship.getNormalShootingPower();
-
-                    if (pirates.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
-                        MessageSenderService.sendOptional("YouLostBattle", sender);
-                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
-
-                        defeatedPlayers.add(player);
-
-                    } else {
-                        MessageSenderService.sendOptional("YouDrewBattle", sender);
-                        gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
-                    }
-                    continue;
-
-                } else {
-                    MessageSenderService.sendOptional(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
-                    phase = EventPhase.CANNON_NUMBER;
-                }
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                continue;
             }
 
+            // Calculates max number of double cannons usable
+            int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
+
+            // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
+            if (maxUsable == 0) {
+                playerFirePower = spaceship.getNormalShootingPower();
+
+                if (pirates.battleResult(spaceship.getNormalShootingPower()) == -1) {
+                    MessageSenderService.sendMessage("YouLostBattle", sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
+                    addDefeatedPlayer(player);
+
+                } else {
+                    MessageSenderService.sendMessage("YouDrewBattle", sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+                }
+
+            } else {
+                phase = EventPhase.CANNON_NUMBER;
+                MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // If the player is disconnected and slavers are not defeated (disconnection in rewardDecision)
+                if(!player.getIsReady() && !defeated){
+                    handleDisconnection(player, spaceship, sender);
+                }
+            }
+        }
+
+        if(!defeatedPlayers.isEmpty()){
             phase = EventPhase.HANDLE_DEFEATED_PLAYERS;
             handleDefeatedPlayers();
+        }
+    }
+
+    private void handleDisconnection(Player player, Spaceship spaceship, Sender sender) {
+        if(pirates.battleResult(spaceship.getNormalShootingPower()) == -1){
+            MessageSenderService.sendMessage("YouLostBattle", sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
+            addDefeatedPlayer(player);
+        }else{
+            MessageSenderService.sendMessage("YouDrewBattle", sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
         }
     }
 
@@ -163,13 +286,13 @@ public class PiratesController extends EventControllerAbstract {
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -192,14 +315,13 @@ public class PiratesController extends EventControllerAbstract {
                 playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
             }
 
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(num), sender);
-
             phase = EventPhase.DISCARDED_BATTERIES;
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
 
         } else {
-            MessageSenderService.sendOptional("IncorrectNumber", sender);
+            MessageSenderService.sendMessage("IncorrectNumber", sender);
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            MessageSenderService.sendOptional(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+            MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
         }
     }
 
@@ -215,22 +337,22 @@ public class PiratesController extends EventControllerAbstract {
     @Override
     public synchronized void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
         switch (phase) {
-            case DISCARDED_BATTERIES:
+            case DISCARDED_BATTERIES: // Sequential
                 if (!player.equals(gameManager.getGame().getActivePlayer())) {
-                    MessageSenderService.sendOptional("NotYourTurn", sender);
+                    MessageSenderService.sendMessage("NotYourTurn", sender);
                     return;
                 }
                 break;
 
-            case SHIELD_BATTERY:
-                if (!discardedBattery.contains(player)) {
-                    MessageSenderService.sendOptional("NotYourTurn", sender);
+            case SHIELD_BATTERY: // Parallel
+                if (!discardedBatteryPlayers.contains(player)) {
+                    MessageSenderService.sendMessage("NotYourTurn", sender);
                     return;
                 }
                 break;
 
             default:
-                MessageSenderService.sendOptional("IncorrectPhase", sender);
+                MessageSenderService.sendMessage("IncorrectPhase", sender);
                 return;
         }
 
@@ -238,73 +360,89 @@ public class PiratesController extends EventControllerAbstract {
 
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
 
             if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
             } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(1), sender);
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
             }
             return;
         }
 
-        Component batteryStorage = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
+        Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
         // Checks if component is a battery storage
-        if (batteryStorage == null || !batteryStorage.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
+        if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
+            MessageSenderService.sendMessage("InvalidComponent", sender);
 
             if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
             } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(1), sender);
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
+            }
+            return;
+        }
+
+        BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
+
+        if(batteryStorage.getItemsCount() == 0) {
+            MessageSenderService.sendMessage("EmptyBatteryStorage", sender);
+
+            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+
+            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
             }
             return;
         }
 
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
-            // Checks if a battery has been discarded
-            if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                requestedBatteries--;
+            batteryStorages.add(batteryStorage);
+            requestedBatteries--;
 
-                MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+            MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
-                if (requestedBatteries == 0) {
-                    phase = EventPhase.BATTLE_RESULT;
-                    battleResult(player, sender);
+            if (requestedBatteries == 0) {
 
-                } else {
-                    MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+                for (BatteryStorage component : batteryStorages) {
+                    component.decrementItemsCount(player.getSpaceship(), 1);
                 }
 
+                // Update spaceship to remove highlight components when it's not my turn.
+                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+                phase = EventPhase.BATTLE_RESULT;
+                battleResult(player, sender);
+
             } else {
-                MessageSenderService.sendOptional("BatteryNotDiscarded", sender);
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
             }
+
 
         } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
 
-            // Checks if a battery has been discarded
-            if (pirates.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
-                discardedBattery.remove(player);
+            removeDiscardedBatteryPlayer(player);
+            batteryStorage.decrementItemsCount(player.getSpaceship(), 1);
 
-                MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+            MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
-                MessageSenderService.sendOptional("YouAreSafe", sender);
+            // Update spaceship to remove highlight components when it's not my turn.
+            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
-                if (discardedBattery.isEmpty()) {
-                    phase = EventPhase.HANDLE_SHOT;
-                    handleShot();
-                }
+            MessageSenderService.sendMessage("YouAreSafe", sender);
 
-            } else {
-                MessageSenderService.sendOptional("BatteryNotDiscarded", sender);
-                MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            if (discardedBatteryPlayers.isEmpty()) {
+                phase = EventPhase.HANDLE_SHOT;
+                handleShot();
             }
         }
     }
@@ -317,37 +455,37 @@ public class PiratesController extends EventControllerAbstract {
      * @param sender current sender
      */
     private void battleResult(Player player, Sender sender) {
-        if (phase.equals(EventPhase.BATTLE_RESULT)) {
+        if (!phase.equals(EventPhase.BATTLE_RESULT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Calls the battleResult function
-            switch (pirates.battleResult(player, playerFirePower)) {
-                case 1:
-                    phase = EventPhase.REWARD_DECISION;
-                    MessageSenderService.sendOptional("YouWonBattle", sender);
-                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+        // Calls the battleResult function
+        switch (pirates.battleResult(playerFirePower)) {
+            case 1:
+                MessageSenderService.sendMessage("YouWonBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+                defeated = true;
 
-                    MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
-                    defeated = true;
-                    break;
+                phase = EventPhase.REWARD_DECISION;
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
+                break;
 
-                case -1:
-                    defeatedPlayers.add(player);
+            case -1:
+                addDefeatedPlayer(player);
 
-                    MessageSenderService.sendOptional("YouLostBattle", sender);
-                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+                MessageSenderService.sendMessage("YouLostBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                    break;
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+                break;
 
-                case 0:
-                    MessageSenderService.sendOptional("YouDrewBattle", sender);
-                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+            case 0:
+                MessageSenderService.sendMessage("YouDrewBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
 
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                    break;
-            }
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+                break;
         }
     }
 
@@ -361,13 +499,13 @@ public class PiratesController extends EventControllerAbstract {
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) {
         if (!phase.equals(EventPhase.REWARD_DECISION)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if current player is active one
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -385,8 +523,8 @@ public class PiratesController extends EventControllerAbstract {
                 break;
 
             default:
-                MessageSenderService.sendOptional("IncorrectResponse", sender);
-                MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
+                MessageSenderService.sendMessage("IncorrectResponse", sender);
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
                 break;
         }
     }
@@ -397,62 +535,71 @@ public class PiratesController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void eventEffect() {
-        if (phase.equals(EventPhase.EFFECT)) {
+        if (!phase.equals(EventPhase.EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Player player = gameManager.getGame().getActivePlayer();
+        Player player = gameManager.getGame().getActivePlayer();
 
-            // Event effect applied for single player
-            pirates.rewardPenalty(gameManager.getGame().getBoard(), player);
+        // Event effect applied for single player
+        pirates.rewardPenalty(gameManager.getGame().getBoard(), player);
 
-            // Retrieves sender reference
-            Sender sender = gameManager.getSenderByPlayer(player);
+        // Retrieves sender reference
+        Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(pirates.getPenaltyDays()), sender);
-            MessageSenderService.sendOptional(new PlayerGetsCreditsMessage(pirates.getRewardCredits()), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()), sender);
+        MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(pirates.getPenaltyDays()), sender);
+        MessageSenderService.sendMessage(new PlayerGetsCreditsMessage(pirates.getRewardCredits()), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()), sender);
 
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
-        }
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
      * Handles defeated players
      *
      * @author Gabriele
-     * @throws InterruptedException
      */
     private void handleDefeatedPlayers() throws InterruptedException {
-        if (phase.equals(EventPhase.HANDLE_DEFEATED_PLAYERS)) {
+        if (!phase.equals(EventPhase.HANDLE_DEFEATED_PLAYERS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            gameManager.broadcastGameMessage("ResetActivePlayer");
+        gameManager.broadcastGameMessage("ResetActivePlayer");
 
-            for (Projectile shot : penaltyShots) {
+        for (Projectile shot : penaltyShots) {
+            // Resets elaboration attributes
+            notAffectedPlayers.clear();
+            protectedPlayers.clear();
+            notProtectedPlayers.clear();
+            discardedBatteryPlayers.clear();
 
-                if (defeatedPlayers.isEmpty()) {
-                    break;
-                }
+            currentShot = shot;
 
-                currentShot = shot;
+            // Sends to each defeated player information about incoming shot
+            for (Player defeatedPlayer : defeatedPlayers) {
+                Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
-                // Sends to each defeated player information about incoming shot
-                for (Player defeatedPlayer : defeatedPlayers) {
-                    Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
+                MessageSenderService.sendMessage(new IncomingProjectileMessage(currentShot), sender);
+            }
 
-                    MessageSenderService.sendOptional(new IncomingProjectileMessage(currentShot), sender);
-                }
+            phase = EventPhase.ASK_ROLL_DICE;
+            askToRollDice();
 
-                phase = EventPhase.ASK_ROLL_DICE;
-                askToRollDice();
+            // Delay to show the dice result
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                e.printStackTrace();
+            }
 
-                gameManager.getGameThread().resetAndWaitTravelersReady();
+            handleShots();
 
-                // Resets elaboration attributes
-                notAffectedPlayers.clear();
-                protectedPlayers.clear();
-                notProtectedPlayers.clear();
-                discardedBattery.clear();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                e.printStackTrace();
             }
         }
     }
@@ -462,20 +609,27 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    private void askToRollDice() {
-        if (phase.equals(EventPhase.ASK_ROLL_DICE)) {
+    private void askToRollDice() throws InterruptedException {
+        if (!phase.equals(EventPhase.ASK_ROLL_DICE))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Asks first defeated player to roll dice
-            Sender sender = gameManager.getSenderByPlayer(defeatedPlayers.getFirst());
+        // Asks first defeated player to roll dice
+        Sender sender = gameManager.getSenderByPlayer(defeatedPlayers.getFirst());
 
-            if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
-                MessageSenderService.sendOptional("RollDiceToFindColumn", sender);
+        phase = EventPhase.ROLL_DICE;
 
-            } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
-                MessageSenderService.sendOptional("RollDiceToFindRow", sender);
-            }
+        if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
+            MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
 
-            phase = EventPhase.ROLL_DICE;
+        } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
+            MessageSenderService.sendMessage("RollDiceToFindRow", sender);
+        }
+
+        gameManager.getGameThread().resetAndWaitTravelerReady(defeatedPlayers.getFirst());
+
+        // If the player is disconnected
+        if(!defeatedPlayers.getFirst().getIsReady()){
+            rollDice(defeatedPlayers.getFirst(), sender);
         }
     }
 
@@ -489,28 +643,26 @@ public class PiratesController extends EventControllerAbstract {
     @Override
     public void rollDice(Player player, Sender sender) {
         if (!phase.equals(EventPhase.ROLL_DICE)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the first defeated player
         if (!player.equals(defeatedPlayers.getFirst())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         diceResult = player.rollDice();
 
-        MessageSenderService.sendOptional(new DiceResultMessage(diceResult), sender);
+        MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(defeatedPlayers.getFirst().getName(), diceResult), sender);
 
-        // Delay to show the dice result
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
+    }
 
+    private void handleShots(){
         // Checks projectile dimensions
         if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SHIELDS;
@@ -522,6 +674,33 @@ public class PiratesController extends EventControllerAbstract {
             phase = EventPhase.HANDLE_SHOT;
             handleShot();
         }
+
+        try {
+            gameManager.getGameThread().waitConnectedTravelersReady();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        //todo
+
+        /*
+        // Handle disconnected travelers
+        ArrayList<Player> disconnectedTravelers = GameController.getDisconnectedTravelers(gameManager);
+
+        for (Player player : disconnectedTravelers) {
+            if(containsHandledPlayer(player)){
+                if(!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
+                    gameManager.getGame().getBoard().leaveTravel(player);
+                    gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+                    gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
+                }
+            }else{
+                handleCurrentMeteorForDisconnected(player);
+            }
+        }
+
+         */
+
     }
 
     /**
@@ -530,46 +709,44 @@ public class PiratesController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void askToUseShields() {
-        if (phase.equals(EventPhase.ASK_SHIELDS)) {
+        if (!phase.equals(EventPhase.ASK_SHIELDS))
+            throw new IllegalStateException("IncorrectPhase");
 
-            ArrayList<Player> playersToRemove = new ArrayList<>();
+        for (Player defeatedPlayer : defeatedPlayers) {
 
-            for (Player defeatedPlayer : defeatedPlayers) {
+            // Asks current defeated player if he wants to use a shield
+            Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
 
-                // Asks current defeated player if he wants to use a shield
-                Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
+            // Finds impact component
+            Component affectedComponent = pirates.penaltyShot(gameManager.getGame(), defeatedPlayer, currentShot, diceResult);
 
-                // Finds impact component
-                Component affectedComponent = pirates.penaltyShot(gameManager.getGame(), defeatedPlayer, currentShot, diceResult);
-
-                // Checks if there is any affected component
-                if (affectedComponent == null) {
-                    MessageSenderService.sendOptional("NoComponentHit", sender);
-                    notAffectedPlayers.add(defeatedPlayer);
-                    continue;
-                }
-
-                MessageSenderService.sendOptional(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()), sender);
-
-                // Checks if current player has a shield that covers that direction
-                boolean hasShield = pirates.checkShields(defeatedPlayer, currentShot);
-
-                if (hasShield && defeatedPlayer.getSpaceship().getBatteriesCount() > 0) {
-                    MessageSenderService.sendOptional("AskToUseShield", sender);
-
-                } else {
-                    notProtectedPlayers.add(defeatedPlayer);
-                    MessageSenderService.sendOptional("NoShieldAvailable", sender);
-                }
+            // Checks if there is any affected component
+            if (affectedComponent == null) {
+                MessageSenderService.sendMessage("NoComponentHit", sender);
+                notAffectedPlayers.add(defeatedPlayer);
+                continue;
             }
 
-            // Checks if there are any players that has to make a decision about shield usage
-            if ((notProtectedPlayers.size() + notAffectedPlayers.size()) == defeatedPlayers.size()) {
-                phase = EventPhase.HANDLE_SHOT;
-                handleShot();
+            MessageSenderService.sendMessage(new AffectedComponentMessage(affectedComponent.getX(), affectedComponent.getY()), sender);
+
+            // Checks if current player has a shield that covers that direction
+            boolean hasShield = pirates.checkShields(defeatedPlayer, currentShot);
+
+            if (hasShield && defeatedPlayer.getSpaceship().getBatteriesCount() > 0) {
+                MessageSenderService.sendMessage("AskToUseShield", sender);
+
             } else {
-                phase = EventPhase.SHIELD_DECISION;
+                notProtectedPlayers.add(defeatedPlayer);
+                MessageSenderService.sendMessage("NoShieldAvailable", sender);
             }
+        }
+
+        // Checks if there are any players that has to make a decision about shield usage
+        if ((notProtectedPlayers.size() + notAffectedPlayers.size()) == defeatedPlayers.size()) {
+            phase = EventPhase.HANDLE_SHOT;
+            handleShot();
+        } else {
+            phase = EventPhase.SHIELD_DECISION;
         }
     }
 
@@ -584,13 +761,13 @@ public class PiratesController extends EventControllerAbstract {
     @Override
     public synchronized void receiveProtectionDecision(Player player, String response, Sender sender) {
         if (!phase.equals(EventPhase.SHIELD_DECISION)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if it is not part of non-protected player, and it is not already contained in protected one list
-        if (notProtectedPlayers.contains(player) || protectedPlayers.contains(player)) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+        if (containsNotProtectedPlayer(player) || protectedPlayers.contains(player)) {
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -598,19 +775,19 @@ public class PiratesController extends EventControllerAbstract {
 
         switch (upperCaseResponse) {
             case "YES":
-                protectedPlayers.add(player);
-                discardedBattery.add(player);
-                MessageSenderService.sendOptional("YouAnsweredYes", sender);
+                addProtectedPlayer(player);
+                addDiscardedBatteryPlayer(player);
+                MessageSenderService.sendMessage("YouAnsweredYes", sender);
                 break;
 
             case "NO":
-                notProtectedPlayers.add(player);
-                MessageSenderService.sendOptional("YouAnsweredNo", sender);
+                addNotProtectedPlayer(player);
+                MessageSenderService.sendMessage("YouAnsweredNo", sender);
                 break;
 
             default:
-                MessageSenderService.sendOptional("IncorrectResponse", sender);
-                MessageSenderService.sendOptional("AskToUseShield", sender);
+                MessageSenderService.sendMessage("IncorrectResponse", sender);
+                MessageSenderService.sendMessage("AskToUseShield", sender);
                 break;
         }
 
@@ -619,14 +796,14 @@ public class PiratesController extends EventControllerAbstract {
 
             if (!protectedPlayers.isEmpty()) {
 
+                phase = EventPhase.SHIELD_BATTERY;
+
                 // Asks for a battery to each protected player
                 for (Player protectedPlayer : protectedPlayers) {
                     Sender senderProtected = gameManager.getSenderByPlayer(protectedPlayer);
 
-                    MessageSenderService.sendOptional(new BatteriesToDiscardMessage(1), senderProtected);
+                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), senderProtected);
                 }
-
-                phase = EventPhase.SHIELD_BATTERY;
 
             } else {
                 phase = EventPhase.HANDLE_SHOT;
@@ -641,50 +818,55 @@ public class PiratesController extends EventControllerAbstract {
      * @author Gabriele
      */
     private void handleShot() {
-        if (phase.equals(EventPhase.HANDLE_SHOT)) {
+        if (!phase.equals(EventPhase.HANDLE_SHOT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            Game game = gameManager.getGame();
-            Projectile shot = currentShot;
+        Game game = gameManager.getGame();
+        Projectile shot = currentShot;
 
-            // Set as ready not defeated players
-            for (Player player : activePlayers) {
-                if (!defeatedPlayers.contains(player)) {
-                    player.setIsReady(true, gameManager.getGame());
-                }
-            }
-
-            // Set as ready not affected players
-            for (Player player : notAffectedPlayers) {
+        // Set as ready not defeated players
+        for (Player player : activePlayers) {
+            if (!defeatedPlayers.contains(player)) {
                 player.setIsReady(true, gameManager.getGame());
+                handledPlayers.add(player);
             }
-
-            // Set as ready protected players
-            for (Player player : protectedPlayers) {
-                player.setIsReady(true, gameManager.getGame());
-            }
-
-            // For each non-protected player handles penalty shot
-            for (Player player : notProtectedPlayers) {
-                Component destroyedComponent = pirates.penaltyShot(game, player, shot, diceResult);
-
-                // Gets current player sender reference
-                Sender sender = gameManager.getSenderByPlayer(player);
-
-                // Sends two types of messages based on the shot's result
-                if (destroyedComponent == null) {
-                    MessageSenderService.sendOptional("NothingGotDestroyed", sender);
-                    player.setIsReady(true, gameManager.getGame());
-                    continue;
-                }
-
-                if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
-                    player.setIsReady(true, gameManager.getGame());
-
-                } else
-                    MessageSenderService.sendOptional("AskSelectSpaceshipPart", sender);
-            }
-
-            gameManager.getGameThread().notifyThread();
         }
+
+        // Set as ready not affected players
+        for (Player player : notAffectedPlayers) {
+            player.setIsReady(true, gameManager.getGame());
+            handledPlayers.add(player);
+        }
+
+        // Set as ready protected players
+        for (Player player : protectedPlayers) {
+            player.setIsReady(true, gameManager.getGame());
+            handledPlayers.add(player);
+        }
+
+        // For each non-protected player handles penalty shot
+        for (Player player : notProtectedPlayers) {
+            Component destroyedComponent = pirates.penaltyShot(game, player, shot, diceResult);
+
+            // Gets current player sender reference
+            Sender sender = gameManager.getSenderByPlayer(player);
+
+            // Sends two types of messages based on the shot's result
+            if (destroyedComponent == null) {
+                MessageSenderService.sendMessage("NothingGotDestroyed", sender);
+                player.setIsReady(true, gameManager.getGame());
+                handledPlayers.add(player);
+                continue;
+            }
+
+            if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
+                player.setIsReady(true, gameManager.getGame());
+                handledPlayers.add(player);
+
+            } else
+                MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
+        }
+
+        gameManager.getGameThread().notifyThread();
     }
 }

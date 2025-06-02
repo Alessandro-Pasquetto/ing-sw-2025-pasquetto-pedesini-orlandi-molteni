@@ -71,7 +71,7 @@ public class LostStationController extends EventControllerAbstract {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
                 if (player.getSpaceship().getTotalCrewCount() >= lostStation.getRequiredCrew()) {
-                    MessageSenderService.sendOptional("LandRequest", sender);
+                    MessageSenderService.sendMessage("LandRequest", sender);
                     phase = EventPhase.LAND;
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -79,7 +79,7 @@ public class LostStationController extends EventControllerAbstract {
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                 } else {
-                    MessageSenderService.sendOptional("NotEnoughCrew", sender);
+                    MessageSenderService.sendMessage("NotEnoughCrew", sender);
                 }
 
                 // Checks if someone landed on the station
@@ -100,12 +100,12 @@ public class LostStationController extends EventControllerAbstract {
     @Override
     public void receiveDecisionToLand(Player player, String decision, Sender sender) {
         if (!phase.equals(EventPhase.LAND)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -117,10 +117,10 @@ public class LostStationController extends EventControllerAbstract {
                 someoneLanded = true;
                 rewardBoxes = lostStation.getRewardBoxes();
 
-                MessageSenderService.sendOptional("LandingCompleted", sender);
+                MessageSenderService.sendMessage("LandingCompleted", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerLandedMessage(player), sender);
 
-                MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+                MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
                 break;
 
             case "NO":
@@ -131,8 +131,8 @@ public class LostStationController extends EventControllerAbstract {
                 break;
 
             default:
-                MessageSenderService.sendOptional("IncorrectResponse", sender);
-                MessageSenderService.sendOptional("LandRequest", sender);
+                MessageSenderService.sendMessage("IncorrectResponse", sender);
+                MessageSenderService.sendMessage("LandRequest", sender);
                 break;
         }
     }
@@ -152,20 +152,20 @@ public class LostStationController extends EventControllerAbstract {
     @Override
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks that current player is trying to get reward the reward box
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         // Checks if reward box index is correct
         if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
-            MessageSenderService.sendOptional("IncorrectRewardIndex", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("IncorrectRewardIndex", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
@@ -179,8 +179,8 @@ public class LostStationController extends EventControllerAbstract {
 
         // Checks if component index is correct
         if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
@@ -188,8 +188,8 @@ public class LostStationController extends EventControllerAbstract {
 
         // Checks if it is a storage component
         if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("InvalidComponent", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
@@ -200,18 +200,18 @@ public class LostStationController extends EventControllerAbstract {
             lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-            MessageSenderService.sendOptional("BoxChosen", sender);
+            MessageSenderService.sendMessage("BoxChosen", sender);
         } catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
 
         // Checks if all boxes were chosen
         if (rewardBoxes.isEmpty()) {
-            MessageSenderService.sendOptional("EmptyReward", sender);
+            MessageSenderService.sendMessage("EmptyReward", sender);
             leaveStation(player, sender);
 
         } else {
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
         }
     }
 
@@ -224,13 +224,13 @@ public class LostStationController extends EventControllerAbstract {
      */
     private void leaveStation(Player player, Sender sender) {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         lostStation.penalty(gameManager.getGame().getBoard(), player);
 
-        MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()), sender);
+        MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()), sender);
 
         player.setIsReady(true, gameManager.getGame());

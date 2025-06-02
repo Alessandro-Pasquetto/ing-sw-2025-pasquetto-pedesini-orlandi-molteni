@@ -209,7 +209,7 @@ public class GameManager {
 
             Sender sender = getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new PlayerColorMessage(player.getColor()), sender);
+            MessageSenderService.sendMessage(new PlayerColorMessage(player.getColor()), sender);
         }
     }
 
@@ -310,10 +310,10 @@ public class GameManager {
         if(activePlayer != null)
             nameActivePlayer = activePlayer.getName();
 
-        MessageSenderService.sendOptional(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer), sender);
+        MessageSenderService.sendMessage(new ReconnectionGameData(game.getLevel(), game.getPhase().toString(), player.getColor(), nameActivePlayer), sender);
 
         if(isLosingPlayer(player)){
-            MessageSenderService.sendOptional("GameOver", sender);
+            MessageSenderService.sendMessage("GameOver", sender);
             return;
         }
 
@@ -326,21 +326,21 @@ public class GameManager {
         }
 
         else if(game.getPhase().equals(GamePhase.EVENT)){
-            MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
-            MessageSenderService.sendOptional(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
-            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
-            MessageSenderService.sendOptional(new PickedEventCardMessage(game.getActiveEventCard()), sender);
+            MessageSenderService.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
+            MessageSenderService.sendMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()), sender);
+            MessageSenderService.sendMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+            MessageSenderService.sendMessage(new PickedEventCardMessage(game.getActiveEventCard()), sender);
 
             if(!player.getHasLeft())
                 eventController.reconnectPlayer(player, sender);
         }
 
         else if(game.getPhase().equals(GamePhase.TRAVEL)){
-            MessageSenderService.sendOptional(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
+            MessageSenderService.sendMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
 
             if(!player.getHasLeft()){
                 game.getBoard().addTraveler(player);
-                MessageSenderService.sendOptional("AskContinueTravel", sender);
+                MessageSenderService.sendMessage("AskContinueTravel", sender);
             }
         }
     }
@@ -391,7 +391,7 @@ public class GameManager {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            MessageSenderService.sendOptional(messageObj, sender);
+            MessageSenderService.sendMessage(messageObj, sender);
         }
     }
 
@@ -399,7 +399,7 @@ public class GameManager {
         ArrayList<Player> playersCopy = game.getPlayersCopy();
 
         for (Player p : playersCopy) {
-            MessageSenderService.sendOptional(messageObj, getSenderByPlayer(p));
+            MessageSenderService.sendMessage(messageObj, getSenderByPlayer(p));
         }
     }
 
@@ -408,7 +408,7 @@ public class GameManager {
 
         for (Sender s : sendersCopy) {
             if (!s.equals(sender)) {
-                MessageSenderService.sendOptional(messageObj, s);
+                MessageSenderService.sendMessage(messageObj, s);
             }
         }
     }

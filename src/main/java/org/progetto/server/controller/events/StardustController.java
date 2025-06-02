@@ -72,9 +72,9 @@ public class StardustController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new ExposedConnectorsMessage(exposedConnectorsCount), sender);
+            MessageSenderService.sendMessage(new ExposedConnectorsMessage(exposedConnectorsCount), sender);
 
-            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(exposedConnectorsCount), sender);
+            MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(exposedConnectorsCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), exposedConnectorsCount), sender);
         }
     }

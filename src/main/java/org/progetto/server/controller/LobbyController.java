@@ -120,7 +120,7 @@ public class LobbyController {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            MessageSenderService.sendOptional(messageObj, sender);
+            MessageSenderService.sendMessage(messageObj, sender);
         }
     }
 
@@ -142,7 +142,7 @@ public class LobbyController {
             waitingGameInfoMessages.add(waitingGameInfoMessage);
         }
 
-        MessageSenderService.sendOptional(new WaitingGamesMessage(waitingGameInfoMessages), sender);
+        MessageSenderService.sendMessage(new WaitingGamesMessage(waitingGameInfoMessages), sender);
     }
 
     /**
@@ -176,9 +176,9 @@ public class LobbyController {
         gameManager.addSender(player, sender);
 
         // Messages
-        MessageSenderService.sendOptional(new GameInfoMessage(idGame, levelGame, numPlayers), sender);
-        MessageSenderService.sendOptional(new WaitingPlayersMessage(game.getPlayersCopy()), sender);
-        MessageSenderService.sendOptional(new NewGamePhaseMessage(game.getPhase().toString()), sender);
+        MessageSenderService.sendMessage(new GameInfoMessage(idGame, levelGame, numPlayers), sender);
+        MessageSenderService.sendMessage(new WaitingPlayersMessage(game.getPlayersCopy()), sender);
+        MessageSenderService.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()), sender);
 
         if(numPlayers != 1){
             GameManagerMaps.addWaitingGameManager(idGame, gameManager);
@@ -219,7 +219,7 @@ public class LobbyController {
         gameManager.addSender(player, sender);
 
         broadcastLobbyMessage("UpdateGameList");
-        MessageSenderService.sendOptional(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()), sender);
+        MessageSenderService.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()), sender);
         gameManager.broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));
 
         gameManager.getGameThread().notifyThread();

@@ -96,18 +96,18 @@ public class OpenSpaceController extends EventControllerAbstract {
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 phase = EventPhase.ENGINE_NUMBER;
-                try{
-                    MessageSenderService.sendCritical(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
+                    MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
+                try {
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
-
-                    // If the player is disconnected
-                    if(!player.getIsReady())
-                        playerEnginePower = player.getSpaceship().getNormalEnginePower();
-
-                }catch (Exception e){
-                    playerEnginePower = player.getSpaceship().getNormalEnginePower();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
+
+                // If the player is disconnected
+                if(!player.getIsReady())
+                    playerEnginePower = player.getSpaceship().getNormalEnginePower();
+
             }
 
             phase = EventPhase.EFFECT;
@@ -127,21 +127,21 @@ public class OpenSpaceController extends EventControllerAbstract {
     public void receiveHowManyEnginesToUse(Player player, int num, Sender sender) {
 
         if (!phase.equals(EventPhase.ENGINE_NUMBER)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         Spaceship spaceship = player.getSpaceship();
         if(num < 0 || num > spaceship.getDoubleEngineCount() || num > spaceship.getBatteriesCount()){
-            MessageSenderService.sendOptional("IncorrectNumber", sender);
+            MessageSenderService.sendMessage("IncorrectNumber", sender);
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
-            MessageSenderService.sendOptional(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
+            MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
             return;
         }
 
@@ -159,7 +159,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             System.out.println("Waiting for BatteriesToDiscard");
             phase = EventPhase.DISCARDED_BATTERIES;
 
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(num), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
         }
     }
 
@@ -175,44 +175,44 @@ public class OpenSpaceController extends EventControllerAbstract {
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         if(xBatteryStorage < 0 || yBatteryStorage < 0 || xBatteryStorage >= spaceshipMatrix[0].length || yBatteryStorage >= spaceshipMatrix.length){
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         Component batteryStorageComp = spaceshipMatrix[yBatteryStorage][xBatteryStorage];
 
         if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
+            MessageSenderService.sendMessage("InvalidComponent", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
 
         if(batteryStorage.getItemsCount() == 0) {
-            MessageSenderService.sendOptional("EmptyBatteryStorage", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
+            MessageSenderService.sendMessage("EmptyBatteryStorage", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
             return;
         }
 
         batteryStorages.add(batteryStorage);
         requestedNumber--;
 
-        MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+        MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
         if (requestedNumber == 0) {
@@ -230,7 +230,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         } else
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedNumber), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
     }
 
     /**
@@ -253,11 +253,11 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Event effect applied for single player
             openSpace.moveAhead(gameManager.getGame().getBoard(), player, playerEnginePower);
 
-            MessageSenderService.sendOptional(new PlayerMovedAheadMessage(playerEnginePower), sender);
+            MessageSenderService.sendMessage(new PlayerMovedAheadMessage(playerEnginePower), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedAheadMessage(player.getName(), playerEnginePower), sender);
 
         } else {
-            MessageSenderService.sendOptional("NoEnginePower", sender);
+            MessageSenderService.sendMessage("NoEnginePower", sender);
             gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(player.getName()), sender);
 
             board.leaveTravel(player);

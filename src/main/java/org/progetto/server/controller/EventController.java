@@ -38,7 +38,7 @@ public class EventController {
 
         for(Player player : gameManager.getGame().getPlayersCopy()){
             Sender sender = gameManager.getSenderByPlayer(player);
-            MessageSenderService.sendOptional(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
+            MessageSenderService.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
         }
 
         gameManager.broadcastGameMessage(new PickedEventCardMessage(card));
@@ -69,7 +69,7 @@ public class EventController {
                 // Gets lapped player sender reference
                 Sender sender = gameManager.getSenderByPlayer(lappedPlayer);
 
-                MessageSenderService.sendOptional("YouGotLapped", sender);
+                MessageSenderService.sendMessage("YouGotLapped", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(lappedPlayer.getName()), sender);
             }
         }
@@ -83,7 +83,7 @@ public class EventController {
                 // Gets lapped player sender reference
                 Sender sender = gameManager.getSenderByPlayer(noCrewPlayer);
 
-                MessageSenderService.sendOptional("YouHaveNoCrew", sender);
+                MessageSenderService.sendMessage("YouHaveNoCrew", sender);
                 gameManager.broadcastGameMessageToOthers(new PlayerDefeatedMessage(noCrewPlayer.getName()), sender);
             }
         }
@@ -104,13 +104,13 @@ public class EventController {
         Board board = gameManager.getGame().getBoard();
 
         // Checks if player can decide to leave travel
-        if (gamePhase.equals(GamePhase.TRAVEL) && !player.getIsReady() && board.getCopyTravelers().contains(player)) {
+        if (gamePhase.equals(GamePhase.TRAVEL) && !player.getIsReady() && GameController.getAllPlayersInTrackCopy(gameManager).contains(player)) {
 
             String upperCaseResponse = response.toUpperCase();
 
             switch (upperCaseResponse) {
                 case "YES":
-                    MessageSenderService.sendOptional("YouAreContinuingTravel", sender);
+                    MessageSenderService.sendMessage("YouAreContinuingTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerIsContinuingMessage(player.getName()), sender);
 
                     gameManager.getGame().getBoard().addTraveler(player);
@@ -119,7 +119,7 @@ public class EventController {
                     break;
 
                 case "NO":
-                    MessageSenderService.sendOptional("YouLeftTravel", sender);
+                    MessageSenderService.sendMessage("YouLeftTravel", sender);
                     gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
 
                     board.leaveTravel(player);
@@ -130,12 +130,12 @@ public class EventController {
                     break;
 
                 default:
-                    MessageSenderService.sendOptional("IncorrectResponse", sender);
+                    MessageSenderService.sendMessage("IncorrectResponse", sender);
                     break;
             }
 
         } else {
-            MessageSenderService.sendOptional("NotAllowedToDoThat", sender);
+            MessageSenderService.sendMessage("NotAllowedToDoThat", sender);
         }
     }
 }

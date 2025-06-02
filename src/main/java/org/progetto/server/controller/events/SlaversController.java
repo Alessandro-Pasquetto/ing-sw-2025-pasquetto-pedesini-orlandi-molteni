@@ -96,20 +96,20 @@ public class SlaversController extends EventControllerAbstract {
             // Checks if players is able to win without double cannons
             if (slavers.battleResult(spaceship.getNormalShootingPower()) == 1) {
                 phase = EventPhase.REWARD_DECISION;
-                MessageSenderService.sendOptional("YouWonBattle", sender);
+                MessageSenderService.sendMessage("YouWonBattle", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
                 defeated = true;
 
-                try{
-                    MessageSenderService.sendCritical(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
 
-                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
+                try {
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
-                    continue;
-                } catch (Exception e) {
-                    continue;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
+                continue;
             }
 
             // Calculates max number of double cannons usable
@@ -121,15 +121,14 @@ public class SlaversController extends EventControllerAbstract {
 
                 // Checks if player lose
                 if (slavers.battleResult(spaceship.getNormalShootingPower()) == -1) {
-
-                    MessageSenderService.sendOptional("YouLostBattle", sender);
+                    MessageSenderService.sendMessage("YouLostBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                     gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                     phase = EventPhase.PENALTY_EFFECT;
                     try{
-                        criticalPenalityEffect(sender);
+                        sendPenaltyEffect(sender);
 
                         gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -143,44 +142,43 @@ public class SlaversController extends EventControllerAbstract {
                     }
 
                 } else {
-                    MessageSenderService.sendOptional("YouDrewBattle", sender);
+                    MessageSenderService.sendMessage("YouDrewBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
                 }
                 continue;
             }
 
             phase = EventPhase.CANNON_NUMBER;
-            try{
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                MessageSenderService.sendCritical(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+            MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
 
+            try {
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-                // If the player is disconnected and slavers are not defeated (disconnection in rewardDecision)
-                if (!player.getIsReady() && !defeated){
-                    handleDisconnection(player, spaceship, sender);
-                }
-
-            } catch (Exception e) {
+            // If the player is disconnected and slavers are not defeated (disconnection in rewardDecision)
+            if (!player.getIsReady() && !defeated){
                 handleDisconnection(player, spaceship, sender);
             }
         }
     }
 
     private void handleLostBattleDisconnection(Player player, Spaceship spaceship, Sender sender){
-        MessageSenderService.sendOptional("YouLostBattle", sender);
+        MessageSenderService.sendMessage("YouLostBattle", sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
         slavers.randomDiscardCrew(spaceship, slavers.getPenaltyCrew());
     }
 
     private void handleDisconnection(Player player, Spaceship spaceship, Sender sender) {
         if(slavers.battleResult(spaceship.getNormalShootingPower()) == -1){
-            MessageSenderService.sendOptional("YouLostBattle", sender);
+            MessageSenderService.sendMessage("YouLostBattle", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
             slavers.randomDiscardCrew(spaceship, slavers.getPenaltyCrew());
         }else{
-            MessageSenderService.sendOptional("YouDrewBattle", sender);
+            MessageSenderService.sendMessage("YouDrewBattle", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
         }
     }
@@ -196,13 +194,13 @@ public class SlaversController extends EventControllerAbstract {
     @Override
     public void receiveHowManyCannonsToUse(Player player, int num, Sender sender) {
         if (!phase.equals(EventPhase.CANNON_NUMBER)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -225,14 +223,14 @@ public class SlaversController extends EventControllerAbstract {
                 playerFirePower = spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount());
             }
 
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(num), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
 
             phase = EventPhase.DISCARDED_BATTERIES;
 
         } else {
-            MessageSenderService.sendOptional("IncorrectNumber", sender);
+            MessageSenderService.sendMessage("IncorrectNumber", sender);
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
-            MessageSenderService.sendOptional(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+            MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
         }
     }
 
@@ -248,13 +246,13 @@ public class SlaversController extends EventControllerAbstract {
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -262,8 +260,8 @@ public class SlaversController extends EventControllerAbstract {
 
         // Checks if component index is correct
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
             return;
         }
 
@@ -271,23 +269,23 @@ public class SlaversController extends EventControllerAbstract {
 
         // Checks if component is a battery storage
         if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            MessageSenderService.sendMessage("InvalidComponent", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
             return;
         }
 
         BatteryStorage batteryStorage = (BatteryStorage) batteryStorageComp;
 
         if(batteryStorage.getItemsCount() == 0) {
-            MessageSenderService.sendOptional("EmptyBatteryStorage", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            MessageSenderService.sendMessage("EmptyBatteryStorage", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
             return;
         }
 
         batteryStorages.add(batteryStorage);
         requestedBatteries--;
 
-        MessageSenderService.sendOptional(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+        MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
         if (requestedBatteries == 0) {
@@ -306,7 +304,7 @@ public class SlaversController extends EventControllerAbstract {
             battleResult(player, sender);
 
         } else {
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
         }
     }
 
@@ -327,24 +325,24 @@ public class SlaversController extends EventControllerAbstract {
             // Calls the battleResult function
             switch (slavers.battleResult(playerFirePower)){
                 case 1:
-                    MessageSenderService.sendOptional("YouWonBattle", sender);
+                    MessageSenderService.sendMessage("YouWonBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
                     defeated = true;
 
                     phase = EventPhase.REWARD_DECISION;
-                    MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+                    MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
                     break;
 
                 case -1:
-                    MessageSenderService.sendOptional("YouLostBattle", sender);
+                    MessageSenderService.sendMessage("YouLostBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                     phase = EventPhase.PENALTY_EFFECT;
-                    penaltyEffect(sender);
+                    sendPenaltyEffect(sender);
                     break;
 
                 case 0:
-                    MessageSenderService.sendOptional("YouDrewBattle", sender);
+                    MessageSenderService.sendMessage("YouDrewBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
 
                     phase = EventPhase.ASK_CANNONS;
@@ -356,29 +354,19 @@ public class SlaversController extends EventControllerAbstract {
         }
     }
 
-    private void criticalPenalityEffect(Sender sender) throws Exception{
-        if (!phase.equals(EventPhase.PENALTY_EFFECT))
-            throw new IllegalStateException("IncorrectPhase");
-
-        requestedCrew = slavers.getPenaltyCrew();
-
-        MessageSenderService.sendCritical(new CrewToDiscardMessage(requestedCrew), sender);
-        phase = EventPhase.DISCARDED_CREW;
-    }
-
     /**
      * If the player is defeated he suffers the penalty
      *
      * @author Stefano
      * @param sender current sender
      */
-    private void penaltyEffect(Sender sender){
+    private void sendPenaltyEffect(Sender sender){
         if (!phase.equals(EventPhase.PENALTY_EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 
         requestedCrew = slavers.getPenaltyCrew();
 
-        MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+        MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
         phase = EventPhase.DISCARDED_CREW;
     }
 
@@ -394,13 +382,13 @@ public class SlaversController extends EventControllerAbstract {
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_CREW)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -408,8 +396,8 @@ public class SlaversController extends EventControllerAbstract {
 
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
@@ -417,23 +405,23 @@ public class SlaversController extends EventControllerAbstract {
 
         // Checks if component is a housing unit
         if (housingUnitComp == null || (!housingUnitComp.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnitComp.getType().equals(ComponentType.CENTRAL_UNIT))) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("InvalidComponent", sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         HousingUnit housingUnit = (HousingUnit) housingUnitComp;
 
         if(housingUnit.getCrewCount() == 0) {
-            MessageSenderService.sendOptional("EmptyHousingUnit", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("EmptyHousingUnit", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         housingUnits.add(housingUnit);
         requestedCrew--;
 
-        MessageSenderService.sendOptional(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
+        MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
         if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
@@ -452,7 +440,7 @@ public class SlaversController extends EventControllerAbstract {
             gameManager.getGameThread().notifyThread();
 
         } else {
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
         }
     }
 
@@ -483,8 +471,8 @@ public class SlaversController extends EventControllerAbstract {
                         break;
 
                     default:
-                        MessageSenderService.sendOptional("IncorrectResponse", sender);
-                        MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+                        MessageSenderService.sendMessage("IncorrectResponse", sender);
+                        MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
                         break;
                 }
             }
@@ -507,8 +495,8 @@ public class SlaversController extends EventControllerAbstract {
             // Retrieves sender reference
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()), sender);
-            MessageSenderService.sendOptional(new PlayerGetsCreditsMessage(slavers.getRewardCredits()), sender);
+            MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(slavers.getPenaltyDays()), sender);
+            MessageSenderService.sendMessage(new PlayerGetsCreditsMessage(slavers.getRewardCredits()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()), sender);
 

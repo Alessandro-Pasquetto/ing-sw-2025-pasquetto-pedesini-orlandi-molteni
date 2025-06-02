@@ -10,7 +10,6 @@ import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.Epidemic;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class EpidemicController extends EventControllerAbstract {
@@ -67,7 +66,7 @@ public class EpidemicController extends EventControllerAbstract {
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new CrewInfectedAmountMessage(infectedCount), sender);
+            MessageSenderService.sendMessage(new CrewInfectedAmountMessage(infectedCount), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewInfectedMessage(infectedCount, player.getName()), sender);
 
             // Updates player spaceship

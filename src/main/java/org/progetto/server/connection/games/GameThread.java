@@ -155,7 +155,7 @@ public class GameThread extends Thread {
                         for (Player player : game.getBoard().getCopyTravelers()) {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
-                            MessageSenderService.sendOptional(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
+                            MessageSenderService.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
                         }
 
                         EventController.pickEventCard(gameManager);
@@ -215,13 +215,11 @@ public class GameThread extends Thread {
                         if(game.getEventDeckSize() > 0){
 
                             // Asks for each traveler if he wants to continue travel
-                            for (Player player : game.getPlayersCopy()) {
-                                if(player.getHasLeft())
-                                    continue;
+                            for (Player player : GameController.getConnectedTravelers(gameManager)) {
 
                                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                                MessageSenderService.sendOptional("AskContinueTravel", sender);
+                                MessageSenderService.sendMessage("AskContinueTravel", sender);
                             }
 
                             resetTravelersAndWaitConnectedTravelersReady();
@@ -251,9 +249,9 @@ public class GameThread extends Thread {
                             Sender sender = gameManager.getSenderByPlayer(player);
 
                             if (player.getCredits() > 0)
-                                MessageSenderService.sendOptional("YouWon", sender);
+                                MessageSenderService.sendMessage("YouWon", sender);
                             else
-                                MessageSenderService.sendOptional("YouLost", sender);
+                                MessageSenderService.sendMessage("YouLost", sender);
                         }
                         return;
                 }
@@ -350,9 +348,8 @@ public class GameThread extends Thread {
 
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
         Game game = gameManager.getGame();
-        Board board = game.getBoard();
 
-        for (Player player : board.getCopyTravelers()) {
+        for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
             player.setIsReady(false, game);
         }
 

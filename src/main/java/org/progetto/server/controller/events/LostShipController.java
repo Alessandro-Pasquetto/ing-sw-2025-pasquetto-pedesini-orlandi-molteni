@@ -78,35 +78,25 @@ public class LostShipController extends EventControllerAbstract  {
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 phase = EventPhase.REWARD_DECISION;
-                try{
-                    MessageSenderService.sendCritical(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
+
+                try {
                     gameManager.getGameThread().resetAndWaitTravelerReady(player);
-
-                    // If the player is disconnected
-                    if(!player.getIsReady())
-                        continue;
-
-                    if(!housingUnits.isEmpty()){
-                        for (HousingUnit housingUnit : housingUnits) {
-                            lostShip.chooseDiscardedCrew(player.getSpaceship(), housingUnit);
-                        }
-
-                        // Update spaceship to remove highlight components when it's not my turn.
-                        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-
-                        phase = EventPhase.EFFECT;
-                        eventEffect();
-                        return;
-                    }
-
-                } catch (Exception e) {
-                    continue;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
 
+                // If the player is disconnected
+                if(!player.getIsReady())
+                    continue;
+
+                phase = EventPhase.EFFECT;
+                eventEffect();
+                return;
+
             } else
-                MessageSenderService.sendOptional("NotEnoughCrew", sender);
+                MessageSenderService.sendMessage("NotEnoughCrew", sender);
         }
     }
 
@@ -121,13 +111,13 @@ public class LostShipController extends EventControllerAbstract  {
     @Override
     public void receiveRewardAndPenaltiesDecision(Player player, String response, Sender sender) {
         if (!phase.equals(EventPhase.REWARD_DECISION)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if active player is correct
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -145,8 +135,8 @@ public class LostShipController extends EventControllerAbstract  {
                 break;
 
             default:
-                MessageSenderService.sendOptional("IncorrectResponse", sender);
-                MessageSenderService.sendOptional(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
+                MessageSenderService.sendMessage("IncorrectResponse", sender);
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
                 break;
         }
     }
@@ -160,19 +150,19 @@ public class LostShipController extends EventControllerAbstract  {
      */
     private void penaltyEffect(Player player, Sender sender) {
         if (!phase.equals(EventPhase.PENALTY_EFFECT)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         requestedCrew = lostShip.getPenaltyCrew();
         phase = EventPhase.DISCARDED_CREW;
-        MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+        MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
     }
 
     /**
@@ -187,13 +177,13 @@ public class LostShipController extends EventControllerAbstract  {
     @Override
     public void receiveDiscardedCrew(Player player, int xHousingUnit, int yHousingUnit, Sender sender) {
         if (!phase.equals(EventPhase.DISCARDED_CREW)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks if the player that calls the methods is also the current one in the controller
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
@@ -201,31 +191,31 @@ public class LostShipController extends EventControllerAbstract  {
 
         // Checks if component index is correct
         if (xHousingUnit < 0 || yHousingUnit < 0 || yHousingUnit >= spaceshipMatrix.length || xHousingUnit >= spaceshipMatrix[0].length ) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         Component housingUnitComp = spaceshipMatrix[yHousingUnit][xHousingUnit];
 
         if (housingUnitComp == null || (!housingUnitComp.getType().equals(ComponentType.HOUSING_UNIT) && !housingUnitComp.getType().equals(ComponentType.CENTRAL_UNIT))) {
-            MessageSenderService.sendOptional("InvalidComponent", sender);
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("InvalidComponent", sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         HousingUnit housingUnit = (HousingUnit) housingUnitComp;
 
         if(housingUnit.getCrewCount() == 0) {
-            MessageSenderService.sendOptional("EmptyHousingUnit", sender);
-            MessageSenderService.sendOptional(new BatteriesToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage("EmptyHousingUnit", sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedCrew), sender);
             return;
         }
 
         housingUnits.add(housingUnit);
         requestedCrew--;
 
-        MessageSenderService.sendOptional(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
+        MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
         if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
@@ -243,7 +233,7 @@ public class LostShipController extends EventControllerAbstract  {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         } else
-            MessageSenderService.sendOptional(new CrewToDiscardMessage(requestedCrew), sender);
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
     }
 
     /**
@@ -261,8 +251,8 @@ public class LostShipController extends EventControllerAbstract  {
             // Event effect applied for single player
             lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
 
-            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()), sender);
-            MessageSenderService.sendOptional(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()), sender);
+            MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()), sender);
+            MessageSenderService.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()), sender);
 
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);

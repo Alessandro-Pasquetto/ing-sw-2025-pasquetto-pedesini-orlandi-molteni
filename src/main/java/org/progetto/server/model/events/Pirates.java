@@ -15,10 +15,10 @@ public class Pirates extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private int firePowerRequired;
-    private int penaltyDays;
-    private int rewardCredits;
-    private ArrayList<Projectile> penaltyShots;
+    private final int firePowerRequired;
+    private final int penaltyDays;
+    private final int rewardCredits;
+    private final ArrayList<Projectile> penaltyShots;
 
     // =======================
     // CONSTRUCTORS
@@ -69,21 +69,6 @@ public class Pirates extends EventCard {
         Spaceship spaceship = player.getSpaceship();
 
         return spaceship.getIdxShieldCount(shot.getFrom()) > 0;
-    }
-
-    /**
-     * Checks if the StorageComponent chosen by player is a battery storage
-     * If that is true, the battery will be removed
-     *
-     * @author Gabriele
-     * @author Stefano
-     * @param component StorageComponent from which the battery will be discarded
-     * @return true if the battery was successfully discarded, false if the battery storage is empty
-     */
-    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship, 1);
-        } else return false;
     }
 
     /**
@@ -175,11 +160,10 @@ public class Pirates extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param player Current player
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int battleResult(Player player, float firePower) {
+    public int battleResult(float firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {

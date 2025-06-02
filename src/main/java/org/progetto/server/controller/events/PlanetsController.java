@@ -73,13 +73,13 @@ public class PlanetsController extends EventControllerAbstract {
             Sender sender = gameManager.getSenderByPlayer(player);
 
             if (planets.getLandedPlayers().size() >= planets.getRewardsForPlanets().size()){
-                MessageSenderService.sendOptional("AllPlanetsAlreadyTaken", sender);
+                MessageSenderService.sendMessage("AllPlanetsAlreadyTaken", sender);
                 return;
             }
 
             // If there is at least a free planet
             phase = EventPhase.LAND;
-            MessageSenderService.sendOptional(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
+            MessageSenderService.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
 
             gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
@@ -109,24 +109,24 @@ public class PlanetsController extends EventControllerAbstract {
     @Override
     public void receiveDecisionToLandPlanet(Player player, int planetIdx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.LAND)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         if(planetIdx < -1 || planetIdx >= planets.getRewardsForPlanets().size()){
-            MessageSenderService.sendOptional("PlanetIdxNotValid", sender);
-            MessageSenderService.sendOptional(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
+            MessageSenderService.sendMessage("PlanetIdxNotValid", sender);
+            MessageSenderService.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
             return;
         }
 
         if (planetIdx > -1 && planets.getPlanetsTaken()[planetIdx]) {
-            MessageSenderService.sendOptional("PlanetAlreadyTaken", sender);
-            MessageSenderService.sendOptional(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
+            MessageSenderService.sendMessage("PlanetAlreadyTaken", sender);
+            MessageSenderService.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
             return;
         }
 
@@ -142,11 +142,11 @@ public class PlanetsController extends EventControllerAbstract {
             planets.choosePlanet(player, planetIdx);
 
             gameManager.broadcastGameMessage(new AnotherPlayerLandedPlanetMessage(player, planetIdx));
-            MessageSenderService.sendOptional("LandingCompleted", sender);
+            MessageSenderService.sendMessage("LandingCompleted", sender);
 
             rewardBoxes = planets.getRewardsForPlanets().get(planetIdx);
             phase = EventPhase.CHOOSE_BOX;
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
         }
     }
 
@@ -166,18 +166,18 @@ public class PlanetsController extends EventControllerAbstract {
     @Override
     public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         // Checks that current player is trying to get reward the reward box
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
             return;
         }
 
         if(idxBox == -1){
-            MessageSenderService.sendOptional("PlanetLeft", sender);
+            MessageSenderService.sendMessage("PlanetLeft", sender);
             leavePlanet(player, sender);
             return;
         }
@@ -185,24 +185,24 @@ public class PlanetsController extends EventControllerAbstract {
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         if(x < 0 || y < 0 || x >= spaceshipMatrix[0].length || y >= spaceshipMatrix.length){
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
         Component boxStorage = spaceshipMatrix[y][x];
 
         if (boxStorage == null || !boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE)) {
-            MessageSenderService.sendOptional("InvalidCoordinates", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("InvalidCoordinates", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
         // Checks that the box index is valid
         BoxStorage storage = (BoxStorage) boxStorage;
         if(idx >= storage.getCapacity() || idx<0){
-            MessageSenderService.sendOptional("InvalidStorageIndex", sender);
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage("InvalidStorageIndex", sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
@@ -213,18 +213,18 @@ public class PlanetsController extends EventControllerAbstract {
             planets.chooseRewardBox(player.getSpaceship(), (BoxStorage) boxStorage, box, idx);
 
             rewardBoxes.remove(box);
-            MessageSenderService.sendOptional("BoxChosen", sender);
+            MessageSenderService.sendMessage("BoxChosen", sender);
         } catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
 
         // All the boxes are chosen
         if (rewardBoxes.isEmpty()) {
-            MessageSenderService.sendOptional("EmptyReward", sender);
+            MessageSenderService.sendMessage("EmptyReward", sender);
             leavePlanet(player, sender);
 
         } else {
-            MessageSenderService.sendOptional(new AvailableBoxesMessage(rewardBoxes), sender);
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
         }
     }
 
@@ -242,7 +242,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         // Checks that current player is trying to leave planet
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendOptional("NotYouTurn", sender);
+            MessageSenderService.sendMessage("NotYouTurn", sender);
             return;
         }
 
@@ -264,7 +264,7 @@ public class PlanetsController extends EventControllerAbstract {
         for (Player player : planets.getLandedPlayers()){
             Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendOptional(new PlayerMovedBackwardMessage(planets.getPenaltyDays()), sender);
+            MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(planets.getPenaltyDays()), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), planets.getPenaltyDays()), sender);
         }
 

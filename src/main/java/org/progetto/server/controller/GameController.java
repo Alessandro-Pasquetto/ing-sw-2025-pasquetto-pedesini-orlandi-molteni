@@ -28,11 +28,11 @@ public class GameController {
 
     public static void ready(GameManager gameManager, Player player, Sender sender) {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        MessageSenderService.sendOptional("YouAreReady", sender);
+        MessageSenderService.sendMessage("YouAreReady", sender);
 
         if(!player.getIsReady()){
             player.setIsReady(true, gameManager.getGame());
@@ -54,7 +54,7 @@ public class GameController {
     public static void playerStats(GameManager gameManager, Player player, Sender sender){
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
@@ -63,10 +63,10 @@ public class GameController {
             int credits = player.getCredits();
             int position = player.getPosition();
             boolean hasLeft = player.getHasLeft();
-            MessageSenderService.sendOptional(new ResponsePlayerStatsMessage(name, credits, position, hasLeft), sender);
+            MessageSenderService.sendMessage(new ResponsePlayerStatsMessage(name, credits, position, hasLeft), sender);
 
         }catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
     }
 
@@ -81,13 +81,13 @@ public class GameController {
     public static void showPlayers(GameManager gameManager, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
         try {
-            MessageSenderService.sendOptional(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()), sender);
+            MessageSenderService.sendMessage(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()), sender);
         }catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
     }
 
@@ -101,17 +101,17 @@ public class GameController {
     public static void showTrack(GameManager gameManager, Sender sender) {
 
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
         try {
             ArrayList<Player> travelers = gameManager.getGame().getBoard().getCopyTravelers();
             Player[] track = gameManager.getGame().getBoard().getTrack();
-            MessageSenderService.sendOptional(new ResponseTrackMessage(travelers, track), sender);
+            MessageSenderService.sendMessage(new ResponseTrackMessage(travelers, track), sender);
 
         }catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
     }
 

@@ -92,9 +92,9 @@ public class SabotageController extends EventControllerAbstract{
         Sender sender = gameManager.getSenderByPlayer(penalizedPlayer);
 
         if (yDiceResult == 0) {
-            MessageSenderService.sendOptional("RollDiceToFindRow", sender);
+            MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         } else if (xDiceResult == 0) {
-            MessageSenderService.sendOptional("RollDiceToFindColumn", sender);
+            MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
         }
 
         phase = EventPhase.ROLL_DICE;
@@ -110,17 +110,17 @@ public class SabotageController extends EventControllerAbstract{
     @Override
     public void rollDice(Player player, Sender sender) {
         if (!phase.equals(EventPhase.ROLL_DICE))
-            MessageSenderService.sendOptional("IncorrectPhase", sender);
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
 
         // Checks if the player that calls the methods is also the penalty one in the controller
         if (!player.equals(penalizedPlayer))
-            MessageSenderService.sendOptional("NotYourTurn", sender);
+            MessageSenderService.sendMessage("NotYourTurn", sender);
 
         // First dice throw (finds row)
         if (yDiceResult == 0) {
             yDiceResult = player.rollDice();
 
-            MessageSenderService.sendOptional(new DiceResultMessage(yDiceResult), sender);
+            MessageSenderService.sendMessage(new DiceResultMessage(yDiceResult), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), yDiceResult), sender);
 
             phase = EventPhase.ASK_ROLL_DICE;
@@ -130,7 +130,7 @@ public class SabotageController extends EventControllerAbstract{
         } else if (xDiceResult == 0) {
             xDiceResult = player.rollDice();
 
-            MessageSenderService.sendOptional(new DiceResultMessage(xDiceResult), sender);
+            MessageSenderService.sendMessage(new DiceResultMessage(xDiceResult), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(penalizedPlayer.getName(), xDiceResult), sender);
 
             phase = EventPhase.EFFECT;
@@ -199,6 +199,6 @@ public class SabotageController extends EventControllerAbstract{
         if (!phase.equals(EventPhase.END))
             throw new IllegalStateException("IncorrectPhase");
 
-        MessageSenderService.sendOptional("Congratulations You Survived", sender);
+        MessageSenderService.sendMessage("Congratulations You Survived", sender);
     }
 }
