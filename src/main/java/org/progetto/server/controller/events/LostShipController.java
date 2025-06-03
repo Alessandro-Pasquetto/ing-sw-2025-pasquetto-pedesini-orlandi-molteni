@@ -50,7 +50,7 @@ public class LostShipController extends EventControllerAbstract  {
      * @author Stefano
      */
     @Override
-    public void start() {
+    public void start() throws InterruptedException {
         phase = EventPhase.ASK_TO_LAND;
         askToLand();
     }
@@ -60,14 +60,15 @@ public class LostShipController extends EventControllerAbstract  {
      *
      * @author Gabriele
      */
-    private void askToLand() {
+    private void askToLand() throws InterruptedException {
         if(!phase.equals(EventPhase.ASK_TO_LAND))
             throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : activePlayers) {
+            housingUnits.clear();
 
             gameManager.getGame().setActivePlayer(player);
-            housingUnits.clear();
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
             Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -75,26 +76,12 @@ public class LostShipController extends EventControllerAbstract  {
             int maxCrewCount = player.getSpaceship().getTotalCrewCount();
 
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 phase = EventPhase.REWARD_DECISION;
 
                 MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
-                try {
-                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                // If the player is disconnected
-                if(!player.getIsReady())
-                    continue;
-
-                phase = EventPhase.EFFECT;
-                eventEffect();
-                return;
-
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
             } else
                 MessageSenderService.sendMessage("NotEnoughCrew", sender);
         }
@@ -126,7 +113,7 @@ public class LostShipController extends EventControllerAbstract  {
         switch (upperCaseResponse) {
             case "YES":
                 phase = EventPhase.PENALTY_EFFECT;
-                penaltyEffect(player, sender);
+                sendPenaltyEffect(sender);
                 break;
 
             case "NO":
@@ -145,20 +132,11 @@ public class LostShipController extends EventControllerAbstract  {
      * If the player accept, he suffers the penalty
      *
      * @author Stefano
-     * @param player current player
      * @param sender current sender
      */
-    private void penaltyEffect(Player player, Sender sender) {
-        if (!phase.equals(EventPhase.PENALTY_EFFECT)) {
-            MessageSenderService.sendMessage("IncorrectPhase", sender);
-            return;
-        }
-
-        // Checks if the player that calls the methods is also the current one in the controller
-        if (!player.equals(gameManager.getGame().getActivePlayer())) {
-            MessageSenderService.sendMessage("NotYourTurn", sender);
-            return;
-        }
+    private void sendPenaltyEffect(Sender sender) {
+        if (!phase.equals(EventPhase.PENALTY_EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
 
         requestedCrew = lostShip.getPenaltyCrew();
         phase = EventPhase.DISCARDED_CREW;
@@ -230,6 +208,8 @@ public class LostShipController extends EventControllerAbstract  {
                 gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
             }
 
+            eventEffect();
+
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         } else
@@ -242,23 +222,24 @@ public class LostShipController extends EventControllerAbstract  {
      * @author Stefano
      */
     private void eventEffect() {
-        if (phase.equals(EventPhase.EFFECT)) {
-            Player player = gameManager.getGame().getActivePlayer();
+        if (!phase.equals(EventPhase.EFFECT))
+            throw new IllegalStateException("IncorrectPhase");
 
-            // Gets sender reference related to current player
-            Sender sender = gameManager.getSenderByPlayer(player);
+        Player player = gameManager.getGame().getActivePlayer();
 
-            // Event effect applied for single player
-            lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
+        // Gets sender reference related to current player
+        Sender sender = gameManager.getSenderByPlayer(player);
 
-            MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()), sender);
-            MessageSenderService.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()), sender);
+        // Event effect applied for single player
+        lostShip.rewardPenalty(gameManager.getGame().getBoard(), player);
 
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);
+        MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(lostShip.getPenaltyDays()), sender);
+        MessageSenderService.sendMessage(new PlayerGetsCreditsMessage(lostShip.getRewardCredits()), sender);
 
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
-        }
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);
+
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 }

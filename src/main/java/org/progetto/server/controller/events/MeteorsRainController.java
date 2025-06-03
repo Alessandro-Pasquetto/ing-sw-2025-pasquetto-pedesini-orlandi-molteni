@@ -33,7 +33,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     private int diceResult;
     private Projectile comingMeteor;
     private final ArrayList<Player> decisionPlayers;
-    private final ArrayList<Player> discardedBattery;
+    private final ArrayList<Player> discardedBatteryPlayers;
     private final ArrayList<Player> handledPlayers;
     
     private void addDecisionPlayer(Player player) {
@@ -43,12 +43,11 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     private void addDiscardedBattery(Player player) {
-        synchronized (discardedBattery) {
-            discardedBattery.add(player);
+        synchronized (discardedBatteryPlayers) {
+            discardedBatteryPlayers.add(player);
         }
     }
 
-    @Override
     public void addHandledPlayer(Player player) {
         synchronized (handledPlayers) {
             handledPlayers.add(player);
@@ -62,8 +61,8 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     private void removeDiscardedBatteryPlayer(Player player) {
-        synchronized (discardedBattery) {
-            discardedBattery.remove(player);
+        synchronized (discardedBatteryPlayers) {
+            discardedBatteryPlayers.remove(player);
         }
     }
     
@@ -74,8 +73,8 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     private boolean containsDiscardedBatteryPlayer(Player player) {
-        synchronized (discardedBattery) {
-            return discardedBattery.contains(player);
+        synchronized (discardedBatteryPlayers) {
+            return discardedBatteryPlayers.contains(player);
         }
     }
 
@@ -102,7 +101,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
-        this.discardedBattery = new ArrayList<>();
+        this.discardedBatteryPlayers = new ArrayList<>();
         this.handledPlayers = new ArrayList<>();
     }
 
@@ -141,7 +140,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         for (Projectile meteor : meteors) {
             handledPlayers.clear();
             decisionPlayers.clear();
-            discardedBattery.clear();
+            discardedBatteryPlayers.clear();
 
             comingMeteor = meteor;
 
@@ -156,21 +155,11 @@ public class MeteorsRainController extends EventControllerAbstract {
             askToRollDice();
 
             // Delay to show the dice result
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                e.printStackTrace();
-            }
+            gameManager.getGameThread().sleep(3000);
 
             handleMeteor();
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                e.printStackTrace();
-            }
+            gameManager.getGameThread().sleep(3000);
         }
     }
 
@@ -179,7 +168,7 @@ public class MeteorsRainController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    private void askToRollDice() {
+    private void askToRollDice() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -196,11 +185,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         }
 
-        try {
-            gameManager.getGameThread().resetAndWaitTravelerReady(activePlayer);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        gameManager.getGameThread().resetAndWaitTravelerReady(activePlayer);
 
         // If the player is disconnected
         if(!activePlayer.getIsReady()){
@@ -559,7 +544,10 @@ public class MeteorsRainController extends EventControllerAbstract {
             return;
 
         if(containsHandledPlayer(player)){
-            MessageSenderService.sendMessage("MeteorAlreadyHandled", sender);
+            if(player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens())
+                MessageSenderService.sendMessage("MeteorAlreadyHandled", sender);
+            else
+                MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
             return;
         }
 

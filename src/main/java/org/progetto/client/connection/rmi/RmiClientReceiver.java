@@ -29,7 +29,7 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         RmiClientReceiver.isHandling = isHandling;
     }
 
-    public static void messageDispatcher(Object messageObj) {
+    private static void messageDispatcher(Object messageObj) {
 
         new Thread(() -> {
             waitHandler();

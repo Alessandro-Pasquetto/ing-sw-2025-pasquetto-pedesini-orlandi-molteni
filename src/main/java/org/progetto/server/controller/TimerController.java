@@ -85,8 +85,7 @@ public class TimerController {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    e.printStackTrace();
                 }
             }
 

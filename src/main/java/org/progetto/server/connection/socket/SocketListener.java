@@ -45,7 +45,7 @@ public class SocketListener extends Thread {
                 }
             }
         } catch (IOException e) {
-
+            // Socket disconnection
             if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
                 clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
             else

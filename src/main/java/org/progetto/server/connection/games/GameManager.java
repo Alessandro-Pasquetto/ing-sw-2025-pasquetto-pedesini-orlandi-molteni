@@ -175,8 +175,7 @@ public class GameManager {
                     gamePinger();
                     Thread.sleep(gameDisconnectionDetectionInterval);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    e.printStackTrace();
                 }
             }
         });

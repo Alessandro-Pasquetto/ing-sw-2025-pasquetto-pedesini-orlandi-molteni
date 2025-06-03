@@ -60,8 +60,7 @@ public class LobbyController {
                     lobbyPinger();
                     Thread.sleep(lobbyDisconnectionDetectionInterval);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    e.printStackTrace();
                 }
             }
         });

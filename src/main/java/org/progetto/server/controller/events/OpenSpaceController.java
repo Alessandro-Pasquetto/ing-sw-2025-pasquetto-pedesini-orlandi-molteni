@@ -58,7 +58,7 @@ public class OpenSpaceController extends EventControllerAbstract {
      * @author Gabriele
      */
     @Override
-    public void start(){
+    public void start() throws InterruptedException {
         if (!phase.equals(EventPhase.START))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -71,15 +71,17 @@ public class OpenSpaceController extends EventControllerAbstract {
      *
      * @author Gabriele
      */
-    private void askHowManyEnginesToUse() {
+    private void askHowManyEnginesToUse() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ENGINES))
             throw new IllegalStateException("IncorrectPhase");
 
         activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
-            gameManager.getGame().setActivePlayer(player);
             batteryStorages.clear();
+
+            gameManager.getGame().setActivePlayer(player);
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
             // Gets the sender reference to send a message to player
             Sender sender = gameManager.getSenderByPlayer(player);
@@ -92,22 +94,16 @@ public class OpenSpaceController extends EventControllerAbstract {
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0)
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
+
             else{
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
-
                 phase = EventPhase.ENGINE_NUMBER;
-                    MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
+                MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
-                try {
-                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                 // If the player is disconnected
                 if(!player.getIsReady())
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
-
             }
 
             phase = EventPhase.EFFECT;

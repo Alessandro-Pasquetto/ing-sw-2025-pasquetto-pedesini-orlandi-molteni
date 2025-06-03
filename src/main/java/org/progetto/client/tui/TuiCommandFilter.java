@@ -171,8 +171,7 @@ public class TuiCommandFilter {
                     }
 
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+                    e.printStackTrace();
                 }
             }
         }).start();

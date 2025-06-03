@@ -98,7 +98,6 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
-    @Override
     public void addHandledPlayer(Player player) {
         synchronized (handledPlayers) {
             handledPlayers.add(player);
@@ -586,21 +585,11 @@ public class PiratesController extends EventControllerAbstract {
             askToRollDice();
 
             // Delay to show the dice result
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                e.printStackTrace();
-            }
+            gameManager.getGameThread().sleep(3000);
 
             handleShots();
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                e.printStackTrace();
-            }
+            gameManager.getGameThread().sleep(3000);
         }
     }
 

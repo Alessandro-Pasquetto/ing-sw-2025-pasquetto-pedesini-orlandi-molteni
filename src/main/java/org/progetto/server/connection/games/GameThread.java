@@ -170,12 +170,7 @@ public class GameThread extends Thread {
                             gameManager.broadcastGameMessage("EventCardSkipped");
 
                             // Sleep for a while to let players read the results of the event
-                            try {
-                                Thread.sleep(5000);
-                            } catch (InterruptedException e) {
-                                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                                e.printStackTrace();
-                            }
+                            sleep(5000);
 
                             game.setPhase(GamePhase.TRAVEL);
                             break;
@@ -193,12 +188,7 @@ public class GameThread extends Thread {
                         EventController.handleDefeatedPlayers(gameManager);
 
                         // Sleep for a while to let players read the results of the event
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
-                            e.printStackTrace();
-                        }
+                        sleep(5000);
 
                         game.setPhase(GamePhase.TRAVEL);
                         break;
@@ -380,6 +370,17 @@ public class GameThread extends Thread {
     public void notifyThread(){
         synchronized (gameThreadLock){
             gameThreadLock.notify();
+        }
+    }
+
+    public void sleep(int millis){
+        synchronized (gameThreadLock){
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                System.out.println(Thread.currentThread().getName() + " was interrupted during sleep.");
+                e.printStackTrace();
+            }
         }
     }
 

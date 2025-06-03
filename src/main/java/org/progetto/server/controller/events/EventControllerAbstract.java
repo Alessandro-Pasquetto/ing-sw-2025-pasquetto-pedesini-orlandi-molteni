@@ -31,8 +31,6 @@ abstract public class EventControllerAbstract {
         this.phase = phase;
     }
 
-    public void addHandledPlayer(Player player) {}
-
     // =======================
     // OTHER METHODS
     // =======================
