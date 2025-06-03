@@ -962,6 +962,21 @@
     -fx-font-family: 'Orgovan';
 }
 
+#boxScrollPane{
+    -fx-background-color: transparent;
+    -fx-background: rgba(15, 25, 25, 0.5);;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: black;
+}
+
+#boxContainer{
+    -fx-background-color: rgba(15, 25, 25, 0.5);
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+}
+
+
 /* ============================
    TRAVEL VIEW
    ============================ */

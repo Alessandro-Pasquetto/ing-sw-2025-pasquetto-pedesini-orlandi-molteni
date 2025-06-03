@@ -672,6 +672,7 @@ public class GuiHandlerMessage {
                    availableBoxesMessage.getBoxes()
            );
            PageController.getEventView().enableDragAndDropBoxesSpaceship();
+           PageController.getEventView().renderBlackHole();
         }
 
         else if(messageObj instanceof AvailablePlanetsMessage availablePlanetsMessage) {
@@ -965,6 +966,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "BoxRemoved":
+                    System.out.println("removed");
                     GameData.getSender().showSpaceship(GameData.getNamePlayer());
                     break;
 

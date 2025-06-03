@@ -131,6 +131,10 @@ public class EventView {
     @FXML
     private Button eventButton;
 
+    @FXML
+    private ImageView blackHoleContainer;
+
+
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
@@ -338,6 +342,39 @@ public class EventView {
     }
 
     /**
+     * Render the discard black hole when it's possible to discard
+     *
+     * @author Lorenzo
+     */
+    public void renderBlackHole() {
+
+        Image blackHoleImage = null;
+
+        if (GameData.getLevelGame() == 1) {
+            blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole-1.png")));
+        } else {
+            blackHoleImage = new Image(String.valueOf(MainClient.class.getResource("img/black-hole-2.png")));
+        }
+
+        blackHoleContainer.setImage(blackHoleImage);
+        blackHoleContainer.setFitWidth(100);
+        blackHoleContainer.setPreserveRatio(true);
+
+        RotateTransition rotate = new RotateTransition(Duration.seconds(5), blackHoleContainer);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(RotateTransition.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.play();
+
+
+    }
+
+    public ImageView getBlackHoleContainer(){
+        return blackHoleContainer;
+    }
+
+
+    /**
      * Initializes the spaceship matrix
      *
      * @author Gabriele
@@ -385,7 +422,6 @@ public class EventView {
      */
     public void updateSpaceship(Spaceship ship) {
         Component[][] shipMatrix = ship.getBuildingBoard().getSpaceshipMatrixCopy();
-
         GridPane shipGrid = spaceshipMatrix;
 
         shipGrid.getChildren().clear();
@@ -699,8 +735,6 @@ public class EventView {
         boxImageView.setPreserveRatio(false);
 
         boxImageView.setRotate(-90 * componentRotation);
-
-        boxImageView.setOnMouseClicked(event -> {removeBox(event,boxSlot);});
         boxSlot.getChildren().add(boxImageView);
     }
 
@@ -1675,35 +1709,33 @@ public class EventView {
      * Allows a player to remove a box from the spaceship
      *
      * @author Lorenzo
-     * @param event is the click event
-     * @param boxSlot is the slot were the box is contained
+     * @param event is the drag event
+     * @param box is the box image
      */
-    public void removeBox(MouseEvent event, Pane boxSlot){
-        if(event.getSource() instanceof ImageView){
-            if(event.getClickCount() == 2){
+    public void removeBox(MouseEvent event, ImageView box){
 
-                double sceneX = event.getSceneX();
-                double sceneY = event.getSceneY();
+            double sceneX = (double) box.getProperties().get("initialSceneX");
+            double sceneY = (double) box.getProperties().get("initialSceneY");
 
-                for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
-                    if (node instanceof Pane cell) {
+            for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
+                if (node instanceof Pane cell) {
 
-                        Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
-                        if (cellBounds.contains(sceneX, sceneY)) {
+                    Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());
+                    if (cellBounds.contains(sceneX, sceneY)) {
 
-                            if (!cell.getChildren().isEmpty()) {
-                                Integer rowIndex = GridPane.getRowIndex(cell);
-                                Integer colIndex = GridPane.getColumnIndex(cell);
-                                Integer slotIndex = (Integer) boxSlot.getProperties().get("idx");
-                                System.out.println("Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
-                                Sender sender = GameData.getSender();
-                                sender.removeBox(colIndex,rowIndex,slotIndex);
-                            }
+                        if (!cell.getChildren().isEmpty()) {
+                            Integer rowIndex = GridPane.getRowIndex(cell);
+                            Integer colIndex = GridPane.getColumnIndex(cell);;
+                            Integer slotIndex = (Integer) ((Pane)box.getProperties().get("originalParent")).getProperties().get("idx");
+                            System.out.println("Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
+                            Sender sender = GameData.getSender();
+                            sender.removeBox(colIndex,rowIndex,slotIndex);
                         }
                     }
                 }
             }
-        }
+
+
     }
 
     /**

@@ -409,8 +409,13 @@ public class DragAndDrop {
         boolean isValidDrop = false;
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
-        Pane root = (Pane) itemImage.getScene().getRoot();
 
+        ImageView trash = PageController.getEventView().getBlackHoleContainer();
+        if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
+            PageController.getEventView().removeBox(event,itemImage);
+        }
+
+        Pane root = (Pane) itemImage.getScene().getRoot();
         itemImage.setManaged(false);
 
         // Check if the drop is inside any cell of the spaceship
@@ -500,39 +505,6 @@ public class DragAndDrop {
                                         }
                                     }
 
-
-
-                                    /*
-                                    else if(targetId.equals("crewSlot") && slot.getId().equals("crewSlot")){
-                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                        root.getChildren().remove(itemImage);
-                                        slot.getChildren().add(itemImage);
-
-                                        // Center the image inside the slot
-                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
-
-                                        // handle idx
-                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released crew in slot " + slot.getProperties().get("idx"));
-
-                                        isValidDrop = true;
-                                    }
-                                    else if(targetId.equals("batterySlot") && slot.getId().equals("batterySlot")){
-                                        // If dropped inside a slot and the slot is not occupied, move the image into the slot
-                                        root.getChildren().remove(itemImage);
-                                        slot.getChildren().add(itemImage);
-
-                                        // Center the image inside the slot
-                                        itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                        itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
-
-                                        // handle idx
-                                        System.out.println("Component x: " + colIndex + " y: " + rowIndex + " released battery in slot " + slot.getProperties().get("idx"));
-
-                                        isValidDrop = true;
-                                    }
-                                     */
-
                                     break;
                                 }
                             }
@@ -570,9 +542,7 @@ public class DragAndDrop {
 
         // MousePressed: save initial coordinates and layout details
         itemImage.setOnMousePressed(event -> {
-            if(event.getClickCount() == 1) {
                 onMousePressedFunctionItems(itemImage, event);
-            }
         });
 
         // MouseDragged: update image position based on drag
