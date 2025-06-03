@@ -615,7 +615,7 @@ public class PiratesController extends EventControllerAbstract {
         }
 
         // Checks that every player has given his preference
-        if (notProtectedPlayers.size() + protectedPlayers.size() == defeatedPlayers.size()) {
+        if (notAffectedPlayers.size() + notProtectedPlayers.size() + protectedPlayers.size() == defeatedPlayers.size()) {
 
             if (!protectedPlayers.isEmpty()) {
 
