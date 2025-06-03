@@ -83,6 +83,11 @@
                                   </HBox>
 
                                   <HBox alignment="CENTER_LEFT" spacing="3">
+                                      <ImageView fx:id="crewSymbol" fitHeight="50" fitWidth="50" preserveRatio="true" />
+                                      <Label fx:id="crewValue" text="" />
+                                  </HBox>
+
+                                  <HBox alignment="CENTER_LEFT" spacing="3">
                                       <ImageView fx:id="destroyedSymbol" fitHeight="50" fitWidth="50" preserveRatio="true" />
                                       <Label fx:id="destroyedValue" text="" />
                                   </HBox>
