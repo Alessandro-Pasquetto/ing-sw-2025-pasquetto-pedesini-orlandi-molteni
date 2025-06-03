@@ -35,6 +35,7 @@ public class PiratesController extends EventControllerAbstract {
     private boolean defeated;
     private final ArrayList<Projectile> penaltyShots;
     private Projectile currentShot;
+    private final ArrayList<Player> notAffectedPlayers;
     private final ArrayList<Player> protectedPlayers;
     private final ArrayList<Player> notProtectedPlayers;
     private final ArrayList<Player> discardedBattery;
@@ -55,6 +56,7 @@ public class PiratesController extends EventControllerAbstract {
         this.currentShot = null;
         this.diceResult = 0;
         this.defeated = false;
+        this.notAffectedPlayers = new ArrayList<>();
         this.protectedPlayers = new ArrayList<>();
         this.notProtectedPlayers = new ArrayList<>();
         this.discardedBattery = new ArrayList<>();
@@ -447,6 +449,7 @@ public class PiratesController extends EventControllerAbstract {
                 gameManager.getGameThread().resetAndWaitTravelersReady();
 
                 // Resets elaboration attributes
+                notAffectedPlayers.clear();
                 protectedPlayers.clear();
                 notProtectedPlayers.clear();
                 discardedBattery.clear();
@@ -542,7 +545,7 @@ public class PiratesController extends EventControllerAbstract {
                 // Checks if there is any affected component
                 if (affectedComponent == null) {
                     MessageSenderService.sendOptional("NoComponentHit", sender);
-                    playersToRemove.add(defeatedPlayer);
+                    notAffectedPlayers.add(defeatedPlayer);
                     continue;
                 }
 
@@ -560,13 +563,10 @@ public class PiratesController extends EventControllerAbstract {
                 }
             }
 
-            // Remove not affected players from defeated players list
-            defeatedPlayers.removeAll(playersToRemove);
-
-            if (notProtectedPlayers.size() == defeatedPlayers.size()) {
+            // Checks if there are any players that has to make a decision about shield usage
+            if ((notProtectedPlayers.size() + notAffectedPlayers.size()) == defeatedPlayers.size()) {
                 phase = EventPhase.HANDLE_SHOT;
                 handleShot();
-
             } else {
                 phase = EventPhase.SHIELD_DECISION;
             }
@@ -651,6 +651,11 @@ public class PiratesController extends EventControllerAbstract {
                 if (!defeatedPlayers.contains(player)) {
                     player.setIsReady(true, gameManager.getGame());
                 }
+            }
+
+            // Set as ready not affected players
+            for (Player player : notAffectedPlayers) {
+                player.setIsReady(true, gameManager.getGame());
             }
 
             // Set as ready protected players
