@@ -60,11 +60,13 @@ class SlaversTest {
 
         //removes an orange alien
         orange.setAlienOrange(true);
+        orange.incrementCrewCount(mario.getSpaceship(), 1);
         slavers.chooseDiscardedCrew(mario.getSpaceship(), orange);
         assertFalse(crew.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(true);
+        purple.incrementCrewCount(mario.getSpaceship(), 1);
         slavers.chooseDiscardedCrew(mario.getSpaceship(), purple);
         assertFalse(crew.getHasPurpleAlien());
     }

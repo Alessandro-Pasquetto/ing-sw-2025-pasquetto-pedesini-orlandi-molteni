@@ -66,17 +66,14 @@ public class Slavers extends EventCard {
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
             spaceship.addNormalEnginePower(-2);
-            spaceship.addCrewCount(-1);
-
         }
         else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
             spaceship.addNormalShootingPower(-2);
-            spaceship.addCrewCount(-1);
         }
-        else
-            component.decrementCrewCount(spaceship, 1);
+
+        component.decrementCrewCount(spaceship, 1);
     }
 
     public void randomDiscardCrew(Spaceship spaceship, int crewMembersToDiscard) {

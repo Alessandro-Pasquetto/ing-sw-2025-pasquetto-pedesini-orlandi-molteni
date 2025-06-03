@@ -58,19 +58,14 @@ class LostShipTest {
 
         //removes an orange alien
         orange.setAlienOrange(true);
+        orange.incrementCrewCount(mario.getSpaceship(), 1);
         lostship.chooseDiscardedCrew(mario.getSpaceship(), orange);
         assertFalse(orange.getHasOrangeAlien());
 
         //removes a purple alien
         purple.setAlienPurple(false);
-
-        exception = assertThrows(
-                IllegalStateException.class,  // o il tipo atteso
-                () -> lostship.chooseDiscardedCrew(mario.getSpaceship(), purple)
-        );
-
-        assertEquals("CannotDecrement", exception.getMessage());
-
+        purple.incrementCrewCount(mario.getSpaceship(), 1);
+        lostship.chooseDiscardedCrew(mario.getSpaceship(), purple);
         assertFalse(crew.getHasPurpleAlien());
     }
 
