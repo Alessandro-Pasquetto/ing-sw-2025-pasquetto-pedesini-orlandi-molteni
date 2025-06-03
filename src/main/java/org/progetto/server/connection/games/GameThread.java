@@ -334,9 +334,8 @@ public class GameThread extends Thread {
      */
     public void resetAndWaitTravelersReady() throws InterruptedException {
         Game game = gameManager.getGame();
-        Board board = game.getBoard();
 
-        for (Player player : board.getCopyTravelers()) {
+        for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
             player.setIsReady(false, game);
         }
 
