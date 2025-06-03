@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.messages.toClient.DestroyedComponentMessage;
+import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
@@ -377,8 +378,8 @@ class SpaceshipControllerTest {
 
         try{
             SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, -1, 66, sender);
-        } catch (RemoteException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+        } catch (IllegalStateException e) {
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
 
 
@@ -392,7 +393,7 @@ class SpaceshipControllerTest {
         try {
             assertDoesNotThrow(() -> SpaceshipController.chooseSpaceshipPartToKeep(gameManager, player, 2, 2, finalSender));
         }catch (IllegalStateException e) {
-            MessageSenderService.sendOptional(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender);
         }
 
     }

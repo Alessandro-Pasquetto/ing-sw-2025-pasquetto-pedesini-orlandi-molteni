@@ -38,7 +38,7 @@ class SlaversControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -99,7 +99,7 @@ class SlaversControllerTest {
             public void run(){
                 try {
                     controller.start();
-                } catch (RemoteException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }

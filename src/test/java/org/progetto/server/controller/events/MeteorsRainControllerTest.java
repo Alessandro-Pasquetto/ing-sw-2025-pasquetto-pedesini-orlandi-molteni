@@ -59,7 +59,7 @@ class MeteorsRainControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -112,7 +112,7 @@ class MeteorsRainControllerTest {
             public void run(){
                 try {
                     controller.start();
-                } catch (RemoteException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }

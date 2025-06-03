@@ -86,6 +86,32 @@ public class Epidemic extends EventCard {
     }
 
     /**
+     * Checks if the StorageComponent chosen by player is a housing unit
+     * If that is true, the crew member will be removed
+     *
+     * @author Gabriele
+     * @author Stefano
+     * @param component StorageComponent from which the crew will be discarded
+     */
+    private void chooseDiscardedCrew(Spaceship spaceship, HousingUnit component) throws IllegalStateException {
+        if (component.getHasOrangeAlien()) {  // if it contains an orange alien
+            spaceship.setAlienOrange(false);
+            component.setAlienOrange(false);
+            spaceship.addNormalEnginePower(-2);
+            spaceship.addCrewCount(-1);
+
+        }
+        else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
+            spaceship.setAlienPurple(false);
+            component.setAlienPurple(false);
+            spaceship.addNormalShootingPower(-2);
+            spaceship.addCrewCount(-1);
+        }
+        else
+            component.decrementCrewCount(spaceship, 1);
+    }
+
+    /**
      * Iterates through the spaceshipMatrix: when it finds the first housing unit calls dfsInfectedComponents()
      * Then, it decrements the crew members count by one for each of the infected units
      *
@@ -113,17 +139,7 @@ public class Epidemic extends EventCard {
 
                     // Deletes for each infected component found one crew mate/alien
                     for (HousingUnit component : infectedComponents) {
-                        if (component.getHasOrangeAlien()) {  // if it contains an orange alien
-                            spaceship.setAlienOrange(false);
-                            component.setAlienOrange(false);
-                            spaceship.addNormalEnginePower(-2);
-
-                        } else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
-                            spaceship.setAlienPurple(false);
-                            component.setAlienPurple(false);
-                            spaceship.addNormalShootingPower(-2);
-                        }
-                        component.decrementCrewCount(spaceship, 1);
+                        chooseDiscardedCrew(spaceship, component);
                     }
 
                     infectedCrew += infectedComponents.size();

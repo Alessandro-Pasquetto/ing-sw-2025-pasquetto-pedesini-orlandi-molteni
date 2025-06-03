@@ -36,7 +36,7 @@ class LostShipControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -62,7 +62,7 @@ class LostShipControllerTest {
             public void run(){
                 try {
                     controller.start();
-                } catch (RemoteException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -73,11 +73,9 @@ class LostShipControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
-
         controller.receiveRewardAndPenaltiesDecision(p2, "NO", sender);
-        assertEquals(EventPhase.ASK_TO_LAND, controller.getPhase());
-        Thread.sleep(200);
 
+        Thread.sleep(200);
         // p3: Accepts, should go to DISCARD_CREW
         controller.receiveRewardAndPenaltiesDecision(p3, "YES", sender);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
@@ -95,7 +93,7 @@ class LostShipControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -131,7 +129,7 @@ class LostShipControllerTest {
             public void run(){
                 try {
                     controller.start();
-                } catch (RemoteException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }

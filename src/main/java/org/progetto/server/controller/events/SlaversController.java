@@ -405,7 +405,7 @@ public class SlaversController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
+        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == requestedCrew) {
 
             if(!housingUnits.isEmpty()){
                 for (HousingUnit component : housingUnits) {

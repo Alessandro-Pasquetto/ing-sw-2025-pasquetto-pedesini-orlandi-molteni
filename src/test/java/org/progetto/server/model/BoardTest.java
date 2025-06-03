@@ -2,6 +2,8 @@ package org.progetto.server.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.progetto.server.connection.games.GameManager;
+import org.progetto.server.controller.GameController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,9 @@ class BoardTest {
         Player p3 = new Player("andrea");
         Player p4 = new Player("gianmaria");
 
-        Game game = new Game(0, 4, 1);
+        GameManager gameManager = new GameManager(0, 4, 2);
+
+        Game game = gameManager.getGame();
         Board board;
         Player[] track;
 
@@ -108,7 +112,7 @@ class BoardTest {
         p3.setIsReady(true, game);
         p4.setIsReady(true, game);
 
-        assertTrue(board.allTravelersReadyOrDisconnected());
+        assertTrue(GameController.allConnectedTravelersReady(gameManager));
 
         board.addTravelersOnTrack(2);
         track = board.getTrack();
@@ -294,7 +298,7 @@ class BoardTest {
         board.addTravelersOnTrack(1);
         board.movePlayerByDistance(p1, 30);
 
-        board.checkLappedPlayers(new ArrayList<>());
+        board.checkLappedPlayers(board.getCopyTravelers());
 
         assertTrue(p2.getHasLeft());
 
@@ -308,12 +312,16 @@ class BoardTest {
         board2.addTravelersOnTrack(1);
         board2.movePlayerByDistance(p3, 3);
 
-        assertNull(board2.checkLappedPlayers(new ArrayList<>()));
+        assertNull(board2.checkLappedPlayers(board2.getCopyTravelers()));
     }
 
     @Test
     void checkNoCrewPlayers() {
-        Game game = new Game(0, 4, 2);
+
+        GameManager gameManager = new GameManager(0, 4, 2);
+
+        Game game = gameManager.getGame();
+
         Player p1 = new Player("gino");
         Player p2 = new Player("alessandro");
         Player p3 = new Player("gino");
@@ -334,7 +342,7 @@ class BoardTest {
         p1.getSpaceship().addCrewCount(3);
         p2.getSpaceship().addCrewCount(0);
 
-        board.checkNoCrewPlayers();
+        board.checkNoCrewPlayers(GameController.getAllPlayersInTrackCopy(gameManager));
 
         assertTrue(p2.getHasLeft());
 
@@ -346,6 +354,6 @@ class BoardTest {
         p3.getSpaceship().addCrewCount(3);
         p4.getSpaceship().addCrewCount(2);
 
-        assertNull(board2.checkNoCrewPlayers());
+        assertNull(board2.checkNoCrewPlayers(GameController.getAllPlayersInTrackCopy(gameManager)));
     }
 }

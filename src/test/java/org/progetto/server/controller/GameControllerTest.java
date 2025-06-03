@@ -24,7 +24,7 @@ class GameControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
             }
         };
 

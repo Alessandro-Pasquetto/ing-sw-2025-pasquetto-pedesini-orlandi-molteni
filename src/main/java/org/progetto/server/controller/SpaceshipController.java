@@ -173,7 +173,13 @@ public class SpaceshipController {
     public static boolean destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
-        buildingBoard.destroyComponent(xComponent, yComponent);
+
+        try {
+            buildingBoard.destroyComponent(xComponent, yComponent);
+        } catch (IllegalStateException e) {
+            MessageSenderService.sendMessage(e.getMessage(), sender);
+            return true;
+        }
 
         MessageSenderService.sendMessage(new DestroyedComponentMessage(xComponent, yComponent), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);

@@ -87,7 +87,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
 
                 // Checks if players is able to win without double cannons
-                if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == 1) {
+                if (smugglers.battleResult(spaceship.getNormalShootingPower()) == 1) {
                     phase = EventPhase.REWARD_DECISION;
                     MessageSenderService.sendMessage("YouWonBattle", sender);
                     gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
@@ -107,7 +107,7 @@ public class SmugglersController extends EventControllerAbstract {
                 if (maxUsable == 0) {
                     playerFirePower = spaceship.getNormalShootingPower();
 
-                    if (smugglers.battleResult(player, spaceship.getNormalShootingPower()) == -1) {
+                    if (smugglers.battleResult(spaceship.getNormalShootingPower()) == -1) {
 
                         MessageSenderService.sendMessage("YouLostBattle", sender);
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
@@ -250,7 +250,7 @@ public class SmugglersController extends EventControllerAbstract {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if a battery has been discarded
-            if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+            if (smugglers.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) { // todo: eliminare metodo dal model, vedere gestione alternativa negli eventi con disconnesione fatta
                 requestedBatteries--;
                 MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
@@ -314,7 +314,7 @@ public class SmugglersController extends EventControllerAbstract {
             if (player.equals(gameManager.getGame().getActivePlayer())) {
 
                 // Calls the battleResult function
-                switch (smugglers.battleResult(player, playerFirePower)){
+                switch (smugglers.battleResult(playerFirePower)){
                     case 1:
                         MessageSenderService.sendMessage("YouWonBattle", sender);
                         gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);

@@ -383,7 +383,7 @@ public class BattlezoneController extends EventControllerAbstract {
         if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
 
             // Checks if a battery has been discarded
-            if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {
+            if (battlezone.chooseDiscardedBattery(player.getSpaceship(), (BatteryStorage) batteryStorage)) {// todo: eliminare metodo dal model, vedere gestione alternativa negli eventi con disconnesione fatta
                 requestedBatteries--;
 
                 MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
@@ -678,7 +678,7 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-            if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
+            if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) { //todo quando la rimozione sarà fatta dentro questo if la seconda condizione va modificata in "player.getSpaceship().getTotalCrewCount() == requestedCrew"
 
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();

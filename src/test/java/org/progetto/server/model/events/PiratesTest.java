@@ -64,39 +64,6 @@ class PiratesTest {
     }
 
     @Test
-    void chooseDiscardedBattery() {
-        Game game = new Game(0, 3, 2);
-
-        Player mario = new Player("mario");
-
-        game.addPlayer(mario);
-        game.initPlayersSpaceship();
-
-        ArrayList<Projectile> projectiles = new ArrayList<>();
-        projectiles.add(new Projectile(ProjectileSize.BIG, 0));
-        projectiles.add(new Projectile(ProjectileSize.SMALL, 3));
-        Pirates pirates = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles);
-        BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(), 2);
-
-        // Returns false if component is not a Housing Unit
-        assertFalse(pirates.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
-
-        // Removes one battery member from the Housing Unit
-        assertTrue(pirates.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(1, battery.getItemsCount());
-
-        // Remove another battery from the storage
-        assertTrue(pirates.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
-
-        // Tries to remove another battery from an empty storage
-        assertFalse(pirates.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
-    }
-
-    @Test
     void penaltyShot() {
         Game game1 = new Game(0, 3, 1);
         Game game2 = new Game(1, 3, 2);
@@ -295,12 +262,12 @@ class PiratesTest {
         Pirates pirates2 = new Pirates(CardType.PIRATES, 2, "imgPath", 6, -2, 4, projectiles2);
 
         //compares a power equal to the one required
-        assertEquals(0, pirates1.battleResult(player1, 5));
+        assertEquals(0, pirates1.battleResult(5));
 
         //compares a lower power than required
-        assertEquals(-1, pirates2.battleResult(player1, 5));
+        assertEquals(-1, pirates2.battleResult(5));
 
         //compares a higher power than required
-        assertEquals(1, pirates1.battleResult(player2, 8));
+        assertEquals(1, pirates1.battleResult(8));
     }
 }

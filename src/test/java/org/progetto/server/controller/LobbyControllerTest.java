@@ -20,7 +20,7 @@ class LobbyControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
             }
         };
 
@@ -68,7 +68,7 @@ class LobbyControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
             }
         };
 

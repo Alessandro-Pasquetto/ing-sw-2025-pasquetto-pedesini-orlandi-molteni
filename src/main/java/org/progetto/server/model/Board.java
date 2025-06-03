@@ -258,7 +258,6 @@ public class Board {
      */
     public ArrayList<Player> checkLappedPlayers(ArrayList<Player> playersInTrack) {
 
-
         Player leader = playersInTrack.getFirst();
 
         for (Player player : playersInTrack) {

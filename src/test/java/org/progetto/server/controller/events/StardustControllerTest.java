@@ -35,7 +35,7 @@ class StardustControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -58,11 +58,7 @@ class StardustControllerTest {
 
             @Override
             public void run(){
-                try {
-                    controller.start();
-                } catch (RemoteException e) {
-                    System.err.println("RMI client unreachable");
-                }
+                controller.start();
             }
         };
 

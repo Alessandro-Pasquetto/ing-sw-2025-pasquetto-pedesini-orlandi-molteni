@@ -228,12 +228,12 @@ class SmugglersTest {
         Smugglers smugglers2 = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 6, 2, -2, rewardBoxes2);
 
         //compares a power equal to the one required
-        assertEquals(0, smugglers1.battleResult(player1, 5));
+        assertEquals(0, smugglers1.battleResult(5));
 
         //compares a lower power than required
-        assertEquals(-1, smugglers2.battleResult(player1, 5));
+        assertEquals(-1, smugglers2.battleResult(5));
 
         //compares a higher power than required
-        assertEquals(1, smugglers1.battleResult(player2, 8));
+        assertEquals(1, smugglers1.battleResult(8));
     }
 }

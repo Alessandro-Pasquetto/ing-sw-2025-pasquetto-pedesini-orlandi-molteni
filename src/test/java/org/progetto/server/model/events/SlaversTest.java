@@ -57,6 +57,7 @@ class SlaversTest {
         //removes one crew member from the Housing Unit
         slavers.chooseDiscardedCrew(mario.getSpaceship(), crew);
         assertEquals(1, crew.getCrewCount());
+
         //removes an orange alien
         orange.setAlienOrange(true);
         slavers.chooseDiscardedCrew(mario.getSpaceship(), orange);

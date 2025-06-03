@@ -56,7 +56,7 @@ class PiratesControllerTest {
 
         Sender sender = new Sender() {
             @Override
-            public void sendMessage(Object msg) throws RemoteException {
+            public void sendMessage(Object msg){
 
             }
         };
@@ -121,7 +121,7 @@ class PiratesControllerTest {
             public void run(){
                 try {
                     controller.start();
-                } catch (RemoteException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -158,9 +158,11 @@ class PiratesControllerTest {
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
+        //todo controllare NoComponentHit (lancio dado)
         assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p1, "YES", sender);
+
 
         Thread.sleep(200);
         assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());

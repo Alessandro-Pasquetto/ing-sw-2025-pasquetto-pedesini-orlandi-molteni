@@ -12,10 +12,10 @@ public class Smugglers extends EventCard {
     // ATTRIBUTES
     // =======================
 
-    private int firePowerRequired;
-    private int penaltyBoxes;
-    private int penaltyDays;
-    private ArrayList<Box> rewardBoxes;
+    private final int firePowerRequired;
+    private final int penaltyBoxes;
+    private final int penaltyDays;
+    private final ArrayList<Box> rewardBoxes;
 
     // =======================
     // CONSTRUCTORS
@@ -61,7 +61,6 @@ public class Smugglers extends EventCard {
      * @param component BoxStorageComponent to which the box should be added
      * @param box Box to be added
      * @param boxIdx Index in the storage where the box will be placed
-     * @return true if the box was successfully added, false otherwise
      */
     public void chooseRewardBox(Spaceship spaceship, BoxStorage component, Box box, int boxIdx) throws IllegalStateException {
         component.addBox(spaceship, box, boxIdx);
@@ -155,11 +154,10 @@ public class Smugglers extends EventCard {
      *
      * @author Gabriele
      * @author Stefano
-     * @param player Current player
      * @param firePower Player's current firepower
      * @return 1 if player wins, -1 if loses, and 0 if draws.
      */
-    public int battleResult(Player player, float firePower) {
+    public int battleResult(float firePower) {
         if (firePower > this.firePowerRequired) {
             return 1;
         } else if (firePower < this.firePowerRequired) {

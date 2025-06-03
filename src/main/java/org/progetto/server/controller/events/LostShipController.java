@@ -196,7 +196,7 @@ public class LostShipController extends EventControllerAbstract  {
         MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
+        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == requestedCrew) {
 
             if(!housingUnits.isEmpty()){
                 for (HousingUnit component : housingUnits) {
@@ -208,6 +208,7 @@ public class LostShipController extends EventControllerAbstract  {
                 gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
             }
 
+            phase = EventPhase.EFFECT;
             eventEffect();
 
             player.setIsReady(true, gameManager.getGame());
