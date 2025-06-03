@@ -241,7 +241,7 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.PIRATES) && !lv2Deck.get(1).getType().equals(CardType.PIRATES))
+                while(!lv2Deck.getFirst().getType().equals(CardType.METEORSRAIN) && !lv2Deck.get(1).getType().equals(CardType.METEORSRAIN))
                    Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -384,23 +384,20 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-        /*
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
 
-         */
-
             // forzare componente, todo da rimuovere
-            int randomPos = 0;
-            ComponentType type;
-            do{
-                randomPos = (int) (Math.random() * componentDeck.size());
-
-                type = componentDeck.get(randomPos).getType();
-
-            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.BATTERY_STORAGE) && !type.equals(ComponentType.HOUSING_UNIT));
-
-            pickedComponent = componentDeck.remove(randomPos);
+//            int randomPos = 0;
+//            ComponentType type;
+//            do{
+//                randomPos = (int) (Math.random() * componentDeck.size());
+//
+//                type = componentDeck.get(randomPos).getType();
+//
+//            } while (!type.equals(ComponentType.CANNON) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.BATTERY_STORAGE) && !type.equals(ComponentType.HOUSING_UNIT));
+//
+//            pickedComponent = componentDeck.remove(randomPos);
         }
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
@@ -472,7 +469,7 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-//           int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
 //            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
             //forzare eventCard, todo da rimuovere
@@ -480,7 +477,7 @@ public class Game {
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PIRATES));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
        }

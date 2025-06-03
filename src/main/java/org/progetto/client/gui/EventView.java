@@ -111,6 +111,12 @@ public class EventView {
     public Label creditsValue;
 
     @FXML
+    public ImageView crewSymbol;
+
+    @FXML
+    public Label crewValue;
+
+    @FXML
     private VBox chatMessagesContainer;
 
     @FXML
@@ -366,6 +372,7 @@ public class EventView {
         // Set spaceship stats images
         firePowerSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/fire-power.png"))));
         enginePowerSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/engine-power.png"))));
+        crewSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/crew.png"))));
         destroyedSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/destroyed.png"))));
         creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
     }
@@ -425,6 +432,7 @@ public class EventView {
             firePowerValue.setText(String.valueOf(power));
 
         enginePowerValue.setText(String.valueOf(ship.getNormalEnginePower()));
+        crewValue.setText(String.valueOf(ship.getCrewCount()));
         destroyedValue.setText(String.valueOf(ship.getDestroyedCount()));
         creditsValue.setText(String.valueOf(GameData.getCredits()));
 
@@ -1434,6 +1442,97 @@ public class EventView {
                 }
             }
         }
+
+        if (typeToHighlight.equals("ANY")) {
+            colorUnconnectedShipParts();
+        }
+    }
+
+    /**
+     * Highlights with different colors groups of connected ship parts
+     *
+     * @author Lorenzo
+     */
+    private void colorUnconnectedShipParts() {
+        Spaceship spaceship = GameData.getSpaceship();
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+        int[][] visited = new int[spaceshipMatrix.length][spaceshipMatrix[0].length];
+        int currentColor = 1;
+
+        // Finds groups of connected ship parts
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+                if (spaceshipMatrix[row][col] != null && visited[row][col] == 0) {
+                    dfsFindUnconnectedShipParts(spaceship, visited, row, col, currentColor, null);
+                    currentColor++;
+                }
+            }
+        }
+
+        // Highlights the groups with different colors
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+                if (visited[row][col] != 0) {
+                    Pane cell = getCellFromSpaceshipMatrix(col, row);
+                    int colorIndex = visited[row][col] % 5;
+
+                    Color color = switch (colorIndex) {
+                        case 1 -> Color.rgb(0, 122, 255, 0.3);
+                        case 2 -> Color.rgb(52, 199, 89, 0.3);
+                        case 3 -> Color.rgb(255, 149, 0, 0.3);
+                        case 4 -> Color.rgb(175, 82, 222, 0.3);
+                        default -> Color.rgb(90, 200, 250, 0.3);
+                    };
+
+                    highlightCell(cell, color);
+                }
+            }
+        }
+    }
+
+    /**
+     * DFS to find group of connected components
+     *
+     * @author Gabriele
+     * @param spaceship is the spaceship to analyze
+     * @param visited is the visited matrix to keep track of visited cells
+     * @param row is the current row in the spaceship matrix
+     * @param col is the current column in the spaceship matrix
+     * @param currentColor is the current color to assign to the group
+     * @param prevComponent is the previous component to check connection
+     */
+    private void dfsFindUnconnectedShipParts(Spaceship spaceship, int[][] visited, int row, int col, int currentColor, Component prevComponent) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        // Check bounds
+        if (row < 0 || row >= spaceshipMatrix.length || col < 0 || col >= spaceshipMatrix[row].length) {
+            return;
+        }
+
+        // Check if the cell is already visited or has no component
+        if (visited[row][col] != 0 || spaceshipMatrix[row][col] == null) {
+            return;
+        }
+
+        // Check if the component is of the same type as the previous one
+        if (prevComponent == null) {
+            visited[row][col] = currentColor;
+        }
+
+        // Check if the component is connected to the previous one
+        if (prevComponent != null) {
+            if (!spaceship.getBuildingBoard().areConnected(spaceshipMatrix[row][col], prevComponent)) {
+                return;
+            }
+        }
+
+        // Sets group color
+        visited[row][col] = currentColor;
+
+        dfsFindUnconnectedShipParts(spaceship, visited, row - 1, col, currentColor, spaceshipMatrix[row][col]); // Up
+        dfsFindUnconnectedShipParts(spaceship, visited, row + 1, col, currentColor, spaceshipMatrix[row][col]); // Down
+        dfsFindUnconnectedShipParts(spaceship, visited, row, col - 1, currentColor, spaceshipMatrix[row][col]); // Left
+        dfsFindUnconnectedShipParts(spaceship, visited, row, col + 1, currentColor, spaceshipMatrix[row][col]); // Right
     }
 
     /**
