@@ -9,8 +9,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.HBox?>
-
 <?import javafx.scene.layout.AnchorPane?>
+
 <StackPane xmlns="http://javafx.com/javafx/23.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.progetto.client.gui.WaitingRoomView"
@@ -27,9 +27,9 @@
         </VBox>
     </AnchorPane>
 
-    <VBox spacing="10"
+    <VBox spacing="20"
           maxWidth="450"
-          maxHeight="420"
+          maxHeight="490"
           fx:id="waitingRoomContainer"
           StackPane.alignment="CENTER">
 

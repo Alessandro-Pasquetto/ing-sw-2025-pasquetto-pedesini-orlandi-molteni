@@ -946,6 +946,17 @@ public class GuiHandlerMessage {
                     );
                     break;
 
+                case "LandRequest":
+                    PageController.getEventView().askYesNo(
+                            "DO YOU WANT TO LAND ON THE STATION?",
+                            "Select your choice...",
+                            response -> {
+                                Sender sender = GameData.getSender();
+                                sender.responseLandRequest(response ? "YES" : "NO");
+                            }
+                    );
+                    break;
+
                 case "LandingCompleted":
                     break;
 

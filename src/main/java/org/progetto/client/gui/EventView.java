@@ -1560,14 +1560,14 @@ public class EventView {
             idx++;
         }
 
-        // Leave planet button
-        Button leavePlanetButton = new Button("Leave planet");
-        leavePlanetButton.setOnAction(e -> {
+        // Leave button
+        Button leaveButton = new Button("Leave");
+        leaveButton.setOnAction(e -> {
             Sender sender = GameData.getSender();
             sender.responseRewardBox(-1, -1, -1, -1);
         });
 
-        mainContainer.getChildren().addAll(boxScrollPane, leavePlanetButton);
+        mainContainer.getChildren().addAll(boxScrollPane, leaveButton);
 
         btnContainer.getChildren().add(mainContainer);
     }
