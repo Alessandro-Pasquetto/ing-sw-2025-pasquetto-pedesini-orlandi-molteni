@@ -23,6 +23,7 @@ public class LostShipController extends EventControllerAbstract  {
     // =======================
 
     private final LostShip lostShip;
+    private boolean someoneLanded;
     private final ArrayList<Player> activePlayers;
     private int requestedCrew;
     private final ArrayList<HousingUnit> housingUnits;
@@ -34,6 +35,7 @@ public class LostShipController extends EventControllerAbstract  {
     public LostShipController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.lostShip = (LostShip) gameManager.getGame().getActiveEventCard();
+        this.someoneLanded = false;
         this.phase = EventPhase.START;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.requestedCrew = 0;
@@ -84,6 +86,9 @@ public class LostShipController extends EventControllerAbstract  {
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
             } else
                 MessageSenderService.sendMessage("NotEnoughCrew", sender);
+
+            // Checks if someone landed on the ship
+            if (someoneLanded) return;
         }
     }
 
@@ -112,6 +117,8 @@ public class LostShipController extends EventControllerAbstract  {
 
         switch (upperCaseResponse) {
             case "YES":
+                someoneLanded = true;
+
                 phase = EventPhase.PENALTY_EFFECT;
                 sendPenaltyEffect(sender);
                 break;

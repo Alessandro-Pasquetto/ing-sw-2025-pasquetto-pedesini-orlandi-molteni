@@ -29,7 +29,7 @@
 
     <VBox spacing="20"
           maxWidth="470"
-          maxHeight="475"
+          maxHeight="477"
           fx:id="waitingRoomContainer"
           StackPane.alignment="CENTER">
 
