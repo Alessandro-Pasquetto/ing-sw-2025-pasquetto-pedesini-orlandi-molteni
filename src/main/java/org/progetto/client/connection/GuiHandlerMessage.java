@@ -423,6 +423,7 @@ public class GuiHandlerMessage {
             System.out.println("Card picked: " + pickedEventCardMessage.getEventCard().getType());
             GameData.setActiveCard(pickedEventCardMessage.getEventCard());
             PageController.getEventView().initEventCard(pickedEventCardMessage.getEventCard());
+            PageController.getEventView().resetBlackHole();
         }
 
         else if (messageObj instanceof PlayerMovedAheadMessage playerMovedAheadMessage) {

@@ -373,6 +373,10 @@ public class EventView {
         return blackHoleContainer;
     }
 
+    public void resetBlackHole(){
+        blackHoleContainer.setImage(null);
+    }
+
 
     /**
      * Initializes the spaceship matrix
@@ -636,7 +640,6 @@ public class EventView {
                 slot1.setLayoutY(24.0);
                 slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot1.getProperties().put("idx", 0);
-
                 renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
                 slot1.setUserData(boxStorage.getType());
@@ -651,7 +654,6 @@ public class EventView {
                 slot1.setLayoutY(8.0);
                 slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot1.getProperties().put("idx", 0);
-
                 renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
                 Pane slot2 = new Pane();
@@ -660,7 +662,6 @@ public class EventView {
                 slot2.setLayoutY(40.0);
                 slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot2.getProperties().put("idx", 1);
-
                 renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
 
                 slot1.setUserData(boxStorage.getType());
@@ -676,7 +677,6 @@ public class EventView {
                 slot1.setLayoutY(24.0);
                 slot1.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot1.getProperties().put("idx", 0);
-
                 renderBox(slot1, boxStorage.getBoxes()[0], boxStorage.getRotation());
 
                 slot2 = new Pane();
@@ -685,7 +685,6 @@ public class EventView {
                 slot2.setLayoutY(8.0);
                 slot2.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot2.getProperties().put("idx", 1);
-
                 renderBox(slot2, boxStorage.getBoxes()[1], boxStorage.getRotation());
 
                 Pane slot3 = new Pane();
@@ -694,7 +693,6 @@ public class EventView {
                 slot3.setLayoutY(40.0);
                 slot3.setPrefSize(BOX_SLOT_SIZE, BOX_SLOT_SIZE);
                 slot3.getProperties().put("idx", 2);
-
                 renderBox(slot3, boxStorage.getBoxes()[2], boxStorage.getRotation());
 
                 slot1.setUserData(boxStorage.getType());
@@ -733,6 +731,8 @@ public class EventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
+        Object[] data = {null,box.getValue()};
+        boxImageView.setUserData(data);
 
         boxImageView.setRotate(-90 * componentRotation);
         boxSlot.getChildren().add(boxImageView);
@@ -1727,7 +1727,7 @@ public class EventView {
                             Integer rowIndex = GridPane.getRowIndex(cell);
                             Integer colIndex = GridPane.getColumnIndex(cell);;
                             Integer slotIndex = (Integer) ((Pane)box.getProperties().get("originalParent")).getProperties().get("idx");
-                            System.out.println("Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
+                            System.out.println("Removed box from Row: "+ rowIndex + " Coll: "+ colIndex+ " Idx: "+ slotIndex);
                             Sender sender = GameData.getSender();
                             sender.removeBox(colIndex,rowIndex,slotIndex);
                         }

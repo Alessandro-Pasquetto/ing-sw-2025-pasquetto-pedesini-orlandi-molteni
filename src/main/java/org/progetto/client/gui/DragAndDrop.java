@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -410,13 +411,17 @@ public class DragAndDrop {
         double sceneX = event.getSceneX();
         double sceneY = event.getSceneY();
 
-        ImageView trash = PageController.getEventView().getBlackHoleContainer();
-        if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
-            PageController.getEventView().removeBox(event,itemImage);
-        }
 
         Pane root = (Pane) itemImage.getScene().getRoot();
         itemImage.setManaged(false);
+
+        ImageView trash = PageController.getEventView().getBlackHoleContainer();
+        if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
+            PageController.getEventView().removeBox(event,itemImage);
+            itemImage.getStyleClass().remove("draggable");
+            ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
+            isValidDrop = true;
+        }
 
         // Check if the drop is inside any cell of the spaceship
         for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
@@ -468,11 +473,13 @@ public class DragAndDrop {
                                             }
 
                                             itemImage.setFitWidth(35);
-                                            itemImage.setPreserveRatio(true);
+                                            itemImage.setFitHeight(35);
 
                                             // Center the image inside the slot
                                             itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
-                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2 - 19);
+                                            itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+                                            itemImage.setRotate(-slot.getParent().getRotate());
+
 
                                             GameData.getSender().responseRewardBox(boxIdx, colIndex, rowIndex, (int) slot.getProperties().get("idx"));
                                             System.out.println("Placed box at x:" + colIndex + " y:" + rowIndex + " in slot " + slot.getProperties().get("idx"));
@@ -482,24 +489,35 @@ public class DragAndDrop {
 
                                         else if(originalParent instanceof Pane originalCell){
 
-                                            Integer startingX = GridPane.getRowIndex(originalCell.getParent());
-                                            Integer startingY = GridPane.getColumnIndex(originalCell.getParent());
+                                            int boxVal = (int) data[1];
+                                            Integer startingX = GridPane.getColumnIndex(originalCell.getParent());
+                                            Integer startingY = GridPane.getRowIndex(originalCell.getParent());
                                             Integer startingIdx = (Integer) originalCell.getProperties().get("idx");
-
                                             Integer finalIdx = (Integer) slot.getProperties().get("idx");
 
-                                            root.getChildren().remove(itemImage);
-                                            slot.getChildren().add(itemImage);
+                                            if (boxVal == 4) {
+                                                if (storageType.equals("RED_BOX_STORAGE")) {
+                                                    root.getChildren().remove(itemImage);
+                                                    slot.getChildren().add(itemImage);
+                                                } else {
+                                                    break;
+                                                }
+
+                                            } else {
+                                                root.getChildren().remove(itemImage);
+                                                slot.getChildren().add(itemImage);
+                                            }
 
                                             itemImage.setFitWidth(35);
-                                            itemImage.setPreserveRatio(true);
+                                            itemImage.setFitHeight(35);
 
                                             // Center the image inside the slot
                                             itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
+                                            itemImage.setRotate(-slot.getParent().getRotate());
 
-                                            GameData.getSender().moveBox(startingX,startingY,startingIdx,rowIndex,colIndex,finalIdx);
-                                            System.out.println("Moved box from x: " + startingX + " y: " + startingY + " idx: "+ startingIdx + " to " + "x: "+ rowIndex + " y: "+ colIndex+ " idx: " + finalIdx);
+                                            GameData.getSender().moveBox(startingX,startingY,startingIdx,colIndex,rowIndex,finalIdx);
+                                            System.out.println("Moved box from x: " + startingX + " y: " + startingY + " idx: "+ startingIdx + " to " + "x: "+ colIndex + " y: "+ rowIndex+ " idx: " + finalIdx);
 
                                             isValidDrop = true;
                                         }
@@ -516,6 +534,7 @@ public class DragAndDrop {
 
         // If the drop was inside a cell
         if (!isValidDrop) {
+            System.out.println("Drop not valid");
             // If the drop was not inside any cell, return the image to its original position
             Object originalParent = itemImage.getProperties().get("originalParent");
             if (itemImage.getParent() != originalParent && originalParent instanceof Pane) {
@@ -581,8 +600,10 @@ public class DragAndDrop {
                                         if(slot.getChildren().isEmpty()) continue;
 
                                         Node node4 = slot.getChildren().get(0);
-                                        if(node4 instanceof ImageView itemImage)
+                                        if(node4 instanceof ImageView itemImage) {
                                             enableDragAndDropItem(itemImage, targetSlotId);
+                                        }
+
                                     }
                                     break;
                             }
