@@ -28,8 +28,8 @@
     </AnchorPane>
 
     <VBox spacing="20"
-          maxWidth="450"
-          maxHeight="490"
+          maxWidth="470"
+          maxHeight="475"
           fx:id="waitingRoomContainer"
           StackPane.alignment="CENTER">
 

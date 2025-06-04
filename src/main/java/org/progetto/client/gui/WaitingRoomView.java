@@ -138,10 +138,10 @@ public class WaitingRoomView {
         playersTable.setItems(playersList);
 
         if (players.size() == numMaxPlayers) {
-            valueStatusLabel.setText(String.format("%d/%d players are ready.", numReadyPlayers, numMaxPlayers));
+            valueStatusLabel.setText(String.format("%d/%d players are ready", numReadyPlayers, numMaxPlayers));
             phraseStatusLabel.setText(String.format("Waiting for others to get ready..."));
         } else {
-            valueStatusLabel.setText(String.format("%d/%d players joined.", players.size(), numMaxPlayers));
+            valueStatusLabel.setText(String.format("%d/%d players joined", players.size(), numMaxPlayers));
             phraseStatusLabel.setText(String.format("Waiting for more players to join..."));
         }
     }
