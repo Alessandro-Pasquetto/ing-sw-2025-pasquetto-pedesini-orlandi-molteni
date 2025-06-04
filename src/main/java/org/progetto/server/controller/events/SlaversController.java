@@ -108,8 +108,8 @@ public class SlaversController extends EventControllerAbstract {
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-                // If the player is disconnected and slavers are not defeated (disconnection in rewardDecision)
-                if (!player.getIsReady() && !defeated){
+                // If the player is disconnected
+                if (!player.getIsReady()){
                     playerFirePower = spaceship.getNormalShootingPower();
                 }
             }
@@ -143,6 +143,7 @@ public class SlaversController extends EventControllerAbstract {
 
         // Player doesn't want to use double cannons
         if (num == 0) {
+            playerFirePower = spaceship.getNormalShootingPower();
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 

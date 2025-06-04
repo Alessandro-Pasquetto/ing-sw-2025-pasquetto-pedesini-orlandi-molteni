@@ -347,7 +347,7 @@ public class GameThread extends Thread {
 
     public void waitParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
         synchronized (gameThreadLock) {
-            while (GameController.allConnectedParametersPlayersReady(players, gameManager))
+            while (!GameController.allConnectedParametersPlayersReady(players, gameManager))
                 gameThreadLock.wait();
         }
     }
