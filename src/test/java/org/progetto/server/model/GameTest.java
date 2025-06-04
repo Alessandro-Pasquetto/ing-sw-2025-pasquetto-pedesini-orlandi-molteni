@@ -285,7 +285,29 @@ class GameTest {
 
         assertTrue(game.getPlayersCopy().contains(mario));
         assertTrue(game.getPlayersCopy().contains(alice));
+    }
 
+    @Test
+    void removePlayer() {
+        Player mario = new Player("mario");
+        Player alice = new Player("alice");
+
+        Game game = new Game(0, 3, 2);
+        game.addPlayer(mario);
+        game.addPlayer(alice);
+
+        assertTrue(game.getPlayersCopy().contains(mario));
+        assertTrue(game.getPlayersCopy().contains(alice));
+
+        game.removePlayer(mario);
+
+        assertFalse(game.getPlayersCopy().contains(mario));
+        assertTrue(game.getPlayersCopy().contains(alice));
+
+        game.removePlayer(alice);
+
+        assertFalse(game.getPlayersCopy().contains(mario));
+        assertFalse(game.getPlayersCopy().contains(alice));
     }
 
     @Test

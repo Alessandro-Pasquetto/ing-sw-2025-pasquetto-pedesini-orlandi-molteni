@@ -7,13 +7,14 @@ import org.progetto.server.model.components.*;
 import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class BuildingBoardTest {
 
     @BeforeEach
     void setUp() {
     }
 
-    private void printBoard(BuildingBoard buildingBoard){
+    private void printBoard(BuildingBoard buildingBoard) {
         System.out.println();
         System.out.printf("%-20s", "-");
         for (int i = 0; i < 5; i++) {
@@ -172,7 +173,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void pickBookedComponent(){
+    void pickBookedComponent() {
         BuildingBoard board = new BuildingBoard(new Spaceship(1, 0), 0);
         Component component = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgSrc", 2);
 
@@ -220,7 +221,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void placeComponent(){
+    void placeComponent() {
         Spaceship spaceship = new Spaceship(1, 1);
 
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
@@ -270,7 +271,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void tryToPlaceComponent(){
+    void tryToPlaceComponent() {
         Spaceship spaceship = new Spaceship(2, 0);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
@@ -924,7 +925,7 @@ class BuildingBoardTest {
     }
 
     @Test
-    void initSpaceshipParams(){
+    void initSpaceshipParams() {
         Spaceship spaceship = new Spaceship(2, 1);
         BuildingBoard buildingBoard = spaceship.getBuildingBoard();
 
@@ -974,7 +975,33 @@ class BuildingBoardTest {
     }
 
     @Test
-    void checkShipValidityAndFixAliens(){
+    void removeBookedComponents() {
+        Spaceship spaceship = new Spaceship(2, 1);
+        BuildingBoard buildingBoard = spaceship.getBuildingBoard();
+
+        Component cannon = new Component(ComponentType.CANNON, new int[]{0, 3, 3, 3}, "imgPath");
+        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 3, 3, 3}, "imgPath", 2);
+        buildingBoard.setHandComponent(cannon);
+        buildingBoard.setAsBooked(0);
+
+        buildingBoard.setHandComponent(battery);
+        buildingBoard.setAsBooked(1);
+
+        Component[] bookedComponents = new Component[buildingBoard.getBookedCopy().length];
+
+        bookedComponents[0] = cannon;
+        bookedComponents[1] = battery;
+        assertArrayEquals(bookedComponents, buildingBoard.getBookedCopy());
+
+        buildingBoard.removeBookedComponents();
+
+        assertEquals(2, spaceship.getDestroyedCount());
+        assertNull(buildingBoard.getBookedCopy()[0]);
+        assertNull(buildingBoard.getBookedCopy()[1]);
+    }
+
+    @Test
+    void checkShipValidityAndFixAliens() {
 
         // TEST DISCONNECTED COMPONENTS
 

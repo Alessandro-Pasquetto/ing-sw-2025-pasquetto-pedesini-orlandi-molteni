@@ -356,4 +356,33 @@ class BoardTest {
 
         assertNull(board2.checkNoCrewPlayers(GameController.getAllPlayersInTrackCopy(gameManager)));
     }
+
+    @Test
+    void clearTravelers() {
+        Player p1 = new Player("gino");
+        Player p2 = new Player("arnoldo");
+        Player p3 = new Player("andrea");
+        Player p4 = new Player("gianmaria");
+
+        Game game = new Game(0, 4, 1);
+
+        // Add travelers in level 1 spaceship
+        Board board = new Board(1, 4);
+        board.addTraveler(p1);
+        board.addTraveler(p2);
+        board.addTraveler(p3);
+        board.addTraveler(p4);
+
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(p1);
+        players.add(p2);
+        players.add(p3);
+        players.add(p4);
+
+        assertEquals(players, board.getCopyTravelers());
+        assertEquals(4, board.getCopyTravelers().size());
+
+        board.clearTravelers();
+        assertEquals(0, board.getCopyTravelers().size());
+    }
 }

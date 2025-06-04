@@ -35,6 +35,10 @@ class PlayerTest {
         Player player = new Player("gino");
 
         assertEquals(0, player.getColor());
+
+        player.setColor(3);
+
+        assertEquals(3, player.getColor());
     }
 
     @Test

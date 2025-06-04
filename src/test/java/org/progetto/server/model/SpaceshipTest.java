@@ -562,6 +562,20 @@ class SpaceshipTest {
     }
 
     @Test
+    void resetDestroyedCount() {
+        Spaceship spaceship = new Spaceship(1, 2);
+
+        assertEquals(0, spaceship.getDestroyedCount());
+
+        spaceship.addDestroyedCount(3);
+        assertEquals(3, spaceship.getDestroyedCount());
+
+        spaceship.resetDestroyedCount();
+
+        assertEquals(0, spaceship.getDestroyedCount());
+    }
+
+    @Test
     void maxNumberOfDoubleEnginesUsable() {
         Game game = new Game(0, 4, 2);
         Player p1 = new Player("alice");

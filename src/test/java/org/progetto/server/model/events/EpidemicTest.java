@@ -70,6 +70,7 @@ class EpidemicTest {
         buildingBoard.placeComponent(0, 3, 0);
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrixCopy()[3][0];
         temp.setAlienPurple(true);
+        temp.incrementCrewCount(player.getSpaceship(), 1);
 
         buildingBoard.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{3, 0, 0, 0}, "imgPath", 2));
         buildingBoard.placeComponent(0, 4, 0);
@@ -84,6 +85,7 @@ class EpidemicTest {
 
         temp = (HousingUnit) buildingBoard.getSpaceshipMatrixCopy()[3][1];
         temp.setAlienOrange(true);
+        temp.incrementCrewCount(player.getSpaceship(), 1);
 
         Epidemic epidemic = new Epidemic(CardType.EPIDEMIC, 2, "imgSrc");
 
