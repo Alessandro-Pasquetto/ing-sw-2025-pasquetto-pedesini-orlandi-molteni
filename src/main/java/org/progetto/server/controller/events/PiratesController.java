@@ -591,8 +591,13 @@ public class PiratesController extends EventControllerAbstract {
         gameManager.getGameThread().notifyThread();
     }
 
+    /**
+     * Handles shots for defeated players
+     *
+     * @author Alessandro
+     * @throws InterruptedException
+     */
     private void handleShotsDefeatedPlayers() throws InterruptedException {
-
         // Reset defeatedPlayers
         for (Player defeatedPlayer : defeatedPlayers) {
             defeatedPlayer.setIsReady(false, gameManager.getGame());
@@ -645,6 +650,12 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Asks current defeated player if he wants to use a shield
+     *
+     * @author Alessandro
+     * @param defeatedPlayer current defeated player
+     */
     private void askToUseShieldSinglePlayer(Player defeatedPlayer) {
         // Asks current defeated player if he wants to use a shield
         Sender sender = gameManager.getSenderByPlayer(defeatedPlayer);
@@ -743,6 +754,12 @@ public class PiratesController extends EventControllerAbstract {
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
     }
 
+    /**
+     * Handles current shot for disconnected player
+     *
+     * @author Alessandro
+     * @param player current player
+     */
     private void handleCurrentShotForDisconnectedPlayer(Player player) {
         Game game = gameManager.getGame();
         Projectile shot = currentShot;
@@ -763,6 +780,13 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Reconnects player to the game
+     *
+     * @author Alessandro
+     * @param player current player
+     * @param sender current sender
+     */
     @Override
     public void reconnectPlayer(Player player, Sender sender) {
         if (!activePlayers.contains(player))

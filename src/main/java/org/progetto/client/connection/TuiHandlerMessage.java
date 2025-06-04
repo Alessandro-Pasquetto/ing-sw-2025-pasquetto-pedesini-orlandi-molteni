@@ -703,6 +703,10 @@ public class TuiHandlerMessage {
                     System.err.println("Unable to discard the battery!");
                     break;
 
+                case "EmptyBatteryStorage":
+                    System.err.println("The battery storage is empty!");
+                    break;
+
                 case "IncorrectNumber":
                     System.err.println("Incorrect number!");
                     break;
@@ -721,6 +725,10 @@ public class TuiHandlerMessage {
 
                 case "BoxNotDiscarded":
                     System.err.println("Unable to discard the box!");
+                    break;
+
+                case "EmptyBoxSlot":
+                    System.err.println("Box storage slot is empty!");
                     break;
 
                 case "BoxChosen":

@@ -222,6 +222,12 @@ public class MeteorsRainController extends EventControllerAbstract {
         gameManager.getGameThread().notifyThread();
     }
 
+    /**
+     * Handles the meteor event
+     *
+     * @author Alessandro
+     * @throws InterruptedException if the thread is interrupted
+     */
     private void handleMeteor() throws InterruptedException{
         gameManager.getGameThread().resetTravelersReady();
 
@@ -270,6 +276,13 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Handles current small meteor for a single player
+     *
+     * @author Alessandro
+     * @param player is the one that needs to handle the current meteor
+     * @param sender current sender
+     */
     private void askSmallMeteorDecisionSinglePlayer(Player player, Sender sender) {
         // Finds impact component
         Component affectedComponent = meteorsRain.checkImpactComponent(gameManager.getGame(), player, comingMeteor, diceResult);
@@ -514,6 +527,13 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Reconnects player to the event
+     *
+     * @author Alessandro
+     * @param player is the one that needs to be reconnected
+     * @param sender current sender
+     */
     @Override
     public void reconnectPlayer(Player player, Sender sender){
         if(!activePlayers.contains(player))

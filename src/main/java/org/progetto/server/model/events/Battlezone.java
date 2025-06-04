@@ -1,5 +1,6 @@
 package org.progetto.server.model.events;
 
+import javafx.util.Pair;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -7,6 +8,8 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Battlezone extends EventCard {
 
@@ -101,6 +104,35 @@ public class Battlezone extends EventCard {
         }
 
         component.decrementCrewCount(spaceship, 1);
+    }
+
+    /**
+     * Discards a number of crew members from the spaceship, randomly choosing a housing unit
+     *
+     * @author Alessandro
+     * @param spaceship Spaceship from which the crew members will be discarded
+     * @param crewMembersToDiscard Number of crew members to discard
+     */
+    public void randomDiscardCrew(Spaceship spaceship, int crewMembersToDiscard) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+
+                Component component = spaceshipMatrix[row][col];
+
+                if(component instanceof HousingUnit housingUnit){
+
+                    while(crewMembersToDiscard != 0 && housingUnit.getCrewCount() > 0){
+                        chooseDiscardedCrew(spaceship, housingUnit);
+                        crewMembersToDiscard--;
+                    }
+
+                    if(crewMembersToDiscard == 0 || spaceship.getCrewCount() == 0)
+                        return;
+                }
+            }
+        }
     }
 
     /**
@@ -242,6 +274,74 @@ public class Battlezone extends EventCard {
     }
 
     /**
+     * Discards a number of box members from the spaceship, randomly choosing a box storage
+     *
+     * @author Gabriele
+     * @param spaceship Spaceship from which the box will be discarded
+     * @param boxToDiscard Number of box members to discard
+     */
+    public void randomDiscardBoxes(Spaceship spaceship, int boxToDiscard) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        int boxCount = spaceship.getBoxCounts()[0] + spaceship.getBoxCounts()[1] + spaceship.getBoxCounts()[2] + spaceship.getBoxCounts()[3];
+        if (boxCount == 0) {
+            randomDiscardBatteries(spaceship, boxToDiscard);
+            return;
+        }
+
+        // Map from box color to list of its locations
+        Map<Box, ArrayList<Pair>> boxMap = new HashMap<>();
+
+        boxMap.put(Box.RED, new ArrayList<>());
+        boxMap.put(Box.YELLOW, new ArrayList<>());
+        boxMap.put(Box.GREEN, new ArrayList<>());
+        boxMap.put(Box.BLUE, new ArrayList<>());
+
+        // Collects box locations
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+                Component component = spaceshipMatrix[row][col];
+
+                if (component instanceof BoxStorage boxStorage) {
+                    Box[] boxes = boxStorage.getBoxes();
+
+                    for (int i = 0; i < boxes.length; i++) {
+                        Box box = boxes[i];
+                        if (box != null) {
+                            boxMap.get(box).add(new Pair(boxStorage, i));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Prioritized discard
+        ArrayList<Box> priority = new ArrayList<>();
+        priority.add(Box.RED);
+        priority.add(Box.YELLOW);
+        priority.add(Box.GREEN);
+        priority.add(Box.BLUE);
+
+        // Discard boxes
+        for (Box color : priority) {
+            ArrayList<Pair> locations = boxMap.get(color);
+
+            for (Pair location : locations) {
+                if (boxToDiscard == 0) return;
+
+                boxCount = spaceship.getBoxCounts()[0] + spaceship.getBoxCounts()[1] + spaceship.getBoxCounts()[2] + spaceship.getBoxCounts()[3];
+                if (boxCount == 0) {
+                    randomDiscardBatteries(spaceship, boxToDiscard);
+                    return;
+                }
+
+                if (chooseDiscardedBox(spaceship, (BoxStorage) location.getKey(), (int) location.getValue()))
+                    boxToDiscard--;
+            }
+        }
+    }
+
+    /**
      * Checks if the StorageComponent chosen by player is a battery storage
      * If that is true, the battery will be removed
      *
@@ -255,6 +355,36 @@ public class Battlezone extends EventCard {
             return component.decrementItemsCount(spaceship, 1);
         }
         return false;
+    }
+
+    /**
+     * Discards a number of batteries from the spaceship, randomly choosing a battery storage
+     *
+     * @author Gabriele
+     * @param spaceship Spaceship from which the batteries will be discarded
+     * @param batteriesToDiscard Number of batteries to discard
+     */
+    public void randomDiscardBatteries(Spaceship spaceship, int batteriesToDiscard) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+
+                Component component = spaceshipMatrix[row][col];
+
+                if (component instanceof BatteryStorage batteryStorage) {
+
+                    while (batteriesToDiscard != 0 && batteryStorage.getItemsCount() > 0) {
+                        if (chooseDiscardedBattery(spaceship, batteryStorage)) {
+                            batteriesToDiscard--;
+                        }
+                    }
+
+                    if (batteriesToDiscard == 0 || spaceship.getBatteriesCount() == 0)
+                        return;
+                }
+            }
+        }
     }
 
     // TODO: There are three couples of condition and penalty for each card.

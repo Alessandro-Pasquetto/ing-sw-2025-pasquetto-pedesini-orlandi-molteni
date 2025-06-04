@@ -76,6 +76,13 @@ public class Slavers extends EventCard {
         component.decrementCrewCount(spaceship, 1);
     }
 
+    /**
+     * Discards a number of crew members from the spaceship, randomly choosing a housing unit
+     *
+     * @author Alessandro
+     * @param spaceship Spaceship from which the crew members will be discarded
+     * @param crewMembersToDiscard Number of crew members to discard
+     */
     public void randomDiscardCrew(Spaceship spaceship, int crewMembersToDiscard) {
 
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();

@@ -32,7 +32,6 @@ public class SlaversController extends EventControllerAbstract {
     private final ArrayList<BatteryStorage> batteryStorages;
     private final ArrayList<HousingUnit> housingUnits;
 
-
     // =======================
     // CONSTRUCTORS
     // =======================
