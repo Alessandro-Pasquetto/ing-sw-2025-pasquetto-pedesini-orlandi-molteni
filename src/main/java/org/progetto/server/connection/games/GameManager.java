@@ -269,21 +269,15 @@ public class GameManager {
         addDisconnectedPlayers(player);
 
         if(game.getPhase().equals(GamePhase.EVENT)){
-            /*
-            game.getBoard().removeTraveler(player);
 
-            broadcastGameMessage(new UpdateOtherTravelersShipMessage(game.getBoard().getCopyTravelers()));
-             */
             broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
         }
 
         if(game.getPhase().equals(GamePhase.TRAVEL)){
 
             game.getBoard().removeTraveler(player);
-
         }
 
-        player.setIsReady(false, game);
         gameThread.notifyThread();
     }
 
@@ -292,8 +286,6 @@ public class GameManager {
 
         if(player == null)
             throw new IllegalStateException("FailedToReconnect");
-
-        player.setIsReady(false, game);
 
         removeDisconnectedPlayer(player);
         addSender(player, sender);

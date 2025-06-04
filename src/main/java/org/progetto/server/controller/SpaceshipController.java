@@ -177,7 +177,7 @@ public class SpaceshipController {
         try {
             buildingBoard.destroyComponent(xComponent, yComponent);
         } catch (IllegalStateException e) {
-            MessageSenderService.sendMessage(e.getMessage(), sender);
+            MessageSenderService.sendMessage(e.getMessage(), sender); // If emptyComponentCell
             return true;
         }
 

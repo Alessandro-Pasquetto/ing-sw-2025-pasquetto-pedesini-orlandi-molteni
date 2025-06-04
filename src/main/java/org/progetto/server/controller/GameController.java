@@ -158,4 +158,19 @@ public class GameController {
 
         return true;
     }
+
+    public static boolean allConnectedParametersPlayersReady(ArrayList<Player> players, GameManager gameManager) {
+
+        ArrayList<Player> connectedPlayers = new ArrayList<>(players
+                .stream()
+                .filter(player -> !gameManager.getDisconnectedPlayersCopy().contains(player))
+                .toList());;
+
+        for (Player player : connectedPlayers) {
+            if(!player.getIsReady())
+                return false;
+        }
+
+        return true;
+    }
 }

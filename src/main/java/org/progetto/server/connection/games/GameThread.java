@@ -132,7 +132,6 @@ public class GameThread extends Thread {
 
                             game.getBoard().updateTravelersBasedOnStartingPosition();
                             game.getBoard().addTravelersOnTrack(game.getLevel());
-                            // TODO: handle disconnected players
                         }
 
                         if(game.getLevel() != 1)
@@ -317,24 +316,6 @@ public class GameThread extends Thread {
         }
     }
 
-    /** //todo questo non dovrebbe servire (da vedere in pirati)
-     * Pauses the game thread until all connected travelers are ready to continue
-     *
-     * @author Gabriele
-     */
-    public void resetAndWaitTravelersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
-
-        for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
-            player.setIsReady(false, game);
-        }
-
-        synchronized (gameThreadLock) {
-            while (!GameController.allConnectedTravelersReady(gameManager))
-                gameThreadLock.wait();
-        }
-    }
-
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
         Game game = gameManager.getGame();
 
@@ -360,6 +341,13 @@ public class GameThread extends Thread {
     public void waitConnectedTravelersReady() throws InterruptedException {
         synchronized (gameThreadLock) {
             while (!GameController.allConnectedTravelersReady(gameManager))
+                gameThreadLock.wait();
+        }
+    }
+
+    public void waitParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
+        synchronized (gameThreadLock) {
+            while (GameController.allConnectedParametersPlayersReady(players, gameManager))
                 gameThreadLock.wait();
         }
     }

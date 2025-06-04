@@ -28,7 +28,7 @@ public class PositioningController {
      * @author Gabriele
      * @param gameManager current gameManager
      */
-    public static void askForStartingPosition(GameManager gameManager){
+    public static void askForStartingPosition(GameManager gameManager) throws InterruptedException {
 
         gameManager.broadcastGameMessage(new PlayersInPositioningDecisionOrderMessage(gameManager.getGame().getBoard().getCopyTravelers()));
 
@@ -44,11 +44,7 @@ public class PositioningController {
             Player[] startingPositions = board.getStartingPositionsCopy();
             MessageSenderService.sendMessage(new AskStartingPositionMessage(startingPositions), sender);
 
-            try {
-                gameManager.getGameThread().resetAndWaitTravelerReady(player);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
             // If the player is disconnected
             if(!player.getIsReady())

@@ -1,5 +1,6 @@
 package org.progetto.server.controller;
 
+// They are used to verify sequential states
 public enum EventPhase {
     START,
     END,
@@ -33,8 +34,8 @@ public enum EventPhase {
     PENALTY_EFFECT,
     DISCARDED_CREW,
     SEND_METEOR,
-    HANDLE_SMALL_METEOR,
-    HANDLE_BIG_METEOR,
+    ASK_SMALL_METEOR_DECISION,
+    ASK_BIG_METEOR_DECISION,
     ASK_TO_PROTECT,
     PROTECTION_DECISION,
     PROTECTION_BATTERY,

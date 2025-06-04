@@ -90,12 +90,12 @@ public class SlaversController extends EventControllerAbstract {
             gameManager.getGame().setActivePlayer(player);
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
+            // Retrieves sender reference
+            Sender sender = gameManager.getSenderByPlayer(player);
+
             Spaceship spaceship = player.getSpaceship();
 
             playerFirePower = spaceship.getNormalShootingPower();
-
-            // Retrieves sender reference
-            Sender sender = gameManager.getSenderByPlayer(player);
 
             // Calculates max number of double cannons usable
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
@@ -115,43 +115,6 @@ public class SlaversController extends EventControllerAbstract {
             }
 
             battleResult(player, sender);
-        }
-    }
-
-    private void battleResult(Player player, Sender sender) throws InterruptedException {
-        switch(slavers.battleResult(playerFirePower)){
-            case 1:
-                MessageSenderService.sendMessage("YouWonBattle", sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
-                defeated = true;
-
-                phase = EventPhase.REWARD_DECISION;
-                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
-
-                gameManager.getGameThread().resetAndWaitTravelerReady(player);
-                break;
-
-            case 0:
-                MessageSenderService.sendMessage("YouDrewBattle", sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
-                break;
-
-            case -1:
-                MessageSenderService.sendMessage("YouLostBattle", sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
-
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
-
-                phase = EventPhase.PENALTY_EFFECT;
-                sendPenaltyEffect(sender);
-
-                gameManager.getGameThread().resetAndWaitTravelerReady(player);
-
-                // If the player is disconnected
-                if(!player.getIsReady()) {
-                    handleLostBattleDisconnection(player, player.getSpaceship(), sender);
-                }
-                break;
         }
     }
 
@@ -267,10 +230,50 @@ public class SlaversController extends EventControllerAbstract {
                 // Update spaceship to remove highlight components when it's not my turn.
                 // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
                 gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
             }
 
         } else {
             MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+        }
+    }
+
+    private void battleResult(Player player, Sender sender) throws InterruptedException {
+        switch(slavers.battleResult(playerFirePower)){
+            case 1:
+                MessageSenderService.sendMessage("YouWonBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerWonBattleMessage(player.getName()), sender);
+                defeated = true;
+
+                phase = EventPhase.REWARD_DECISION;
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
+                break;
+
+            case 0:
+                MessageSenderService.sendMessage("YouDrewBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerDrewBattleMessage(player.getName()), sender);
+                break;
+
+            case -1:
+                MessageSenderService.sendMessage("YouLostBattle", sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
+
+                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+
+                phase = EventPhase.PENALTY_EFFECT;
+                sendPenaltyEffect(sender);
+
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // If the player is disconnected
+                if(!player.getIsReady()) {
+                    handleLostBattleDisconnection(player, player.getSpaceship(), sender);
+                }
+                break;
         }
     }
 
@@ -286,26 +289,29 @@ public class SlaversController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.REWARD_DECISION))
             throw new IllegalStateException("IncorrectPhase");
 
-        if (player.equals(gameManager.getGame().getActivePlayer())) {
+        // Checks if current player is active one
+        if (!player.equals(gameManager.getGame().getActivePlayer())) {
+            MessageSenderService.sendMessage("NotYourTurn", sender);
+            return;
+        }
 
-            String upperCaseResponse = response.toUpperCase();
+        String upperCaseResponse = response.toUpperCase();
 
-            switch (upperCaseResponse) {
-                case "YES":
-                    phase = EventPhase.EFFECT;
-                    eventEffect();
-                    break;
+        switch (upperCaseResponse) {
+            case "YES":
+                phase = EventPhase.EFFECT;
+                eventEffect();
+                break;
 
-                case "NO":
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                    break;
+            case "NO":
+                player.setIsReady(true, gameManager.getGame());
+                gameManager.getGameThread().notifyThread();
+                break;
 
-                default:
-                    MessageSenderService.sendMessage("IncorrectResponse", sender);
-                    MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
-                    break;
-            }
+            default:
+                MessageSenderService.sendMessage("IncorrectResponse", sender);
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+                break;
         }
     }
 
