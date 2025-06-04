@@ -80,7 +80,6 @@ public class LostShipController extends EventControllerAbstract  {
             if (maxCrewCount > lostShip.getPenaltyCrew()) {
 
                 phase = EventPhase.REWARD_DECISION;
-
                 MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
@@ -117,8 +116,6 @@ public class LostShipController extends EventControllerAbstract  {
 
         switch (upperCaseResponse) {
             case "YES":
-                someoneLanded = true;
-
                 phase = EventPhase.PENALTY_EFFECT;
                 sendPenaltyEffect(sender);
                 break;
@@ -217,9 +214,6 @@ public class LostShipController extends EventControllerAbstract  {
 
             phase = EventPhase.EFFECT;
             eventEffect();
-
-            player.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
         } else
             MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
     }
@@ -246,6 +240,8 @@ public class LostShipController extends EventControllerAbstract  {
 
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostShip.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), lostShip.getRewardCredits()), sender);
+
+        someoneLanded = true;
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
