@@ -8,7 +8,7 @@ public class ExposedConnectorsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int exposedConnectorsCount;
+    private final int exposedConnectorsCount;
 
     // =======================
     // CONSTRUCTORS

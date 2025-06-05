@@ -8,19 +8,14 @@ public class AnotherPlayerDiscardComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int xPlacedComponent;
-    private int yPlacedComponent;
-    private int rPlacedComponent;
-    private String imgSrcDiscardedComponent;
+    private final String namePlayer;
 
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public AnotherPlayerDiscardComponentMessage(String namePlayer, String imgSrcDiscardedComponent) {
+    public AnotherPlayerDiscardComponentMessage(String namePlayer) {
         this.namePlayer = namePlayer;
-        this.imgSrcDiscardedComponent = imgSrcDiscardedComponent;
     }
 
     // =======================
@@ -29,9 +24,5 @@ public class AnotherPlayerDiscardComponentMessage implements Serializable {
 
     public String getNamePlayer() {
         return namePlayer;
-    }
-
-    public String getImgSrcDiscardedComponent() {
-        return imgSrcDiscardedComponent;
     }
 }

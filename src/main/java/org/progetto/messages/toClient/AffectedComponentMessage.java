@@ -8,8 +8,8 @@ public class AffectedComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xComponent;
-    private int yComponent;
+    private final int xComponent;
+    private final int yComponent;
 
     // =======================
     // CONSTRUCTORS

@@ -8,9 +8,9 @@ public class GameInfoMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int idGame;
-    private int levelGame;
-    private int numMaxPlayers;
+    private final int idGame;
+    private final int levelGame;
+    private final int numMaxPlayers;
 
     // =======================
     // CONSTRUCTORS

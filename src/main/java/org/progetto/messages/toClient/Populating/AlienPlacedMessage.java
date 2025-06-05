@@ -8,8 +8,8 @@ public class AlienPlacedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     // =======================
     // CONSTRUCTORS

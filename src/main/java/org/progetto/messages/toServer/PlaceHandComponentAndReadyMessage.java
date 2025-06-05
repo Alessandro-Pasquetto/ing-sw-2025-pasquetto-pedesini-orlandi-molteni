@@ -8,9 +8,9 @@ public class PlaceHandComponentAndReadyMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int x;
-    private int y;
-    private int rotation;
+    private final int x;
+    private final int y;
+    private final int rotation;
 
     // =======================
     // CONSTRUCTORS

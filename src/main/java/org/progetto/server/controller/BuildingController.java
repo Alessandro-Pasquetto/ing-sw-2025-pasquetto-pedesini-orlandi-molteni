@@ -916,9 +916,8 @@ public class BuildingController {
         }
 
         try{
-            String imgSrc = gameManager.getGame().discardComponent(player);
             MessageSenderService.sendMessage("HandComponentDiscarded", sender);
-            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName(), imgSrc), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName()), sender);
 
         }catch (IllegalStateException e){
             if(e.getMessage().equals("EmptyHandComponent"))

@@ -8,7 +8,7 @@ public class ResponseHowManyDoubleCannonsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int howManyWantToUse;
+    private final int howManyWantToUse;
 
     // =======================
     // CONSTRUCTORS

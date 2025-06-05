@@ -11,7 +11,7 @@ public class ScoreBoardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Player> scoreBoard;
+    private final ArrayList<Player> scoreBoard;
 
     // =======================
     // CONSTRUCTORS

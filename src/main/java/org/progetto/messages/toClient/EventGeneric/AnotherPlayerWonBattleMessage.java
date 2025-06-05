@@ -8,7 +8,7 @@ public class AnotherPlayerWonBattleMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String playerName;
+    private final String playerName;
 
     // =======================
     // CONSTRUCTORS

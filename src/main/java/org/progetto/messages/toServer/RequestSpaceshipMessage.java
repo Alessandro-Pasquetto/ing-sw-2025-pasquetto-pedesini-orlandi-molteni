@@ -7,7 +7,7 @@ public class RequestSpaceshipMessage implements Serializable{
     // =======================
     // ATTRIBUTES
     // =======================
-    String owner;
+    private final String owner;
 
     // =======================
     // CONSTRUCTORS

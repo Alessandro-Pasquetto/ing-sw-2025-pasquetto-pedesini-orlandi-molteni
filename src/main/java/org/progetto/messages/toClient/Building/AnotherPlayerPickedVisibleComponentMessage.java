@@ -10,7 +10,7 @@ public class AnotherPlayerPickedVisibleComponentMessage implements Serializable 
     // ATTRIBUTES
     // =======================
 
-    private String playerName;
+    private final String playerName;
     private final Component component;
 
     // =======================

@@ -7,9 +7,9 @@ public class CreateGameMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    private int levelGame;
-    private int numPlayers;
-    private String name;
+    private final int levelGame;
+    private final int numPlayers;
+    private final String name;
 
     // =======================
     // CONSTRUCTORS

@@ -8,7 +8,7 @@ public class BoxToDiscardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int boxToDiscard;
+    private final int boxToDiscard;
 
     // =======================
     // CONSTRUCTORS

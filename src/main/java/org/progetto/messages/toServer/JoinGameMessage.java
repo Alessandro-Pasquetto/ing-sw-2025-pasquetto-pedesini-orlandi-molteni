@@ -7,8 +7,8 @@ public class JoinGameMessage implements Serializable {
     // =======================
     // ATTRIBUTES
     // =======================
-    private int idGame;
-    private String name;
+    private final int idGame;
+    private final String name;
 
     // =======================
     // CONSTRUCTORS

@@ -8,8 +8,8 @@ public class CrewDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xHousingUnit;
-    private int yHousingUnit;
+    private final int xHousingUnit;
+    private final int yHousingUnit;
 
     // =======================
     // CONSTRUCTORS

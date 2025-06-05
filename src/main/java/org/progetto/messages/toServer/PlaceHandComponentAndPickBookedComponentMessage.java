@@ -8,10 +8,10 @@ public class PlaceHandComponentAndPickBookedComponentMessage implements Serializ
     // ATTRIBUTES
     // =======================
 
-    private int x;
-    private int y;
-    private int rotation;
-    private int idx;
+    private final int x;
+    private final int y;
+    private final int rotation;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS

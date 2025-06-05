@@ -8,9 +8,9 @@ public class RemoveBoxMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xBoxStorage;
-    private int yBoxStorage;
-    private int idx;
+    private final int xBoxStorage;
+    private final int yBoxStorage;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS

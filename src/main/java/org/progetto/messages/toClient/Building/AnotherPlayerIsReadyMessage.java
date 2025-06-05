@@ -8,7 +8,7 @@ public class AnotherPlayerIsReadyMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
+    private final String namePlayer;
 
     // =======================
     // CONSTRUCTORS

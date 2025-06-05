@@ -8,7 +8,7 @@ public class ResponseChooseToUseShieldMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String response;
+    private final String response;
 
     // =======================
     // CONSTRUCTORS

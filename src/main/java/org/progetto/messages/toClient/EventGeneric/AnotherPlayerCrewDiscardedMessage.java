@@ -8,9 +8,9 @@ public class AnotherPlayerCrewDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String playerName;
-    private int xHousingUnit;
-    private int yHousingUnit;
+    private final String playerName;
+    private final int xHousingUnit;
+    private final int yHousingUnit;
 
     // =======================
     // CONSTRUCTORS

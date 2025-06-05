@@ -8,7 +8,7 @@ public class NewGamePhaseMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String phaseGame;
+    private final String phaseGame;
 
     // =======================
     // CONSTRUCTORS

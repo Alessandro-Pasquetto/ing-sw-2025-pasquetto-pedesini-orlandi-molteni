@@ -11,7 +11,7 @@ public class ShowHandComponentMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Component handComponent;
+    private final Component handComponent;
 
     // =======================
     // CONSTRUCTORS

@@ -12,8 +12,8 @@ public class AcceptRewardBoxesAndPenaltyDaysMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Box> rewardBoxes;
-    private int penaltyDays;
+    private final ArrayList<Box> rewardBoxes;
+    private final int penaltyDays;
 
     // =======================
     // CONSTRUCTORS

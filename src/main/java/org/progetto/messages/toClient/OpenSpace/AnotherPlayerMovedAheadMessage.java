@@ -8,8 +8,8 @@ public class AnotherPlayerMovedAheadMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int stepsCount;
+    private final String namePlayer;
+    private final int stepsCount;
 
     // =======================
     // CONSTRUCTORS

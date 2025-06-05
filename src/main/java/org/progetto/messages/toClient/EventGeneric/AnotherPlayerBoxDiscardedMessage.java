@@ -8,10 +8,10 @@ public class AnotherPlayerBoxDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String playerName;
-    private int xBoxStorage;
-    private int yBoxStorage;
-    private int boxIdx;
+    private final String playerName;
+    private final int xBoxStorage;
+    private final int yBoxStorage;
+    private final int boxIdx;
 
     // =======================
     // CONSTRUCTORS

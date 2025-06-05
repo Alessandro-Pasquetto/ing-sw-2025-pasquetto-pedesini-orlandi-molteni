@@ -8,7 +8,7 @@ public class ResponseAcceptRewardCreditsAndPenaltiesMessage implements Serializa
     // ATTRIBUTES
     // =======================
 
-    private String response;
+    private final String response;
 
     // =======================
     // CONSTRUCTORS

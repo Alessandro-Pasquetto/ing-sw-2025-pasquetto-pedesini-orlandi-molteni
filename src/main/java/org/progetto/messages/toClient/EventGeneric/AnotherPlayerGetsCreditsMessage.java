@@ -8,8 +8,8 @@ public class AnotherPlayerGetsCreditsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int credits;
+    private final String namePlayer;
+    private final int credits;
 
     // =======================
     // CONSTRUCTORS

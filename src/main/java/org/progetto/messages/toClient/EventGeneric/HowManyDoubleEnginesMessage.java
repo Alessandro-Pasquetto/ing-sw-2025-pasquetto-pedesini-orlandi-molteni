@@ -8,8 +8,8 @@ public class HowManyDoubleEnginesMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int maxUsable;
-    int enginePower;
+    private final int maxUsable;
+    private final int enginePower;
 
     // =======================
     // CONSTRUCTORS

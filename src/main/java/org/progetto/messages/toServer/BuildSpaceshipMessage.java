@@ -8,7 +8,7 @@ public class BuildSpaceshipMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int idShip;
+    private final int idShip;
 
     // =======================
     // CONSTRUCTORS

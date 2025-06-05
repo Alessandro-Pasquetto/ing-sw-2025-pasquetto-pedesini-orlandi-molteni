@@ -220,6 +220,7 @@ public class TuiHandlerMessage {
         }
 
         else if (messageObj instanceof AnotherPlayerPlacedComponentMessage anotherPlayerPlacedComponentMessage) {
+
         }
 
         else if (messageObj instanceof AnotherPlayerPickedVisibleComponentMessage anotherPlayerPickedVisibleComponentMessage) {

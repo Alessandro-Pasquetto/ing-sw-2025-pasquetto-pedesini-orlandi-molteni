@@ -10,10 +10,10 @@ public class ResponseRewardBoxMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int idxBox;
-    private int xBoxStorage;
-    private int yBoxStorage;
-    private int idx;
+    private final int idxBox;
+    private final int xBoxStorage;
+    private final int yBoxStorage;
+    private final int idx;
 
     // =======================
     // CONSTRUCTORS

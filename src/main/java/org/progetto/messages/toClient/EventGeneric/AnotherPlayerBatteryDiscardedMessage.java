@@ -8,9 +8,9 @@ public class AnotherPlayerBatteryDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int xBatteryStorage;
-    private int yBatteryStorage;
+    private final String namePlayer;
+    private final int xBatteryStorage;
+    private final int yBatteryStorage;
 
     // =======================
     // CONSTRUCTORS

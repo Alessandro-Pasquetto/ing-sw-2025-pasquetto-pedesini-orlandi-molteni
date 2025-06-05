@@ -11,7 +11,7 @@ public class ShowVisibleComponentsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<Component> visibleComponentDeck;
+    private final ArrayList<Component> visibleComponentDeck;
 
     // =======================
     // CONSTRUCTORS

@@ -11,7 +11,7 @@ public class AvailablePlanetsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private ArrayList<ArrayList<Box>> rewardsForPlanets;
+    private final ArrayList<ArrayList<Box>> rewardsForPlanets;
     private final boolean[] planetsTaken;
 
     // =======================

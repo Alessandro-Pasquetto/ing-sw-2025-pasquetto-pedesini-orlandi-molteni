@@ -8,7 +8,7 @@ public class EvaluatingConditionMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String condition;
+    private final String condition;
 
     // =======================
     // CONSTRUCTORS

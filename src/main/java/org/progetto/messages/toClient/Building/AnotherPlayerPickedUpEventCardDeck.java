@@ -8,8 +8,8 @@ public class AnotherPlayerPickedUpEventCardDeck implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int deckIdx;
+    private final String namePlayer;
+    private final int deckIdx;
 
     // =======================
     // CONSTRUCTORS

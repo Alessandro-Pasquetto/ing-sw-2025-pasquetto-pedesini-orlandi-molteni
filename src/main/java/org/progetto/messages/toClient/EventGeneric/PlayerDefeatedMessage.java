@@ -8,7 +8,7 @@ public class PlayerDefeatedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String playerName;
+    private final String playerName;
 
     // =======================
     // CONSTRUCTORS

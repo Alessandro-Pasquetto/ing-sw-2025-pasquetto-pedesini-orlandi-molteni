@@ -8,7 +8,7 @@ public class CrewInfectedAmountMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int infectedCrew;
+    private final int infectedCrew;
 
     // =======================
     // CONSTRUCTORS

@@ -8,8 +8,8 @@ public class AnotherPlayerDiceResultMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String namePlayer;
-    private int diceResult;
+    private final String namePlayer;
+    private final int diceResult;
 
     // =======================
     // CONSTRUCTORS

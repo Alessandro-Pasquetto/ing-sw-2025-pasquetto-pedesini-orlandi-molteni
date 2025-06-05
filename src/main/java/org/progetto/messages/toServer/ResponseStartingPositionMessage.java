@@ -8,7 +8,7 @@ public class ResponseStartingPositionMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int startingPosition;
+    private final int startingPosition;
 
     // =======================
     // CONSTRUCTORS

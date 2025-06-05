@@ -8,7 +8,7 @@ public class ResponseContinueTravelMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private String response;
+    private final String response;
 
     // =======================
     // CONSTRUCTORS

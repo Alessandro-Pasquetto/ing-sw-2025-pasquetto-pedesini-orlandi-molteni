@@ -8,7 +8,7 @@ public class CrewToDiscardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int crewToDiscard;
+    private final int crewToDiscard;
 
     // =======================
     // CONSTRUCTORS

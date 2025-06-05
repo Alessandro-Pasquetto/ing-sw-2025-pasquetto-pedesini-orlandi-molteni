@@ -8,7 +8,7 @@ public class TimerMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int time;
+    private final int time;
 
     // =======================
     // CONSTRUCTORS

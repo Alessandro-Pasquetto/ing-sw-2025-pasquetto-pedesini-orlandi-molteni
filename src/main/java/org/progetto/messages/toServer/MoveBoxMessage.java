@@ -8,12 +8,12 @@ public class MoveBoxMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xStart;
-    private int yStart;
-    private int idxStart;
-    private int xDestination;
-    private int yDestination;
-    private int idxDestination;
+    private final int xStart;
+    private final int yStart;
+    private final int idxStart;
+    private final int xDestination;
+    private final int yDestination;
+    private final int idxDestination;
 
     // =======================
     // CONSTRUCTORS

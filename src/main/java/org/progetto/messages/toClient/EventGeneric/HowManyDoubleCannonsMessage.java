@@ -8,9 +8,9 @@ public class HowManyDoubleCannonsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    int maxUsable;
-    int firePowerRequired;
-    float shootingPower;
+    private final int maxUsable;
+    private final int firePowerRequired;
+    private final float shootingPower;
 
     // =======================
     // CONSTRUCTORS

@@ -8,8 +8,8 @@ public class BatteryDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int xBatteryStorage;
-    private int yBatteryStorage;
+    private final int xBatteryStorage;
+    private final int yBatteryStorage;
 
     // =======================
     // CONSTRUCTORS

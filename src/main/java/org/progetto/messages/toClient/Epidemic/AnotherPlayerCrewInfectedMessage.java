@@ -8,8 +8,8 @@ public class AnotherPlayerCrewInfectedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int infectedCrew;
-    private String namePlayer;
+    private final int infectedCrew;
+    private final String namePlayer;
 
     // =======================
     // CONSTRUCTORS

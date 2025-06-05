@@ -11,8 +11,8 @@ public class PickedUpEventCardDeckMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int deckIdx;
-    private ArrayList<EventCard> eventCardsDeck;
+    private final int deckIdx;
+    private final ArrayList<EventCard> eventCardsDeck;
 
     // =======================
     // CONSTRUCTORS

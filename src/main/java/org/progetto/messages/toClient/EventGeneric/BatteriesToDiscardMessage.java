@@ -8,7 +8,7 @@ public class BatteriesToDiscardMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int batteriesToDiscard;
+    private final int batteriesToDiscard;
 
     // =======================
     // CONSTRUCTORS

@@ -10,7 +10,7 @@ public class ResponseSpaceshipStatsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private Spaceship spaceship;
+    private final Spaceship spaceship;
 
     // =======================
     // CONSTRUCTORS

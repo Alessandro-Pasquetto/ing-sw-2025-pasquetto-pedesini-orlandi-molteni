@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class PlaceLastComponentMessage implements Serializable {
 
-    private int x;
-    private int y;
-    private int rotation;
+    private final int x;
+    private final int y;
+    private final int rotation;
 
     // =======================
     // CONSTRUCTORS

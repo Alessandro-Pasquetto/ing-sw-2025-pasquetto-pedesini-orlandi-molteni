@@ -8,7 +8,7 @@ public class PlayerGetsCreditsMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private int credits;
+    private final int credits;
 
     // =======================
     // CONSTRUCTORS

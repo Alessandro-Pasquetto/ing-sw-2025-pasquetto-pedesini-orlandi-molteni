@@ -8,7 +8,7 @@ import java.io.Serializable;
         // ATTRIBUTES
         // =======================
 
-        private String response;
+        private final String response;
 
         // =======================
         // CONSTRUCTORS
