@@ -916,6 +916,7 @@ public class BuildingController {
         }
 
         try{
+            gameManager.getGame().discardComponent(player);
             MessageSenderService.sendMessage("HandComponentDiscarded", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName()), sender);
 

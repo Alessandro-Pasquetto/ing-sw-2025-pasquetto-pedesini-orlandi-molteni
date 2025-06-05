@@ -1,5 +1,4 @@
 package org.progetto.server.model.events;
-import javafx.util.Pair;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;

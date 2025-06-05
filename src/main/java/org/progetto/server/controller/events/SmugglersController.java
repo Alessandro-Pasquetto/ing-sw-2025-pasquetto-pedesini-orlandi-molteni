@@ -122,6 +122,7 @@ public class SmugglersController extends EventControllerAbstract {
                 }
             }
 
+            phase = EventPhase.BATTLE_RESULT;
             battleResult(player, sender);
         }
     }
@@ -420,9 +421,9 @@ public class SmugglersController extends EventControllerAbstract {
 
         if(
             (tempBoxCounts[0] != 0 && !box.equals(Box.RED))     ||
-            (tempBoxCounts[1] != 0 && !box.equals(Box.YELLOW))  ||
-            (tempBoxCounts[2] != 0 && !box.equals(Box.GREEN))   ||
-            (tempBoxCounts[3] != 0 && !box.equals(Box.BLUE)))
+            (tempBoxCounts[0] == 0 && tempBoxCounts[1] != 0 && !box.equals(Box.YELLOW))  ||
+            (tempBoxCounts[0] == 0 && tempBoxCounts[1] == 0 && tempBoxCounts[2] != 0 && !box.equals(Box.GREEN))   ||
+            (tempBoxCounts[0] == 0 && tempBoxCounts[1] == 0 && tempBoxCounts[2] == 0 && tempBoxCounts[3] != 0 && !box.equals(Box.BLUE)))
         {
             MessageSenderService.sendMessage("IsNotMaxValuableBox", sender);
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);

@@ -410,9 +410,8 @@ public class Game {
      *
      * @author Alessandro
      * @param player is the player who is discarding a component
-     * @return the imgSrc of the discarded component
      */
-    public String discardComponent(Player player) throws IllegalStateException{
+    public void discardComponent(Player player) throws IllegalStateException{
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
         Component discardedComponent = buildingBoard.getHandComponent();
@@ -428,7 +427,6 @@ public class Game {
         synchronized (visibleComponentDeck) {
             visibleComponentDeck.add(discardedComponent);
         }
-        return discardedComponent.getImgSrc();
     }
 
     /**
@@ -469,27 +467,19 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
-
-            //forzare eventCard, todo da rimuovere
-            int randomPos = 0;
-
-            do {
-                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
-
+            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
-//            ArrayList<Box> rewardBoxes = new ArrayList<>();
-//            rewardBoxes.add(Box.YELLOW);
-//            rewardBoxes.add(Box.GREEN);
-//            rewardBoxes.add(Box.BLUE);
-//            Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "card19-lv1.jpg", 4, 2, -1, rewardBoxes);
-//            pickedEventCard = smugglers;
-
-
+            //forzare eventCard, todo da rimuovere
+//            int randomPos = 0;
+//
+//            do {
+//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
+//
+//            pickedEventCard = hiddenEventDeck.remove(randomPos);
        }
+
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;
     }
