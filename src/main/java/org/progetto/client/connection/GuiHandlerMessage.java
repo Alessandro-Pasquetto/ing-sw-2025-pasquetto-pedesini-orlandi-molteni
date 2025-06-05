@@ -22,6 +22,7 @@ import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
+import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
@@ -452,7 +453,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage(anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + "positions", "GREEN");
+            PageController.getEventView().addChatMessage(anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + " positions", "GREEN");
         }
 
         else if (messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
@@ -503,6 +504,17 @@ public class GuiHandlerMessage {
                     response -> {
                         Sender sender = GameData.getSender();
                         sender.responseAcceptRewardCreditsAndPenaltyDays(response ? "YES" : "NO");
+                    }
+            );
+        }
+
+        else if (messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
+            PageController.getEventView().askYesNo(
+                    "DO YOU WANT TO ACCEPT BOXES?",
+                    "You will get the boxes indicated on the card, but you will lose " + acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays() + " days...",
+                    response -> {
+                        Sender sender = GameData.getSender();
+                        sender.responseAcceptRewardBoxesAndPenaltyDays(response ? "YES" : "NO");
                     }
             );
         }

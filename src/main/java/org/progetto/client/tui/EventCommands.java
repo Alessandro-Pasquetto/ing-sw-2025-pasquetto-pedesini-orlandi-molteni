@@ -260,7 +260,7 @@ public class EventCommands {
 
             if (response.equalsIgnoreCase("YES") || response.equalsIgnoreCase("NO")){
                 Sender sender = GameData.getSender();
-                sender.responseAcceptRewardCreditsAndPenaltyDays(response);
+                sender.responseAcceptRewardBoxesAndPenaltyDays(response);
                 break;
             } else
                 System.err.println("You must choose between YES or NO");

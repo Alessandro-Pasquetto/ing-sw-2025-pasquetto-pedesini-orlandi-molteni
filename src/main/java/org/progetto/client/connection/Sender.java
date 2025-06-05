@@ -92,6 +92,8 @@ public interface Sender {
 
     void responseAcceptRewardCreditsAndPenaltyDays(String response);
 
+    void responseAcceptRewardBoxesAndPenaltyDays(String response);
+
     void responsePlanetLandRequest(int idx);
 
     void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);

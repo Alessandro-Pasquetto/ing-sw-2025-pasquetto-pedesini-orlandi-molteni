@@ -370,6 +370,18 @@ public class SocketListener extends Thread {
             eventController.receiveRewardDecision(player, response, socketWriter);
         }
 
+        else if(messageObj instanceof ResponseAcceptRewardBoxesAndPenaltyDaysMessage responseAcceptRewardBoxesAndPenaltyDaysMessage){
+            String response = responseAcceptRewardBoxesAndPenaltyDaysMessage.getResponse();
+
+            EventControllerAbstract eventController = gameManager.getEventController();
+            if(eventController == null){
+                socketWriter.sendMessage("EventControllerNull");
+                return;
+            }
+
+            eventController.receiveRewardDecision(player, response, socketWriter);
+        }
+
         else if(messageObj instanceof ResponsePlanetLandRequestMessage responsePlanetLandRequestMessage){
             int planetIdx = responsePlanetLandRequestMessage.getIdx();
 

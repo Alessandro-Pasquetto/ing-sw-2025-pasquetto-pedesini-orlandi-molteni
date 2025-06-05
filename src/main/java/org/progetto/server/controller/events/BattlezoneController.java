@@ -1061,7 +1061,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param sender current sende
+     * @param sender current sender
      */
     @Override
     public void rollDice(Player player, Sender sender){
@@ -1079,6 +1079,9 @@ public class BattlezoneController extends EventControllerAbstract {
         diceResult = player.rollDice();
 
         MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
+
+        player.setIsReady(true, gameManager.getGame());
+        gameManager.getGameThread().notifyThread();
     }
 
     /**
@@ -1101,7 +1104,6 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
             return;
         }
 
@@ -1111,8 +1113,8 @@ public class BattlezoneController extends EventControllerAbstract {
         boolean hasShield = battlezone.checkShields(penaltyPlayer, currentShot);
 
         if (hasShield && penaltyPlayer.getSpaceship().getBatteriesCount() > 0) {
-            MessageSenderService.sendMessage("AskToUseShield", sender);
             phase = EventPhase.SHIELD_DECISION;
+            MessageSenderService.sendMessage("AskToUseShield", sender);
 
         } else {
             MessageSenderService.sendMessage("NoShieldAvailable", sender);
@@ -1182,13 +1184,11 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
             return;
         }
 
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
             penaltyPlayer.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
         } else
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
     }

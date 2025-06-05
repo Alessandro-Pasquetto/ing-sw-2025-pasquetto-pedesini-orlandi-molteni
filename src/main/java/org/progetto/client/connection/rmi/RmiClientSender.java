@@ -473,6 +473,15 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
+    public void responseAcceptRewardBoxesAndPenaltyDays(String response) {
+        try {
+            server.responseAcceptRewardBoxesAndPenaltyDays(RmiClientReceiver.getInstance(), GameData.getIdGame(), response);
+        } catch (RemoteException e) {
+            System.err.println("RMI client unreachable");
+        }
+    }
+
+    @Override
     public void responsePlanetLandRequest(int idx) {
         try {
             server.responsePlanetLandRequest(RmiClientReceiver.getInstance(), GameData.getIdGame(), idx);

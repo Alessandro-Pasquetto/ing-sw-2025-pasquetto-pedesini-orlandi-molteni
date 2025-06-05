@@ -275,6 +275,11 @@ public class SocketClient implements Sender {
     }
 
     @Override
+    public void responseAcceptRewardBoxesAndPenaltyDays(String response) {
+        SocketWriter.sendMessage(new ResponseAcceptRewardBoxesAndPenaltyDaysMessage(response));
+    }
+
+    @Override
     public void responsePlanetLandRequest(int idx) {
         SocketWriter.sendMessage(new ResponsePlanetLandRequestMessage(idx));
     }
