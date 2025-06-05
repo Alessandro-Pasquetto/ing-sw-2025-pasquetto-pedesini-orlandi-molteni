@@ -283,8 +283,7 @@ public class Battlezone extends EventCard {
     public void randomDiscardBoxes(Spaceship spaceship, int boxToDiscard) {
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-        int boxCount = spaceship.getBoxCounts()[0] + spaceship.getBoxCounts()[1] + spaceship.getBoxCounts()[2] + spaceship.getBoxCounts()[3];
-        if (boxCount == 0) {
+        if (spaceship.getBoxesCount() == 0) {
             randomDiscardBatteries(spaceship, boxToDiscard);
             return;
         }
@@ -329,8 +328,7 @@ public class Battlezone extends EventCard {
             for (Pair location : locations) {
                 if (boxToDiscard == 0) return;
 
-                boxCount = spaceship.getBoxCounts()[0] + spaceship.getBoxCounts()[1] + spaceship.getBoxCounts()[2] + spaceship.getBoxCounts()[3];
-                if (boxCount == 0) {
+                if (spaceship.getBoxesCount() == 0) {
                     randomDiscardBatteries(spaceship, boxToDiscard);
                     return;
                 }
@@ -341,7 +339,7 @@ public class Battlezone extends EventCard {
         }
     }
 
-    /**
+    /** //todo rimuovere sta roba
      * Checks if the StorageComponent chosen by player is a battery storage
      * If that is true, the battery will be removed
      *

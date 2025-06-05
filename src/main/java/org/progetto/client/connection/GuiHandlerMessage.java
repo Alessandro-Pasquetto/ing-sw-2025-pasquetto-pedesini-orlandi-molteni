@@ -970,7 +970,6 @@ public class GuiHandlerMessage {
                     break;
 
                 case "BoxChosen":
-                    PageController.getEventView().disableDragAndDropBoxesSpaceship();
                     break;
 
                 case "BoxRemoved":

@@ -62,29 +62,31 @@ public class LostStationController extends EventControllerAbstract {
      * @throws InterruptedException
      */
     private void askForLand() throws InterruptedException {
-        if (phase.equals(EventPhase.ASK_TO_LAND)) {
+        if (!phase.equals(EventPhase.ASK_TO_LAND))
+            throw new IllegalStateException("IncorrectPhase");
 
-            for (Player player : activePlayers) {
+        for (Player player : activePlayers) {
 
-                gameManager.getGame().setActivePlayer(player);
+            gameManager.getGame().setActivePlayer(player);
+            gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
-                Sender sender = gameManager.getSenderByPlayer(player);
+            Sender sender = gameManager.getSenderByPlayer(player);
 
-                if (player.getSpaceship().getTotalCrewCount() >= lostStation.getRequiredCrew()) {
-                    MessageSenderService.sendMessage("LandRequest", sender);
-                    phase = EventPhase.LAND;
+            if (player.getSpaceship().getTotalCrewCount() >= lostStation.getRequiredCrew()) {
+                phase = EventPhase.LAND;
+                MessageSenderService.sendMessage("LandRequest", sender);
 
-                    gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
+                gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-                    gameManager.getGameThread().resetAndWaitTravelerReady(player);
+                if(!player.getIsReady() && someoneLanded)
+                    leaveStation(player, sender);
 
-                } else {
-                    MessageSenderService.sendMessage("NotEnoughCrew", sender);
-                }
-
-                // Checks if someone landed on the station
-                if (someoneLanded) return;
+            } else {
+                MessageSenderService.sendMessage("NotEnoughCrew", sender);
             }
+
+            // Checks if someone landed on the station
+            if (someoneLanded) return;
         }
     }
 
@@ -114,8 +116,8 @@ public class LostStationController extends EventControllerAbstract {
         switch (upperCaseDecision) {
             case "YES":
                 phase = EventPhase.CHOOSE_BOX;
-                someoneLanded = true;
                 rewardBoxes = lostStation.getRewardBoxes();
+                someoneLanded = true;
 
                 MessageSenderService.sendMessage("LandingCompleted", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerLandedMessage(player), sender);
@@ -124,8 +126,6 @@ public class LostStationController extends EventControllerAbstract {
                 break;
 
             case "NO":
-                phase = EventPhase.ASK_TO_LAND;
-
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
                 break;
@@ -223,10 +223,6 @@ public class LostStationController extends EventControllerAbstract {
      * @param sender current sender
      */
     private void leaveStation(Player player, Sender sender) {
-        if (!phase.equals(EventPhase.CHOOSE_BOX)) {
-            MessageSenderService.sendMessage("IncorrectPhase", sender);
-            return;
-        }
 
         lostStation.penalty(gameManager.getGame().getBoard(), player);
 

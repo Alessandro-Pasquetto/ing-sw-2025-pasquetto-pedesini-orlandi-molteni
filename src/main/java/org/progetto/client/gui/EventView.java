@@ -1698,6 +1698,7 @@ public class EventView {
         leaveButton.setOnAction(e -> {
             Sender sender = GameData.getSender();
             sender.responseRewardBox(-1, -1, -1, -1);
+            PageController.getEventView().disableDragAndDropBoxesSpaceship();
         });
 
         mainContainer.getChildren().addAll(boxScrollPane, leaveButton);

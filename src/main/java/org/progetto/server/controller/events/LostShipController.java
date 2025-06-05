@@ -200,17 +200,15 @@ public class LostShipController extends EventControllerAbstract  {
         MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == requestedCrew) {
+        if (requestedCrew == 0) {
 
-            if(!housingUnits.isEmpty()){
-                for (HousingUnit component : housingUnits) {
-                    lostShip.chooseDiscardedCrew(player.getSpaceship(), component);
-                }
-
-                // Update spaceship to remove highlight components when it's not my turn.
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+            for (HousingUnit component : housingUnits) {
+                lostShip.chooseDiscardedCrew(player.getSpaceship(), component);
             }
+
+            // Update spaceship to remove highlight components when it's not my turn.
+            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             phase = EventPhase.EFFECT;
             eventEffect();

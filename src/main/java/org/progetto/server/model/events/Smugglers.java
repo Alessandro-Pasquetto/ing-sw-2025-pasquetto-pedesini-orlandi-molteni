@@ -1,10 +1,15 @@
 package org.progetto.server.model.events;
+import javafx.util.Pair;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
+import org.progetto.server.model.components.Box;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Smugglers extends EventCard {
 
@@ -66,74 +71,126 @@ public class Smugglers extends EventCard {
         component.addBox(spaceship, box, boxIdx);
     }
 
+
     /**
-     * Checks that box chosen to be discarded by player is the most premium one possessed by him
-     * If that is true, the box will be removed
+     * Discards a number of box members from the spaceship, randomly choosing a box storage
      *
-     * @author Gabriele
-     * @author Stefano
-     * @param spaceship the spaceship of the current player
-     * @param component BoxStorageComponent from which the box will be discarded
-     * @param boxIdx Index in the storage where the box is placed
-     * @return true if the box was successfully discarded, false if the box chosen isn't the most premium possessed by player
+     * @author Alessandro
+     * @param spaceship Spaceship from which the box will be discarded
+     * @param boxesToDiscard Number of box members to discard
      */
-    public boolean chooseDiscardedBox(Spaceship spaceship, BoxStorage component, int boxIdx) {
-        Box[] componentsBoxes = component.getBoxes();
+    public void randomDiscardBoxes(Spaceship spaceship, int boxesToDiscard) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-        if(boxIdx >= component.getCapacity())
-            return false;
+        Map<Box, Integer> boxCountsMap = new HashMap<>();
+        int[] boxCounts = spaceship.getBoxCounts();
 
-        Box box = componentsBoxes[boxIdx];
+        int remaining = boxesToDiscard;
 
-        if(box == null)
-            return false;
+        // How many boxes of that type I need to discard
+        for (int i = 0; i < 4 && remaining > 0; i++) {
 
-        int[] playerBoxes = spaceship.getBoxCounts();
+            int toDiscard = Math.min(boxCounts[i], remaining);
 
-        if (playerBoxes[0] > 0) {  // if he has at least a red box
-            if (box == Box.RED) {
-                component.removeBox(spaceship, boxIdx);
-                return true;
-            } else return false;
+            switch(i){
+                case 0:
+                    boxCountsMap.put(Box.RED, toDiscard);
+                    break;
+                case 1:
+                    boxCountsMap.put(Box.YELLOW, toDiscard);
+                    break;
+                case 2:
+                    boxCountsMap.put(Box.GREEN, toDiscard);
+                    break;
+                case 3:
+                    boxCountsMap.put(Box.BLUE, toDiscard);
+                    break;
+            }
+
+            remaining -= toDiscard;
         }
 
-        if (playerBoxes[1] > 0) {  // if he has at least a yellow box
-            if (box == Box.YELLOW) {
-                component.removeBox(spaceship, boxIdx);
-                return true;
-            } else return false;
-        }
+        // Discard
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+                Component component = spaceshipMatrix[row][col];
 
-        if (playerBoxes[2] > 0) {  // if he has at least a green box
-            if (box == Box.GREEN) {
-                component.removeBox(spaceship, boxIdx);
-                return true;
-            } else return false;
-        }
+                if (component instanceof BoxStorage boxStorage) {
+                    Box[] boxes = boxStorage.getBoxes();
 
-        if (playerBoxes[3] > 0) {  // if he has at least a blue box
-            if (box == Box.BLUE) {
-                component.removeBox(spaceship, boxIdx);
-                return true;
-            } else return false;
-        }
+                    for (int i = 0; i < boxes.length; i++) {
 
-        return false;
+                        Box box = boxes[i];
+
+                        int boxCount = boxCountsMap.get(box);
+
+                        if (boxCount == 0)
+                            continue;
+
+                        boxCountsMap.put(box, boxCount - 1);
+
+                        boxStorage.removeBox(spaceship, i);
+                        boxesToDiscard--;
+
+                        if(boxesToDiscard == 0)
+                            return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void discardAllBoxes(Spaceship spaceship){
+
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+                Component component = spaceshipMatrix[row][col];
+
+                if (component instanceof BoxStorage boxStorage) {
+
+                    Box[] boxes = boxStorage.getBoxes();
+
+                    for (int i = 0; i < boxes.length; i++) {
+
+                        Box box = boxes[i];
+
+                        if(box != null)
+                            boxStorage.removeBox(spaceship, i);
+                    }
+                }
+            }
+        }
     }
 
     /**
-     * Checks if the StorageComponent chosen by player is a battery storage
-     * If that is true, the battery will be removed
+     * Discards a number of batteries from the spaceship, randomly choosing a battery storage
      *
      * @author Gabriele
-     * @author Stefano
-     * @param component StorageComponent from which the battery will be discarded
-     * @return true if the battery was successfully discarded, false if the battery storage is empty
+     * @param spaceship Spaceship from which the batteries will be discarded
+     * @param batteriesToDiscard Number of batteries to discard
      */
-    public boolean chooseDiscardedBattery(Spaceship spaceship, BatteryStorage component) {
-        if (component.getType().equals(ComponentType.BATTERY_STORAGE)) {
-            return component.decrementItemsCount(spaceship, 1);
-        } else return false;
+    public void randomDiscardBatteries(Spaceship spaceship, int batteriesToDiscard) {
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+
+        for (int row = 0; row < spaceshipMatrix.length; row++) {
+            for (int col = 0; col < spaceshipMatrix[row].length; col++) {
+
+                Component component = spaceshipMatrix[row][col];
+
+                if (component instanceof BatteryStorage batteryStorage) {
+
+                    while (batteriesToDiscard != 0 && batteryStorage.getItemsCount() > 0) {
+                        batteryStorage.decrementItemsCount(spaceship, 1);
+                        batteriesToDiscard--;
+                    }
+
+                    if (batteriesToDiscard == 0 || spaceship.getBatteriesCount() == 0)
+                        return;
+                }
+            }
+        }
     }
 
     /**

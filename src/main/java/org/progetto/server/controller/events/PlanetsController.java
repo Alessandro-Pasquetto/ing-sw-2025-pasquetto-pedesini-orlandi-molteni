@@ -67,7 +67,6 @@ public class PlanetsController extends EventControllerAbstract {
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);
-
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
             Sender sender = gameManager.getSenderByPlayer(player);
@@ -132,8 +131,6 @@ public class PlanetsController extends EventControllerAbstract {
 
         if (planetIdx == -1){
             // If he does not want to land
-            phase = EventPhase.ASK_TO_LAND;
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -200,7 +197,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         // Checks that the box index is valid
         BoxStorage storage = (BoxStorage) boxStorage;
-        if(idx >= storage.getCapacity() || idx<0){
+        if(idx >= storage.getCapacity() || idx < 0){
             MessageSenderService.sendMessage("InvalidStorageIndex", sender);
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
@@ -245,8 +242,6 @@ public class PlanetsController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NotYouTurn", sender);
             return;
         }
-
-        phase = EventPhase.ASK_TO_LAND;
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();

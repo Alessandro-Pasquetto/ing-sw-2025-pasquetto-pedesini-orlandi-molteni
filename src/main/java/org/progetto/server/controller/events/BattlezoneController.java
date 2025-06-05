@@ -47,7 +47,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
     private final ArrayList<BatteryStorage> batteryStorages;
     private final ArrayList<HousingUnit> housingUnits;
-    private final ArrayList<Pair<BoxStorage, Integer>> boxStorages;
+    private final ArrayList<Pair<BoxStorage, Integer>> boxSlots;
+    private final int[] tempBoxCounts;
 
     // =======================
     // CONSTRUCTORS
@@ -70,7 +71,8 @@ public class BattlezoneController extends EventControllerAbstract {
         this.diceResult = 0;
         this.batteryStorages = new ArrayList<>();
         this.housingUnits = new ArrayList<>();
-        this.boxStorages = new ArrayList<>();
+        this.boxSlots = new ArrayList<>();
+        this.tempBoxCounts = new int[4];
     }
 
     // =======================
@@ -777,11 +779,11 @@ public class BattlezoneController extends EventControllerAbstract {
         Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
         // Resets battery storages list and box storages list
-        boxStorages.clear();
+        boxSlots.clear();
         batteryStorages.clear();
 
         // Box currently owned
-        int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+        int boxCount = player.getSpaceship().getBoxesCount();
 
         // Checks if he has at least a box to discard
         if (boxCount > 0) {
@@ -868,38 +870,42 @@ public class BattlezoneController extends EventControllerAbstract {
         }
 
         BoxStorage boxStorage = (BoxStorage) boxStorageComp;
-
-        // Checks if the slot is not empty
-        if(boxStorage.getBoxes()[idx] == null) {
-            MessageSenderService.sendMessage("EmptyBoxSlot", sender);
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
-            return;
-        }
-
         Box box = boxStorage.getBoxes()[idx];
-        Spaceship spaceship = player.getSpaceship();
 
-        int[] playerBoxes = spaceship.getBoxCounts();
-        Box[] priority = {Box.RED, Box.YELLOW, Box.GREEN, Box.BLUE};
-
-        // Finds the most precious box to discard
-        Box requiredBoxToDiscard = null;
-
-        for (int i = 0; i < priority.length; i++) {
-            if (playerBoxes[i] > 0) {
-                requiredBoxToDiscard = priority[i];
-                break;
-            }
-        }
-
-        // Checks if the box to discard is the one requested
-        if (box != requiredBoxToDiscard) {
-            MessageSenderService.sendMessage("BoxNotDiscarded", sender);
+        if(box == null) {
+            MessageSenderService.sendMessage("EmptyBoxSlot", sender);
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
             return;
         }
 
-        boxStorages.add(new Pair<>(boxStorage, idx));
+        if(
+            (tempBoxCounts[0] != 0 && !box.equals(Box.RED))     ||
+            (tempBoxCounts[1] != 0 && !box.equals(Box.YELLOW))  ||
+            (tempBoxCounts[2] != 0 && !box.equals(Box.GREEN))   ||
+            (tempBoxCounts[3] != 0 && !box.equals(Box.BLUE)))
+        {
+            MessageSenderService.sendMessage("IsNotMaxValuableBox", sender);
+            MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
+            return;
+        }
+        //End validation
+
+        switch (box){
+            case RED:
+                tempBoxCounts[0]--;
+                break;
+            case YELLOW:
+                tempBoxCounts[1]--;
+                break;
+            case GREEN:
+                tempBoxCounts[2]--;
+                break;
+            case BLUE:
+                tempBoxCounts[3]--;
+                break;
+        }
+
+        boxSlots.add(new Pair<>(boxStorage, idx));
         requestedBoxes--;
 
         MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
@@ -907,8 +913,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
         if (requestedBoxes == 0) {
 
-            if(!boxStorages.isEmpty()){
-                for (Pair couple : boxStorages) {
+            if(!boxSlots.isEmpty()){
+                for (Pair couple : boxSlots) {
                     BoxStorage component = (BoxStorage) couple.getKey();
                     int boxIdx = (int) couple.getValue();
                     component.removeBox(player.getSpaceship(), boxIdx);
@@ -925,7 +931,7 @@ public class BattlezoneController extends EventControllerAbstract {
         } else {
 
             // Box currently owned
-            int boxCount = player.getSpaceship().getBoxCounts()[0] + player.getSpaceship().getBoxCounts()[1] + player.getSpaceship().getBoxCounts()[2] + player.getSpaceship().getBoxCounts()[3];
+            int boxCount = player.getSpaceship().getBoxesCount();
 
             if (boxCount > 0) {
                 MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
@@ -933,8 +939,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
             } else {
 
-                if(!boxStorages.isEmpty()){
-                    for (Pair couple : boxStorages) {
+                if(!boxSlots.isEmpty()){
+                    for (Pair couple : boxSlots) {
                         BoxStorage component = (BoxStorage) couple.getKey();
                         int boxIdx = (int) couple.getValue();
                         component.removeBox(player.getSpaceship(), boxIdx);

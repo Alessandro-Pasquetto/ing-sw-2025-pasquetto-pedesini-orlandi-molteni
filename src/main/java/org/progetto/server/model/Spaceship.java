@@ -116,6 +116,10 @@ public class Spaceship implements Serializable {
         return boxCounts;
     }
 
+    public int getBoxesCount(){
+        return boxCounts[0] +  boxCounts[1] + boxCounts[2] + boxCounts[3];
+    }
+
     public BuildingBoard getBuildingBoard() {
         return buildingBoard;
     }

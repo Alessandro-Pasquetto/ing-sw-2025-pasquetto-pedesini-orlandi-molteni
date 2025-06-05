@@ -143,6 +143,7 @@ public class SlaversController extends EventControllerAbstract {
         // Player doesn't want to use double cannons
         if (num == 0) {
             playerFirePower = spaceship.getNormalShootingPower();
+
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -222,18 +223,16 @@ public class SlaversController extends EventControllerAbstract {
 
         if (requestedBatteries == 0) {
 
-            if(!batteryStorages.isEmpty()){
-                for (BatteryStorage component : batteryStorages) {
-                    component.decrementItemsCount(player.getSpaceship(), 1);
-                }
-
-                // Update spaceship to remove highlight components when it's not my turn.
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
+            for (BatteryStorage component : batteryStorages) {
+                component.decrementItemsCount(player.getSpaceship(), 1);
             }
+
+            // Update spaceship to remove highlight components when it's not my turn.
+            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+            player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
 
         } else {
             MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
@@ -262,8 +261,6 @@ public class SlaversController extends EventControllerAbstract {
                 MessageSenderService.sendMessage("YouLostBattle", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
-
                 phase = EventPhase.PENALTY_EFFECT;
                 sendPenaltyEffect(sender);
 
@@ -286,8 +283,10 @@ public class SlaversController extends EventControllerAbstract {
      * @param sender current sender
      */
     public void receiveRewardDecision(Player player, String response, Sender sender) {
-        if (!phase.equals(EventPhase.REWARD_DECISION))
-            throw new IllegalStateException("IncorrectPhase");
+        if (!phase.equals(EventPhase.REWARD_DECISION)){
+            MessageSenderService.sendMessage("IncorrectPhase", sender);
+            return;
+        }
 
         // Checks if current player is active one
         if (!player.equals(gameManager.getGame().getActivePlayer())) {
@@ -411,17 +410,15 @@ public class SlaversController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == requestedCrew) {
+        if (requestedCrew == 0 || housingUnits.size() == player.getSpaceship().getTotalCrewCount()) {
 
-            if(!housingUnits.isEmpty()){
-                for (HousingUnit component : housingUnits) {
-                    slavers.chooseDiscardedCrew(player.getSpaceship(), component);
-                }
-
-                // Update spaceship to remove highlight components when it's not my turn.
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+            for (HousingUnit component : housingUnits) {
+                slavers.chooseDiscardedCrew(player.getSpaceship(), component);
             }
+
+            // Update spaceship to remove highlight components when it's not my turn.
+            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
+            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
