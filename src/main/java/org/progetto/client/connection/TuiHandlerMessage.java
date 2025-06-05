@@ -494,15 +494,15 @@ public class TuiHandlerMessage {
         }
 
         else if(messageObj instanceof AnotherPlayerWonBattleMessage anotherPlayerWonBattleMessage) {
-            System.out.println(anotherPlayerWonBattleMessage.getPlayerName() + " won battle");
+            System.out.println(GREEN + anotherPlayerWonBattleMessage.getPlayerName() + " won battle" + RESET);
         }
 
         else if(messageObj instanceof AnotherPlayerLostBattleMessage anotherPlayerLostBattleMessage) {
-            System.out.println(anotherPlayerLostBattleMessage.getPlayerName() + " lost battle");
+            System.out.println(RED + anotherPlayerLostBattleMessage.getPlayerName() + " lost battle" + RESET);
         }
 
         else if(messageObj instanceof AnotherPlayerDrewBattleMessage anotherPlayerDrewBattleMessage){
-            System.out.println(anotherPlayerDrewBattleMessage.getPlayerName() + " drew battle");
+            System.out.println(ORANGE + anotherPlayerDrewBattleMessage.getPlayerName() + " drew battle" + RESET);
         }
 
         else if(messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {

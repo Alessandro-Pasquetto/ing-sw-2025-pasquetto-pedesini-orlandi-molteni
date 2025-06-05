@@ -2081,6 +2081,24 @@ public class EventView {
                     textColor = "#2e7d32";
                     break;
 
+                case "BLUE":
+                    backgroundColor = "rgba(30, 144, 255, 0.15)";
+                    borderColor = "#1E90FF";
+                    textColor = "#1565C0";
+                    break;
+
+                case "YELLOW":
+                    backgroundColor = "rgba(255, 255, 0, 0.15)";
+                    borderColor = "#FFD700";
+                    textColor = "#B8860B";
+                    break;
+
+                case "PURPLE":
+                    backgroundColor = "rgba(128, 0, 128, 0.15)";
+                    borderColor = "#800080";
+                    textColor = "#6A1B9A";
+                    break;
+
                 case "INFO":
                 default:
                     backgroundColor = "rgba(240, 240, 245, 0.12)";

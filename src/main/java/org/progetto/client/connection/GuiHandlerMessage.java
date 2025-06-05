@@ -16,6 +16,7 @@ import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
+import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
@@ -432,7 +433,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions", "INFO");
+            PageController.getEventView().addChatMessage("You have moved ahead of " + playerMovedAheadMessage.getStepsCount() + " positions", "GREEN");
         }
 
         else if (messageObj instanceof PlayerMovedBackwardMessage playerMovedBackwardMessage) {
@@ -441,7 +442,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage("You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions", "INFO");
+            PageController.getEventView().addChatMessage("You have moved backward of " + playerMovedBackwardMessage.getStepsCount() + " positions", "BLUE");
         }
 
         else if (messageObj instanceof AnotherPlayerMovedAheadMessage anotherPlayerMovedAheadMessage) {
@@ -451,7 +452,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage(anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + "positions", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerMovedAheadMessage.getNamePlayer() + " has moved ahead of " + anotherPlayerMovedAheadMessage.getStepsCount() + "positions", "GREEN");
         }
 
         else if (messageObj instanceof AnotherPlayerMovedBackwardMessage anotherPlayerMovedBackwardMessage) {
@@ -461,7 +462,7 @@ public class GuiHandlerMessage {
 
             PageController.getEventView().updateMiniTrack(GameData.getTrack());
 
-            PageController.getEventView().addChatMessage(anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerMovedBackwardMessage.getNamePlayer() + " has moved backward of " + anotherPlayerMovedBackwardMessage.getStepsCount() + " positions", "BLUE");
         }
 
         else if(messageObj instanceof HowManyDoubleEnginesMessage howManyDoubleEnginesMessage) {
@@ -511,11 +512,11 @@ public class GuiHandlerMessage {
             GameData.setCredits(GameData.getCredits() + credits);
             PageController.getEventView().updateSpaceship(GameData.getSpaceship());
 
-            PageController.getEventView().addChatMessage("You received " + playerGetsCreditsMessage.getCredits() + " credits", "INFO");
+            PageController.getEventView().addChatMessage("You received " + playerGetsCreditsMessage.getCredits() + " credits", "YELLOW");
         }
 
         else if(messageObj instanceof AnotherPlayerGetsCreditsMessage anotherplayerGetsCreditsMessage) {
-            PageController.getEventView().addChatMessage(anotherplayerGetsCreditsMessage.getNamePlayer() + " received " + anotherplayerGetsCreditsMessage.getCredits() + " credits", "INFO");
+            PageController.getEventView().addChatMessage(anotherplayerGetsCreditsMessage.getNamePlayer() + " received " + anotherplayerGetsCreditsMessage.getCredits() + " credits", "YELLOW");
         }
 
         else if (messageObj instanceof BatteriesToDiscardMessage batteriesToDiscardMessage) {
@@ -685,6 +686,12 @@ public class GuiHandlerMessage {
            );
         }
 
+        else if(messageObj instanceof AnotherPlayerLandedPlanetMessage anotherPlayerLandedPlanetMessage) {
+            if(!(GameData.getActivePlayer().equals(anotherPlayerLandedPlanetMessage.getPlayerName()))) {
+                PageController.getEventView().addChatMessage(anotherPlayerLandedPlanetMessage.getPlayerName() + " landed on planet " + anotherPlayerLandedPlanetMessage.getPlanetIdx(), "INFO");
+            }
+        }
+
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
             PageController.getBuildingView().updateTimer(timer);
@@ -740,23 +747,23 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof PlayerLeftMessage playerLeftMessage) {
             PageController.getTravelView().setPlayerStatus(playerLeftMessage.getPlayerName(), true);
 
-            PageController.getEventView().addChatMessage(playerLeftMessage.getPlayerName() + " left travel", "INFO");
+            PageController.getEventView().addChatMessage(playerLeftMessage.getPlayerName() + " left travel", "PURPLE");
         }
 
         else if(messageObj instanceof AnotherPlayerWonBattleMessage anotherPlayerWonBattleMessage) {
-            PageController.getEventView().addChatMessage(anotherPlayerWonBattleMessage.getPlayerName() + " won battle", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerWonBattleMessage.getPlayerName() + " won battle", "GREEN");
         }
 
         else if(messageObj instanceof AnotherPlayerLostBattleMessage anotherPlayerLostBattleMessage) {
-            PageController.getEventView().addChatMessage(anotherPlayerLostBattleMessage.getPlayerName() + " lost battle", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerLostBattleMessage.getPlayerName() + " lost battle", "RED");
         }
 
         else if(messageObj instanceof AnotherPlayerDrewBattleMessage anotherPlayerDrewBattleMessage){
-            PageController.getEventView().addChatMessage(anotherPlayerDrewBattleMessage.getPlayerName() + " drew battle", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerDrewBattleMessage.getPlayerName() + " drew battle", "ORANGE");
         }
 
         else if (messageObj instanceof PlayerDefeatedMessage playerDefeatedMessage) {
-            PageController.getEventView().addChatMessage(playerDefeatedMessage.getPlayerName() + " was defeated!", "INFO");
+            PageController.getEventView().addChatMessage(playerDefeatedMessage.getPlayerName() + " was defeated!", "RED");
         }
 
         else if (messageObj instanceof ScoreBoardMessage scoreBoardMessage) {
@@ -1066,17 +1073,17 @@ public class GuiHandlerMessage {
 
                 case "YouLostBattle":
                     PageController.getEventView().setEventLabels("YOU LOST THE BATTLE", "You lost the battle, wait for other players to finish their turn...");
-                    PageController.getEventView().addChatMessage("You lost the battle", "INFO");
+                    PageController.getEventView().addChatMessage("You lost the battle", "RED");
                     break;
 
                 case "YouWonBattle":
                     PageController.getEventView().setEventLabels("YOU WON THE BATTLE", "You won the battle, wait for other players to finish their turn...");
-                    PageController.getEventView().addChatMessage("You won the battle", "INFO");
+                    PageController.getEventView().addChatMessage("You won the battle", "GREEN");
                     break;
 
                 case "YouDrewBattle":
                     PageController.getEventView().setEventLabels("YOU DREW THE BATTLE", "You drew the battle, wait for other players to finish their turn...");
-                    PageController.getEventView().addChatMessage("You drew the battle", "INFO");
+                    PageController.getEventView().addChatMessage("You drew the battle", "ORANGE");
                     break;
 
                 case "YouLost":
