@@ -6,7 +6,6 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.components.Box;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

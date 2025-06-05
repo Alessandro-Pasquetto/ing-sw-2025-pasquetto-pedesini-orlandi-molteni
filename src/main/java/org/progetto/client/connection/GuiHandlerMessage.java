@@ -1,5 +1,6 @@
 package org.progetto.client.connection;
 
+import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.progetto.client.gui.Alerts;
@@ -489,10 +490,24 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
             PageController.getEventView().askYesNo(
                     "DO YOU WANT TO ACCEPT CREDITS?",
-                    "You will get " + acceptRewardCreditsAndPenaltiesMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays() + " days and " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew() + " crew members...",
+                    "You will get " + acceptRewardCreditsAndPenaltiesMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays() +
+                            (acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays()<-1 ? " day and ":" days and ") + acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew() + " crew members...",
                     response -> {
                         Sender sender = GameData.getSender();
                         sender.responseAcceptRewardCreditsAndPenalties(response ? "YES" : "NO");
+                    }
+            );
+        }
+
+        else if (messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage){
+
+            PageController.getEventView().askYesNo(
+                    "DO YOU WANT TO ACCEPT THE REWARD BOXES AND THE DAYS OF PENALTY?",
+                    "You will lose " + -1*acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()+
+                            (acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()< -1 ? " days of travel....": " day of travel...."),
+                    response -> {
+                        Sender sender = GameData.getSender();
+                        sender.responseAcceptRewardCreditsAndPenaltyDays(response ? "YES" : "NO");
                     }
             );
         }
@@ -808,6 +823,14 @@ public class GuiHandlerMessage {
                     Alerts.showError("Username already taken for this game", false);
                     break;
 
+                case "NotYourTurn":
+                    Alerts.showWarning("Wait for your turn!");
+                    break;
+
+                case "IncorrectPhase":
+                    Alerts.showWarning("Incorrect phase");
+                    break;
+
                 case "AllowedToPlaceComponent":
                     BuildingData.resetHandComponent();
                     break;
@@ -939,6 +962,34 @@ public class GuiHandlerMessage {
 
                 case "NotEnoughBatteries":
                     Alerts.showWarning("Not enough batteries!");
+                    break;
+
+                case "NotEnoughCrew":
+                    PageController.getEventView().setEventLabels("NOT ENOUGH CREW MEMBERS AVAILABLES", "You cannot face this challenge, wait for other players to finish their turn...");
+                    break;
+
+                case "NotEnoughBoxesAndBatteries":
+                    Alerts.showWarning("Not enough boxes and batteries!");
+                    break;
+
+                case "NotEnoughBoxes":
+                    Alerts.showWarning("Not enough boxes!");
+                    break;
+
+                case "InvalidComponent":
+                    Alerts.showWarning("Invalid component!");
+                    break;
+
+                case "InvalidCoordinates":
+                    Alerts.showWarning("Invalid coordinates!");
+                    break;
+
+                case "IncorrectRewardIndex":
+                    Alerts.showWarning("Incorrect reward index!");
+                    break;
+
+                case "IncorrectResponse":
+                    Alerts.showWarning("Incorrect response");
                     break;
 
                 case "AskToUseShield":

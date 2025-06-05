@@ -5,7 +5,6 @@ module org.progetto{
     requires com.fasterxml.jackson.databind;
     requires com.google.gson;
     requires java.rmi;
-    requires java.desktop;
 
     opens org.progetto.client to com.google.gson, javafx.fxml;
     opens org.progetto.server.model to com.google.gson, javafx.fxml;

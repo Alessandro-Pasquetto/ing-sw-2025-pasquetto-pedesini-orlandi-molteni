@@ -469,19 +469,27 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
+//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
             //forzare eventCard, todo da rimuovere
-//            int randomPos = 0;
-//
-//            do {
-//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
-//
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
-       }
+            int randomPos = 0;
 
+            do {
+                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
+
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
+
+//            ArrayList<Box> rewardBoxes = new ArrayList<>();
+//            rewardBoxes.add(Box.YELLOW);
+//            rewardBoxes.add(Box.GREEN);
+//            rewardBoxes.add(Box.BLUE);
+//            Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "card19-lv1.jpg", 4, 2, -1, rewardBoxes);
+//            pickedEventCard = smugglers;
+
+
+       }
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;
     }

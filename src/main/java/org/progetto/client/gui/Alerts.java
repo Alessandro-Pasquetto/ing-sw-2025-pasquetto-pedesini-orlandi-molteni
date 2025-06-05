@@ -17,6 +17,11 @@ import javafx.scene.robot.Robot;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.animation.PauseTransition;
+import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
+import javafx.stage.Popup;
+import javafx.stage.Window;
 
 
 public class Alerts {
@@ -33,14 +38,45 @@ public class Alerts {
      * @param message is the warning message
      */
     public static void showWarning(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
-        alert.showAndWait();
+        Stage stage = PageController.getStage();
+        Scene scene = stage.getScene();
+
+        Label label = new Label(message);
+        label.setStyle(
+                "-fx-background-color: #2B2B2BFF;" +
+                        "-fx-text-fill: #DF9A00FF;" +
+                        "-fx-padding: 20 40;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-font-size: 20px;"
+        );
+        label.setFont(Font.font("sans-serif"));
+
+        StackPane popupContent = new StackPane(label);
+        popupContent.setPadding(new Insets(20));
+        popupContent.setStyle("-fx-background-radius: 10;");
+
+        Popup popup = new Popup();
+        popup.getContent().add(popupContent);
+        popup.setAutoFix(true);
+        popup.setAutoHide(true);
+        popup.setHideOnEscape(true);
+
+        // Posiziona al centro alto della finestra
+        double x = scene.getX() + scene.getWidth() / 2 - 200;
+        double y = scene.getY() + 100;
+        popup.show(scene.getWindow(), x, y);
+
+        // Chiudi dopo 2 secondi
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(e -> popup.hide());
+        delay.play();
     }
+
 
     /**
      * Create a popup message to display an error
      *
-     * @author Alessandro
+     * @author Lorenzo,Alessandro
      * @param message is the String to display
      * @param onMouseEvent allows to display the message on the mouse pointer position
      */

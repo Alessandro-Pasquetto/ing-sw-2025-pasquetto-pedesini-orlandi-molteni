@@ -417,10 +417,12 @@ public class DragAndDrop {
 
         ImageView trash = PageController.getEventView().getBlackHoleContainer();
         if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
-            PageController.getEventView().removeBox(event,itemImage);
-            itemImage.getStyleClass().remove("draggable");
-            ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
-            isValidDrop = true;
+            if(!(itemImage.getProperties().get("originalParent") instanceof FlowPane)) {
+                PageController.getEventView().removeBox(event, itemImage);
+                itemImage.getStyleClass().remove("draggable");
+                ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
+                isValidDrop = true;
+            }
         }
 
         // Check if the drop is inside any cell of the spaceship
@@ -537,12 +539,21 @@ public class DragAndDrop {
             System.out.println("Drop not valid");
             // If the drop was not inside any cell, return the image to its original position
             Object originalParent = itemImage.getProperties().get("originalParent");
-            if (itemImage.getParent() != originalParent && originalParent instanceof Pane) {
-                root.getChildren().remove(itemImage);
-                ((Pane) originalParent).getChildren().addLast(itemImage);
+            if(originalParent instanceof FlowPane flowPane) {
+                System.out.println(itemImage.getProperties());
+                flowPane.getChildren().remove(itemImage);
+                flowPane.getChildren().add(itemImage);
+                itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
+                itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
             }
-            itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
-            itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
+            else if(originalParent instanceof Pane){
+                root.getChildren().remove(itemImage);
+                ((Pane) originalParent).getChildren().add(itemImage);
+                itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
+                itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
+            }
+
+
         }
         event.consume();  // Consume the event to prevent default behavior
     }
