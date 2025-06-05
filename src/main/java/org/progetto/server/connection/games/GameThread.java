@@ -303,6 +303,20 @@ public class GameThread extends Thread {
     }
 
     /**
+     * Pauses the game thread until the specified player is ready or disconnected
+     *
+     * @author Gabriele
+     * @param player the player to wait for
+     * @throws InterruptedException if the thread is interrupted while waiting
+     */
+    public void waitTravelerReady(Player player) throws InterruptedException {
+        synchronized (gameThreadLock) {
+            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
+                gameThreadLock.wait();
+        }
+    }
+
+    /**
      * Pauses the game thread until the player is ready or disconnected
      *
      * @author Alessandro
@@ -316,6 +330,12 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Resets all travelers and waits until all connected travelers are ready
+     *
+     * @author Alessandro
+     * @throws InterruptedException if the thread is interrupted while waiting
+     */
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
         Game game = gameManager.getGame();
 
@@ -329,6 +349,11 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Resets all travelers and waits until all connected travelers are ready
+     *
+     * @author Alessandro
+     */
     public void resetTravelersReady() {
         Game game = gameManager.getGame();
         Board board = game.getBoard();
@@ -338,6 +363,12 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Waits until all connected travelers are ready
+     *
+     * @author Alessandro
+     * @throws InterruptedException if the thread is interrupted while waiting
+     */
     public void waitConnectedTravelersReady() throws InterruptedException {
         synchronized (gameThreadLock) {
             while (!GameController.allConnectedTravelersReady(gameManager))
@@ -345,6 +376,12 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Waits until all connected parameter players are ready
+     *
+     * @author Alessandro
+     * @throws InterruptedException if the thread is interrupted while waiting
+     */
     public void waitParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
         synchronized (gameThreadLock) {
             while (!GameController.allConnectedParametersPlayersReady(players, gameManager))
@@ -361,6 +398,11 @@ public class GameThread extends Thread {
         }
     }
 
+    /**
+     * Sleeps the game thread for a specified number of milliseconds
+     *
+     * @param millis the number of milliseconds to sleep
+     */
     public void sleep(int millis){
         synchronized (gameThreadLock){
             try {

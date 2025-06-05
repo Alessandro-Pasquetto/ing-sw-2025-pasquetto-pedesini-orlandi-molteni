@@ -6,11 +6,14 @@ import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
 import org.progetto.messages.toClient.Battlezone.EvaluatingConditionMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
+import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
+import org.progetto.server.controller.GameController;
 import org.progetto.server.controller.SpaceshipController;
 import org.progetto.server.model.Board;
 import org.progetto.server.model.Game;
@@ -973,6 +976,11 @@ public class BattlezoneController extends EventControllerAbstract {
 
             currentShot = shot;
 
+            // If penalty player is not on the board anymore skip the remaining shots
+            if (!gameManager.getGame().getBoard().getCopyTravelers().contains(penaltyPlayer)) {
+                break;
+            }
+
             // Gets penalty player sender reference
             Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
@@ -981,7 +989,30 @@ public class BattlezoneController extends EventControllerAbstract {
             phase = EventPhase.ASK_ROLL_DICE;
             askToRollDice();
 
-            gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
+            // Delay to show the dice result
+            gameManager.getGameThread().sleep(3000);
+
+            // Sets penalty player as not ready
+            penaltyPlayer.setIsReady(false, gameManager.getGame());
+
+            // Checks if the shot is small or big
+            if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
+                phase = EventPhase.ASK_SHIELDS;
+                askToUseShields();
+            } else {
+                phase = EventPhase.HANDLE_SHOT;
+                handleShot();
+            }
+
+            gameManager.getGameThread().waitTravelerReady(penaltyPlayer);
+
+            // If the player is disconnected
+            if (!penaltyPlayer.getIsReady()) {
+                handleCurrentMeteorForDisconnectedPlayer(penaltyPlayer);
+            }
+
+            // Delay to show the dice result
+            gameManager.getGameThread().sleep(3000);
         }
 
         // Next Couple
@@ -995,7 +1026,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      */
-    private void askToRollDice(){
+    private void askToRollDice() throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -1010,6 +1041,13 @@ public class BattlezoneController extends EventControllerAbstract {
         }
 
         phase = EventPhase.ROLL_DICE;
+
+        gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
+
+        // If the player is disconnected
+        if(!penaltyPlayer.getIsReady()) {
+            rollDice(penaltyPlayer, sender);
+        }
     }
 
     /**
@@ -1035,18 +1073,6 @@ public class BattlezoneController extends EventControllerAbstract {
         diceResult = player.rollDice();
 
         MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
-
-        // Delay to show the dice result
-        gameManager.getGameThread().sleep(3000);
-
-        if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
-            phase = EventPhase.ASK_SHIELDS;
-            askToUseShields();
-
-        } else {
-            phase = EventPhase.HANDLE_SHOT;
-            handleShot();
-        }
     }
 
     /**
@@ -1134,7 +1160,7 @@ public class BattlezoneController extends EventControllerAbstract {
      *
      * @author Stefano
      */
-    private void handleShot(){
+    private void handleShot() {
         if (!phase.equals(EventPhase.HANDLE_SHOT))
             throw new IllegalStateException("IncorrectPhase");
 
@@ -1148,6 +1174,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Sends two types of messages based on the shot's result
         if (destroyedComponent == null) {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
+
             penaltyPlayer.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
             return;
@@ -1156,8 +1183,33 @@ public class BattlezoneController extends EventControllerAbstract {
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
             penaltyPlayer.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
-
         } else
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
+    }
+
+    /**
+     * Handles current meteor for disconnected players
+     *
+     * @author Alessandro
+     * @param player is the one that needs to handle the current meteor
+     */
+    private void handleCurrentMeteorForDisconnectedPlayer(Player player) {
+        Game game = gameManager.getGame();
+
+        // Handles current shot for player
+        Component affectedComponent = battlezone.penaltyShot(game, player, currentShot, diceResult);
+
+        if(affectedComponent == null)
+            return;
+
+        // Gets current player sender reference
+        Sender sender = gameManager.getSenderByPlayer(player);
+
+        // Destroys affected component
+        if(!SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
+            gameManager.getGame().getBoard().leaveTravel(player);
+            gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
+            gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
+        }
     }
 }

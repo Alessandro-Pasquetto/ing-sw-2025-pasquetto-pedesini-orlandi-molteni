@@ -312,7 +312,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             addDecisionPlayer(player);
             MessageSenderService.sendMessage("AskToUseShield", sender);
 
-            // Notifies component destruction
+        // Notifies component destruction
         } else {
             MessageSenderService.sendMessage("NoShieldAvailable", sender);
             handleCurrentMeteor(player);
