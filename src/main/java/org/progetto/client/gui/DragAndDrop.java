@@ -543,6 +543,21 @@ public class DragAndDrop {
                 flowPane.getChildren().add(itemImage);
                 itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
                 itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
+
+                /*TilePane boxContainer = new TilePane();
+                boxContainer.setHgap(10);
+                boxContainer.setVgap(10);
+                boxContainer.setPrefColumns(4);
+
+
+                tilePane.getChildren().remove(itemImage);
+                tilePane.getChildren().add(itemImage);
+                itemImage.setLayoutX(itemImage.getProperties().get("originalLayoutX"));
+                itemImage.setLayoutY(itemImage.getProperties().get("originalLayoutY"));
+
+
+                 */
+
             }
             else if(originalParent instanceof Pane){
                 root.getChildren().remove(itemImage);
