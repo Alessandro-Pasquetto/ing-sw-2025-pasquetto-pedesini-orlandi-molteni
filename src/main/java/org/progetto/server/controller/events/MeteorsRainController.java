@@ -177,6 +177,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         Sender sender = gameManager.getSenderByPlayer(activePlayer);
 
         phase = EventPhase.ROLL_DICE;
+
         if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2) {
             MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
         }
@@ -459,9 +460,8 @@ public class MeteorsRainController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
-        // Update spaceship to remove highlight components when it's not my turn.
-        // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+        // Update spaceship to remove highlight components.
+        MessageSenderService.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
 
         MessageSenderService.sendMessage("YouAreSafe", sender);
 

@@ -176,12 +176,16 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
             } else {
-                MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
                 phase = EventPhase.ENGINE_NUMBER;
+                MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
                 // If the player is disconnected
                 if(!player.getIsReady()) {
@@ -227,8 +231,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
             tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower() + 2 * num);
 
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
             phase = EventPhase.DISCARDED_BATTERIES;
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
 
         } else {
             MessageSenderService.sendMessage("IncorrectNumber", sender);
@@ -265,12 +269,16 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
             } else {
-                MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()), sender);
                 phase = EventPhase.CANNON_NUMBER;
+                MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()), sender);
 
                 gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
                 // If the player is disconnected
                 if(!player.getIsReady()) {
@@ -322,8 +330,8 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempFirePower.put(player, spaceship.getNormalShootingPower() + 2 * spaceship.getFullDoubleCannonCount() + (num - spaceship.getFullDoubleCannonCount()));
             }
 
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
             phase = EventPhase.DISCARDED_BATTERIES;
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
 
         } else {
             MessageSenderService.sendMessage("IncorrectNumber", sender);
@@ -438,10 +446,6 @@ public class BattlezoneController extends EventControllerAbstract {
                     for (BatteryStorage component : batteryStorages) {
                         component.decrementItemsCount(player.getSpaceship(), 1);
                     }
-
-                    // Update spaceship to remove highlight components when it's not my turn.
-                    // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                    gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
                 }
 
                 // Resets battery storages list
@@ -463,10 +467,6 @@ public class BattlezoneController extends EventControllerAbstract {
                     for (BatteryStorage component : batteryStorages) {
                         component.decrementItemsCount(player.getSpaceship(), 1);
                     }
-
-                    // Update spaceship to remove highlight components when it's not my turn.
-                    // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                    gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
                 }
 
                 // Resets battery storages list
@@ -480,8 +480,8 @@ public class BattlezoneController extends EventControllerAbstract {
                 // Checks if he has at least a battery to discard
                 if (player.getSpaceship().getBatteriesCount() > 0) {
                     MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
                     phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
 
                 } else {
                     MessageSenderService.sendMessage("NotEnoughBatteries", sender);
@@ -667,10 +667,14 @@ public class BattlezoneController extends EventControllerAbstract {
         housingUnits.clear();
 
         // Request to discard crew
-        MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
         phase = EventPhase.DISCARDED_CREW;
+        MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
 
         gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
+
+        // Update spaceship to remove highlight components
+        // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(penaltyPlayer.getSpaceship(), penaltyPlayer));
 
         // If the player is disconnected
         if(!penaltyPlayer.getIsReady()) {
@@ -743,13 +747,9 @@ public class BattlezoneController extends EventControllerAbstract {
         if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
 
             if(!housingUnits.isEmpty()){
-                for (HousingUnit component : housingUnits) {
-                    battlezone.chooseDiscardedCrew(player.getSpaceship(), (HousingUnit) housingUnit);
+                for (HousingUnit hu : housingUnits) {
+                    battlezone.chooseDiscardedCrew(player.getSpaceship(), hu);
                 }
-
-                // Update spaceship to remove highlight components when it's not my turn.
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
             }
 
             // Resets housing units list
@@ -787,8 +787,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
         // Checks if he has at least a box to discard
         if (boxCount > 0) {
-            MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
             phase = EventPhase.DISCARDED_BOXES;
+            MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
             gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
@@ -805,8 +805,8 @@ public class BattlezoneController extends EventControllerAbstract {
             // Checks if he has at least a battery to discard
             if (player.getSpaceship().getBatteriesCount() > 0) {
                 MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
                 phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
@@ -919,10 +919,6 @@ public class BattlezoneController extends EventControllerAbstract {
                     int boxIdx = (int) couple.getValue();
                     component.removeBox(player.getSpaceship(), boxIdx);
                 }
-
-                // Update spaceship to remove highlight components when it's not my turn.
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
             }
 
             player.setIsReady(true, gameManager.getGame());
@@ -934,8 +930,8 @@ public class BattlezoneController extends EventControllerAbstract {
             int boxCount = player.getSpaceship().getBoxesCount();
 
             if (boxCount > 0) {
-                MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
                 phase = EventPhase.DISCARDED_BOXES;
+                MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
             } else {
 
@@ -945,17 +941,13 @@ public class BattlezoneController extends EventControllerAbstract {
                         int boxIdx = (int) couple.getValue();
                         component.removeBox(player.getSpaceship(), boxIdx);
                     }
-
-                    // Update spaceship to remove highlight components when it's not my turn.
-                    // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                    gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
                 }
 
                 // Checks if he has at least a battery to discard
                 if (player.getSpaceship().getBatteriesCount() > 0) {
                     MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
                     phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
 
                 } else {
                     MessageSenderService.sendMessage("NotEnoughBatteries", sender);
@@ -1039,14 +1031,14 @@ public class BattlezoneController extends EventControllerAbstract {
         // Asks penalty player to roll dice
         Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
+        phase = EventPhase.ROLL_DICE;
+
         if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
             MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
 
         } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
             MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         }
-
-        phase = EventPhase.ROLL_DICE;
 
         gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
 
@@ -1219,3 +1211,11 @@ public class BattlezoneController extends EventControllerAbstract {
         }
     }
 }
+
+/* todo: finire di sistemare UpdateSpaceshipMessage dopo refactor (scartare box/batterie)
+
+// Update spaceship to remove highlight components
+// For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
+*/

@@ -91,13 +91,13 @@ public class SabotageController extends EventControllerAbstract{
 
         Sender sender = gameManager.getSenderByPlayer(penalizedPlayer);
 
+        phase = EventPhase.ROLL_DICE;
+
         if (yDiceResult == 0) {
             MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         } else if (xDiceResult == 0) {
             MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
         }
-
-        phase = EventPhase.ROLL_DICE;
     }
 
     /**

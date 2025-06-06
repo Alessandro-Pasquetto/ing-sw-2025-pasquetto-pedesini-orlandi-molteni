@@ -101,6 +101,10 @@ public class OpenSpaceController extends EventControllerAbstract {
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
                 // If the player is disconnected
                 if(!player.getIsReady())
                     playerEnginePower = player.getSpaceship().getNormalEnginePower();
@@ -216,10 +220,6 @@ public class OpenSpaceController extends EventControllerAbstract {
             for (BatteryStorage component : batteryStorages) {
                 component.decrementItemsCount(player.getSpaceship(), 1);
             }
-
-            // Update spaceship to remove highlight components when it's not my turn.
-            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();

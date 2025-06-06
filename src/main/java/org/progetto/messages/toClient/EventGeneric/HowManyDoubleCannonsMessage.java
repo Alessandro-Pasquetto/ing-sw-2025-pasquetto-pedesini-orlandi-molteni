@@ -29,6 +29,8 @@ public class HowManyDoubleCannonsMessage implements Serializable {
     public int getMaxUsable() {
         return maxUsable;
     }
+
     public int getFirePowerRequired() {return firePowerRequired;}
+
     public float getShootingPower() {return shootingPower;}
 }

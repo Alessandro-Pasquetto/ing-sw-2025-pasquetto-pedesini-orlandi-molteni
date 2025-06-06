@@ -782,6 +782,7 @@ public class EventView {
         }
 
         playerListView.setItems(playersWithSeparators);
+        playerListView.setSelectionModel(null);
 
         playerListView.setCellFactory(listView -> new ListCell<Player>() {
             private final VBox content = new VBox(5);

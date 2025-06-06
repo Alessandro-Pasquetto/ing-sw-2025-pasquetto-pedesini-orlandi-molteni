@@ -112,9 +112,11 @@ public class SmugglersController extends EventControllerAbstract {
                 phase = EventPhase.CANNON_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
 
-                gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
-
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
                 // If the player is disconnected
                 if (!player.getIsReady()){
@@ -241,10 +243,6 @@ public class SmugglersController extends EventControllerAbstract {
                 boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
             }
 
-            // Update spaceship to remove highlight components when it's not my turn.
-            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -289,6 +287,10 @@ public class SmugglersController extends EventControllerAbstract {
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
                 // If the player disconnected during the reward decision
                 if(!player.getIsReady())
                     penaltyDays();
@@ -308,7 +310,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                     phase = EventPhase.PENALTY_EFFECT;
                     penaltyEffect(player, sender);
-                        //todo randomDiscard
 
                 } else
                     MessageSenderService.sendMessage("NotEnoughBoxesAndBatteries", sender);
@@ -351,6 +352,10 @@ public class SmugglersController extends EventControllerAbstract {
 
         gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
+        // Update spaceship to remove highlight components
+        // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
         // If the player disconnected
         if(!player.getIsReady()){
 
@@ -364,9 +369,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                 smugglers.randomDiscardBatteries(spaceship, Math.min(spaceship.getBatteriesCount(), requestedBatteries));
             }
-
-            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
         }
     }
 
@@ -457,10 +459,6 @@ public class SmugglersController extends EventControllerAbstract {
             for (BoxSlot boxSlot : boxSlots) {
                 boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
             }
-
-            // Update spaceship to remove highlight components when it's not my turn.
-            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
@@ -583,6 +581,8 @@ public class SmugglersController extends EventControllerAbstract {
 
             rewardBoxes.remove(box);
             MessageSenderService.sendMessage("BoxChosen", sender);
+            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);
         }

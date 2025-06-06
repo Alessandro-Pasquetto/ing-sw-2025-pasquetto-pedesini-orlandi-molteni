@@ -6,7 +6,8 @@ public class MessageSenderService {
     public static void sendMessage(Object messageObj, Sender sender) {
         try {
             sender.sendMessage(messageObj);
-        } catch (Exception _) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

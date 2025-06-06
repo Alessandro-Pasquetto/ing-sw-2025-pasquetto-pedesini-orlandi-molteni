@@ -83,6 +83,11 @@ public class LostShipController extends EventControllerAbstract  {
                 MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
 
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
+
+                // Update spaceship to remove highlight components
+                // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+
             } else
                 MessageSenderService.sendMessage("NotEnoughCrew", sender);
 
@@ -205,10 +210,6 @@ public class LostShipController extends EventControllerAbstract  {
             for (HousingUnit component : housingUnits) {
                 lostShip.chooseDiscardedCrew(player.getSpaceship(), component);
             }
-
-            // Update spaceship to remove highlight components when it's not my turn.
-            // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-            gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
             phase = EventPhase.EFFECT;
             eventEffect();

@@ -1,10 +1,8 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
-import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventGeneric.AvailableBoxesMessage;
-import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventGeneric.AnotherPlayerLandedMessage;
+import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -144,13 +142,13 @@ public class LostStationController extends EventControllerAbstract {
      * @author Lorenzo
      * @param player that choose the box
      * @param idxBox chosen
-     * @param x coordinate of the component were the box will be placed
-     * @param y coordinate of the component were the box will be placed
+     * @param xBoxStorage coordinate of the component were the box will be placed
+     * @param yBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
+    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -178,13 +176,13 @@ public class LostStationController extends EventControllerAbstract {
         Component[][] matrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
         // Checks if component index is correct
-        if (x < 0 || y < 0 || y >= matrix.length || x >= matrix[0].length ) {
+        if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= matrix.length || xBoxStorage >= matrix[0].length ) {
             MessageSenderService.sendMessage("InvalidCoordinates", sender);
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
-        Component component = matrix[y][x];
+        Component component = matrix[yBoxStorage][xBoxStorage];
 
         // Checks if it is a storage component
         if (component == null || (!component.getType().equals(ComponentType.BOX_STORAGE) && !component.getType().equals(ComponentType.RED_BOX_STORAGE))) {
@@ -201,6 +199,8 @@ public class LostStationController extends EventControllerAbstract {
 
             rewardBoxes.remove(box);
             MessageSenderService.sendMessage("BoxChosen", sender);
+            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);
         }

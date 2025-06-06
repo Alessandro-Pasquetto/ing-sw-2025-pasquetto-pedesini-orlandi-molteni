@@ -2,10 +2,12 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.EventGeneric.AnotherPlayerRewardedBox;
 import org.progetto.messages.toClient.EventGeneric.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
+import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
@@ -154,14 +156,14 @@ public class PlanetsController extends EventControllerAbstract {
      * @author Gabriele
      * @param player that choose the box
      * @param idxBox chosen
-     * @param y coordinate of the component were the box will be placed
-     * @param x coordinate of the component were the box will be placed
+     * @param yBoxStorage coordinate of the component were the box will be placed
+     * @param xBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      * @throws IllegalStateException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) throws IllegalStateException {
+    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -181,13 +183,13 @@ public class PlanetsController extends EventControllerAbstract {
 
         Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
 
-        if(x < 0 || y < 0 || x >= spaceshipMatrix[0].length || y >= spaceshipMatrix.length){
+        if(xBoxStorage < 0 || yBoxStorage < 0 || xBoxStorage >= spaceshipMatrix[0].length || yBoxStorage >= spaceshipMatrix.length){
             MessageSenderService.sendMessage("InvalidCoordinates", sender);
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
-        Component boxStorage = spaceshipMatrix[y][x];
+        Component boxStorage = spaceshipMatrix[yBoxStorage][xBoxStorage];
 
         if (boxStorage == null || !boxStorage.getType().equals(ComponentType.BOX_STORAGE) && !boxStorage.getType().equals(ComponentType.RED_BOX_STORAGE)) {
             MessageSenderService.sendMessage("InvalidCoordinates", sender);
@@ -211,6 +213,8 @@ public class PlanetsController extends EventControllerAbstract {
 
             rewardBoxes.remove(box);
             MessageSenderService.sendMessage("BoxChosen", sender);
+            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);
         }
