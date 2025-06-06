@@ -283,7 +283,7 @@ public class PageController {
         BuildingData.initMask(levelGame);
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
-        eventView.initTrack(levelGame);
+        eventView.initMiniTrack(levelGame);
         eventView.initEventLabels();
         eventView.clearChatMessages();
     }

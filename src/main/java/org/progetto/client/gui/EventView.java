@@ -186,7 +186,7 @@ public class EventView {
      * @author Gabriele
      * @param levelGame is the game level
      */
-    public void initTrack(int levelGame) {
+    public void initMiniTrack(int levelGame) {
         cellsGroup.getChildren().clear();
         boardCells.clear();
 
@@ -365,18 +365,20 @@ public class EventView {
         rotate.setCycleCount(RotateTransition.INDEFINITE);
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.play();
-
-
     }
 
-    public ImageView getBlackHoleContainer(){
+    public ImageView getBlackHoleContainer() {
         return blackHoleContainer;
     }
 
+    /**
+     * Resets the black hole image
+     *
+     * @author Lorenzo
+     */
     public void resetBlackHole(){
         blackHoleContainer.setImage(null);
     }
-
 
     /**
      * Initializes the spaceship matrix
@@ -715,8 +717,7 @@ public class EventView {
      * @param componentRotation is the rotation to adjust
      */
     private void renderBox(Pane boxSlot, Box box, int componentRotation){
-
-        if(box == null) return;
+        if (box == null) return;
 
         Image boxImage = switch (box) {
             case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
@@ -1511,10 +1512,9 @@ public class EventView {
                     int colorIndex = visited[row][col] % 5;
 
                     Color color = switch (colorIndex) {
-                        case 1 -> Color.rgb(0, 122, 255, 0.3);
-                        case 2 -> Color.rgb(52, 199, 89, 0.3);
-                        case 3 -> Color.rgb(255, 149, 0, 0.3);
-                        case 4 -> Color.rgb(175, 82, 222, 0.3);
+                        case 1 -> Color.rgb(52, 199, 89, 0.3);
+                        case 2 -> Color.rgb(255, 149, 0, 0.3);
+                        case 3 -> Color.rgb(175, 82, 222, 0.3);
                         default -> Color.rgb(90, 200, 250, 0.3);
                     };
 
@@ -1698,11 +1698,11 @@ public class EventView {
         leaveButton.setOnAction(e -> {
             Sender sender = GameData.getSender();
             sender.responseRewardBox(-1, -1, -1, -1);
+            resetBlackHole();
             PageController.getEventView().disableDragAndDropBoxesSpaceship();
         });
 
         mainContainer.getChildren().addAll(boxScrollPane, leaveButton);
-
         btnContainer.getChildren().add(mainContainer);
     }
 
@@ -1714,7 +1714,6 @@ public class EventView {
      * @param box is the box image
      */
     public void removeBox(MouseEvent event, ImageView box){
-
             double sceneX = (double) box.getProperties().get("initialSceneX");
             double sceneY = (double) box.getProperties().get("initialSceneY");
 
@@ -1735,8 +1734,6 @@ public class EventView {
                     }
                 }
             }
-
-
     }
 
     /**

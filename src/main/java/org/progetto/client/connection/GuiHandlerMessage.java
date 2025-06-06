@@ -824,11 +824,11 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotYourTurn":
-                    Alerts.showWarning("Wait for your turn!");
+                    Alerts.showError("Wait for your turn!", true);
                     break;
 
                 case "IncorrectPhase":
-                    Alerts.showWarning("Incorrect phase");
+                    Alerts.showError("Incorrect phase", true);
                     break;
 
                 case "AllowedToPlaceComponent":
@@ -976,12 +976,16 @@ public class GuiHandlerMessage {
                     Alerts.showWarning("Not enough boxes!");
                     break;
 
+                case "IsNotMaxValuableBox":
+                    Alerts.showError("You cannot discard this box, it is not the most valuable one!", true);
+                    break;
+
                 case "InvalidComponent":
-                    Alerts.showWarning("Invalid component!");
+                    Alerts.showError("Invalid component!", true);
                     break;
 
                 case "InvalidCoordinates":
-                    Alerts.showWarning("Invalid coordinates!");
+                    Alerts.showError("Invalid coordinates!", true);
                     break;
 
                 case "IncorrectRewardIndex":
@@ -989,7 +993,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "IncorrectResponse":
-                    Alerts.showWarning("Incorrect response");
+                    Alerts.showError("Incorrect response", true);
                     break;
 
                 case "AskToUseShield":
@@ -1043,6 +1047,7 @@ public class GuiHandlerMessage {
 
                 case "EmptyReward":
                     PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");
+                    PageController.getEventView().resetBlackHole();
                     break;
 
                 case "PlanetLeft":

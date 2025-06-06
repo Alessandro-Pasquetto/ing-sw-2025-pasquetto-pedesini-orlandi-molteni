@@ -390,7 +390,6 @@ public class DragAndDrop {
         event.consume();  // Consume the event to prevent default behavior
     }
 
-
     /**
      * Allows an item ImageView to be placed on the left-key released
      *
@@ -400,7 +399,6 @@ public class DragAndDrop {
      * @param targetId is the FXML id of the final Object
      */
     private static void onMouseReleasedFunctionItems(ImageView itemImage, MouseEvent event, String targetId){
-
 
         if (event.getButton() != MouseButton.PRIMARY)
             return;

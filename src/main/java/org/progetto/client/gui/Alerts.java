@@ -43,17 +43,18 @@ public class Alerts {
 
         Label label = new Label(message);
         label.setStyle(
-                "-fx-background-color: #2B2B2BFF;" +
-                        "-fx-text-fill: #DF9A00FF;" +
-                        "-fx-padding: 20 40;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-font-size: 20px;"
+                "-fx-background-color: rgba(0, 0, 0, 0.9);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-padding: 15px;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-font-size: 18px;"
         );
-        label.setFont(Font.font("sans-serif"));
+        label.setFont(Font.font("Inter 18pt"));
 
         StackPane popupContent = new StackPane(label);
         popupContent.setPadding(new Insets(20));
         popupContent.setStyle("-fx-background-radius: 10;");
+        popupContent.setOpacity(1.0);
 
         Popup popup = new Popup();
         popup.getContent().add(popupContent);
@@ -61,17 +62,29 @@ public class Alerts {
         popup.setAutoHide(true);
         popup.setHideOnEscape(true);
 
-        // Posiziona al centro alto della finestra
-        double x = scene.getX() + scene.getWidth() / 2 - 200;
-        double y = scene.getY() + 100;
-        popup.show(scene.getWindow(), x, y);
+        popup.show(stage, -1000, -1000);
 
-        // Chiudi dopo 2 secondi
-        PauseTransition delay = new PauseTransition(Duration.seconds(3));
-        delay.setOnFinished(e -> popup.hide());
-        delay.play();
+        Platform.runLater(() -> {
+            double contentWidth = popupContent.getWidth();
+            double contentHeight = popupContent.getHeight();
+
+            double x = stage.getX() + (stage.getWidth() - contentWidth) / 2;
+            double y = stage.getY() + (stage.getHeight() - contentHeight) / 2;
+
+            popup.setX(x);
+            popup.setY(y);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            pause.setOnFinished(e -> {
+                FadeTransition ft = new FadeTransition(Duration.seconds(2), popupContent);
+                ft.setFromValue(1.0);
+                ft.setToValue(0.0);
+                ft.setOnFinished(ev -> popup.hide());
+                ft.play();
+            });
+            pause.play();
+        });
     }
-
 
     /**
      * Create a popup message to display an error
@@ -87,10 +100,10 @@ public class Alerts {
 
         Label messageLabel = new Label(message);
         messageLabel.setStyle("""
-        -fx-background-color: rgba(0, 0, 0, 0.8);
+        -fx-background-color: rgba(0, 0, 0, 0.9);
         -fx-text-fill: white;
         -fx-padding: 15px;
-        -fx-background-radius: 10;
+        -fx-background-radius: 8;
         -fx-font-size: 14px;
         """);
         messageLabel.setFont(Font.font("Arial"));
@@ -135,97 +148,6 @@ public class Alerts {
 
         scene.widthProperty().addListener((obs, oldVal, newVal) -> overlay.setPrefWidth(newVal.doubleValue()));
         scene.heightProperty().addListener((obs, oldVal, newVal) -> overlay.setPrefHeight(newVal.doubleValue()));
-    }
-
-    /**
-     * Show a yes/no popup with a title and message
-     *
-     * @author Gabriele
-     * @param titleText the title text
-     * @param messageText the message text
-     * @param onYes the action to perform when "YES" is clicked
-     * @param onNo the action to perform when "NO" is clicked
-     */
-    public static void showYesNoPopup(Pane targetPane, String titleText, String messageText, Runnable onYes, Runnable onNo) {
-        Platform.runLater(() -> {
-            StackPane overlay = new StackPane();
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85);");
-            overlay.setPickOnBounds(true);
-
-            // Popup container
-            VBox popup = new VBox(20);
-            popup.setMaxWidth(400);
-            popup.setMaxHeight(200);
-            popup.setStyle(
-                    "-fx-padding: 20;" +
-                    "-fx-border-radius: 8;" +
-                    "-fx-background-radius: 8;" +
-                    "-fx-background-color: linear-gradient(to bottom right, #a3aea7, #535e5d);" +
-                    "-fx-border-color: rgba(43, 50, 57, 0.5);" +
-                    "-fx-border-width: 2;"
-            );
-            popup.setAlignment(Pos.CENTER);
-
-            // Title
-            Label title = new Label(titleText);
-            title.setStyle(
-                    "-fx-font-size: 24px;" +
-                    "-fx-text-fill: #15357b;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-font-family: 'Orgovan';"
-            );
-
-            // Message
-            Label message = new Label(messageText);
-            message.setStyle(
-                    "-fx-font-size: 16px;" +
-                    "-fx-text-fill: black;" +
-                    "-fx-wrap-text: true;"
-            );
-
-            // Buttons
-            HBox buttonBox = new HBox(20);
-            buttonBox.setAlignment(Pos.CENTER);
-
-            Button yesButton = new Button("Yes");
-            Button noButton = new Button("No");
-
-            buttonBox.getChildren().addAll(yesButton, noButton);
-
-            popup.getChildren().addAll(title, message, buttonBox);
-            overlay.getChildren().add(popup);
-            targetPane.getChildren().add(overlay);
-
-            // Fade in
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), overlay);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-            fadeIn.play();
-
-            // YES button action
-            yesButton.setOnAction(e -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(200), overlay);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(ev -> {
-                    targetPane.getChildren().remove(overlay);
-                    if (onYes != null) onYes.run();
-                });
-                fadeOut.play();
-            });
-
-            // NO button action
-            noButton.setOnAction(e -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(200), overlay);
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(ev -> {
-                    targetPane.getChildren().remove(overlay);
-                    if (onNo != null) onNo.run();
-                });
-                fadeOut.play();
-            });
-        });
     }
 }
 
