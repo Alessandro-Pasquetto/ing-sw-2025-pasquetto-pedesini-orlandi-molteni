@@ -384,10 +384,12 @@ public class Game {
             if(componentDeck.isEmpty())
                 throw new IllegalStateException("EmptyComponentDeck");
 
-//            int randomPos = (int) (Math.random() * componentDeck.size());
-//            pickedComponent = componentDeck.remove(randomPos);
+            int randomPos = (int) (Math.random() * componentDeck.size());
+            pickedComponent = componentDeck.remove(randomPos);
 
             // forzare componente, todo da rimuovere
+
+            /*
             int randomPos = 0;
             ComponentType type;
             do{
@@ -398,7 +400,10 @@ public class Game {
             } while (!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE));
 
             pickedComponent = componentDeck.remove(randomPos);
+
+             */
         }
+
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
 
@@ -467,9 +472,10 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-//            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
+            int randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
+            /*
             //forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
@@ -478,6 +484,8 @@ public class Game {
             } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
+
+             */
        }
 
         setActiveEventCard(pickedEventCard);

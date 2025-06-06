@@ -1,7 +1,6 @@
 module org.progetto{
     requires javafx.controls;
     requires javafx.fxml;
-    requires org.controlsfx.controls;
     requires com.fasterxml.jackson.databind;
     requires com.google.gson;
     requires java.rmi;

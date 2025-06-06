@@ -410,7 +410,7 @@ class GameTest {
         game.initPlayersSpaceship();
 
         Component nextDiscardedComponent = game.pickHiddenComponent(mario);
-        String imgSrcDiscardedComponent = game.discardComponent(mario);
+        game.discardComponent(mario);
 
         game.pickVisibleComponent(0, mario);
 
@@ -437,7 +437,7 @@ class GameTest {
         assertEquals("EmptyHandComponent", exception.getMessage());
 
         Component pickedComponent = game.pickHiddenComponent(mario);
-        String imgSrcDiscardedComponent = game.discardComponent(mario);
+        game.discardComponent(mario);
 
         assertNull(mario.getSpaceship().getBuildingBoard().getHandComponent());
     }
