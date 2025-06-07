@@ -1,6 +1,5 @@
 package org.progetto.server.controller.events;
 
-import javafx.util.Pair;
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.Battlezone.AnotherPlayerGotPenalizedMessage;
@@ -28,6 +27,8 @@ import java.util.Map;
 
 public class BattlezoneController extends EventControllerAbstract {
 
+    private record BoxSlot(BoxStorage boxStorage, int idx){}
+
     // =======================
     // ATTRIBUTES
     // =======================
@@ -47,7 +48,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
     private final ArrayList<BatteryStorage> batteryStorages;
     private final ArrayList<HousingUnit> housingUnits;
-    private final ArrayList<Pair<BoxStorage, Integer>> boxSlots;
+    private final ArrayList<BoxSlot> boxSlots;
     private final int[] tempBoxCounts;
 
     // =======================
@@ -161,7 +162,6 @@ public class BattlezoneController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : activePlayers) {
-            batteryStorages.clear();
 
             gameManager.getGame().setActivePlayer(player);
 
@@ -176,6 +176,9 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
             } else {
+                batteryStorages.clear();
+                boxSlots.clear();
+
                 phase = EventPhase.ENGINE_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 
@@ -252,7 +255,6 @@ public class BattlezoneController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : activePlayers) {
-            batteryStorages.clear();
 
             gameManager.getGame().setActivePlayer(player);
 
@@ -269,6 +271,9 @@ public class BattlezoneController extends EventControllerAbstract {
                 tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
 
             } else {
+                batteryStorages.clear();
+                boxSlots.clear();
+
                 phase = EventPhase.CANNON_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()), sender);
 
@@ -351,6 +356,9 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender){
+
+        boolean isDiscardingShieldBattery = false;
+
         switch (phase) {
             case DISCARDED_BATTERIES:
                 if (!player.equals(gameManager.getGame().getActivePlayer())) {
@@ -371,6 +379,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     MessageSenderService.sendMessage("NotYourTurn", sender);
                     return;
                 }
+                isDiscardingShieldBattery = true;
                 break;
 
             default:
@@ -384,15 +393,11 @@ public class BattlezoneController extends EventControllerAbstract {
         if (xBatteryStorage < 0 || yBatteryStorage < 0 || yBatteryStorage >= spaceshipMatrix.length || xBatteryStorage >= spaceshipMatrix[0].length ) {
             MessageSenderService.sendMessage("InvalidCoordinates", sender);
 
-            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+            if(isDiscardingShieldBattery)
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
+            else
                 MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
-            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
-
-            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
-            }
             return;
         }
 
@@ -402,15 +407,11 @@ public class BattlezoneController extends EventControllerAbstract {
         if (batteryStorageComp == null || !batteryStorageComp.getType().equals(ComponentType.BATTERY_STORAGE)) {
             MessageSenderService.sendMessage("InvalidComponent", sender);
 
-            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+            if(isDiscardingShieldBattery)
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
+            else
                 MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
-            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
-
-            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
-            }
             return;
         }
 
@@ -419,87 +420,66 @@ public class BattlezoneController extends EventControllerAbstract {
         if(batteryStorage.getItemsCount() == 0) {
             MessageSenderService.sendMessage("EmptyBatteryStorage", sender);
 
-            if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+            if(isDiscardingShieldBattery)
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
+            else
                 MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
-            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
-
-            } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(1), sender);
-            }
             return;
         }
 
-        batteryStorages.add(batteryStorage);
 
-        MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
-        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+        if (phase.equals(EventPhase.DISCARDED_BATTERIES) || phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
-        if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
-
+            batteryStorages.add(batteryStorage);
             requestedBatteries--;
+
+            MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
 
             if (requestedBatteries == 0) {
 
-                if(!batteryStorages.isEmpty()){
-                    for (BatteryStorage component : batteryStorages) {
-                        component.decrementItemsCount(player.getSpaceship(), 1);
-                    }
+                for (BatteryStorage component : batteryStorages) {
+                    component.decrementItemsCount(player.getSpaceship(), 1);
                 }
 
-                // Resets battery storages list
-                batteryStorages.clear();
-
-                player.setIsReady(true, gameManager.getGame());
-                gameManager.getGameThread().notifyThread();
-
-            } else
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
-
-        } else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
-
-            requestedBatteries--;
-
-            if (requestedBatteries == 0) {
-
-                if(!batteryStorages.isEmpty()){
-                    for (BatteryStorage component : batteryStorages) {
-                        component.decrementItemsCount(player.getSpaceship(), 1);
-                    }
+                for (BoxSlot boxSlot : boxSlots) {
+                    boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
                 }
-
-                // Resets battery storages list
-                batteryStorages.clear();
 
                 player.setIsReady(true, gameManager.getGame());
                 gameManager.getGameThread().notifyThread();
 
             } else {
 
-                // Checks if he has at least a battery to discard
-                if (player.getSpaceship().getBatteriesCount() > 0) {
-                    MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
+                if(phase.equals(EventPhase.DISCARDED_BATTERIES))
+                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
-                } else {
-                    MessageSenderService.sendMessage("NotEnoughBatteries", sender);
+                else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)){
+                    if(batteryStorages.size() != player.getSpaceship().getBatteriesCount()){
+                        MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
-                    // Resets battery storages list
-                    batteryStorages.clear();
-
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
+                    } else{
+                        MessageSenderService.sendMessage("YouHaveDiscardedAllBatteries", sender);
+                        player.setIsReady(true, gameManager.getGame());
+                        gameManager.getGameThread().notifyThread();
+                    }
                 }
             }
 
-        } else if (phase.equals(EventPhase.SHIELD_BATTERY)) {
+        }else if(isDiscardingShieldBattery){
 
-            phase = EventPhase.HANDLE_SHOT;
-            gameManager.broadcastGameMessage("NothingGotDestroyed");
+            batteryStorage.decrementItemsCount(player.getSpaceship(), 1);
 
-            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), xBatteryStorage, yBatteryStorage), sender);
+
+            // Update spaceship to remove highlight components.
+            MessageSenderService.sendMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player), sender);
+
+            MessageSenderService.sendMessage("YouAreSafe", sender);
+
+            player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
         }
     }
@@ -752,9 +732,6 @@ public class BattlezoneController extends EventControllerAbstract {
                 }
             }
 
-            // Resets housing units list
-            housingUnits.clear();
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -774,52 +751,62 @@ public class BattlezoneController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         Player player = penaltyPlayer;
+        Spaceship spaceship = player.getSpaceship();
 
         // Gets penalty player sender reference
         Sender sender = gameManager.getSenderByPlayer(penaltyPlayer);
 
-        // Resets battery storages list and box storages list
-        boxSlots.clear();
-        batteryStorages.clear();
+        // Checks if he has at least a box/battery
+        if (spaceship.getBoxesCount() == 0 && spaceship.getBatteriesCount() == 0) {
+            MessageSenderService.sendMessage("NotEnoughBoxesAndBatteries", sender);
 
-        // Box currently owned
-        int boxCount = player.getSpaceship().getBoxesCount();
+            // Next Couple
+            couples.removeFirst();
+            phase = EventPhase.CONDITION;
+            condition();
+            return;
+        }
+
+        tempBoxCounts[0] = spaceship.getBoxCounts()[0];
+        tempBoxCounts[1] = spaceship.getBoxCounts()[1];
+        tempBoxCounts[2] = spaceship.getBoxCounts()[2];
+        tempBoxCounts[3] = spaceship.getBoxCounts()[3];
+
+        // Resets battery storages list and box storages list
+        batteryStorages.clear();
+        boxSlots.clear();
 
         // Checks if he has at least a box to discard
-        if (boxCount > 0) {
+        if (spaceship.getBoxesCount() > 0) {
             phase = EventPhase.DISCARDED_BOXES;
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
-            gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
-
-            // If the player is disconnected
-            if(!player.getIsReady()) {
-                battlezone.randomDiscardBoxes(penaltyPlayer.getSpaceship(), requestedBoxes);
-
-                // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(penaltyPlayer.getSpaceship(), penaltyPlayer));
-            }
-
         } else {
+            MessageSenderService.sendMessage("NotEnoughBoxes", sender);
+            requestedBatteries = requestedBoxes;
 
-            // Checks if he has at least a battery to discard
-            if (player.getSpaceship().getBatteriesCount() > 0) {
-                MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
+            phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+        }
 
-                gameManager.getGameThread().resetAndWaitTravelerReady(penaltyPlayer);
+        gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
-                // If the player is disconnected
-                if(!player.getIsReady()) {
-                    battlezone.randomDiscardBatteries(penaltyPlayer.getSpaceship(), requestedBoxes);
+        // Update spaceship to remove highlight components
+        // For others, it's used to reload the spaceship in case of disconnections while he was discarding.
+        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
-                    // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
-                    gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(penaltyPlayer.getSpaceship(), penaltyPlayer));
-                }
+        // If the player disconnected
+        if(!player.getIsReady()){
 
-            } else {
-                MessageSenderService.sendMessage("NotEnoughBatteries", sender);
+            if(spaceship.getBoxesCount() >= requestedBoxes){
+                battlezone.randomDiscardBoxes(spaceship, requestedBoxes);
+            }else{
+
+                requestedBatteries = requestedBoxes - spaceship.getBoxesCount();
+
+                battlezone.randomDiscardBoxes(spaceship, spaceship.getBoxesCount());
+
+                battlezone.randomDiscardBatteries(spaceship, Math.min(spaceship.getBatteriesCount(), requestedBatteries));
             }
         }
 
@@ -905,7 +892,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 break;
         }
 
-        boxSlots.add(new Pair<>(boxStorage, idx));
+        boxSlots.add(new BoxSlot(boxStorage, idx));
         requestedBoxes--;
 
         MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
@@ -913,12 +900,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
         if (requestedBoxes == 0) {
 
-            if(!boxSlots.isEmpty()){
-                for (Pair couple : boxSlots) {
-                    BoxStorage component = (BoxStorage) couple.getKey();
-                    int boxIdx = (int) couple.getValue();
-                    component.removeBox(player.getSpaceship(), boxIdx);
-                }
+            for (BoxSlot boxSlot : boxSlots) {
+                boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
             }
 
             player.setIsReady(true, gameManager.getGame());
@@ -926,35 +909,14 @@ public class BattlezoneController extends EventControllerAbstract {
 
         } else {
 
-            // Box currently owned
-            int boxCount = player.getSpaceship().getBoxesCount();
-
-            if (boxCount > 0) {
-                phase = EventPhase.DISCARDED_BOXES;
+            if(boxSlots.size() != player.getSpaceship().getBoxesCount()){
                 MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
-            } else {
-
-                if(!boxSlots.isEmpty()){
-                    for (Pair couple : boxSlots) {
-                        BoxStorage component = (BoxStorage) couple.getKey();
-                        int boxIdx = (int) couple.getValue();
-                        component.removeBox(player.getSpaceship(), boxIdx);
-                    }
-                }
-
-                // Checks if he has at least a battery to discard
-                if (player.getSpaceship().getBatteriesCount() > 0) {
-                    MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
-
-                } else {
-                    MessageSenderService.sendMessage("NotEnoughBatteries", sender);
-
-                    player.setIsReady(true, gameManager.getGame());
-                    gameManager.getGameThread().notifyThread();
-                }
+            } else{
+                MessageSenderService.sendMessage("NotEnoughBoxes", sender);
+                requestedBatteries = requestedBoxes;
+                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
             }
         }
     }
@@ -1211,11 +1173,3 @@ public class BattlezoneController extends EventControllerAbstract {
         }
     }
 }
-
-/* todo: finire di sistemare UpdateSpaceshipMessage dopo refactor (scartare box/batterie)
-
-// Update spaceship to remove highlight components
-// For others, it's used to reload the spaceship in case of disconnections while he was discarding.
-        gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
-
-*/

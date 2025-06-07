@@ -339,7 +339,7 @@ public class BuildingController {
                         bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{0, 0, 0, 1}, "battery1.jpg", 3));
                         bb.placeComponent(2, 0, 3);
 
-                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{2, 1, 0, 3}, "red-box-storage6.jpg", 2));
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{2, 1, 0, 3}, "red-box-storage6.jpg", 1));
                         bb.placeComponent(2, 2, 1);
 
                         bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));

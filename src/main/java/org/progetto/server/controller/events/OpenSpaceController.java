@@ -78,7 +78,6 @@ public class OpenSpaceController extends EventControllerAbstract {
         activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
-            batteryStorages.clear();
 
             gameManager.getGame().setActivePlayer(player);
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -96,6 +95,8 @@ public class OpenSpaceController extends EventControllerAbstract {
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
             else{
+                batteryStorages.clear();
+
                 phase = EventPhase.ENGINE_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
 

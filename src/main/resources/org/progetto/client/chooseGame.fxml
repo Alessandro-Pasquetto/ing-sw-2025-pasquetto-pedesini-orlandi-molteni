@@ -77,9 +77,9 @@
 
          <TableView fx:id="gamesTable">
             <columns>
-               <TableColumn fx:id="gameIdCol" text="Game" minWidth="60" maxWidth="60" styleClass="table-column"/>
+               <TableColumn fx:id="gameIdCol" text="GameID" minWidth="65" maxWidth="80" styleClass="table-column"/>
                <TableColumn fx:id="levelCol" text="Level" minWidth="60" maxWidth="60" styleClass="table-column"/>
-               <TableColumn fx:id="maxPlayersCol" text="Max Players" minWidth="90" maxWidth="90" styleClass="table-column"/>
+               <TableColumn fx:id="maxPlayersCol" text="Max Players" minWidth="90" maxWidth="95" styleClass="table-column"/>
                <TableColumn fx:id="playersCol" text="Players" minWidth="90" styleClass="table-column"/>
                <TableColumn fx:id="joinCol" text="" minWidth="70" maxWidth="70" styleClass="table-column"/>
             </columns>

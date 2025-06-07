@@ -83,9 +83,6 @@ public class SlaversController extends EventControllerAbstract {
                 break;
             }
 
-            batteryStorages.clear();
-            housingUnits.clear();
-
             gameManager.getGame().setActivePlayer(player);
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
@@ -101,6 +98,8 @@ public class SlaversController extends EventControllerAbstract {
 
             // If he can use any double cannon, and he doesn't win with normalShootingPower
             if (maxUsable != 0 && slavers.battleResult(playerFirePower) != 1) {
+
+                batteryStorages.clear();
 
                 phase = EventPhase.CANNON_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
@@ -355,6 +354,8 @@ public class SlaversController extends EventControllerAbstract {
             throw new IllegalStateException("IncorrectPhase");
 
         requestedCrew = slavers.getPenaltyCrew();
+
+        housingUnits.clear();
 
         phase = EventPhase.DISCARDED_CREW;
         MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);

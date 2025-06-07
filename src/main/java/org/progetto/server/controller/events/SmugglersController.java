@@ -90,9 +90,6 @@ public class SmugglersController extends EventControllerAbstract {
                 break;
             }
 
-            batteryStorages.clear();
-            boxSlots.clear();
-
             gameManager.getGame().setActivePlayer(player);
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
 
@@ -108,6 +105,9 @@ public class SmugglersController extends EventControllerAbstract {
 
             // If he can use any double cannon, and he doesn't win with normalShootingPower
             if(maxUsable != 0 && smugglers.battleResult(playerFirePower) != -1){
+
+                batteryStorages.clear();
+                boxSlots.clear();
 
                 phase = EventPhase.CANNON_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
@@ -305,14 +305,8 @@ public class SmugglersController extends EventControllerAbstract {
                 MessageSenderService.sendMessage("YouLostBattle", sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
-                // Checks if he has at least a box/battery
-                if (player.getSpaceship().getBoxesCount() > 0 || player.getSpaceship().getBatteriesCount() > 0) {
-
-                    phase = EventPhase.PENALTY_EFFECT;
-                    penaltyEffect(player, sender);
-
-                } else
-                    MessageSenderService.sendMessage("NotEnoughBoxesAndBatteries", sender);
+                phase = EventPhase.PENALTY_EFFECT;
+                penaltyEffect(player, sender);
                 break;
         }
     }
@@ -330,6 +324,12 @@ public class SmugglersController extends EventControllerAbstract {
 
         Spaceship spaceship = player.getSpaceship();
 
+        // Checks if he has at least a box/battery
+        if (spaceship.getBoxesCount() == 0 && spaceship.getBatteriesCount() == 0) {
+            MessageSenderService.sendMessage("NotEnoughBoxesAndBatteries", sender);
+            return;
+        }
+
         requestedBoxes = smugglers.getPenaltyBoxes();
 
         tempBoxCounts[0] = spaceship.getBoxCounts()[0];
@@ -337,8 +337,12 @@ public class SmugglersController extends EventControllerAbstract {
         tempBoxCounts[2] = spaceship.getBoxCounts()[2];
         tempBoxCounts[3] = spaceship.getBoxCounts()[3];
 
+        batteryStorages.clear();
+        boxSlots.clear();
+
         // Checks if he has at least a box to discard
         if (spaceship.getBoxesCount() > 0) {
+
             phase = EventPhase.DISCARDED_BOXES;
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 

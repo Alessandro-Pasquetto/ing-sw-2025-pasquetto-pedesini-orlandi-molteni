@@ -1510,13 +1510,13 @@ public class EventView {
             for (int col = 0; col < spaceshipMatrix[row].length; col++) {
                 if (visited[row][col] != 0) {
                     Pane cell = getCellFromSpaceshipMatrix(col, row);
-                    int colorIndex = visited[row][col] % 5;
+                    int colorIndex = visited[row][col] % 4;
 
                     Color color = switch (colorIndex) {
                         case 1 -> Color.rgb(52, 199, 89, 0.3);
-                        case 2 -> Color.rgb(255, 149, 0, 0.3);
-                        case 3 -> Color.rgb(175, 82, 222, 0.3);
-                        default -> Color.rgb(90, 200, 250, 0.3);
+                        case 2 -> Color.rgb(175, 82, 222, 0.3);
+                        case 3 -> Color.rgb(90, 200, 250, 0.3);
+                        default -> Color.rgb(255, 149, 0, 0.3);
                     };
 
                     highlightCell(cell, color);

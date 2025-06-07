@@ -67,7 +67,6 @@ public class LostShipController extends EventControllerAbstract  {
             throw new IllegalStateException("IncorrectPhase");
 
         for (Player player : activePlayers) {
-            housingUnits.clear();
 
             gameManager.getGame().setActivePlayer(player);
             gameManager.broadcastGameMessage(new ActivePlayerMessage(player.getName()));
@@ -148,6 +147,9 @@ public class LostShipController extends EventControllerAbstract  {
             throw new IllegalStateException("IncorrectPhase");
 
         requestedCrew = lostShip.getPenaltyCrew();
+
+        housingUnits.clear();
+
         phase = EventPhase.DISCARDED_CREW;
         MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
     }
