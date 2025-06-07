@@ -1,20 +1,14 @@
 package org.progetto.client;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
 import org.progetto.client.connection.rmi.RmiClientSender;
-import org.progetto.client.gui.PageController;
+import org.progetto.client.gui.GuiApplication;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.TuiCommandFilter;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
-public class MainClient extends Application {
+public class MainClient {
 
-    @Override
-    public void start(Stage stage) throws IOException {
+    private static void startGame() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println(" ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗ ");
@@ -39,14 +33,8 @@ public class MainClient extends Application {
 
             }else if(command.equals("GUI")){
                 GameData.setUIType(command);
-                PageController.setStage(stage);
 
-                stage.setOnCloseRequest(event -> {
-                    System.out.println("Closing GUI...");
-                    System.exit(0);
-                });
-
-                PageController.start();
+                GuiApplication.main();
                 break;
 
             }else
@@ -74,6 +62,6 @@ public class MainClient extends Application {
 
         RmiClientSender.setRmiServerDisconnectionDetectionInterval(1000);
 
-        launch();
+        startGame();
     }
 }
