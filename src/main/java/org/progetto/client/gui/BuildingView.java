@@ -151,7 +151,11 @@ public class BuildingView {
         trash.setOnDragDropped(event -> {discardComponent();});
 
         // Initialize hidden component deck
-        componentDeck.setImage(new Image(String.valueOf(MainClient.class.getResource("img/hidden-deck.png"))));
+        if (GameData.getLevelGame() == 1)
+            componentDeck.setImage(new Image(String.valueOf(MainClient.class.getResource("img/hidden-deck-1.png"))));
+        else
+            componentDeck.setImage(new Image(String.valueOf(MainClient.class.getResource("img/hidden-deck-2.png"))));
+
         componentDeck.setOnMouseClicked(event -> {
             pickHiddenComponent();
         });
