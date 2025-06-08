@@ -65,6 +65,11 @@ public class DragAndDrop {
         componentImage.getProperties().put("dragOffsetX", event.getSceneX() - boundsInScene.getMinX());
         componentImage.getProperties().put("dragOffsetY", event.getSceneY() - boundsInScene.getMinY());
 
+        double width = boundsInScene.getWidth();
+        double height = boundsInScene.getHeight();
+        componentImage.getProperties().put("dragOffsetX", width / 2);
+        componentImage.getProperties().put("dragOffsetY", height / 2);
+
         event.consume();
     }
 
@@ -86,13 +91,11 @@ public class DragAndDrop {
         double offsetX = (double) componentView.getProperties().get("dragOffsetX");
         double offsetY = (double) componentView.getProperties().get("dragOffsetY");
 
-        // Calculate the new position of the image based on the mouse's current position
-        double newX = event.getSceneX() - offsetX;
-        double newY = event.getSceneY() - offsetY;
+        Pane root = (Pane) componentView.getScene().getRoot();
+        Point2D localCoords = root.sceneToLocal(event.getSceneX(), event.getSceneY());
 
-        // Set the new position of the image
-        componentView.setLayoutX(newX);
-        componentView.setLayoutY(newY);
+        componentView.setLayoutX(localCoords.getX() - offsetX);
+        componentView.setLayoutY(localCoords.getY() - offsetY);
 
         event.consume();  // Consume the event to prevent default behavior
     }
@@ -321,8 +324,7 @@ public class DragAndDrop {
      * @param itemImage is the ImageView of the item to be dragged
      * @param event is the MouseEvent to read for the pick
      */
-    private static void onMousePressedFunctionItems(ImageView itemImage, MouseEvent event){
-
+    private static void onMousePressedFunctionItems(ImageView itemImage, MouseEvent event) {
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
@@ -332,31 +334,36 @@ public class DragAndDrop {
         itemImage.getProperties().put("initialSceneX", event.getSceneX());
         itemImage.getProperties().put("initialSceneY", event.getSceneY());
 
-        // Store the original parent and local layout coordinates
+        // Store original state
         itemImage.getProperties().put("originalParent", itemImage.getParent());
         itemImage.getProperties().put("originalLayoutX", itemImage.getLayoutX());
         itemImage.getProperties().put("originalLayoutY", itemImage.getLayoutY());
+        itemImage.getProperties().put("originalRotation", itemImage.getRotate());
 
-        // Calculate the position in the scene's coordinate system
+        itemImage.setRotate(0); // Optional: reset rotation during drag
+
+        // Get bounds in scene
         Bounds boundsInScene = itemImage.localToScene(itemImage.getBoundsInLocal());
 
         Pane root = (Pane) itemImage.getScene().getRoot();
         itemImage.setManaged(false);
 
-        // If the node is not already in the root, move it there
+        // Move to root if needed
         if (itemImage.getParent() != root) {
             ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
             root.getChildren().add(itemImage);
         }
 
-        // Convert the scene coordinates to root's local coordinates
+        // Convert scene coordinates to root local coordinates
         Point2D localPos = root.sceneToLocal(boundsInScene.getMinX(), boundsInScene.getMinY());
         itemImage.setLayoutX(localPos.getX());
         itemImage.setLayoutY(localPos.getY());
 
-        // Store the drag offset (distance from mouse to top-left of the node)
-        itemImage.getProperties().put("dragOffsetX", event.getSceneX() - boundsInScene.getMinX());
-        itemImage.getProperties().put("dragOffsetY", event.getSceneY() - boundsInScene.getMinY());
+        // Center the image under the cursor
+        double width = boundsInScene.getWidth();
+        double height = boundsInScene.getHeight();
+        itemImage.getProperties().put("dragOffsetX", width / 2);
+        itemImage.getProperties().put("dragOffsetY", height / 2);
 
         event.consume();
     }
@@ -369,26 +376,22 @@ public class DragAndDrop {
      * @param itemImage is the ImageView of the item to be dragged
      * @param event is the MouseEvent to read for the drag
      */
-    private static void onMouseDraggedFunctionItems(ImageView itemImage, MouseEvent event){
-
-        Boolean startedWithPrimary = (Boolean) itemImage.getProperties().get("dragStartedWithPrimary");
-        if (startedWithPrimary == null || !startedWithPrimary)
+    private static void onMouseDraggedFunctionItems(ImageView itemImage, MouseEvent event) {
+        if (!(boolean) itemImage.getProperties().getOrDefault("dragStartedWithPrimary", false))
             return;
 
-        // Get the initial offset saved during MousePressed
         double offsetX = (double) itemImage.getProperties().get("dragOffsetX");
         double offsetY = (double) itemImage.getProperties().get("dragOffsetY");
 
-        // Calculate the new position of the image based on the mouse's current position
-        double newX = event.getSceneX() - offsetX;
-        double newY = event.getSceneY() - offsetY;
+        Pane root = (Pane) itemImage.getScene().getRoot();
+        Point2D localCoords = root.sceneToLocal(event.getSceneX(), event.getSceneY());
 
-        // Set the new position of the image
-        itemImage.setLayoutX(newX);
-        itemImage.setLayoutY(newY);
+        itemImage.setLayoutX(localCoords.getX() - offsetX);
+        itemImage.setLayoutY(localCoords.getY() - offsetY);
 
-        event.consume();  // Consume the event to prevent default behavior
+        event.consume();
     }
+
 
     /**
      * Allows an item ImageView to be placed on the left-key released
@@ -548,6 +551,7 @@ public class DragAndDrop {
                 ((Pane) originalParent).getChildren().add(itemImage);
                 itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
                 itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
+                itemImage.setRotate((double) itemImage.getProperties().get("originalRotation"));
             }
         }
         event.consume();  // Consume the event to prevent default behavior
