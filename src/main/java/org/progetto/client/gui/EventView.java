@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -17,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.progetto.client.MainClient;
@@ -146,9 +148,16 @@ public class EventView {
         return spaceshipMatrix;
     }
 
+    private int shotFrom = 0;
+
     // =======================
     // METHODS
     // =======================
+
+
+    public void setShotFrom(int shotFrom) {
+        this.shotFrom = shotFrom;
+    }
 
     /**
      * Initializes the background
@@ -418,6 +427,142 @@ public class EventView {
         crewSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/crew.png"))));
         destroyedSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/destroyed.png"))));
         creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
+    }
+
+    public void spawnShot(int indexCoord) {
+
+        int SHOT_SIZE = 15;
+
+        if(shotFrom == 0 || shotFrom == 2)
+            indexCoord += GameData.getLevelGame() - 6;
+        else
+            indexCoord -= 5;
+
+        StackPane parentStack = (StackPane) spaceshipMatrix.getParent();
+
+        Pane overlayPane = new Pane();
+        overlayPane.setPickOnBounds(false);
+
+        parentStack.getChildren().add(overlayPane);
+
+        int maxRow = -1;
+        int maxCol = -1;
+        for (Node node : spaceshipMatrix.getChildren()) {
+            Integer rowIndex = GridPane.getRowIndex(node);
+            Integer colIndex = GridPane.getColumnIndex(node);
+            if (rowIndex == null) rowIndex = 0;
+            if (colIndex == null) colIndex = 0;
+            if (rowIndex > maxRow) maxRow = rowIndex;
+            if (colIndex > maxCol) maxCol = colIndex;
+        }
+
+        Node referenceNodeStart = null;
+
+        switch (shotFrom) {
+            case 0:
+                referenceNodeStart = getNodeByColumnRowIndex(indexCoord, 0, spaceshipMatrix);
+                break;
+            case 1:
+                referenceNodeStart = getNodeByColumnRowIndex(maxCol, indexCoord, spaceshipMatrix);
+                break;
+            case 2:
+                referenceNodeStart = getNodeByColumnRowIndex(indexCoord, maxRow, spaceshipMatrix);
+                break;
+            case 3:
+                referenceNodeStart = getNodeByColumnRowIndex(0, indexCoord, spaceshipMatrix);
+                break;
+            default:
+                System.err.println("NotValidDirection");
+                parentStack.getChildren().remove(overlayPane);
+                return;
+        }
+
+        if (referenceNodeStart == null) {
+            System.out.println("Index " + indexCoord + " is not valid");
+            parentStack.getChildren().remove(overlayPane);
+            return;
+        }
+
+        final Node refStart = referenceNodeStart;
+
+        Platform.runLater(() -> {
+            Bounds boundsStart = refStart.localToScene(refStart.getBoundsInLocal());
+
+            Point2D posStart = overlayPane.sceneToLocal(boundsStart.getMinX(), boundsStart.getMinY());
+
+            Circle redCircle = new Circle(SHOT_SIZE, Color.RED);
+
+            switch (shotFrom) {
+                case 0:
+                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
+                    redCircle.setLayoutY(posStart.getY() - 20);
+                    overlayPane.getChildren().add(redCircle);
+
+                    TranslateTransition ttDown = new TranslateTransition(Duration.seconds(1), redCircle);
+                    ttDown.setByY(refStart.getBoundsInLocal().getHeight() + 20);
+                    ttDown.setOnFinished(e -> {
+                        overlayPane.getChildren().remove(redCircle);
+                        parentStack.getChildren().remove(overlayPane);
+                    });
+                    ttDown.play();
+                    break;
+
+                case 1:
+                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() + 20);
+                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    overlayPane.getChildren().add(redCircle);
+
+                    TranslateTransition ttLeft = new TranslateTransition(Duration.seconds(1), redCircle);
+                    ttLeft.setByX(-refStart.getBoundsInLocal().getWidth() - 20);
+                    ttLeft.setOnFinished(e -> {
+                        overlayPane.getChildren().remove(redCircle);
+                        parentStack.getChildren().remove(overlayPane);
+                    });
+                    ttLeft.play();
+                    break;
+
+                case 2:
+                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
+                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() + 20);
+                    overlayPane.getChildren().add(redCircle);
+
+                    TranslateTransition ttUp = new TranslateTransition(Duration.seconds(1), redCircle);
+                    ttUp.setByY(-refStart.getBoundsInLocal().getHeight() - 20);
+                    ttUp.setOnFinished(e -> {
+                        overlayPane.getChildren().remove(redCircle);
+                        parentStack.getChildren().remove(overlayPane);
+                    });
+                    ttUp.play();
+                    break;
+
+                case 3:
+                    redCircle.setLayoutX(posStart.getX() - 20);
+                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    overlayPane.getChildren().add(redCircle);
+
+                    TranslateTransition ttRight = new TranslateTransition(Duration.seconds(1), redCircle);
+                    ttRight.setByX(refStart.getBoundsInLocal().getWidth() + 20);
+                    ttRight.setOnFinished(e -> {
+                        overlayPane.getChildren().remove(redCircle);
+                        parentStack.getChildren().remove(overlayPane);
+                    });
+                    ttRight.play();
+                    break;
+            }
+        });
+    }
+
+    private Node getNodeByColumnRowIndex(final int column, final int row, GridPane gridPane) {
+        for (Node node : gridPane.getChildren()) {
+            Integer colIndex = GridPane.getColumnIndex(node);
+            Integer rowIndex = GridPane.getRowIndex(node);
+            if (colIndex == null) colIndex = 0;
+            if (rowIndex == null) rowIndex = 0;
+            if (colIndex == column && rowIndex == row) {
+                return node;
+            }
+        }
+        return null;
     }
 
     /**
@@ -1765,10 +1910,10 @@ public class EventView {
      * Updates the dice result in the event view
      *
      * @author Gabriele
-     * @param result is the result of the dice roll
+     * @param diceResult is the result of the dice roll
      * @param name is the name of the player who rolled the dice (can be null for self)
      */
-    public void updateDiceResult(int result, String name) {
+    public void updateDiceResult(int diceResult, String name) {
         eventMainTitle.setText("Dice result");
 
         if (name != null) {
@@ -1783,7 +1928,7 @@ public class EventView {
         int firstDice;
         int secondDice;
 
-        switch (result) {
+        switch (diceResult) {
             case 2 -> {
                 firstDice = 1;
                 secondDice = 1;
@@ -1828,7 +1973,7 @@ public class EventView {
                 firstDice = 6;
                 secondDice = 6;
             }
-            default -> throw new IllegalStateException("Unexpected value: " + result);
+            default -> throw new IllegalStateException("Unexpected value: " + diceResult);
         }
 
         Image firstDiceImage = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/dice" + firstDice + ".png")));
@@ -1850,6 +1995,8 @@ public class EventView {
         btnContainer.getChildren().add(diceBox);
 
         animateDiceEntrance(firstDiceView, secondDiceView);
+
+        spawnShot(diceResult);
     }
 
     /**

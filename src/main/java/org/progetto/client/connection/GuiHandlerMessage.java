@@ -1,10 +1,10 @@
 package org.progetto.client.connection;
 
-import javafx.scene.control.Alert;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.progetto.client.gui.Alerts;
 import org.progetto.client.gui.DragAndDrop;
+import org.progetto.client.gui.EventView;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -677,6 +677,8 @@ public class GuiHandlerMessage {
                 case 3 -> "LEFT";
                 default -> "UNKNOWN";
             };
+
+            PageController.getEventView().setShotFrom(projectile.getFrom());
 
             PageController.getEventView().setEventLabels("A " + dimension + " projectile is incoming from " + from + "!", "Wait for the first player to roll dice to decide where will it hit...");
         }
