@@ -534,29 +534,13 @@ public class DragAndDrop {
 
         // If the drop was inside a cell
         if (!isValidDrop) {
-            System.out.println("Drop not valid");
             // If the drop was not inside any cell, return the image to its original position
             Object originalParent = itemImage.getProperties().get("originalParent");
-            if(originalParent instanceof FlowPane flowPane) {
-                System.out.println(itemImage.getProperties());
-                flowPane.getChildren().remove(itemImage);
-                flowPane.getChildren().add(itemImage);
-                itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
-                itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
+            if(originalParent instanceof FlowPane) {
 
-                /*TilePane boxContainer = new TilePane();
-                boxContainer.setHgap(10);
-                boxContainer.setVgap(10);
-                boxContainer.setPrefColumns(4);
-
-
-                tilePane.getChildren().remove(itemImage);
-                tilePane.getChildren().add(itemImage);
-                itemImage.setLayoutX(itemImage.getProperties().get("originalLayoutX"));
-                itemImage.setLayoutY(itemImage.getProperties().get("originalLayoutY"));
-
-
-                 */
+                root.getChildren().remove(itemImage);
+                itemImage.setManaged(true);
+                ((FlowPane) originalParent).getChildren().add(itemImage);
 
             }
             else if(originalParent instanceof Pane){
@@ -565,8 +549,6 @@ public class DragAndDrop {
                 itemImage.setLayoutX((double) itemImage.getProperties().get("originalLayoutX"));
                 itemImage.setLayoutY((double) itemImage.getProperties().get("originalLayoutY"));
             }
-
-
         }
         event.consume();  // Consume the event to prevent default behavior
     }

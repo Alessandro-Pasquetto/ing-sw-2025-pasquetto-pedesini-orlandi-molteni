@@ -1822,7 +1822,7 @@ public class EventView {
             };
 
             ImageView boxImage = new ImageView(img);
-            Object[] data = {idx,box.getValue()};
+            Object[] data = {idx, box.getValue()};
             boxImage.setUserData(data);
             boxImage.setFitWidth(60);
             boxImage.setPreserveRatio(true);

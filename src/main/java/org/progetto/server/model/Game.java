@@ -241,7 +241,7 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.METEORSRAIN) && !lv2Deck.get(1).getType().equals(CardType.METEORSRAIN))
+                while(!lv2Deck.getFirst().getType().equals(CardType.PLANETS) && !lv2Deck.get(1).getType().equals(CardType.PLANETS))
                    Collections.shuffle(lv2Deck);
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -484,7 +484,7 @@ public class Game {
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
