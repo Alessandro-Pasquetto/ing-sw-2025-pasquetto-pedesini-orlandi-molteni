@@ -1868,7 +1868,7 @@ public class EventView {
             Sender sender = GameData.getSender();
             sender.responseRewardBox(-1, -1, -1, -1);
             resetBlackHole();
-            PageController.getEventView().disableDragAndDropBoxesSpaceship();
+            disableDragAndDropBoxesSpaceship();
         });
 
         mainContainer.getChildren().addAll(boxScrollPane, leaveButton);
@@ -1886,7 +1886,7 @@ public class EventView {
             double sceneX = (double) box.getProperties().get("initialSceneX");
             double sceneY = (double) box.getProperties().get("initialSceneY");
 
-            for (Node node : PageController.getEventView().getSpaceshipMatrix().getChildren()) {
+            for (Node node : getSpaceshipMatrix().getChildren()) {
                 if (node instanceof Pane cell) {
 
                     Bounds cellBounds = cell.localToScene(cell.getBoundsInLocal());

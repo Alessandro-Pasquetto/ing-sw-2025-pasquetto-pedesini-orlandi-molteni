@@ -617,17 +617,11 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
-            Spaceship spaceship = GameData.getSpaceship();
-            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
-
-            int xBox = boxDiscardedMessage.getXBoxStorage();
-            int yBox = boxDiscardedMessage.getYBoxStorage();
+            int xBoxStorage = boxDiscardedMessage.getXBoxStorage();
+            int yBoxStorage = boxDiscardedMessage.getYBoxStorage();
             int idxBox = boxDiscardedMessage.getBoxIdx();
 
-            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
-            bs.removeBox(spaceship, idxBox);
-
-            PageController.getEventView().updateSpaceship(spaceship);
+            PageController.getEventView().removeBox(xBoxStorage, yBoxStorage, idxBox);
         }
 
         else if (messageObj instanceof AnotherPlayerBoxDiscardedMessage anotherPlayerBoxDiscardedMessage) {
@@ -669,7 +663,7 @@ public class GuiHandlerMessage {
             int idxBox_start = boxAddedMessage.getBoxIdx_start();
             int xBox_end = boxAddedMessage.getXBoxStorage_end();
             int yBox_end = boxAddedMessage.getYBoxStorage_end();
-            int idxBox_end = boxAddedMessage.getBoxIdx_start();
+            int idxBox_end = boxAddedMessage.getBoxIdx_end();
 
             if (!playerName.equals(GameData.getNamePlayer())) {
                 Spaceship spaceship = GameData.getOtherSpaceships().get(playerName);
@@ -1127,6 +1121,7 @@ public class GuiHandlerMessage {
                 case "EmptyReward":
                     PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");
                     PageController.getEventView().resetBlackHole();
+                    PageController.getEventView().disableDragAndDropBoxesSpaceship();
                     break;
 
                 case "PlanetLeft":
