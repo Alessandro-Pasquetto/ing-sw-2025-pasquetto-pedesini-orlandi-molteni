@@ -40,7 +40,8 @@ public class GameManager {
     GameThread gameThread;
     private final Game game;
     private EventControllerAbstract eventController;
-    private final TimerController timer;
+    private final TimerThreadController timer;
+    private final FreezeTimerThread freezeTimer;
 
     private static int gameDisconnectionDetectionInterval;
 
@@ -57,7 +58,8 @@ public class GameManager {
 
         this.game = new Game(idGame, numPlayers, level);
         this.eventController = null;
-        this.timer = new TimerController(this, 90, 2);
+        this.timer = new TimerThreadController(this, 90, 2);
+        this.freezeTimer = new FreezeTimerThread(this, 60);
         GameManagerMaps.addWaitingGameManager(idGame, this);
 
         gameThread = new GameThread(this);
@@ -102,8 +104,12 @@ public class GameManager {
         return gameThread;
     }
 
-    public TimerController getTimerController() {
+    public TimerThreadController getTimerController() {
         return timer;
+    }
+
+    public FreezeTimerThread getFreezeTimer() {
+        return freezeTimer;
     }
 
     public boolean getTimerExpired() {
@@ -334,6 +340,9 @@ public class GameManager {
                 MessageSenderService.sendMessage("AskContinueTravel", sender);
             }
         }
+
+        getTimerController().notifyThread();
+        gameThread.notifyThread();
     }
 
     public void kickOutDisconnectedPlayer(Player player) {

@@ -130,6 +130,10 @@ public class SocketListener extends Thread {
         GameManager gameManager = clientHandler.getGameManager();
         Player player = clientHandler.getPlayer();
 
+        // Freeze game
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         if (messageObj instanceof PlaceComponentMessage placeComponentMessage) {
             int xPlaceComponent = placeComponentMessage.getX();
             int yPlaceComponent = placeComponentMessage.getY();

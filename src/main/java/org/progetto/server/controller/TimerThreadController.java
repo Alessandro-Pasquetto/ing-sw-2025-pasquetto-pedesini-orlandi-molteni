@@ -7,7 +7,7 @@ import org.progetto.server.model.GamePhase;
 /**
  * Timer controller class
  */
-public class TimerController {
+public class TimerThreadController {
 
     // =======================
     // ATTRIBUTES
@@ -20,11 +20,13 @@ public class TimerController {
     private boolean isTimerRunning = false;
     private boolean isTimerExpired = false;
 
+    private final Object timerThreadLock = new Object();
+
     // =======================
     // CONSTRUCTORS
     // =======================
 
-    public TimerController(GameManager gameManager, int defaultTimer, int timerFlipsAllowed) {
+    public TimerThreadController(GameManager gameManager, int defaultTimer, int timerFlipsAllowed) {
         this.gameManager = gameManager;
         this.defaultTimer = defaultTimer;
         this.timer = defaultTimer;
@@ -71,6 +73,27 @@ public class TimerController {
             int currentTimer = timer;
             while (isTimerRunning) {
 
+                boolean freezed = false;
+
+                synchronized (timerThreadLock) {
+                    while(gameManager.getGame().getPlayersSize() == 1) {
+                        freezed = true;
+                        gameManager.broadcastGameMessage("Freeze");
+                        gameManager.getFreezeTimer().startTimer();
+
+                        try {
+                            timerThreadLock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                if(freezed){
+                    gameManager.getFreezeTimer().stopTimer();
+                    gameManager.broadcastGameMessage("Resume");
+                }
+
                 System.out.println("Timer: " + currentTimer);
                 gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
 
@@ -100,5 +123,11 @@ public class TimerController {
 
     public synchronized void stopTimer() {
         isTimerRunning = false;
+    }
+
+    public void notifyThread(){
+        synchronized (timerThreadLock) {
+            timerThreadLock.notify();
+        }
     }
 }

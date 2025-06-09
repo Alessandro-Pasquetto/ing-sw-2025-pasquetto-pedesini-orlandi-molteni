@@ -76,6 +76,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void showHandComponent(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -91,6 +95,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void pickHiddenComponent(VirtualClient virtualClient, int idGame) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -106,6 +114,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void buildShip(VirtualClient virtualClient, int idGame, int idShip) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -122,12 +134,20 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     public void showVisibleComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
+
         BuildingController.showVisibleComponents(gameManager, virtualClient);
     }
 
     @Override
     public void pickVisibleComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -143,6 +163,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -158,6 +182,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeLastComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -173,6 +201,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeHandComponentAndPickHiddenComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -188,6 +220,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeHandComponentAndPickVisibleComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int componentIdx) throws RemoteException{
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -203,6 +239,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeHandComponentAndPickUpEventCardDeck(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -218,6 +258,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeHandComponentAndPickBookedComponent(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -233,6 +277,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void placeHandComponentAndReady(VirtualClient virtualClient, int idGame, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -256,6 +304,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void discardComponent(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -280,6 +332,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void bookComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -295,6 +351,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void showBookedComponents(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -319,6 +379,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void pickBookedComponent(VirtualClient virtualClient, int idGame, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -334,6 +398,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void pickUpEventCardDeck(VirtualClient virtualClient, int idGame, int deckIdx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -349,6 +417,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void putDownEventCardDeck(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try {
             player = gameManager.getPlayerBySender(virtualClient);
@@ -374,6 +446,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void destroyComponent(VirtualClient virtualClient, int idGame, int xComponent, int yComponent) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -389,6 +465,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void playerReady(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -409,6 +489,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void resetTimer(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -424,6 +508,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void playerStats(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -440,30 +528,50 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     public void showPlayers(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
+
         GameController.showPlayers(gameManager, virtualClient);
     }
 
     @Override
     public void showStartingPositions(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         PositioningController.showStartingPositions(gameManager, virtualClient);
     }
 
     @Override
     public void showPlayersInPositioningDecisionOrder(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         PositioningController.showPlayersInPositioningDecisionOrder(gameManager, virtualClient);
     }
 
     @Override
     public void showSpaceship(VirtualClient virtualClient, int idGame, String owner) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         SpaceshipController.showSpaceship(gameManager, owner, virtualClient);
     }
 
     @Override
     public void spaceshipStats(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -479,12 +587,20 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void showTrack(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         GameController.showTrack(gameManager, virtualClient);
     }
 
     @Override
     public void rollDice(VirtualClient virtualClient, int idGame) throws RemoteException, InterruptedException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -500,6 +616,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responsePlaceAlien(VirtualClient virtualClient, int idGame, int x, int y, String color) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -515,6 +635,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseStartingPosition(VirtualClient virtualClient, int idGame, int startingPosition) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -530,6 +654,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseHowManyDoubleCannons(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -551,6 +679,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseHowManyDoubleEngines(VirtualClient virtualClient, int idGame, int howManyWantToUse) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -572,6 +704,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseBatteryToDiscard(VirtualClient virtualClient, int idGame, int xBatteryStorage, int yBatteryStorage) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -593,6 +729,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseCrewToDiscard(VirtualClient virtualClient, int idGame, int xHousingUnit, int yHousingUnit) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -614,6 +754,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseBoxToDiscard(VirtualClient virtualClient, int idGame, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -635,6 +779,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseChooseToUseShield(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -656,6 +804,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseUseDoubleCannonRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -677,6 +829,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseAcceptRewardCreditsAndPenalties(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -698,6 +854,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseLandRequest(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -719,6 +879,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseAcceptRewardCreditsAndPenaltyDays(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -740,6 +904,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseAcceptRewardBoxesAndPenaltyDays(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -761,6 +929,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responsePlanetLandRequest(VirtualClient virtualClient, int idGame, int planetIdx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -782,6 +954,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -803,6 +979,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void moveBox(VirtualClient virtualClient, int idGame, int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -818,6 +998,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void removeBox(VirtualClient virtualClient, int idGame, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -833,6 +1017,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseContinueTravel(VirtualClient virtualClient, int idGame, String response) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -848,6 +1036,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseRollDice(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -869,6 +1061,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void responseSelectSpaceshipPart(VirtualClient virtualClient, int idGame, int x, int y) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);
@@ -884,6 +1080,10 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     @Override
     public void leaveGame(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
+
+        if(gameManager.getGame().getPlayersSize() == 1)
+            return;
+
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);

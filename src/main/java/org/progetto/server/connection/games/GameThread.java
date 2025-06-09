@@ -296,9 +296,24 @@ public class GameThread extends Thread {
     public void waitPlayersReady() throws InterruptedException {
         Game game = gameManager.getGame();
 
+        boolean freezed = false;
+
         synchronized (gameThreadLock) {
-            while (game.getNumReadyPlayers() < game.getPlayersSize())
+            while (game.getNumReadyPlayers() < game.getPlayersSize() || game.getPlayersSize() == 1){
+
+                if(game.getPlayersSize() == 1){
+                    freezed = true;
+                    gameManager.broadcastGameMessage("Freeze");
+                    gameManager.getFreezeTimer().startTimer();
+                }
+
                 gameThreadLock.wait();
+            }
+        }
+
+        if(freezed){
+            gameManager.getFreezeTimer().stopTimer();
+            gameManager.broadcastGameMessage("Resume");
         }
     }
 
@@ -310,9 +325,26 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void waitTravelerReady(Player player) throws InterruptedException {
+        Game game = gameManager.getGame();
+
+        boolean freezed = false;
+
         synchronized (gameThreadLock) {
-            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
+            while ((!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player)) || game.getPlayersSize() == 1){
+
+                if(game.getPlayersSize() == 1){
+                    freezed = true;
+                    gameManager.broadcastGameMessage("Freeze");
+                    gameManager.getFreezeTimer().startTimer();
+                }
+
                 gameThreadLock.wait();
+            }
+        }
+
+        if (freezed){
+            gameManager.getFreezeTimer().stopTimer();
+            gameManager.broadcastGameMessage("Resume");
         }
     }
 
@@ -324,10 +356,7 @@ public class GameThread extends Thread {
     public void resetAndWaitTravelerReady(Player player) throws InterruptedException {
         player.setIsReady(false, gameManager.getGame());
 
-        synchronized (gameThreadLock) {
-            while (!player.getIsReady() && !gameManager.getDisconnectedPlayersCopy().contains(player))
-                gameThreadLock.wait();
-        }
+        waitTravelerReady(player);
     }
 
     /**
@@ -337,16 +366,9 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
+        resetTravelersReady();
 
-        for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
-            player.setIsReady(false, game);
-        }
-
-        synchronized (gameThreadLock) {
-            while (!GameController.allConnectedTravelersReady(gameManager))
-                gameThreadLock.wait();
-        }
+        waitConnectedTravelersReady();
     }
 
     /**
@@ -370,9 +392,25 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void waitConnectedTravelersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        boolean freezed = false;
+
         synchronized (gameThreadLock) {
-            while (!GameController.allConnectedTravelersReady(gameManager))
+            while (!GameController.allConnectedTravelersReady(gameManager) || game.getPlayersSize() == 1){
+
+                if(game.getPlayersSize() == 1){
+                    freezed = true;
+                    gameManager.broadcastGameMessage("Freeze");
+                    gameManager.getFreezeTimer().startTimer();
+                }
+
                 gameThreadLock.wait();
+            }
+        }
+
+        if(freezed){
+            gameManager.getFreezeTimer().stopTimer();
+            gameManager.broadcastGameMessage("Resume");
         }
     }
 
@@ -383,9 +421,25 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void waitParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
+        Game game = gameManager.getGame();
+        boolean freezed = false;
+
         synchronized (gameThreadLock) {
-            while (!GameController.allConnectedParametersPlayersReady(players, gameManager))
+            while (!GameController.allConnectedParametersPlayersReady(players, gameManager) || game.getPlayersSize() == 1){
+
+                if(game.getPlayersSize() == 1){
+                    freezed = true;
+                    gameManager.broadcastGameMessage("Freeze");
+                    gameManager.getFreezeTimer().startTimer();
+                }
+
                 gameThreadLock.wait();
+            }
+        }
+
+        if (freezed){
+            gameManager.getFreezeTimer().stopTimer();
+            gameManager.broadcastGameMessage("Resume");
         }
     }
 
