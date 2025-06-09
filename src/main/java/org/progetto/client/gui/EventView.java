@@ -888,8 +888,8 @@ public class EventView {
         boxImageView.setLayoutX((BOX_SLOT_SIZE - boxImageView.getFitWidth()) / 2);
         boxImageView.setLayoutY((BOX_SLOT_SIZE - boxImageView.getFitHeight()) / 2);
         boxImageView.setPreserveRatio(false);
-        Object[] data = {null,box.getValue()};
-        boxImageView.setUserData(data);
+
+        boxImageView.getProperties().put("boxObj", box);
 
         boxImageView.setRotate(-90 * componentRotation);
         boxSlot.getChildren().add(boxImageView);
