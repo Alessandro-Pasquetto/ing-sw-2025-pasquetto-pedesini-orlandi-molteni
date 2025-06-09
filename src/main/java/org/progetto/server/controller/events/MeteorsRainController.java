@@ -321,7 +321,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     }
 
     /**
-     * Handles current small meteor for each player
+     * Handles current big meteor for each player
      *
      * @author Gabriele
      */
@@ -339,6 +339,11 @@ public class MeteorsRainController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Handles current big meteor for a single player
+     *
+     * @author Alessandro
+     */
     private void askBigMeteorDecisionSinglePlayer(Player player, Sender sender) {
         // Finds impact component
         Component affectedComponent = meteorsRain.checkImpactComponent(gameManager.getGame(), player, comingMeteor, diceResult);

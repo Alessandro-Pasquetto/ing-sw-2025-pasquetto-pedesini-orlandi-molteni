@@ -98,7 +98,7 @@ public class PlanetsController extends EventControllerAbstract {
      * Receive the player decision to land on the planet
      * Send the available boxes to that player
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param player current player
      * @param planetIdx is the index of the planet chosen
      * @param sender current player
@@ -150,7 +150,7 @@ public class PlanetsController extends EventControllerAbstract {
      * For each player receive the box that the player choose, and it's placement in the component
      * Update the player's view with the new list of available boxes
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param player that choose the box
      * @param rewardIdxBox chosen
      * @param yBoxStorage coordinate of the component were the box will be placed
@@ -228,7 +228,7 @@ public class PlanetsController extends EventControllerAbstract {
     /**
      * Function called if the player wants to leave
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param player current player
      * @param sender current sender
      * @throws IllegalStateException

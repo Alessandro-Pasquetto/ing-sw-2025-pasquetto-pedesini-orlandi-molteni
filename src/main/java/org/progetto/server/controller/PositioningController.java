@@ -93,6 +93,14 @@ public class PositioningController {
         }
     }
 
+
+    /**
+     * Asks a player for starting position
+     *
+     * @author Alessandro
+     * @param gameManager is the current GameManager
+     * @param player is the player that needs to decide
+     */
     public static void insertAtFurthestStartPosition(GameManager gameManager, Player player) {
         Board board = gameManager.getGame().getBoard();
         Player[] startingPositions = board.getStartingPositionsCopy();
@@ -106,6 +114,13 @@ public class PositioningController {
         }
     }
 
+    /**
+     * Allows to show all the starting position on the track
+     *
+     * @author Alessandro
+     * @param gameManager is the current GameManager
+     * @param sender is the current Sender
+     */
     public static void showStartingPositions(GameManager gameManager, Sender sender){
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);

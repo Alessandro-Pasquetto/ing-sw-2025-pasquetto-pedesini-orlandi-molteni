@@ -5,6 +5,11 @@ import org.progetto.server.model.components.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserializer for loading Components objects from JSON file
+ *
+ * @author Lorenzo
+ */
 public class ComponentDeserializer implements JsonDeserializer<Component> {
     @Override
     public Component deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

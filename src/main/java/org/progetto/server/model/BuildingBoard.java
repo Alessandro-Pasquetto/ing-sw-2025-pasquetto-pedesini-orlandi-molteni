@@ -173,6 +173,13 @@ public class BuildingBoard implements Serializable {
         handComponent = null;
     }
 
+    /**
+     * Try to place the hand component if possible
+     *
+     * @author Alessandro
+     * @param x coordinate for placing component
+     * @param y coordinate for placing component
+     */
     public void tryToPlaceComponent(int x, int y) {
 
         if(handComponent == null)
@@ -883,7 +890,7 @@ public class BuildingBoard implements Serializable {
      *
      * @author Alessandro
      * @param hu the housingUnit under examination
-     * @return if it is allowed
+     * @return true if it is allowed
      */
     private boolean checkAndSetAllowPurpleAlien(HousingUnit hu){
 
@@ -947,7 +954,7 @@ public class BuildingBoard implements Serializable {
      *
      * @author Alessandro
      * @param hu the housingUnit under examination
-     * @return if it is allowed
+     * @return true if it is allowed
      */
     private boolean checkAndSetAllowOrangeAlien(HousingUnit hu){
 
@@ -1294,6 +1301,12 @@ public class BuildingBoard implements Serializable {
         }
     }
 
+
+    /**
+     * Reset a component that has not been correctly placed
+     *
+     * @author Alessandro
+     */
     private void resetIncorrectlyPlacedComponents() {
 
         for(int y = 0; y < spaceshipMatrix.length; y++) {

@@ -8,6 +8,11 @@ import org.progetto.server.model.events.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * Deserializer for loading EventCard objects from JSON file
+ *
+ * @author Lorenzo
+ */
 public class EventDeserializer implements JsonDeserializer<EventCard> {
 
     @Override

@@ -60,6 +60,15 @@ public class BoxStorage extends Component {
         spaceship.addBoxCount(1, box);
     }
 
+    /**
+     * Try to remove a box if possible
+     *
+     * @author Alessandro
+     * @param box is the box to remove
+     * @param idx were the box is located
+     * @throws IllegalStateException
+     */
+
     public void tryToAddBox(Box box, int idx) throws IllegalStateException{
 
         if(box == null)

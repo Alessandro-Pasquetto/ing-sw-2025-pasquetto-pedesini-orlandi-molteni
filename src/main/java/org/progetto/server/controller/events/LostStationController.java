@@ -92,7 +92,7 @@ public class LostStationController extends EventControllerAbstract {
      * Receive the player decision to land on the lost ship
      * Send the available boxes to that player
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param player current player
      * @param sender current sender
      * @param decision player's decision

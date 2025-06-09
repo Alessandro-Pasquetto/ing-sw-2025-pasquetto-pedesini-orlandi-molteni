@@ -24,8 +24,6 @@ public class BuildingController {
     // OTHER METHODS
     // =======================
 
-    // todo: add check if is building phase and check if the player is already ready
-
     /**
      * Handles player decision to show hand component
      *
@@ -118,7 +116,7 @@ public class BuildingController {
      * @param gameManager is the current gameManager
      * @param player that required the spaceship to be build
      * @param idShip type of spaceship to be build
-     * @param sender
+     * @param sender current sender
      */
     public static void buildShip(GameManager gameManager, Player player, int idShip, Sender sender) {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
@@ -1193,7 +1191,7 @@ public class BuildingController {
      *
      * @author Alessandro
      * @param gameManager current gameManager
-     * @return areAllValid
+     * @return areAllValid if all the ready players ships are valid
      */
     public static boolean checkAllNotReadyStartShipValidityAndAddToTravelers(GameManager gameManager) {
         Game game = gameManager.getGame();

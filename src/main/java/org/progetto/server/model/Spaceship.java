@@ -261,6 +261,11 @@ public class Spaceship implements Serializable {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Reset the counter of destroyed components
+     *
+     * @author Alessandro
+     */
     public void resetDestroyedCount() {
         destroyedCount = 0;
     }

@@ -87,6 +87,12 @@ public class Player implements Serializable {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Initialize the spaceship for a player
+     *
+     * @author Lorenzo
+     * @param levelShip is the game level
+     */
     public void initSpaceship(int levelShip) {
         this.spaceship = new Spaceship(levelShip, color);
     }

@@ -52,6 +52,11 @@ public class LobbyController {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Allows to start the ping method
+     *
+     * @author Alessandro
+     */
     public static void startLobbyPinger(){
 
         Thread pingThread = new Thread(() -> {
@@ -69,6 +74,12 @@ public class LobbyController {
         pingThread.start();
     }
 
+
+    /**
+     * Pings for check connection with the lobby
+     *
+     * @author Alessandro
+     */
     private static void lobbyPinger(){
 
         ArrayList<Sender> sendersCopy = getSendersCopy();
@@ -112,7 +123,7 @@ public class LobbyController {
      * Send message to all clients in lobby
      *
      * @author Alessandro
-     * @param messageObj
+     * @param messageObj is the message to send
      */
     public synchronized static void broadcastLobbyMessage(Object messageObj) {
 
@@ -127,7 +138,7 @@ public class LobbyController {
      * Show all waiting games
      *
      * @author Gabriele
-     * @param sender
+     * @param sender is the current Sender
      */
     public synchronized static void showWaitingGames(Sender sender) {
 
@@ -148,10 +159,10 @@ public class LobbyController {
      * Create game objects and player, add player to the game
      *
      * @author Alessandro
-     * @param name
-     * @param levelGame
-     * @param numPlayers
-     * @return
+     * @param name is the player's username
+     * @param levelGame is the game level
+     * @param numPlayers is the number of maximum game players
+     * @return the GameManager of the created Game
      */
     public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException{
         int idGame = currentIdGame.getAndIncrement();
@@ -193,10 +204,10 @@ public class LobbyController {
      * Join game objects and player, add player to the game
      *
      * @author Alessandro
-     * @param idGame
-     * @param name
-     * @param sender
-     * @return gameManager
+     * @param idGame is the game id of an existing Lobby
+     * @param name is the player's username
+     * @param sender is the current Sender
+     * @return gameManager of the joined game
      */
     public static GameManager joinGame(int idGame, String name, Sender sender) throws IllegalStateException{
 
@@ -226,7 +237,15 @@ public class LobbyController {
         return gameManager;
     }
 
-
+    /**
+     * Allows a player to reconnect to an existing game
+     *
+     * @param idGame is the game id of an existing Game
+     * @param name is the player's username
+     * @param sender is the current Sender
+     * @return the GameManager of the game in which the player has been reconnected
+     * @throws IllegalStateException if it was impossible to reconnect to the game
+     */
     public static GameManager reconnectToGame(int idGame, String name, Sender sender) throws IllegalStateException{
 
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);

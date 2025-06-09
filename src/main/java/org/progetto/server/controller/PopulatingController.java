@@ -32,6 +32,13 @@ public class PopulatingController {
         }
     }
 
+    /**
+     * Allows to ask only one player if he wants to place an alien on his spaceship
+     *
+     * @author Alessandro
+     * @param gameManager is the current gameManager
+     * @param player the player to ask for the aliens
+     */
     public static void askAliensToSinglePlayer(GameManager gameManager, Player player) {
 
         Sender sender = gameManager.getSenderByPlayer(player);
@@ -66,6 +73,7 @@ public class PopulatingController {
         else
             receiveOrangeAlien(gameManager, player, x, y);
     }
+
 
     /**
      * It receives the purple alien placed by the player

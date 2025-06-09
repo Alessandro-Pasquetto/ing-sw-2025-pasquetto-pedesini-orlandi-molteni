@@ -76,7 +76,7 @@ public class SpaceshipController {
     /**
      * Handles the player decision to move a box between boxStorages
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param gameManager of the current game
      * @param player is the player that needs to move a box
      * @param startY coordinate of starting component
@@ -124,7 +124,7 @@ public class SpaceshipController {
     /**
      * Handles the player decision to remove a box
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param gameManager current gameManager
      * @param player current player
      * @param yBoxStorage y coordinate of chosen box storage

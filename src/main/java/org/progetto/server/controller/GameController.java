@@ -18,14 +18,48 @@ import java.util.ArrayList;
 public class GameController {
 
     // =======================
+    // GETTERS
+    // =======================
+
+    public static ArrayList<Player> getConnectedTravelers(GameManager gameManager) {
+
+        return new ArrayList<>(gameManager.getGame().getPlayersCopy()
+                .stream()
+                .filter(player -> !player.getHasLeft())
+                .toList());
+    }
+
+    public static ArrayList<Player> getDisconnectedTravelers(GameManager gameManager) {
+        return new ArrayList<>(gameManager.getDisconnectedPlayersCopy()
+                .stream()
+                .filter(player -> !player.getHasLeft())
+                .toList());
+    }
+
+
+    // =======================
     // OTHER METHODS
     // =======================
 
+    /**
+     * Enable building phase
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     */
     public static void startBuilding(GameManager gameManager) {
         if(gameManager.getGame().getLevel() != 1)
             gameManager.startTimer();
     }
 
+
+    /**
+     * Lets a player decide to be in a ready state
+     *
+     * @param gameManager is the current gameManager
+     * @param player is the player that wants to be ready
+     * @param sender is the current player sender
+     */
     public static void ready(GameManager gameManager, Player player, Sender sender) {
         if (!(gameManager.getGame().getPhase().equals(GamePhase.INIT)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
@@ -115,6 +149,14 @@ public class GameController {
         }
     }
 
+
+    /**
+     * Return an ArrayList of the players in the track as a copy of the original
+     *
+     * @author Alessandro
+     * @param gameManager is the current gameManager
+     * @return the player list
+     */
     public static ArrayList<Player> getAllPlayersInTrackCopy(GameManager gameManager) {
         ArrayList<Player> playersInTrack = new ArrayList<>();
 
@@ -135,21 +177,13 @@ public class GameController {
         return playersInTrack;
     }
 
-    public static ArrayList<Player> getConnectedTravelers(GameManager gameManager) {
-
-        return new ArrayList<>(gameManager.getGame().getPlayersCopy()
-                .stream()
-                .filter(player -> !player.getHasLeft())
-                .toList());
-    }
-
-    public static ArrayList<Player> getDisconnectedTravelers(GameManager gameManager) {
-        return new ArrayList<>(gameManager.getDisconnectedPlayersCopy()
-                .stream()
-                .filter(player -> !player.getHasLeft())
-                .toList());
-    }
-
+    /**
+     * Allows to obtain the ready state of all the connected travellers
+     *
+     * @author Alessandro
+     * @param gameManager is the current gameManager
+     * @return true if all the players are ready
+     */
     public static boolean allConnectedTravelersReady(GameManager gameManager) {
         for (Player traveler : getConnectedTravelers(gameManager)) {
             if(!traveler.getIsReady())
@@ -159,6 +193,14 @@ public class GameController {
         return true;
     }
 
+    /**
+     * Allows to obtain the list of connected player and checks if all the players are ready
+     *
+     * @author Alessandro
+     * @param players are all the players in game
+     * @param gameManager is the current gameManager
+     * @return true if all the connected players are ready
+     */
     public static boolean allConnectedParametersPlayersReady(ArrayList<Player> players, GameManager gameManager) {
 
         ArrayList<Player> connectedPlayers = new ArrayList<>(players

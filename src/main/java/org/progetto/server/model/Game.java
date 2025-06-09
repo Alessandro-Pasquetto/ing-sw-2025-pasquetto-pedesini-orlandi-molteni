@@ -296,7 +296,7 @@ public class Game {
      * Elaborates score board calculating final credits for each player
      *
      * @author Gabriele
-     * @param arrivalOrderPlayers
+     * @param arrivalOrderPlayers is the list of players by arrival order
      * @return list of players sorted in order of credit number
      */
     public ArrayList<Player> scoreBoard(ArrayList<Player> arrivalOrderPlayers) {
@@ -364,6 +364,13 @@ public class Game {
         }
     }
 
+    /**
+     * Remove a player from the players list
+     *
+     * @author Alessandro
+     * @param player the player to remove
+     * @throws IllegalStateException
+     */
     public void removePlayer(Player player) throws IllegalStateException {
         synchronized (players) {
             players.remove(player);
@@ -540,7 +547,7 @@ public class Game {
     /**
      * Put-down the visible event-deck
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param player is the player that wants to put-down the deck
      * @return the idx of the deck put down
      */

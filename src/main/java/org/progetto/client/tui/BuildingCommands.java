@@ -83,7 +83,7 @@ public class BuildingCommands {
      * Enables to place the hand component given its coordinates and rotation
      * usage : Place pos_x pos_y rot
      *
-     * @author Gabriele
+     * @author Lorenzo
      * @param commandParts are segments of the command
      */
     public static void placeComponent(String[] commandParts){

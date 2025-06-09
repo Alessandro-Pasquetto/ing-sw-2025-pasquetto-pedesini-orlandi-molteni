@@ -397,7 +397,7 @@ public class DragAndDrop {
     /**
      * Allows an item ImageView to be placed on the left-key released
      *
-     * @author Alessandro
+     * @author Lorenzo
      * @param itemImage is the ImageView of the item to be dragged
      * @param event is the MouseEvent to read for the release
      * @param targetId is the FXML id of the final Object
