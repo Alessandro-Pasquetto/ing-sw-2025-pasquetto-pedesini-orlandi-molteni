@@ -201,7 +201,7 @@ public class GameThread extends Thread {
                         // Updates the track
                         gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), game.getBoard().getTrack()));
 
-                        if(game.getEventDeckSize() > 0){
+                        if (game.getEventDeckSize() > 0) {
 
                             // Asks for each traveler if he wants to continue travel
                             for (Player player : GameController.getConnectedTravelers(gameManager)) {
@@ -368,7 +368,6 @@ public class GameThread extends Thread {
 
         synchronized (gameThreadLock) {
             while (!GameController.allConnectedTravelersReady(gameManager) || game.getPlayersSize() == 1){
-
                 gameThreadLock.wait();
             }
         }

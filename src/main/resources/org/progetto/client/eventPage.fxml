@@ -101,7 +101,7 @@
 
                       <Label fx:id="eventMainDesc" text="Event description..." wrapText="true" />
                       <VBox fx:id="btnContainer" alignment="CENTER" spacing="30" />
-                  </VBox>
+                   </VBox>
 
                    <ImageView fx:id="blackHoleContainer" fitHeight="145.0" fitWidth="162.0" pickOnBounds="true" preserveRatio="true" translateX="-310.0" translateY="330.0"></ImageView>
                </children>
@@ -110,5 +110,12 @@
 
         </BorderPane>
     </ScrollPane>
+
+    <!-- Freeze -->
+    <VBox fx:id="freezePane" alignment="CENTER" mouseTransparent="true" spacing="50" visible="false" StackPane.alignment="CENTER" >
+        <Label fx:id="freezeTitle" text="You are alone in the game..." />
+        <Label fx:id="freezeTimer" text="" />
+        <Label fx:id="freezeDesc" text="Waiting for other players to reconnect, otherwise you will win..." />
+    </VBox>
 
 </StackPane>

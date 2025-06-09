@@ -257,10 +257,11 @@ public class TuiHandlerMessage {
 
         else if (messageObj instanceof TimerMessage timerMessage) {
             int timer = timerMessage.getTime();
+
             if (timer == 10)
-                System.out.println(ORANGE + "10 seconds to the end" + RESET);
-            else if(timer == 0)
-                System.out.println(ORANGE + "Timer is at 0s" + RESET);
+                System.out.println(ORANGE + "10 seconds remaining..." + RESET);
+            else if (timer == 0)
+                System.out.println(ORANGE + "Timer is finished" + RESET);
         }
 
         else if (messageObj instanceof AnotherPlayerIsReadyMessage anotherPlayerIsReadyMessage) {
@@ -530,6 +531,26 @@ public class TuiHandlerMessage {
             TuiPrinters.printScoreBoard(scoreBoardMessage.getScoreBoard());
         }
 
+        else if (messageObj instanceof AnotherPlayerDisconnectMessage anotherPlayerDisconnectMessage) {
+            String playerName = anotherPlayerDisconnectMessage.getPlayerName();
+
+            System.out.println(ORANGE + playerName + " has disconnected!" + RESET);
+        }
+
+        else if (messageObj instanceof AnotherPlayerReconnectMessage anotherPlayerReconnectMessage) {
+            String playerName = anotherPlayerReconnectMessage.getPlayerName();
+
+            System.out.println(BLUE + playerName + " has reconnected!" + RESET);
+        }
+
+        else if (messageObj instanceof FreezeTimerMessage freezeTimerMessage) {
+            int freezeTime = freezeTimerMessage.getTimer();
+
+            if (freezeTime == 10)
+                System.out.println(ORANGE + "10 seconds remaining..." + RESET);
+            else if(freezeTime == 0)
+                System.out.println(ORANGE + "Timer is finished" + RESET);
+        }
 
         else if (messageObj instanceof String messageString) {
 
@@ -904,6 +925,22 @@ public class TuiHandlerMessage {
 
                 case "SpaceshipPartKept":
                     System.out.println("Spaceship part kept successfully!");
+
+                case "Freeze":
+                    System.out.println(BLUE + "Game freezed!" + RESET);
+                    System.out.println("You are the only player still connected, if no one reconnects within 1 minute, you will win by forfeit...");
+                    break;
+
+                case "Resume":
+                    System.out.println(GREEN + "Game resumed!" + RESET);
+                    break;
+
+                case "WonByForfeit":
+                    System.out.println(GREEN + "You won by forfeit!" + RESET);
+                    Sender sender = GameData.getSender();
+                    sender.leaveGame();
+                    GameData.resetData();
+                    break;
 
                 default:
                     System.out.println(messageString);

@@ -1,5 +1,6 @@
 package org.progetto.client.gui;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.collections.FXCollections;
@@ -15,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.progetto.client.connection.Sender;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.MainClient;
 import org.progetto.client.model.GameData;
@@ -24,6 +26,7 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,6 +120,18 @@ public class BuildingView {
 
     @FXML
     private ImageView deck2Image;
+
+    @FXML
+    public Pane freezePane;
+
+    @FXML
+    public Label freezeTitle;
+
+    @FXML
+    public Label freezeTimer;
+
+    @FXML
+    public Label freezeDesc;
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
     private static final Map<String, GridPane> bookedGridsByPlayer = new HashMap<>();
@@ -1152,5 +1167,88 @@ public class BuildingView {
      */
     public void setReadyButtonDisabled() {
         buildingReadyButton.setDisable(true);
+    }
+
+    /**
+     * Shows the freeze pane
+     *
+     * @author Gabriele
+     */
+    public void showFreeze() {
+        freezePane.setOpacity(0);
+        freezePane.setVisible(true);
+        FadeTransition ft = new FadeTransition(Duration.millis(300), freezePane);
+        ft.setToValue(1);
+        ft.play();
+    }
+
+    /**
+     * Hides the freeze pane
+     *
+     * @author Gabriele
+     */
+    public void hideFreeze() {
+        FadeTransition ft = new FadeTransition(Duration.millis(300), freezePane);
+        ft.setToValue(0);
+        ft.setOnFinished(e -> freezePane.setVisible(false));
+        ft.play();
+    }
+
+    /**
+     * Updates the freeze timer
+     *
+     * @author Gabriele
+     * @param timeInSeconds is the time in seconds to update the timer
+     */
+    public void updateFreezeTimer(int timeInSeconds) {
+        int minutes = timeInSeconds / 60;
+        int seconds = timeInSeconds % 60;
+
+        String formattedTime = String.format("%02d:%02d", minutes, seconds);
+        freezeTimer.setText(formattedTime);
+    }
+
+    /**
+     * Displays a message when the player wins while being frozen
+     *
+     * @author Gabriele
+     */
+    public void winDuringFreeze() {
+        freezeTitle.setText("You won!");
+        freezePane.getChildren().remove(freezeTimer);
+        freezeDesc.setText("You won the game while being frozen, congratulations!");
+
+        freezePane.setMouseTransparent(false);
+
+        // Adds a return to lobby button
+        Button returnButton = new Button("Return to lobby");
+
+        returnButton.setOnAction(e -> {
+            try {
+                returnToLobby();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        freezePane.getChildren().add(returnButton);
+    }
+
+    /**
+     * Allows the player to return to the lobby page
+     *
+     * @author Alessandro
+     * @throws IOException if the page cannot be loaded
+     */
+    public void returnToLobby() throws IOException {
+        Sender sender = GameData.getSender();
+        sender.leaveGame();
+
+        GameData.resetData();
+
+        PageController.loadControllers();
+
+        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+        sender.updateGameList();
     }
 }

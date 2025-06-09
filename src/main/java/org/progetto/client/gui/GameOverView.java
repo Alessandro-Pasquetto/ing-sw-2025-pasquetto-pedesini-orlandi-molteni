@@ -134,7 +134,7 @@ public class GameOverView {
     }
 
     /**
-     * Connected to the button, allows the player to return to the lobby page
+     * Allows the player to return to the lobby page
      *
      * @author Alessandro
      * @throws IOException if the page cannot be loaded

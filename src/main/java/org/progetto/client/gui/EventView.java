@@ -30,6 +30,7 @@ import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.EventCard;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -136,7 +137,17 @@ public class EventView {
     @FXML
     private ImageView blackHoleContainer;
 
+    @FXML
+    public Pane freezePane;
 
+    @FXML
+    public Label freezeTitle;
+
+    @FXML
+    public Label freezeTimer;
+
+    @FXML
+    public Label freezeDesc;
 
     private static final Map<String, GridPane> shipGridsByPlayer = new HashMap<>();
 
@@ -153,7 +164,6 @@ public class EventView {
     // =======================
     // METHODS
     // =======================
-
 
     public void setShotFrom(int shotFrom) {
         this.shotFrom = shotFrom;
@@ -1804,10 +1814,23 @@ public class EventView {
 
         // Create boxes container
         FlowPane boxContainer = new FlowPane(10, 10);
-        ScrollPane boxScrollPane = new ScrollPane(boxContainer);
+        boxContainer.setAlignment(Pos.CENTER);
+        boxContainer.setPrefWrapLength(420);
+        boxContainer.setPrefWidth(420);
+        boxContainer.setPrefHeight(110);
+
+        VBox centeredWrapper = new VBox(boxContainer);
+        centeredWrapper.setAlignment(Pos.CENTER);
+        centeredWrapper.setPrefHeight(110);
+        centeredWrapper.setMinHeight(110);
+
+        ScrollPane boxScrollPane = new ScrollPane(centeredWrapper);
         boxScrollPane.setId("boxScrollPane");
+        boxScrollPane.setPrefSize(420, 120);
         boxScrollPane.setMaxWidth(420);
-        boxScrollPane.setMinHeight(110);
+        boxScrollPane.setMaxHeight(120);
+        boxScrollPane.setFitToWidth(true);
+        boxScrollPane.setFitToHeight(true);
 
         boxContainer.getChildren().clear();
 
@@ -1831,7 +1854,7 @@ public class EventView {
 
             boxContainer.getChildren().add(boxImage);
 
-            for(Node node: boxContainer.getChildren()){
+            for (Node node: boxContainer.getChildren()) {
                 ImageView frame = (ImageView) node;
                 DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
             }
@@ -2277,60 +2300,86 @@ public class EventView {
         });
     }
 
-//    public void placeStackPanes(boolean[] chosen){
-//
-//        double cardHeight = 292;
-//        double rowHeight = cardHeight / chosen.length ;
-//
-//        overlayContainer.getChildren().clear();
-//
-//        for (int i = 0; i < chosen.length; i++) {
-//            StackPane stack_zone = new StackPane();
-//            stack_zone.setPrefSize(eventCard.getFitWidth(), rowHeight);
-//            stack_zone.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
-//            int planetIndex = i;
-//            stack_zone.setUserData(planetIndex);
-//            stack_zone.setOnMouseClicked(e -> {
-//                eventButton.setVisible(false);
-//                askYesNo("Landing",
-//                        "Do you really want to land on planet "+(planetIndex+1),
-//                        response -> {
-//                            Sender sender = GameData.getSender();
-//                            if(response)
-//                                sender.responsePlanetLandRequest(planetIndex);
-//                            else
-//                                eventButton.setVisible(true);
-//                            resetEventLabels();
-//                            });
-//            });
-//
-//            ImageView pawnView = new ImageView();
-//            pawnView.setFitHeight(60);
-//            pawnView.setFitWidth(60);
-//            pawnView.setMouseTransparent(true);
-//
-//            StackPane.setAlignment(pawnView, Pos.BOTTOM_LEFT);
-//            StackPane.setMargin(pawnView, new Insets(5));
-//
-//            stack_zone.getChildren().add(pawnView);
-//            overlayContainer.getChildren().add(stack_zone);
-//        }
-//
-//
-//        eventButton.setText("Leve site");
-//        eventButton.setOnAction(e -> {
-//            Sender sender = GameData.getSender();
-//            sender.responsePlanetLandRequest(-1);
-//            eventButton.setVisible(false);
-//        });
-//        eventButton.setVisible(true);
-//
-//        resetEventLabels();
-//        setEventLabels("Planets in sight!","Click on the planet were you want to to land");
-//
-//    }
-//
-//    public void removeStackPanes(){
-//        overlayContainer.getChildren().clear();
-//    }
+    /**
+     * Shows the freeze pane
+     *
+     * @author Gabriele
+     */
+    public void showFreeze() {
+        freezePane.setOpacity(0);
+        freezePane.setVisible(true);
+        FadeTransition ft = new FadeTransition(Duration.millis(300), freezePane);
+        ft.setToValue(1);
+        ft.play();
+    }
+
+    /**
+     * Hides the freeze pane
+     *
+     * @author Gabriele
+     */
+    public void hideFreeze() {
+        FadeTransition ft = new FadeTransition(Duration.millis(300), freezePane);
+        ft.setToValue(0);
+        ft.setOnFinished(e -> freezePane.setVisible(false));
+        ft.play();
+    }
+
+    /**
+     * Updates the freeze timer
+     *
+     * @author Gabriele
+     * @param timeInSeconds is the time in seconds to update the timer
+     */
+    public void updateFreezeTimer(int timeInSeconds) {
+        int minutes = timeInSeconds / 60;
+        int seconds = timeInSeconds % 60;
+
+        String formattedTime = String.format("%02d:%02d", minutes, seconds);
+        freezeTimer.setText(formattedTime);
+    }
+
+    /**
+     * Displays a message when the player wins while being frozen
+     *
+     * @author Gabriele
+     */
+    public void winDuringFreeze() {
+        freezeTitle.setText("You won!");
+        freezePane.getChildren().remove(freezeTimer);
+        freezeDesc.setText("You won the game while being frozen, congratulations!");
+
+        freezePane.setMouseTransparent(false);
+
+        // Adds a return to lobby button
+        Button returnButton = new Button("Return to lobby");
+
+        returnButton.setOnAction(e -> {
+            try {
+                returnToLobby();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        freezePane.getChildren().add(returnButton);
+    }
+
+    /**
+     * Allows the player to return to the lobby page
+     *
+     * @author Alessandro
+     * @throws IOException if the page cannot be loaded
+     */
+    public void returnToLobby() throws IOException {
+        Sender sender = GameData.getSender();
+        sender.leaveGame();
+
+        GameData.resetData();
+
+        PageController.loadControllers();
+
+        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+        sender.updateGameList();
+    }
 }

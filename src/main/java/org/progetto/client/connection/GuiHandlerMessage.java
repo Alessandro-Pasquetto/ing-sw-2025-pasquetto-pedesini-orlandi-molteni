@@ -799,6 +799,51 @@ public class GuiHandlerMessage {
             PageController.getGameOverView().initScoreboard(scoreBoardMessage.getScoreBoard());
         }
 
+        else if (messageObj instanceof AnotherPlayerDisconnectMessage anotherPlayerDisconnectMessage) {
+            String playerName = anotherPlayerDisconnectMessage.getPlayerName();
+
+            if (GameData.getPhaseGame().equals("EVENT"))
+                PageController.getEventView().addChatMessage(playerName + " has disconnected!", "ORANGE");
+        }
+
+        else if (messageObj instanceof AnotherPlayerReconnectMessage anotherPlayerReconnectMessage) {
+            String playerName = anotherPlayerReconnectMessage.getPlayerName();
+
+            if (GameData.getPhaseGame().equals("EVENT"))
+                PageController.getEventView().addChatMessage(playerName + " has reconnected!", "BLUE");
+        }
+
+        else if (messageObj instanceof FreezeTimerMessage freezeTimerMessage) {
+            switch (GameData.getPhaseGame()) {
+                case "BUILDING":
+                    PageController.getBuildingView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                case "ADJUSTING":
+                    PageController.getAdjustingView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                case "POPULATING":
+                    PageController.getPopulatingView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                case "POSITIONING":
+                    PageController.getPositioningView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                case "EVENT":
+                    PageController.getEventView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                case "TRAVEL":
+                    PageController.getTravelView().updateFreezeTimer(freezeTimerMessage.getTimer());
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
@@ -1169,6 +1214,99 @@ public class GuiHandlerMessage {
 
                 case "EventCardEnded":
                     PageController.getEventView().setEventLabels("THE EVENT IS ENDED", "Get ready for the travel...");
+                    break;
+
+                case "Freeze":
+                    switch (GameData.getPhaseGame()) {
+                        case "BUILDING":
+                            PageController.getBuildingView().showFreeze();
+                            break;
+
+                        case "ADJUSTING":
+                            PageController.getAdjustingView().showFreeze();
+                            break;
+
+                        case "POPULATING":
+                            PageController.getPopulatingView().showFreeze();
+                            break;
+
+                        case "POSITIONING":
+                            PageController.getPositioningView().showFreeze();
+                            break;
+
+                        case "EVENT":
+                            PageController.getEventView().showFreeze();
+                            break;
+
+                        case "TRAVEL":
+                            PageController.getTravelView().showFreeze();
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+
+                case "Resume":
+                    switch (GameData.getPhaseGame()) {
+                        case "BUILDING":
+                            PageController.getBuildingView().hideFreeze();
+                            break;
+
+                        case "ADJUSTING":
+                            PageController.getAdjustingView().hideFreeze();
+                            break;
+
+                        case "POPULATING":
+                            PageController.getPopulatingView().hideFreeze();
+                            break;
+
+                        case "POSITIONING":
+                            PageController.getPositioningView().hideFreeze();
+                            break;
+
+                        case "EVENT":
+                            PageController.getEventView().hideFreeze();
+                            break;
+
+                        case "TRAVEL":
+                            PageController.getTravelView().hideFreeze();
+                            break;
+
+                        default:
+                            break;
+                    }
+                    break;
+
+                case "WonByForfeit":
+                    switch (GameData.getPhaseGame()) {
+                        case "BUILDING":
+                            PageController.getBuildingView().winDuringFreeze();
+                            break;
+
+                        case "ADJUSTING":
+                            PageController.getAdjustingView().winDuringFreeze();
+                            break;
+
+                        case "POPULATING":
+                            PageController.getPopulatingView().winDuringFreeze();
+                            break;
+
+                        case "POSITIONING":
+                            PageController.getPositioningView().winDuringFreeze();
+                            break;
+
+                        case "EVENT":
+                            PageController.getEventView().winDuringFreeze();
+                            break;
+
+                        case "TRAVEL":
+                            PageController.getTravelView().winDuringFreeze();
+                            break;
+
+                        default:
+                            break;
+                    }
                     break;
 
                 default:
