@@ -455,8 +455,7 @@ public class SmugglersController extends EventControllerAbstract {
         boxSlots.add(new BoxSlot(boxStorage, idx));
         requestedBoxes--;
 
-        MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
-        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
+        gameManager.broadcastGameMessage(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx));
         
         if (requestedBoxes == 0) {
 
@@ -526,14 +525,14 @@ public class SmugglersController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player that choose the box
-     * @param idxBox chosen
+     * @param rewardIdxBox chosen
      * @param yBoxStorage coordinate of the component were the box will be placed
      * @param xBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
+    public void receiveRewardBox(Player player, int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -546,14 +545,14 @@ public class SmugglersController extends EventControllerAbstract {
         }
 
         // Checks if reward box index is correct
-        if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
+        if (rewardIdxBox < -1 || rewardIdxBox >= rewardBoxes.size()) {
             MessageSenderService.sendMessage("IncorrectRewardIndex", sender);
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
         // Checks if player wants to leave
-        if (idxBox == -1) {
+        if (rewardIdxBox == -1) {
             phase = EventPhase.PENALTY_DAYS;
             penaltyDays();
             return;
@@ -577,15 +576,14 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
-        Box box = rewardBoxes.get(idxBox);
+        Box box = rewardBoxes.get(rewardIdxBox);
 
         // Checks that reward box is placed correctly in given storage
         try{
             smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-            MessageSenderService.sendMessage("BoxChosen", sender);
-            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

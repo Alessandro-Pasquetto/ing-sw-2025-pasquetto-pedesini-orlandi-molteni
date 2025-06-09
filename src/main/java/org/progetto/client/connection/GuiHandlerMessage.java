@@ -4,7 +4,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.progetto.client.gui.Alerts;
 import org.progetto.client.gui.DragAndDrop;
-import org.progetto.client.gui.EventView;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
@@ -34,10 +33,7 @@ import org.progetto.messages.toClient.Travel.PlayerLeftMessage;
 import org.progetto.messages.toClient.WaitingGameInfoMessage;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.BatteryStorage;
-import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.HousingUnit;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.Projectile;
 import org.progetto.server.model.events.ProjectileSize;
 
@@ -621,31 +617,52 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
-            Spaceship spaceship = GameData.getSpaceship();
-            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-            int xBox = boxDiscardedMessage.getXBoxStorage();
-            int yBox = boxDiscardedMessage.getYBoxStorage();
+            String playerName = boxDiscardedMessage.getPlayerName();
+            int xBoxStorage = boxDiscardedMessage.getXBoxStorage();
+            int yBoxStorage = boxDiscardedMessage.getYBoxStorage();
             int idxBox = boxDiscardedMessage.getBoxIdx();
 
-            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
-            bs.removeBox(spaceship, idxBox);
+            if(playerName.equals(GameData.getNamePlayer())){
+                PageController.getEventView().removeBox(xBoxStorage, yBoxStorage, idxBox);
+            } else {
 
-            PageController.getEventView().updateSpaceship(spaceship);
+                //todo (controller già invia)
+            }
         }
 
-        else if (messageObj instanceof AnotherPlayerBoxDiscardedMessage anotherPlayerBoxDiscardedMessage) {
-            Spaceship spaceship = GameData.getOtherSpaceships().get(anotherPlayerBoxDiscardedMessage.getPlayerName());
-            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
+        else if(messageObj instanceof BoxAddedMessage boxAddedMessage){
 
-            int xBox = anotherPlayerBoxDiscardedMessage.getXBoxStorage();
-            int yBox = anotherPlayerBoxDiscardedMessage.getYBoxStorage();
-            int idxBox = anotherPlayerBoxDiscardedMessage.getBoxIdx();
+            String playerName = boxAddedMessage.getPlayerName();
+            int xBoxStorage = boxAddedMessage.getXBoxStorage();
+            int yBoxStorage = boxAddedMessage.getYBoxStorage();
+            int idxBox = boxAddedMessage.getBoxIdx();
+            Box box = boxAddedMessage.getBox();
 
-            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
-            bs.removeBox(spaceship, idxBox);
+            if(playerName.equals(GameData.getNamePlayer())){
+                System.out.println("addedBox");
+            } else {
 
-            PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerBoxDiscardedMessage.getPlayerName(), spaceship);
+                //todo (controller già invia)
+            }
+        }
+
+        else if(messageObj instanceof BoxMovedMessage boxAddedMessage){
+
+            String playerName = boxAddedMessage.getPlayerName();
+            int xBox_start = boxAddedMessage.getXBoxStorage_start();
+            int yBox_start = boxAddedMessage.getYBoxStorage_start();
+            int idxBox_start = boxAddedMessage.getBoxIdx_start();
+            int xBox_end = boxAddedMessage.getXBoxStorage_end();
+            int yBox_end = boxAddedMessage.getYBoxStorage_end();
+            int idxBox_end = boxAddedMessage.getBoxIdx_start();
+
+            if(playerName.equals(GameData.getNamePlayer())){
+                System.out.println("movedBox");
+            } else {
+
+                //todo (controller già invia)
+            }
         }
 
         else if (messageObj instanceof EvaluatingConditionMessage evaluatingConditionMessage) {
@@ -1085,12 +1102,6 @@ public class GuiHandlerMessage {
 
                 case "BoxChosen":
                     break;
-
-                case "BoxRemoved":
-                    System.out.println("removed");
-                    GameData.getSender().showSpaceship(GameData.getNamePlayer());
-                    break;
-
 
                 case "EmptyReward":
                     PageController.getEventView().setEventLabels("THE REWARD IS EMPTY", "Wait for other players to finish their turn...");

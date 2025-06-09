@@ -491,9 +491,9 @@ public class RmiClientSender implements Sender {
     }
 
     @Override
-    public void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx) {
+    public void responseRewardBox(int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx) {
         try {
-            server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), idxBox, xBoxStorage, yBoxStorage, idx);
+            server.responseRewardBox(RmiClientReceiver.getInstance(), GameData.getIdGame(), rewardIdxBox, xBoxStorage, yBoxStorage, idx);
         } catch (RemoteException e) {
             System.err.println("RMI client unreachable");
         }

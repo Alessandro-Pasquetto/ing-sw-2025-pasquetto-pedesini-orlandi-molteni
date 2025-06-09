@@ -165,6 +165,7 @@ public class EventView {
     // METHODS
     // =======================
 
+
     public void setShotFrom(int shotFrom) {
         this.shotFrom = shotFrom;
     }
@@ -1834,19 +1835,23 @@ public class EventView {
 
         boxContainer.getChildren().clear();
 
-        int idx = 0;
-        for (Box box : availableBoxes) {
-            Image img = switch (box.getValue()) {
-                case 1 -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
-                case 2 -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
-                case 3 -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
-                case 4 -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
+        for (int i = 0; i < availableBoxes.size(); i++) {
+
+            Box box =  availableBoxes.get(i);
+
+            Image img = switch (box) {
+                case BLUE -> new Image(String.valueOf(MainClient.class.getResource("img/items/BlueBox.png")));
+                case GREEN -> new Image(String.valueOf(MainClient.class.getResource("img/items/GreenBox.png")));
+                case YELLOW -> new Image(String.valueOf(MainClient.class.getResource("img/items/YellowBox.png")));
+                case RED -> new Image(String.valueOf(MainClient.class.getResource("img/items/RedBox.png")));
                 default -> null;
             };
 
             ImageView boxImage = new ImageView(img);
-            Object[] data = {idx, box.getValue()};
-            boxImage.setUserData(data);
+
+            boxImage.getProperties().put("idx", i);
+            boxImage.getProperties().put("boxObj", box);
+
             boxImage.setFitWidth(60);
             boxImage.setPreserveRatio(true);
             boxImage.setSmooth(true);
@@ -1854,12 +1859,7 @@ public class EventView {
 
             boxContainer.getChildren().add(boxImage);
 
-            for (Node node: boxContainer.getChildren()) {
-                ImageView frame = (ImageView) node;
-                DragAndDrop.enableDragAndDropItem(frame,"boxSlot");
-            }
-
-            idx++;
+            DragAndDrop.enableDragAndDropItem(boxImage, "boxSlot");
         }
 
         // Leave button
@@ -2287,6 +2287,57 @@ public class EventView {
             // Auto-scroll to bottom
             Platform.runLater(() -> chatScrollPane.setVvalue(1.0));
         });
+    }
+
+    public void removeBox(int xBox, int yBox, int idxBox) {
+
+        Spaceship spaceship = GameData.getSpaceship();
+
+        BoxStorage bs = (BoxStorage) spaceship.getBuildingBoard().getSpaceshipMatrixCopy()[yBox][xBox];
+        bs.removeBox(spaceship, idxBox);
+
+        for (Node node : spaceshipMatrix.getChildren()) {
+            if (node instanceof Pane cell) {
+
+                if (!cell.getChildren().isEmpty()) {
+                    Integer rowIndex = GridPane.getRowIndex(cell);
+                    Integer colIndex = GridPane.getColumnIndex(cell);
+
+                    if(rowIndex != yBox || colIndex != xBox)
+                        continue;
+
+                    for (Node node2 : cell.getChildren()) {
+                        if (node2 instanceof Pane slot) {
+
+                            if(slot.getProperties().get("idx").equals(idxBox)){
+                                slot.getChildren().clear();
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    public void addBox(int xBox, int yBox, int idxBox, Box box) {
+
+        Spaceship spaceship = GameData.getSpaceship();
+
+        BoxStorage bs = (BoxStorage) spaceship.getBuildingBoard().getSpaceshipMatrixCopy()[yBox][xBox];
+        bs.addBox(spaceship, box, idxBox);
+    };
+
+    public void moveBox(int xStartBox, int yStartBox, int idxStartBox, int xEndBox, int yEndBox, int idxEndBox, ImageView imageBox) {
+
+        Spaceship spaceship = GameData.getSpaceship();
+
+        BoxStorage bs_start = (BoxStorage) spaceship.getBuildingBoard().getSpaceshipMatrixCopy()[yStartBox][xStartBox];
+        bs_start.removeBox(spaceship, idxStartBox);
+
+        BoxStorage bs_end = (BoxStorage) spaceship.getBuildingBoard().getSpaceshipMatrixCopy()[yEndBox][xEndBox];
+        bs_end.addBox(spaceship, (Box) imageBox.getProperties().get("boxObj"), idxEndBox);
     }
 
     /**

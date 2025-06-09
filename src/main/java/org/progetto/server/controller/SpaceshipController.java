@@ -2,6 +2,8 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.DestroyedComponentMessage;
+import org.progetto.messages.toClient.EventGeneric.BoxDiscardedMessage;
+import org.progetto.messages.toClient.EventGeneric.BoxMovedMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
@@ -106,7 +108,7 @@ public class SpaceshipController {
             startComponent.removeBox(player.getSpaceship(), startIdx);
             endComponent.addBox(player.getSpaceship(), box, endIdx); // safe, already validated by tryToAddBox
 
-            MessageSenderService.sendMessage("BoxMoved", sender);
+            gameManager.broadcastGameMessage(new BoxMovedMessage(player.getName(), startX, startY, startIdx, endX, endY, endIdx));
 
         } catch (ClassCastException e) {
             MessageSenderService.sendMessage("NotAStorageComponent", sender);
@@ -146,7 +148,7 @@ public class SpaceshipController {
 
             component.removeBox(player.getSpaceship(), idx);
 
-            MessageSenderService.sendMessage("BoxRemoved", sender);
+            gameManager.broadcastGameMessage(new BoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx));
 
         } catch (ClassCastException e) {
             MessageSenderService.sendMessage("NotAStorageComponent", sender);

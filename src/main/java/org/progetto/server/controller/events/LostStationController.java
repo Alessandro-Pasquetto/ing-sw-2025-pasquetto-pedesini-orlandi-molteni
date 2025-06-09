@@ -141,14 +141,14 @@ public class LostStationController extends EventControllerAbstract {
      *
      * @author Lorenzo
      * @param player that choose the box
-     * @param idxBox chosen
+     * @param rewardIdxBox chosen
      * @param xBoxStorage coordinate of the component were the box will be placed
      * @param yBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
      * @param sender current sender
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
+    public void receiveRewardBox(Player player, int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -161,14 +161,14 @@ public class LostStationController extends EventControllerAbstract {
         }
 
         // Checks if reward box index is correct
-        if (idxBox < -1 || idxBox >= rewardBoxes.size()) {
+        if (rewardIdxBox < -1 || rewardIdxBox >= rewardBoxes.size()) {
             MessageSenderService.sendMessage("IncorrectRewardIndex", sender);
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
             return;
         }
 
         // Checks if player wants to leave
-        if (idxBox == -1) {
+        if (rewardIdxBox == -1) {
             leaveStation(player, sender);
             return;
         }
@@ -191,15 +191,14 @@ public class LostStationController extends EventControllerAbstract {
             return;
         }
 
-        Box box = rewardBoxes.get(idxBox);
+        Box box = rewardBoxes.get(rewardIdxBox);
 
         // Checks that reward box is placed correctly in given storage
         try{
             lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-            MessageSenderService.sendMessage("BoxChosen", sender);
-            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

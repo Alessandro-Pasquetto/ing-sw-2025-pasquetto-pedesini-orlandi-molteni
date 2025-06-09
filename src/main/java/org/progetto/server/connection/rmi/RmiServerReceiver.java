@@ -952,7 +952,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void responseRewardBox(VirtualClient virtualClient, int idGame, int idxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
+    public void responseRewardBox(VirtualClient virtualClient, int idGame, int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
         if(gameManager.getGame().getPlayersSize() == 1)
@@ -973,7 +973,7 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
             return;
         }
 
-        eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, virtualClient);
+        eventController.receiveRewardBox(player, rewardIdxBox, xBoxStorage, yBoxStorage, idx, virtualClient);
     }
 
     @Override

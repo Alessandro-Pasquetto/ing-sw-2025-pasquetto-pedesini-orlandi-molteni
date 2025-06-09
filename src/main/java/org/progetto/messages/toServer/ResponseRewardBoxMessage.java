@@ -1,7 +1,5 @@
 package org.progetto.messages.toServer;
 
-import org.progetto.server.model.components.Box;
-
 import java.io.Serializable;
 
 public class ResponseRewardBoxMessage implements Serializable {
@@ -10,7 +8,7 @@ public class ResponseRewardBoxMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private final int idxBox;
+    private final int rewardIdxBox;
     private final int xBoxStorage;
     private final int yBoxStorage;
     private final int idx;
@@ -19,8 +17,8 @@ public class ResponseRewardBoxMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public ResponseRewardBoxMessage(int idxBox, int xBoxStorage, int yBoxStorage, int idx) {
-        this.idxBox = idxBox;
+    public ResponseRewardBoxMessage(int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx) {
+        this.rewardIdxBox = rewardIdxBox;
         this.xBoxStorage = xBoxStorage;
         this.yBoxStorage = yBoxStorage;
         this.idx = idx;
@@ -30,7 +28,7 @@ public class ResponseRewardBoxMessage implements Serializable {
     // GETTERS
     // =======================
 
-    public int getIdxBox() { return idxBox; }
+    public int getRewardIdxBox() { return rewardIdxBox; }
 
     public int getXBoxStorage() { return xBoxStorage; }
 

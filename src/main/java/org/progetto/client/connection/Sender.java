@@ -96,7 +96,7 @@ public interface Sender {
 
     void responsePlanetLandRequest(int idx);
 
-    void responseRewardBox(int idxBox, int xBoxStorage, int yBoxStorage, int idx);
+    void responseRewardBox(int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx);
 
     void moveBox(int xStart, int yStart, int idxStart, int xDestination, int yDestination, int idxDestination);
 

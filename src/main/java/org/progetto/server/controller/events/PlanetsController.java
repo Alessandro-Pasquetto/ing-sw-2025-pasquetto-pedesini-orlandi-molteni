@@ -1,12 +1,9 @@
 package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
-import org.progetto.messages.toClient.EventGeneric.AnotherPlayerMovedBackwardMessage;
-import org.progetto.messages.toClient.EventGeneric.AnotherPlayerRewardedBox;
-import org.progetto.messages.toClient.EventGeneric.AvailableBoxesMessage;
+import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
-import org.progetto.messages.toClient.EventGeneric.PlayerMovedBackwardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -155,7 +152,7 @@ public class PlanetsController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player that choose the box
-     * @param idxBox chosen
+     * @param rewardIdxBox chosen
      * @param yBoxStorage coordinate of the component were the box will be placed
      * @param xBoxStorage coordinate of the component were the box will be placed
      * @param idx is where the player want to insert the chosen box
@@ -163,7 +160,7 @@ public class PlanetsController extends EventControllerAbstract {
      * @throws IllegalStateException
      */
     @Override
-    public void receiveRewardBox(Player player, int idxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
+    public void receiveRewardBox(Player player, int rewardIdxBox, int xBoxStorage, int yBoxStorage, int idx, Sender sender) throws IllegalStateException {
         if (!phase.equals(EventPhase.CHOOSE_BOX)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -175,7 +172,7 @@ public class PlanetsController extends EventControllerAbstract {
             return;
         }
 
-        if(idxBox == -1){
+        if(rewardIdxBox == -1){
             MessageSenderService.sendMessage("PlanetLeft", sender);
             leavePlanet(player, sender);
             return;
@@ -205,15 +202,14 @@ public class PlanetsController extends EventControllerAbstract {
             return;
         }
 
-        Box box = rewardBoxes.get(idxBox);
+        Box box = rewardBoxes.get(rewardIdxBox);
 
         // Checks that reward box is placed correctly in given storage
         try{
             planets.chooseRewardBox(player.getSpaceship(), (BoxStorage) boxStorage, box, idx);
 
             rewardBoxes.remove(box);
-            MessageSenderService.sendMessage("BoxChosen", sender);
-            gameManager.broadcastGameMessage(new AnotherPlayerRewardedBox(player.getName(), xBoxStorage, yBoxStorage, idxBox));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

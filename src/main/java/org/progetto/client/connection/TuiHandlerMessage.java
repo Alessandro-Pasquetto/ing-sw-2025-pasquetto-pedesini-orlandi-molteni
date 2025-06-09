@@ -789,20 +789,12 @@ public class TuiHandlerMessage {
                     System.err.println("You cannot store a red box in a non-red storage!");
                     break;
 
-                case "BoxMoved":
-                    System.out.println("Box moved successfully");
-                    break;
-
                 case "BoxNotMoved":
                     System.err.println("Unable to move the box!");
                     break;
 
                 case "NotAStorageComponent":
                     System.err.println("The component is not a storage component!");
-                    break;
-
-                case "BoxRemoved":
-                    System.out.println("Box removed successfully");
                     break;
 
                 case "BoxNotRemoved":

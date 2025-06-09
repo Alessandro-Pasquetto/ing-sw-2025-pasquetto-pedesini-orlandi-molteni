@@ -93,7 +93,7 @@ abstract public class EventControllerAbstract {
     }
 
     //responseRewardBox
-    public void receiveRewardBox(Player player, int idxBox, int x, int y, int idx, Sender sender) {
+    public void receiveRewardBox(Player player, int rewardIdxBox, int x, int y, int idx, Sender sender) {
         MessageSenderService.sendMessage("FunctionNotAvailable", sender);
     }
 

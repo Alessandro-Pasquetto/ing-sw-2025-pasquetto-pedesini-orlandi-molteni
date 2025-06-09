@@ -240,16 +240,19 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
+
                 // forzare uscita carta evento, todo da rimuovere
-//                while(!lv2Deck.getFirst().getType().equals(CardType.PLANETS) && !lv2Deck.get(1).getType().equals(CardType.PLANETS))
-//                   Collections.shuffle(lv2Deck);
+                while(!lv2Deck.getFirst().getType().equals(CardType.PLANETS) && !lv2Deck.get(1).getType().equals(CardType.PLANETS))
+                   Collections.shuffle(lv2Deck);
+
+
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
 
                 for(int i = 1; i < 4; i++) {
-                    decks[i - 1].add(lv1Deck.get(i));   // Add 1 lv1 card
-                    decks[i - 1].addAll(lv2Deck.subList(i * 2, i * 2 + 2)); // Adds 2 lv2 cards
+                    decks[i - 1].add(lv1Deck.get(i));   //Add 1 lv1 card
+                    decks[i - 1].addAll(lv2Deck.subList(i * 2, i * 2 + 2)); //Adds 2 lv2 cards
                 }
 
                 return decks;
@@ -472,17 +475,21 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
+            /*
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
+             */
+
+
             //forzare eventCard, todo da rimuovere
-//            int randomPos = 0;
-//
-//            do {
-//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-//            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
-//
-//            pickedEventCard = hiddenEventDeck.remove(randomPos);
+            int randomPos = 0;
+
+            do {
+                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PLANETS));
+
+            pickedEventCard = hiddenEventDeck.remove(randomPos);
 
        }
 

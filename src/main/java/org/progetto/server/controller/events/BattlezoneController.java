@@ -895,8 +895,7 @@ public class BattlezoneController extends EventControllerAbstract {
         boxSlots.add(new BoxSlot(boxStorage, idx));
         requestedBoxes--;
 
-        MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
-        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
+        gameManager.broadcastGameMessage(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx));
 
         if (requestedBoxes == 0) {
 

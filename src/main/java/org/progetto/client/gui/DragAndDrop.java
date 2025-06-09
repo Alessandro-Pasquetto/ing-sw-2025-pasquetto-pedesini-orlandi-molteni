@@ -14,6 +14,7 @@ import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.model.Game;
+import org.progetto.server.model.components.Box;
 
 public class DragAndDrop {
 
@@ -420,9 +421,6 @@ public class DragAndDrop {
         if (trash.localToScene(trash.getBoundsInLocal()).contains(event.getSceneX(), event.getSceneY())) {
             if(!(itemImage.getProperties().get("originalParent") instanceof FlowPane)) {
                 PageController.getEventView().removeBox(event, itemImage);
-                itemImage.getStyleClass().remove("draggable");
-                ((Pane) itemImage.getParent()).getChildren().remove(itemImage);
-                isValidDrop = true;
             }
         }
 
@@ -455,17 +453,17 @@ public class DragAndDrop {
 
                                         Object originalParent = itemImage.getProperties().get("originalParent");
                                         String storageType = cell.getChildren().get(1).getUserData().toString();
-                                        Object[] data = (Object[]) itemImage.getUserData();
 
                                         if(originalParent instanceof FlowPane) {
 
-                                            int boxIdx = (int) data[0];
-                                            int boxVal = (int) data[1];
+                                            int rewardBoxIdx = (int) itemImage.getProperties().get("idx");
+                                            Box box = (Box) itemImage.getProperties().get("boxObj");
 
-                                            if (boxVal == 4) {
+                                            if (box == Box.RED) {
                                                 if (storageType.equals("RED_BOX_STORAGE")) {
                                                     root.getChildren().remove(itemImage);
                                                     slot.getChildren().add(itemImage);
+
                                                 } else {
                                                     break;
                                                 }
@@ -475,6 +473,8 @@ public class DragAndDrop {
                                                 slot.getChildren().add(itemImage);
                                             }
 
+                                            itemImage.getProperties().put("idx", null);
+
                                             itemImage.setFitWidth(35);
                                             itemImage.setFitHeight(35);
 
@@ -483,22 +483,25 @@ public class DragAndDrop {
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
                                             itemImage.setRotate(-slot.getParent().getRotate());
 
+                                            int idx = (int) slot.getProperties().get("idx");
 
-                                            GameData.getSender().responseRewardBox(boxIdx, colIndex, rowIndex, (int) slot.getProperties().get("idx"));
-                                            System.out.println("Placed box at x:" + colIndex + " y:" + rowIndex + " in slot " + slot.getProperties().get("idx"));
+                                            PageController.getEventView().addBox(colIndex, rowIndex, idx, box);
+                                            GameData.getSender().responseRewardBox(rewardBoxIdx, colIndex, rowIndex, idx);
+                                            System.out.println("Placed box at x:" + colIndex + " y:" + rowIndex + " in slot " + idx);
 
                                             isValidDrop = true;
                                         }
 
                                         else if(originalParent instanceof Pane originalCell){
 
-                                            int boxVal = (int) data[1];
+                                            Box box = (Box) itemImage.getProperties().get("boxObj");
+
                                             Integer startingX = GridPane.getColumnIndex(originalCell.getParent());
                                             Integer startingY = GridPane.getRowIndex(originalCell.getParent());
                                             Integer startingIdx = (Integer) originalCell.getProperties().get("idx");
                                             Integer finalIdx = (Integer) slot.getProperties().get("idx");
 
-                                            if (boxVal == 4) {
+                                            if (box == Box.RED) {
                                                 if (storageType.equals("RED_BOX_STORAGE")) {
                                                     root.getChildren().remove(itemImage);
                                                     slot.getChildren().add(itemImage);
@@ -519,8 +522,10 @@ public class DragAndDrop {
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
                                             itemImage.setRotate(-slot.getParent().getRotate());
 
-                                            GameData.getSender().moveBox(startingX,startingY,startingIdx,colIndex,rowIndex,finalIdx);
-                                            System.out.println("Moved box from x: " + startingX + " y: " + startingY + " idx: "+ startingIdx + " to " + "x: "+ colIndex + " y: "+ rowIndex+ " idx: " + finalIdx);
+
+                                            PageController.getEventView().moveBox(startingX, startingY, startingIdx, colIndex, rowIndex, finalIdx, itemImage);
+                                            GameData.getSender().moveBox(startingX, startingY, startingIdx, colIndex, rowIndex, finalIdx);
+                                            System.out.println("Moved box from x: " + startingX + " y: " + startingY + " idx: " + startingIdx + " to " + "x: "+ colIndex + " y: "+ rowIndex+ " idx: " + finalIdx);
 
                                             isValidDrop = true;
                                         }

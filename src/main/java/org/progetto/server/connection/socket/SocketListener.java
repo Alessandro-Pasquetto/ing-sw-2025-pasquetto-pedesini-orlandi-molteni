@@ -399,7 +399,7 @@ public class SocketListener extends Thread {
         }
 
         else if(messageObj instanceof ResponseRewardBoxMessage responseRewardBoxMessage){
-            int idxBox = responseRewardBoxMessage.getIdxBox();
+            int rewardIdxBox = responseRewardBoxMessage.getRewardIdxBox();
             int idx = responseRewardBoxMessage.getIdx();
             int xBoxStorage = responseRewardBoxMessage.getXBoxStorage();
             int yBoxStorage = responseRewardBoxMessage.getYBoxStorage();
@@ -410,7 +410,7 @@ public class SocketListener extends Thread {
                 return;
             }
 
-            eventController.receiveRewardBox(player, idxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
+            eventController.receiveRewardBox(player, rewardIdxBox, xBoxStorage, yBoxStorage, idx, socketWriter);
         }
 
         else if (messageObj instanceof MoveBoxMessage moveBoxMessage) {

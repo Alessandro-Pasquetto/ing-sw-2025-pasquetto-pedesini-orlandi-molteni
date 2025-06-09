@@ -338,7 +338,11 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
-        resetTravelersReady();
+        Game game = gameManager.getGame();
+
+        for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
+            player.setIsReady(false, game);
+        }
 
         waitConnectedTravelersReady();
     }
