@@ -73,25 +73,14 @@ public class TimerThreadController {
             int currentTimer = timer;
             while (isTimerRunning) {
 
-                boolean freezed = false;
-
                 synchronized (timerThreadLock) {
                     while(gameManager.getGame().getPlayersSize() == 1) {
-                        freezed = true;
-                        gameManager.broadcastGameMessage("Freeze");
-                        gameManager.getFreezeTimer().startTimer();
-
                         try {
                             timerThreadLock.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                }
-
-                if(freezed){
-                    gameManager.getFreezeTimer().stopTimer();
-                    gameManager.broadcastGameMessage("Resume");
                 }
 
                 System.out.println("Timer: " + currentTimer);

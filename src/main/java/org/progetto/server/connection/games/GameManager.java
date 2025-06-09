@@ -285,6 +285,11 @@ public class GameManager {
         }
 
         gameThread.notifyThread();
+
+        if(game.getPlayersSize() == 1){
+            broadcastGameMessage("Freeze");
+            getFreezeTimer().startTimer();
+        }
     }
 
     public synchronized void reconnectPlayer(String namePlayer, Sender sender) {
@@ -343,6 +348,11 @@ public class GameManager {
 
         getTimerController().notifyThread();
         gameThread.notifyThread();
+
+        if(game.getPlayersSize() == 2){
+            getFreezeTimer().stopTimer();
+            broadcastGameMessage("Resume");
+        }
     }
 
     public void kickOutDisconnectedPlayer(Player player) {
