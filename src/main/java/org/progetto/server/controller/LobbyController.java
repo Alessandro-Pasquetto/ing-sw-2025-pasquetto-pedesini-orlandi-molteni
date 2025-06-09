@@ -156,7 +156,7 @@ public class LobbyController {
     public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException{
         int idGame = currentIdGame.getAndIncrement();
 
-        if (numPlayers <= 0 || numPlayers > 4) {
+        if (numPlayers <= 1 || numPlayers > 4) {
             throw new IllegalStateException("NotValidPlayerNumber");
         }
 

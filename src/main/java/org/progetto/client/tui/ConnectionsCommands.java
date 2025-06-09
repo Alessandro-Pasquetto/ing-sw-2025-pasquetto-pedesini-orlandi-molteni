@@ -28,14 +28,19 @@ public class ConnectionsCommands {
     }
 
     /**
-     * Enable to create a game, usage : CreateGame playerName
+     * Enable to create a game, usage : CreateGame playerName Level maxPlayers
      *
      * @author Alessandro
      * @param commandParts are segments of the command
      */
     public static void createGame(String[] commandParts){
-        GameData.setNamePlayer(commandParts[1]);
 
+        if(commandParts[1].length() > 16){
+            System.err.println("Your name needs to be at most 16 characters");
+            return;
+        }
+
+        GameData.setNamePlayer(commandParts[1]);
         try {
             GameData.getSender().createGame(Integer.parseInt(commandParts[2]), Integer.parseInt(commandParts[3]));
         } catch (NumberFormatException e){
@@ -50,6 +55,12 @@ public class ConnectionsCommands {
      * @param commandParts are segments of the command
      */
     public static void joinGame(String[] commandParts){
+
+        if(commandParts[2].length() > 16){
+            System.err.println("Your name needs to be at most 16 characters");
+            return;
+        }
+
         GameData.setNamePlayer(commandParts[2]);
 
         try {

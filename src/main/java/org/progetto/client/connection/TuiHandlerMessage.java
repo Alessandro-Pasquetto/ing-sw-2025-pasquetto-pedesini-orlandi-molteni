@@ -562,6 +562,10 @@ public class TuiHandlerMessage {
                     System.err.println("Not valid game ID!");
                     break;
 
+                case "NotValidPlayerNumber":
+                    System.err.println("The maximum number of players is 4, the minimum is 2");
+                    break;
+
                 case "NotAvailableName":
                     System.err.println("Username not available!");
                     break;

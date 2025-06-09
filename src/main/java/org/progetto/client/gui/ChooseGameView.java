@@ -68,7 +68,7 @@ public class ChooseGameView {
         boxGameLevel.setItems(FXCollections.observableArrayList(1, 2));
         boxGameLevel.setOnAction(event -> gameLevel = boxGameLevel.getValue());
 
-        boxNumMaxPlayers.setItems(FXCollections.observableArrayList(1, 2, 3, 4));
+        boxNumMaxPlayers.setItems(FXCollections.observableArrayList( 2, 3, 4));
         boxNumMaxPlayers.setOnAction(event -> numMaxPlayers = boxNumMaxPlayers.getValue());
 
         gamesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -103,6 +103,11 @@ public class ChooseGameView {
                     // Check if the username is empty
                     if (username.isEmpty()) {
                         Alerts.showError("Please enter your name before joining a game", true);
+                        return;
+                    }
+
+                    if(username.length() > 16) {
+                        Alerts.showError("Your name needs to be at most 16 characters", true);
                         return;
                     }
 
@@ -143,6 +148,11 @@ public class ChooseGameView {
         // Check if the number of players is valid
         if (numMaxPlayers == 0) {
             Alerts.showError("Select the number of players", true);
+            return;
+        }
+
+        if(username.length() > 16) {
+            Alerts.showError("Your name needs to be at most 16 characters", true);
             return;
         }
 
