@@ -2430,7 +2430,7 @@ public class EventView {
 
         PageController.loadControllers();
 
-        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+        PageController.switchScene("chooseGame.fxml");
         sender.updateGameList();
     }
 }

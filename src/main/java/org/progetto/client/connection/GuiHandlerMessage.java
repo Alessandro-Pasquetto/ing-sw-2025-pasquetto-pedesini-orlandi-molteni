@@ -68,7 +68,7 @@ public class GuiHandlerMessage {
             int numMaxPlayer = initGameMessage.getNumMaxPlayers();
 
             try {
-                PageController.switchScene("waitingRoom.fxml", "WaitingRoom");
+                PageController.switchScene("waitingRoom.fxml");
                 PageController.getWaitingRoomView().populateGameInformation(gameId, levelGame, numMaxPlayer);
 
             } catch (IOException e) {
@@ -98,7 +98,7 @@ public class GuiHandlerMessage {
                 switch (gamePhase) {
                     case "BUILDING":
                         PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
-                        PageController.switchScene("buildingPage.fxml", "Building");
+                        PageController.switchScene("buildingPage.fxml");
 
                         sender.showHandComponent();
                         sender.showBookedComponents();
@@ -109,29 +109,29 @@ public class GuiHandlerMessage {
 
                     case "ADJUSTING":
                         PageController.initAdjusting(GameData.getLevelGame());
-                        PageController.switchScene("adjustingPage.fxml", "Adjusting");
+                        PageController.switchScene("adjustingPage.fxml");
 
                         sender.showSpaceship(GameData.getNamePlayer());
                         break;
 
                     case "POPULATING":
                         PageController.initPopulating(GameData.getLevelGame());
-                        PageController.switchScene("populatingPage.fxml", "Populating");
+                        PageController.switchScene("populatingPage.fxml");
                         break;
 
                     case "POSITIONING":
                         PageController.initPositioning(GameData.getLevelGame());
-                        PageController.switchScene("positioningPage.fxml", "Positioning");
+                        PageController.switchScene("positioningPage.fxml");
                         break;
 
                     case "EVENT":
                         PageController.initEvent(GameData.getLevelGame());
-                        PageController.switchScene("eventPage.fxml", "Event");
+                        PageController.switchScene("eventPage.fxml");
                         break;
 
                     case "TRAVEL":
                         PageController.initTravel(GameData.getLevelGame());
-                        PageController.switchScene("travelPage.fxml", "Travel");
+                        PageController.switchScene("travelPage.fxml");
 
                         GameData.getSender().showTrack();
                         break;
@@ -177,39 +177,39 @@ public class GuiHandlerMessage {
                     GameData.saveGameData();
 
                     PageController.initBuilding(GameData.getLevelGame(), GameData.getColor());
-                    PageController.switchScene("buildingPage.fxml", "Building");
+                    PageController.switchScene("buildingPage.fxml");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ADJUSTING")) {
                     PageController.initAdjusting(GameData.getLevelGame());
-                    PageController.switchScene("adjustingPage.fxml", "Adjusting");
+                    PageController.switchScene("adjustingPage.fxml");
 
                     sender.showSpaceship(GameData.getNamePlayer());
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("POPULATING")) {
                     PageController.initPopulating(GameData.getLevelGame());
-                    PageController.switchScene("populatingPage.fxml", "Populating");
+                    PageController.switchScene("populatingPage.fxml");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("POSITIONING")) {
                     PageController.initPositioning(GameData.getLevelGame());
-                    PageController.switchScene("positioningPage.fxml", "Positioning");
+                    PageController.switchScene("positioningPage.fxml");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("EVENT")) {
                     PageController.initEvent(GameData.getLevelGame());
-                    PageController.switchScene("eventPage.fxml", "Event");
+                    PageController.switchScene("eventPage.fxml");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("TRAVEL")){
                     PageController.initTravel(GameData.getLevelGame());
-                    PageController.switchScene("travelPage.fxml", "Travel");
+                    PageController.switchScene("travelPage.fxml");
                 }
 
                 else if(GameData.getPhaseGame().equalsIgnoreCase("ENDGAME")){
                     PageController.initEndGame(GameData.getLevelGame());
-                    PageController.switchScene("gameOverPage.fxml","EndGame");
+                    PageController.switchScene("gameOverPage.fxml");
                 }
 
 
@@ -617,38 +617,52 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof BoxDiscardedMessage boxDiscardedMessage) {
+            Spaceship spaceship = GameData.getSpaceship();
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-            String playerName = boxDiscardedMessage.getPlayerName();
-            int xBoxStorage = boxDiscardedMessage.getXBoxStorage();
-            int yBoxStorage = boxDiscardedMessage.getYBoxStorage();
+            int xBox = boxDiscardedMessage.getXBoxStorage();
+            int yBox = boxDiscardedMessage.getYBoxStorage();
             int idxBox = boxDiscardedMessage.getBoxIdx();
 
-            if(playerName.equals(GameData.getNamePlayer())){
-                PageController.getEventView().removeBox(xBoxStorage, yBoxStorage, idxBox);
-            } else {
+            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
+            bs.removeBox(spaceship, idxBox);
 
-                //todo (controller già invia)
-            }
+            PageController.getEventView().updateSpaceship(spaceship);
         }
 
-        else if(messageObj instanceof BoxAddedMessage boxAddedMessage){
+        else if (messageObj instanceof AnotherPlayerBoxDiscardedMessage anotherPlayerBoxDiscardedMessage) {
+            Spaceship spaceship = GameData.getOtherSpaceships().get(anotherPlayerBoxDiscardedMessage.getPlayerName());
+            Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
+            int xBox = anotherPlayerBoxDiscardedMessage.getXBoxStorage();
+            int yBox = anotherPlayerBoxDiscardedMessage.getYBoxStorage();
+            int idxBox = anotherPlayerBoxDiscardedMessage.getBoxIdx();
+
+            BoxStorage bs = (BoxStorage) spaceshipMatrix[yBox][xBox];
+            bs.removeBox(spaceship, idxBox);
+
+            PageController.getEventView().updateOtherPlayerSpaceship(anotherPlayerBoxDiscardedMessage.getPlayerName(), spaceship);
+        }
+
+        else if (messageObj instanceof BoxAddedMessage boxAddedMessage) {
             String playerName = boxAddedMessage.getPlayerName();
             int xBoxStorage = boxAddedMessage.getXBoxStorage();
             int yBoxStorage = boxAddedMessage.getYBoxStorage();
             int idxBox = boxAddedMessage.getBoxIdx();
             Box box = boxAddedMessage.getBox();
 
-            if(playerName.equals(GameData.getNamePlayer())){
-                System.out.println("addedBox");
-            } else {
+            if (!playerName.equals(GameData.getNamePlayer())){
+                Spaceship spaceship = GameData.getOtherSpaceships().get(playerName);
+                Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-                //todo (controller già invia)
+                BoxStorage bs = (BoxStorage) spaceshipMatrix[yBoxStorage][xBoxStorage];
+                bs.addBox(spaceship, box, idxBox);
+
+                PageController.getEventView().updateOtherPlayerSpaceship(playerName, spaceship);
             }
         }
 
-        else if(messageObj instanceof BoxMovedMessage boxAddedMessage){
-
+        else if (messageObj instanceof BoxMovedMessage boxAddedMessage) {
             String playerName = boxAddedMessage.getPlayerName();
             int xBox_start = boxAddedMessage.getXBoxStorage_start();
             int yBox_start = boxAddedMessage.getYBoxStorage_start();
@@ -657,11 +671,18 @@ public class GuiHandlerMessage {
             int yBox_end = boxAddedMessage.getYBoxStorage_end();
             int idxBox_end = boxAddedMessage.getBoxIdx_start();
 
-            if(playerName.equals(GameData.getNamePlayer())){
-                System.out.println("movedBox");
-            } else {
+            if (!playerName.equals(GameData.getNamePlayer())) {
+                Spaceship spaceship = GameData.getOtherSpaceships().get(playerName);
+                Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
-                //todo (controller già invia)
+                BoxStorage bs_start = (BoxStorage) spaceshipMatrix[yBox_start][xBox_start];
+                BoxStorage bs_end = (BoxStorage) spaceshipMatrix[yBox_end][xBox_end];
+
+                Box box = bs_start.getBoxes()[idxBox_start];
+                bs_start.removeBox(spaceship, idxBox_start);
+                bs_end.addBox(spaceship, box, idxBox_end);
+
+                PageController.getEventView().updateOtherPlayerSpaceship(playerName, spaceship);
             }
         }
 
@@ -868,7 +889,7 @@ public class GuiHandlerMessage {
                 case "FailedToReconnect":
                     GameData.clearSaveFile();
                     try {
-                        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                        PageController.switchScene("chooseGame.fxml");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

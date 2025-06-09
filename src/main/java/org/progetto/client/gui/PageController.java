@@ -120,7 +120,7 @@ public class PageController {
 
         loadControllers();
 
-        switchScene("connection.fxml", "Connection");
+        switchScene("connection.fxml");
     }
 
     /**
@@ -179,10 +179,9 @@ public class PageController {
      *
      * @author Alessandro
      * @param fxmlFile the name of the FXML file
-     * @param title    the title of the window
      * @throws IOException if the FXML file cannot be loaded
      */
-    public static void switchScene(String fxmlFile, String title) throws IOException {
+    public static void switchScene(String fxmlFile) throws IOException {
         Parent root = switch (fxmlFile) {
             case "connection.fxml" -> connectionRoot;
             case "chooseGame.fxml" -> chooseGameRoot;
@@ -217,7 +216,7 @@ public class PageController {
         stage.setMaximized(true);
 
         stage.setScene(scene);
-        stage.setTitle(title);
+        stage.setTitle("Galaxy Trucker");
 
         stage.show();
     }

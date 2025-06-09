@@ -198,7 +198,7 @@ public class LostStationController extends EventControllerAbstract {
             lostStation.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, idx, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

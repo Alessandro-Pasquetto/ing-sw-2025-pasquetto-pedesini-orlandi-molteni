@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.Building.AnotherPlayerDestroyedComponentMessage;
 import org.progetto.messages.toClient.DestroyedComponentMessage;
+import org.progetto.messages.toClient.EventGeneric.AnotherPlayerBoxDiscardedMessage;
 import org.progetto.messages.toClient.EventGeneric.BoxDiscardedMessage;
 import org.progetto.messages.toClient.EventGeneric.BoxMovedMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
@@ -33,7 +34,6 @@ public class SpaceshipController {
      * @param player owner of the spaceship requested
      */
     public static void showSpaceship(GameManager gameManager, String player, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -43,8 +43,8 @@ public class SpaceshipController {
             Player owner = gameManager.getGame().getPlayerByName(player);
             MessageSenderService.sendMessage(new ResponseSpaceshipMessage(owner.getSpaceship(), owner), sender);
 
-        }catch (IllegalStateException e) {
-            if(e.getMessage().equals("PlayerNameNotFound"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("PlayerNameNotFound"))
                 MessageSenderService.sendMessage("PlayerNameNotFound", sender);
         }
     }
@@ -57,7 +57,6 @@ public class SpaceshipController {
      * @param player owner of the spaceship requested
      */
     public static void spaceshipStats(GameManager gameManager, Player player, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -88,7 +87,6 @@ public class SpaceshipController {
      * @param sender current sender
      */
     public static void moveBox(GameManager gameManager, Player player, int startX, int startY, int startIdx, int endX, int endY, int endIdx, Sender sender) {
-
         EventPhase phase = gameManager.getEventController().getPhase();
         Player activePlayer = gameManager.getGame().getActivePlayer();
 
@@ -133,7 +131,6 @@ public class SpaceshipController {
      * @param sender current sender
      */
     public static void removeBox(GameManager gameManager, Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
-
         EventPhase phase = gameManager.getEventController().getPhase();
         Player activePlayer = gameManager.getGame().getActivePlayer();
 
@@ -148,7 +145,8 @@ public class SpaceshipController {
 
             component.removeBox(player.getSpaceship(), idx);
 
-            gameManager.broadcastGameMessage(new BoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx));
+            MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
+            gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
 
         } catch (ClassCastException e) {
             MessageSenderService.sendMessage("NotAStorageComponent", sender);
@@ -173,7 +171,6 @@ public class SpaceshipController {
      * @return false if is required to select spaceship part
      */
     public static boolean destroyComponentAndCheckValidity(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
-
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         try {
@@ -203,7 +200,6 @@ public class SpaceshipController {
      * @param sender current sender
      */
     public static void startDestroyComponent(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -251,7 +247,6 @@ public class SpaceshipController {
      * @param yComponent y coordinate of chosen component
      */
     public static void chooseSpaceshipPartToKeep(GameManager gameManager, Player player, int xComponent, int yComponent, Sender sender) throws IllegalStateException {
-
         try {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 

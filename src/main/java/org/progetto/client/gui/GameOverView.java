@@ -147,7 +147,7 @@ public class GameOverView {
 
         PageController.loadControllers();
 
-        PageController.switchScene("chooseGame.fxml", "ChooseGame");
+        PageController.switchScene("chooseGame.fxml");
         sender.updateGameList();
     }
 }

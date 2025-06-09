@@ -8,7 +8,6 @@ public class BoxDiscardedMessage implements Serializable {
     // ATTRIBUTES
     // =======================
 
-    private final String playerName;
     private final int xBoxStorage;
     private final int yBoxStorage;
     private final int boxIdx;
@@ -17,8 +16,7 @@ public class BoxDiscardedMessage implements Serializable {
     // CONSTRUCTORS
     // =======================
 
-    public BoxDiscardedMessage(String playerName, int xBoxStorage, int yBoxStorage, int boxIdx) {
-        this.playerName = playerName;
+    public BoxDiscardedMessage(int xBoxStorage, int yBoxStorage, int boxIdx) {
         this.xBoxStorage = xBoxStorage;
         this.yBoxStorage = yBoxStorage;
         this.boxIdx = boxIdx;
@@ -27,10 +25,6 @@ public class BoxDiscardedMessage implements Serializable {
     // =======================
     // GETTERS
     // =======================
-
-    public String getPlayerName() {
-        return playerName;
-    }
 
     public int getXBoxStorage() {
         return xBoxStorage;

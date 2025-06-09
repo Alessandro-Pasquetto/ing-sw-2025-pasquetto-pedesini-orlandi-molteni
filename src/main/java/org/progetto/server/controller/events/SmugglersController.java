@@ -455,7 +455,8 @@ public class SmugglersController extends EventControllerAbstract {
         boxSlots.add(new BoxSlot(boxStorage, idx));
         requestedBoxes--;
 
-        gameManager.broadcastGameMessage(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx));
+        MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
+        gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), xBoxStorage, yBoxStorage, idx), sender);
         
         if (requestedBoxes == 0) {
 
@@ -583,7 +584,7 @@ public class SmugglersController extends EventControllerAbstract {
             smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
-            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, idx, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

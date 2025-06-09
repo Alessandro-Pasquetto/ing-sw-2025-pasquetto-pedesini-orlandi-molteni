@@ -569,7 +569,7 @@ public class RmiClientSender implements Sender {
         if(GameData.getUIType().equals("GUI")) {
             Platform.runLater(() -> {
                 try {
-                    PageController.switchScene("connection.fxml", "Connection");
+                    PageController.switchScene("connection.fxml");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

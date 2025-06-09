@@ -209,7 +209,7 @@ public class PlanetsController extends EventControllerAbstract {
             planets.chooseRewardBox(player.getSpaceship(), (BoxStorage) boxStorage, box, idx);
 
             rewardBoxes.remove(box);
-            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, rewardIdxBox, box));
+            gameManager.broadcastGameMessage(new BoxAddedMessage(player.getName(), xBoxStorage, yBoxStorage, idx, box));
 
         } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);

@@ -109,7 +109,7 @@ public class ConnectionView {
 
             if(!GameData.hasSavedGameData()){
 
-                PageController.switchScene("chooseGame.fxml", "ChooseGame");
+                PageController.switchScene("chooseGame.fxml");
                 GameData.getSender().updateGameList();
             }else{
                 GameData.restoreSavedGameData();

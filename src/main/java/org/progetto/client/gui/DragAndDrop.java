@@ -487,7 +487,6 @@ public class DragAndDrop {
 
                                             PageController.getEventView().addBox(colIndex, rowIndex, idx, box);
                                             GameData.getSender().responseRewardBox(rewardBoxIdx, colIndex, rowIndex, idx);
-                                            System.out.println("Placed box at x:" + colIndex + " y:" + rowIndex + " in slot " + idx);
 
                                             isValidDrop = true;
                                         }
@@ -521,7 +520,6 @@ public class DragAndDrop {
                                             itemImage.setLayoutX((slot.getWidth() - itemImage.getFitWidth()) / 2);
                                             itemImage.setLayoutY((slot.getHeight() - itemImage.getFitHeight()) / 2);
                                             itemImage.setRotate(-slot.getParent().getRotate());
-
 
                                             PageController.getEventView().moveBox(startingX, startingY, startingIdx, colIndex, rowIndex, finalIdx, itemImage);
                                             GameData.getSender().moveBox(startingX, startingY, startingIdx, colIndex, rowIndex, finalIdx);
