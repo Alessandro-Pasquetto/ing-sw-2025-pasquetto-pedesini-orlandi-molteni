@@ -428,7 +428,6 @@ public class BattlezoneController extends EventControllerAbstract {
             return;
         }
 
-
         if (phase.equals(EventPhase.DISCARDED_BATTERIES) || phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)) {
 
             batteryStorages.add(batteryStorage);
@@ -467,7 +466,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 }
             }
 
-        }else if(isDiscardingShieldBattery){
+        } else if(isDiscardingShieldBattery) {
 
             batteryStorage.decrementItemsCount(player.getSpaceship(), 1);
 
@@ -966,6 +965,8 @@ public class BattlezoneController extends EventControllerAbstract {
 
             gameManager.getGameThread().waitTravelerReady(penaltyPlayer);
 
+            System.out.println("CIAO 4");
+
             // If the player is disconnected
             if (!penaltyPlayer.getIsReady()) {
                 handleCurrentMeteorForDisconnectedPlayer(penaltyPlayer);
@@ -1058,6 +1059,7 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
             return;
         }
 
@@ -1138,11 +1140,13 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
             return;
         }
 
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
             penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
         } else
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
     }

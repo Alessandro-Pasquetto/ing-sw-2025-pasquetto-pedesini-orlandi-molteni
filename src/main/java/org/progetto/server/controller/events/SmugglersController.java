@@ -104,8 +104,7 @@ public class SmugglersController extends EventControllerAbstract {
             int maxUsable = spaceship.maxNumberOfDoubleCannonsUsable();
 
             // If he can use any double cannon, and he doesn't win with normalShootingPower
-            if(maxUsable != 0 && smugglers.battleResult(playerFirePower) != -1){
-
+            if(maxUsable != 0 && smugglers.battleResult(playerFirePower) != 1){
                 batteryStorages.clear();
                 boxSlots.clear();
 

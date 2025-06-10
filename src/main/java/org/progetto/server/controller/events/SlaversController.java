@@ -98,7 +98,6 @@ public class SlaversController extends EventControllerAbstract {
 
             // If he can use any double cannon, and he doesn't win with normalShootingPower
             if (maxUsable != 0 && slavers.battleResult(playerFirePower) != 1) {
-
                 batteryStorages.clear();
 
                 phase = EventPhase.CANNON_NUMBER;

@@ -695,7 +695,7 @@ public class GuiHandlerMessage {
             PageController.getEventView().updateActivePlayer(GameData.getNamePlayer());
 
             PageController.getEventView().setEventLabels("ANOTHER PLAYER GOT PENALIZED", "Wait for that player to finish his turn...");
-            PageController.getEventView().addChatMessage(anotherPlayerGotPenalizedMessage.getPlayerName() + " got penalized for current condition", "INFO");
+            PageController.getEventView().addChatMessage(anotherPlayerGotPenalizedMessage.getPlayerName() + " got penalized for current condition", "RED");
         }
 
         else if (messageObj instanceof IncomingProjectileMessage incomingProjectileMessage) {
@@ -1027,7 +1027,7 @@ public class GuiHandlerMessage {
                     PageController.getEventView().updateActivePlayer(GameData.getNamePlayer());
 
                     PageController.getEventView().setEventLabels("YOU ARE PENALIZED", "You are penalized for current condition...");
-                    PageController.getEventView().addChatMessage("You are penalized for current condition", "INFO");
+                    PageController.getEventView().addChatMessage("You are penalized for current condition", "RED");
                     break;
 
                 case "BoxNotDiscarded":

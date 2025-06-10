@@ -195,7 +195,6 @@ public class PiratesController extends EventControllerAbstract {
 
             // If he can use any double cannon, and he doesn't win with normalShootingPower
             if (maxUsable != 0 && pirates.battleResult(playerFirePower) != 1) {
-
                 batteryStorages.clear();
 
                 phase = EventPhase.CANNON_NUMBER;
