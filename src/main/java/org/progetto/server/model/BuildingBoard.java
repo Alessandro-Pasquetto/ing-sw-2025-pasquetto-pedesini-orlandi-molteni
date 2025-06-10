@@ -868,6 +868,7 @@ public class BuildingBoard implements Serializable {
                     if(!checkAndSetAllowPurpleAlien(hu)){
                         if(hu.getHasPurpleAlien()){
                             hu.setAlienPurple(false);
+                            hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienPurple(false);
                             spaceship.addCrewCount(-1);
                         }
@@ -876,6 +877,7 @@ public class BuildingBoard implements Serializable {
                     if(!checkAndSetAllowOrangeAlien(hu)){
                         if(hu.getHasOrangeAlien()){
                             hu.setAlienOrange(false);
+                            hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienOrange(false);
                             spaceship.addCrewCount(-1);
                         }

@@ -965,8 +965,6 @@ public class BattlezoneController extends EventControllerAbstract {
 
             gameManager.getGameThread().waitTravelerReady(penaltyPlayer);
 
-            System.out.println("CIAO 4");
-
             // If the player is disconnected
             if (!penaltyPlayer.getIsReady()) {
                 handleCurrentMeteorForDisconnectedPlayer(penaltyPlayer);
@@ -1059,7 +1057,6 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
-            gameManager.getGameThread().notifyThread();
             return;
         }
 

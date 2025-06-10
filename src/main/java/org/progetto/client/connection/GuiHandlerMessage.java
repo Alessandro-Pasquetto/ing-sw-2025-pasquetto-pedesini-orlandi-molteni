@@ -748,9 +748,7 @@ public class GuiHandlerMessage {
         }
 
         else if(messageObj instanceof AnotherPlayerLandedPlanetMessage anotherPlayerLandedPlanetMessage) {
-            if(!(GameData.getActivePlayer().equals(anotherPlayerLandedPlanetMessage.getPlayerName()))) {
-                PageController.getEventView().addChatMessage(anotherPlayerLandedPlanetMessage.getPlayerName() + " landed on planet " + anotherPlayerLandedPlanetMessage.getPlanetIdx(), "INFO");
-            }
+            PageController.getEventView().addChatMessage(anotherPlayerLandedPlanetMessage.getPlayerName() + " landed on planet " + (anotherPlayerLandedPlanetMessage.getPlanetIdx() + 1), "INFO");
         }
 
         else if (messageObj instanceof TimerMessage timerMessage) {
@@ -758,7 +756,7 @@ public class GuiHandlerMessage {
             PageController.getBuildingView().updateTimer(timer);
         }
 
-        else if (messageObj instanceof DestroyedComponentMessage destroyedComponentMessage) {
+        else if (messageObj instanceof DestroyedComponentMessage) {
 
             switch (GameData.getPhaseGame()) {
 

@@ -440,6 +440,7 @@ public class EventView {
         creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
     }
 
+    //todo sistemare pallino
     public void spawnShot(int indexCoord) {
 
         int SHOT_SIZE = 15;
@@ -498,7 +499,6 @@ public class EventView {
 
         Platform.runLater(() -> {
             Bounds boundsStart = refStart.localToScene(refStart.getBoundsInLocal());
-
             Point2D posStart = overlayPane.sceneToLocal(boundsStart.getMinX(), boundsStart.getMinY());
 
             Circle redCircle = new Circle(SHOT_SIZE, Color.RED);
@@ -507,59 +507,33 @@ public class EventView {
                 case 0:
                     redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
                     redCircle.setLayoutY(posStart.getY() - 20);
-                    overlayPane.getChildren().add(redCircle);
-
-                    TranslateTransition ttDown = new TranslateTransition(Duration.seconds(1), redCircle);
-                    ttDown.setByY(refStart.getBoundsInLocal().getHeight() + 20);
-                    ttDown.setOnFinished(e -> {
-                        overlayPane.getChildren().remove(redCircle);
-                        parentStack.getChildren().remove(overlayPane);
-                    });
-                    ttDown.play();
                     break;
 
                 case 1:
                     redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() + 20);
                     redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
-                    overlayPane.getChildren().add(redCircle);
-
-                    TranslateTransition ttLeft = new TranslateTransition(Duration.seconds(1), redCircle);
-                    ttLeft.setByX(-refStart.getBoundsInLocal().getWidth() - 20);
-                    ttLeft.setOnFinished(e -> {
-                        overlayPane.getChildren().remove(redCircle);
-                        parentStack.getChildren().remove(overlayPane);
-                    });
-                    ttLeft.play();
                     break;
 
                 case 2:
                     redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
                     redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() + 20);
-                    overlayPane.getChildren().add(redCircle);
-
-                    TranslateTransition ttUp = new TranslateTransition(Duration.seconds(1), redCircle);
-                    ttUp.setByY(-refStart.getBoundsInLocal().getHeight() - 20);
-                    ttUp.setOnFinished(e -> {
-                        overlayPane.getChildren().remove(redCircle);
-                        parentStack.getChildren().remove(overlayPane);
-                    });
-                    ttUp.play();
                     break;
 
                 case 3:
                     redCircle.setLayoutX(posStart.getX() - 20);
                     redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
-                    overlayPane.getChildren().add(redCircle);
-
-                    TranslateTransition ttRight = new TranslateTransition(Duration.seconds(1), redCircle);
-                    ttRight.setByX(refStart.getBoundsInLocal().getWidth() + 20);
-                    ttRight.setOnFinished(e -> {
-                        overlayPane.getChildren().remove(redCircle);
-                        parentStack.getChildren().remove(overlayPane);
-                    });
-                    ttRight.play();
                     break;
             }
+
+            overlayPane.getChildren().add(redCircle);
+
+            // Rimuove il cerchio e l'overlay dopo 3 secondi
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            pause.setOnFinished(e -> {
+                overlayPane.getChildren().remove(redCircle);
+                parentStack.getChildren().remove(overlayPane);
+            });
+            pause.play();
         });
     }
 
