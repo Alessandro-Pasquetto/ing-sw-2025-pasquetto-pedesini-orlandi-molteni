@@ -1100,7 +1100,7 @@ class BuildingBoardTest {
         buildingBoard2.destroyComponent(4, 1);
 
         assertTrue(buildingBoard2.checkShipValidityAndFixAliens());
-        assertEquals(2, spaceship2.getCrewCount());
+        assertEquals(1, spaceship2.getCrewCount());
         assertFalse(hu.getHasPurpleAlien());
 
         buildingBoard2.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{3, 3, 3, 3}, "imgPath"));
@@ -1114,7 +1114,7 @@ class BuildingBoardTest {
         buildingBoard2.destroyComponent(4, 1);
 
         assertTrue(buildingBoard2.checkShipValidityAndFixAliens());
-        assertEquals(2, spaceship2.getCrewCount());
+        assertEquals(0, spaceship2.getCrewCount());
         assertFalse(hu.getHasOrangeAlien());
 
         //printBoard(buildingBoard2);

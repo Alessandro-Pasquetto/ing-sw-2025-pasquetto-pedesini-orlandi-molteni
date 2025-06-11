@@ -161,6 +161,40 @@ class BattlezoneTest {
     }
 
     @Test
+    void randomDiscardCrew(){
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        buildingBoard.setHandComponent(housingUnit);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+
+        // Removes one crew member from the Housing unit
+        battlezone.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(3, mario.getSpaceship().getCrewCount());
+
+        // Remove another 2 crew members from the housing unit
+        battlezone.randomDiscardCrew(mario.getSpaceship(), 2);
+        assertEquals(1, mario.getSpaceship().getCrewCount());
+
+        // Remove another crew member from the housing unit
+        battlezone.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getCrewCount());
+
+        // Tries to remove another crew member from an empty housing unit
+        battlezone.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getCrewCount());
+    }
+
+    @Test
     void checkShields() {
         Game game = new Game(0, 4, 2);
 
@@ -394,7 +428,7 @@ class BattlezoneTest {
     }
 
     @Test
-    void chooseDiscardedBattery() {
+    void randomDiscardBoxes() {
         Game game = new Game(0, 3, 2);
 
         Player mario = new Player("mario");
@@ -402,24 +436,56 @@ class BattlezoneTest {
         game.addPlayer(mario);
         game.initPlayersSpaceship();
 
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
         Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
-        BatteryStorage notBattery = new BatteryStorage(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
+        bs1.addBox(mario.getSpaceship(), Box.YELLOW, 2);
+        bs1.addBox(mario.getSpaceship(), Box.GREEN, 1);
+        buildingBoard.setHandComponent(bs1);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+
+        // Removes one box from the Box storage
+        battlezone.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(1, mario.getSpaceship().getBoxesCount());
+
+        // Remove another box from the box storage
+        battlezone.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBoxesCount());
+
+        // Tries to remove another box from an empty box storage
+        battlezone.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBoxesCount());
+    }
+
+    @Test
+    void randomDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Battlezone battlezone = new Battlezone(CardType.BATTLEZONE, 2, "img", new ArrayList<>());
         BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
-        battery.incrementItemsCount(mario.getSpaceship(), 2);
+        buildingBoard.setHandComponent(battery);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
 
-        // Returns false if component is not a Housing Unit
-        assertFalse(battlezone.chooseDiscardedBattery(mario.getSpaceship(), (BatteryStorage) notBattery));
-
-        // Removes one battery member from the Housing Unit
-        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(1, battery.getItemsCount());
+        // Removes one battery from the Battery Storage
+        battlezone.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(1, mario.getSpaceship().getBatteriesCount());
 
         // Remove another battery from the storage
-        assertTrue(battlezone.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
+        battlezone.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBatteriesCount());
 
         // Tries to remove another battery from an empty storage
-        assertFalse(battlezone.chooseDiscardedBattery(mario.getSpaceship(), battery));
-        assertEquals(0, battery.getItemsCount());
+        battlezone.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBatteriesCount());
     }
 }

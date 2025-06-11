@@ -2,11 +2,14 @@ package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.model.Board;
+import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,6 +72,40 @@ class SlaversTest {
         purple.incrementCrewCount(mario.getSpaceship(), 1);
         slavers.chooseDiscardedCrew(mario.getSpaceship(), purple);
         assertFalse(crew.getHasPurpleAlien());
+    }
+
+    @Test
+    void randomDiscardCrew(){
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
+        HousingUnit housingUnit = new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2);
+        buildingBoard.setHandComponent(housingUnit);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+
+        // Removes one crew member from the Housing unit
+        slavers.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(3, mario.getSpaceship().getCrewCount());
+
+        // Remove another 2 crew members from the housing unit
+        slavers.randomDiscardCrew(mario.getSpaceship(), 2);
+        assertEquals(1, mario.getSpaceship().getCrewCount());
+
+        // Remove another crew member from the housing unit
+        slavers.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getCrewCount());
+
+        // Tries to remove another crew member from an empty housing unit
+        slavers.randomDiscardCrew(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getCrewCount());
     }
 
     @Test

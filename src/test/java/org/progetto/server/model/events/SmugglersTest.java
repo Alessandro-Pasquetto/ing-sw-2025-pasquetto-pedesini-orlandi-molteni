@@ -1,10 +1,7 @@
 package org.progetto.server.model.events;
 
 import org.junit.jupiter.api.Test;
-import org.progetto.server.model.Board;
-import org.progetto.server.model.Game;
-import org.progetto.server.model.Player;
-import org.progetto.server.model.Spaceship;
+import org.progetto.server.model.*;
 import org.progetto.server.model.components.*;
 
 import java.util.ArrayList;
@@ -118,6 +115,63 @@ class SmugglersTest {
     }
 
     @Test
+    void randomDiscardBoxes() {
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
+        bs1.addBox(mario.getSpaceship(), Box.YELLOW, 2);
+        bs1.addBox(mario.getSpaceship(), Box.GREEN, 1);
+        buildingBoard.setHandComponent(bs1);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+
+        // Removes one box from the Box storage
+        smugglers.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(1, mario.getSpaceship().getBoxesCount());
+
+        // Remove another box from the box storage
+        smugglers.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBoxesCount());
+
+        // Tries to remove another box from an empty box storage
+        smugglers.randomDiscardBoxes(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBoxesCount());
+    }
+
+    @Test
+    void discardAllBoxes() {
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
+        BoxStorage bs1 = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 1, 1, 1}, "", 3);
+        bs1.addBox(mario.getSpaceship(), Box.YELLOW, 2);
+        bs1.addBox(mario.getSpaceship(), Box.GREEN, 1);
+        buildingBoard.setHandComponent(bs1);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+        assertEquals(2, mario.getSpaceship().getBoxesCount());
+
+        // Removes one box from the Box storage
+        smugglers.discardAllBoxes(mario.getSpaceship());
+        assertEquals(0, mario.getSpaceship().getBoxesCount());
+    }
+
+    @Test
     void battleResult() {
         ArrayList<Box> rewardBoxes1 = new ArrayList<>();
         rewardBoxes1.add(Box.RED);
@@ -138,5 +192,35 @@ class SmugglersTest {
 
         //compares a higher power than required
         assertEquals(1, smugglers1.battleResult(8));
+    }
+
+    @Test
+    void randomDiscardedBattery() {
+        Game game = new Game(0, 3, 2);
+
+        Player mario = new Player("mario");
+
+        game.addPlayer(mario);
+        game.initPlayersSpaceship();
+
+        BuildingBoard buildingBoard = mario.getSpaceship().getBuildingBoard();
+
+        Smugglers smugglers = new Smugglers(CardType.SMUGGLERS, 2, "imgPath", 5, 2, -3, new ArrayList<>());
+        BatteryStorage battery = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2);
+        buildingBoard.setHandComponent(battery);
+        buildingBoard.placeComponent(3, 1, 0);
+        mario.getSpaceship().getBuildingBoard().initSpaceshipParams();
+
+        // Removes one battery from the Battery Storage
+        smugglers.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(1, mario.getSpaceship().getBatteriesCount());
+
+        // Remove another battery from the storage
+        smugglers.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBatteriesCount());
+
+        // Tries to remove another battery from an empty storage
+        smugglers.randomDiscardBatteries(mario.getSpaceship(), 1);
+        assertEquals(0, mario.getSpaceship().getBatteriesCount());
     }
 }
