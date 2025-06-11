@@ -1216,10 +1216,14 @@ public class GuiHandlerMessage {
                     break;
 
                 case "YouLost":
+                    GameData.getSender().leaveGame();
+
                     PageController.getGameOverView().initGameOver(1);
                     break;
 
                 case "YouWon":
+                    GameData.getSender().leaveGame();
+
                     PageController.getGameOverView().initGameOver(0);
                     break;
 
@@ -1294,6 +1298,8 @@ public class GuiHandlerMessage {
                     break;
 
                 case "WonByForfeit":
+                    GameData.getSender().leaveGame();
+
                     switch (GameData.getPhaseGame()) {
                         case "BUILDING":
                             PageController.getBuildingView().winDuringFreeze();

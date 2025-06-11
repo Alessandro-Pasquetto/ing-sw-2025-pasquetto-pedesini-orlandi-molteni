@@ -130,6 +130,13 @@ public class SocketListener extends Thread {
         GameManager gameManager = clientHandler.getGameManager();
         Player player = clientHandler.getPlayer();
 
+        if(messageObj instanceof String messageString && messageString.equals("LeaveGame")){
+            gameManager.leaveGame(player, socketWriter);
+            clientHandler.setGameManager(null);
+            clientHandler.setPlayer(null);
+            return;
+        }
+
         // Freeze game
         if(gameManager.getGame().getPlayersSize() == 1)
             return;
@@ -517,12 +524,6 @@ public class SocketListener extends Thread {
                     }
 
                     eventController.rollDice(player, socketWriter);
-                    break;
-
-                case "LeaveGame":
-                    gameManager.leaveGame(player, socketWriter);
-                    clientHandler.setGameManager(null);
-                    clientHandler.setPlayer(null);
                     break;
 
                 default:

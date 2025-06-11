@@ -50,7 +50,7 @@
     </ScrollPane>
 
     <!-- Freeze -->
-    <VBox fx:id="freezePane" alignment="CENTER" mouseTransparent="true" spacing="50" visible="false" StackPane.alignment="CENTER" >
+    <VBox fx:id="freezePane" alignment="CENTER" spacing="50" visible="false" StackPane.alignment="CENTER" >
         <Label fx:id="freezeTitle" text="You are alone in the game..." />
         <Label fx:id="freezeTimer" text="" />
         <Label fx:id="freezeDesc" text="Waiting for other players to reconnect, otherwise you will win..." />

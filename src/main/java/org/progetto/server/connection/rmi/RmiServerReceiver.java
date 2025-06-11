@@ -1081,9 +1081,6 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     public void leaveGame(VirtualClient virtualClient, int idGame) throws RemoteException {
         GameManager gameManager = GameManagerMaps.getGameManager(idGame);
 
-        if(gameManager.getGame().getPlayersSize() == 1)
-            return;
-
         Player player;
         try{
             player = gameManager.getPlayerBySender(virtualClient);

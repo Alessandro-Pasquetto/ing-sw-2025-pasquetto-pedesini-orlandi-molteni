@@ -141,7 +141,6 @@ public class GameOverView {
      */
     public void returnToLobby() throws IOException {
         Sender sender = GameData.getSender();
-        sender.leaveGame();
 
         GameData.resetData();
 

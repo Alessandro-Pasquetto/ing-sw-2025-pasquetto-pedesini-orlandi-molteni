@@ -190,15 +190,8 @@ public class LobbyController {
         MessageSenderService.sendMessage(new WaitingPlayersMessage(game.getPlayersCopy()), sender);
         MessageSenderService.sendMessage(new NewGamePhaseMessage(game.getPhase().toString()), sender);
 
-        //Refresh game list
-        showWaitingGames(sender);
-
-        if(numPlayers != 1){
-            GameManagerMaps.addWaitingGameManager(idGame, gameManager);
-            broadcastLobbyMessage("UpdateGameList");
-        }
-        else
-            gameManager.getGameThread().notifyThread();
+        GameManagerMaps.addWaitingGameManager(idGame, gameManager);
+        broadcastLobbyMessage("UpdateGameList");
 
         return gameManager;
     }

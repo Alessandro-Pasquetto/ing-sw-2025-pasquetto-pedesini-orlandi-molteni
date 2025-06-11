@@ -452,8 +452,6 @@ public class EventView {
         int SHOT_SIZE = 60;
         int SHOT_OFFSET = 15;
 
-        //System.out.println(indexCoord+"  "+ shotFrom);
-
         if(shotFrom == 0 || shotFrom == 2) {
             if (indexCoord < 4 || indexCoord > 10)
                 return;
@@ -513,7 +511,6 @@ public class EventView {
         final Bounds boundsStart = referenceNodeStart;
 
         Platform.runLater(() -> {
-            Point2D posStart = overlayPane.sceneToLocal(boundsStart.getMinX(), boundsStart.getMinY());
 
             Image img = new Image(String.valueOf(MainClient.class.getResource("img/meteor.png")));
             ImageView projectile = new ImageView(img);
@@ -561,22 +558,8 @@ public class EventView {
                 parentStack.getChildren().remove(overlayPane);
             });
             pause.play();
-            pause.play();
         });
     }
-
-//    private Node getNodeByColumnRowIndex(final int column, final int row, GridPane gridPane) {
-//        for (Node node : gridPane.getChildren()) {
-//            Integer colIndex = GridPane.getColumnIndex(node);
-//            Integer rowIndex = GridPane.getRowIndex(node);
-//            if (colIndex == null) colIndex = 0;
-//            if (rowIndex == null) rowIndex = 0;
-//            if (colIndex == column && rowIndex == row) {
-//                return node;
-//            }
-//        }
-//        return null;
-//    }
 
     /**
      * Updates the spaceship matrix with the current spaceship
