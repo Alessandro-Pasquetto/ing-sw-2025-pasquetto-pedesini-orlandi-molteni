@@ -434,7 +434,6 @@ public class SmugglersController extends EventControllerAbstract {
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
             return;
         }
-        //End validation
 
         switch (box){
             case RED:
@@ -468,14 +467,27 @@ public class SmugglersController extends EventControllerAbstract {
 
         } else {
 
-            if(boxSlots.size() != player.getSpaceship().getBoxesCount()){
+            if (boxSlots.size() != player.getSpaceship().getBoxesCount()){
                 MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
-            } else{
-                MessageSenderService.sendMessage("NotEnoughBoxes", sender);
-                requestedBatteries = requestedBoxes;
-                phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
-                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBoxes), sender);
+            } else {
+
+                if (player.getSpaceship().getBatteriesCount() > 0) {
+                    MessageSenderService.sendMessage("NotEnoughBoxes", sender);
+                    requestedBatteries = requestedBoxes;
+                    phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
+                    MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+
+                } else {
+                    MessageSenderService.sendMessage("NotEnoughBatteries", sender);
+
+                    for (BoxSlot boxSlot : boxSlots) {
+                        boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
+                    }
+
+                    player.setIsReady(true, gameManager.getGame());
+                    gameManager.getGameThread().notifyThread();
+                }
             }
         }
     }

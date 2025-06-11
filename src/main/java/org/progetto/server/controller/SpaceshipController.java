@@ -183,10 +183,12 @@ public class SpaceshipController {
         MessageSenderService.sendMessage(new DestroyedComponentMessage(xComponent, yComponent), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDestroyedComponentMessage(player.getName(), xComponent, yComponent), sender);
 
+        boolean isValid = player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens();
+
         gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
         // Checks ship validity
-        return player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens();
+        return isValid;
     }
 
     /**
