@@ -440,10 +440,13 @@ public class EventView {
         creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
     }
 
+
+
     //todo sistemare pallino
     public void spawnShot(int indexCoord) {
 
-        int SHOT_SIZE = 15;
+
+        int SHOT_SIZE = 60;
 
         if(shotFrom == 0 || shotFrom == 2)
             indexCoord += GameData.getLevelGame() - 6;
@@ -451,7 +454,6 @@ public class EventView {
             indexCoord -= 5;
 
         StackPane parentStack = (StackPane) spaceshipMatrix.getParent();
-
         Pane overlayPane = new Pane();
         overlayPane.setPickOnBounds(false);
 
@@ -501,38 +503,52 @@ public class EventView {
             Bounds boundsStart = refStart.localToScene(refStart.getBoundsInLocal());
             Point2D posStart = overlayPane.sceneToLocal(boundsStart.getMinX(), boundsStart.getMinY());
 
-            Circle redCircle = new Circle(SHOT_SIZE, Color.RED);
+            Image img = new Image(String.valueOf(MainClient.class.getResource("img/meteor.png")));
+            ImageView projectile = new ImageView(img);
+            projectile.setFitHeight(SHOT_SIZE);
+            projectile.setPreserveRatio(true);
+
+            TranslateTransition translate = new TranslateTransition(Duration.millis(1000), projectile);
 
             switch (shotFrom) {
                 case 0:
-                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
-                    redCircle.setLayoutY(posStart.getY() - 20);
+                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
+                    projectile.setLayoutY(posStart.getY());
+                    translate.setByY(spaceshipMatrix.getHeight());
                     break;
 
                 case 1:
-                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() + 20);
-                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth());
+                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setRotate(90);
+                    translate.setByX(-spaceshipMatrix.getWidth());
                     break;
 
                 case 2:
-                    redCircle.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
-                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() + 20);
+                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
+                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() );
+                    projectile.setRotate(180);
+                    translate.setByY(-spaceshipMatrix.getHeight());
                     break;
 
                 case 3:
-                    redCircle.setLayoutX(posStart.getX() - 20);
-                    redCircle.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setLayoutX(posStart.getX());
+                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setRotate(270);
+                    translate.setByX(spaceshipMatrix.getWidth());
                     break;
             }
 
-            overlayPane.getChildren().add(redCircle);
+            overlayPane.getChildren().add(projectile);
+            translate.play();
 
             // Rimuove il cerchio e l'overlay dopo 3 secondi
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
             pause.setOnFinished(e -> {
-                overlayPane.getChildren().remove(redCircle);
+                overlayPane.getChildren().remove(projectile);
                 parentStack.getChildren().remove(overlayPane);
             });
+            pause.play();
             pause.play();
         });
     }

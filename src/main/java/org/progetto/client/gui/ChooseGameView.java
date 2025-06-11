@@ -72,6 +72,7 @@ public class ChooseGameView {
         boxNumMaxPlayers.setOnAction(event -> numMaxPlayers = boxNumMaxPlayers.getValue());
 
         gamesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        gamesTable.getColumns().forEach(column -> column.setReorderable(false));
         gameIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         levelCol.setCellValueFactory(new PropertyValueFactory<>("level"));
         maxPlayersCol.setCellValueFactory(new PropertyValueFactory<>("maxPlayers"));

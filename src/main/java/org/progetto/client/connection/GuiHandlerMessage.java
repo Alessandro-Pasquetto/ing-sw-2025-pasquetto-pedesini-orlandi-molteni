@@ -486,7 +486,7 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof AcceptRewardCreditsAndPenaltiesMessage acceptRewardCreditsAndPenaltiesMessage) {
             PageController.getEventView().askYesNo(
                     "DO YOU WANT TO ACCEPT CREDITS?",
-                    "You will get " + acceptRewardCreditsAndPenaltiesMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays() +
+                    "You will get " + acceptRewardCreditsAndPenaltiesMessage.getRewardCredits() + " credits, but you will lose " + -1*acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays() +
                             (acceptRewardCreditsAndPenaltiesMessage.getPenaltyDays()<-1 ? " day and ":" days and ") + acceptRewardCreditsAndPenaltiesMessage.getPenaltyCrew() + " crew members...",
                     response -> {
                         Sender sender = GameData.getSender();
@@ -495,23 +495,12 @@ public class GuiHandlerMessage {
             );
         }
 
-        else if (messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage){
-
-            PageController.getEventView().askYesNo(
-                    "DO YOU WANT TO ACCEPT THE REWARD BOXES AND THE DAYS OF PENALTY?",
-                    "You will lose " + -1*acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()+
-                            (acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()< -1 ? " days of travel....": " day of travel...."),
-                    response -> {
-                        Sender sender = GameData.getSender();
-                        sender.responseAcceptRewardCreditsAndPenaltyDays(response ? "YES" : "NO");
-                    }
-            );
-        }
-
         else if (messageObj instanceof AcceptRewardCreditsAndPenaltyDaysMessage acceptRewardCreditsAndPenaltyDaysMessage) {
             PageController.getEventView().askYesNo(
                     "DO YOU WANT TO ACCEPT CREDITS?",
-                    "You will get " + acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits() + " credits, but you will lose " + acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays() + " days...",
+                    "You will get " + acceptRewardCreditsAndPenaltyDaysMessage.getRewardCredits() + " credits, but you will lose " +
+                            -1*acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays() + (acceptRewardCreditsAndPenaltyDaysMessage.getPenaltyDays()< -1 ? " days of travel....": " day of travel...."),
+
                     response -> {
                         Sender sender = GameData.getSender();
                         sender.responseAcceptRewardCreditsAndPenaltyDays(response ? "YES" : "NO");
@@ -522,7 +511,8 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof AcceptRewardBoxesAndPenaltyDaysMessage acceptRewardBoxesAndPenaltyDaysMessage) {
             PageController.getEventView().askYesNo(
                     "DO YOU WANT TO ACCEPT BOXES?",
-                    "You will get the boxes indicated on the card, but you will lose " + acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays() + " days...",
+                    "You will get the boxes indicated on the card, but you will lose " + -1*acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()
+                            + (acceptRewardBoxesAndPenaltyDaysMessage.getPenaltyDays()< -1 ? " days of travel....": " day of travel...."),
                     response -> {
                         Sender sender = GameData.getSender();
                         sender.responseAcceptRewardBoxesAndPenaltyDays(response ? "YES" : "NO");
