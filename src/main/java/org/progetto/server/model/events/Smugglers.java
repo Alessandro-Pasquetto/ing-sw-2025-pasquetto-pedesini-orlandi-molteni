@@ -81,30 +81,17 @@ public class Smugglers extends EventCard {
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         Map<Box, Integer> boxCountsMap = new HashMap<>();
+
+        Box[] boxTypes = {Box.RED, Box.YELLOW, Box.GREEN, Box.BLUE};
         int[] boxCounts = spaceship.getBoxCounts();
 
         int remaining = boxesToDiscard;
 
         // How many boxes of that type I need to discard
-        for (int i = 0; i < 4 && remaining > 0; i++) {
+        for (int i = 0; i < 4; i++) {
+            int toDiscard = remaining > 0 ? Math.min(boxCounts[i], remaining) : 0;
 
-            int toDiscard = Math.min(boxCounts[i], remaining);
-
-            switch(i){
-                case 0:
-                    boxCountsMap.put(Box.RED, toDiscard);
-                    break;
-                case 1:
-                    boxCountsMap.put(Box.YELLOW, toDiscard);
-                    break;
-                case 2:
-                    boxCountsMap.put(Box.GREEN, toDiscard);
-                    break;
-                case 3:
-                    boxCountsMap.put(Box.BLUE, toDiscard);
-                    break;
-            }
-
+            boxCountsMap.put(boxTypes[i], toDiscard);
             remaining -= toDiscard;
         }
 
@@ -120,18 +107,18 @@ public class Smugglers extends EventCard {
 
                         Box box = boxes[i];
 
+                        if(box == null) continue;
+
                         int boxCount = boxCountsMap.get(box);
 
-                        if (boxCount == 0)
-                            continue;
+                        if (boxCount == 0) continue;
 
                         boxCountsMap.put(box, boxCount - 1);
 
                         boxStorage.removeBox(spaceship, i);
                         boxesToDiscard--;
 
-                        if(boxesToDiscard == 0)
-                            return;
+                        if(boxesToDiscard == 0) return;
                     }
                 }
             }
