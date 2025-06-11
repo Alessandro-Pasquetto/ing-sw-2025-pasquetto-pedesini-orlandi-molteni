@@ -441,17 +441,34 @@ public class EventView {
     }
 
 
-
-    //todo sistemare pallino
+    /**
+     * Render a projectile animation
+     *
+     * @author Alessandro, Lorenzo
+     * @param indexCoord is the projectile coordinate
+     */
     public void spawnShot(int indexCoord) {
 
-
         int SHOT_SIZE = 60;
+        int SHOT_OFFSET = 15;
+
+        //System.out.println(indexCoord+"  "+ shotFrom);
+
+        if(shotFrom == 0 || shotFrom == 2) {
+            if (indexCoord < 4 || indexCoord > 10)
+                return;
+        }
+        else if(shotFrom == 1 || shotFrom == 3){
+            if(indexCoord < 5 || indexCoord > 9)
+                return;
+        }
+
 
         if(shotFrom == 0 || shotFrom == 2)
             indexCoord += GameData.getLevelGame() - 6;
         else
             indexCoord -= 5;
+
 
         StackPane parentStack = (StackPane) spaceshipMatrix.getParent();
         Pane overlayPane = new Pane();
@@ -470,37 +487,32 @@ public class EventView {
             if (colIndex > maxCol) maxCol = colIndex;
         }
 
-        Node referenceNodeStart = null;
+        Bounds referenceNodeStart = null;
 
         switch (shotFrom) {
             case 0:
-                referenceNodeStart = getNodeByColumnRowIndex(indexCoord, 0, spaceshipMatrix);
+                referenceNodeStart = spaceshipMatrix.getCellBounds(indexCoord, 0);
                 break;
             case 1:
-                referenceNodeStart = getNodeByColumnRowIndex(maxCol, indexCoord, spaceshipMatrix);
+                referenceNodeStart = spaceshipMatrix.getCellBounds(maxCol,indexCoord);
                 break;
             case 2:
-                referenceNodeStart = getNodeByColumnRowIndex(indexCoord, maxRow, spaceshipMatrix);
+                referenceNodeStart = spaceshipMatrix.getCellBounds(indexCoord, maxRow);
                 break;
             case 3:
-                referenceNodeStart = getNodeByColumnRowIndex(0, indexCoord, spaceshipMatrix);
+                referenceNodeStart = spaceshipMatrix.getCellBounds(0,indexCoord);
                 break;
+
             default:
                 System.err.println("NotValidDirection");
                 parentStack.getChildren().remove(overlayPane);
                 return;
         }
 
-        if (referenceNodeStart == null) {
-            System.out.println("Index " + indexCoord + " is not valid");
-            parentStack.getChildren().remove(overlayPane);
-            return;
-        }
 
-        final Node refStart = referenceNodeStart;
+        final Bounds boundsStart = referenceNodeStart;
 
         Platform.runLater(() -> {
-            Bounds boundsStart = refStart.localToScene(refStart.getBoundsInLocal());
             Point2D posStart = overlayPane.sceneToLocal(boundsStart.getMinX(), boundsStart.getMinY());
 
             Image img = new Image(String.valueOf(MainClient.class.getResource("img/meteor.png")));
@@ -510,39 +522,39 @@ public class EventView {
 
             TranslateTransition translate = new TranslateTransition(Duration.millis(1000), projectile);
 
+
             switch (shotFrom) {
                 case 0:
-                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
-                    projectile.setLayoutY(posStart.getY());
-                    translate.setByY(spaceshipMatrix.getHeight());
+                    projectile.setLayoutX(boundsStart.getMinX()+SHOT_OFFSET);
+                    projectile.setLayoutY(boundsStart.getMinY());
+                    translate.setByY(spaceShipImage.getFitHeight());
                     break;
 
                 case 1:
-                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth());
-                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setLayoutX(boundsStart.getMaxX());
+                    projectile.setLayoutY(boundsStart.getMinY() + SHOT_OFFSET);
                     projectile.setRotate(90);
-                    translate.setByX(-spaceshipMatrix.getWidth());
+                    translate.setByX(-spaceShipImage.getFitWidth());
                     break;
 
                 case 2:
-                    projectile.setLayoutX(posStart.getX() + refStart.getBoundsInLocal().getWidth() / 2);
-                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() );
+                    projectile.setLayoutX(boundsStart.getMinX() + SHOT_OFFSET);
+                    projectile.setLayoutY(boundsStart.getMaxY());
                     projectile.setRotate(180);
-                    translate.setByY(-spaceshipMatrix.getHeight());
+                    translate.setByY(-spaceShipImage.getFitHeight());
                     break;
 
                 case 3:
-                    projectile.setLayoutX(posStart.getX());
-                    projectile.setLayoutY(posStart.getY() + refStart.getBoundsInLocal().getHeight() / 2);
+                    projectile.setLayoutX(boundsStart.getMinX());
+                    projectile.setLayoutY(boundsStart.getMinY() + SHOT_OFFSET);
                     projectile.setRotate(270);
-                    translate.setByX(spaceshipMatrix.getWidth());
+                    translate.setByX(spaceShipImage.getFitWidth());
                     break;
             }
 
             overlayPane.getChildren().add(projectile);
             translate.play();
 
-            // Rimuove il cerchio e l'overlay dopo 3 secondi
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
             pause.setOnFinished(e -> {
                 overlayPane.getChildren().remove(projectile);
@@ -553,18 +565,18 @@ public class EventView {
         });
     }
 
-    private Node getNodeByColumnRowIndex(final int column, final int row, GridPane gridPane) {
-        for (Node node : gridPane.getChildren()) {
-            Integer colIndex = GridPane.getColumnIndex(node);
-            Integer rowIndex = GridPane.getRowIndex(node);
-            if (colIndex == null) colIndex = 0;
-            if (rowIndex == null) rowIndex = 0;
-            if (colIndex == column && rowIndex == row) {
-                return node;
-            }
-        }
-        return null;
-    }
+//    private Node getNodeByColumnRowIndex(final int column, final int row, GridPane gridPane) {
+//        for (Node node : gridPane.getChildren()) {
+//            Integer colIndex = GridPane.getColumnIndex(node);
+//            Integer rowIndex = GridPane.getRowIndex(node);
+//            if (colIndex == null) colIndex = 0;
+//            if (rowIndex == null) rowIndex = 0;
+//            if (colIndex == column && rowIndex == row) {
+//                return node;
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * Updates the spaceship matrix with the current spaceship
