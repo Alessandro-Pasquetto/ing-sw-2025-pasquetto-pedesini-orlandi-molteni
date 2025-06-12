@@ -160,15 +160,23 @@ public class EventView {
     }
 
     private int shotFrom = 0;
+    private String shotSize;
 
     // =======================
-    // METHODS
+    // SETTERS
     // =======================
-
 
     public void setShotFrom(int shotFrom) {
         this.shotFrom = shotFrom;
     }
+
+    public void setShotSize(String shotSize) {
+        this.shotSize = shotSize;
+    }
+
+    // =======================
+    // METHODS
+    // =======================
 
     /**
      * Initializes the background
@@ -440,7 +448,6 @@ public class EventView {
         creditsSymbol.setImage(new Image(String.valueOf(MainClient.class.getResource("img/icons/credits.png"))));
     }
 
-
     /**
      * Render a projectile animation
      *
@@ -460,7 +467,6 @@ public class EventView {
             if(indexCoord < 5 || indexCoord > 9)
                 return;
         }
-
 
         if(shotFrom == 0 || shotFrom == 2)
             indexCoord += GameData.getLevelGame() - 6;
@@ -512,13 +518,30 @@ public class EventView {
 
         Platform.runLater(() -> {
 
-            Image img = new Image(String.valueOf(MainClient.class.getResource("img/meteor.png")));
+            Image img;
+            String cardType = GameData.getActiveCard().getType().toString();
+            String imagePath = null;
+
+            switch (cardType) {
+                case "METEORSRAIN":
+                    imagePath = shotSize.equals("SMALL") ? "img/small-meteor.png" : "img/big-meteor.png";
+                    break;
+                case "BATTLEZONE":
+                case "PIRATES":
+                    imagePath = shotSize.equals("SMALL") ? "img/small-shot.png" : "img/big-shot.png";
+                    break;
+                default:
+                    System.err.println("Unhandled card type: " + cardType);
+                    return;
+            }
+
+            img = new Image(String.valueOf(MainClient.class.getResource(imagePath)));
+
             ImageView projectile = new ImageView(img);
             projectile.setFitHeight(SHOT_SIZE);
             projectile.setPreserveRatio(true);
 
-            TranslateTransition translate = new TranslateTransition(Duration.millis(1000), projectile);
-
+            TranslateTransition translate = new TranslateTransition(Duration.millis(2000), projectile);
 
             switch (shotFrom) {
                 case 0:

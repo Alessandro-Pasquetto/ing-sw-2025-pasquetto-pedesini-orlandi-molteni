@@ -701,6 +701,7 @@ public class GuiHandlerMessage {
             };
 
             PageController.getEventView().setShotFrom(projectile.getFrom());
+            PageController.getEventView().setShotSize(dimension);
 
             PageController.getEventView().setEventLabels("A " + dimension + " projectile is incoming from " + from + "!", "Wait for the first player to roll dice to decide where will it hit...");
         }
