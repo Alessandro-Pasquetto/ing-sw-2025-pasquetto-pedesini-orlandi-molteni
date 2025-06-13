@@ -242,7 +242,7 @@ public class Game {
 
 
                 // forzare uscita carta evento, todo da rimuovere
-//                while(!lv2Deck.getFirst().getType().equals(CardType.PLANETS) && !lv2Deck.get(1).getType().equals(CardType.PLANETS))
+//                while(!lv2Deck.getFirst().getType().equals(CardType.PIRATES) && !lv2Deck.get(1).getType().equals(CardType.PIRATES))
 //                   Collections.shuffle(lv2Deck);
 
 
@@ -485,18 +485,14 @@ public class Game {
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
-            /*
             //forzare eventCard, todo da rimuovere
-            int randomPos = 0;
-
-            do {
-                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
-
-
-
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
-            */
+//            int randomPos = 0;
+//
+//            do {
+//                randomPos = (int) (Math.random() * hiddenEventDeck.size());
+//            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.PIRATES));
+//
+//            pickedEventCard = hiddenEventDeck.remove(randomPos);
        }
 
         setActiveEventCard(pickedEventCard);

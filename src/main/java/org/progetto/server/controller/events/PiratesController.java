@@ -666,6 +666,7 @@ public class PiratesController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
             addHandledPlayer(defeatedPlayer);
             defeatedPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
             return;
         }
 
@@ -742,11 +743,13 @@ public class PiratesController extends EventControllerAbstract {
         if (destroyedComponent == null) {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
             player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
             return;
         }
 
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
             player.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
 
         } else
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);

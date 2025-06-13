@@ -1069,6 +1069,7 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
 
             penaltyPlayer.setIsReady(true, gameManager.getGame());
+            gameManager.getGameThread().notifyThread();
             return;
         }
 
@@ -1156,6 +1157,7 @@ public class BattlezoneController extends EventControllerAbstract {
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
             penaltyPlayer.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
+
         } else
             MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
     }

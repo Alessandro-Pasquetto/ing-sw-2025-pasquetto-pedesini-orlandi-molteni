@@ -5,10 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -449,78 +446,88 @@ public class EventView {
     }
 
     /**
-     * Render a projectile animation
+     * Spawns a shot from the spaceship
      *
-     * @author Alessandro, Lorenzo
-     * @param indexCoord is the projectile coordinate
+     * @author Alessandro, Lorenzo, Gabriele
+     * @param shotPosition is the position of the shot
      */
-    public void spawnShot(int indexCoord) {
+    public void spawnShot(int shotPosition) {
+        final int SHOT_SIZE = 80;
 
-        int SHOT_SIZE = 60;
-        int SHOT_OFFSET = 15;
+        Component[][] spaceship = GameData.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
+        int rows = spaceship.length;
+        int cols = spaceship[0].length;
 
-        if(shotFrom == 0 || shotFrom == 2) {
-            if (indexCoord < 4 || indexCoord > 10)
+        int impactRow = -1;
+        int impactColumn = -1;
+
+        // Check shot position validity
+        if (shotFrom == 0 || shotFrom == 2) {
+            if (shotPosition < (6 - GameData.getLevelGame()) || shotPosition > (8 + GameData.getLevelGame()))
+                return;
+        } else {
+            if (shotPosition < 5 || shotPosition > 9)
                 return;
         }
-        else if(shotFrom == 1 || shotFrom == 3){
-            if(indexCoord < 5 || indexCoord > 9)
-                return;
-        }
 
-        if(shotFrom == 0 || shotFrom == 2)
-            indexCoord += GameData.getLevelGame() - 6;
+        if (shotFrom == 0 || shotFrom == 2)
+            shotPosition += GameData.getLevelGame() - 6;
         else
-            indexCoord -= 5;
+            shotPosition -= 5;
 
-
-        StackPane parentStack = (StackPane) spaceshipMatrix.getParent();
-        Pane overlayPane = new Pane();
-        overlayPane.setPickOnBounds(false);
-
-        parentStack.getChildren().add(overlayPane);
-
-        int maxRow = -1;
-        int maxCol = -1;
-        for (Node node : spaceshipMatrix.getChildren()) {
-            Integer rowIndex = GridPane.getRowIndex(node);
-            Integer colIndex = GridPane.getColumnIndex(node);
-            if (rowIndex == null) rowIndex = 0;
-            if (colIndex == null) colIndex = 0;
-            if (rowIndex > maxRow) maxRow = rowIndex;
-            if (colIndex > maxCol) maxCol = colIndex;
-        }
-
-        Bounds referenceNodeStart = null;
-
+        // Detect impact row/col
         switch (shotFrom) {
-            case 0:
-                referenceNodeStart = spaceshipMatrix.getCellBounds(indexCoord, 0);
-                break;
-            case 1:
-                referenceNodeStart = spaceshipMatrix.getCellBounds(maxCol,indexCoord);
-                break;
-            case 2:
-                referenceNodeStart = spaceshipMatrix.getCellBounds(indexCoord, maxRow);
-                break;
-            case 3:
-                referenceNodeStart = spaceshipMatrix.getCellBounds(0,indexCoord);
+            case 0: // top
+                impactColumn = shotPosition;
+                for (int i = 0; i < rows; i++) {
+                    if (spaceship[i][impactColumn] != null) {
+                        impactRow = i;
+                        break;
+                    }
+                }
                 break;
 
-            default:
-                System.err.println("NotValidDirection");
-                parentStack.getChildren().remove(overlayPane);
-                return;
+            case 1: // right
+                impactRow = shotPosition;
+                for (int j = cols - 1; j >= 0; j--) {
+                    if (spaceship[impactRow][j] != null) {
+                        impactColumn = j;
+                        break;
+                    }
+                }
+                break;
+
+            case 2: // bottom
+                impactColumn = shotPosition;
+                for (int i = rows - 1; i >= 0; i--) {
+                    if (spaceship[i][impactColumn] != null) {
+                        impactRow = i;
+                        break;
+                    }
+                }
+                break;
+
+            case 3: // left
+                impactRow = shotPosition;
+                for (int j = 0; j < cols; j++) {
+                    if (spaceship[impactRow][j] != null) {
+                        impactColumn = j;
+                        break;
+                    }
+                }
+                break;
         }
 
+        if (impactRow == -1 || impactColumn == -1)
+            return;
 
-        final Bounds boundsStart = referenceNodeStart;
+        int finalImpactRow = impactRow;
+        int finalImpactColumn = impactColumn;
 
         Platform.runLater(() -> {
-
             Image img;
             String cardType = GameData.getActiveCard().getType().toString();
-            String imagePath = null;
+            String imagePath;
 
             switch (cardType) {
                 case "METEORSRAIN":
@@ -536,43 +543,73 @@ public class EventView {
             }
 
             img = new Image(String.valueOf(MainClient.class.getResource(imagePath)));
-
             ImageView projectile = new ImageView(img);
             projectile.setFitHeight(SHOT_SIZE);
             projectile.setPreserveRatio(true);
 
-            TranslateTransition translate = new TranslateTransition(Duration.millis(2000), projectile);
+            // Create overlay pane matching grid size and position
+            Bounds matrixBounds = spaceshipMatrix.localToScene(spaceshipMatrix.getBoundsInLocal());
+
+            Pane overlayPane = new Pane();
+            overlayPane.setPickOnBounds(false);
+            overlayPane.setPrefSize(matrixBounds.getWidth(), matrixBounds.getHeight());
+            overlayPane.setMaxWidth(80 * spaceship[0].length);
+            overlayPane.setMaxHeight(80 * spaceship.length);
+
+            if (GameData.getLevelGame() == 2){
+                overlayPane.setLayoutX(190.0);
+            }
+
+            StackPane parentStack = (StackPane) spaceshipMatrix.getParent();
+            parentStack.getChildren().add(overlayPane);
+
+            // Compute center of impact cell
+            double impactCenterX = finalImpactColumn * COMPONENT_SIZE;
+            double impactCenterY = finalImpactRow * COMPONENT_SIZE;
+
+            double startX = 0, startY = 0, deltaX = 0, deltaY = 0;
+            final double OFFSET = 320;
 
             switch (shotFrom) {
-                case 0:
-                    projectile.setLayoutX(boundsStart.getMinX()+SHOT_OFFSET);
-                    projectile.setLayoutY(boundsStart.getMinY());
-                    translate.setByY(spaceShipImage.getFitHeight());
+                case 0: // top → down
+                    startX = impactCenterX;
+                    startY = -OFFSET;
+                    deltaX = 0;
+                    deltaY = impactCenterY - startY - COMPONENT_SIZE;
                     break;
 
-                case 1:
-                    projectile.setLayoutX(boundsStart.getMaxX());
-                    projectile.setLayoutY(boundsStart.getMinY() + SHOT_OFFSET);
+                case 1: // right → left
+                    startX = overlayPane.getMaxWidth() + OFFSET;
+                    startY = impactCenterY;
+                    deltaX = impactCenterX - startX + COMPONENT_SIZE;
+                    deltaY = 0;
                     projectile.setRotate(90);
-                    translate.setByX(-spaceShipImage.getFitWidth());
                     break;
 
-                case 2:
-                    projectile.setLayoutX(boundsStart.getMinX() + SHOT_OFFSET);
-                    projectile.setLayoutY(boundsStart.getMaxY());
+                case 2: // bottom → up
+                    startX = impactCenterX;
+                    startY = overlayPane.getMaxHeight() + OFFSET;
+                    deltaX = 0;
+                    deltaY = impactCenterY - startY + COMPONENT_SIZE;
                     projectile.setRotate(180);
-                    translate.setByY(-spaceShipImage.getFitHeight());
                     break;
 
-                case 3:
-                    projectile.setLayoutX(boundsStart.getMinX());
-                    projectile.setLayoutY(boundsStart.getMinY() + SHOT_OFFSET);
+                case 3: // left → right
+                    startX = -OFFSET;
+                    startY = impactCenterY;
+                    deltaX = impactCenterX - startX - COMPONENT_SIZE;
+                    deltaY = 0;
                     projectile.setRotate(270);
-                    translate.setByX(spaceShipImage.getFitWidth());
                     break;
             }
 
+            projectile.setLayoutX(startX);
+            projectile.setLayoutY(startY);
             overlayPane.getChildren().add(projectile);
+
+            TranslateTransition translate = new TranslateTransition(Duration.millis(2000), projectile);
+            translate.setByX(deltaX);
+            translate.setByY(deltaY);
             translate.play();
 
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
