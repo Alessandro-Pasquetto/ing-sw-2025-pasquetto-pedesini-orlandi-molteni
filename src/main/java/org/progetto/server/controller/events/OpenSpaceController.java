@@ -160,7 +160,7 @@ public class OpenSpaceController extends EventControllerAbstract {
             System.out.println("Waiting for BatteriesToDiscard");
             phase = EventPhase.DISCARDED_BATTERIES;
 
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
         }
     }
 
@@ -258,6 +258,27 @@ public class OpenSpaceController extends EventControllerAbstract {
             board.leaveTravel(player);
             gameManager.broadcastGameMessage(new UpdateOtherTravelersShipMessage(gameManager.getGame().getBoard().getCopyTravelers()));
             gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
+        }
+    }
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        if (phase.equals(EventPhase.ENGINE_NUMBER)){
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
+            MessageSenderService.sendMessage(new HowManyDoubleEnginesMessage(maxUsable, player.getSpaceship().getNormalEnginePower()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_BATTERIES)){
+
+            // Remove batteries already discarded
+            for(BatteryStorage batteryStorage : batteryStorages){
+                MessageSenderService.sendMessage(new BatteryDiscardedMessage(batteryStorage.getX(), batteryStorage.getY()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), batteryStorage.getX(), batteryStorage.getY()), sender);
+            }
+
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);
         }
     }
 }

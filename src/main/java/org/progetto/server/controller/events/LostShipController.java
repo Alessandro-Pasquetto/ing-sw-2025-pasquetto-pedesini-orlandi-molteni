@@ -9,6 +9,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
+import org.progetto.server.model.components.BatteryStorage;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 import org.progetto.server.model.components.HousingUnit;
@@ -246,5 +247,25 @@ public class LostShipController extends EventControllerAbstract  {
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
+    }
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        if (phase.equals(EventPhase.REWARD_DECISION)){
+            MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltiesMessage(lostShip.getRewardCredits(), lostShip.getPenaltyCrew(), lostShip.getPenaltyDays()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_CREW)){
+
+            // Remove batteries already discarded
+            for(HousingUnit housingUnit : housingUnits){
+                MessageSenderService.sendMessage(new CrewDiscardedMessage(housingUnit.getX(), housingUnit.getY()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), housingUnit.getX(), housingUnit.getY()), sender);
+            }
+
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.LostStation.AcceptRewardCreditsAndPenaltiesMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
@@ -10,10 +11,7 @@ import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.EventPhase;
 import org.progetto.server.model.Player;
-import org.progetto.server.model.components.Box;
-import org.progetto.server.model.components.BoxStorage;
-import org.progetto.server.model.components.Component;
-import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.Planets;
 
 import java.util.ArrayList;
@@ -265,5 +263,18 @@ public class PlanetsController extends EventControllerAbstract {
 
         // Penalty applied
         planets.penalty(gameManager.getGame().getBoard());
+    }
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        if (phase.equals(EventPhase.LAND)){
+            MessageSenderService.sendMessage(new AvailablePlanetsMessage(planets.getRewardsForPlanets(), planets.getPlanetsTaken()), sender);
+        }
+        else if (phase.equals(EventPhase.CHOOSE_BOX)){
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
+        }
     }
 }

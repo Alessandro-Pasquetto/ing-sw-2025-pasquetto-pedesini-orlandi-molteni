@@ -284,12 +284,11 @@ public class GameManager {
             game.getBoard().removeTraveler(player);
         }
 
-        gameThread.notifyThread();
-
         if(game.getPlayersSize() == 1){
             broadcastGameMessage("Freeze");
             getFreezeTimer().startTimer();
-        }
+        }else
+            gameThread.notifyThread();
     }
 
     public synchronized void reconnectPlayer(String namePlayer, Sender sender) {
@@ -346,13 +345,13 @@ public class GameManager {
             }
         }
 
-        getTimerController().notifyThread();
-        gameThread.notifyThread();
-
         if(game.getPlayersSize() == 2){
             getFreezeTimer().stopTimer();
             broadcastGameMessage("Resume");
         }
+
+        getTimerController().notifyThread();
+        gameThread.notifyThread();
     }
 
     public void kickOutDisconnectedPlayer(Player player) {
