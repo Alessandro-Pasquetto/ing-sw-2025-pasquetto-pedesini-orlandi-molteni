@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 
 <StackPane fx:id="eventPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.progetto.client.gui.EventView">
 
@@ -43,7 +44,11 @@
 
                     <VBox fx:id="eventSidebarWrapper" alignment="TOP_CENTER" maxWidth="345.0" spacing="20">
                         <Label fx:id="eventSectionTitle" text="Current event" wrapText="true" />
-                        <ImageView fx:id="eventCard" fitHeight="292.0" fitWidth="190.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+
+                        <StackPane maxHeight="292.0" minWidth="190.0">
+                            <ImageView fx:id="eventCard" fitHeight="292.0" fitWidth="190.0" preserveRatio="true" style="-fx-border-radius: 8; -fx-background-radius: 8" />
+                            <Button fx:id="infoButton" text="?" maxWidth="24" maxHeight="20" style="-fx-font-size: 16px" StackPane.alignment="BOTTOM_RIGHT" onAction="#onInfoClicked" />
+                        </StackPane>
 
                         <VBox.margin>
                             <Insets bottom="10" left="0" right="0" top="0" />

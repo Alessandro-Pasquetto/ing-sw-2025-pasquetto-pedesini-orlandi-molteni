@@ -15,8 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Popup;
 import javafx.util.Duration;
 import org.progetto.client.MainClient;
 import org.progetto.client.connection.Sender;
@@ -117,19 +117,15 @@ public class EventView {
     public Label crewValue;
 
     @FXML
+    public Button infoButton;
+
+    private Popup helpPopup;
+
+    @FXML
     private VBox chatMessagesContainer;
 
     @FXML
     private ScrollPane chatScrollPane;
-
-    @FXML
-    private VBox overlayContainer;
-
-    @FXML
-    private VBox boxesViewContainer;
-
-    @FXML
-    private Button eventButton;
 
     @FXML
     private ImageView blackHoleContainer;
@@ -315,6 +311,9 @@ public class EventView {
 
         Image img = new Image(String.valueOf(MainClient.class.getResource("img/cards/" + imgSource)));
         eventCard.setImage(img);
+
+        // Initialize the event card explanation popup
+        helpPopup = createInfoPopup();
     }
 
     /**
@@ -1715,9 +1714,9 @@ public class EventView {
 
                     Color color = switch (colorIndex) {
                         case 1 -> Color.rgb(52, 199, 89, 0.3);
-                        case 2 -> Color.rgb(175, 82, 222, 0.3);
-                        case 3 -> Color.rgb(90, 200, 250, 0.3);
-                        default -> Color.rgb(255, 149, 0, 0.3);
+                        case 2 -> Color.rgb(234, 223, 0, 0.3);
+                        case 3 -> Color.rgb(255, 149, 0, 0.3);
+                        default -> Color.rgb(90, 200, 250, 0.3);
                     };
 
                     highlightCell(cell, color);
@@ -2393,6 +2392,109 @@ public class EventView {
     public void clearChatMessages() {
         Platform.runLater(() -> {
             chatMessagesContainer.getChildren().clear();
+        });
+    }
+
+    /**
+     * Creates the info popup with explanations for each card type
+     *
+     * @author Gabriele
+     * @return the created Popup object
+     */
+    private Popup createInfoPopup() {
+        Popup popup = new Popup();
+
+        VBox content = new VBox();
+        content.setStyle(
+                "-fx-background-color: rgba(0, 0, 0, 0.8);" +
+                "-fx-padding: 10;" +
+                "-fx-background-radius: 10;" +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 20, 0.3, 0, 4);"
+        );
+        content.setMaxWidth(350);
+
+        Label explanation = switch (GameData.getActiveCard().getType().toString()) {
+            case "PLANETS" -> new Label("In route order, players are allowed to land on a planet.\n"
+                    + "Once a planet is occupied, it cannot be chosen by others.\n"
+                    + "Landed players load goods in landing order, then lose flight days in reverse route order.");
+
+            case "OPENSPACE" -> new Label("In route order, each player declares their engine power and immediately advances that many empty spaces (skipping and not counting overtaken rockets).\n"
+                    + "Players who declare 0 engine power must abandon the race.");
+
+            case "METEORSRAIN" -> new Label("The leader rolls dice for each meteorite to determine its path.\n"
+                    + "Meteors hit the first tile in their row or column.\n"
+                    + "Small meteors bounce off smooth edges or hit exposed connectors.\n"
+                    + "Large meteors destroy tiles unless blocked by cannons.\n"
+                    + "Cannons can block meteors based on their direction.");
+
+            case "SLAVERS" -> new Label("Each player, in route order, compares firepower with the slavers.\n"
+                    + "If the slavers win, the player must discard crew.\n"
+                    + "If the player wins, they may lose days to gain a reward.\n"
+                    + "In both cases, the slavers stop attacking.");
+
+            case "PIRATES" -> new Label("Each player compares firepower with the pirates.\n"
+                    + "If the pirates win, the player takes damage (same dice for all).\n"
+                    + "Winning players may lose days to claim a reward.\n"
+                    + "Pirates stop attacking after a player wins.");
+
+            case "SMUGGLERS" -> new Label("Each player compares firepower with the smugglers.\n"
+                    + "If the smugglers win, the player discards box.\n"
+                    + "Players who win may spend days to earn a reward.\n"
+                    + "Smugglers stop attacking after one is defeated.");
+
+            case "LOSTSHIP" -> new Label("In route order, players with enough crew may claim the reward.\n"
+                    + "Only one player can take it.\n"
+                    + "The chosen player loses the required crew and flight days.");
+
+            case "STARDUST" -> new Label("In reverse route order, each player counts exposed connectors and loses that many flight days.");
+
+            case "EPIDEMIC" -> new Label("Remove 1 crew member from each cabin connected to another occupied cabin.");
+
+            case "BATTLEZONE" -> new Label("Battle zone has three lines evaluated top to bottom.\n"
+                    + "Players compare crew size, engine power, and firepower on each line.\n"
+                    + "Lowest value player suffers a penalty (flight days, crew, damage, or box loss).\n"
+                    + "If tied, the first in route order takes the penalty.\n"
+                    + "Losing flight days can change route order for next lines.");
+
+            case "LOSTSTATION" -> new Label("In route order, players with enough crew may claim the reward.\n"
+                    + "Only one player can take it.\n"
+                    + "The chosen player loses the indicated flight days but not crew.");
+
+            default -> new Label("This is a generic event card. It may have different effects based on the game state.");
+        };
+
+        explanation.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+        explanation.setWrapText(true);
+
+        content.getChildren().add(explanation);
+        popup.getContent().add(content);
+        popup.setAutoHide(true);
+
+        return popup;
+    }
+
+    /**
+     * Handles the info button click event to show or hide the info popup
+     *
+     * @author Gabriele
+     */
+    @FXML
+    private void onInfoClicked() {
+        if (helpPopup.isShowing()) {
+            helpPopup.hide();
+            return;
+        }
+
+        Bounds buttonBounds = infoButton.localToScreen(infoButton.getBoundsInLocal());
+
+        helpPopup.show(infoButton.getScene().getWindow(), 0, 0);
+
+        Platform.runLater(() -> {
+            double popupX = buttonBounds.getMinX() + buttonBounds.getWidth() - helpPopup.getWidth() + 15;
+            double popupY = buttonBounds.getMinY() - helpPopup.getHeight() + 10;
+
+            helpPopup.setX(popupX);
+            helpPopup.setY(popupY);
         });
     }
 
