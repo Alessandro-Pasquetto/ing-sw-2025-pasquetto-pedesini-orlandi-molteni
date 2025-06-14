@@ -36,6 +36,7 @@ public class GameData {
     private static Spaceship spaceship = null;
     private static Map<String, Spaceship> otherSpaceships = new HashMap<String, Spaceship>();
     private static Player[] track;
+    private static boolean isFreezed = false;
     private static String UIType;
 
     // =======================
@@ -102,6 +103,10 @@ public class GameData {
         return credits;
     }
 
+    public static boolean isFreezed() {
+        return isFreezed;
+    }
+
     public static EventCard getActiveCard() {
         return activeCard;
     }
@@ -164,6 +169,10 @@ public class GameData {
 
     public static void setCredits(int credits) {
         GameData.credits = credits;
+    }
+
+    public static void setFreezed(boolean freezed) {
+        isFreezed = freezed;
     }
 
     public static void setActiveCard(EventCard activeCard) {
@@ -306,7 +315,6 @@ public class GameData {
         track[finalPos] = player;
     }
 
-
     /**
      * Reset variables used during the game to the default values
      *
@@ -324,6 +332,7 @@ public class GameData {
         setColor(0);
         setSpaceship(null);
         setTrack(null);
+        setFreezed(false);
 
         BuildingData.resetBuildingData();
     }

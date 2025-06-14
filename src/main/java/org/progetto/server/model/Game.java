@@ -410,8 +410,7 @@ public class Game {
             } while (!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE));
 
             pickedComponent = componentDeck.remove(randomPos);
-
-             */
+            */
         }
 
 
@@ -485,8 +484,7 @@ public class Game {
             /*
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-
-             */
+            */
 
             //forzare eventCard, todo da rimuovere
             int randomPos = 0;

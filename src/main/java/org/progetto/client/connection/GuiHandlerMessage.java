@@ -1237,6 +1237,8 @@ public class GuiHandlerMessage {
                     break;
 
                 case "Freeze":
+                    GameData.setFreezed(true);
+
                     switch (GameData.getPhaseGame()) {
                         case "BUILDING":
                             PageController.getBuildingView().showFreeze();
@@ -1268,6 +1270,8 @@ public class GuiHandlerMessage {
                     break;
 
                 case "Resume":
+                    GameData.setFreezed(false);
+
                     switch (GameData.getPhaseGame()) {
                         case "BUILDING":
                             PageController.getBuildingView().hideFreeze();

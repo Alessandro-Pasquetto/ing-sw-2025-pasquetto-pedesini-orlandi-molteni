@@ -10,6 +10,7 @@ import org.progetto.client.model.BuildingData;
 import java.io.IOException;
 import java.util.Objects;
 import javafx.scene.text.Font;
+import org.progetto.client.model.GameData;
 
 /**
  * GUI page controller
@@ -235,6 +236,12 @@ public class PageController {
         buildingView.initSpaceship(levelGame, color);
         buildingView.initTimer(levelGame);
         buildingView.initEventCardDecks(levelGame);
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
@@ -247,6 +254,12 @@ public class PageController {
         BuildingData.initMask(levelGame);
         adjustingView.initBackground(levelGame);
         adjustingView.initSpaceship(levelGame);
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
@@ -259,6 +272,12 @@ public class PageController {
         BuildingData.initMask(levelGame);
         populatingView.initBackground(levelGame);
         populatingView.initSpaceship(levelGame);
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
@@ -270,6 +289,12 @@ public class PageController {
     public static void initPositioning(int levelGame) {
         positioningView.initBackground(levelGame);
         positioningView.initTrack(levelGame);
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
@@ -285,6 +310,12 @@ public class PageController {
         eventView.initMiniTrack(levelGame);
         eventView.initEventLabels();
         eventView.clearChatMessages();
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
@@ -297,6 +328,12 @@ public class PageController {
         travelView.initBackground(levelGame);
         travelView.initTrack(levelGame);
         travelView.initTravelLabels();
+
+        if (GameData.isFreezed()) {
+            adjustingView.showFreeze();
+        } else {
+            adjustingView.hideFreeze();
+        }
     }
 
     /**
