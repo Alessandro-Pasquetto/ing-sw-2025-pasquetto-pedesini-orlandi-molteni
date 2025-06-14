@@ -324,6 +324,8 @@ public class GameManager {
         else if (game.getPhase().equals(GamePhase.POSITIONING)) {
             PositioningController.showPlayersInPositioningDecisionOrder(this, sender);
             PositioningController.showStartingPositions(this, sender);
+
+            PositioningController.reconnectPlayer(this, player, sender);
         }
 
         else if(game.getPhase().equals(GamePhase.EVENT)){

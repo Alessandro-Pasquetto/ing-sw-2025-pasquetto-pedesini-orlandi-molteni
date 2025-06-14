@@ -29,6 +29,7 @@ public class MeteorsRainController extends EventControllerAbstract {
     // =======================
 
     private final MeteorsRain meteorsRain;
+    private Player leaderPlayer;
     private ArrayList<Player> activePlayers;
     private int diceResult;
     private Projectile comingMeteor;
@@ -98,6 +99,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.meteorsRain = (MeteorsRain) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
+        this.activePlayers = null;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
@@ -148,7 +150,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             for (Player player : activePlayers) {
                 Sender sender = gameManager.getSenderByPlayer(player);
 
-                MessageSenderService.sendMessage(new IncomingProjectileMessage(meteor), sender);
+                MessageSenderService.sendMessage(new IncomingProjectileMessage(comingMeteor), sender);
             }
 
             phase = EventPhase.ASK_ROLL_DICE;
@@ -172,25 +174,24 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
-        Player activePlayer = activePlayers.getFirst();
+        leaderPlayer = activePlayers.getFirst();
 
-        Sender sender = gameManager.getSenderByPlayer(activePlayer);
+        Sender sender = gameManager.getSenderByPlayer(leaderPlayer);
 
         phase = EventPhase.ROLL_DICE;
 
         if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2) {
             MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
         }
-
         else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3) {
             MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         }
 
-        gameManager.getGameThread().resetAndWaitTravelerReady(activePlayer);
+        gameManager.getGameThread().resetAndWaitTravelerReady(leaderPlayer);
 
         // If the player is disconnected
-        if(!activePlayer.getIsReady()){
-            rollDice(activePlayer, sender);
+        if(!leaderPlayer.getIsReady()){
+            rollDice(leaderPlayer, sender);
         }
     }
 
@@ -544,6 +545,19 @@ public class MeteorsRainController extends EventControllerAbstract {
         if(!activePlayers.contains(player))
             return;
 
+        if(phase.equals(EventPhase.ROLL_DICE) && player.equals(leaderPlayer)){
+            MessageSenderService.sendMessage(new IncomingProjectileMessage(comingMeteor), sender);
+
+            if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2) {
+                MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
+            }
+            else if (comingMeteor.getFrom() == 1 || comingMeteor.getFrom() == 3) {
+                MessageSenderService.sendMessage("RollDiceToFindRow", sender);
+            }
+
+            return;
+        }
+
         player.setIsReady(false, gameManager.getGame());
 
         // Reset decisions
@@ -551,10 +565,13 @@ public class MeteorsRainController extends EventControllerAbstract {
         removeDiscardedBatteryPlayer(player);
 
         if(containsHandledPlayer(player)){
-            if(player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens())
+            if(player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
                 MessageSenderService.sendMessage("MeteorAlreadyHandled", sender);
+                player.setIsReady(true, gameManager.getGame());
+            }
             else
                 MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);
+
             return;
         }
 

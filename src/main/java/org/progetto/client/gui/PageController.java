@@ -238,9 +238,9 @@ public class PageController {
         buildingView.initEventCardDecks(levelGame);
 
         if (GameData.isFreezed()) {
-            adjustingView.showFreeze();
+            buildingView.showFreeze();
         } else {
-            adjustingView.hideFreeze();
+            buildingView.hideFreeze();
         }
     }
 
@@ -274,9 +274,9 @@ public class PageController {
         populatingView.initSpaceship(levelGame);
 
         if (GameData.isFreezed()) {
-            adjustingView.showFreeze();
+            populatingView.showFreeze();
         } else {
-            adjustingView.hideFreeze();
+            populatingView.hideFreeze();
         }
     }
 
@@ -291,9 +291,9 @@ public class PageController {
         positioningView.initTrack(levelGame);
 
         if (GameData.isFreezed()) {
-            adjustingView.showFreeze();
+            positioningView.showFreeze();
         } else {
-            adjustingView.hideFreeze();
+            positioningView.hideFreeze();
         }
     }
 
@@ -312,9 +312,9 @@ public class PageController {
         eventView.clearChatMessages();
 
         if (GameData.isFreezed()) {
-            adjustingView.showFreeze();
+            eventView.showFreeze();
         } else {
-            adjustingView.hideFreeze();
+            eventView.hideFreeze();
         }
     }
 
@@ -330,9 +330,9 @@ public class PageController {
         travelView.initTravelLabels();
 
         if (GameData.isFreezed()) {
-            adjustingView.showFreeze();
+            travelView.showFreeze();
         } else {
-            adjustingView.hideFreeze();
+            travelView.hideFreeze();
         }
     }
 

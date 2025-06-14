@@ -31,6 +31,7 @@ public class PiratesController extends EventControllerAbstract {
     // =======================
 
     private final Pirates pirates;
+    private Player leaderPlayer;
     private final ArrayList<Player> activePlayers;
     private float playerFirePower;
     private int requestedBatteries;
@@ -538,10 +539,10 @@ public class PiratesController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
-        Player firstPlayer = getFirstDefeatedPlayer();
+        leaderPlayer = getFirstDefeatedPlayer();
 
         // Asks first defeated player to roll dice
-        Sender sender = gameManager.getSenderByPlayer(firstPlayer);
+        Sender sender = gameManager.getSenderByPlayer(leaderPlayer);
 
         phase = EventPhase.ROLL_DICE;
 
@@ -552,11 +553,11 @@ public class PiratesController extends EventControllerAbstract {
             MessageSenderService.sendMessage("RollDiceToFindRow", sender);
         }
 
-        gameManager.getGameThread().resetAndWaitTravelerReady(firstPlayer);
+        gameManager.getGameThread().resetAndWaitTravelerReady(leaderPlayer);
 
         // If the player is disconnected
-        if(!firstPlayer.getIsReady()){
-            rollDice(firstPlayer, sender);
+        if(!leaderPlayer.getIsReady()){
+            rollDice(leaderPlayer, sender);
         }
     }
 
@@ -792,6 +793,19 @@ public class PiratesController extends EventControllerAbstract {
     public void reconnectPlayer(Player player, Sender sender) {
         if (!activePlayers.contains(player))
             return;
+
+        if(phase.equals(EventPhase.ROLL_DICE) && player.equals(leaderPlayer)){
+            MessageSenderService.sendMessage(new IncomingProjectileMessage(currentShot), sender);
+
+            if (currentShot.getFrom() == 0 || currentShot.getFrom() == 2) {
+                MessageSenderService.sendMessage("RollDiceToFindColumn", sender);
+
+            } else if (currentShot.getFrom() == 1 || currentShot.getFrom() == 3) {
+                MessageSenderService.sendMessage("RollDiceToFindRow", sender);
+            }
+
+            return;
+        }
 
         player.setIsReady(false, gameManager.getGame());
 

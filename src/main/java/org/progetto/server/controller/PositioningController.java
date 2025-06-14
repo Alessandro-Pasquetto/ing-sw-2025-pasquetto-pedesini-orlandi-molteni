@@ -1,6 +1,7 @@
 package org.progetto.server.controller;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
+import org.progetto.messages.toClient.EventGeneric.AvailableBoxesMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
@@ -146,5 +147,13 @@ public class PositioningController {
         ArrayList<Player> players = gameManager.getGame().getBoard().getCopyTravelers();
 
         MessageSenderService.sendMessage(new PlayersInPositioningDecisionOrderMessage(players), sender);
+    }
+
+    public static void reconnectPlayer(GameManager gameManager, Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        Player[] startingPositions = gameManager.getGame().getBoard().getStartingPositionsCopy();
+        MessageSenderService.sendMessage(new AskStartingPositionMessage(startingPositions), sender);
     }
 }

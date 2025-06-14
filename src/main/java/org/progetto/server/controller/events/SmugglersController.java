@@ -169,7 +169,7 @@ public class SmugglersController extends EventControllerAbstract {
             }
 
             phase = EventPhase.DISCARDED_BATTERIES;
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
         } else {
             MessageSenderService.sendMessage("IncorrectNumber", sender);
@@ -634,5 +634,33 @@ public class SmugglersController extends EventControllerAbstract {
 
         player.setIsReady(true, gameManager.getGame());
         gameManager.getGameThread().notifyThread();
+    }
+
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        if (phase.equals(EventPhase.CANNON_NUMBER)){
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleCannonsUsable();
+            MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_BATTERIES) || phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)){
+
+            // Remove batteries already discarded
+            for(BatteryStorage batteryStorage : batteryStorages){
+                MessageSenderService.sendMessage(new BatteryDiscardedMessage(batteryStorage.getX(), batteryStorage.getY()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), batteryStorage.getX(), batteryStorage.getY()), sender);
+            }
+
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+        }
+        else if (phase.equals(EventPhase.REWARD_DECISION)){
+            MessageSenderService.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_BOXES)){
+            MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
+        }
     }
 }
