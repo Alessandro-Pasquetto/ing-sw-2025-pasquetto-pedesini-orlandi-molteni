@@ -191,7 +191,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         // If the player is disconnected
         if(!leaderPlayer.getIsReady()){
-            rollDice(leaderPlayer, sender);
+            rollDice(leaderPlayer, null);
         }
     }
 

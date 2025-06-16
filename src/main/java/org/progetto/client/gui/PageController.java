@@ -230,18 +230,18 @@ public class PageController {
      * @param color the color of the spaceship
      */
     public static void initBuilding(int levelGame, int color) {
+        if (GameData.isFreezed()){
+            buildingView.showFreeze();
+        } else{
+            buildingView.hideFreeze();
+        }
+
         BuildingData.initMask(levelGame);
         buildingView.initImages();
         buildingView.initBackground(levelGame);
         buildingView.initSpaceship(levelGame, color);
         buildingView.initTimer(levelGame);
         buildingView.initEventCardDecks(levelGame);
-
-        if (GameData.isFreezed()) {
-            buildingView.showFreeze();
-        } else {
-            buildingView.hideFreeze();
-        }
     }
 
     /**
@@ -251,15 +251,15 @@ public class PageController {
      * @param levelGame the level of the game
      */
     public static void initAdjusting(int levelGame) {
-        BuildingData.initMask(levelGame);
-        adjustingView.initBackground(levelGame);
-        adjustingView.initSpaceship(levelGame);
-
         if (GameData.isFreezed()) {
             adjustingView.showFreeze();
         } else {
             adjustingView.hideFreeze();
         }
+
+        BuildingData.initMask(levelGame);
+        adjustingView.initBackground(levelGame);
+        adjustingView.initSpaceship(levelGame);
     }
 
     /**
@@ -269,15 +269,15 @@ public class PageController {
      * @param levelGame the level of the game
      */
     public static void initPopulating(int levelGame) {
-        BuildingData.initMask(levelGame);
-        populatingView.initBackground(levelGame);
-        populatingView.initSpaceship(levelGame);
-
         if (GameData.isFreezed()) {
             populatingView.showFreeze();
         } else {
             populatingView.hideFreeze();
         }
+
+        BuildingData.initMask(levelGame);
+        populatingView.initBackground(levelGame);
+        populatingView.initSpaceship(levelGame);
     }
 
     /**
@@ -287,14 +287,14 @@ public class PageController {
      * @param levelGame the level of the game
      */
     public static void initPositioning(int levelGame) {
-        positioningView.initBackground(levelGame);
-        positioningView.initTrack(levelGame);
-
         if (GameData.isFreezed()) {
             positioningView.showFreeze();
         } else {
             positioningView.hideFreeze();
         }
+
+        positioningView.initBackground(levelGame);
+        positioningView.initTrack(levelGame);
     }
 
     /**
@@ -304,18 +304,18 @@ public class PageController {
      * @param levelGame the level of the game
      */
     public static void initEvent(int levelGame) {
+        if (GameData.isFreezed()) {
+            eventView.showFreeze();
+        } else {
+            eventView.hideFreeze();
+        }
+
         BuildingData.initMask(levelGame);
         eventView.initBackground(levelGame);
         eventView.initSpaceship(levelGame);
         eventView.initMiniTrack(levelGame);
         eventView.initEventLabels();
         eventView.clearChatMessages();
-
-        if (GameData.isFreezed()) {
-            eventView.showFreeze();
-        } else {
-            eventView.hideFreeze();
-        }
     }
 
     /**
@@ -325,15 +325,15 @@ public class PageController {
      * @param levelGame the level of the game
      */
     public static void initTravel(int levelGame) {
-        travelView.initBackground(levelGame);
-        travelView.initTrack(levelGame);
-        travelView.initTravelLabels();
-
         if (GameData.isFreezed()) {
             travelView.showFreeze();
         } else {
             travelView.hideFreeze();
         }
+
+        travelView.initBackground(levelGame);
+        travelView.initTrack(levelGame);
+        travelView.initTravelLabels();
     }
 
     /**

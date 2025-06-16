@@ -124,7 +124,7 @@ public class SmugglersController extends EventControllerAbstract {
             }
 
             phase = EventPhase.BATTLE_RESULT;
-            battleResult(player, sender);
+            battleResult(player);
         }
     }
 
@@ -268,11 +268,12 @@ public class SmugglersController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param sender current sender
      */
-    private void battleResult(Player player, Sender sender) throws InterruptedException {
+    private void battleResult(Player player) throws InterruptedException {
         if (!phase.equals(EventPhase.BATTLE_RESULT))
             throw new IllegalStateException("IncorrectPhase");
+
+        Sender sender = gameManager.getSenderByPlayer(player);
 
         // Calls the battleResult function
         switch (smugglers.battleResult(playerFirePower)){
@@ -305,7 +306,7 @@ public class SmugglersController extends EventControllerAbstract {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
 
                 phase = EventPhase.PENALTY_EFFECT;
-                penaltyEffect(player, sender);
+                penaltyEffect(player);
                 break;
         }
     }
@@ -315,13 +316,13 @@ public class SmugglersController extends EventControllerAbstract {
      *
      * @author Stefano
      * @param player current player
-     * @param sender current sender
      */
-    private void penaltyEffect(Player player, Sender sender) throws InterruptedException {
+    private void penaltyEffect(Player player) throws InterruptedException {
         if (!phase.equals(EventPhase.PENALTY_EFFECT))
             throw new IllegalStateException("IncorrectPhase");
 
         Spaceship spaceship = player.getSpaceship();
+        Sender sender = gameManager.getSenderByPlayer(player);
 
         // Checks if he has at least a box/battery
         if (spaceship.getBoxesCount() == 0 && spaceship.getBatteriesCount() == 0) {
@@ -636,7 +637,6 @@ public class SmugglersController extends EventControllerAbstract {
         gameManager.getGameThread().notifyThread();
     }
 
-
     @Override
     public void reconnectPlayer(Player player, Sender sender) {
         if(!player.equals(gameManager.getGame().getActivePlayer()))
@@ -660,6 +660,13 @@ public class SmugglersController extends EventControllerAbstract {
             MessageSenderService.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()), sender);
         }
         else if (phase.equals(EventPhase.DISCARDED_BOXES)){
+
+            // Remove batteries already discarded
+            for(BoxSlot boxSlot : boxSlots){
+                MessageSenderService.sendMessage(new BoxDiscardedMessage(boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
+            }
+
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
         }
     }

@@ -245,7 +245,9 @@ public class GameManager {
 
         if(game.getPlayersSize() == 0){
             GameManagerMaps.removeGameManager(game.getId());
-            LobbyController.broadcastLobbyMessage("UpdateGameList");
+
+            if(game.getPhase().equals(GamePhase.WAITING))
+                LobbyController.broadcastLobbyMessage("UpdateGameList");
             return;
         }
 

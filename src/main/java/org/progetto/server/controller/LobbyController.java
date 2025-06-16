@@ -224,6 +224,10 @@ public class LobbyController {
         LobbyController.removeSender(sender);
         gameManager.addSender(player, sender);
 
+        if(game.getPlayersSize() == game.getMaxNumPlayers())
+            GameManagerMaps.removeWaitingGameManager(game.getId());
+
+
         broadcastLobbyMessage("UpdateGameList");
         MessageSenderService.sendMessage(new GameInfoMessage(idGame, game.getLevel(), game.getMaxNumPlayers()), sender);
         gameManager.broadcastGameMessage(new WaitingPlayersMessage(game.getPlayersCopy()));

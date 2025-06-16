@@ -75,7 +75,7 @@ public class LostStationController extends EventControllerAbstract {
                 gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
                 if(!player.getIsReady() && someoneLanded)
-                    leaveStation(player, sender);
+                    leaveStation(player);
 
             } else {
                 MessageSenderService.sendMessage("NotEnoughCrew", sender);
@@ -167,7 +167,7 @@ public class LostStationController extends EventControllerAbstract {
 
         // Checks if player wants to leave
         if (rewardIdxBox == -1) {
-            leaveStation(player, sender);
+            leaveStation(player);
             return;
         }
 
@@ -205,7 +205,7 @@ public class LostStationController extends EventControllerAbstract {
         // Checks if all boxes were chosen
         if (rewardBoxes.isEmpty()) {
             MessageSenderService.sendMessage("EmptyReward", sender);
-            leaveStation(player, sender);
+            leaveStation(player);
 
         } else {
             MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
@@ -217,9 +217,10 @@ public class LostStationController extends EventControllerAbstract {
      *
      * @author Lorenzo
      * @param player current player
-     * @param sender current sender
      */
-    private void leaveStation(Player player, Sender sender) {
+    private void leaveStation(Player player) {
+
+        Sender sender = gameManager.getSenderByPlayer(player);
 
         lostStation.penalty(gameManager.getGame().getBoard(), player);
 

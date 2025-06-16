@@ -216,7 +216,7 @@ public class PiratesController extends EventControllerAbstract {
             }
 
             phase = EventPhase.BATTLE_RESULT;
-            battleResult(player, sender);
+            battleResult(player);
         }
 
         gameManager.getGameThread().sleep(3000);
@@ -392,11 +392,12 @@ public class PiratesController extends EventControllerAbstract {
      *
      * @author Gabriele
      * @param player current player
-     * @param sender current sender
      */
-    private void battleResult(Player player, Sender sender) throws InterruptedException {
+    private void battleResult(Player player) throws InterruptedException {
         if (!phase.equals(EventPhase.BATTLE_RESULT))
             throw new IllegalStateException("IncorrectPhase");
+
+        Sender sender = gameManager.getSenderByPlayer(player);
 
         // Calls the battleResult function
         switch (pirates.battleResult(playerFirePower)) {
@@ -557,7 +558,7 @@ public class PiratesController extends EventControllerAbstract {
 
         // If the player is disconnected
         if(!leaderPlayer.getIsReady()){
-            rollDice(leaderPlayer, sender);
+            rollDice(leaderPlayer, null);
         }
     }
 

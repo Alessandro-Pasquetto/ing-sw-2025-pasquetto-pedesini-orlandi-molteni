@@ -1015,7 +1015,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
         // If the player is disconnected
         if(!penaltyPlayer.getIsReady()) {
-            rollDice(penaltyPlayer, sender);
+            rollDice(penaltyPlayer, null);
         }
     }
 
@@ -1207,6 +1207,13 @@ public class BattlezoneController extends EventControllerAbstract {
             MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, 0, player.getSpaceship().getNormalShootingPower()), sender);
         }
         else if (phase.equals(EventPhase.DISCARDED_BOXES)){
+
+            // Remove batteries already discarded
+            for(BoxSlot boxSlot : boxSlots){
+                MessageSenderService.sendMessage(new BoxDiscardedMessage(boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
+            }
+
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
         }
         else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)){

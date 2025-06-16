@@ -115,7 +115,7 @@ public class SlaversController extends EventControllerAbstract {
                 }
             }
 
-            battleResult(player, sender);
+            battleResult(player);
         }
     }
 
@@ -237,7 +237,10 @@ public class SlaversController extends EventControllerAbstract {
         }
     }
 
-    private void battleResult(Player player, Sender sender) throws InterruptedException {
+    private void battleResult(Player player) throws InterruptedException {
+
+        Sender sender = gameManager.getSenderByPlayer(player);
+
         switch(slavers.battleResult(playerFirePower)){
             case 1:
                 MessageSenderService.sendMessage("YouWonBattle", sender);
@@ -270,7 +273,7 @@ public class SlaversController extends EventControllerAbstract {
 
                 // If the player is disconnected
                 if(!player.getIsReady()) {
-                    handleLostBattleDisconnection(player, player.getSpaceship(), sender);
+                    handleLostBattleDisconnection(player, player.getSpaceship());
                 }
                 break;
         }
@@ -428,7 +431,10 @@ public class SlaversController extends EventControllerAbstract {
         }
     }
 
-    private void handleLostBattleDisconnection(Player player, Spaceship spaceship, Sender sender){
+    private void handleLostBattleDisconnection(Player player, Spaceship spaceship){
+
+        Sender sender = gameManager.getSenderByPlayer(player);
+
         MessageSenderService.sendMessage("YouLostBattle", sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
         slavers.randomDiscardCrew(spaceship, slavers.getPenaltyCrew());

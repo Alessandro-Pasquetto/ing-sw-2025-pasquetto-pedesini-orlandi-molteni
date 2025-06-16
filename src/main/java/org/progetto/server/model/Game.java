@@ -241,10 +241,11 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
 
+                /*
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.METEORSRAIN) && !lv2Deck.get(1).getType().equals(CardType.METEORSRAIN))
+                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS) && !lv2Deck.get(1).getType().equals(CardType.SMUGGLERS))
                    Collections.shuffle(lv2Deck);
-
+                 */
 
 
                 hiddenEventDeck.add(lv1Deck.getFirst());
@@ -356,11 +357,6 @@ public class Game {
                 throw new IllegalStateException("GameFull");
 
             players.add(player);
-
-            if(players.size() == maxNumPlayers){
-                GameManagerMaps.removeWaitingGameManager(id);
-                LobbyController.broadcastLobbyMessage("UpdateGameList");
-            }
         }
     }
 
@@ -482,21 +478,20 @@ public class Game {
             if (hiddenEventDeck.isEmpty())
                 throw new IllegalStateException("EmptyHiddenEventCardDeck");
 
-            /*
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
-             */
-
+            /*
             //forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SMUGGLERS));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-       }
+            */
+        }
 
         setActiveEventCard(pickedEventCard);
         return pickedEventCard;
