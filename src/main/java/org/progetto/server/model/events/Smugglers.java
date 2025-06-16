@@ -71,11 +71,11 @@ public class Smugglers extends EventCard {
 
 
     /**
-     * Discards a number of box members from the spaceship, randomly choosing a box storage
+     * Discards a number of box from the spaceship, randomly choosing a box storage
      *
      * @author Alessandro
      * @param spaceship Spaceship from which the box will be discarded
-     * @param boxesToDiscard Number of box members to discard
+     * @param boxesToDiscard Number of box to discard
      */
     public void randomDiscardBoxes(Spaceship spaceship, int boxesToDiscard) {
         Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();

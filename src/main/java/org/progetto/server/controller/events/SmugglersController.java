@@ -17,8 +17,6 @@ import java.util.ArrayList;
 
 public class SmugglersController extends EventControllerAbstract {
 
-    private record BoxSlot(BoxStorage boxStorage, int idx){}
-
     // =======================
     // ATTRIBUTES
     // =======================
@@ -32,8 +30,6 @@ public class SmugglersController extends EventControllerAbstract {
     private final ArrayList<Box> rewardBoxes;
 
     private final ArrayList<BatteryStorage> batteryStorages;
-    private final ArrayList<BoxSlot> boxSlots;
-    private final int[] tempBoxCounts;
 
     // =======================
     // CONSTRUCTORS
@@ -50,8 +46,6 @@ public class SmugglersController extends EventControllerAbstract {
         this.requestedBoxes = 0;
         this.rewardBoxes = new ArrayList<>(smugglers.getRewardBoxes());
         this.batteryStorages = new ArrayList<>();
-        this.boxSlots = new ArrayList<>();
-        this.tempBoxCounts = new int[4];
     }
 
     // =======================
@@ -106,7 +100,6 @@ public class SmugglersController extends EventControllerAbstract {
             // If he can use any double cannon, and he doesn't win with normalShootingPower
             if(maxUsable != 0 && smugglers.battleResult(playerFirePower) != 1){
                 batteryStorages.clear();
-                boxSlots.clear();
 
                 phase = EventPhase.CANNON_NUMBER;
                 MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, smugglers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
@@ -226,7 +219,11 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
-        batteryStorages.add(batteryStorage);
+        if(phase.equals(EventPhase.DISCARDED_BATTERIES))
+            batteryStorages.add(batteryStorage);
+        else if (phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES))
+            batteryStorage.decrementItemsCount(player.getSpaceship(), 1);
+
         requestedBatteries--;
 
         MessageSenderService.sendMessage(new BatteryDiscardedMessage(xBatteryStorage, yBatteryStorage), sender);
@@ -236,10 +233,6 @@ public class SmugglersController extends EventControllerAbstract {
 
             for (BatteryStorage component : batteryStorages) {
                 component.decrementItemsCount(player.getSpaceship(), 1);
-            }
-
-            for (BoxSlot boxSlot : boxSlots) {
-                boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
             }
 
             player.setIsReady(true, gameManager.getGame());
@@ -332,13 +325,7 @@ public class SmugglersController extends EventControllerAbstract {
 
         requestedBoxes = smugglers.getPenaltyBoxes();
 
-        tempBoxCounts[0] = spaceship.getBoxCounts()[0];
-        tempBoxCounts[1] = spaceship.getBoxCounts()[1];
-        tempBoxCounts[2] = spaceship.getBoxCounts()[2];
-        tempBoxCounts[3] = spaceship.getBoxCounts()[3];
-
         batteryStorages.clear();
-        boxSlots.clear();
 
         // Checks if he has at least a box to discard
         if (spaceship.getBoxesCount() > 0) {
@@ -371,7 +358,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                 smugglers.discardAllBoxes(spaceship);
 
-                smugglers.randomDiscardBatteries(spaceship, Math.min(spaceship.getBatteriesCount(), requestedBatteries));
+                smugglers.randomDiscardBatteries(spaceship, requestedBatteries);
             }
         }
     }
@@ -387,6 +374,9 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
+
+        Spaceship spaceship = player.getSpaceship();
+
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -398,7 +388,7 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
-        Component[][] spaceshipMatrix = player.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy();
+        Component[][] spaceshipMatrix = spaceship.getBuildingBoard().getSpaceshipMatrixCopy();
 
         // Checks if component index is correct
         if (xBoxStorage < 0 || yBoxStorage < 0 || yBoxStorage >= spaceshipMatrix.length || xBoxStorage >= spaceshipMatrix[0].length ) {
@@ -425,33 +415,20 @@ public class SmugglersController extends EventControllerAbstract {
             return;
         }
 
+        int[] boxCounts = spaceship.getBoxCounts();
+
         if(
-            (tempBoxCounts[0] != 0 && !box.equals(Box.RED))     ||
-            (tempBoxCounts[0] == 0 && tempBoxCounts[1] != 0 && !box.equals(Box.YELLOW))  ||
-            (tempBoxCounts[0] == 0 && tempBoxCounts[1] == 0 && tempBoxCounts[2] != 0 && !box.equals(Box.GREEN))   ||
-            (tempBoxCounts[0] == 0 && tempBoxCounts[1] == 0 && tempBoxCounts[2] == 0 && tempBoxCounts[3] != 0 && !box.equals(Box.BLUE)))
+            (boxCounts[0] != 0 && !box.equals(Box.RED))     ||
+            (boxCounts[0] == 0 && boxCounts[1] != 0 && !box.equals(Box.YELLOW))  ||
+            (boxCounts[0] == 0 && boxCounts[1] == 0 && boxCounts[2] != 0 && !box.equals(Box.GREEN))   ||
+            (boxCounts[0] == 0 && boxCounts[1] == 0 && boxCounts[2] == 0 && boxCounts[3] != 0 && !box.equals(Box.BLUE)))
         {
             MessageSenderService.sendMessage("IsNotMaxValuableBox", sender);
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
             return;
         }
 
-        switch (box){
-            case RED:
-                tempBoxCounts[0]--;
-                break;
-            case YELLOW:
-                tempBoxCounts[1]--;
-                break;
-            case GREEN:
-                tempBoxCounts[2]--;
-                break;
-            case BLUE:
-                tempBoxCounts[3]--;
-                break;
-        }
-
-        boxSlots.add(new BoxSlot(boxStorage, idx));
+        boxStorage.removeBox(spaceship, idx);
         requestedBoxes--;
 
         MessageSenderService.sendMessage(new BoxDiscardedMessage(xBoxStorage, yBoxStorage, idx), sender);
@@ -459,21 +436,17 @@ public class SmugglersController extends EventControllerAbstract {
         
         if (requestedBoxes == 0) {
 
-            for (BoxSlot boxSlot : boxSlots) {
-                boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
-            }
-
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
         } else {
 
-            if (boxSlots.size() != player.getSpaceship().getBoxesCount()){
+            if (spaceship.getBoxesCount() > 0){
                 MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
 
             } else {
 
-                if (player.getSpaceship().getBatteriesCount() > 0) {
+                if (spaceship.getBatteriesCount() > 0) {
                     MessageSenderService.sendMessage("NotEnoughBoxes", sender);
                     requestedBatteries = requestedBoxes;
                     phase = EventPhase.DISCARDED_BATTERIES_FOR_BOXES;
@@ -481,10 +454,6 @@ public class SmugglersController extends EventControllerAbstract {
 
                 } else {
                     MessageSenderService.sendMessage("NotEnoughBatteries", sender);
-
-                    for (BoxSlot boxSlot : boxSlots) {
-                        boxSlot.boxStorage().removeBox(player.getSpaceship(), boxSlot.idx());
-                    }
 
                     player.setIsReady(true, gameManager.getGame());
                     gameManager.getGameThread().notifyThread();
@@ -648,7 +617,7 @@ public class SmugglersController extends EventControllerAbstract {
         }
         else if (phase.equals(EventPhase.DISCARDED_BATTERIES) || phase.equals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES)){
 
-            // Remove batteries already discarded
+            // Remove batteries already discarded (DISCARDED_BATTERIES)
             for(BatteryStorage batteryStorage : batteryStorages){
                 MessageSenderService.sendMessage(new BatteryDiscardedMessage(batteryStorage.getX(), batteryStorage.getY()), sender);
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), batteryStorage.getX(), batteryStorage.getY()), sender);
@@ -660,13 +629,6 @@ public class SmugglersController extends EventControllerAbstract {
             MessageSenderService.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()), sender);
         }
         else if (phase.equals(EventPhase.DISCARDED_BOXES)){
-
-            // Remove batteries already discarded
-            for(BoxSlot boxSlot : boxSlots){
-                MessageSenderService.sendMessage(new BoxDiscardedMessage(boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
-                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBoxDiscardedMessage(player.getName(), boxSlot.boxStorage().getX(), boxSlot.boxStorage().getY(), boxSlot.idx()), sender);
-            }
-
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);
         }
     }

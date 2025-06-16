@@ -30,7 +30,6 @@ public class SlaversController extends EventControllerAbstract {
     private int requestedCrew;
 
     private final ArrayList<BatteryStorage> batteryStorages;
-    private final ArrayList<HousingUnit> housingUnits;
 
     // =======================
     // CONSTRUCTORS
@@ -46,7 +45,6 @@ public class SlaversController extends EventControllerAbstract {
         this.requestedBatteries = 0;
         this.requestedCrew = 0;
         this.batteryStorages = new ArrayList<>();
-        this.housingUnits = new ArrayList<>();
     }
 
     // =======================
@@ -357,8 +355,6 @@ public class SlaversController extends EventControllerAbstract {
 
         requestedCrew = slavers.getPenaltyCrew();
 
-        housingUnits.clear();
-
         phase = EventPhase.DISCARDED_CREW;
         MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
     }
@@ -411,18 +407,13 @@ public class SlaversController extends EventControllerAbstract {
             return;
         }
 
-        housingUnits.add(housingUnit);
+        slavers.chooseDiscardedCrew(player.getSpaceship(), housingUnit);
         requestedCrew--;
 
         MessageSenderService.sendMessage(new CrewDiscardedMessage(xHousingUnit, yHousingUnit), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
-        if (requestedCrew == 0 || housingUnits.size() == player.getSpaceship().getTotalCrewCount()) {
-
-            for (HousingUnit component : housingUnits) {
-                slavers.chooseDiscardedCrew(player.getSpaceship(), component);
-            }
-
+        if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
             player.setIsReady(true, gameManager.getGame());
             gameManager.getGameThread().notifyThread();
 
@@ -437,7 +428,7 @@ public class SlaversController extends EventControllerAbstract {
 
         MessageSenderService.sendMessage("YouLostBattle", sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
-        slavers.randomDiscardCrew(spaceship, slavers.getPenaltyCrew());
+        slavers.randomDiscardCrew(spaceship, requestedCrew);
 
         // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
         gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
