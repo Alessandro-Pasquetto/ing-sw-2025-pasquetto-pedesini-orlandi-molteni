@@ -90,6 +90,9 @@ public class PlanetsController extends EventControllerAbstract {
             }
         }
 
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
+
         // Checks that at least a player landed
         if (!planets.getLandedPlayers().isEmpty()) {
             phase = EventPhase.EFFECT;

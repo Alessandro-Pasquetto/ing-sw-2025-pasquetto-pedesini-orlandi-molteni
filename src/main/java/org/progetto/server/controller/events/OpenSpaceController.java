@@ -68,7 +68,7 @@ public class OpenSpaceController extends EventControllerAbstract {
 
     @Override
     public boolean isParticipant(Player player){
-        return false;
+        return activePlayers.contains(player);
     }
 
     /**
@@ -119,6 +119,9 @@ public class OpenSpaceController extends EventControllerAbstract {
             phase = EventPhase.EFFECT;
             eventEffect();
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**

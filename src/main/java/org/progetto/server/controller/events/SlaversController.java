@@ -120,6 +120,9 @@ public class SlaversController extends EventControllerAbstract {
 
             battleResult(player);
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**

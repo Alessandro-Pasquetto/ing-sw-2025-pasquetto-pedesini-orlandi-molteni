@@ -99,6 +99,9 @@ public class LostShipController extends EventControllerAbstract  {
             // Checks if someone landed on the ship
             if (someoneLanded) return;
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**

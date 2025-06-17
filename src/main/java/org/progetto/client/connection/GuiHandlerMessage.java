@@ -1168,8 +1168,8 @@ public class GuiHandlerMessage {
                     PageController.getEventView().setEventLabels("YOU ANSWERED NO", "Wait for other players to finish their turn...");
                     break;
 
-                case "IsNotNotPartecipant":
-                    GameData.setIsNotPartecipating(true);
+                case "IsNotParticipant":
+                    GameData.setIsNotParticipating(true);
                     PageController.getEventView().setEventLabels("YOU ARE NOT PART OF CURRENT EVENT", "Wait for current event finish...");
                     break;
 

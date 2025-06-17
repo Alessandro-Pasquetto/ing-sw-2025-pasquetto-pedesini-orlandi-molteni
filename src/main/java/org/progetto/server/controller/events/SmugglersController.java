@@ -124,6 +124,9 @@ public class SmugglersController extends EventControllerAbstract {
             phase = EventPhase.BATTLE_RESULT;
             battleResult(player);
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**

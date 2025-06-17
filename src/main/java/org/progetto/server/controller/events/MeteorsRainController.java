@@ -1,5 +1,6 @@
 package org.progetto.server.controller.events;
 
+import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
@@ -29,7 +30,6 @@ public class MeteorsRainController extends EventControllerAbstract {
     // =======================
 
     private final MeteorsRain meteorsRain;
-    private Player leaderPlayer;
     private ArrayList<Player> activePlayers;
     private int diceResult;
     private Projectile comingMeteor;
@@ -99,7 +99,6 @@ public class MeteorsRainController extends EventControllerAbstract {
         this.gameManager = gameManager;
         this.meteorsRain = (MeteorsRain) gameManager.getGame().getActiveEventCard();
         this.phase = EventPhase.START;
-        this.activePlayers = null;
         this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.diceResult = 0;
         this.decisionPlayers = new ArrayList<>();
@@ -179,7 +178,9 @@ public class MeteorsRainController extends EventControllerAbstract {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
             throw new IllegalStateException("IncorrectPhase");
 
-        leaderPlayer = activePlayers.getFirst();
+        Player leaderPlayer = activePlayers.getFirst();
+
+        gameManager.getGame().setActivePlayer(leaderPlayer);
 
         Sender sender = gameManager.getSenderByPlayer(leaderPlayer);
 
@@ -198,6 +199,9 @@ public class MeteorsRainController extends EventControllerAbstract {
         if(!leaderPlayer.getIsReady()){
             rollDice(leaderPlayer, null);
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**
@@ -550,7 +554,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if(!activePlayers.contains(player))
             return;
 
-        if(phase.equals(EventPhase.ROLL_DICE) && player.equals(leaderPlayer)){
+        if(phase.equals(EventPhase.ROLL_DICE) && player.equals(gameManager.getGame().getActivePlayer())){
             MessageSenderService.sendMessage(new IncomingProjectileMessage(comingMeteor), sender);
 
             if (comingMeteor.getFrom() == 0 || comingMeteor.getFrom() == 2) {
@@ -579,6 +583,8 @@ public class MeteorsRainController extends EventControllerAbstract {
 
             return;
         }
+
+        MessageSenderService.sendMessage(new IncomingProjectileMessage(comingMeteor), sender);
 
         if(comingMeteor.getSize().equals(ProjectileSize.SMALL))
             askSmallMeteorDecisionSinglePlayer(player, sender);

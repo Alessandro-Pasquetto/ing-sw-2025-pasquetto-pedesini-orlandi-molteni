@@ -89,6 +89,9 @@ public class LostStationController extends EventControllerAbstract {
             // Checks if someone landed on the station
             if (someoneLanded) return;
         }
+
+        // Reset activePlayer
+        gameManager.getGame().setActivePlayer(null);
     }
 
     /**

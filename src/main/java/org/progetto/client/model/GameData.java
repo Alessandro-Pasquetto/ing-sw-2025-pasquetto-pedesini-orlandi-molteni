@@ -3,11 +3,9 @@ package org.progetto.client.model;
 import org.progetto.client.connection.Sender;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
-import org.progetto.server.model.components.Component;
 import org.progetto.server.model.events.EventCard;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +28,7 @@ public class GameData {
     private static EventCard activeCard;
     private static String namePlayer;
     private static boolean hasLeft = false;
-    private static boolean isNotPartecipating = false;
+    private static boolean isNotParticipating = false;
     private static String activePlayer;
     private static int color;
     private static int credits = 0;
@@ -76,8 +74,8 @@ public class GameData {
         return hasLeft;
     }
 
-    public static boolean isNotPartecipating() {
-        return isNotPartecipating;
+    public static boolean isNotParticipating() {
+        return isNotParticipating;
     }
 
     public static String getActivePlayer() {
@@ -148,8 +146,8 @@ public class GameData {
         GameData.hasLeft = hasLeft;
     }
 
-    public static void setIsNotPartecipating(boolean isNotPartecipating) {
-        GameData.isNotPartecipating = isNotPartecipating;
+    public static void setIsNotParticipating(boolean isNotParticipating) {
+        GameData.isNotParticipating = isNotParticipating;
     }
 
     public static void setActivePlayer(String activePlayer) {

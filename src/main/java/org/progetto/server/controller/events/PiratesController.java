@@ -747,7 +747,7 @@ public class PiratesController extends EventControllerAbstract {
 
         Component destroyedComponent = pirates.penaltyShot(game, player, shot, diceResult);
 
-        handledPlayers.add(player);
+        addHandledPlayer(player);
 
         // Sends two types of messages based on the shot's result
         if (destroyedComponent == null) {
@@ -851,6 +851,7 @@ public class PiratesController extends EventControllerAbstract {
             return;
         }
 
+        MessageSenderService.sendMessage(new IncomingProjectileMessage(currentShot), sender);
         askToUseShieldSinglePlayer(player);
     }
 }

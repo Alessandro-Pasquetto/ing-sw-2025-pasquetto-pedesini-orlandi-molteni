@@ -243,6 +243,14 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
+                /*
+                // forzare uscita carta evento, todo da rimuovereAdd commentMore actions
+                while(!lv2Deck.getFirst().getType().equals(CardType.BATTLEZONE))
+                   Collections.shuffle(lv2Deck);
+
+                 */
+
+
                 // Add one lv1 and two lv2 to hidden deck
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -477,16 +485,16 @@ public class Game {
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
-            /*
+/*
             //forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SMUGGLERS));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.BATTLEZONE));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-            */
+*/
         }
 
         setActiveEventCard(pickedEventCard);
