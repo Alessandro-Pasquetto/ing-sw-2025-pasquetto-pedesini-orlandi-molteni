@@ -23,6 +23,7 @@ public class PlanetsController extends EventControllerAbstract {
     // =======================
     
     private final Planets planets;
+    private final ArrayList<Player> activePlayers;
     private ArrayList<Box> rewardBoxes;
 
     // =======================
@@ -32,6 +33,7 @@ public class PlanetsController extends EventControllerAbstract {
     public PlanetsController(GameManager gameManager) {
         this.gameManager = gameManager;
         this.phase = EventPhase.START;
+        this.activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
         this.planets = (Planets) gameManager.getGame().getActiveEventCard();
         this.rewardBoxes = new ArrayList<>();
     }
@@ -48,6 +50,11 @@ public class PlanetsController extends EventControllerAbstract {
         }
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Ask each player if they want to land on one of the given planets
      * List of planets are sent only to the active player
@@ -59,8 +66,6 @@ public class PlanetsController extends EventControllerAbstract {
     private void askForLand() throws IllegalStateException, InterruptedException {
         if (!phase.equals(EventPhase.ASK_TO_LAND))
             throw new IllegalStateException("IncorrectPhase");
-
-        ArrayList<Player> activePlayers = gameManager.getGame().getBoard().getCopyTravelers();
 
         for (Player player : activePlayers) {
             gameManager.getGame().setActivePlayer(player);

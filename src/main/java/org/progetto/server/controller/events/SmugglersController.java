@@ -66,6 +66,11 @@ public class SmugglersController extends EventControllerAbstract {
         }
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Asks current player how many double cannons he wants to use
      *

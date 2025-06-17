@@ -58,6 +58,11 @@ public class LostShipController extends EventControllerAbstract  {
         askToLand();
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Asks to land on the ship
      *

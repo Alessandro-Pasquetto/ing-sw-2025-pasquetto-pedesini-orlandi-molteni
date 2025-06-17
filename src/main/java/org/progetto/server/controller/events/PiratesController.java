@@ -165,6 +165,11 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Asks current player how many double cannons he wants to use
      *
@@ -219,6 +224,9 @@ public class PiratesController extends EventControllerAbstract {
             battleResult(player);
         }
 
+        // Reset active player
+        gameManager.getGame().setActivePlayer(null);
+
         gameManager.getGameThread().sleep(3000);
 
         if(!defeatedPlayers.isEmpty()){
@@ -267,7 +275,7 @@ public class PiratesController extends EventControllerAbstract {
             }
 
             phase = EventPhase.DISCARDED_BATTERIES;
-            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(num), sender);
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
 
         } else {
             MessageSenderService.sendMessage("IncorrectNumber", sender);
@@ -794,6 +802,27 @@ public class PiratesController extends EventControllerAbstract {
     public void reconnectPlayer(Player player, Sender sender) {
         if (!activePlayers.contains(player))
             return;
+
+        if(player.equals(gameManager.getGame().getActivePlayer())){
+            if(phase.equals(EventPhase.CANNON_NUMBER)){
+                int maxUsable = player.getSpaceship().maxNumberOfDoubleCannonsUsable();
+                MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, pirates.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+
+            } else if (phase.equals(EventPhase.DISCARDED_BATTERIES)) {
+
+                // Remove batteries already discarded
+                for(BatteryStorage batteryStorage : batteryStorages){
+                    MessageSenderService.sendMessage(new BatteryDiscardedMessage(batteryStorage.getX(), batteryStorage.getY()), sender);
+                    gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), batteryStorage.getX(), batteryStorage.getY()), sender);
+                }
+
+                MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+            }
+            else if (phase.equals(EventPhase.REWARD_DECISION)) {
+                MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(pirates.getRewardCredits(), pirates.getPenaltyDays()), sender);
+            }
+            return;
+        }
 
         if(phase.equals(EventPhase.ROLL_DICE) && player.equals(leaderPlayer)){
             MessageSenderService.sendMessage(new IncomingProjectileMessage(currentShot), sender);

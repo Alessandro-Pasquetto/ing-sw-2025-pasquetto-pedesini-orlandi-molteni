@@ -37,6 +37,10 @@ abstract public class EventControllerAbstract {
 
     abstract public void start() throws InterruptedException;
 
+    public boolean isParticipant(Player player){
+        return false;
+    }
+
     public void rollDice(Player player, Sender sender) {
         MessageSenderService.sendMessage("FunctionNotAvailable", sender);
     }

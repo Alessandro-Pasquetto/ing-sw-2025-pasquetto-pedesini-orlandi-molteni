@@ -127,6 +127,11 @@ public class MeteorsRainController extends EventControllerAbstract {
         sendMeteor();
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Send broadcast the incoming meteor information
      *

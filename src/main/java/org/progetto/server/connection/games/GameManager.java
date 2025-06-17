@@ -336,8 +336,12 @@ public class GameManager {
             MessageSenderService.sendMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this), game.getBoard().getTrack()), sender);
             MessageSenderService.sendMessage(new PickedEventCardMessage(game.getActiveEventCard()), sender);
 
-            if(!player.getHasLeft())
-                eventController.reconnectPlayer(player, sender);
+            if(!player.getHasLeft()){
+                if(eventController.isParticipant(player))
+                    eventController.reconnectPlayer(player, sender);
+                else
+                    MessageSenderService.sendMessage("IsNotParticipant", sender);
+            }
         }
 
         else if(game.getPhase().equals(GamePhase.TRAVEL)){

@@ -66,6 +66,11 @@ public class OpenSpaceController extends EventControllerAbstract {
         askHowManyEnginesToUse();
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return false;
+    }
+
     /**
      * Asks current player how many double engines he wants to use
      *

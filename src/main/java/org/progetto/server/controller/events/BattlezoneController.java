@@ -87,6 +87,11 @@ public class BattlezoneController extends EventControllerAbstract {
         condition();
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Handles current condition
      *

@@ -51,6 +51,11 @@ public class LostStationController extends EventControllerAbstract {
         }
     }
 
+    @Override
+    public boolean isParticipant(Player player){
+        return activePlayers.contains(player);
+    }
+
     /**
      * Ask each player if they want to land on the lost ship, only if the preconditions are satisfied
      *
