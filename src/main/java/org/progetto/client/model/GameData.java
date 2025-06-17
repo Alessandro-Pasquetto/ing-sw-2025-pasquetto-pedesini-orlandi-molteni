@@ -30,6 +30,7 @@ public class GameData {
     private static EventCard activeCard;
     private static String namePlayer;
     private static boolean hasLeft = false;
+    private static boolean isNotPartecipating = false;
     private static String activePlayer;
     private static int color;
     private static int credits = 0;
@@ -73,6 +74,10 @@ public class GameData {
 
     public static boolean getHasLeft() {
         return hasLeft;
+    }
+
+    public static boolean isNotPartecipating() {
+        return isNotPartecipating;
     }
 
     public static String getActivePlayer() {
@@ -141,6 +146,10 @@ public class GameData {
 
     public static void setHasLeft(boolean hasLeft) {
         GameData.hasLeft = hasLeft;
+    }
+
+    public static void setIsNotPartecipating(boolean isNotPartecipating) {
+        GameData.isNotPartecipating = isNotPartecipating;
     }
 
     public static void setActivePlayer(String activePlayer) {

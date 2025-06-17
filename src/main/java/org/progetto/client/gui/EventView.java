@@ -326,6 +326,10 @@ public class EventView {
             eventMainTitle.setText("YOU LEFT THE TRAVEL");
             eventMainDesc.setText("You can no longer interact with the game...");
             btnContainer.getChildren().clear();
+        } else if (GameData.isNotPartecipating()) {
+            eventMainTitle.setText("YOU ARE NOT PART OF CURRENT EVENT");
+            eventMainDesc.setText("Wait for current event finish...");
+            btnContainer.getChildren().clear();
         } else {
             eventMainTitle.setText("");
             eventMainDesc.setText("");
@@ -1452,7 +1456,7 @@ public class EventView {
         }
 
         // Update event labels based on active player
-        if (!name.equals(GameData.getNamePlayer()) && !GameData.getHasLeft()) {
+        if (!name.equals(GameData.getNamePlayer()) && !GameData.getHasLeft() && !GameData.isNotPartecipating()) {
             eventMainTitle.setText("WAIT FOR YOUR TURN");
             eventMainDesc.setText("Another player is taking his decisions, please wait...");
             btnContainer.getChildren().clear();

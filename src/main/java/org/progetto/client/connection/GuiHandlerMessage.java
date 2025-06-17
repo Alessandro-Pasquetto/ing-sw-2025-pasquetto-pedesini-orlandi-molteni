@@ -1033,7 +1033,7 @@ public class GuiHandlerMessage {
                     break;
 
                 case "NotEnoughCrew":
-                    PageController.getEventView().setEventLabels("NOT ENOUGH CREW MEMBERS AVAILABLES", "You cannot face this challenge, wait for other players to finish their turn...");
+                    PageController.getEventView().setEventLabels("NOT ENOUGH CREW MEMBERS AVAILABLE", "You cannot face this challenge, wait for other players to finish their turn...");
                     break;
 
                 case "NotEnoughBoxesAndBatteries":
@@ -1166,6 +1166,11 @@ public class GuiHandlerMessage {
 
                 case "YouAnsweredNo":
                     PageController.getEventView().setEventLabels("YOU ANSWERED NO", "Wait for other players to finish their turn...");
+                    break;
+
+                case "IsNotNotPartecipant":
+                    GameData.setIsNotPartecipating(true);
+                    PageController.getEventView().setEventLabels("YOU ARE NOT PART OF CURRENT EVENT", "Wait for current event finish...");
                     break;
 
                 case "AskContinueTravel":
