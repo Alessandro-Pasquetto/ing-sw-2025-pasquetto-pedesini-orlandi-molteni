@@ -7,6 +7,11 @@ import java.io.IOException;
 
 public class GuiApplication extends Application {
 
+    static {
+        // Suppress JavaFX warnings
+        System.setProperty("java.util.logging.config.file", "logging.properties");
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         PageController.setStage(stage);

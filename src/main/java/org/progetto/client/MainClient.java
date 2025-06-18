@@ -43,17 +43,16 @@ public class MainClient {
     }
 
     public static void main(String[] args) {
-
         String clientId;
 
         if (args.length == 0) {
-            System.out.println("Default client ID: 0");
+            // System.out.println("Default client ID: 0");
             clientId = "0";
         }
         else{
             clientId = args[0];
-            System.out.println("Client ID: " + clientId);
-            System.out.println();
+            // System.out.println("Client ID: " + clientId);
+            // System.out.println();
         }
 
         GameData.setClientId(clientId);
