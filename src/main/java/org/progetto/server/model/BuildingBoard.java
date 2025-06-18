@@ -1,12 +1,13 @@
 package org.progetto.server.model;
 
-import java.io.Serializable;
+import java.io.*;
+
 import javafx.util.Pair;
+import org.progetto.server.MainServer;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.loading.MaskMatrix;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BuildingBoard implements Serializable {
@@ -287,28 +288,28 @@ public class BuildingBoard implements Serializable {
      * @author Lorenzo
      * @return the loaded matrix configuration for the board
      */
-    private int[][] loadBoardMask()
-    {
-        try{
+    private int[][] loadBoardMask() {
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
-            MaskMatrix data = objectMapper.readValue(new File("src/main/resources/org/progetto/server/Masks.json"), MaskMatrix.class);
 
-            switch (spaceship.getLevelShip())
-            {
-                case 1:
-                    boardMask = data.getBaseMatrix();
-                    break;
+            try (InputStream inputStream = MainServer.class.getResourceAsStream("Masks.json")) {
+                if (inputStream == null) {
+                    throw new FileNotFoundException("Masks.json not found in resources");
+                }
 
-                case 2:
-                    boardMask = data.getAdvancedMatrix();
-                    break;
+                MaskMatrix data = objectMapper.readValue(inputStream, MaskMatrix.class);
+
+                switch (spaceship.getLevelShip()) {
+                    case 1 -> boardMask = data.getBaseMatrix();
+                    case 2 -> boardMask = data.getAdvancedMatrix();
+                }
+
+                return boardMask;
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error loading board mask: " + e.getMessage(), e);
         }
-
-        return boardMask;
     }
 
     /**

@@ -2,14 +2,13 @@ package org.progetto.client.tui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.progetto.client.MainClient;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Spaceship;
 import org.progetto.server.model.components.*;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
@@ -79,12 +78,14 @@ public class GameCommands {
     /**
      * Help command, read a list of commands and display their usage
      *
-     * @author Lorenzo
+     * @author Gabriele
      */
     public static void showHelp() {
-        String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
         Gson gson = new Gson();
-        try (Reader reader = new FileReader(path)) {
+
+        try (InputStream inputStream = MainClient.class.getResourceAsStream("commands/CommandsList.json");
+             Reader reader = new InputStreamReader(inputStream)) {
+
             Type listType = new TypeToken<List<Command>>() {}.getType();
             List<Command> commands = gson.fromJson(reader, listType);
 
@@ -97,11 +98,8 @@ public class GameCommands {
             String bottomBorder = "└" + "─".repeat(nameWidth + 2) + "┴" + "─".repeat(descWidth + 2) + "┴" + "─".repeat(usageWidth + 2) + "┘";
 
             System.out.println("\n📖 Available Commands:\n");
-
             System.out.println(topBorder);
-
             System.out.printf("│ %-" + nameWidth + "s │ %-" + descWidth + "s │ %-" + usageWidth + "s │%n", "Name", "Description", "Usage");
-
             System.out.println(headerSeparator);
 
             for (Command cmd : commands) {
@@ -118,10 +116,11 @@ public class GameCommands {
 
             System.out.println(bottomBorder);
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.err.println("Error loading command list: " + e.getMessage());
         }
     }
+
 
     /**
      * Enables to set a player as ready

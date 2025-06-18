@@ -2,6 +2,7 @@ package org.progetto.client.tui;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.progetto.client.MainClient;
 import org.progetto.client.connection.rmi.RmiClientReceiver;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.connection.socket.SocketClient;
@@ -9,9 +10,7 @@ import org.progetto.client.connection.socket.SocketListener;
 import org.progetto.client.model.GameData;
 import org.progetto.server.model.Game;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -240,11 +239,12 @@ public class TuiCommandFilter {
      * @return a map of String with command name with its object reference
      */
     public static Map<String, Command> loadCommands() {
-        String path = "src/main/resources/org/progetto/client/commands/CommandsList.json";
         Map<String, Command> commands = new HashMap<>();
         Gson gson = new Gson();
 
-        try (Reader reader = new FileReader(path)) {
+        try (InputStream inputStream = MainClient.class.getResourceAsStream("commands/CommandsList.json");
+             Reader reader = new InputStreamReader(inputStream)) {
+
             Type listType = new TypeToken<List<Command>>() {}.getType();
             List<Command> commandList = gson.fromJson(reader, listType);
 
@@ -260,7 +260,7 @@ public class TuiCommandFilter {
                 commands.put(cmd.getName().toLowerCase(), cmd);
             }
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.err.println("Error loading command list: " + e.getMessage());
         }
 

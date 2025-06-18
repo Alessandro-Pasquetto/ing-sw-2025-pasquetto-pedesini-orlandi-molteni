@@ -115,9 +115,9 @@ public class PageController {
         stage.getIcons().add(icon);
 
         // Loads the custom font
-        Font.loadFont(MainClient.class.getResourceAsStream("/org/progetto/client/fonts/Orgovan.ttf"), 10);
-        Font.loadFont(MainClient.class.getResourceAsStream("/org/progetto/client/fonts/Inter-Regular.ttf"), 10);
-        Font.loadFont(MainClient.class.getResourceAsStream("/org/progetto/client/fonts/Inter-SemiBold.ttf"), 10);
+        Font.loadFont(MainClient.class.getResourceAsStream("fonts/Orgovan.ttf"), 10);
+        Font.loadFont(MainClient.class.getResourceAsStream("fonts/Inter-Regular.ttf"), 10);
+        Font.loadFont(MainClient.class.getResourceAsStream("fonts/Inter-SemiBold.ttf"), 10);
 
         loadControllers();
 

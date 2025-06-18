@@ -1,6 +1,8 @@
 package org.progetto.server.model;
 
 import com.google.gson.reflect.TypeToken;
+import org.progetto.client.MainClient;
+import org.progetto.server.MainServer;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
 import org.progetto.server.controller.EventPhase;
@@ -8,7 +10,7 @@ import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.*;
 
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -16,8 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.progetto.server.model.loading.ComponentDeserializer;
 import org.progetto.server.model.loading.EventDeserializer;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -199,7 +200,7 @@ public class Game {
      * @author Lorenzo
      * @return visible event card decks (list of event cards)
      */
-    private ArrayList<EventCard>[] loadEvents(){
+    private ArrayList<EventCard>[] loadEvents() {
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(EventCard.class, new EventDeserializer());
@@ -207,59 +208,54 @@ public class Game {
 
             Type listType = new TypeToken<ArrayList<EventCard>>() {}.getType();
 
-            if(level == 1) {
-                ArrayList<EventCard> demoDeck;
-                FileReader reader = new FileReader("src/main/resources/org/progetto/server/EventCardsL.json");
-                demoDeck = gson.fromJson(reader, listType);
-                reader.close();
+            if (level == 1) {
+                try (InputStream inputStream = MainServer.class.getResourceAsStream("EventCardsL.json");
+                     Reader reader = new InputStreamReader(inputStream)) {
 
-                Collections.shuffle(demoDeck);
-
-                hiddenEventDeck = demoDeck;
-
-                return null;
+                    ArrayList<EventCard> demoDeck = gson.fromJson(reader, listType);
+                    Collections.shuffle(demoDeck);
+                    hiddenEventDeck = demoDeck;
+                    return null;
+                }
             }
 
-            if(level == 2) {
-                ArrayList<EventCard> lv1Deck;
-                ArrayList<EventCard> lv2Deck;
-
+            if (level == 2) {
                 ArrayList<EventCard>[] decks = (ArrayList<EventCard>[]) new ArrayList[3];
                 for (int i = 0; i < 3; i++) {
                     decks[i] = new ArrayList<>();
                 }
 
-                FileReader reader = new FileReader("src/main/resources/org/progetto/server/EventCards1.json");
-                lv1Deck = gson.fromJson(reader, listType);
-                reader.close();
+                ArrayList<EventCard> lv1Deck;
+                ArrayList<EventCard> lv2Deck;
 
-                reader = new FileReader("src/main/resources/org/progetto/server/EventCards2.json");
-                lv2Deck = gson.fromJson(reader, listType);
-                reader.close();
+                try (InputStream is1 = MainServer.class.getResourceAsStream("EventCards1.json");
+                     Reader reader1 = new InputStreamReader(is1)) {
+
+                    lv1Deck = gson.fromJson(reader1, listType);
+                }
+
+                try (InputStream is2 = MainServer.class.getResourceAsStream("EventCards2.json");
+                     Reader reader2 = new InputStreamReader(is2)) {
+
+                    lv2Deck = gson.fromJson(reader2, listType);
+                }
 
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
-
-                /*
-                // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SMUGGLERS) && !lv2Deck.get(1).getType().equals(CardType.SMUGGLERS))
-                   Collections.shuffle(lv2Deck);
-                 */
-
-
+                // Add one lv1 and two lv2 to hidden deck
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
 
-                for(int i = 1; i < 4; i++) {
-                    decks[i - 1].add(lv1Deck.get(i));   //Add 1 lv1 card
-                    decks[i - 1].addAll(lv2Deck.subList(i * 2, i * 2 + 2)); //Adds 2 lv2 cards
+                for (int i = 1; i < 4; i++) {
+                    decks[i - 1].add(lv1Deck.get(i));                         // 1 lv1 card
+                    decks[i - 1].addAll(lv2Deck.subList(i * 2, i * 2 + 2));   // 2 lv2 cards
                 }
 
                 return decks;
             }
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
 
@@ -272,7 +268,7 @@ public class Game {
      * @author Lorenzo
      * @return component deck (list of components)
      */
-    private ArrayList<Component> loadComponents(){
+    private ArrayList<Component> loadComponents() {
         try {
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(Component.class, new ComponentDeserializer());
@@ -280,15 +276,15 @@ public class Game {
 
             Type listType = new TypeToken<ArrayList<Component>>() {}.getType();
 
-            FileReader reader = new FileReader("src/main/resources/org/progetto/server/Components.json");
-            ArrayList<Component> components = gson.fromJson(reader, listType);
-            reader.close();
+            try (InputStream inputStream = MainServer.class.getResourceAsStream("Components.json");
+                 Reader reader = new InputStreamReader(inputStream)) {
 
-            return components;
+                ArrayList<Component> components = gson.fromJson(reader, listType);
+                return components;
+            }
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-
             return null;
         }
     }
