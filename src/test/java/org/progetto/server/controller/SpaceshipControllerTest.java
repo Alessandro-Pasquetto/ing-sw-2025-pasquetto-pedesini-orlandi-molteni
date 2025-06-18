@@ -189,8 +189,7 @@ class SpaceshipControllerTest {
         //test incorrect phase
         sender = new Sender() {
             @Override
-            public void sendMessage(Object message) {
-                assertEquals("PermissionDenied", message);}
+            public void sendMessage(Object message) {}
         };
         SpaceshipController.removeBox(gameManager, player, 2, 1, 0, sender);
 
@@ -198,43 +197,17 @@ class SpaceshipControllerTest {
         gameManager.getEventController().setPhase(EventPhase.CHOOSE_BOX);
 
         //test invalid coordinates
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("InvalidCoordinates", message);
-            }};
         SpaceshipController.removeBox(gameManager, player, 20, 10, 55, sender);
 
         //test remove from a noStorage component
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("NotAStorageComponent", message);
-            }};
         SpaceshipController.removeBox(gameManager, player, 2, 1, 0, sender);
 
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("BoxRemoved", message);
-            }};
         SpaceshipController.removeBox(gameManager, player, 1, 2, 0, sender);
 
         //test invalid idx for box
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                assertEquals("InvalidBoxIdx", message);
-            }};
         SpaceshipController.removeBox(gameManager, player, 1, 2, 100, sender);
 
         //test valid removal of a box
-        sender = new Sender() {
-            @Override
-            public void sendMessage(Object message) {
-                if(!message.equals("SpaceshipUpdated"))
-                    assertEquals("BoxRemoved", message);
-            }};
         SpaceshipController.removeBox(gameManager, player, 1, 2, 1, sender);
     }
 

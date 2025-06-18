@@ -27,6 +27,7 @@ class PiratesControllerTest {
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
         projectiles.add(new Projectile(ProjectileSize.BIG, 3));
+        projectiles.add(new Projectile(ProjectileSize.BIG, 2));
         Pirates pirates = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles);
         gameManager.getGame().setActiveEventCard(pirates);
 
@@ -38,6 +39,7 @@ class PiratesControllerTest {
                 int result = switch(count){
                     case 0 -> 2;
                     case 1 -> 1;
+                    case 2 -> 8;
                     default -> 2;
                 };
 
@@ -154,25 +156,24 @@ class PiratesControllerTest {
         assertEquals(3, p3.getCredits());
         assertEquals(-3, p3.getPosition());
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
         Thread.sleep(3200);
-        //todo controllare NoComponentHit (lancio dado)
-        assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
+        assertEquals(EventPhase.ASK_SHIELDS, controller.getPhase());
         controller.receiveProtectionDecision(p1, "YES", sender);
-
-
-        Thread.sleep(200);
-        assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
         controller.receiveDiscardedBatteries(p1, 3, 2, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        Thread.sleep(200);
-        assertEquals(EventPhase.HANDLE_SHOT, controller.getPhase());
+        Thread.sleep(3200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.rollDice(p1, sender);
+
+        Thread.sleep(3200);
+        assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
     }
 }
