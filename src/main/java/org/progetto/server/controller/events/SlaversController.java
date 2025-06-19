@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
+import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
@@ -431,14 +432,36 @@ public class SlaversController extends EventControllerAbstract {
     }
 
     private void handleLostBattleDisconnection(Player player, Spaceship spaceship){
-
-        Sender sender = gameManager.getSenderByPlayer(player);
-
-        MessageSenderService.sendMessage("YouLostBattle", sender);
-        gameManager.broadcastGameMessageToOthers(new AnotherPlayerLostBattleMessage(player.getName()), sender);
         slavers.randomDiscardCrew(spaceship, requestedCrew);
 
         // For others, it's used to reload the spaceship in case they got disconnected while it was discarding.
         gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
+    }
+
+    @Override
+    public void reconnectPlayer(Player player, Sender sender) {
+        if(!player.equals(gameManager.getGame().getActivePlayer()))
+            return;
+
+        if (phase.equals(EventPhase.CANNON_NUMBER)){
+            int maxUsable = player.getSpaceship().maxNumberOfDoubleCannonsUsable();
+            MessageSenderService.sendMessage(new HowManyDoubleCannonsMessage(maxUsable, slavers.getFirePowerRequired(), player.getSpaceship().getNormalShootingPower()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_BATTERIES)){
+
+            // Remove batteries already discarded (DISCARDED_BATTERIES)
+            for(BatteryStorage batteryStorage : batteryStorages){
+                MessageSenderService.sendMessage(new BatteryDiscardedMessage(batteryStorage.getX(), batteryStorage.getY()), sender);
+                gameManager.broadcastGameMessageToOthers(new AnotherPlayerBatteryDiscardedMessage(player.getName(), batteryStorage.getX(), batteryStorage.getY()), sender);
+            }
+
+            MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+        }
+        else if (phase.equals(EventPhase.REWARD_DECISION)){
+            MessageSenderService.sendMessage(new AcceptRewardCreditsAndPenaltyDaysMessage(slavers.getRewardCredits(), slavers.getPenaltyDays()), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_CREW)){
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
+        }
     }
 }
