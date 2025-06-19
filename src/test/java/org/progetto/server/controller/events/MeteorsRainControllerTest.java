@@ -142,10 +142,12 @@ class MeteorsRainControllerTest {
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[3][2]);
+        assertEquals(EventPhase.ASK_SMALL_METEOR_DECISION, controller.getPhase());
 
         // Third meteor
+        Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 

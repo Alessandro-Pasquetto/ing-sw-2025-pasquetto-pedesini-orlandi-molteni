@@ -92,27 +92,27 @@ class OpenSpaceControllerTest {
         gameManager.setGameThread(gameThread);
         gameThread.start();
 
-        Thread.sleep(50); // Wait for the controller to enter the waiting state
+        Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         controller.receiveHowManyEnginesToUse(p2, 0, sender);
 
-        Thread.sleep(50); // Wait for the controller to enter the waiting state
+        Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
 
         controller.receiveHowManyEnginesToUse(p3, 2, sender);
 
-        Thread.sleep(50); // Wait for the controller to enter the waiting state
+        Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         controller.receiveDiscardedBatteries(p3, 2, 1, sender);
 
-        Thread.sleep(50); // Wait for the controller to enter the waiting state
+        Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         controller.receiveDiscardedBatteries(p3, 2, 1, sender);
 
-        Thread.sleep(50);
+        Thread.sleep(200);
         assertEquals(EventPhase.EFFECT, controller.getPhase());
 
         assertEquals(3, p1.getPosition());

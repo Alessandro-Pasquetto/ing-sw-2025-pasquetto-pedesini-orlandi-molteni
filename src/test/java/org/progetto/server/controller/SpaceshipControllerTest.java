@@ -31,10 +31,10 @@ class SpaceshipControllerTest {
         GameManager gameManager = new GameManager(0, 4, 1);
         gameManager.getGame().addPlayer(player);
         gameManager.getGame().initPlayersSpaceship();
-        gameManager.getGame().setActivePlayer(player);
         gameManager.getGame().setActiveEventCard(new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 1, 1, 1));
         gameManager.createEventController();
         gameManager.getEventController().start();
+        gameManager.getGame().setActivePlayer(player);
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         //place red_box storage on the left of central-unit
@@ -62,7 +62,6 @@ class SpaceshipControllerTest {
         //place a housing unit on the top of central-unit
         buildingBoard.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{3, 3, 3, 3}, "imgSrc", 3));
         buildingBoard.placeComponent(2, 1, 0);
-
 
         //test incorrect phase
         sender = new Sender() {
@@ -154,10 +153,10 @@ class SpaceshipControllerTest {
         GameManager gameManager = new GameManager(0, 4, 1);
         gameManager.getGame().addPlayer(player);
         gameManager.getGame().initPlayersSpaceship();
-        gameManager.getGame().setActivePlayer(player);
         gameManager.getGame().setActiveEventCard(new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 1, 1, 1));
         gameManager.createEventController();
         gameManager.getEventController().start();
+        gameManager.getGame().setActivePlayer(player);
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
         //place red_box storage on the left of central-unit

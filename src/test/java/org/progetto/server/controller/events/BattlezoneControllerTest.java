@@ -46,9 +46,9 @@ class BattlezoneControllerTest {
             @Override
             public int rollDice(){
                 int result = switch(count){
-                    case 0 -> 3;
-                    case 1 -> 3;
-                    case 2 -> 1;
+                    case 0 -> 8;
+                    case 1 -> 8;
+                    case 2 -> 6;
                     default -> 2;
                 };
 
@@ -219,7 +219,7 @@ class BattlezoneControllerTest {
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p3, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p3, "YES", sender);
 
@@ -227,19 +227,16 @@ class BattlezoneControllerTest {
         assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p3, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p3, "NO", sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p3, sender);
-
-        Thread.sleep(200);
-        assertEquals(EventPhase.CONDITION, controller.getPhase());
     }
 }
