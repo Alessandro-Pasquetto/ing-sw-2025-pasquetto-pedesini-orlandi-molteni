@@ -63,7 +63,7 @@ class LostStationControllerTest {
 
         spaceship1.addCrewCount(1);
         spaceship2.addCrewCount(3);
-        spaceship3.addCrewCount(2);
+        spaceship3.addCrewCount(3);
         spaceship3.setAlienPurple(true);
 
         BuildingBoard bb3 = spaceship3.getBuildingBoard();
@@ -94,29 +94,29 @@ class LostStationControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.LAND, controller.getPhase());
-
-        Thread.sleep(200);
         controller.receiveDecisionToLand(p3, "YES", sender);
+
+        Thread.sleep(200);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
-
-        Thread.sleep(200);
         controller.receiveRewardBox(p3, 0, 2, 1, 0, sender);
+
+        Thread.sleep(200);
         assertNull(boxStorage.getBoxes()[0]);
-
-        Thread.sleep(200);
         controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
-        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
 
         Thread.sleep(200);
+        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
         controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
-        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
 
         Thread.sleep(200);
+        assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
         controller.receiveRewardBox(p3, 1, 2, 1, 1, sender);
-        assertEquals(Box.GREEN, boxStorage.getBoxes()[1]);
 
         Thread.sleep(200);
+        assertEquals(Box.GREEN, boxStorage.getBoxes()[1]);
         controller.receiveRewardBox(p3, -1, 2, 1, 1, sender);
+
+        Thread.sleep(200);
         assertEquals(-1, p3.getPosition());
     }
 }

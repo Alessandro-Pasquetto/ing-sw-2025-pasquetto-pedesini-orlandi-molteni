@@ -126,16 +126,16 @@ class MeteorsRainControllerTest {
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
-        assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
+        assertEquals(EventPhase.ASK_SMALL_METEOR_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p1, "YES", sender);
 
         Thread.sleep(200);
         controller.receiveDiscardedBatteries(p1, 2, 3, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
 
         // Second meteor
@@ -149,13 +149,13 @@ class MeteorsRainControllerTest {
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
-        assertEquals(EventPhase.PROTECTION_DECISION, controller.getPhase());
+        assertEquals(EventPhase.ASK_BIG_METEOR_DECISION, controller.getPhase());
         controller.receiveProtectionDecision(p1, "NO", sender);
 
-        Thread.sleep(200);
+        Thread.sleep(3200);
         assertNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
 
         // Fourth meteor
