@@ -590,7 +590,7 @@ public class Game {
     public void resetReadyPlayers(){
         synchronized (players){
             for (Player p : players) {
-                p.setIsReady(false, this);
+                p.setIsReady(false);
             }
         }
     }
