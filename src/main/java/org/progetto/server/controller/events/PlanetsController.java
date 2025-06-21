@@ -86,7 +86,7 @@ public class PlanetsController extends EventControllerAbstract {
 
             // If it disconnects
             if(!player.getIsReady()){
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
             }
         }
 
@@ -136,7 +136,7 @@ public class PlanetsController extends EventControllerAbstract {
 
         if (planetIdx == -1){
             // If he does not want to land
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -249,7 +249,7 @@ public class PlanetsController extends EventControllerAbstract {
             return;
         }
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 

@@ -130,7 +130,7 @@ public class LostStationController extends EventControllerAbstract {
                 break;
 
             case "NO":
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
                 break;
 
@@ -235,7 +235,7 @@ public class LostStationController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(lostStation.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), lostStation.getPenaltyDays()), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 

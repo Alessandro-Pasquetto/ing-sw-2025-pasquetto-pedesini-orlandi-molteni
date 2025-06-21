@@ -156,7 +156,7 @@ public class SmugglersController extends EventControllerAbstract {
         if (num == 0) {
             playerFirePower = player.getSpaceship().getNormalShootingPower();
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
@@ -243,7 +243,7 @@ public class SmugglersController extends EventControllerAbstract {
                 component.decrementItemsCount(player.getSpaceship(), 1);
             }
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -257,7 +257,7 @@ public class SmugglersController extends EventControllerAbstract {
 
                 } else{
                     MessageSenderService.sendMessage("YouHaveDiscardedAllBatteries", sender);
-                    player.setIsReady(true, gameManager.getGame());
+                    player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();
                 }
             }
@@ -444,7 +444,7 @@ public class SmugglersController extends EventControllerAbstract {
         
         if (requestedBoxes == 0) {
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -463,7 +463,7 @@ public class SmugglersController extends EventControllerAbstract {
                 } else {
                     MessageSenderService.sendMessage("NotEnoughBatteries", sender);
 
-                    player.setIsReady(true, gameManager.getGame());
+                    player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();
                 }
             }
@@ -498,7 +498,7 @@ public class SmugglersController extends EventControllerAbstract {
                 break;
 
             case "NO":
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
                 break;
 
@@ -610,7 +610,7 @@ public class SmugglersController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new PlayerMovedBackwardMessage(smugglers.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), smugglers.getPenaltyDays()), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 

@@ -1,0 +1,111 @@
+title Place Component
+
+participant OtherClients
+participant Client
+participant Server
+participant Game
+participant Player
+participant Spaceship
+participant BuildingBoard
+
+alt PlaceHandComponentAndPickHiddenComponent
+  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x, y, r)
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
+  
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+    OtherClients<-Server: sendMessageToOtherPlayersInGame(name, x, y, r, imgSrc)
+
+    Server->Game: PickHiddenComponent(player)
+    Game->Game: removeFromDeckComponent(randomPos)
+    Game->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+    BuildingBoard->Component:getImgSrc()
+
+    Server->Client: PickedComponentMessage(imgSrcComponent)
+  else ImpossiblePlaceComponent
+    Client<-Server: "ImpossiblePlaceComponent"
+  end
+
+
+else PlaceHandComponentAndPickVisibleComponent
+
+  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x, y, r)
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
+
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+    OtherClients<-Server: sendMessageToOtherPlayersInGame(name, x, y, r, imgSrc)
+
+    Server->Game: PickVisibleComponent(player, idxVisibleComponent)
+    Game->Game: removeFromVisibleDeckComponent(idxVisibleComponent)
+    Game->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+    BuildingBoard->Component:getImgSrc()
+
+    Server->Client: PickedComponentMessage(imgSrcComponent)
+  else ImpossiblePlaceComponent
+    Client<-Server: "ImpossiblePlaceComponent"
+  end
+
+else PlaceHandComponentAndPickBookedComponent
+
+  Client->Server:PlaceHandComponentAndPickBookedComponentMessage(x, y, r, idx)
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
+
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+    OtherClients<-Server: sendMessageToOtherPlayersInGame(name, x, y, r, imgSrc)
+
+    Server->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: pickBookedComponent(idx)
+    BuildingBoard->Component:getImgSrc()
+
+    Server->Client: PickedComponentMessage(imgSrcComponent)
+  else ImpossiblePlaceComponent
+    Client<-Server: "ImpossiblePlaceComponent"
+  end
+end
+
+else PlaceHandComponentAndShowEventCardDeck
+
+  Client->Server:PlaceHandComponentAndShowEventCardDeckMessage(x, y, r, idx)
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+
+  BuildingBoard->BuildingBoard: placeComponent(y, x, r)
+
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+    OtherClients<-Server: sendMessageToOtherPlayersInGame(name, x, y, r, imgSrc)
+
+    Server->Game:getEventCardDeck(player, idx)
+
+    #and?
+
+    Server->Client: DataEventCardDeckMessage(imgSrcCards[])
+  else ImpossiblePlaceComponent
+    Client<-Server: "ImpossiblePlaceComponent"
+  end
+end
+space
+note over Client, Server: Components could be placed in four possible scenarios: when player picks a hidden, visible or booked component, or when he asks to see the event card deck.\nIn all these cases, the component could be placed correctly, or it could be impossible to be placed.\nIf the placement of the hand component is invalid, the Server responds with "ImpossiblePlaceComponent".

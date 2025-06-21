@@ -229,7 +229,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(activePlayers.getFirst().getName(), diceResult), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -241,6 +241,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     private void handleMeteor() throws InterruptedException{
         gameManager.getGameThread().resetTravelersReady();
+
+        System.out.println(comingMeteor);
 
         if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SMALL_METEOR_DECISION;
@@ -303,7 +305,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
             addHandledPlayer(player);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             return;
         }
 
@@ -312,7 +314,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentDamaged", sender);
             addHandledPlayer(player);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             return;
         }
 
@@ -363,7 +365,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             MessageSenderService.sendMessage("NoComponentHit", sender);
             addHandledPlayer(player);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             return;
         }
 
@@ -372,7 +374,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             MessageSenderService.sendMessage("MeteorDestroyed", sender);
             addHandledPlayer(player);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             return;
         }
 
@@ -480,7 +482,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         MessageSenderService.sendMessage("YouAreSafe", sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -501,14 +503,14 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         if(affectedComponent == null){
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             return;
         }
 
         // Destroys affected component
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, affectedComponent.getX(), affectedComponent.getY(), sender)){
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -567,7 +569,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             return;
         }
 
-        player.setIsReady(false, gameManager.getGame());
+        player.setIsReady(false);
 
         // Reset decisions
         removeDecisionPlayer(player);
@@ -576,7 +578,7 @@ public class MeteorsRainController extends EventControllerAbstract {
         if(containsHandledPlayer(player)){
             if(player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
                 MessageSenderService.sendMessage("MeteorAlreadyHandled", sender);
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
             }
             else
                 MessageSenderService.sendMessage("AskSelectSpaceshipPart", sender);

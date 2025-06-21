@@ -198,9 +198,9 @@ class GameTest {
         game.addPlayer(player2);
         game.addPlayer(player3);
 
-        player1.setIsReady(true, game);
-        player2.setIsReady(false, game);
-        player3.setIsReady(true, game);
+        player1.setIsReady(true);
+        player2.setIsReady(false);
+        player3.setIsReady(true);
 
         assertEquals(2, game.getNumReadyPlayers());
     }
@@ -479,9 +479,9 @@ class GameTest {
         game.addPlayer(p2);
         game.addPlayer(p3);
 
-        p1.setIsReady(true, game);
-        p2.setIsReady(true, game);
-        p3.setIsReady(true, game);
+        p1.setIsReady(true);
+        p2.setIsReady(true);
+        p3.setIsReady(true);
 
         game.resetReadyPlayers();
 

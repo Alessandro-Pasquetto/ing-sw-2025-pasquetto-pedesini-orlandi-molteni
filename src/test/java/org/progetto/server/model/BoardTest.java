@@ -107,10 +107,10 @@ class BoardTest {
         board.addTraveler(p3);
         board.addTraveler(p4);
 
-        p1.setIsReady(true, game);
-        p2.setIsReady(true, game);
-        p3.setIsReady(true, game);
-        p4.setIsReady(true, game);
+        p1.setIsReady(true);
+        p2.setIsReady(true);
+        p3.setIsReady(true);
+        p4.setIsReady(true);
 
         assertTrue(GameController.allConnectedTravelersReady(gameManager));
 

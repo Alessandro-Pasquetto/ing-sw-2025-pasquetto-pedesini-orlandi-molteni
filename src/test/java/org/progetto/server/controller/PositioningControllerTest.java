@@ -56,11 +56,11 @@ class PositioningControllerTest {
             public void resetAndWaitTravelerReady(Player player) {
                 callCount++;
                 if (player.equals(p1)) {
-                    p1.setIsReady(true, gameManager.getGame()); // p1 ready
+                    p1.setIsReady(true); // p1 ready
                 } else if (player.equals(p2)) {
-                    p2.setIsReady(false, gameManager.getGame()); // p2 not ready
+                    p2.setIsReady(false); // p2 not ready
                 } else if (player.equals(p3)) {
-                    p3.setIsReady(true, gameManager.getGame()); // p3 ready
+                    p3.setIsReady(true); // p3 ready
                 }
             }
 

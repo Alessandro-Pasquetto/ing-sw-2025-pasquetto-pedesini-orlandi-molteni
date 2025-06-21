@@ -69,7 +69,7 @@ public class GameController {
         MessageSenderService.sendMessage("YouAreReady", sender);
 
         if(!player.getIsReady()){
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             gameManager.broadcastGameMessageToOthers(player.getName() + " is ready", sender);
 

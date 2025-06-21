@@ -24,7 +24,6 @@ The final version includes:
 * Working game implementation, which has to be rules compliant;
 * Source code of the implementation;
 * Source code of unity tests.
-* [PowerPoint Presentation]() of our project.
 
 
 ## Implemented Functionalities
@@ -35,10 +34,10 @@ The final version includes:
 | Socket          | ✅ |
 | RMI            | ✅ |
 | TUI            | ✅ |
-| GUI            | ⚠️ |
+| GUI            | ✅️ |
 | Demo travel    | ✅ |
 | Multiple games | ✅ |
-| Resilience     | ⚠️ |
+| Resilience     | ✅ |
 | Persistence    | ⛔ |
 
 #### Legend
@@ -52,22 +51,46 @@ The final version includes:
 
 
 ## Test cases
-The tests made for the Model package - N classes - has a total Line coverage of z% (x/y).
+The tests were made for the Model and Controller package.
 
-**Coverage criteria: code lines.**
-
-| Package | Tested Class   | Coverage |
-|:-----------------------|:---------------|:------------------------------------:|
-| Model | Global Package | x/y (z%)
-| Model | Other          | x/y (z%)
+| Package    | Methods (%)   | Lines (%)       | Branch (%)      |
+|:-----------|:--------------|:---------------:|:---------------:|
+| Model      | 99% (314/316) | 95% (1560/1634) | 78% (1081/1382) |
+| Controller | 65% (169/257) | 56% (1577/2815) | 42% (667/1582)  |
 
 
 ## Compile and Run
-Work in Progress...
+
+To run the tests and compile the software:
+
+1. Install [Java SE 23](https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html);
+2. Clone this repository
+3. Open a Command Prompt or Bash terminal
+   > ⚠️ *We do **not** recommend using Windows PowerShell due to encoding issues.*
+4. Navigate to the `deliverables/final/jar` directory.  
+   In this folder, you will find the JAR files which already include all project dependencies.
+5. Execute the following commands:
+
+```bash
+// (For Windows users only: this command changes the character encoding, for a better User Experience)
+CHCP 65001
+
+// Start the Server
+java -jar server.jar
+
+// Start how many Clients you want
+java -jar client.jar
+```
 
 
 ## Game Screenshot
-Work in Progress...
+
+<img src="extra/game-images/1.png" alt="Screenshot 1" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
+<img src="extra/game-images/2.png" alt="Screenshot 2" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
+<img src="extra/game-images/3.png" alt="Screenshot 3" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
+<img src="extra/game-images/4.png" alt="Screenshot 4" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
+<img src="extra/game-images/5.gif" alt="Screenshot 5" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
+<img src="extra/game-images/6.gif" alt="Screenshot 6" style="width:100%; max-width:800px; display:block; margin: 0 auto 20px auto;" />
 
 
 ## Software used

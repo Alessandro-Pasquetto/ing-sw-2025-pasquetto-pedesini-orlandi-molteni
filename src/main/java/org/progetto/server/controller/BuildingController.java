@@ -562,7 +562,7 @@ public class BuildingController {
                 MessageSenderService.sendMessage(e.getMessage(), sender);
         }
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.addNotCheckedReadyPlayer(player);
         gameManager.getGameThread().notifyThread();
     }
@@ -846,7 +846,7 @@ public class BuildingController {
             MessageSenderService.sendMessage("YouAreReady", sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.addNotCheckedReadyPlayer(player);
             gameManager.getGameThread().notifyThread();
 
@@ -883,7 +883,7 @@ public class BuildingController {
         MessageSenderService.sendMessage("YouAreReady", sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerIsReadyMessage(player.getName()), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.addNotCheckedReadyPlayer(player);
         gameManager.getGameThread().notifyThread();
     }
@@ -1216,7 +1216,7 @@ public class BuildingController {
             } else {
 
                 areAllValid = false;
-                player.setIsReady(false, game);
+                player.setIsReady(false);
 
                 MessageSenderService.sendMessage("NotValidSpaceShip", sender);
                 MessageSenderService.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
@@ -1245,7 +1245,7 @@ public class BuildingController {
 
         if (result.getKey()) {
 
-            player.setIsReady(true, game);
+            player.setIsReady(true);
             gameManager.removeNotCheckedReadyPlayer(player);
             game.getBoard().addTraveler(player);
 
@@ -1254,7 +1254,7 @@ public class BuildingController {
             gameManager.getGameThread().notifyThread();
 
         } else {
-            player.setIsReady(false, game);
+            player.setIsReady(false);
 
             MessageSenderService.sendMessage("NotValidSpaceShip", sender);
             MessageSenderService.sendMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player), sender);
@@ -1277,7 +1277,7 @@ public class BuildingController {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
             if(!buildingBoard.initSpaceshipParams()){
-                player.setIsReady(false, game);
+                player.setIsReady(false);
                 areAllInit = false;
             }
             buildingBoard.removeBookedComponents();
@@ -1300,7 +1300,7 @@ public class BuildingController {
         for(Player player : gameManager.getDisconnectedPlayersCopy()){
 
             if(!player.getIsReady()){
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.addNotCheckedReadyPlayer(player);
             }
         }

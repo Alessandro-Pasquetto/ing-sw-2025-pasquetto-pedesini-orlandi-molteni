@@ -94,7 +94,7 @@ class PlayerTest {
         Game game = new Game(0, 4, 0);
         game.addPlayer(player);
 
-        player.setIsReady(true, game);
+        player.setIsReady(true);
 
         assertEquals(1, game.getNumReadyPlayers());
     }

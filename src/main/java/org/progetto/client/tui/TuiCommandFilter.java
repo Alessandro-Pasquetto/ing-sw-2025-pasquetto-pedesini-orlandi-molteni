@@ -115,7 +115,15 @@ public class TuiCommandFilter {
             try {
                 GameData.getSender().connect(ip, serverPort);
                 System.out.println();
-                System.out.println("Type 'help' to see the available commands");
+
+                if (!GameData.hasSavedGameData()) {
+                    System.out.println("Type 'help' to see the available commands");
+                } else {
+                    GameData.restoreSavedGameData();
+                    System.out.println("A saved game was found and the data has been restored");
+
+                    GameData.getSender().reconnectToGame();
+                }
                 break;
 
             } catch (Exception e) {

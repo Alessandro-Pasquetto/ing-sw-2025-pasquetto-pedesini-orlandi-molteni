@@ -134,7 +134,7 @@ public class LostShipController extends EventControllerAbstract  {
                 break;
 
             case "NO":
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
                 break;
 
@@ -253,7 +253,7 @@ public class LostShipController extends EventControllerAbstract  {
 
         someoneLanded = true;
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 

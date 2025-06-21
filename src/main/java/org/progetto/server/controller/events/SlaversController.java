@@ -153,7 +153,7 @@ public class SlaversController extends EventControllerAbstract {
         if (num == 0) {
             playerFirePower = spaceship.getNormalShootingPower();
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -236,7 +236,7 @@ public class SlaversController extends EventControllerAbstract {
                 component.decrementItemsCount(player.getSpaceship(), 1);
             }
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -315,7 +315,7 @@ public class SlaversController extends EventControllerAbstract {
                 break;
 
             case "NO":
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
                 break;
 
@@ -348,7 +348,7 @@ public class SlaversController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), slavers.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), slavers.getRewardCredits()), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -423,7 +423,7 @@ public class SlaversController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
         if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {

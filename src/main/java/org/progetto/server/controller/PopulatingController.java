@@ -109,7 +109,7 @@ public class PopulatingController {
             MessageSenderService.sendMessage(new AskAlienMessage("orange", player.getSpaceship()), sender);
         else {
             player.getSpaceship().getBuildingBoard().fillHumans();
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
             MessageSenderService.sendMessage("PopulatingComplete", sender);
@@ -149,7 +149,7 @@ public class PopulatingController {
         }
 
         player.getSpaceship().getBuildingBoard().fillHumans();
-        player.setIsReady(true, game);
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
 
         MessageSenderService.sendMessage("PopulatingComplete", sender);

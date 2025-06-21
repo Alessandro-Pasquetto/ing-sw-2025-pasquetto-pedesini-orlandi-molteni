@@ -115,7 +115,7 @@ public class EventController {
                     gameManager.broadcastGameMessageToOthers(new PlayerIsContinuingMessage(player.getName()), sender);
 
                     gameManager.getGame().getBoard().addTraveler(player);
-                    player.setIsReady(true, gameManager.getGame());
+                    player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();
                     break;
 
@@ -126,7 +126,7 @@ public class EventController {
                     board.leaveTravel(player);
                     // gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
 
-                    player.setIsReady(true, gameManager.getGame());
+                    player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();
                     break;
 

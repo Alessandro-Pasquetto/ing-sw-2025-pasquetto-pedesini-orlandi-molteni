@@ -158,7 +158,7 @@ public class OpenSpaceController extends EventControllerAbstract {
         if (num == 0) {
             playerEnginePower = player.getSpaceship().getNormalEnginePower();
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -230,7 +230,7 @@ public class OpenSpaceController extends EventControllerAbstract {
                 component.decrementItemsCount(player.getSpaceship(), 1);
             }
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
         } else
             MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);

@@ -261,7 +261,7 @@ public class PiratesController extends EventControllerAbstract {
         // Player doesn't want to use double cannons
         if (num == 0) {
             playerFirePower = player.getSpaceship().getNormalShootingPower();
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= spaceship.getBatteriesCount() && num > 0) {
@@ -370,7 +370,7 @@ public class PiratesController extends EventControllerAbstract {
                     component.decrementItemsCount(player.getSpaceship(), 1);
                 }
 
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
 
             } else {
@@ -390,7 +390,7 @@ public class PiratesController extends EventControllerAbstract {
 
             MessageSenderService.sendMessage("YouAreSafe", sender);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
         }
     }
@@ -463,7 +463,7 @@ public class PiratesController extends EventControllerAbstract {
                 break;
 
             case "NO":
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
                 break;
 
@@ -496,7 +496,7 @@ public class PiratesController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerMovedBackwardMessage(player.getName(), pirates.getPenaltyDays()), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerGetsCreditsMessage(player.getName(), pirates.getRewardCredits()), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -595,7 +595,7 @@ public class PiratesController extends EventControllerAbstract {
         MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiceResultMessage(player.getName(), diceResult), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -608,7 +608,7 @@ public class PiratesController extends EventControllerAbstract {
     private void handleShotsDefeatedPlayers() throws InterruptedException {
         // Reset defeatedPlayers
         for (Player defeatedPlayer : defeatedPlayers) {
-            defeatedPlayer.setIsReady(false, gameManager.getGame());
+            defeatedPlayer.setIsReady(false);
         }
 
         // Checks projectile dimensions
@@ -675,7 +675,7 @@ public class PiratesController extends EventControllerAbstract {
         if (affectedComponent == null) {
             MessageSenderService.sendMessage("NoComponentHit", sender);
             addHandledPlayer(defeatedPlayer);
-            defeatedPlayer.setIsReady(true, gameManager.getGame());
+            defeatedPlayer.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             return;
         }
@@ -752,13 +752,13 @@ public class PiratesController extends EventControllerAbstract {
         // Sends two types of messages based on the shot's result
         if (destroyedComponent == null) {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             return;
         }
 
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else
@@ -837,7 +837,7 @@ public class PiratesController extends EventControllerAbstract {
             return;
         }
 
-        player.setIsReady(false, gameManager.getGame());
+        player.setIsReady(false);
 
         // Reset decisions
         removeShieldPlayer(player);

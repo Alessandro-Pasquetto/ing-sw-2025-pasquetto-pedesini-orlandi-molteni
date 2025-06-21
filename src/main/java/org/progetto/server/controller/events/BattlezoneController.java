@@ -227,7 +227,7 @@ public class BattlezoneController extends EventControllerAbstract {
         if (num == 0) {
             tempEnginePower.put(player, player.getSpaceship().getNormalEnginePower());
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else if (num <= player.getSpaceship().getDoubleEngineCount() && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -321,7 +321,7 @@ public class BattlezoneController extends EventControllerAbstract {
         // Player doesn't want to use double cannons
         if (num == 0) {
             tempFirePower.put(player, player.getSpaceship().getNormalShootingPower());
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else if (num <= (spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) && num <= player.getSpaceship().getBatteriesCount() && num > 0) {
@@ -419,7 +419,7 @@ public class BattlezoneController extends EventControllerAbstract {
                     component.decrementItemsCount(player.getSpaceship(), 1);
                 }
 
-                player.setIsReady(true, gameManager.getGame());
+                player.setIsReady(true);
                 gameManager.getGameThread().notifyThread();
 
             } else {
@@ -433,7 +433,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
                     } else{
                         MessageSenderService.sendMessage("YouHaveDiscardedAllBatteries", sender);
-                        player.setIsReady(true, gameManager.getGame());
+                        player.setIsReady(true);
                         gameManager.getGameThread().notifyThread();
                     }
                 }
@@ -451,7 +451,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
             MessageSenderService.sendMessage("YouAreSafe", sender);
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
         }
     }
@@ -692,7 +692,7 @@ public class BattlezoneController extends EventControllerAbstract {
         gameManager.broadcastGameMessageToOthers(new AnotherPlayerCrewDiscardedMessage(player.getName(), xHousingUnit, yHousingUnit), sender);
 
         if (requestedCrew == 0 || player.getSpaceship().getTotalCrewCount() == 0) {
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -837,7 +837,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
         if (requestedBoxes == 0) {
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else {
@@ -856,7 +856,7 @@ public class BattlezoneController extends EventControllerAbstract {
                 } else {
                     MessageSenderService.sendMessage("NotEnoughBatteries", sender);
 
-                    player.setIsReady(true, gameManager.getGame());
+                    player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();
                 }
             }
@@ -895,7 +895,7 @@ public class BattlezoneController extends EventControllerAbstract {
             gameManager.getGameThread().sleep(3000);
 
             // Sets penalty player as not ready
-            penaltyPlayer.setIsReady(false, gameManager.getGame());
+            penaltyPlayer.setIsReady(false);
 
             // Checks if the shot is small or big
             if (currentShot.getSize().equals(ProjectileSize.SMALL)) {
@@ -971,7 +971,7 @@ public class BattlezoneController extends EventControllerAbstract {
 
         MessageSenderService.sendMessage(new DiceResultMessage(diceResult), sender);
 
-        player.setIsReady(true, gameManager.getGame());
+        player.setIsReady(true);
         gameManager.getGameThread().notifyThread();
     }
 
@@ -994,7 +994,7 @@ public class BattlezoneController extends EventControllerAbstract {
         if (affectedComponent == null) {
             MessageSenderService.sendMessage("NoComponentHit", sender);
 
-            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            penaltyPlayer.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             return;
         }
@@ -1075,13 +1075,13 @@ public class BattlezoneController extends EventControllerAbstract {
         if (destroyedComponent == null) {
             MessageSenderService.sendMessage("NothingGotDestroyed", sender);
 
-            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            penaltyPlayer.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             return;
         }
 
         if (SpaceshipController.destroyComponentAndCheckValidity(gameManager, penaltyPlayer, destroyedComponent.getX(), destroyedComponent.getY(), sender)){
-            penaltyPlayer.setIsReady(true, gameManager.getGame());
+            penaltyPlayer.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } else

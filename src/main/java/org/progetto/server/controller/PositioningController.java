@@ -79,7 +79,7 @@ public class PositioningController {
             MessageSenderService.sendMessage("ValidStartingPosition", sender);
             gameManager.broadcastGameMessage(new StartingPositionsMessage(gameManager.getGame().getBoard().getStartingPositionsCopy()));
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } catch (IllegalStateException e) {

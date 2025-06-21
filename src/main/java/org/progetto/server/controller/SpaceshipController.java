@@ -258,7 +258,7 @@ public class SpaceshipController {
 
             gameManager.broadcastGameMessage(new UpdateSpaceshipMessage(player.getSpaceship(), player));
 
-            player.setIsReady(true, gameManager.getGame());
+            player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
 
         } catch (IllegalStateException e) {
