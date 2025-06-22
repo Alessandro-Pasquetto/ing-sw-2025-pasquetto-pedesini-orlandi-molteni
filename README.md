@@ -72,7 +72,7 @@ To run the tests and compile the software:
 5. Execute the following commands:
 
 ```bash
-// (For Windows users only: this command changes the character encoding, for a better User Experience)
+// (For Windows users, use this command to change character encoding)
 CHCP 65001
 
 // Start the Server
