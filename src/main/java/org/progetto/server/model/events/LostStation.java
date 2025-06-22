@@ -73,10 +73,4 @@ public class LostStation extends EventCard {
     public void penalty(Board board, Player player) {
         board.movePlayerByDistance(player, this.penaltyDays);
     }
-
-    // TODO: The controller asks to each player, starting from the leader, if he wants to accept the card conditions.
-    //  If so, it would ask for each box contained in rewardBoxes if he wants it.
-    //  If he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
-    //  Otherwise, if the player answers "no", the controller moves to the next box in the array until there are no more left.
-    //  If player had decided to take at least a reward box, calls penalty().
 }

@@ -208,19 +208,4 @@ public class Smugglers extends EventCard {
             return 0;
         }
     }
-
-    // TODO: The controller, giving to player the smugglers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
-    //  It calls battleResult() to know battle's outcome.
-    //  If player:
-    //  - wins, it would ask if he wants rewardBoxes in exchange of penaltyDays.
-    //          If he answers "yes", it would ask for each box contained in rewardBoxes if he wants it, otherwise the effect ends.
-    //          In the for each, if he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
-    //          Otherwise, if the player answers "no", the controller moves to the next box in the array until there are no more left.
-    //          At the end, the card's effect ends.
-    //  - loses, he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones), calling chooseDiscardedBox().
-    //           If he has no box left, he has to discard batteries calling chooseDiscardedBattery().
-    //           If he hasn't any battery left, card's effect stops.
-    //           Then, the smugglers will affect next player.
-    //  - draws, nothing happens.
-    //           The smugglers will affect next player.
 }

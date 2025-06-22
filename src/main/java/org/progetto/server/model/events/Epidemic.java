@@ -146,6 +146,4 @@ public class Epidemic extends EventCard {
 
         return infectedCrew;
     }
-
-    // TODO: The controller calls for each player at the same time epidemicResult().
 }

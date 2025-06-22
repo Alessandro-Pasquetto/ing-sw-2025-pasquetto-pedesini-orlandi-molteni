@@ -4,9 +4,7 @@ import org.progetto.messages.toClient.Building.TimerMessage;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.GamePhase;
 
-/**
- * Timer controller class
- */
+
 public class TimerThreadController {
 
     // =======================
@@ -46,25 +44,14 @@ public class TimerThreadController {
     }
 
     // =======================
-    // SETTERS
-    // =======================
-
-    public synchronized void resetTimer() throws IllegalStateException {
-        if (gameManager.getGame().getPhase() != GamePhase.BUILDING || gameManager.getGame().getLevel() == 1 || isTimerRunning || timerFlipsAllowed == 0) {
-            throw new IllegalStateException("ImpossibleToResetTimer");
-        }
-
-        timer = defaultTimer;
-        timerFlipsAllowed--;
-        startTimer();
-
-        gameManager.broadcastGameMessage("TimerFlipped");
-    }
-
-    // =======================
     // OTHER METHODS
     // =======================
 
+    /**
+     * Starts the timer
+     *
+     * @author Alessandro
+     */
     public synchronized void startTimer() {
         isTimerRunning = true;
 
@@ -110,6 +97,29 @@ public class TimerThreadController {
         }).start();
     }
 
+    /**
+     * Resets the timer
+     *
+     * @author Alessandro
+     * @throws IllegalStateException if the timer cannot be reset
+     */
+    public synchronized void resetTimer() throws IllegalStateException {
+        if (gameManager.getGame().getPhase() != GamePhase.BUILDING || gameManager.getGame().getLevel() == 1 || isTimerRunning || timerFlipsAllowed == 0) {
+            throw new IllegalStateException("ImpossibleToResetTimer");
+        }
+
+        timer = defaultTimer;
+        timerFlipsAllowed--;
+        startTimer();
+
+        gameManager.broadcastGameMessage("TimerFlipped");
+    }
+
+    /**
+     * Stops the timer
+     *
+     * @author Alessandro
+     */
     public synchronized void stopTimer() {
         isTimerRunning = false;
     }

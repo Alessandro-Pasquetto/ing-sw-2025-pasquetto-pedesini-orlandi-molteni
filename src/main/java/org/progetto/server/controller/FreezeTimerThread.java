@@ -25,8 +25,12 @@ public class FreezeTimerThread {
         this.isTimerRunning = false;
     }
 
+    /**
+     * Starts freeze timer
+     *
+     * @author Alessandro
+     */
     public synchronized void startTimer() {
-
         timer = defaultTimer;
         isTimerRunning = true;
 
@@ -59,6 +63,11 @@ public class FreezeTimerThread {
         }).start();
     }
 
+    /**
+     * Stops the freeze timer
+     *
+     * @author Alessandro
+     */
     public void stopTimer() {
         isTimerRunning = false;
     }

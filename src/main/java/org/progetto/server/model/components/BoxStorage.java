@@ -43,17 +43,16 @@ public class BoxStorage extends Component {
      * @param idx Storage index where to add it
      */
     public void addBox(Spaceship spaceship, Box box, int idx) throws IllegalStateException{
-
-        if(box == null)
+        if (box == null)
             throw new IllegalStateException("NullBox");
 
-        if(idx < 0 || idx >= boxes.length)
+        if (idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxes[idx] != null)
+        if (boxes[idx] != null)
             throw new IllegalStateException("FullBoxSlot");
 
-        if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
+        if (box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
             throw new IllegalStateException("CantStoreInANonRedStorage");
 
         boxes[idx] = box;
@@ -70,17 +69,16 @@ public class BoxStorage extends Component {
      */
 
     public void tryToAddBox(Box box, int idx) throws IllegalStateException{
-
-        if(box == null)
+        if (box == null)
             throw new IllegalStateException("NullBox");
 
-        if(idx < 0 || idx >= boxes.length)
+        if (idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxes[idx] != null)
+        if (boxes[idx] != null)
             throw new IllegalStateException("FullBoxSlot");
 
-        if(box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
+        if (box == Box.RED && !type.equals(ComponentType.RED_BOX_STORAGE))
             throw new IllegalStateException("CantStoreInANonRedStorage");
     }
 
@@ -91,11 +89,10 @@ public class BoxStorage extends Component {
      * @param idx Storage index to remove
      */
     public void removeBox(Spaceship spaceship, int idx) throws IllegalStateException {
-
-        if(idx < 0 || idx >= boxes.length)
+        if (idx < 0 || idx >= boxes.length)
             throw new IllegalStateException("InvalidBoxIdx");
 
-        if(boxes[idx] == null)
+        if (boxes[idx] == null)
             throw new IllegalStateException("EmptyBoxSlot");
 
         spaceship.addBoxCount(-1, boxes[idx]);

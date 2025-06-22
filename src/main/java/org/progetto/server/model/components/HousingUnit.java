@@ -93,8 +93,7 @@ public class HousingUnit extends Component{
      * @param num is the number of crew member to add
      */
     public void incrementCrewCount(Spaceship spaceship, int num) throws IllegalStateException {
-
-        if(crewCount + num > capacity)
+        if (crewCount + num > capacity)
             throw new IllegalStateException("CapacityExceeded");
 
         spaceship.addCrewCount(num);
@@ -109,8 +108,7 @@ public class HousingUnit extends Component{
      * @param num is the number of crew member to remove
      */
     public void decrementCrewCount(Spaceship spaceship, int num) throws IllegalStateException {
-
-        if(crewCount - num < 0)
+        if (crewCount - num < 0)
             throw new IllegalStateException("CannotDecrement");
 
         spaceship.addCrewCount(-num);

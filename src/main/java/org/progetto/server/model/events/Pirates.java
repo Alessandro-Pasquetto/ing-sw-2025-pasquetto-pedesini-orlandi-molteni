@@ -172,20 +172,4 @@ public class Pirates extends EventCard {
             return 0;
         }
     }
-
-    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
-    //  It calls battleResult() to know battle's outcome.
-    //  If player:
-    //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays.
-    //          Pirates are defeated, so now we have to handle the defeatedPlayers so far.
-    //  - loses, the controller adds the player to defeatedPlayers list.
-    //           Then, pirates will affect next player.
-    //  - draws, nothing happens.
-    //           Pirates will affect next player.
-    //  If there is any defeated player, the first defeated player will throw two dices to the determinate row/column of impact.
-    //  If the shot is small, the controller have to check the position of shields for each player calling checkShields(), in case it have to ask the player if he wants to use the shield or not:
-    //  - "yes", uses one battery and the spaceship is safe (for now), calling chooseDiscardedBattery().
-    //  - "no", go on.
-    //  It calls penaltyShot() for each defeated player, go on with the next shot until there is no more left.
-    //  The card's effect ends.
 }

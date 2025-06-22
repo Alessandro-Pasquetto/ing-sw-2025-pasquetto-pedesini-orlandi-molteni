@@ -12,30 +12,40 @@ import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
 
-/**
- * Game controller class
- */
+
 public class GameController {
 
     // =======================
     // GETTERS
     // =======================
 
+    /**
+     * Returns a list of all the connected players that haven't left the game
+     *
+     * @author Alessandro
+     * @param gameManager is the current gameManager
+     * @return the list of connected players
+     */
     public static ArrayList<Player> getConnectedTravelers(GameManager gameManager) {
-
         return new ArrayList<>(gameManager.getGame().getPlayersCopy()
                 .stream()
                 .filter(player -> !player.getHasLeft())
                 .toList());
     }
 
+    /**
+     * Returns a list of all the disconnected players that haven't left the game
+     *
+     * @author Alessandro
+     * @param gameManager is the current gameManager
+     * @return the list of disconnected players
+     */
     public static ArrayList<Player> getDisconnectedTravelers(GameManager gameManager) {
         return new ArrayList<>(gameManager.getDisconnectedPlayersCopy()
                 .stream()
                 .filter(player -> !player.getHasLeft())
                 .toList());
     }
-
 
     // =======================
     // OTHER METHODS
@@ -52,10 +62,10 @@ public class GameController {
             gameManager.startTimer();
     }
 
-
     /**
      * Lets a player decide to be in a ready state
      *
+     * @author Alessandro
      * @param gameManager is the current gameManager
      * @param player is the player that wants to be ready
      * @param sender is the current player sender
@@ -68,12 +78,12 @@ public class GameController {
 
         MessageSenderService.sendMessage("YouAreReady", sender);
 
-        if(!player.getIsReady()){
+        if (!player.getIsReady()) {
             player.setIsReady(true);
             gameManager.getGameThread().notifyThread();
             gameManager.broadcastGameMessageToOthers(player.getName() + " is ready", sender);
 
-            if(gameManager.getGame().getPhase().equals(GamePhase.INIT))
+            if (gameManager.getGame().getPhase().equals(GamePhase.INIT))
                 gameManager.broadcastGameMessage(new WaitingPlayersMessage(gameManager.getGame().getPlayersCopy()));
         }
     }
@@ -86,7 +96,6 @@ public class GameController {
      * @param sender current sender
      */
     public static void playerStats(GameManager gameManager, Player player, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -99,11 +108,10 @@ public class GameController {
             boolean hasLeft = player.getHasLeft();
             MessageSenderService.sendMessage(new ResponsePlayerStatsMessage(name, credits, position, hasLeft), sender);
 
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);
         }
     }
-
 
     /**
      * Allows a client to obtain all the active players
@@ -113,14 +121,13 @@ public class GameController {
      * @param sender current sender
      */
     public static void showPlayers(GameManager gameManager, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.ADJUSTING)) && !(gameManager.getGame().getPhase().equals(GamePhase.POPULATING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
         try {
             MessageSenderService.sendMessage(new ResponsePlayersMessage(gameManager.getGame().getPlayersCopy()), sender);
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             MessageSenderService.sendMessage(e.getMessage(), sender);
         }
     }
@@ -133,7 +140,6 @@ public class GameController {
      * @param sender current sender
      */
     public static void showTrack(GameManager gameManager, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING)) && !(gameManager.getGame().getPhase().equals(GamePhase.EVENT)) && !(gameManager.getGame().getPhase().equals(GamePhase.TRAVEL))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -202,7 +208,6 @@ public class GameController {
      * @return true if all the connected players are ready
      */
     public static boolean allConnectedParametersPlayersReady(ArrayList<Player> players, GameManager gameManager) {
-
         ArrayList<Player> connectedPlayers = new ArrayList<>(players
                 .stream()
                 .filter(player -> !gameManager.getDisconnectedPlayersCopy().contains(player))

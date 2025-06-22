@@ -103,13 +103,4 @@ public class Planets extends EventCard {
             landedPlayers.pop();
         }
     }
-
-    // TODO: Starting from the leader, the current player have two choices:
-    //  - skip
-    //  - chooses a planet to land (if available), so the controller calls choosePlanet().
-    //                                             It will ask for each box contained in the corresponding rewardsForPlanets of the planet if he wants it.
-    //                                             In the for each, if he answers "yes", the controller will call chooseRewardBox() with the correct params, adding the box in the BoxStorageComponent decided by player.
-    //                                             Otherwise, if the player answers "no", the controller moves to the next box in the array until there are no more left.
-    //  After, the decision process of the current player, if there are any planets still available, the controller moves to the next player.
-    //  Otherwise, for each player that has decided to land on a planet, in reverse route order, move their rocket backward on the route, losing the indicated number of flight days (penaltyDays), calling penalty().
 }

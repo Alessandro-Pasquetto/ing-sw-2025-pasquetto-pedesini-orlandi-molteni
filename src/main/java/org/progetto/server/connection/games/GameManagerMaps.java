@@ -3,11 +3,7 @@ package org.progetto.server.connection.games;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Class to handle:
- * - waitingGamesManager: map of non started games
- * - allGamesManager: map of already started games
- */
+
 public class GameManagerMaps {
 
     // =======================
@@ -59,6 +55,13 @@ public class GameManagerMaps {
     // OTHER METHODS
     // =======================
 
+    /**
+     * Adds a GameManager to the waitingGamesManager and allGamesManager if it doesn't already exist
+     *
+     * @author Alessandro
+     * @param idGame the ID of the game
+     * @param gameManager  the GameManager instance to add
+     */
     public static void addWaitingGameManager(int idGame, GameManager gameManager) {
         synchronized (waitingGamesManager) {
             waitingGamesManager.put(idGame, gameManager);
@@ -70,12 +73,24 @@ public class GameManagerMaps {
         }
     }
 
+    /**
+     * Removes a GameManager from the waitingGamesManager
+     *
+     * @author Alessandro
+     * @param idGame the ID of the game
+     */
     public static void removeWaitingGameManager(int idGame) {
         synchronized (waitingGamesManager) {
             waitingGamesManager.remove(idGame);
         }
     }
 
+    /**
+     * Removes a GameManager from both waitingGamesManager and allGamesManager
+     *
+     * @author Alessandro
+     * @param idGame the ID of the game
+     */
     public static void removeGameManager(int idGame) {
         synchronized (waitingGamesManager) {
             waitingGamesManager.remove(idGame);

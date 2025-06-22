@@ -80,9 +80,4 @@ public class LostShip extends EventCard {
         player.addCredits(this.rewardCredits);
         board.movePlayerByDistance(player, this.penaltyDays);
     }
-
-    // TODO: The controller has to manage the current player's decisions, giving him the possibility to discard an amount of crew members (humans or aliens) equals to penaltyCrew.
-    //  This happens only if the player has at least as many crew members as penaltyCrew.
-    //  If player wants to discard crew amount required, for each crew member he has to define the housing unit from which discard a member, calling chooseDiscardedCrew().
-    //  When this process is ended, so he had discarded the correct amount of crew members, the controller calls rewardPenalty().
 }

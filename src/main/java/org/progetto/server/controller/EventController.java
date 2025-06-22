@@ -17,9 +17,7 @@ import org.progetto.server.model.events.EventCard;
 
 import java.util.ArrayList;
 
-/**
- * Event phase controller class
- */
+
 public class EventController {
 
     // =======================
@@ -124,7 +122,6 @@ public class EventController {
                     gameManager.broadcastGameMessageToOthers(new PlayerLeftMessage(player.getName()), sender);
 
                     board.leaveTravel(player);
-                    // gameManager.broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(gameManager), gameManager.getGame().getBoard().getTrack()));
 
                     player.setIsReady(true);
                     gameManager.getGameThread().notifyThread();

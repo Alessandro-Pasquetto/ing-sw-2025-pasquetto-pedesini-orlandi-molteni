@@ -15,9 +15,7 @@ import org.progetto.server.model.events.EventCard;
 
 import java.util.ArrayList;
 
-/**
- * Building phase controller class
- */
+
 public class BuildingController {
 
     // =======================
@@ -33,7 +31,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void showHandComponent(GameManager gameManager, Player player, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -72,38 +69,37 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void pickHiddenComponent(GameManager gameManager, Player player, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(player.equals(playerCheck)) {
+        for (Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if (player.equals(playerCheck)) {
                 MessageSenderService.sendMessage("FullHandEventDeck", sender);
                 return;
             }
         }
 
-        try{
+        try {
             Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
             MessageSenderService.sendMessage(new PickedComponentMessage(pickedComponent), sender);
 
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("FullHandComponent"))
+            if (e.getMessage().equals("FullHandComponent"))
                 MessageSenderService.sendMessage("FullHandComponent", sender);
 
-            if(e.getMessage().equals("EmptyComponentDeck"))
+            if (e.getMessage().equals("EmptyComponentDeck"))
                 MessageSenderService.sendMessage("EmptyComponentDeck", sender);
 
             System.out.println(e.getMessage());
@@ -411,7 +407,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void showVisibleComponents(GameManager gameManager, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -441,40 +436,39 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void pickVisibleComponent(GameManager gameManager, Player player, int componentIdx, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()){
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()){
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+        for (Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if (player.equals(playerCheck)) {
                 MessageSenderService.sendMessage("FullHandEventDeck", sender);
                 return;
             }
         }
 
-        try{
+        try {
             gameManager.getGame().pickVisibleComponent(componentIdx, player);
             Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
             MessageSenderService.sendMessage(new PickedComponentMessage(pickedComponent), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedVisibleComponentMessage(player.getName(), pickedComponent), sender);
 
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("FullHandComponent"))
+            if (e.getMessage().equals("FullHandComponent"))
                 MessageSenderService.sendMessage("FullHandComponent", sender);
 
-            if(e.getMessage().equals("IllegalIndexComponent"))
+            if (e.getMessage().equals("IllegalIndexComponent"))
                 MessageSenderService.sendMessage("IllegalIndexComponent", sender);
         }
     }
@@ -491,7 +485,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -509,17 +502,17 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             MessageSenderService.sendMessage("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -538,7 +531,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeLastComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -546,17 +538,17 @@ public class BuildingController {
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             MessageSenderService.sendMessage("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -579,29 +571,29 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeHandComponentAndPickHiddenComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             MessageSenderService.sendMessage("AllowedToPlaceComponent", sender);
+
             try{
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
                 Component pickedComponent = gameManager.getGame().pickHiddenComponent(player);
@@ -614,10 +606,10 @@ public class BuildingController {
                 if (e.getMessage().equals("EmptyComponentDeck"))
                     MessageSenderService.sendMessage("EmptyComponentDeck", sender);
             }
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -637,32 +629,32 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeHandComponentAndPickVisibleComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idxVisibleComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             MessageSenderService.sendMessage("AllowedToPlaceComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
-            try{
+
+            try {
                 gameManager.getGame().pickVisibleComponent(idxVisibleComponent, player);
                 Component pickedComponent = player.getSpaceship().getBuildingBoard().getHandComponent();
                 MessageSenderService.sendMessage(new PickedComponentMessage(pickedComponent), sender);
@@ -672,10 +664,10 @@ public class BuildingController {
                 if (e.getMessage().equals("IllegalIndexComponent"))
                     MessageSenderService.sendMessage("IllegalIndexComponent", sender);
             }
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -695,25 +687,24 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeHandComponentAndPickUpEventCardDeck(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int deckIdx, Sender sender) {
-
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        if(gameManager.getGame().getLevel() == 1){
+        if (gameManager.getGame().getLevel() == 1) {
             MessageSenderService.sendMessage("CannotPickUpEventCardDeck", sender);
             return;
         }
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
 
             buildingBoard.tryToPlaceComponent(xPlaceComponent, yPlaceComponent);
@@ -727,14 +718,14 @@ public class BuildingController {
             MessageSenderService.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck), sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
 
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
 
-            else if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
+            else if (e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
                 MessageSenderService.sendMessage("EventCardDeckIsAlreadyTaken", sender);
 
             else
@@ -755,31 +746,31 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeHandComponentAndPickBookedComponent(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, int idx, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
 
             MessageSenderService.sendMessage("AllowedToPlaceComponent", sender);
-            try{
+
+            try {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPlacedComponentMessage(player.getName(), component, xPlaceComponent, yPlaceComponent), sender);
 
                 gameManager.getGame().getPlayersCopy().get(gameManager.getGame().getPlayersCopy().indexOf(player)).getSpaceship().getBuildingBoard().pickBookedComponent(idx);
@@ -788,17 +779,17 @@ public class BuildingController {
                 gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
             } catch (IllegalStateException e) {
-                if(e.getMessage().equals("FullHandComponent"))
+                if (e.getMessage().equals("FullHandComponent"))
                     MessageSenderService.sendMessage("FullHandComponent", sender);
                 else if (e.getMessage().equals("IllegalIndex"))
                     MessageSenderService.sendMessage("IllegalIndex", sender);
                 else if (e.getMessage().equals("EmptyBookedCell"))
                     MessageSenderService.sendMessage("EmptyBookedCell", sender);
             }
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -817,25 +808,24 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void placeHandComponentAndReady(GameManager gameManager, Player player, int xPlaceComponent, int yPlaceComponent, int rPlaceComponent, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
         BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-        try{
+        try {
             Component component = buildingBoard.getHandComponent();
 
             buildingBoard.placeComponent(xPlaceComponent, yPlaceComponent, rPlaceComponent);
@@ -850,10 +840,10 @@ public class BuildingController {
             gameManager.addNotCheckedReadyPlayer(player);
             gameManager.getGameThread().notifyThread();
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("NotAllowedToPlaceComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("NotAllowedToPlaceComponent"))
                 MessageSenderService.sendMessage("NotAllowedToPlaceComponent", sender);
-            else if(e.getMessage().equals("EmptyHandComponent"))
+            else if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -869,13 +859,12 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void readyBuilding(GameManager gameManager, Player player, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
@@ -897,18 +886,17 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void discardComponent(GameManager gameManager, Player player, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
@@ -918,10 +906,10 @@ public class BuildingController {
             MessageSenderService.sendMessage("HandComponentDiscarded", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerDiscardComponentMessage(player.getName()), sender);
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("EmptyHandComponent"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
-            if(e.getMessage().equals("HasBeenBooked"))
+            if (e.getMessage().equals("HasBeenBooked"))
                 MessageSenderService.sendMessage("HasBeenBooked", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -938,18 +926,17 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void bookComponent(GameManager gameManager, Player player, int idx, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
@@ -960,7 +947,7 @@ public class BuildingController {
             MessageSenderService.sendMessage("ComponentBooked", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerBookedComponentMessage(player.getName(), component, idx), sender);
 
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             if(e.getMessage().equals("EmptyHandComponent"))
                 MessageSenderService.sendMessage("EmptyHandComponent", sender);
             else if (e.getMessage().equals("IllegalBookIndex"))
@@ -979,7 +966,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void showBookedComponents(GameManager gameManager, Player player, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -1014,24 +1000,23 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void pickBookedComponent(GameManager gameManager, Player player, int idx, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
-            if(playerCheck != null) {
+        for (Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+            if (playerCheck != null) {
                 if (playerCheck.equals(player)) {
                     MessageSenderService.sendMessage("FullHandEventDeck", sender);
                     return;
@@ -1039,14 +1024,14 @@ public class BuildingController {
             }
         }
 
-        try{
+        try {
             player.getSpaceship().getBuildingBoard().pickBookedComponent(idx);
 
             MessageSenderService.sendMessage("PickedBookedComponent", sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedBookedComponentMessage(player.getName(), idx), sender);
 
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("FullHandComponent"))
+            if (e.getMessage().equals("FullHandComponent"))
                 MessageSenderService.sendMessage("FullHandComponent", sender);
             else if (e.getMessage().equals("IllegalIndex"))
                 MessageSenderService.sendMessage("IllegalIndex", sender);
@@ -1065,28 +1050,27 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void pickUpEventCardDeck(GameManager gameManager, Player player, int deckIdx, Sender sender) {
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        if(player.getSpaceship().getBuildingBoard().getHandComponent() != null){
+        if (player.getSpaceship().getBuildingBoard().getHandComponent() != null) {
             MessageSenderService.sendMessage("FullHandComponent", sender);
             return;
         }
 
-        for(Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
+        for (Player playerCheck : gameManager.getGame().getEventDeckAvailableCopy()) {
             if(playerCheck != null) {
                 if (playerCheck.equals(player)) {
                     MessageSenderService.sendMessage("FullHandEventDeck", sender);
@@ -1095,25 +1079,25 @@ public class BuildingController {
             }
         }
 
-        if(gameManager.getGame().getLevel() == 1){
+        if (gameManager.getGame().getLevel() == 1) {
             MessageSenderService.sendMessage("CannotPickUpEventCardDeck", sender);
             return;
         }
 
-        if(player.getSpaceship().getShipComponentsCount() == 1){
+        if (player.getSpaceship().getShipComponentsCount() == 1) {
             MessageSenderService.sendMessage("RequirePlacedComponent", sender);
             return;
         }
 
-        try{
+        try {
             ArrayList<EventCard> eventCardsDeck = gameManager.getGame().pickUpEventCardDeck(player, deckIdx);
             MessageSenderService.sendMessage(new PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck), sender);
             gameManager.broadcastGameMessageToOthers(new AnotherPlayerPickedUpEventCardDeck(player.getName(), deckIdx), sender);
 
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("EventCardDeckIsAlreadyTaken"))
                 MessageSenderService.sendMessage("EventCardDeckIsAlreadyTaken", sender);
-            if(e.getMessage().equals("IllegalIndexEventCardDeck"))
+            if (e.getMessage().equals("IllegalIndexEventCardDeck"))
                 MessageSenderService.sendMessage("IllegalIndexEventCardDeck", sender);
             else
                 MessageSenderService.sendMessage(e.getMessage(), sender);
@@ -1135,22 +1119,22 @@ public class BuildingController {
             return;
         }
 
-        if(player.getIsReady()){
+        if (player.getIsReady()) {
             MessageSenderService.sendMessage("ActionNotAllowedInReadyState", sender);
             return;
         }
 
-        if(gameManager.getTimerExpired()){
+        if (gameManager.getTimerExpired()) {
             MessageSenderService.sendMessage("TimerExpired", sender);
             return;
         }
 
-        try{
+        try {
             int deckIdx = gameManager.getGame().putDownEventCardDeck(player);
             MessageSenderService.sendMessage("EventCardDeckPutDown", sender);
             gameManager.broadcastGameMessageToOthers( new AnotherPlayerPutDownEventCardDeckMessage(player.getName(), deckIdx), sender);
 
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             if(e.getMessage().equals("NoEventCardDeckTaken"))
                 MessageSenderService.sendMessage("NoEventCardDeckTaken", sender);
             else
@@ -1166,7 +1150,6 @@ public class BuildingController {
      * @param sender current sender
      */
     public static void resetTimer(GameManager gameManager, Player player, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.BUILDING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -1179,8 +1162,8 @@ public class BuildingController {
 
         try {
             gameManager.getTimerController().resetTimer();
-        }catch (IllegalStateException e){
-            if(e.getMessage().equals("ImpossibleToResetTimer"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("ImpossibleToResetTimer"))
                 MessageSenderService.sendMessage("ImpossibleToResetTimer", sender);
         }
     }
@@ -1233,7 +1216,6 @@ public class BuildingController {
      * @param player current player
      */
     public static void checkStartShipValidityControllerAndAddToTravelers(GameManager gameManager, Player player) {
-
         Game game = gameManager.getGame();
 
         Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
@@ -1269,20 +1251,18 @@ public class BuildingController {
      * @return areAllInit
      */
     public static boolean initializeAllSpaceship(Game game){
-
         boolean areAllInit = true;
 
-        for(Player player : game.getBoard().getCopyTravelers()){
-
+        for (Player player : game.getBoard().getCopyTravelers()) {
             BuildingBoard buildingBoard = player.getSpaceship().getBuildingBoard();
 
-            if(!buildingBoard.initSpaceshipParams()){
+            if (!buildingBoard.initSpaceshipParams()) {
                 player.setIsReady(false);
                 areAllInit = false;
             }
             buildingBoard.removeBookedComponents();
 
-            if(game.getLevel() == 1)
+            if (game.getLevel() == 1)
                 player.getSpaceship().resetDestroyedCount();
         }
 
@@ -1296,10 +1276,9 @@ public class BuildingController {
      * @param gameManager current gameManager
      */
     public static void autoReadyBuildingForDisconnectedPlayers(GameManager gameManager){
+        for (Player player : gameManager.getDisconnectedPlayersCopy()){
 
-        for(Player player : gameManager.getDisconnectedPlayersCopy()){
-
-            if(!player.getIsReady()){
+            if (!player.getIsReady()) {
                 player.setIsReady(true);
                 gameManager.addNotCheckedReadyPlayer(player);
             }
@@ -1313,12 +1292,11 @@ public class BuildingController {
      * @param gameManager current gameManager
      */
     public static void addDisconnectedPlayersWithIllegalSpaceshipToLosingPlayers(GameManager gameManager){
-
-        for(Player player : gameManager.getDisconnectedPlayersCopy()){
+        for (Player player : gameManager.getDisconnectedPlayersCopy()){
 
             Pair<Boolean, Boolean> result = player.getSpaceship().getBuildingBoard().checkStartShipValidity();
 
-            if(!result.getKey()) {
+            if (!result.getKey()) {
                 gameManager.addLosingPlayer(player);
             }
         }

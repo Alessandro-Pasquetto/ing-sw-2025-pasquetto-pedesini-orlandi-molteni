@@ -10,9 +10,7 @@ import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.Spaceship;
 
-/**
- * Populating phase controller class
- */
+
 public class PopulatingController {
 
     // =======================
@@ -73,7 +71,6 @@ public class PopulatingController {
         else
             receiveOrangeAlien(gameManager, player, x, y);
     }
-
 
     /**
      * It receives the purple alien placed by the player
@@ -162,7 +159,6 @@ public class PopulatingController {
      * @param gameManager the game manager
      */
     public static void fillHumansDisconnectedPlayers(GameManager gameManager){
-
         for (Player player : gameManager.getDisconnectedPlayersCopy()){
 
             if(!player.getIsReady())

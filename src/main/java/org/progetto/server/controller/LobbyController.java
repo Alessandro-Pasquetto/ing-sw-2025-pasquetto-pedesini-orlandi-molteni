@@ -12,9 +12,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Lobby controller class
- */
+
 public class LobbyController {
 
     // =======================
@@ -99,7 +97,7 @@ public class LobbyController {
      * Add sender to the list
      *
      * @author Alessandro
-     * @param sender
+     * @param sender is the current Sender
      */
     public static void addSender(Sender sender) {
         synchronized(currentIdGame){
@@ -111,7 +109,7 @@ public class LobbyController {
      * Remove sender from the list
      *
      * @author Alessandro
-     * @param sender
+     * @param sender is the current Sender
      */
     public static void removeSender(Sender sender) {
         synchronized(currentIdGame){

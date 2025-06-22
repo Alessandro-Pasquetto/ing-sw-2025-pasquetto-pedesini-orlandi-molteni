@@ -114,7 +114,6 @@ public class Board {
      * @author Gabriele
      */
     public void updateTravelersBasedOnStartingPosition() {
-
         travelers.clear();
 
         for (Player player : startingPositions) {
@@ -153,7 +152,6 @@ public class Board {
      * @param levelBoard the level of the board
      */
     public synchronized void addTravelersOnTrack(int levelBoard) {
-
         switch (levelBoard) {
             case 1:
                 track[4] = travelers.get(0);

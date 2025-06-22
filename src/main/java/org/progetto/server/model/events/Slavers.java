@@ -136,13 +136,4 @@ public class Slavers extends EventCard {
             return 0;
         }
     }
-
-    // TODO: The controller, giving to player the slavers fire power, gives to the player the possibility to use double cannons through the use of batteries, calling chooseDiscardedBattery().
-    //  It calls battleResult() to know battle's outcome.
-    //  If player:
-    //  - wins, it would ask if he wants rewardCredits in exchange of penaltyDays and the card's effect ends.
-    //  - loses, he has to discard an amount of crew members (humans or aliens) equals to penaltyCrew.
-    //           Then, the slavers will affect next player.
-    //  - draws, nothing happens.
-    //           The slavers will affect next player.
 }

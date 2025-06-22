@@ -28,7 +28,4 @@ public class OpenSpace extends EventCard {
     public void moveAhead(Board board, Player player, int enginePower) {
         board.movePlayerByDistance(player, enginePower);
     }
-
-    // TODO: Controller has to ask for each player if he wants to use a battery for his double cannons, calling each time chooseDiscardedBattery().
-    //  He asks the players starting from the leader in route order.
 }

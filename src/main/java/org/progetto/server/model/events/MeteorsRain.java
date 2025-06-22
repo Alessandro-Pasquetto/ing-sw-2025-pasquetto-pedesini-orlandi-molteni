@@ -122,26 +122,4 @@ public class MeteorsRain extends EventCard {
 
         return spaceship.getIdxShieldCount(shot.getFrom()) > 0;
     }
-
-    // TODO: For each meteor, the controller let the leader throw the dices to find impact position.
-    //  Each one of the players will be affected by that projectile simultaneously.
-    //  There is two types of meteor:
-    //  - small: the controller checks if it hits an exposed connector calling checkImpactComponent().
-    //           If returns null, the meteor does not destroy anything.
-    //           Otherwise, the controller has to check if that component has any exposed connector in shot direction (connections[shotDirection] > 0).
-    //           If it has any exposed connector, the controller checks if the player has a shield pointing in the projectile direction, calling checkShields().
-    //           If returns true, the controller asks to player if he wants to use battery to enable it (if he has at least a battery).
-    //           Otherwise, the meteor hits the exposed connector component, so controller destroys previously passed component.
-    //  - big: the controller checks what's the first component in meteor's way (row/column), calling checkImpactComponent().
-    //         That returns null if there's no component in its trajectory; otherwise returns component's reference.
-    //         Controller checks component's type:
-    //         1) if it is NOT a cannon: the meteor hits the spaceship, destroying the component.
-    //         2) if it is a single cannon: checks cannon's rotation.
-    //                                      If it's directed against meteor, it destroys it without asking anything and goes to the next meteor.
-    //                                      Otherwise, it destroys the cannon.
-    //         3) if it is a double cannon, checks cannon's rotation.
-    //                                      If it's NOT directed against meteor, it destroys the cannon.
-    //                                      Otherwise, if it's directed against meteor, asks to player if he wants to use a battery to enable the cannon.
-    //                                      If he answers "yes", the battery is used and the meteor destroyed; otherwise goes on and destroys the cannon.
-    //  It goes on until there are no meteor left.
 }

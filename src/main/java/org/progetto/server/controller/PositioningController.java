@@ -14,9 +14,7 @@ import org.progetto.server.model.Player;
 
 import java.util.ArrayList;
 
-/**
- * Positioning phase controller class
- */
+
 public class PositioningController {
 
     // =======================
@@ -30,7 +28,6 @@ public class PositioningController {
      * @param gameManager current gameManager
      */
     public static void askForStartingPosition(GameManager gameManager) throws InterruptedException {
-
         gameManager.broadcastGameMessage(new PlayersInPositioningDecisionOrderMessage(gameManager.getGame().getBoard().getCopyTravelers()));
 
         Board board = gameManager.getGame().getBoard();
@@ -48,7 +45,7 @@ public class PositioningController {
             gameManager.getGameThread().resetAndWaitTravelerReady(player);
 
             // If the player is disconnected
-            if(!player.getIsReady())
+            if (!player.getIsReady())
                 insertAtFurthestStartPosition(gameManager, player);
         }
     }
@@ -63,7 +60,6 @@ public class PositioningController {
      * @param sender current sender
      */
     public static void receiveStartingPosition(GameManager gameManager, Player player, int startingPosition, Sender sender){
-
         if (!(gameManager.getGame().getPhase().equals(GamePhase.POSITIONING))) {
             MessageSenderService.sendMessage("IncorrectPhase", sender);
             return;
@@ -149,8 +145,16 @@ public class PositioningController {
         MessageSenderService.sendMessage(new PlayersInPositioningDecisionOrderMessage(players), sender);
     }
 
+    /**
+     * Reconnects a player to the game, asking for starting position if they are the active player
+     *
+     * @author Alessandro
+     * @param gameManager current gameManager
+     * @param player current player
+     * @param sender current sender
+     */
     public static void reconnectPlayer(GameManager gameManager, Player player, Sender sender) {
-        if(!player.equals(gameManager.getGame().getActivePlayer()))
+        if (!player.equals(gameManager.getGame().getActivePlayer()))
             return;
 
         Player[] startingPositions = gameManager.getGame().getBoard().getStartingPositionsCopy();

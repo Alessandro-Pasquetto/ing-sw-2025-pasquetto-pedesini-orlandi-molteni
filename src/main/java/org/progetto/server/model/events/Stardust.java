@@ -31,6 +31,4 @@ public class Stardust extends EventCard {
         board.movePlayerByDistance(player, Math.negateExact(exposedConnectorsCount));
         return exposedConnectorsCount;
     }
-
-    // TODO: The controller call penalty() for each player.
 }

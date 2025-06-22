@@ -77,7 +77,6 @@ public class BuildingData {
     // SETTERS
     // =======================
 
-
     public static void setHandComponent(ImageView handComponent) {
         BuildingData.handComponent = handComponent;
     }
@@ -142,22 +141,22 @@ public class BuildingData {
      */
     public static void initMask(int levelShip){
         shipMask =  switch (levelShip) {
-                        case 1 -> new int[][]{
-                                {0, 0, 1, 0, 0},
-                                {0, 1, 1, 1, 0},
-                                {1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1},
-                                {1, 1, 0, 1, 1},
-                        };
-                        case 2 -> new int[][]{
-                                {0, 0, 1, 0, 1, 0, 0},
-                                {0, 1, 1, 1, 1, 1, 0},
-                                {1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 1, 1, 1, 1},
-                                {1, 1, 1, 0, 1, 1, 1},
-                        };
-                        default -> null;
-                    };
+            case 1 -> new int[][]{
+                    {0, 0, 1, 0, 0},
+                    {0, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1},
+                    {1, 1, 0, 1, 1},
+            };
+            case 2 -> new int[][]{
+                    {0, 0, 1, 0, 1, 0, 0},
+                    {0, 1, 1, 1, 1, 1, 0},
+                    {1, 1, 1, 1, 1, 1, 1},
+                    {1, 1, 1, 1, 1, 1, 1},
+                    {1, 1, 1, 0, 1, 1, 1},
+            };
+            default -> null;
+        };
     }
 
     /**

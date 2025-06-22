@@ -108,6 +108,12 @@ public class BuildingBoard implements Serializable {
         };
     }
 
+    /**
+     * Returns the central unit of the spaceship
+     *
+     * @author Alessandro
+     * @return the centralUnit component of the spaceship
+     */
     public Component getCentralUnit() {
         return switch (spaceship.getLevelShip()) {
             case 1 -> spaceshipMatrix[2][2];
@@ -135,7 +141,6 @@ public class BuildingBoard implements Serializable {
                 spaceshipMatrix[2][3].setX(3);
                 break;
         }
-        // There is no need to increment the componentCount in the spaceship because it is set by default to 1
     }
 
     /**
@@ -357,7 +362,7 @@ public class BuildingBoard implements Serializable {
      * @param x is the x coordinate of the component to remove
      */
     public void destroyComponent(int x, int y) throws IllegalStateException {
-        if(boardMask[y][x] != -1)
+        if (boardMask[y][x] != -1)
            throw new IllegalStateException("EmptyComponentCell");
 
         spaceship.addComponentsShipCount(-1);
@@ -523,8 +528,7 @@ public class BuildingBoard implements Serializable {
      * @return true if the component is validly connected, false otherwise
      */
     private boolean dfsStartValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentsChecked, AtomicInteger exposedConnectorsCount){
-
-        if(visited[y][x])
+         (visited[y][x])
             return true;
 
         boolean correctlyPlaced = true;
@@ -764,7 +768,6 @@ public class BuildingBoard implements Serializable {
      * @param visited the already visited component list
      */
     private void deleteDisconnectedComponents(boolean[][] visited){
-
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
 
@@ -785,7 +788,6 @@ public class BuildingBoard implements Serializable {
      * @param visited the already visited component list
      */
     private void startDeleteDisconnectedComponents(boolean[][] visited){
-
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for(int x = 0; x < spaceshipMatrix[y].length; x++) {
 
@@ -817,11 +819,11 @@ public class BuildingBoard implements Serializable {
         int xComponent = -1, yComponent = -1;
         Component centralUnit = getCentralUnit();
 
-        if(centralUnit != null){
+        if (centralUnit != null) {
             xComponent = centralUnit.getX();
             yComponent = centralUnit.getY();
 
-        }else{
+        } else {
 
             for(int y = 0; y < spaceshipMatrix.length && xComponent == -1; y++) {
                 for(int x = 0; x < spaceshipMatrix[y].length; x++) {
@@ -838,7 +840,7 @@ public class BuildingBoard implements Serializable {
 
         dfsValidity(xComponent, yComponent, visited, numComponentsChecked, exposedConnectorsCount);
 
-        if(numComponentsChecked.get() != spaceship.getShipComponentsCount())
+        if (numComponentsChecked.get() != spaceship.getShipComponentsCount())
             return false;
 
         spaceship.setExposedConnectorsCount(exposedConnectorsCount.get());
@@ -853,7 +855,6 @@ public class BuildingBoard implements Serializable {
      * @author Alessandro
      */
     private void fixAlienPresence(){
-
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 

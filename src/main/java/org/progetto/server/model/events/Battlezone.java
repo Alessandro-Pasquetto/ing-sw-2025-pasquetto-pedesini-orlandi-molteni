@@ -367,25 +367,4 @@ public class Battlezone extends EventCard {
             }
         }
     }
-
-    // TODO: There are three couples of condition and penalty for each card.
-    //  The controller evaluates each couple sequentially:
-    //  1) Finds which player is the weakest for that condition (in case of draw, pick the player furthest ahead in the route order).
-    //  2) Applies the penalty for that player.
-    //  3) Go on with the next couple.
-    //  There are three types of conditions:
-    //  - CrewRequirement: finds player with fewer number of crew members calling lessPopulatedSpaceship().
-    //  - FirePowerRequirement: starting from the leader and further ahead in the route order the controller gives to the player the possibility to use double cannons through the use of batteries.
-    //  - EnginePowerRequirement: starting from the leader and further ahead in the route order the controller gives to the player the possibility to use double engines through the use of batteries.
-    //  There are four types of penalties:
-    //  - PenaltyDays: calls penaltyDays() for the player
-    //  - PenaltyCrew: the player has to discard an amount of crew members (humans or aliens) equals to needAmount, calling for each crew member chooseDiscardedCrew()
-    //  - PenaltyShots: the player will throw two dices to the determinate row/column of impact.
-    //                  If the shot is small, the controller have to check the position of shields for the player calling checkShields(), in case it have to ask the player if he wants to use the shield or not:
-    //                  - "yes", uses one battery and the spaceship is safe (for now), calling chooseDiscardedBattery().
-    //                  - "no", go on.
-    //                  It calls penaltyShot() for the player, go on with the next shot until there is no more left.
-    //  - PenaltyBoxes: he has to discard an amount of boxes equals to penaltyBoxes (starting from the most premium ones).
-    //                  If he has no box left, he has to discard batteries.
-    //                  If he hasn't any battery left, card's effect stops.
 }

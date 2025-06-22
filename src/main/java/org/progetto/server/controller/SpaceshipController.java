@@ -15,11 +15,6 @@ import org.progetto.server.model.*;
 import org.progetto.server.model.components.*;
 
 
-/**
- * This controller handles:
- * 1. broadcast updates of spaceship attributes
- * 2. destroy components and validity
- */
 public class SpaceshipController {
 
     // =======================
@@ -66,8 +61,8 @@ public class SpaceshipController {
             Spaceship spaceship = player.getSpaceship();
             MessageSenderService.sendMessage(new ResponseSpaceshipStatsMessage(spaceship), sender);
 
-        }catch (IllegalStateException e) {
-            if(e.getMessage().equals("PlayerNameNotFound"))
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("PlayerNameNotFound"))
                 MessageSenderService.sendMessage("PlayerNameNotFound", sender);
         }
     }
