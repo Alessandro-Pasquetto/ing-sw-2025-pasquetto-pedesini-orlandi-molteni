@@ -142,6 +142,8 @@ class SmugglersControllerTest {
         controller.receiveDiscardedBox(p1, 1, 1, 0, sender);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
+        controller.reconnectPlayer(p1, sender);
+
         Thread.sleep(200);
         controller.receiveDiscardedBox(p1, 0, 0, 2, sender);
 
@@ -157,6 +159,7 @@ class SmugglersControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
+        controller.reconnectPlayer(p2, sender);
         controller.receiveHowManyCannonsToUse(p2, 0, sender);
 
         Thread.sleep(200);
@@ -175,12 +178,14 @@ class SmugglersControllerTest {
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedBatteries(p3, 2, 1, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         Thread.sleep(200);
+        controller.reconnectPlayer(p3, sender);
         controller.receiveRewardDecision(p3, "YES", sender);
 
         Thread.sleep(200);

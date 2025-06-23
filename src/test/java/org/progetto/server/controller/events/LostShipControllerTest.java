@@ -73,11 +73,13 @@ class LostShipControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
+        controller.reconnectPlayer(p2, sender);
         controller.receiveRewardAndPenaltiesDecision(p2, "NO", sender);
 
         Thread.sleep(200);
         // p3: Accepts, should go to DISCARD_CREW
         controller.receiveRewardAndPenaltiesDecision(p3, "YES", sender);
+        controller.reconnectPlayer(p3, sender);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
     }
 
@@ -153,6 +155,7 @@ class LostShipControllerTest {
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
 
         Thread.sleep(200);
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedCrew(p3, 1, 1, sender);
 
         // Checks

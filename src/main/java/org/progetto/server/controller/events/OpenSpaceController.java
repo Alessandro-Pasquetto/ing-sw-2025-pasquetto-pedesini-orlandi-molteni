@@ -93,8 +93,6 @@ public class OpenSpaceController extends EventControllerAbstract {
             // Calculates max number of double engine usable
             int maxUsable = player.getSpaceship().maxNumberOfDoubleEnginesUsable();
 
-            System.out.println(maxUsable);
-
             // If he can't use any double cannon, apply event effect; otherwise, ask how many he wants to use
             if (maxUsable == 0)
                 playerEnginePower = player.getSpaceship().getNormalEnginePower();
@@ -165,7 +163,6 @@ public class OpenSpaceController extends EventControllerAbstract {
             requestedNumber = num;
             playerEnginePower = player.getSpaceship().getNormalEnginePower() + 2 * num;
 
-            System.out.println("Waiting for BatteriesToDiscard");
             phase = EventPhase.DISCARDED_BATTERIES;
 
             MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedNumber), sender);

@@ -12,6 +12,8 @@ import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -614,7 +616,74 @@ class BuildingControllerTest {
        };
 
        BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
-
-
     }
+
+    @Test
+    void buildShip(){
+        GameManager gameManager = new GameManager(0, 2, 2);
+        Player p1 = new Player("mario");
+        Player p2 = new Player("marco");
+        gameManager.getGame().addPlayer(p1);
+        gameManager.getGame().addPlayer(p2);
+        gameManager.getGame().initPlayersSpaceship();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+
+        BuildingController.buildShip(gameManager, p1, 1, sender);
+        BuildingController.buildShip(gameManager, p2, 2, sender);
+
+        GameManager gameManager2 = new GameManager(0, 2, 1);
+        Player p3 = new Player("mario");
+        Player p4 = new Player("marco");
+        gameManager2.getGame().addPlayer(p3);
+        gameManager2.getGame().addPlayer(p4);
+        gameManager2.getGame().initPlayersSpaceship();
+        gameManager2.getGame().setPhase(GamePhase.BUILDING);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+
+        BuildingController.buildShip(gameManager2, p3, 1, sender2);
+        BuildingController.buildShip(gameManager2, p4, 2, sender2);
+    }
+
+    @Test
+    void showHandComponent(){
+        GameManager gameManager = new GameManager(0, 3, 1);
+        Player player = new Player("gabriele");
+        gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+        gameManager.addSender(player, sender);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.showHandComponent(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.showHandComponent(gameManager, player, sender);
+
+        // null component
+        player.getSpaceship().getBuildingBoard().setHandComponent(null);
+        BuildingController.showHandComponent(gameManager, player, sender);
+    }
+
+
 }

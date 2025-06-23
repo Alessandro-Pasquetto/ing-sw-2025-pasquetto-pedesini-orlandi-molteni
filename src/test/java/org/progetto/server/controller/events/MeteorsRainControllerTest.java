@@ -124,12 +124,14 @@ class MeteorsRainControllerTest {
         // First meteor
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.reconnectPlayer(p1, sender);
         controller.rollDice(p1, sender);
 
         Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertEquals(EventPhase.ASK_SMALL_METEOR_DECISION, controller.getPhase());
+        controller.reconnectPlayer(p1, sender);
         controller.receiveProtectionDecision(p1, "YES", sender);
 
         Thread.sleep(200);
@@ -155,6 +157,7 @@ class MeteorsRainControllerTest {
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertEquals(EventPhase.ASK_BIG_METEOR_DECISION, controller.getPhase());
+        controller.reconnectPlayer(p1, sender);
         controller.receiveProtectionDecision(p1, "NO", sender);
 
         Thread.sleep(3200);
@@ -163,6 +166,9 @@ class MeteorsRainControllerTest {
         // Fourth meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
+
+        controller.reconnectPlayer(p1, sender);
+        controller.reconnectPlayer(p2, sender);
 
         Thread.sleep(200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][1]);

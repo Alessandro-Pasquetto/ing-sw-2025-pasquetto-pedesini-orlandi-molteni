@@ -129,12 +129,6 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
-    private boolean containsShieldBatteryPlayer(Player player) {
-        synchronized (shieldBatteryPlayers) {
-            return shieldBatteryPlayers.contains(player);
-        }
-    }
-
     private boolean containsHandledPlayer(Player player) {
         synchronized (handledPlayers) {
             return handledPlayers.contains(player);

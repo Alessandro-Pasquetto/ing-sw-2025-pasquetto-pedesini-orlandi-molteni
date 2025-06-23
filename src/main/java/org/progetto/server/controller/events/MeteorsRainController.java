@@ -242,8 +242,6 @@ public class MeteorsRainController extends EventControllerAbstract {
     private void handleMeteor() throws InterruptedException{
         gameManager.getGameThread().resetTravelersReady();
 
-        System.out.println(comingMeteor);
-
         if (comingMeteor.getSize().equals(ProjectileSize.SMALL)) {
             phase = EventPhase.ASK_SMALL_METEOR_DECISION;
             askSmallMeteorDecision();

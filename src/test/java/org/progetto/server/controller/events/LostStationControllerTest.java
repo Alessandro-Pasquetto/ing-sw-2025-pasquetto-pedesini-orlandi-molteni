@@ -94,10 +94,12 @@ class LostStationControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.LAND, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDecisionToLand(p3, "YES", sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
+        controller.reconnectPlayer(p2, sender);
         controller.receiveRewardBox(p3, 0, 2, 1, 0, sender);
 
         Thread.sleep(200);
@@ -114,6 +116,7 @@ class LostStationControllerTest {
 
         Thread.sleep(200);
         assertEquals(Box.GREEN, boxStorage.getBoxes()[1]);
+        controller.reconnectPlayer(p3, sender);
         controller.receiveRewardBox(p3, -1, 2, 1, 1, sender);
 
         Thread.sleep(200);

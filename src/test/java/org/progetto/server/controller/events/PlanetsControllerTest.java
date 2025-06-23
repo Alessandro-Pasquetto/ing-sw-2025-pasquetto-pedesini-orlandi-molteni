@@ -118,6 +118,7 @@ class PlanetsControllerTest {
         controller.receiveDecisionToLandPlanet(p1, 5, sender);
 
         //Test landing completed
+        controller.reconnectPlayer(p1, sender);
         controller.receiveDecisionToLandPlanet(p1, 0, sender);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
@@ -126,6 +127,7 @@ class PlanetsControllerTest {
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         //Test first box chosen
+        controller.reconnectPlayer(p1, sender);
         controller.receiveRewardBox(p1, 0, 3, 2, 0, sender);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 

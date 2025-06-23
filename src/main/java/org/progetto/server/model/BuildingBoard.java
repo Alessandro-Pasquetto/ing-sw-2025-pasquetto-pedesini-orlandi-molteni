@@ -528,7 +528,7 @@ public class BuildingBoard implements Serializable {
      * @return true if the component is validly connected, false otherwise
      */
     private boolean dfsStartValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentsChecked, AtomicInteger exposedConnectorsCount){
-         if(visited[y][x])
+         if (visited[y][x])
             return true;
 
         boolean correctlyPlaced = true;

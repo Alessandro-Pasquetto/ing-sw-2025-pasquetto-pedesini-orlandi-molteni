@@ -166,6 +166,7 @@ class BattlezoneControllerTest {
         assertEquals(-3, p3.getPosition());
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
+        controller.reconnectPlayer(p2, sender);
         controller.receiveHowManyCannonsToUse(p2, 0, sender);
 
         Thread.sleep(200);
@@ -174,10 +175,12 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
+        controller.reconnectPlayer(p1, sender);
         controller.receiveDiscardedCrew(p1, 2, 1, sender);
 
         Thread.sleep(200);
@@ -186,6 +189,7 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
+        controller.reconnectPlayer(p2, sender);
         controller.receiveHowManyEnginesToUse(p2, 0, sender);
 
         Thread.sleep(200);
@@ -202,6 +206,7 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedBox(p3, 1, 1, 0, sender);
 
         Thread.sleep(200);
@@ -210,6 +215,7 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
         batteryStorage3.incrementItemsCount(p3.getSpaceship(), 2);
@@ -217,14 +223,17 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.rollDice(p3, sender);
 
         Thread.sleep(3200);
         assertEquals(EventPhase.SHIELD_DECISION, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveProtectionDecision(p3, "YES", sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.SHIELD_BATTERY, controller.getPhase());
+        controller.reconnectPlayer(p3, sender);
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
         Thread.sleep(3200);
