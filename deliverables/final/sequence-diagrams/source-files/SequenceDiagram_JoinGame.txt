@@ -1,0 +1,65 @@
+title Join Game
+
+participant Client
+participant Server
+participant Game
+participant Board
+participant Player
+participant Spaceship
+participant BuildingBoard
+
+Client-->Server:Connect()
+
+Client<-Server:Response(gameIds[])
+
+alt CreateGame
+
+
+  Client->Server:CreateGame(gameLevel,adminName, numPlayers)
+  Server->Game:newGame(idGame, numPlayers, level)
+
+
+  Game->Board:newBoard(level,numPlayers)
+
+  Server->Player:newPlayer(name)
+
+  Player->Spaceship:newSpaceship(levelShip, color)
+
+  Spaceship->BuildingBoard:newBuildingBoard(spaceship,color)
+
+Client<-Server:"UpdateGameList"
+  Server->Client:NewGamePhaseMessage(gamePahse)
+
+Client<-Server:GameInfoMessage(idGame, levelGame, numPlayers)
+Client<-Server:WaitingPlayersMessage(player)
+else JoinGame
+  Client->Server:JoinGame(idGame, namePlayer)
+
+  Server->Game:checkAvailableName(name)
+
+  alt true
+
+    Game->Server:true
+
+    Server->Player:newPlayer(name)
+
+    Player->Spaceship:newSpaceship(levelShip, color)
+
+    Spaceship->BuildingBoard:newBuildingBoard(spaceship,color)
+
+    Server->Game:addPlayer(player)
+
+Client<-Server:"UpdateGameList"
+    Server->Client:GameInfoMessage(idGame, levelGame, numPlayers)
+
+Client<-Server:WaitingPlayersMessage(player)
+  else false
+
+    Game->Server:false
+    Server->Client:"NotAvailableName"
+  end
+
+end
+
+space
+note over Client, Server: Client connects to server.\nThen, server sends to player a list that contains all the available games to join.\nPlayer has two options: create his own game, or join an already created one, picked from the previous list.\nIn the first case, he selects game level, maximum number of players and his name: so game is initialized.\nIn the second case, he tries to join the game by using its id and giving his name. He will receive success/fail response based on name chosen.\nIf name is available, he joins the game, otherwise he isn't allowed to do it.

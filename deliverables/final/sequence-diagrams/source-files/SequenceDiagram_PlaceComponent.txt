@@ -1,0 +1,216 @@
+title Place Component
+
+participant OtherClients
+participant Client
+participant Server
+participant Game
+participant Player
+participant Spaceship
+participant BuildingBoard
+
+alt PlaceHandComponentAndPickHiddenComponent
+  Client->Server:PlaceHandComponentAndPickHiddenComponentMessage(x, y, r)
+  Server->Game:getPhase()
+
+  break not Building
+  Client<-Server:"IncorrectPhase"
+  end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  
+  BuildingBoard->BuildingBoard:placeComponent(x,y, r)
+  
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+Client<-Server:"AllowedToPlaceComponent"
+    OtherClients<-Server:AnotherPlayerPlacedComponentMessage(playerName, component, xPlaceComponent, yPlaceComponent)
+
+    Server->Game: PickHiddenComponent(player)
+    Game->Game: removeFromDeckComponent(randomPos)
+    Game->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+    BuildingBoard->Component:getImgSrc()
+
+assert "FullHandComponent"
+Client<-Server:"FullHandComponent"
+end
+assert "EmptyComponentDeck"
+Client<-Server:"EmptyComponentDeck"
+end
+    Server->Client:PickedComponentMessage(pickedComponent)
+  else ImpossiblePlaceComponent
+  assert "NotAllowdToPlaceComponent"
+Client<-Server:"NotAllowedToPlaceComponent"
+end
+assert "EmpthandComponent"
+Client<-Server:"EmptyHandComponent"
+end
+  end
+
+
+else PlaceHandComponentAndPickVisibleComponent
+
+  Client->Server:PlaceHandComponentAndPickVisibleComponentMessage(x, y, r, idx)
+  Server->Game:getPhase()
+
+   break not Building
+  Client<-Server:"IncorrectPhase"
+  end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+
+  BuildingBoard->BuildingBoard:placeComponent(x, y, r)
+
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+    Client<-Server:"AllowedToPlaceComponent"
+    OtherClients<-Server:AnotherPlayerPlacedComponentMessage(playerName, component, xPlaceComponent, yPlaceComponent)
+
+    Server->Game:PickVisibleComponent(idxVisibleComponent,player)
+    Game->Game: removeFromVisibleDeckComponent(idxVisibleComponent)
+    Game->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+    BuildingBoard->Component:getImgSrc()
+    assert "IllegalIndexComponent"
+Client<-Server:"IllegalIndexComponent"
+end
+
+    Server->Client:PickedComponentMessage(pickedComponent)
+OtherClients<-Server:AnotherPlayerPickedVisibleComponentMessage(playerName, pickedComponent)
+  else ImpossiblePlaceComponent
+  assert "NotAllowdToPlaceComponent"
+Client<-Server:"NotAllowedToPlaceComponent"
+end
+assert "EmpthandComponent"
+Client<-Server:"EmptyHandComponent"
+end
+  end
+
+else PlaceHandComponentAndPickBookedComponent
+
+  Client->Server:PlaceHandComponentAndPickBookedComponentMessage(x, y, r, idx)
+    Server->Game:getPhase()
+
+   break not Building
+  Client<-Server:"IncorrectPhase"
+  end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+
+  BuildingBoard->BuildingBoard:placeComponent(x, y, r)
+
+  alt PlacedComponent
+    BuildingBoard->Component: getImgSrc()
+   Client<-Server:"AllowedToPlaceComponent"
+    OtherClients<-Server:AnotherPlayerPlacedComponentMessage(playerName, component, xPlaceComponent, yPlaceComponent)
+    Server->Player:
+    Player->Spaceship:getSpaceship()
+    Spaceship->BuildingBoard:getBuildingBoard()
+    BuildingBoard->BuildingBoard: pickBookedComponent(idx)
+    BuildingBoard->Component:getImgSrc()
+assert "FullHandComponent"
+Client<-Server:"FullHandComponent"
+end
+assert "IllegalIndex"
+Client<-Server:"IllegalIndex"
+end
+assert "EmptyBookedCell"
+Client<-Server:"EmptyBookedCell"
+end
+     Server->Client:"PickedBookedComponent"
+OtherClients<-Server:AnotherPlayerPickedBookedComponentMessage(playerName, idx)
+  else ImpossiblePlaceComponent
+     assert "NotAllowdToPlaceComponent"
+Client<-Server:"NotAllowedToPlaceComponent"
+end
+assert "EmpthandComponent"
+Client<-Server:"EmptyHandComponent"
+end
+  end
+end
+
+else PlaceHandComponentAndShowEventCardDeck
+
+alt placeHandComponentAndPickUpEventCardDeck
+  Client->Server:PlaceHandComponentAndShowEventCardDeckMessage(x, y, r, idx)
+
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+
+
+Server->Game:getLevel()
+break level = 1
+Client<-Server:"CannotPickUpEventCardDeck"
+end
+  Server->Player: player
+  Player->Spaceship: getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard:tryToPlaceComponent(x,y)
+  alt PlacedComponent
+    Server->Game:pickUpEventCardDeck(player, idx)
+BuildingBoard->BuildingBoard:placeComponent(x,y,r)
+    BuildingBoard->Component: getImgSrc()
+   Client<-Server:"AllowedToPlaceComponent"
+    OtherClients<-Server:AnotherPlayerPlacedComponentMessage(playerName, component, xPlaceComponent, yPlaceComponent)
+
+
+    #and?
+
+    Server->Client:PickedUpEventCardDeckMessage(deckIdx, eventCardsDeck)
+OtherClients<-Server:AnotherPlayerPickedUpEventCardDeck(playerName, deckIdx)
+  else ImpossiblePlaceComponent
+    assert "NotAllowdToPlaceComponent"
+Client<-Server:"NotAllowedToPlaceComponent"
+end
+assert "EmpthandComponent"
+Client<-Server:"EmptyHandComponent"
+end
+  assert "EventCardDeckIsAlreadyTaken"
+Client<-Server:"EventCardDeckIsAlreadyTaken"
+end
+end
+space
+  end
+note over Client, Server:Components could be placed in four possible scenarios: when player picks a hidden, visible or booked component, or when he asks to see the event card deck.\nIn all these cases, the component could be placed correctly, or it could be impossible to be placed.\nIf the placement of the hand component is invalid, the Server responds with various error messages.

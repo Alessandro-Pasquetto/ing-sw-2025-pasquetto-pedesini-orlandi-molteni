@@ -1,0 +1,130 @@
+title Pick Component
+
+participant OtherClients
+participant Client
+participant Server
+participant Game
+participant Player
+participant Spaceship
+participant BuildingBoard
+participant Component
+
+
+alt PickHiddenComponent
+
+Client-->Server:"PickHiddenComponent"
+Server->Game:getPhase()
+break not Building
+Client<-Server:"IncorrectPhase"
+end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+Server->Game:getEventDeckAvailableCopy()
+break "PlayerHasDeck"
+Client<-Server:"FullHandEventDeck"
+end
+  Server->Game: PickHiddenComponent(player)
+assert "FullHandComponent"
+Client<-Server:"FullHandComponent"
+end
+assert "EmptyComponentDeck"
+Client<-Server:"EmptyComponentDeck"
+end
+  Game->Game: removeFromDeckComponent(randomPos)
+  Game->Player:
+  Player->Spaceship:getSpaceship()
+Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+BuildingBoard->Component:getImgSrc()\n
+  Server->Client:PickedComponentMessage(pickedComponent)
+
+
+else PickVisibleComponent
+
+  Client-->Server:PickVisibleComponentMessage(idx)
+  
+Server->Game:getPhase()
+  break not Building
+Client<-Server:"IncorrectPhase"
+end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+Server->Game:getEventDeckAvailableCopy()
+break "PlayerHasDeck"
+Client<-Server:"FullHandEventDeck"
+end
+  Server->Game:PickVisibleComponent(componentIdx,player)
+assert "FullHandComponent"
+Client<-Server:"FullHandComponent"
+end
+assert "IllegalIndexComponent"
+Client<-Server:"IllegalIndexComponent"
+end
+  
+  
+  Game->Game: removeFromVisibleDeckComponent(idxVisibleComponent)
+  Game->Player:
+  Player->Spaceship:getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+  BuildingBoard->BuildingBoard: setHandComponent(pickedComponent)
+  BuildingBoard->Component:getImgSrc()
+
+  Server->Client:PickedComponentMessage(pickedComponent)
+
+OtherClients<-Server:AnotherPlayerPickedVisibleComponentMessage(playerName), pickedComponent)
+else PickBookedComponent
+
+  Client-->Server:PickBookedComponentMessage(idx)
+  Server->Game:getPhase()
+break not Building
+Client<-Server:"IncorrectPhase"
+end
+Server->Game:
+Game->Player:getIsReady()
+break false
+Client<-Server:"ActionNotAllowedInReadyState"
+end
+Server->Server:getTimerExpired()
+break true
+Client<-Server:"TimerExpired"
+end
+Server->Game:getEventDeckAvailableCopy()
+break "PlayerHasDeck"
+Client<-Server:"FullHandEventDeck"
+end
+  Server->Player:
+  Player->Spaceship:getSpaceship()
+  Spaceship->BuildingBoard:getBuildingBoard()
+BuildingBoard->BuildingBoard:pickBookedComponent(idx)
+assert "FullHandComponent"
+Client<-Server:"FullHandComponent"
+end
+assert "EmptyBookedCell"
+Client<-Server:"EmptyBookedCell"
+end
+  
+assert "IllegalIndex"
+Client<-Server:"IllegalIndex"
+end
+  Server->Client:"PickedBookedComponent"
+  
+OtherClients<-Server:AnotherPlayerPickedBookedComponentMessage(playerName, idx)
+end
+
+
+space
+note over Client, Server: Player has three choices: pick an hidden component, pick a visible component or pick a booked component.\nIn the first case, the chosen component is removed from component deck and set as hand component.\nIn the second case, the chosen component is removed from visible component deck and set as hand component.\nIn the third case, the chosen component is removed from booked component array and set as hand component.

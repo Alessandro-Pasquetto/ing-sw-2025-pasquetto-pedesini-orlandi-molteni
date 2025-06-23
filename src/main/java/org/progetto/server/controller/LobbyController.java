@@ -160,6 +160,7 @@ public class LobbyController {
      * @param name is the player's username
      * @param levelGame is the game level
      * @param numPlayers is the number of maximum game players
+     * @param sender is the current Sender
      * @return the GameManager of the created Game
      */
     public synchronized static GameManager createGame(String name, int levelGame, int numPlayers, Sender sender) throws IllegalStateException{
