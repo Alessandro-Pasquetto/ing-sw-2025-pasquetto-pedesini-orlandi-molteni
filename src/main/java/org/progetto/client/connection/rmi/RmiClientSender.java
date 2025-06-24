@@ -7,7 +7,6 @@ import org.progetto.client.gui.PageController;
 import org.progetto.server.connection.rmi.VirtualServer;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -572,6 +571,7 @@ public class RmiClientSender implements Sender {
         }
     }
 
+    @Override
     public void disconnected() {
         server = null;
         System.out.println("You have disconnected!");

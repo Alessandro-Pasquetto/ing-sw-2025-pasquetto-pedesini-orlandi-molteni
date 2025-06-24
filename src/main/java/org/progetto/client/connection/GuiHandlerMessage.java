@@ -864,6 +864,7 @@ public class GuiHandlerMessage {
             switch (messageString) {
                 case "Ping":
                     if(GameData.getSender() instanceof SocketClient sc){
+                        sc.setPingIsArrived(true);
                         sc.sendPong();
                     }
                     break;
