@@ -256,21 +256,6 @@ public class GameThread extends Thread {
     // =======================
 
     /**
-     * Pauses the game thread until max num players are ready to continue
-     *
-     * @author Alessandro
-     */
-    public void resetAndWaitPlayersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
-        game.resetReadyPlayers();
-
-        synchronized (gameThreadLock) {
-            while (game.getPlayersSize() < game.getMaxNumPlayers())
-                gameThreadLock.wait();
-        }
-    }
-
-    /**
      * Pauses the game thread until max num players are ready to continue in waiting phase
      *
      * @author Alessandro
@@ -286,6 +271,21 @@ public class GameThread extends Thread {
 
                 gameThreadLock.wait();
             }
+        }
+    }
+
+    /**
+     * Pauses the game thread until max num players are ready to continue
+     *
+     * @author Alessandro
+     */
+    public void resetAndWaitPlayersReady() throws InterruptedException {
+        Game game = gameManager.getGame();
+        game.resetReadyPlayers();
+
+        synchronized (gameThreadLock) {
+            while (game.getPlayersSize() < game.getMaxNumPlayers())
+                gameThreadLock.wait();
         }
     }
 

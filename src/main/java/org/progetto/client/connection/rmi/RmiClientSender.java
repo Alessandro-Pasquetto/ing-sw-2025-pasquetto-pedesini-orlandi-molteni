@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class RmiClientSender implements Sender {
 
@@ -30,7 +32,8 @@ public class RmiClientSender implements Sender {
      */
     @Override
     public void connect(String serverIp, int serverPort) throws MalformedURLException, NotBoundException, RemoteException {
-        server = (VirtualServer) Naming.lookup("//" + serverIp + ":" + serverPort + "/VirtualServer");
+        Registry registry = LocateRegistry.getRegistry(serverIp, serverPort);
+        server = (VirtualServer) registry.lookup("VirtualServer");
 
         server.connect(RmiClientReceiver.getInstance());
 

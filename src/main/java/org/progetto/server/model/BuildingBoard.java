@@ -1314,7 +1314,6 @@ public class BuildingBoard implements Serializable {
      * @author Alessandro
      */
     private void resetIncorrectlyPlacedComponents() {
-
         for(int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
                 Component component = spaceshipMatrix[y][x];
