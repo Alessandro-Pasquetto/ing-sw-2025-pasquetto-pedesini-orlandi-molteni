@@ -2,6 +2,7 @@ package org.progetto.client.connection;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.gui.Alerts;
 import org.progetto.client.gui.DragAndDrop;
 import org.progetto.client.model.BuildingData;
@@ -861,6 +862,11 @@ public class GuiHandlerMessage {
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
+                case "Ping":
+                    if(GameData.getSender() instanceof SocketClient sc){
+                        sc.sendPong();
+                    }
+                    break;
 
                 case "FailedToReconnect":
                     GameData.clearSaveFile();

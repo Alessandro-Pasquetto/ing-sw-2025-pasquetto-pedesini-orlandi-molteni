@@ -10,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 import java.io.UTFDataFormatException;
 
-
 public class SocketListener extends Thread {
 
     private final ClientHandler clientHandler;
@@ -45,11 +44,17 @@ public class SocketListener extends Thread {
                 }
             }
         } catch (IOException e) {
+
+            System.err.println("Client unreachable");
+
+            /*
             // Socket disconnection
             if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
                 clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
             else
                 LobbyController.removeSender(clientHandler.getSocketWriter());
+
+             */
         }
     }
 
@@ -114,6 +119,10 @@ public class SocketListener extends Thread {
 
         else if (messageObj instanceof String messageString) {
             switch (messageString){
+                case "Pong":
+                    clientHandler.getSocketWriter().setPongReceived();
+                    break;
+
                 case "UpdateGameList":
                     LobbyController.showWaitingGames(clientHandler.getSocketWriter());
                     break;
@@ -135,6 +144,11 @@ public class SocketListener extends Thread {
         SocketWriter socketWriter = clientHandler.getSocketWriter();
         GameManager gameManager = clientHandler.getGameManager();
         Player player = clientHandler.getPlayer();
+
+        if(messageObj instanceof String messageString && messageString.equals("Pong")){
+            clientHandler.getSocketWriter().setPongReceived();
+            return;
+        }
 
         if(messageObj instanceof String messageString && messageString.equals("LeaveGame")){
             gameManager.leaveGame(player, socketWriter);

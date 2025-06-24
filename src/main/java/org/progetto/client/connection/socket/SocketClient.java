@@ -65,6 +65,10 @@ public class SocketClient implements Sender {
         }
     }
 
+    public void sendPong(){
+        SocketWriter.sendMessage("Pong");
+    }
+
     @Override
     public void updateGameList() {
         SocketWriter.sendMessage("UpdateGameList");

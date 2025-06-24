@@ -2,6 +2,7 @@ package org.progetto.client.connection;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
@@ -552,6 +553,12 @@ public class TuiHandlerMessage {
         else if (messageObj instanceof String messageString) {
 
             switch (messageString) {
+                case "Ping":
+                    if(GameData.getSender() instanceof SocketClient sc){
+                        sc.sendPong();
+                    }
+                    break;
+
                 case "UpdateGameList":
                     break;
 

@@ -6,6 +6,7 @@ import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
+import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
 import java.rmi.RemoteException;
@@ -83,12 +84,15 @@ public class LobbyController {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            if (sender instanceof VirtualClient vc) {
+            if(sender instanceof VirtualClient virtualClient){
                 try{
-                    vc.ping();
+                    virtualClient.ping();
                 } catch (RemoteException e) {
                     removeSender(sender);
                 }
+            }
+            else if (sender instanceof SocketWriter socketWriter) {
+                socketWriter.ping(() -> removeSender(sender), "Lobby");
             }
         }
     }

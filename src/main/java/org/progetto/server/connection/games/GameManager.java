@@ -8,6 +8,7 @@ import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
@@ -206,6 +207,9 @@ public class GameManager {
                 } catch (RemoteException e) {
                     disconnectPlayer(getPlayerBySender(vc));
                 }
+            }
+            else if (sender instanceof SocketWriter sw) {
+                sw.ping(() -> disconnectPlayer(getPlayerBySender(sw)), "Game");
             }
         }
     }
