@@ -7,9 +7,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Handles the invocation of methods on the server
- */
+
 public class SocketClient implements Sender {
 
     // =======================
@@ -28,6 +26,10 @@ public class SocketClient implements Sender {
 
     /**
      * Method to connect to the socket server
+     *
+     * @author Alessandro
+     * @param serverIp the IP address of the server
+     * @param serverPort the port number of the server
      */
     @Override
     public void connect(String serverIp, int serverPort) throws IOException {
@@ -45,6 +47,10 @@ public class SocketClient implements Sender {
 
     /**
      * Check if the port is open for a socket communication
+     *
+     * @author Alessandro
+     * @param serverIp the IP address of the server
+     * @param serverPort the port number of the server
      */
     public boolean isSocketServerReachable(String serverIp, int serverPort) {
         try (Socket socket = new Socket()) {

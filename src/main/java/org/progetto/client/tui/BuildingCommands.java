@@ -10,9 +10,7 @@ import org.progetto.server.model.components.ComponentType;
 
 import java.util.ArrayList;
 
-/**
- * Contains commands relating to the building phase
- */
+
 public class BuildingCommands {
 
     // =======================

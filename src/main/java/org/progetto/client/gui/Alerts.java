@@ -30,7 +30,6 @@ public class Alerts {
     // OTHER METHODS
     // =======================
 
-
     /**
      * Creates and displays a visual warnings
      *

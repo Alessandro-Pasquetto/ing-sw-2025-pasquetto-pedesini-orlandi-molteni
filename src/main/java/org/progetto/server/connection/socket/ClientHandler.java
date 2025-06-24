@@ -5,9 +5,7 @@ import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Player;
 import java.io.*;
 
-/**
- * Stores socket client data
- */
+
 public class ClientHandler {
 
     // =======================

@@ -9,9 +9,7 @@ import org.progetto.server.model.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-/**
- * Handles model's methods invocation made by RMI clients
- */
+
 public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer {
 
     // =======================
@@ -28,6 +26,9 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
 
     /**
      * Add the virtualClient to the list of rmiClients in the lobby
+     *
+     * @author Alessandro
+     * @param rmiClient is the client that wants to connect
      */
     @Override
     public void connect(VirtualClient rmiClient) throws RemoteException {

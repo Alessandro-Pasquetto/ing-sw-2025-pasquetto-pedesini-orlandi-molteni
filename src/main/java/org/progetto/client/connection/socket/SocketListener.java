@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.SocketException;
 
-/**
- * Socket message listener for messages coming from server
- */
+
 public class SocketListener extends Thread {
 
     // =======================
@@ -55,13 +53,23 @@ public class SocketListener extends Thread {
         }
     }
 
+    /**
+     * Sets the isHandling attribute to true or false
+     *
+     * @author Alessandro
+     * @param isHandling true if a message is being handled, false otherwise
+     */
     public static void setIsHandling(boolean isHandling) {
         SocketListener.isHandling = isHandling;
     }
 
-    // It allows executing an handleMessage one at a time, except when a thread goes into wait inside the handleMessage method
+    /**
+     * It allows executing an handleMessage one at a time, except when a thread goes into wait inside the handleMessage method
+     *
+     * @author Alessandro
+     * @param messageObj the message object to be processed
+     */
     public static void messageDispatcher(Object messageObj) {
-
         new Thread(() -> {
             waitHandler();
             processMessage(messageObj);
@@ -70,6 +78,11 @@ public class SocketListener extends Thread {
         }).start();
     }
 
+    /**
+     * Waits for the handler to be available
+     *
+     * @author Alessandro
+     */
     private static void waitHandler(){
         synchronized (handlerMessageLock) {
             try {
@@ -83,12 +96,23 @@ public class SocketListener extends Thread {
         }
     }
 
+    /**
+     * Notifies the handler that a message has been processed
+     *
+     * @author Alessandro
+     */
     private static void notifyHandler() {
         synchronized (handlerMessageLock) {
             handlerMessageLock.notify();
         }
     }
 
+    /**
+     * Processes the message based on the UI type
+     *
+     * @author Alessandro
+     * @param objMessage the message object to be processed
+     */
     private static void processMessage(Object objMessage) {
 
         if (GameData.getUIType().equals("GUI")) {
@@ -100,6 +124,11 @@ public class SocketListener extends Thread {
         }
     }
 
+    /**
+     * Stops the listener thread and closes the input stream
+     *
+     * @author Alessandro
+     */
     public static void stopListener() {
         running = false;
         try {
@@ -110,6 +139,11 @@ public class SocketListener extends Thread {
         }
     }
 
+    /**
+     * Closes the socket listener and stops the writer thread
+     *
+     * @author Alessandro
+     */
     public void close() {
         SocketListener.stopListener();
         SocketWriter.stopWriter();

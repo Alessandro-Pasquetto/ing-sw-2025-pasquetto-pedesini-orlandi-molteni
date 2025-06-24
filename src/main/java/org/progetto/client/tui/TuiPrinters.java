@@ -11,11 +11,6 @@ import org.progetto.server.model.events.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Contains all the printing methods used by the TUI
- *
- * @author Lorenzo,Gabriele
- */
 
 public class TuiPrinters {
 
@@ -42,6 +37,12 @@ public class TuiPrinters {
     // LOBBY
     // =======================
 
+    /**
+     * Prints the list of waiting games in a formatted table
+     *
+     * @author Gabriele
+     * @param waitingGameInfoMessages List of WaitingGameInfoMessage objects containing game information
+     */
     public static void printWaitingGames(ArrayList<WaitingGameInfoMessage> waitingGameInfoMessages) {
         int idWidth = 5;
         int levelWidth = 5;
@@ -91,8 +92,16 @@ public class TuiPrinters {
     // PLAYER
     // =======================
 
+    /**
+     * Prints the player's stats in a formatted table
+     *
+     * @author Gabriele
+     * @param name Player's name
+     * @param credits Player's credits
+     * @param position Player's position in the game
+     * @param hasLeft Indicates if the player has left the game
+     */
     public static void printPlayerStats(String name, int credits, int position, boolean hasLeft) {
-
         System.out.println("\uD83E\uDDCD Your Stats:");
         System.out.println();
 
@@ -102,23 +111,19 @@ public class TuiPrinters {
         System.out.printf("│ Has left : %s%n", hasLeft ? "YES" : "NO");
     }
 
-    public static void printPlayers(ArrayList<Player> players) {
-
-        System.out.println("\uD83E\uDDCD Active players:");
-        for(Player player: players) {
-            System.out.printf("│ Name     : %s%n", player.getName());
-        }
-    }
-
-
-
     // =======================
     // COMPONENTS
     // =======================
 
+    /**
+     * Draws a box with a specific value using colored squares
+     *
+     * @author Gabriele
+     * @param box The Box object to draw
+     * @return A string representation of the box with color coding
+     */
     public static String drawBox(Box box) {
-
-        if(box == null)
+        if (box == null)
             return " ";
 
         return switch (box.getValue()) {
@@ -130,6 +135,13 @@ public class TuiPrinters {
         };
     }
 
+    /**
+     * Abbreviates the component type to a single character or symbol
+     *
+     * @author Gabriele
+     * @param type The ComponentType to abbreviate
+     * @return A string representing the abbreviated component type
+     */
     public static String abbreviateComponentType(ComponentType type) {
         return switch (type) {
             case CANNON, DOUBLE_CANNON -> "C";
@@ -146,8 +158,15 @@ public class TuiPrinters {
         };
     }
 
+    /**
+     * Draws a component
+     *
+     * @author Gabriele
+     * @param component The Component object to draw
+     * @param playerColor The player's color (used for housing units)
+     * @return An array of strings representing the drawn component
+     */
     public static String[] drawComponent(Component component, int playerColor) {
-
         String[] lines = new String[5];
 
         if (component != null) {
@@ -547,8 +566,13 @@ public class TuiPrinters {
         return lines;
     }
 
+    /**
+     * Prints a single component in the console
+     *
+     * @author Gabriele
+     * @param component The Component object to print
+     */
     public static void printComponent(Component component) {
-
         String[] lines = TuiPrinters.drawComponent(component, GameData.getColor());
 
         for (int row = 0; row < 5; row++) {
@@ -557,6 +581,12 @@ public class TuiPrinters {
         }
     }
 
+    /**
+     * Prints the visible components
+     *
+     * @author Gabriele
+     * @param visibleComponents The list of visible components to print
+     */
     public static void printVisibleComponents(ArrayList<Component> visibleComponents) {
 
         System.out.println("Current Visible Components:");
@@ -597,8 +627,13 @@ public class TuiPrinters {
         }
     }
 
+    /**
+     * Prints the booked components
+     *
+     * @author Gabriele
+     * @param bookedComponents The list of booked components to print
+     */
     public static void printBookedComponents(Component[] bookedComponents) {
-
         System.out.println("Current Booked Components:");
         System.out.println();
 
@@ -623,6 +658,14 @@ public class TuiPrinters {
         System.out.println();
     }
 
+    /**
+     * Prints the destroyed component
+     *
+     * @author Gabriele
+     * @param player The name of the player who lost the component, or null if it's a general loss
+     * @param x The x coordinate of the component
+     * @param y The y coordinate of the component
+     */
     public static void printDestroyedComponent(String player, int x, int y){
         int levelGame = GameData.getLevelGame();
 
@@ -644,6 +687,14 @@ public class TuiPrinters {
     // SPACESHIP
     // =======================
 
+    /**
+     * Prints the spaceship of a player
+     *
+     * @author Gabriele
+     * @param owner The name of the owner of the spaceship
+     * @param spaceship The Spaceship object to print
+     * @param playerColor The color of the player (used for housing units)
+     */
     public static void printSpaceship(String owner, Spaceship spaceship, int playerColor) {
 
         if (GameData.getNamePlayer().equals(owner)) {
@@ -705,8 +756,13 @@ public class TuiPrinters {
         System.out.println();
     }
 
+    /**
+     * Prints the stats of a spaceship
+     *
+     * @author Gabriele
+     * @param spaceship The Spaceship object to print stats for
+     */
     public static void printSpaceshipStats(Spaceship spaceship) {
-
         System.out.println("🚀 Your Spaceship Stats:");
 
         System.out.println("\nAttributes");
@@ -739,7 +795,13 @@ public class TuiPrinters {
     // =======================
     // EVENT CARDS
     // =======================
-    
+
+    /**
+     * Prints an event card
+     *
+     * @author Gabriele
+     * @param card The EventCard object to print
+     */
     public static void printEventCard(EventCard card) {
         int width = 50;
 
@@ -877,6 +939,12 @@ public class TuiPrinters {
         System.out.println(bottomBorder);
     }
 
+    /**
+     * Prints a line in the event card format
+     *
+     * @author Gabriele
+     * @param text The text to print in the event card line
+     */
     private static void printEventCardLine(String text) {
         int width = 48;
 
@@ -889,6 +957,12 @@ public class TuiPrinters {
         System.out.printf("│ %-"+totalWidth+"s │%n", text);
     }
 
+    /**
+     * Prints the event card deck
+     *
+     * @author Gabriele
+     * @param eventCardDeck The ArrayList of EventCard objects to print
+     */
     public static void printEventCardDeck(ArrayList<EventCard> eventCardDeck) {
 
         System.out.println("Picked Up Event Card Deck:");
@@ -899,8 +973,13 @@ public class TuiPrinters {
         }
     }
 
+    /**
+     * Prints the incoming projectile message
+     *
+     * @author Gabriele
+     * @param message The IncomingProjectileMessage object to print
+     */
     public static void printIncomingProjectile(IncomingProjectileMessage message){
-
         int from = message.getProjectile().getFrom();
         String[] directions = {"TOP", "RIGHT", "BOTTOM", "LEFT"};
         String direction = (from >= 0 && from < directions.length) ? directions[from] : "unknown";
@@ -914,8 +993,14 @@ public class TuiPrinters {
     // TRACK
     // =======================
 
+    /**
+     * Prints the current track of players
+     *
+     * @author Gabriele
+     * @param playersInTrack The list of players currently in the track
+     * @param track The array representing the track
+     */
     public static void printTrack(ArrayList<Player> playersInTrack, Player[] track) {
-
         System.out.println("♟\uFE0F Current Track:\n");
 
         if (!playersInTrack.isEmpty()) {
@@ -947,6 +1032,12 @@ public class TuiPrinters {
     // SCOREBOARD
     // =======================
 
+    /**
+     * Prints the scoreboard of players
+     *
+     * @author Gabriele
+     * @param scoreBoard The ArrayList of Player objects representing the scoreboard
+     */
     public static void printScoreBoard(ArrayList<Player> scoreBoard) {
         int nameWidth = 15;
         int creditWidth = 10;

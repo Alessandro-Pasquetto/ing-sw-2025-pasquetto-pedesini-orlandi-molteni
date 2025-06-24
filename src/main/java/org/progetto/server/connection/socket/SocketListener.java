@@ -10,9 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
 import java.io.UTFDataFormatException;
 
-/**
- * Socket message listener for messages coming from a single client
- */
+
 public class SocketListener extends Thread {
 
     private final ClientHandler clientHandler;
@@ -27,6 +25,8 @@ public class SocketListener extends Thread {
 
     /**
      * Method that receives the messages sent by the socket clients
+     *
+     * @author Alessandro
      */
     @Override
     public void run() {
@@ -59,6 +59,9 @@ public class SocketListener extends Thread {
 
     /**
      * Method that handle lobby requests
+     *
+     * @author Alessandro
+     * @param messageObj the message object received from the client
      */
     private synchronized void handlerLobbyMessages(Object messageObj) {
 
@@ -124,6 +127,9 @@ public class SocketListener extends Thread {
 
     /**
      * Method that handle game requests
+     *
+     * @author Alessandro, Gabriele
+     * @param messageObj the message object received from the client
      */
     private void handlerGameMessages(Object messageObj) {
         SocketWriter socketWriter = clientHandler.getSocketWriter();

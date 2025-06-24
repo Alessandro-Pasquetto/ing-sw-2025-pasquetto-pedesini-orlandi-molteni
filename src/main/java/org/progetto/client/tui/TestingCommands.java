@@ -3,9 +3,7 @@ package org.progetto.client.tui;
 import org.progetto.client.connection.Sender;
 import org.progetto.client.model.GameData;
 
-/**
- * This class contains all the methods needed to test the TUI
- */
+
 public class TestingCommands {
 
     // =======================

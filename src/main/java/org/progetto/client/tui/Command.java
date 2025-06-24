@@ -1,10 +1,6 @@
 package org.progetto.client.tui;
 
-/**
- * Class to describe the command object
- *
- * @author Gariele
- */
+
 public class Command {
 
     // =======================

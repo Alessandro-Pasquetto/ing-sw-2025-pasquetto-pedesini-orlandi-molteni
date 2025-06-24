@@ -4,9 +4,7 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Socket message writer that sends messages to server
- */
+
 public class SocketWriter extends Thread {
 
     // =======================
@@ -46,6 +44,11 @@ public class SocketWriter extends Thread {
         }
     }
 
+    /**
+     * Stops the writer thread and closes the output stream
+     *
+     * @author Alessandro
+     */
     public static void stopWriter() {
         running = false;
         try {
@@ -57,6 +60,12 @@ public class SocketWriter extends Thread {
         }
     }
 
+    /**
+     * Sends a message object to the output stream
+     *
+     * @author Alessandro
+     * @param messageObj the message object to send
+     */
     public static void sendMessage(Object messageObj) {
         try {
             messageQueue.put(messageObj);

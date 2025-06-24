@@ -4,7 +4,7 @@ import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.gui.GuiApplication;
 import org.progetto.client.model.GameData;
 
-public class MainClientGui{
+public class MainClientGui {
 
     public static void main(String[] args) {
         String clientId;

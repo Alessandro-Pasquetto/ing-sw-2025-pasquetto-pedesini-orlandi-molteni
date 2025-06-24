@@ -30,7 +30,6 @@ public class DragAndDrop {
      * @param event is the MouseEvent to read for the pick
      */
     private static void onMousePressedFunctionComponent(ImageView componentImage, MouseEvent event){
-
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
@@ -83,7 +82,6 @@ public class DragAndDrop {
      * @param event is the MouseEvent to read for the drag
      */
     private static void onMouseDraggedFunctionComponent(ImageView componentView, MouseEvent event){
-
         Boolean startedWithPrimary = (Boolean) componentView.getProperties().get("dragStartedWithPrimary");
         if (startedWithPrimary == null || !startedWithPrimary)
             return;
@@ -109,7 +107,6 @@ public class DragAndDrop {
      * @param event is the MouseEvent to read for the release
      */
     private static void onMouseReleasedFunctionComponent(ImageView componentImageView, MouseEvent event){
-
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
@@ -202,7 +199,7 @@ public class DragAndDrop {
         }
 
         // If the drop was inside a booking cell or the booked component drop is not valid
-        if(BuildingData.getYHandComponent() == -1){
+        if (BuildingData.getYHandComponent() == -1) {
             componentImageView.setRotate(componentImageView.getRotate() - 90 * BuildingData.getRHandComponent());
 
             GameData.getSender().bookComponent(BuildingData.getXHandComponent());
@@ -403,7 +400,6 @@ public class DragAndDrop {
      * @param targetId is the FXML id of the final Object
      */
     private static void onMouseReleasedFunctionItems(ImageView itemImage, MouseEvent event, String targetId){
-
         if (event.getButton() != MouseButton.PRIMARY)
             return;
 
@@ -568,7 +564,6 @@ public class DragAndDrop {
      * @param targetSlotId the FXML id of the slot container
      */
     public static void enableDragAndDropItem(ImageView itemImage, String targetSlotId) {
-
         // Make sure the image responds to mouse events
         itemImage.setPickOnBounds(true);
 

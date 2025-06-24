@@ -3,9 +3,7 @@ package org.progetto.server.connection.socket;
 import java.io.*;
 import java.net.*;
 
-/**
- * Handles socket clients connection and messages
- */
+
 public class SocketServer extends Thread {
 
     public SocketServer() {

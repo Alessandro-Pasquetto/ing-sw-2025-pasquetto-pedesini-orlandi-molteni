@@ -3,9 +3,7 @@ package org.progetto.server.connection.rmi;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-/**
- * Handles RMI clients connection and messages
- */
+
 public class RmiServer extends Thread {
 
     public RmiServer() {

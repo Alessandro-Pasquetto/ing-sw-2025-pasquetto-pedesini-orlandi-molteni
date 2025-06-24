@@ -9,9 +9,7 @@ import org.progetto.client.model.GameData;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 
-/**
- * Contains commands relating to the lobby phase
- */
+
 public class ConnectionsCommands {
 
     // =======================
@@ -68,51 +66,5 @@ public class ConnectionsCommands {
         } catch (NumberFormatException e){
             System.err.println("You must insert a number!");
         }
-    }
-
-    /**
-     * Allows the users to connect and automatically create a game
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     * @throws InterruptedException if the connection will be interrupted
-     */
-    public static void autoCreate(String[] commandParts) throws InterruptedException {
-
-//        if(GameData.getSender() instanceof RmiClientSender)
-//            connect(new String[]{"connect", "127.0.0.1", "1099"});
-//        else if (GameData.getSender() instanceof SocketClient)
-//            connect(new String[]{"connect", "127.0.0.1", "8080"});
-
-        Thread.sleep(500);
-
-        createGame(new String[]{"createGame", "player_1", "2", "2"});
-
-        Thread.sleep(500);
-
-        GameCommands.readyPlayer(null);
-    }
-
-    /**
-     * Allows the users to connect and automatically create a game
-     *
-     * @author Lorenzo
-     * @param commandParts are segments of the command
-     * @throws InterruptedException if the connection will be interrupted
-     */
-    public static void autoJoin(String[] commandParts) throws InterruptedException {
-
-//        if(GameData.getSender() instanceof RmiClientSender)
-//            connect(new String[]{"connect", "127.0.0.1", "1099"});
-//        else if (GameData.getSender() instanceof SocketClient)
-//            connect(new String[]{"connect", "127.0.0.1", "8080"});
-
-        Thread.sleep(500);
-
-        joinGame(new String[]{"joinGame", commandParts[1], "player_" + Long.toString((long)System.currentTimeMillis()/10).substring(10, 12)});
-
-        Thread.sleep(500);
-
-        GameCommands.readyPlayer(null);
     }
 }

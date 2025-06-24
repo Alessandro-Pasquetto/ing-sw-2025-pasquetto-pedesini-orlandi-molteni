@@ -9,9 +9,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Client data useful to track game evolution
- */
+
 public class GameData {
 
     // =======================

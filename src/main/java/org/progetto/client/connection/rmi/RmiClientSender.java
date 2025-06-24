@@ -25,6 +25,8 @@ public class RmiClientSender implements Sender {
 
     /**
      * Method to connect to the RMI server
+     *
+     * @author Alessandro
      */
     @Override
     public void connect(String serverIp, int serverPort) throws MalformedURLException, NotBoundException, RemoteException {
@@ -37,6 +39,11 @@ public class RmiClientSender implements Sender {
         System.out.println("Connected to the RMIServer");
     }
 
+    /**
+     * Starts a thread that pings the RMI server at regular intervals to check if it is still reachable
+     *
+     * @author Alessandro
+     */
     private void startRmiServerPinger(){
         Thread pingThread = new Thread(() -> {
             while (true) {

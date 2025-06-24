@@ -24,7 +24,7 @@ public class EventCommands {
      */
     public static void responseHowManyDoubleCannons(int required, int max, float shootingPower) {
 
-        while(true){
+        while (true) {
             System.out.println("How many double cannons do you want to activate?");
             if(required == 0)
                 System.out.println("You have " + max + " double cannons");

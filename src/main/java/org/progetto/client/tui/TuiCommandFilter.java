@@ -63,8 +63,7 @@ public class TuiCommandFilter {
      * @author Alessandro
      */
     public static void setProtocol(){
-
-        while(true){
+        while (true) {
             System.out.println();
             System.out.println("Select Socket/Rmi:");
 
@@ -83,7 +82,7 @@ public class TuiCommandFilter {
             }
         }
 
-        while(true){
+        while (true) {
             System.out.println();
             System.out.println("What ip do you want to connect to?");
 
@@ -99,10 +98,10 @@ public class TuiCommandFilter {
 
             int serverPort;
 
-            try{
+            try {
                 serverPort = Integer.parseInt(scanner.nextLine().trim());
 
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e){
                 System.err.println("Port must be a number!");
                 continue;
             }
@@ -160,7 +159,7 @@ public class TuiCommandFilter {
     /**
      * Takes the first command in the queue
      *
-     * @autrhor Alessandro
+     * @author Alessandro
      */
     public static void messageDispatcher() {
         new Thread(() -> {
@@ -338,20 +337,6 @@ public class TuiCommandFilter {
                     case "JOINGAME":
                         if (isValidCommand(commandParts.length, 3))
                             ConnectionsCommands.joinGame(commandParts);
-                        else
-                            expectedFormat(commandType);
-                        break;
-
-                    case "AUTOCREATE":
-                        if (isValidCommand(commandParts.length, 1))
-                            ConnectionsCommands.autoCreate(commandParts);
-                        else
-                            expectedFormat(commandType);
-                        break;
-
-                    case "AUTOJOIN":
-                        if (isValidCommand(commandParts.length, 2))
-                            ConnectionsCommands.autoJoin(commandParts);
                         else
                             expectedFormat(commandType);
                         break;

@@ -4,9 +4,7 @@ import org.progetto.server.connection.Sender;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-/**
- * Socket message writer that sends messages to a single client
- */
+
 public class SocketWriter implements Sender {
 
     private final ObjectOutputStream out;

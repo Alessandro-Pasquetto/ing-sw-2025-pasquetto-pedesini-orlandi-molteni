@@ -18,6 +18,13 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         super();
     }
 
+    /**
+     * Returns the single instance of RmiClientReceiver
+     *
+     * @author Alessandro
+     * @return the single instance of RmiClientReceiver
+     * @throws RemoteException if there is an error during remote method call
+     */
     public static RmiClientReceiver getInstance() throws RemoteException {
         if (instance == null)
             instance = new RmiClientReceiver();
@@ -25,10 +32,22 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         return instance;
     }
 
+    /**
+     * Sets the handling state of the message dispatcher
+     *
+     * @author Alessandro
+     * @param isHandling true if a message is being handled, false otherwise
+     */
     public static void setIsHandling(boolean isHandling) {
         RmiClientReceiver.isHandling = isHandling;
     }
 
+    /**
+     * Dispatches the message to the appropriate handler
+     *
+     * @author Alessandro
+     * @param messageObj the message object to be processed
+     */
     private static void messageDispatcher(Object messageObj) {
 
         new Thread(() -> {
@@ -39,6 +58,11 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         }).start();
     }
 
+    /**
+     * Waits for the handler to be available before processing the message
+     *
+     * @author Alessandro
+     */
     private static void waitHandler(){
         synchronized (handlerMessageLock) {
             try {
@@ -52,12 +76,23 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
         }
     }
 
+    /**
+     * Notifies the handler that it can process the next message
+     *
+     * @author Alessandro
+     */
     private static void notifyHandler() {
         synchronized (handlerMessageLock) {
             handlerMessageLock.notify();
         }
     }
 
+    /**
+     * Processes the message based on the UI type
+     *
+     * @author Alessandro
+     * @param objMessage the message object to be processed
+     */
     private static void processMessage(Object objMessage) {
         if (GameData.getUIType().equals("GUI")) {
             Platform.runLater(() -> {
@@ -70,6 +105,8 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
 
     /**
      * Method called by the server to notify changes to the client
+     *
+     * @author Alessandro
      */
     @Override
     public synchronized void sendMessage(Object objMessage) throws RemoteException {

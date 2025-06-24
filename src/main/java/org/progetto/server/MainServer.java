@@ -11,7 +11,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 public class MainServer {
 
     public static void main(String[] args) {
-
         SocketServer socketServer = new SocketServer();
         RmiServer rmiServer = new RmiServer();
 

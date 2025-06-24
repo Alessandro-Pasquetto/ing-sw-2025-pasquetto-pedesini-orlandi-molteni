@@ -42,9 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Handles messages coming from server
- */
+
 public class GuiHandlerMessage {
 
     /**
@@ -53,14 +51,12 @@ public class GuiHandlerMessage {
      * @param messageObj the message that has arrived
      */
     public static void handleMessage(Object messageObj) {
-
         if (messageObj instanceof WaitingGamesMessage waitingGamesMessage) {
             ArrayList<WaitingGameInfoMessage> gamesInfo = waitingGamesMessage.getWaitingGames();
             PageController.getChooseGameView().generateGameRecordList(gamesInfo);
         }
 
         else if (messageObj instanceof GameInfoMessage initGameMessage) {
-
             System.out.println("You joined a game");
 
             int gameId = initGameMessage.getIdGame();
@@ -82,7 +78,6 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof ReconnectionGameData reconnectionGameData) {
             try {
-
                 Sender sender = GameData.getSender();
 
                 int levelGame = reconnectionGameData.getLevelGame();
@@ -220,7 +215,6 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof UpdateSpaceshipMessage updateSpaceshipMessage) {
-
             if (updateSpaceshipMessage.getOwner().getName().equals(GameData.getNamePlayer())){
                 GameData.setSpaceship(updateSpaceshipMessage.getSpaceship());
                 GameData.setCredits(updateSpaceshipMessage.getOwner().getCredits());
@@ -295,7 +289,6 @@ public class GuiHandlerMessage {
         }
 
         else if (messageObj instanceof UpdateOtherTravelersShipMessage updateOtherTravelersShipMessage) {
-
             ArrayList<Player> travelers = updateOtherTravelersShipMessage.getTravelers();
             travelers.removeIf(player -> player.getName().equals(GameData.getNamePlayer()));
 

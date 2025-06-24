@@ -11,6 +11,8 @@ public class MainClient {
     private static void startGame() {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println();
+
         System.out.println(" ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗ ");
         System.out.println("██╔════╝ ██╔══██╗██║     ██╔══██╗╚██╗██╔╝╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗");
         System.out.println("██║  ███╗███████║██║     ███████║ ╚███╔╝  ╚████╔╝        ██║   ██████╔╝██║   ██║██║     █████╔╝ █████╗  ██████╔╝");
@@ -22,22 +24,22 @@ public class MainClient {
 
         System.out.println("Select TUI/GUI:");
 
-        while(true){
+        while (true) {
             String command = scanner.nextLine().toUpperCase();
 
-            if(command.equals("TUI")){
+            if (command.equals("TUI")) {
                 GameData.setUIType(command);
                 TuiCommandFilter.setProtocol();
                 TuiCommandFilter.listenerCommand();
                 break;
 
-            }else if(command.equals("GUI")){
+            } else if (command.equals("GUI")) {
                 GameData.setUIType(command);
 
                 GuiApplication.main();
                 break;
 
-            }else
+            } else
                 System.err.println("Command not found");
         }
     }

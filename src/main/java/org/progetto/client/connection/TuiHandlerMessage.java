@@ -39,9 +39,7 @@ import org.progetto.server.model.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Handles messages coming from server
- */
+
 public class TuiHandlerMessage {
 
     // =======================
@@ -66,7 +64,6 @@ public class TuiHandlerMessage {
      * @param messageObj the message that has arrived
      */
     public static void handleMessage(Object messageObj) {
-
         if (messageObj instanceof WaitingGamesMessage waitingGamesMessage) {
             TuiPrinters.printWaitingGames(waitingGamesMessage.getWaitingGames());
         }

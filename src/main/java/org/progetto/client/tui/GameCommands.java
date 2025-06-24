@@ -13,9 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Contains commands relating to the game execution
- */
+
 public class GameCommands {
 
     // =======================
