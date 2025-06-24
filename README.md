@@ -53,10 +53,10 @@ The final version includes:
 ## Test cases
 The tests were made for the Model and Controller package.
 
-| Package    | Methods (%)   | Lines (%)       | Branch (%)      |
+| Package    | Methods (%)   |    Lines (%)    |   Branch (%)    |
 |:-----------|:--------------|:---------------:|:---------------:|
 | Model      | 99% (314/316) | 95% (1560/1634) | 78% (1081/1382) |
-| Controller | 65% (169/257) | 56% (1577/2815) | 42% (667/1582)  |
+| Controller | 78% (202/256) | 74% (2087/2809) | 56% (900/1582)  |
 
 
 ## Compile and Run

@@ -23,11 +23,11 @@ class PiratesControllerTest {
 
     @Test
     void piratesControllerTest() throws RemoteException, InterruptedException {
-        GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager gameManager = new GameManager(0, 4, 1);
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
         projectiles.add(new Projectile(ProjectileSize.BIG, 3));
-        projectiles.add(new Projectile(ProjectileSize.BIG, 2));
+        projectiles.add(new Projectile(ProjectileSize.SMALL, 2));
         Pirates pirates = new Pirates(CardType.PIRATES, 2, "imgPath", 5, -3, 3, projectiles);
         gameManager.getGame().setActiveEventCard(pirates);
 
@@ -37,10 +37,10 @@ class PiratesControllerTest {
             @Override
             public int rollDice(){
                 int result = switch(count){
-                    case 0 -> 2;
-                    case 1 -> 1;
-                    case 2 -> 8;
-                    default -> 2;
+                    case 0 -> 6;
+                    case 1 -> 6;
+                    case 2 -> 10;
+                    default -> 8;
                 };
 
                 count++;
@@ -49,10 +49,12 @@ class PiratesControllerTest {
         };
         Player p2 = new Player("alice");
         Player p3 = new Player("alessio");
+        Player p4 = new Player("valeria");
 
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
         gameManager.getGame().addPlayer(p3);
+        gameManager.getGame().addPlayer(p4);
 
         gameManager.getGame().initPlayersSpaceship();
 
@@ -66,10 +68,12 @@ class PiratesControllerTest {
         gameManager.addSender(p1, sender);
         gameManager.addSender(p2, sender);
         gameManager.addSender(p3, sender);
+        gameManager.addSender(p4, sender);
 
         gameManager.getGame().getBoard().addTraveler(p1);
-        gameManager.getGame().getBoard().addTraveler(p2);
         gameManager.getGame().getBoard().addTraveler(p3);
+        gameManager.getGame().getBoard().addTraveler(p2);
+        gameManager.getGame().getBoard().addTraveler(p4);
 
         BuildingBoard bb1 = p1.getSpaceship().getBuildingBoard();
         bb1.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
@@ -101,18 +105,40 @@ class PiratesControllerTest {
         p2.getSpaceship().addBatteriesCount(2);
 
         BatteryStorage batteryStorage = new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "img", 2);
-        BuildingBoard bb3 = p3.getSpaceship().getBuildingBoard();
+        BuildingBoard bb3 = p4.getSpaceship().getBuildingBoard();
         bb3.setHandComponent(batteryStorage);
         bb3.placeComponent(2, 1, 0);
 
-        batteryStorage.incrementItemsCount(p3.getSpaceship(), 2);
-        p3.getSpaceship().addBatteriesCount(2);
+        batteryStorage.incrementItemsCount(p4.getSpaceship(), 2);
+        p4.getSpaceship().addBatteriesCount(2);
+
+        BuildingBoard bb4 = p3.getSpaceship().getBuildingBoard();
+        bb4.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
+        bb4.placeComponent(2, 1, 0);
+
+        bb4.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 1, 1, 1}, "imgPath"));
+        bb4.placeComponent(1, 1, 1);
+
+        bb4.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 2));
+        bb4.placeComponent(3, 2, 1);
+
+        bb4.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 1, 1}, "imgPath", 3));
+        bb4.placeComponent(2, 3, 1);
+
+        bb4.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 1, 1}, "imgPath"));
+        bb4.placeComponent(1, 2, 2);
+
+        bb4.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 0}, "imgPath"));
+        bb4.placeComponent(3, 3, 0);
+
+        bb4.initSpaceshipParams();
 
         p1.getSpaceship().addNormalShootingPower(3);
         p2.getSpaceship().addNormalShootingPower(5);
         p2.getSpaceship().addFullDoubleCannonCount(1);
-        p3.getSpaceship().addNormalShootingPower(5);
-        p3.getSpaceship().addFullDoubleCannonCount(2);
+        p3.getSpaceship().addNormalShootingPower(0);
+        p4.getSpaceship().addNormalShootingPower(5);
+        p4.getSpaceship().addFullDoubleCannonCount(2);
 
         // Controller
         PiratesController controller = new PiratesController(gameManager);
@@ -143,21 +169,21 @@ class PiratesControllerTest {
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p3, 1, sender);
+        controller.receiveHowManyCannonsToUse(p4, 1, sender);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
+        controller.reconnectPlayer(p4, sender);
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveRewardDecision(p3, "YES", sender);
-        assertEquals(3, p3.getCredits());
-        assertEquals(-3, p3.getPosition());
+        controller.reconnectPlayer(p4, sender);
+        controller.receiveRewardDecision(p4, "YES", sender);
+        assertEquals(3, p4.getCredits());
+        assertEquals(-3, p4.getPosition());
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
@@ -170,15 +196,15 @@ class PiratesControllerTest {
         controller.receiveProtectionDecision(p1, "YES", sender);
         controller.reconnectPlayer(p1, sender);
         controller.receiveDiscardedBatteries(p1, 3, 2, sender);
+        controller.receiveProtectionDecision(p3, "NO", sender);
+        controller.receiveDiscardedBatteries(p3, 3, 2, sender);
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 
-        controller.reconnectPlayer(p1, sender);
-        controller.reconnectPlayer(p2, sender);
-
         Thread.sleep(3200);
+        controller.reconnectPlayer(p3, sender);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
         controller.rollDice(p1, sender);
 

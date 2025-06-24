@@ -171,6 +171,7 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
+        controller.receiveHowManyCannonsToUse(p3, -6, sender);
         controller.receiveHowManyCannonsToUse(p3, 1, sender);
 
         Thread.sleep(200);
@@ -181,6 +182,7 @@ class BattlezoneControllerTest {
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
         controller.reconnectPlayer(p1, sender);
+        controller.receiveDiscardedCrew(p1, -2, 1, sender);
         controller.receiveDiscardedCrew(p1, 2, 1, sender);
 
         Thread.sleep(200);
@@ -194,10 +196,13 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
+        controller.receiveHowManyEnginesToUse(p3, -6, sender);
         controller.receiveHowManyEnginesToUse(p3, 1, sender);
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
+        controller.receiveDiscardedBatteries(p3, -1, 2, sender);
+        controller.receiveDiscardedBatteries(p3, 3, 1, sender);
         controller.receiveDiscardedBatteries(p3, 1, 2, sender);
 
         Thread.sleep(200);
@@ -211,6 +216,9 @@ class BattlezoneControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
+        controller.receiveDiscardedBox(p3, -2, 1, 1, sender);
+        controller.receiveDiscardedBox(p3, 1, 2, 1, sender);
+        controller.receiveDiscardedBox(p3, 2, 1, 0, sender);
         controller.receiveDiscardedBox(p3, 2, 1, 1, sender);
 
         Thread.sleep(200);

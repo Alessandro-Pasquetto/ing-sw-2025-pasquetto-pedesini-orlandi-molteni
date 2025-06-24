@@ -10,6 +10,7 @@ import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.components.Component;
 import org.progetto.server.model.components.ComponentType;
+import org.progetto.server.model.components.HousingUnit;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -41,6 +42,15 @@ class BuildingControllerTest {
         assertDoesNotThrow(() -> BuildingController.pickHiddenComponent(gameManager, player, sender));
 
         assertNotNull(player.getSpaceship().getBuildingBoard().getHandComponent());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.pickHiddenComponent(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.pickHiddenComponent(gameManager, player, sender);
     }
 
     @Test
@@ -48,8 +58,10 @@ class BuildingControllerTest {
         GameManager gameManager = new GameManager(0, 4, 1);
 
         Player player = new Player("mario");
+        Player p2 = new Player("chiara");
 
         gameManager.getGame().addPlayer(player);
+        gameManager.getGame().addPlayer(p2);
         gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
@@ -69,7 +81,22 @@ class BuildingControllerTest {
         assertDoesNotThrow(() -> BuildingController.pickVisibleComponent(gameManager, player, 0, sender));
 
         // Check if the player’s hand now contains the picked visible component
-        assertTrue(player.getSpaceship().getBuildingBoard().getHandComponent().equals(component));
+        assertEquals(player.getSpaceship().getBuildingBoard().getHandComponent(), component);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.pickVisibleComponent(gameManager, player, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.pickVisibleComponent(gameManager, player, 0, sender);
+
+        p2.getSpaceship().getBuildingBoard().setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 1, 1, 1}, "img", 2));
+        BuildingController.pickVisibleComponent(gameManager, p2, 0, sender);
+
+        gameManager.getGame().discardComponent(p2);
+        BuildingController.pickVisibleComponent(gameManager, p2, 3 , sender);
     }
 
     @Test
@@ -91,9 +118,12 @@ class BuildingControllerTest {
 
         gameManager.getGame().setPhase(GamePhase.BUILDING);
 
+        BuildingController.placeComponent(gameManager, player, 2, 1, 0, sender);
+
         Component component = new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath");
         buildingBoard.setHandComponent(component);
 
+        BuildingController.placeComponent(gameManager, player, 4, 4, 0, sender);
         assertDoesNotThrow(() -> BuildingController.placeComponent(gameManager, player, 2, 1, 0, sender));
 
         assertEquals("AllowedToPlaceComponent", lastMessage[0]);
@@ -101,6 +131,15 @@ class BuildingControllerTest {
         assertEquals(2, component.getX());
         assertEquals(1, component.getY());
         assertEquals(0, component.getRotation());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeComponent(gameManager, player, 2, 1, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeComponent(gameManager, player, 2, 1, 0, sender);
     }
 
     @Test
@@ -121,11 +160,13 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender);
+
         // Set up a hand component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component component = buildingBoard.getHandComponent();
 
-        // Place the last component
+        BuildingController.placeLastComponent(gameManager, player, 4, 4, 0, sender);
         assertDoesNotThrow(() -> BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender));
 
         assertEquals(2, component.getX());
@@ -134,6 +175,11 @@ class BuildingControllerTest {
 
         // Check that the component was placed and the player's hand component is now null
         assertNull(player.getSpaceship().getBuildingBoard().getHandComponent());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender);
+
     }
 
     @Test
@@ -152,8 +198,12 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender);
+
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component component = buildingBoard.getHandComponent();
+
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 4, 4, 0, sender);
 
         assertDoesNotThrow(() -> BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender));
 
@@ -166,6 +216,15 @@ class BuildingControllerTest {
 
         assertNotNull(component2);
         assertNotSame(component, component2);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender);
     }
 
     @Test
@@ -192,15 +251,28 @@ class BuildingControllerTest {
         Component visibleComponent = buildingBoard.getHandComponent();
         gameManager.getGame().discardComponent(player);
 
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, 2, 1, 0, 0, sender);
+
         // Set up a hand component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 1, 2, 1}, "imgPath"));
         Component component = buildingBoard.getHandComponent();
+
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, 4, 4, 0, 0, sender);
 
         // Place the hand component and pick a visible component
         assertDoesNotThrow(() -> BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, 2, 1, 0, 0, sender));
 
         // Check that the component was placed and the player picked up the visible component
-        assertTrue(player.getSpaceship().getBuildingBoard().getHandComponent().equals(visibleComponent));
+        assertEquals(player.getSpaceship().getBuildingBoard().getHandComponent(), visibleComponent);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, 2, 1, 0, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeHandComponentAndPickVisibleComponent(gameManager, player, 2, 1, 0, 0, sender);
     }
 
     @Test
@@ -269,8 +341,12 @@ class BuildingControllerTest {
 
         //Test correct placing and picking
         bb1.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 1, 3, 0, 1, sender);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 1, 0, 1, sender);
 
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 1, 0, 1, sender);
     }
 
     @Test
@@ -291,6 +367,8 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender);
+
         // Set up a booked component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component bookedComponent = buildingBoard.getHandComponent();
@@ -298,11 +376,22 @@ class BuildingControllerTest {
 
         buildingBoard.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 1, 2, 1}, "imgPath"));
 
+        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 4, 4, 0, 0, sender);
+
         // Simulate the action of placing the hand component and picking up the booked component
         assertDoesNotThrow(() -> BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender));
 
         // Assert that the booked component has been placed
         assertEquals(player.getSpaceship().getBuildingBoard().getHandComponent(), bookedComponent);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender);
     }
 
     @Test
@@ -323,9 +412,13 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender);
+
         // Set up a hand component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component component = buildingBoard.getHandComponent();
+
+        BuildingController.placeHandComponentAndReady(gameManager, player, 4, 4, 0, sender);
 
         // Simulate the action of placing the hand component and marking it as ready
         assertDoesNotThrow(() -> BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender));
@@ -337,6 +430,15 @@ class BuildingControllerTest {
 
         // Assert that the player is ready
         assertTrue(player.getIsReady());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender);
     }
 
     @Test
@@ -362,6 +464,15 @@ class BuildingControllerTest {
 
         // Assert that the building is ready
         assertTrue(player.getIsReady());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.readyBuilding(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.readyBuilding(gameManager, player, sender);
     }
 
     @Test
@@ -383,15 +494,25 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.discardComponent(gameManager, player, sender);
+
         // Set up a hand component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
-        Component handComponent = buildingBoard.getHandComponent();
 
         // Discard the hand component
         gameManager.getGame().discardComponent(player);
 
         // Check that the component has been discarded (null)
         assertNull(player.getSpaceship().getBuildingBoard().getHandComponent());
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.discardComponent(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.discardComponent(gameManager, player, sender);
     }
 
     @Test
@@ -412,14 +533,30 @@ class BuildingControllerTest {
             }
         };
 
+        BuildingController.bookComponent(gameManager, player, 0, sender);
+
         // Set up a booked component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component bookedComponent = buildingBoard.getHandComponent();
+
+        BuildingController.bookComponent(gameManager, player, 4, sender);
 
         assertDoesNotThrow(() -> BuildingController.bookComponent(gameManager, player, 0, sender));
 
         // Check if the component was booked correctly
         assertEquals(bookedComponent, buildingBoard.getBookedCopy()[0]);
+
+        buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
+        BuildingController.bookComponent(gameManager, player, 0, sender);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.bookComponent(gameManager, player, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.bookComponent(gameManager, player, 0, sender);
     }
 
     @Test
@@ -443,13 +580,28 @@ class BuildingControllerTest {
         // Set up a booked component for the player
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
         Component bookedComponent = buildingBoard.getHandComponent();
+
+        BuildingController.pickBookedComponent(gameManager, player, 0, sender);
+
         buildingBoard.setAsBooked(0);
+
+        BuildingController.pickBookedComponent(gameManager, player, 4, sender);
+        BuildingController.pickBookedComponent(gameManager, player, -3, sender);
 
         // Simulate the action of picking up the booked component
         assertDoesNotThrow(() -> BuildingController.pickBookedComponent(gameManager, player, 0, sender));
 
         // Assert that the booked component has been placed
         assertEquals(player.getSpaceship().getBuildingBoard().getHandComponent(), bookedComponent);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.pickBookedComponent(gameManager, player, 0, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.pickBookedComponent(gameManager, player, 0, sender);
     }
 
     @Test
@@ -472,7 +624,6 @@ class BuildingControllerTest {
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
-
         //Test unable to pick with hand full
         gameManager = new GameManager(0, 4, 2);
         gameManager.getGame().addPlayer(player);
@@ -482,23 +633,6 @@ class BuildingControllerTest {
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
         buildingBoard.setHandComponent(null);   //reset hand
-
-
-        //Test unable to pick while ready   //todo check why it doesn't set ready the player
-//        gameManager = new GameManager(0, 4, 2);
-//        gameManager.getGame().addPlayer(player);
-//        player.setIsReady(true, gameManager.getGame());
-//
-//        sender = new Sender() {
-//            @Override
-//            public void sendMessage(Object message) {
-//                assertEquals("ActionNotAllowedInReadyState", message);
-//
-//            }
-//        };
-//
-//        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
-
 
         //Test idxOutOfBound
         gameManager = new GameManager(0, 4, 2);
@@ -532,6 +666,14 @@ class BuildingControllerTest {
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
 
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
     }
 
     @Test
@@ -570,6 +712,14 @@ class BuildingControllerTest {
 
         BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.putDownEventCardDeck(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.putDownEventCardDeck(gameManager, player, sender);
     }
 
     @Test
@@ -671,6 +821,10 @@ class BuildingControllerTest {
         };
         gameManager.addSender(player, sender);
 
+        BuildingBoard buildingBoard = new BuildingBoard(player.getSpaceship(), player.getColor());
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 0, 1, 1}, "imgSrc"));
+        BuildingController.showHandComponent(gameManager, player, sender);
+
         // wrong phase
         gameManager.getGame().setPhase(GamePhase.POPULATING);
         BuildingController.showHandComponent(gameManager, player, sender);
@@ -685,5 +839,82 @@ class BuildingControllerTest {
         BuildingController.showHandComponent(gameManager, player, sender);
     }
 
+    @Test
+    void showVisibleComponent(){
+        GameManager gameManager = new GameManager(0, 3, 1);
+        Player player = new Player("gabriele");
+        gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
 
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+        gameManager.addSender(player, sender);
+
+        BuildingBoard buildingBoard = new BuildingBoard(player.getSpaceship(), player.getColor());
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 0, 1, 1}, "imgSrc"));
+        BuildingController.showVisibleComponents(gameManager, sender);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.showVisibleComponents(gameManager, sender);
+    }
+
+    @Test
+    void showBookedComponents(){
+        GameManager gameManager = new GameManager(0, 3, 1);
+        Player player = new Player("gabriele");
+        gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+        gameManager.addSender(player, sender);
+
+        BuildingBoard buildingBoard = new BuildingBoard(player.getSpaceship(), player.getColor());
+        buildingBoard.setHandComponent(new Component(ComponentType.SHIELD, new int[]{1, 0, 1, 1}, "imgSrc"));
+        buildingBoard.setAsBooked(0);
+        BuildingController.showBookedComponents(gameManager, player, sender);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.showBookedComponents(gameManager, player, sender);
+
+        // ready player
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+        player.setIsReady(true);
+        BuildingController.showBookedComponents(gameManager, player, sender);
+    }
+
+    @Test
+    void resetTimer(){
+        GameManager gameManager = new GameManager(0, 3, 1);
+        Player player = new Player("gabriele");
+        gameManager.getGame().addPlayer(player);
+        gameManager.getGame().initPlayersSpaceship();
+        gameManager.getGame().setPhase(GamePhase.BUILDING);
+
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+        };
+        gameManager.addSender(player, sender);
+
+        BuildingController.resetTimer(gameManager, player, sender);
+
+        // wrong phase
+        gameManager.getGame().setPhase(GamePhase.POPULATING);
+        BuildingController.resetTimer(gameManager, player, sender);
+    }
 }

@@ -624,7 +624,6 @@ public class PiratesController extends EventControllerAbstract {
                 .filter(player -> gameManager.getDisconnectedPlayersCopy().contains(player))
                 .toList());
 
-
         for (Player player : disconnectedDefeatedPlayers) {
             if(containsHandledPlayer(player)){
                 if(!player.getSpaceship().getBuildingBoard().checkShipValidityAndFixAliens()){
