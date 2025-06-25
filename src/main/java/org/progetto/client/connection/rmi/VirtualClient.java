@@ -6,7 +6,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface VirtualClient extends Remote, Sender {
+    @Override
     void sendMessage(Object objMessage) throws RemoteException;
 
-    void ping() throws RemoteException;
+    @Override
+    void sendPing() throws RemoteException;
 }

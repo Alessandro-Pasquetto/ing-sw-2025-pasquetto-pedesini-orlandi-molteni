@@ -10,10 +10,12 @@ public class MessageSenderService {
      * @param sender The sender responsible for sending the message.
      */
     public static void sendMessage(Object messageObj, Sender sender) {
-        try {
-            sender.sendMessage(messageObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            try {
+                sender.sendMessage(messageObj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

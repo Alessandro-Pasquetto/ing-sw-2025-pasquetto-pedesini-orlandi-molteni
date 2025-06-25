@@ -1,14 +1,12 @@
 package org.progetto.client.connection;
 
-import javafx.application.Platform;
-import org.progetto.client.gui.PageController;
-import org.progetto.client.model.GameData;
-
 import java.io.IOException;
 import java.rmi.NotBoundException;
 
 public interface Sender {
     void connect(String serverIp, int serverPort) throws IOException, NotBoundException;
+
+    void sendPong();
 
     void updateGameList();
 

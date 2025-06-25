@@ -1,6 +1,7 @@
 package org.progetto.server.connection.rmi;
 
 import org.progetto.client.connection.rmi.VirtualClient;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.controller.*;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
@@ -8,7 +9,6 @@ import org.progetto.server.controller.events.EventControllerAbstract;
 import org.progetto.server.model.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
 
 public class RmiServerReceiver extends UnicastRemoteObject implements VirtualServer {
 
@@ -36,8 +36,8 @@ public class RmiServerReceiver extends UnicastRemoteObject implements VirtualSer
     }
 
     @Override
-    public void ping() throws RemoteException {
-
+    public void sendPong(VirtualClient virtualClient) throws RemoteException {
+        ServerDisconnectionDetection.setPongIsArrived(virtualClient);
     }
 
     @Override

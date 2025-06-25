@@ -2,6 +2,7 @@ package org.progetto.client.connection.socket;
 
 import javafx.application.Platform;
 import org.progetto.client.connection.Sender;
+import org.progetto.client.connection.ClientDisconnectionDetection;
 import org.progetto.client.gui.PageController;
 import org.progetto.client.model.GameData;
 import org.progetto.messages.toServer.*;
@@ -17,20 +18,13 @@ public class SocketClient implements Sender {
 
     private Socket socket;
 
-    private boolean pingIsArrived;
-
     public SocketClient() {
         socket = null;
-        pingIsArrived = true;
     }
 
     // =======================
     // OTHER METHODS
     // =======================
-
-    public void setPingIsArrived(boolean pingIsArrived) {
-        this.pingIsArrived = pingIsArrived;
-    }
 
     /**
      * Method to connect to the socket server
@@ -47,36 +41,12 @@ public class SocketClient implements Sender {
 
         socket = new Socket(serverIp, serverPort);
 
-        startWatchdog();
+        ClientDisconnectionDetection.startWatchdog(this);
 
         System.out.println("Connected to the socketServer!");
 
         new SocketWriter(new ObjectOutputStream(socket.getOutputStream())).start();
         new SocketListener(new ObjectInputStream(socket.getInputStream())).start();
-    }
-
-    public void startWatchdog() {
-        Thread checkPingThread = new Thread(() -> {
-
-            while (true) {
-
-                if(!pingIsArrived){
-                    disconnected();
-                    return;
-                }
-
-                pingIsArrived = false;
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        checkPingThread.setDaemon(true);
-        checkPingThread.start();
     }
 
     /**
@@ -99,6 +69,7 @@ public class SocketClient implements Sender {
         }
     }
 
+    @Override
     public void sendPong(){
         SocketWriter.sendMessage("Pong");
     }

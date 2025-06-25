@@ -1,15 +1,14 @@
 package org.progetto.server.controller;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameManagerMaps;
-import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -84,16 +83,7 @@ public class LobbyController {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            if(sender instanceof VirtualClient virtualClient){
-                try{
-                    virtualClient.ping();
-                } catch (RemoteException e) {
-                    removeSender(sender);
-                }
-            }
-            else if (sender instanceof SocketWriter socketWriter) {
-                socketWriter.ping(() -> removeSender(sender), "Lobby");
-            }
+            ServerDisconnectionDetection.ping(() -> removeSender(sender), "Lobby", sender);
         }
     }
 

@@ -718,11 +718,6 @@ public class BattlezoneController extends EventControllerAbstract {
         // Checks if he has at least a box/battery
         if (spaceship.getBoxesCount() == 0 && spaceship.getBatteriesCount() == 0) {
             MessageSenderService.sendMessage("NotEnoughBoxesAndBatteries", sender);
-
-            // Next Couple
-            couples.removeFirst();
-            phase = EventPhase.CONDITION;
-            condition();
             return;
         }
 

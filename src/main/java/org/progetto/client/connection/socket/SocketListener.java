@@ -123,40 +123,4 @@ public class SocketListener extends Thread {
             TuiHandlerMessage.handleMessage(objMessage);
         }
     }
-
-    /**
-     * Stops the listener thread and closes the input stream
-     *
-     * @author Alessandro
-     */
-    public static void stopListener() {
-        running = false;
-        try {
-            if (in != null)
-                in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Closes the socket listener and stops the writer thread
-     *
-     * @author Alessandro
-     */
-    public void close() {
-        SocketListener.stopListener();
-        SocketWriter.stopWriter();
-
-        System.out.println("You have disconnected!");
-        if(GameData.getUIType().equals("GUI")) {
-            Platform.runLater(() -> {
-                try {
-                    PageController.switchScene("connection.fxml");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-    }
 }

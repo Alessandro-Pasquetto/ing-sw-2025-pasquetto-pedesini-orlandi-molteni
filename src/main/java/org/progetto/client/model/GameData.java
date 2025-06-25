@@ -20,7 +20,7 @@ public class GameData {
     private static File saveFile;
 
     private static Sender sender;
-    private static int idGame;
+    private static int idGame = -1;
     private static int levelGame;
     private static String phaseGame = "LOBBY";
     private static EventCard activeCard;

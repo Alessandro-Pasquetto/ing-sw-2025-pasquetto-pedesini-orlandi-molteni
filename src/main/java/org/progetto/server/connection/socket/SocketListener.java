@@ -1,6 +1,7 @@
 package org.progetto.server.connection.socket;
 
 import org.progetto.messages.toServer.*;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.EventControllerAbstract;
@@ -38,6 +39,7 @@ public class SocketListener extends Thread {
                         handlerLobbyMessages(messageObj);
                     else
                         handlerGameMessages(messageObj);
+
                 }catch (StreamCorruptedException | UTFDataFormatException | ClassNotFoundException e) {
                     System.err.println("Error reading the object from the stream");
                     e.printStackTrace();
@@ -46,15 +48,6 @@ public class SocketListener extends Thread {
         } catch (IOException e) {
 
             System.err.println("Client unreachable");
-
-            /* TODO remove?
-            // Socket disconnection
-            if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
-                clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
-            else
-                LobbyController.removeSender(clientHandler.getSocketWriter());
-
-             */
         }
     }
 
@@ -120,7 +113,7 @@ public class SocketListener extends Thread {
         else if (messageObj instanceof String messageString) {
             switch (messageString){
                 case "Pong":
-                    clientHandler.getSocketWriter().setPongReceived();
+                    ServerDisconnectionDetection.setPongIsArrived(clientHandler.getSocketWriter());
                     break;
 
                 case "UpdateGameList":
@@ -146,7 +139,7 @@ public class SocketListener extends Thread {
         Player player = clientHandler.getPlayer();
 
         if(messageObj instanceof String messageString && messageString.equals("Pong")){
-            clientHandler.getSocketWriter().setPongReceived();
+            ServerDisconnectionDetection.setPongIsArrived(clientHandler.getSocketWriter());
             return;
         }
 

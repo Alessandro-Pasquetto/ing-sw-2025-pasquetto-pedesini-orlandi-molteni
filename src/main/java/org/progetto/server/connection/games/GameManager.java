@@ -1,21 +1,20 @@
 package org.progetto.server.connection.games;
 
-import org.progetto.client.connection.rmi.VirtualClient;
 import org.progetto.messages.toClient.*;
 import org.progetto.messages.toClient.Building.PickedEventCardMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
 import org.progetto.messages.toClient.Spaceship.UpdateSpaceshipMessage;
 import org.progetto.messages.toClient.Track.UpdateTrackMessage;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
-import org.progetto.server.connection.socket.SocketWriter;
 import org.progetto.server.controller.*;
 import org.progetto.server.controller.events.*;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
 import org.progetto.server.model.events.EventCard;
-import java.rmi.RemoteException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -201,16 +200,7 @@ public class GameManager {
         ArrayList<Sender> sendersCopy = getSendersCopy();
 
         for (Sender sender : sendersCopy) {
-            if (sender instanceof VirtualClient vc) {
-                try{
-                    vc.ping();
-                } catch (RemoteException e) {
-                    disconnectPlayer(getPlayerBySender(vc));
-                }
-            }
-            else if (sender instanceof SocketWriter sw) {
-                sw.ping(() -> disconnectPlayer(getPlayerBySender(sw)), "Game");
-            }
+            ServerDisconnectionDetection.ping(() -> disconnectPlayer(getPlayerBySender(sender)), "Game", sender);
         }
     }
 

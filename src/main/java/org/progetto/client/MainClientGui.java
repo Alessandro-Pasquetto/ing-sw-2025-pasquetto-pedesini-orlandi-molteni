@@ -1,5 +1,6 @@
 package org.progetto.client;
 
+import org.progetto.client.connection.ClientDisconnectionDetection;
 import org.progetto.client.connection.rmi.RmiClientSender;
 import org.progetto.client.gui.GuiApplication;
 import org.progetto.client.model.GameData;
@@ -22,8 +23,6 @@ public class MainClientGui {
         GameData.setClientId(clientId);
 
         GameData.createSaveFile();
-
-        RmiClientSender.setRmiServerDisconnectionDetectionInterval(1000);
 
         GuiApplication.main();
     }

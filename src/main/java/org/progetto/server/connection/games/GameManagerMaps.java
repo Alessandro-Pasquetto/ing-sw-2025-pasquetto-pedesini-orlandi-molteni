@@ -3,7 +3,6 @@ package org.progetto.server.connection.games;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class GameManagerMaps {
 
     // =======================

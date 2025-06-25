@@ -1,6 +1,7 @@
 package org.progetto.client.connection.rmi;
 
 import javafx.application.Platform;
+import org.progetto.client.connection.ClientDisconnectionDetection;
 import org.progetto.client.connection.GuiHandlerMessage;
 import org.progetto.client.connection.TuiHandlerMessage;
 import org.progetto.client.model.GameData;
@@ -114,7 +115,8 @@ public class RmiClientReceiver extends UnicastRemoteObject implements VirtualCli
     }
 
     @Override
-    public void ping() throws RemoteException {
-
+    public void sendPing() throws RemoteException {
+        ClientDisconnectionDetection.setPingIsArrived(true);
+        GameData.getSender().sendPong();
     }
 }

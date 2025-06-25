@@ -1,6 +1,5 @@
 package org.progetto.client.connection;
 
-import org.progetto.client.connection.socket.SocketClient;
 import org.progetto.client.model.BuildingData;
 import org.progetto.client.model.GameData;
 import org.progetto.client.tui.*;
@@ -551,10 +550,8 @@ public class TuiHandlerMessage {
 
             switch (messageString) {
                 case "Ping":
-                    if(GameData.getSender() instanceof SocketClient sc){
-                        sc.setPingIsArrived(true);
-                        sc.sendPong();
-                    }
+                    ClientDisconnectionDetection.setPingIsArrived(true);
+                    GameData.getSender().sendPong();
                     break;
 
                 case "UpdateGameList":

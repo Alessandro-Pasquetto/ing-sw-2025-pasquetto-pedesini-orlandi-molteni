@@ -4,12 +4,11 @@ import org.progetto.client.connection.rmi.VirtualClient;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-
 public interface VirtualServer extends Remote {
 
     void connect(VirtualClient virtualClient) throws RemoteException;
 
-    void ping() throws RemoteException;
+    void sendPong(VirtualClient virtualClient) throws RemoteException;
 
     void showWaitingGames(VirtualClient virtualClient) throws RemoteException;
 
