@@ -47,7 +47,7 @@ public class SocketListener extends Thread {
 
             System.err.println("Client unreachable");
 
-            /*
+            /* TODO remove?
             // Socket disconnection
             if(clientHandler.getPlayer() != null && clientHandler.getGameManager() != null)
                 clientHandler.getGameManager().disconnectPlayer(clientHandler.getPlayer());
