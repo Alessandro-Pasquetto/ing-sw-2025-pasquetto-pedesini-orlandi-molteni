@@ -79,7 +79,7 @@ public class EventController {
         if (noCrewPlayers != null) {
             for (Player noCrewPlayer : noCrewPlayers) {
 
-                // Gets lapped player sender reference
+                // Gets no crew player sender reference
                 Sender sender = gameManager.getSenderByPlayer(noCrewPlayer);
 
                 MessageSenderService.sendMessage("YouHaveNoCrew", sender);

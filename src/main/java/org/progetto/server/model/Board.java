@@ -287,7 +287,7 @@ public class Board {
         ArrayList<Player> noCrewPlayers = new ArrayList<>();
 
         for (Player player : playersInTrack) {
-            if (player.getSpaceship().getTotalCrewCount() == 0) {
+            if (player.getSpaceship().getTotalCrewCount() <= 0) {
                 noCrewPlayers.add(player);
                 leaveTravel(player);
             }

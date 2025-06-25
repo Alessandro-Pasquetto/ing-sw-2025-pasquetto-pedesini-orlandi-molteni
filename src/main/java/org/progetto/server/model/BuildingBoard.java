@@ -872,7 +872,6 @@ public class BuildingBoard implements Serializable {
                             hu.setAlienPurple(false);
                             hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienPurple(false);
-                            spaceship.addCrewCount(-1);
                             spaceship.addNormalShootingPower(-2);
                         }
                     }
@@ -882,7 +881,6 @@ public class BuildingBoard implements Serializable {
                             hu.setAlienOrange(false);
                             hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienOrange(false);
-                            spaceship.addCrewCount(-1);
                             spaceship.addNormalEnginePower(-2);
                         }
                     }
