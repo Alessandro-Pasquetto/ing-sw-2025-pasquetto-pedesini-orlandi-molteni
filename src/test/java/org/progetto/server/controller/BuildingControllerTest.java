@@ -3,6 +3,7 @@ package org.progetto.server.controller;
 import org.junit.jupiter.api.Test;
 import org.progetto.messages.toClient.Building.PickedUpEventCardDeckMessage;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.Game;
@@ -36,7 +37,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         assertNull(player.getSpaceship().getBuildingBoard().getHandComponent());
@@ -74,7 +78,10 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
@@ -119,7 +126,10 @@ class BuildingControllerTest {
                 lastMessage[0] = msg.toString();
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         gameManager.getGame().setPhase(GamePhase.BUILDING);
@@ -165,7 +175,10 @@ class BuildingControllerTest {
                 // Mock implementation
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender);
@@ -205,7 +218,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender);
@@ -255,7 +271,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         // Set up a visible component in the game for the player
@@ -308,7 +327,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
@@ -325,7 +347,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
@@ -347,7 +372,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, otherPLayer, 2, 3, 0, 0, sender);
 
@@ -384,7 +412,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender);
@@ -431,7 +462,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender);
@@ -480,7 +514,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         // Simulate the action of readying the building
@@ -517,7 +554,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.discardComponent(gameManager, player, sender);
@@ -558,7 +598,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.bookComponent(gameManager, player, 0, sender);
@@ -604,7 +647,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         // Set up a booked component for the player
@@ -651,7 +697,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
@@ -686,7 +735,10 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         BuildingController.pickUpEventCardDeck(gameManager, otherPLayer, 1, sender);
 
@@ -727,7 +779,10 @@ class BuildingControllerTest {
                 assertEquals("NoEventCardDeckTaken", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
@@ -743,7 +798,10 @@ class BuildingControllerTest {
             @Override
             public void sendMessage(Object message) {}
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 2, sender);
@@ -786,7 +844,10 @@ class BuildingControllerTest {
                 assertEquals("ValidSpaceShip", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
@@ -804,7 +865,10 @@ class BuildingControllerTest {
                 assertEquals("NotValidSpaceShip", message);
             }
 
-           public void sendPing() {}
+           @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
 
        };
 
@@ -826,7 +890,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.buildShip(gameManager, p1, 1, sender);
@@ -845,7 +912,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         BuildingController.buildShip(gameManager2, p3, 1, sender2);
@@ -866,7 +936,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         gameManager.addSender(player, sender);
 
@@ -902,7 +975,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         gameManager.addSender(player, sender);
 
@@ -929,7 +1005,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         gameManager.addSender(player, sender);
 
@@ -962,7 +1041,10 @@ class BuildingControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         gameManager.addSender(player, sender);
 

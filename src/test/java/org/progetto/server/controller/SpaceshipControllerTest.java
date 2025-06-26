@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.progetto.messages.toClient.DestroyedComponentMessage;
 import org.progetto.server.connection.MessageSenderService;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.BuildingBoard;
 import org.progetto.server.model.GamePhase;
@@ -69,7 +70,10 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("PermissionDenied", message);}
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
@@ -83,7 +87,10 @@ class SpaceshipControllerTest {
                 assertEquals("FullBoxSlot", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
@@ -94,7 +101,10 @@ class SpaceshipControllerTest {
                 assertEquals("BoxMoved", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
@@ -105,7 +115,10 @@ class SpaceshipControllerTest {
                 assertEquals("NullBox", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
@@ -117,7 +130,10 @@ class SpaceshipControllerTest {
                 assertEquals("CantStoreInANonRedStorage", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 3, 2, 1, sender);
 
@@ -129,7 +145,10 @@ class SpaceshipControllerTest {
                 assertEquals("BoxMoved", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 2, 3, 2, sender);
 
@@ -140,7 +159,10 @@ class SpaceshipControllerTest {
                 assertEquals("InvalidCoordinates", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 22, 11, 0, 25, 34, 5, sender);
 
@@ -152,7 +174,10 @@ class SpaceshipControllerTest {
                     assertEquals("CantStoreInANonRedStorage", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 2, 3, 0, 3, 2, 1, sender);
 
@@ -164,7 +189,10 @@ class SpaceshipControllerTest {
                     assertEquals("BoxMoved", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.moveBox(gameManager, player, 2, 3, 1, 3, 2, 2, sender);
     }
@@ -216,7 +244,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {}
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.removeBox(gameManager, player, 2, 1, 0, sender);
 
@@ -272,7 +303,10 @@ class SpaceshipControllerTest {
                 assertEquals("EmptyComponentCell", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 0, 0, sender);
 
@@ -284,7 +318,10 @@ class SpaceshipControllerTest {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 1, 2, sender);
 
@@ -296,7 +333,10 @@ class SpaceshipControllerTest {
                     assertEquals("AskSelectSpaceshipPart", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 2, 2, sender);
     }
@@ -337,7 +377,10 @@ class SpaceshipControllerTest {
                 assertEquals("EmptyComponentCell", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.startDestroyComponent(gameManager, player, 0, 0, sender);
 
@@ -348,7 +391,10 @@ class SpaceshipControllerTest {
                 assertEquals("ImpossibleToDestroyCorrectlyPlaced", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         SpaceshipController.startDestroyComponent(gameManager, player, 1, 2, sender);
     }
@@ -388,7 +434,10 @@ class SpaceshipControllerTest {
                 assertEquals("NotValidCoordinates", message);
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         try{
@@ -403,7 +452,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {}
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
         Sender finalSender = sender ;
 

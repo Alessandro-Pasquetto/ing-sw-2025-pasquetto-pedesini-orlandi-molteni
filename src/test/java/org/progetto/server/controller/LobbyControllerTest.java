@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.Game;
 import org.progetto.server.model.Player;
@@ -23,7 +24,10 @@ class LobbyControllerTest {
             public void sendMessage(Object msg){
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         //Test game with lvl 1 initialized correctly
@@ -75,7 +79,10 @@ class LobbyControllerTest {
             public void sendMessage(Object msg){
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         GameManager gameManager  = LobbyController.createGame("Mario", 1, 4, sender);

@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
@@ -59,7 +60,10 @@ class PlanetsControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         Sender sender2 = new Sender() {
@@ -68,7 +72,10 @@ class PlanetsControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         gameManager.addSender(p1, sender1);

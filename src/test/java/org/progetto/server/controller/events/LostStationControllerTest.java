@@ -50,7 +50,10 @@ class LostStationControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         Sender sender2 = new Sender() {
@@ -59,7 +62,10 @@ class LostStationControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         Sender sender3 = new Sender() {
@@ -68,7 +74,10 @@ class LostStationControllerTest {
 
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         gameManager.addSender(p1, sender1);

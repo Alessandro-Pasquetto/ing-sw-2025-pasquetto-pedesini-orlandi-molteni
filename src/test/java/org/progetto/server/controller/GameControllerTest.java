@@ -2,6 +2,7 @@ package org.progetto.server.controller;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.model.GamePhase;
 import org.progetto.server.model.Player;
@@ -27,7 +28,10 @@ class GameControllerTest {
             public void sendMessage(Object msg){
             }
 
-            public void sendPing() {}
+            @Override
+            public void sendPing() {
+                ServerDisconnectionDetection.setPongIsArrived(this);
+            }
         };
 
         assertEquals(GamePhase.WAITING, gameManager.getGame().getPhase());
