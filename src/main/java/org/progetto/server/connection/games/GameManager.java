@@ -557,10 +557,6 @@ public class GameManager {
                 eventController = new SlaversController(this);
                 break;
 
-            case SABOTAGE:
-                eventController = new SabotageController(this);
-                break;
-
             default:
                 eventController = null;
                 break;

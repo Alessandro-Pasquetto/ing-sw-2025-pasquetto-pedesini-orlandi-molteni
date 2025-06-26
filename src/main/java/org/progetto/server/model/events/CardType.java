@@ -6,7 +6,6 @@ public enum CardType {
     SLAVERS,
     SMUGGLERS,
     LOSTSTATION,
-    SABOTAGE,
     EPIDEMIC,
     BATTLEZONE,
     PIRATES,

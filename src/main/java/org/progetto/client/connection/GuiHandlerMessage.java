@@ -51,6 +51,7 @@ public class GuiHandlerMessage {
      * @param messageObj the message that has arrived
      */
     public static void handleMessage(Object messageObj) {
+
         if (messageObj instanceof WaitingGamesMessage waitingGamesMessage) {
             ArrayList<WaitingGameInfoMessage> gamesInfo = waitingGamesMessage.getWaitingGames();
             PageController.getChooseGameView().generateGameRecordList(gamesInfo);

@@ -532,6 +532,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * Chooses the next phase based on the PenaltyType
      *
      * @author Stefano
+     * @param penaltyPlayer the player who is penalized
      * @throws InterruptedException
      */
     private void penalty(Player penaltyPlayer) throws InterruptedException {
@@ -704,6 +705,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles box penalty
      *
      * @author Gabriele
+     * @param penaltyPlayer the player who is penalized
      * @throws InterruptedException
      */
     private void penaltyBoxes(Player penaltyPlayer) throws InterruptedException {
@@ -770,7 +772,6 @@ public class BattlezoneController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
-
         Spaceship spaceship = player.getSpaceship();
 
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {
@@ -917,6 +918,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * Asks first penalized player to roll dice
      *
      * @author Stefano
+     * @param penaltyPlayer is the player that needs to roll dice
      */
     private void askToRollDice(Player penaltyPlayer) throws InterruptedException {
         if (!phase.equals(EventPhase.ASK_ROLL_DICE))
@@ -974,6 +976,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * Asks penalty players if they want to use shields to protect
      *
      * @author Stefano
+     * @param penaltyPlayer is the player that needs to handle the current shot
      */
     private void askToUseShields(Player penaltyPlayer){
         if (!phase.equals(EventPhase.ASK_SHIELDS))
@@ -1054,6 +1057,7 @@ public class BattlezoneController extends EventControllerAbstract {
      * Handles current shot
      *
      * @author Stefano
+     * @param penaltyPlayer is the player that needs to handle the current shot
      */
     private void handleShot(Player penaltyPlayer) {
         if (!phase.equals(EventPhase.HANDLE_SHOT))
@@ -1141,6 +1145,9 @@ public class BattlezoneController extends EventControllerAbstract {
             }
 
             MessageSenderService.sendMessage(new BatteriesToDiscardMessage(requestedBatteries), sender);
+        }
+        else if (phase.equals(EventPhase.DISCARDED_CREW)){
+            MessageSenderService.sendMessage(new CrewToDiscardMessage(requestedCrew), sender);
         }
         else if (phase.equals(EventPhase.ROLL_DICE)){
             MessageSenderService.sendMessage(new IncomingProjectileMessage(currentShot), sender);

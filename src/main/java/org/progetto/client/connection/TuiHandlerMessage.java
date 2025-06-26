@@ -20,7 +20,6 @@ import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
 import org.progetto.messages.toClient.Positioning.PlayersInPositioningDecisionOrderMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
-import org.progetto.messages.toClient.Sabotage.LessPopulatedPlayerMessage;
 import org.progetto.messages.toClient.Smugglers.AcceptRewardBoxesAndPenaltyDaysMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipMessage;
 import org.progetto.messages.toClient.Spaceship.ResponseSpaceshipStatsMessage;
@@ -512,13 +511,6 @@ public class TuiHandlerMessage {
         else if(messageObj instanceof AnotherPlayerCrewInfectedMessage anotherPlayerCrewInfectedMessage) {
             if(!anotherPlayerCrewInfectedMessage.getNamePlayer().equals(GameData.getNamePlayer())) {}
                 System.out.println(anotherPlayerCrewInfectedMessage.getNamePlayer() + " has " + anotherPlayerCrewInfectedMessage.getInfectedCrew() + " infected crew members");
-        }
-
-        else if(messageObj instanceof LessPopulatedPlayerMessage lessPopulatedPlayerMessage) {
-            if(lessPopulatedPlayerMessage.getPlayerName().equals(GameData.getNamePlayer()))
-                System.out.println("You have the least amount of crew");
-            else
-                System.out.println(lessPopulatedPlayerMessage.getPlayerName() + " has the least amount of crew");
         }
 
         else if(messageObj instanceof ScoreBoardMessage scoreBoardMessage) {

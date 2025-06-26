@@ -353,6 +353,8 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Handles current big meteor for a single player
      *
      * @author Alessandro
+     * @param player is the one that needs to handle the current meteor
+     * @param sender current sender
      */
     private void askBigMeteorDecisionSinglePlayer(Player player, Sender sender) {
         // Finds impact component
@@ -399,7 +401,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     @Override
     public void receiveProtectionDecision(Player player, String response, Sender sender) {
-
         // Checks if it is not part of non-protected player, and it is not already contained in protected one list
         if (!containsDecisionPlayer(player)) {
             MessageSenderService.sendMessage("CannotDecide", sender);
@@ -436,7 +437,6 @@ public class MeteorsRainController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBatteries(Player player, int xBatteryStorage, int yBatteryStorage, Sender sender) {
-
         // Checks if the player that calls the methods has to discard a battery to activate protection
         if (!containsDiscardedBatteryPlayer(player)) {
             MessageSenderService.sendMessage("CannotDiscardBatteries", sender);
@@ -488,9 +488,11 @@ public class MeteorsRainController extends EventControllerAbstract {
      * Function called to handle current shot
      *
      * @author Gabriele
+     * @param player is the one that needs to handle the current meteor
      */
     private void handleCurrentMeteor(Player player) {
         Game game = gameManager.getGame();
+
         // Gets current player sender reference
         Sender sender = gameManager.getSenderByPlayer(player);
 
@@ -586,7 +588,7 @@ public class MeteorsRainController extends EventControllerAbstract {
 
         MessageSenderService.sendMessage(new IncomingProjectileMessage(comingMeteor), sender);
 
-        if(comingMeteor.getSize().equals(ProjectileSize.SMALL))
+        if (comingMeteor.getSize().equals(ProjectileSize.SMALL))
             askSmallMeteorDecisionSinglePlayer(player, sender);
         else
             askBigMeteorDecisionSinglePlayer(player, sender);

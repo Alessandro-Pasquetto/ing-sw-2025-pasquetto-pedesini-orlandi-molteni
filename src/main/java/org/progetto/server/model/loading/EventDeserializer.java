@@ -52,9 +52,6 @@ public class EventDeserializer implements JsonDeserializer<EventCard> {
                 penaltyDays = jsonObject.get("penaltyDays").getAsInt();
                 return new LostStation(type, level, imgSrc, requiredCrew, rewardBoxes, penaltyDays);
 
-            case SABOTAGE:
-                return new Sabotage(type, level, imgSrc);
-
             case EPIDEMIC:
                 return new Epidemic(type, level, imgSrc);
 

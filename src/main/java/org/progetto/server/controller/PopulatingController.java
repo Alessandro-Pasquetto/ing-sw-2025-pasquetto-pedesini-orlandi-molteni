@@ -24,7 +24,6 @@ public class PopulatingController {
      * @param gameManager the game manager
      */
     public static void askAliens(GameManager gameManager) {
-
         for (Player player : gameManager.getGame().getBoard().getCopyTravelers()){
             askAliensToSinglePlayer(gameManager, player);
         }
@@ -38,7 +37,6 @@ public class PopulatingController {
      * @param player the player to ask for the aliens
      */
     public static void askAliensToSinglePlayer(GameManager gameManager, Player player) {
-
         Sender sender = gameManager.getSenderByPlayer(player);
 
         if(player.getIsReady()){

@@ -698,7 +698,6 @@ public class PiratesController extends EventControllerAbstract {
      */
     @Override
     public void receiveProtectionDecision(Player player, String response, Sender sender) {
-
         // Checks if it is not part of non-protected player, and it is not already contained in protected one list
         if (!containsShieldPlayer(player)) {
             MessageSenderService.sendMessage("NotYourTurn", sender);
@@ -729,9 +728,9 @@ public class PiratesController extends EventControllerAbstract {
      * Handles current shot
      *
      * @author Gabriele
+     * @param player current player
      */
     private void handleCurrentShot(Player player) {
-
         Game game = gameManager.getGame();
         Projectile shot = currentShot;
 
@@ -784,13 +783,6 @@ public class PiratesController extends EventControllerAbstract {
         }
     }
 
-    /**
-     * Reconnects player to the game
-     *
-     * @author Alessandro
-     * @param player current player
-     * @param sender current sender
-     */
     @Override
     public void reconnectPlayer(Player player, Sender sender) {
         if (!activePlayers.contains(player))

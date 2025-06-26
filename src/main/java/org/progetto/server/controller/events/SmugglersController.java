@@ -382,7 +382,6 @@ public class SmugglersController extends EventControllerAbstract {
      */
     @Override
     public void receiveDiscardedBox(Player player, int xBoxStorage, int yBoxStorage, int idx, Sender sender) {
-
         Spaceship spaceship = player.getSpaceship();
 
         if (!phase.equals(EventPhase.DISCARDED_BOXES)) {

@@ -244,8 +244,14 @@ public class SlaversController extends EventControllerAbstract {
         }
     }
 
+    /**
+     * Handles the battle result for the current player
+     *
+     * @author Stefano
+     * @param player current player
+     * @throws InterruptedException if the thread is interrupted while waiting for the player to be ready
+     */
     private void battleResult(Player player) throws InterruptedException {
-
         Sender sender = gameManager.getSenderByPlayer(player);
 
         switch(slavers.battleResult(playerFirePower)){

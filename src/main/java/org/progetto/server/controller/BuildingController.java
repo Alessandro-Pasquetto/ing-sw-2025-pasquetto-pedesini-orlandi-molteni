@@ -270,11 +270,7 @@ public class BuildingController {
                         bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{3, 0, 0, 3}, "red-box-storage4.jpg", 1));
                         bb.placeComponent(0, 3, 1);
 
-                        // TODO: remove
                         BoxStorage bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3);
-                        bs.addBox(player.getSpaceship(), Box.YELLOW, 0);
-                        bs.addBox(player.getSpaceship(), Box.BLUE, 1);
-                        bs.addBox(player.getSpaceship(), Box.GREEN, 2);
                         bb.setHandComponent(bs);
                         bb.placeComponent(0, 2, 3);
 
@@ -343,9 +339,6 @@ public class BuildingController {
                         bb.placeComponent(1, 3, 1);
 
                         bs = new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 0, 1, 2}, "blue-box-storage2.jpg", 3);
-                        bs.addBox(player.getSpaceship(), Box.YELLOW, 0);
-                        bs.addBox(player.getSpaceship(), Box.BLUE, 1);
-                        bs.addBox(player.getSpaceship(), Box.GREEN, 2);
                         bb.setHandComponent(bs);
                         bb.placeComponent(1, 2, 0);
 

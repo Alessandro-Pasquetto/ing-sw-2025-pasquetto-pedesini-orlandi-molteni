@@ -5,7 +5,7 @@ import org.progetto.server.model.components.*;
 import org.progetto.server.model.events.CardType;
 import org.progetto.server.model.events.Epidemic;
 import org.progetto.server.model.events.EventCard;
-import org.progetto.server.model.events.Sabotage;
+
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -173,10 +173,6 @@ class GameTest {
 
         game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
         assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
-
-        game.setActiveEventCard(new Sabotage(CardType.SABOTAGE, 2, "img"));
-        assertEquals(CardType.SABOTAGE, game.getActiveEventCard().getType());
-        assertNotEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
     }
 
     @Test
@@ -235,10 +231,6 @@ class GameTest {
 
         game.setActiveEventCard(new Epidemic(CardType.EPIDEMIC, 1, "img"));
         assertEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
-
-        game.setActiveEventCard(new Sabotage(CardType.SABOTAGE, 2, "img"));
-        assertEquals(CardType.SABOTAGE, game.getActiveEventCard().getType());
-        assertNotEquals(CardType.EPIDEMIC, game.getActiveEventCard().getType());
     }
 
     @Test

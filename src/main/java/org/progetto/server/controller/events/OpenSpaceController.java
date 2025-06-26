@@ -287,10 +287,3 @@ public class OpenSpaceController extends EventControllerAbstract {
         }
     }
 }
-
-
-/*
-    In the ask operations, the send must be critical (and errors should be handled), while in the receive operations,
-    the send can be optional since the sender is unlikely to be null. Even if it does throw an error, it won't block the GameThread.
-    Later, the pinger will detect that the client is not receiving messages and will handle the disconnection.
- */
