@@ -9,7 +9,6 @@ public class ClientDisconnectionDetection {
     private static int serverDisconnectionDetectionInterval;
     private static boolean pingIsArrived;
 
-
     // =======================
     // CONSTRUCTORS
     // =======================

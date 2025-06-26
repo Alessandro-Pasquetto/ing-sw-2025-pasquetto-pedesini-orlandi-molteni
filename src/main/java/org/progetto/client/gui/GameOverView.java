@@ -140,13 +140,11 @@ public class GameOverView {
      * @throws IOException if the page cannot be loaded
      */
     public void returnToLobby() throws IOException {
-        Sender sender = GameData.getSender();
-
         GameData.resetData();
 
         PageController.loadControllers();
 
         PageController.switchScene("chooseGame.fxml");
-        sender.updateGameList();
+        GameData.getSender().updateGameList();
     }
 }

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class GameManager {
 
     // =======================
@@ -235,18 +234,6 @@ public class GameManager {
     }
 
     /**
-     * Removes a player from the list of losing players
-     *
-     * @author Alessandro
-     * @param player the player to remove
-     */
-    public void removeLosingPlayer(Player player) {
-        synchronized (losingPlayers) {
-            losingPlayers.remove(player);
-        }
-    }
-
-    /**
      * Checks if a player is in the list of losing players
      *
      * @author Alessandro
@@ -273,6 +260,7 @@ public class GameManager {
 
         if (game.getPlayersSize() == 0) {
             GameManagerMaps.removeGameManager(game.getId());
+            System.out.println("Game " +  game.getId() + " deleted");
 
             if (game.getPhase().equals(GamePhase.WAITING))
                 LobbyController.broadcastLobbyMessage("UpdateGameList");
@@ -395,18 +383,6 @@ public class GameManager {
 
         getTimerController().notifyThread();
         gameThread.notifyThread();
-    }
-
-    /**
-     * Kicks out a disconnected player from the game, removing them from all lists and notifying other players
-     *
-     * @author Alessandro
-     * @param player the player to kick out
-     */
-    public void kickOutDisconnectedPlayer(Player player) {
-        removeLosingPlayer(player);
-        removeDisconnectedPlayer(player);
-        removeSender(player);
     }
 
     /**
@@ -611,20 +587,11 @@ public class GameManager {
         game.removePlayer(player);
         removeSender(player);
 
-        if(game.getPlayersSize() == 0)
+        if(game.getPlayersSize() == 0){
             GameManagerMaps.removeGameManager(game.getId());
+            System.out.println("Game " +  game.getId() + " deleted");
+        }
 
         LobbyController.addSender(sender);
-    }
-
-    /**
-     * Loses a player in the game
-     * @param player the player who is losing
-     */
-    public void losePlayer(Player player) {
-        game.getBoard().leaveTravel(player);
-        addLosingPlayer(player);
-
-        broadcastGameMessage(new UpdateTrackMessage(GameController.getAllPlayersInTrackCopy(this),game.getBoard().getTrack()));
     }
 }

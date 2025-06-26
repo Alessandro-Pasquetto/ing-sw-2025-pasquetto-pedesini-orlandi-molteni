@@ -306,7 +306,7 @@ public class TuiCommandFilter {
         switch (commandType) {
             case "CLOSE":
                 if (isValidCommand(commandParts.length, 1))
-                    GameCommands.close(commandParts);
+                    GameCommands.close();
                 else
                     expectedFormat(commandType);
                 return;

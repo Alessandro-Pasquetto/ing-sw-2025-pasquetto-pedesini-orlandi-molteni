@@ -22,15 +22,13 @@ public class SocketWriter implements Sender {
             out.reset();
             out.writeObject(messageObj);
             out.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public synchronized void sendPing() throws IOException {
-        out.reset();
-        out.writeObject("Ping");
-        out.flush();
+    public void sendPing() {
+        sendMessage("Ping");
     }
 }

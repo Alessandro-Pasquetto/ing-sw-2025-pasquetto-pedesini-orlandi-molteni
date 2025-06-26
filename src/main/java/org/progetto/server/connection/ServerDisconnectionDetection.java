@@ -1,5 +1,6 @@
 package org.progetto.server.connection;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
 public class ServerDisconnectionDetection {
@@ -53,10 +54,7 @@ public class ServerDisconnectionDetection {
         new Thread(() -> {
             try {
                 sender.sendPing();
-            } catch (Exception e) {
-                action.run();
-                senderPongMap.remove(sender);
-                e.printStackTrace();
+            } catch (RemoteException _) {
             }
         }).start();
     }

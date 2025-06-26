@@ -70,7 +70,6 @@ public class TimerThreadController {
                     }
                 }
 
-                System.out.println("Timer: " + currentTimer);
                 gameManager.broadcastGameMessage(new TimerMessage(currentTimer));
 
                 synchronized (this) {

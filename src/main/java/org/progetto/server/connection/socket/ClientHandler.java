@@ -5,7 +5,6 @@ import org.progetto.server.controller.LobbyController;
 import org.progetto.server.model.Player;
 import java.io.*;
 
-
 public class ClientHandler {
 
     // =======================

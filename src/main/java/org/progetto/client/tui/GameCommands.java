@@ -137,9 +137,8 @@ public class GameCommands {
      * usage : Close
      *
      * @author Lorenzo
-     * @param commandParts are segments of the command
      */
-    public static void close(String[] commandParts){
+    public static void close(){
         Sender sender = GameData.getSender();
         sender.leaveGame();
     }

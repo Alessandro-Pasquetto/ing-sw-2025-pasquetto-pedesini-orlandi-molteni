@@ -121,7 +121,7 @@ public class SocketListener extends Thread {
                     break;
 
                 default:
-                    System.out.println(messageString + " not allowed");
+                    System.out.println(messageString + " not allowed in lobby");
                     break;
             }
         }
@@ -139,7 +139,7 @@ public class SocketListener extends Thread {
         Player player = clientHandler.getPlayer();
 
         if(messageObj instanceof String messageString && messageString.equals("Pong")){
-            ServerDisconnectionDetection.setPongIsArrived(clientHandler.getSocketWriter());
+            ServerDisconnectionDetection.setPongIsArrived(socketWriter);
             return;
         }
 
@@ -541,19 +541,9 @@ public class SocketListener extends Thread {
 
                 default:
 
-                    System.out.println(messageString + " not allowed");
+                    System.out.println(messageString + " not allowed in game");
                     break;
             }
-        }
-    }
-
-    public void stopListener() {
-        running = false;
-        try {
-            if (in != null)
-                in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
