@@ -1113,7 +1113,7 @@ public class EventView {
 
         GridPane shipGrid = getShipGridByPlayer(playerName);
         if (shipGrid == null){
-            System.err.println("Spaceship grid not ready");
+            System.err.println("OtherSpaceship grid not ready");
             return;
         }
 
