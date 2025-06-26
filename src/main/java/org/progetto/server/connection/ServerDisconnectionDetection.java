@@ -5,39 +5,52 @@ import java.util.HashMap;
 
 public class ServerDisconnectionDetection {
 
-    public record IsWaitingPong(boolean isWaitingPongLobby, boolean isWaitingPongGame) {}
+    private static final int MAX_ALLOWED_MISSED_PINGS = 1;
+
+    public record IsWaitingPong(int missedPongCountLobby, int missedPongCountGame) {}
 
     private static final HashMap<Sender, IsWaitingPong> senderPongMap = new HashMap<>();
 
     private static void setIsWaitingPongLobby(Sender sender, boolean isWaitingPongLobby) {
-        boolean isWaitingPongGame = senderPongMap.get(sender).isWaitingPongGame();
+        int missedPongCountLobby = senderPongMap.get(sender).missedPongCountLobby();
+        int missedPongCountGame = senderPongMap.get(sender).missedPongCountGame();
 
-        IsWaitingPong updated = new IsWaitingPong(isWaitingPongLobby, isWaitingPongGame);
+        if(isWaitingPongLobby)
+            missedPongCountLobby++;
+        else
+            missedPongCountLobby = 0;
+
+        IsWaitingPong updated = new IsWaitingPong(missedPongCountLobby, missedPongCountGame);
         senderPongMap.put(sender, updated);
     }
 
     private static void setIsWaitingPongGame(Sender sender, boolean isWaitingGame) {
-        boolean isWaitingPongLobby = senderPongMap.get(sender).isWaitingPongLobby();
+        int missedPongCountLobby = senderPongMap.get(sender).missedPongCountLobby();
+        int missedPongCountGame = senderPongMap.get(sender).missedPongCountGame();
 
-        IsWaitingPong updated = new IsWaitingPong(isWaitingPongLobby, isWaitingGame);
+        if(isWaitingGame)
+            missedPongCountGame++;
+        else
+            missedPongCountGame = 0;
+
+        IsWaitingPong updated = new IsWaitingPong(missedPongCountLobby, missedPongCountGame);
         senderPongMap.put(sender, updated);
     }
 
     public static void setPongIsArrived(Sender sender){
-        senderPongMap.put(sender, new IsWaitingPong(false, false));
+        senderPongMap.put(sender, new IsWaitingPong(0, 0));
     }
 
     public static void ping(Runnable action, String where, Sender sender) {
-
-        senderPongMap.computeIfAbsent(sender, s -> new IsWaitingPong(false, false));
+        senderPongMap.computeIfAbsent(sender, _ -> new IsWaitingPong(0, 0));
 
         if(where.equals("Game"))
             setIsWaitingPongLobby(sender, false);
 
-        boolean isWaitingPongLobby = senderPongMap.get(sender).isWaitingPongLobby();
-        boolean isWaitingPongGame = senderPongMap.get(sender).isWaitingPongGame();
+        int missedPongCountLobby = senderPongMap.get(sender).missedPongCountLobby();
+        int missedPongCountGame = senderPongMap.get(sender).missedPongCountGame();
 
-        if(where.equals("Lobby") && isWaitingPongLobby || where.equals("Game") && isWaitingPongGame){
+        if((where.equals("Lobby") && missedPongCountLobby > MAX_ALLOWED_MISSED_PINGS) || (where.equals("Game") && missedPongCountGame > MAX_ALLOWED_MISSED_PINGS)){
             System.err.println("Player disconnected: pong timeout");
             action.run();
             senderPongMap.remove(sender);
