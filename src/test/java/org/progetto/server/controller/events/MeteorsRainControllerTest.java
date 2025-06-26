@@ -17,10 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class MeteorsRainControllerTest {
 
     @Test
-    void MeteorsRainControllerTest() throws InterruptedException, RemoteException {
+    void meteorsRainControllerTest() throws InterruptedException, RemoteException {
 
         //board setup
         GameManager gameManager = new GameManager(0, 2, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
 
         ArrayList<Projectile> meteors = new ArrayList<Projectile>();
 
@@ -57,7 +58,7 @@ class MeteorsRainControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -66,8 +67,17 @@ class MeteorsRainControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -126,25 +136,25 @@ class MeteorsRainControllerTest {
         // First meteor
         Thread.sleep(200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.rollDice(p1, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
         assertEquals(EventPhase.ASK_SMALL_METEOR_DECISION, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveProtectionDecision(p1, "YES", sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveProtectionDecision(p1, "YES", sender1);
 
         Thread.sleep(200);
-        controller.receiveDiscardedBatteries(p1, 2, 3, sender);
+        controller.receiveDiscardedBatteries(p1, 2, 3, sender1);
 
         Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[1][2]);
 
         // Second meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.rollDice(p1, sender);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[3][2]);
@@ -153,24 +163,24 @@ class MeteorsRainControllerTest {
         // Third meteor
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.rollDice(p1, sender);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertNull(p2.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
         assertEquals(EventPhase.ASK_BIG_METEOR_DECISION, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveProtectionDecision(p1, "NO", sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveProtectionDecision(p1, "NO", sender1);
 
         Thread.sleep(3200);
         assertNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][3]);
 
         // Fourth meteor
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.rollDice(p1, sender);
+        controller.rollDice(p1, sender1);
 
-        controller.reconnectPlayer(p1, sender);
-        controller.reconnectPlayer(p2, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.reconnectPlayer(p2, sender2);
 
         Thread.sleep(200);
         assertNotNull(p1.getSpaceship().getBuildingBoard().getSpaceshipMatrixCopy()[2][1]);

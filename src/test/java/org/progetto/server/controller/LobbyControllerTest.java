@@ -28,8 +28,10 @@ class LobbyControllerTest {
 
         //Test game with lvl 1 initialized correctly
         GameManager gameManager1 = LobbyController.createGame("Mario", 1, 4, sender);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         assertNotNull(gameManager1);
-        player = gameManager1.getGame().getPlayersCopy().get(0);
+        player = gameManager1.getGame().getPlayersCopy().getFirst();
         assertNotNull(player);
         game = gameManager1.getGame();
         assertNotNull(game);
@@ -48,7 +50,7 @@ class LobbyControllerTest {
         //Test game with lvl 2 initialized correctly
         GameManager gameManager2 = LobbyController.createGame("Giovanni", 2, 4, sender);
         assertNotNull(gameManager2);
-        player = gameManager2.getGame().getPlayersCopy().get(0);
+        player = gameManager2.getGame().getPlayersCopy().getFirst();
         assertNotNull(player);
         game = gameManager2.getGame();
         assertNotNull(game);
@@ -77,7 +79,9 @@ class LobbyControllerTest {
         };
 
         GameManager gameManager  = LobbyController.createGame("Mario", 1, 4, sender);
-        Player player1 = gameManager.getGame().getPlayersCopy().get(0);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
+        Player player1 = gameManager.getGame().getPlayersCopy().getFirst();
         Game game = gameManager.getGame();
 
         Player player2 = new Player("Ciro");

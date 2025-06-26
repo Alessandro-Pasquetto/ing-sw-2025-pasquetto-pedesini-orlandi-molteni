@@ -21,6 +21,8 @@ class LostShipControllerTest {
     @Test
     void getRewardDecision() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
         gameManager.getGame().setActiveEventCard(lostShip);
 
@@ -34,7 +36,7 @@ class LostShipControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -43,9 +45,27 @@ class LostShipControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -75,19 +95,21 @@ class LostShipControllerTest {
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveRewardAndPenaltiesDecision(p2, "NO", sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveRewardAndPenaltiesDecision(p2, "NO", sender2);
 
         Thread.sleep(200);
         // p3: Accepts, should go to DISCARD_CREW
-        controller.receiveRewardAndPenaltiesDecision(p3, "YES", sender);
-        controller.reconnectPlayer(p3, sender);
+        controller.receiveRewardAndPenaltiesDecision(p3, "YES", sender3);
+        controller.reconnectPlayer(p3, sender3);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
     }
 
     @Test
     void receiveDiscardedCrew() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 1, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         LostShip lostShip = new LostShip(CardType.LOSTSHIP, 1, "imgSrc", 3, 4, -2);
         gameManager.getGame().setActiveEventCard(lostShip);
 

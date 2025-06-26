@@ -24,6 +24,8 @@ class PiratesControllerTest {
     @Test
     void piratesControllerTest() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 4, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         ArrayList<Projectile> projectiles = new ArrayList<>();
         projectiles.add(new Projectile(ProjectileSize.SMALL, 0));
         projectiles.add(new Projectile(ProjectileSize.BIG, 3));
@@ -58,7 +60,7 @@ class PiratesControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -67,10 +69,37 @@ class PiratesControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
-        gameManager.addSender(p4, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender4 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
+        gameManager.addSender(p4, sender4);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p3);
@@ -164,51 +193,51 @@ class PiratesControllerTest {
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveHowManyCannonsToUse(p2, 0, sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveHowManyCannonsToUse(p2, 0, sender2);
 
         Thread.sleep(500);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p4, 1, sender);
+        controller.receiveHowManyCannonsToUse(p4, 1, sender4);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p4, sender);
-        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
+        controller.reconnectPlayer(p4, sender4);
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender4);
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p4, sender);
-        controller.receiveRewardDecision(p4, "YES", sender);
+        controller.reconnectPlayer(p4, sender4);
+        controller.receiveRewardDecision(p4, "YES", sender4);
         assertEquals(3, p4.getCredits());
         assertEquals(-3, p4.getPosition());
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.rollDice(p1, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ASK_SHIELDS, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveProtectionDecision(p1, "YES", sender);
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveDiscardedBatteries(p1, 3, 2, sender);
-        controller.receiveProtectionDecision(p3, "NO", sender);
-        controller.receiveDiscardedBatteries(p3, 3, 2, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveProtectionDecision(p1, "YES", sender1);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveDiscardedBatteries(p1, 3, 2, sender1);
+        controller.receiveProtectionDecision(p3, "NO", sender3);
+        controller.receiveDiscardedBatteries(p3, 3, 2, sender3);
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.rollDice(p1, sender);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
-        controller.reconnectPlayer(p3, sender);
+        controller.reconnectPlayer(p3, sender3);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());
-        controller.rollDice(p1, sender);
+        controller.rollDice(p1, sender1);
 
         Thread.sleep(3200);
         assertEquals(EventPhase.ROLL_DICE, controller.getPhase());

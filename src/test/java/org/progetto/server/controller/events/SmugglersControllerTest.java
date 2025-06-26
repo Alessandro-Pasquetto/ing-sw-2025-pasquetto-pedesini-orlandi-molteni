@@ -23,6 +23,8 @@ class SmugglersControllerTest {
     @Test
     void smugglersControllerTest() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 4, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         ArrayList<Box> rewardBoxes = new ArrayList<>();
         rewardBoxes.add(Box.RED);
         rewardBoxes.add(Box.GREEN);
@@ -41,7 +43,7 @@ class SmugglersControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -50,10 +52,37 @@ class SmugglersControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p4, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender4 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p4, sender3);
+        gameManager.addSender(p3, sender4);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -136,73 +165,73 @@ class SmugglersControllerTest {
 
         Thread.sleep(200);
         // Discarded boxes
-        controller.receiveDiscardedBox(p1, 2, 1, 1, sender);
+        controller.receiveDiscardedBox(p1, 2, 1, 1, sender1);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
         // Discarded boxes
-        controller.receiveDiscardedBox(p1, 1, 1, 0, sender);
+        controller.receiveDiscardedBox(p1, 1, 1, 0, sender1);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
-        controller.reconnectPlayer(p1, sender);
+        controller.reconnectPlayer(p1, sender1);
 
         Thread.sleep(200);
-        controller.receiveDiscardedBox(p1, 0, 0, 2, sender);
+        controller.receiveDiscardedBox(p1, 0, 0, 2, sender1);
 
         Thread.sleep(200);
-        controller.receiveDiscardedBox(p1, -2, 1, 2, sender);
+        controller.receiveDiscardedBox(p1, -2, 1, 2, sender1);
 
         Thread.sleep(200);
-        controller.receiveDiscardedBox(p3, 2, 1, 2, sender);
+        controller.receiveDiscardedBox(p3, 2, 1, 2, sender3);
 
         Thread.sleep(200);
-        controller.receiveDiscardedBox(p1, 2, 1, 0, sender);
+        controller.receiveDiscardedBox(p1, 2, 1, 0, sender1);
         assertEquals(EventPhase.DISCARDED_BOXES, controller.getPhase());
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveHowManyCannonsToUse(p2, 0, sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveHowManyCannonsToUse(p2, 0, sender2);
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
-        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender4);
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_BATTERIES_FOR_BOXES, controller.getPhase());
-        controller.receiveDiscardedBatteries(p4, 2, 1, sender);
+        controller.receiveDiscardedBatteries(p4, 2, 1, sender4);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p3, 1, sender);
+        controller.receiveHowManyCannonsToUse(p3, 1, sender3);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveRewardDecision(p3, "YES", sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveRewardDecision(p3, "YES", sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveRewardBox(p3, 0, 1, 1, 0, sender);
+        controller.receiveRewardBox(p3, 0, 1, 1, 0, sender3);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveRewardBox(p3, 0, 3, 1, 0, sender);
+        controller.receiveRewardBox(p3, 0, 3, 1, 0, sender3);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveRewardBox(p3, -1, 3, 1, 0, sender);
+        controller.receiveRewardBox(p3, -1, 3, 1, 0, sender3);
         assertEquals(EventPhase.PENALTY_DAYS, controller.getPhase());
 
         assertEquals(1, p3.getSpaceship().getBoxCounts()[0]);

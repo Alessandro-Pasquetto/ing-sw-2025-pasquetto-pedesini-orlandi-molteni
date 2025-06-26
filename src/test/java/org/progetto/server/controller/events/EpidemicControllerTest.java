@@ -21,6 +21,8 @@ class EpidemicControllerTest {
     @Test
     void epidemicController() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 1, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         Epidemic epidemic = new Epidemic(CardType.EPIDEMIC, 2, "imgPath");
         gameManager.getGame().setActiveEventCard(epidemic);
 
@@ -29,7 +31,7 @@ class EpidemicControllerTest {
         gameManager.getGame().addPlayer(player);
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -38,7 +40,25 @@ class EpidemicControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(player, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(player, sender1);
 
         gameManager.getGame().getBoard().addTraveler(player);
 

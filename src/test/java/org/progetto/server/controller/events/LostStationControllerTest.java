@@ -2,6 +2,7 @@ package org.progetto.server.controller.events;
 
 import org.junit.jupiter.api.Test;
 import org.progetto.server.connection.Sender;
+import org.progetto.server.connection.ServerDisconnectionDetection;
 import org.progetto.server.connection.games.GameManager;
 import org.progetto.server.connection.games.GameThread;
 import org.progetto.server.controller.EventPhase;
@@ -22,6 +23,7 @@ class LostStationControllerTest {
     @Test
     void lostStationController() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
 
         ArrayList<Box> boxes = new ArrayList<>();
         boxes.add(Box.RED);
@@ -42,7 +44,7 @@ class LostStationControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -51,9 +53,27 @@ class LostStationControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -92,34 +112,34 @@ class LostStationControllerTest {
         gameThread.start();
 
         Thread.sleep(200);
-        controller.receiveDecisionToLand(p2, "NO", sender);
+        controller.receiveDecisionToLand(p2, "NO", sender2);
 
         Thread.sleep(200);
         assertEquals(EventPhase.LAND, controller.getPhase());
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveDecisionToLand(p3, "YES", sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveDecisionToLand(p3, "YES", sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveRewardBox(p3, 0, 2, 1, 0, sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveRewardBox(p3, 0, 2, 1, 0, sender3);
 
         Thread.sleep(200);
         assertNull(boxStorage.getBoxes()[0]);
-        controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
+        controller.receiveRewardBox(p3, 1, 2, 1, 0, sender3);
 
         Thread.sleep(200);
         assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
-        controller.receiveRewardBox(p3, 1, 2, 1, 0, sender);
+        controller.receiveRewardBox(p3, 1, 2, 1, 0, sender3);
 
         Thread.sleep(200);
         assertEquals(Box.YELLOW, boxStorage.getBoxes()[0]);
-        controller.receiveRewardBox(p3, 1, 2, 1, 1, sender);
+        controller.receiveRewardBox(p3, 1, 2, 1, 1, sender3);
 
         Thread.sleep(200);
         assertEquals(Box.GREEN, boxStorage.getBoxes()[1]);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveRewardBox(p3, -1, 2, 1, 1, sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveRewardBox(p3, -1, 2, 1, 1, sender3);
 
         Thread.sleep(200);
         assertEquals(-1, p3.getPosition());

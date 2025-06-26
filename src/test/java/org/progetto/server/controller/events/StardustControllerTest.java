@@ -20,6 +20,8 @@ class StardustControllerTest {
     @Test
     void stardustControllerTest() throws InterruptedException, RemoteException {
         GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         Stardust stardust = new Stardust(CardType.STARDUST, 1, "imgSrc");
         gameManager.getGame().setActiveEventCard(stardust);
 
@@ -33,7 +35,7 @@ class StardustControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -42,9 +44,27 @@ class StardustControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);

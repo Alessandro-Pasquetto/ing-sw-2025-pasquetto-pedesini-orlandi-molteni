@@ -24,6 +24,8 @@ class OpenSpaceControllerTest {
     @Test
     void openSpaceController() throws RemoteException, InterruptedException {
         GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         OpenSpace openspace = new OpenSpace(CardType.OPENSPACE, 2, "imgPath");
         gameManager.getGame().setActiveEventCard(openspace);
 
@@ -37,7 +39,7 @@ class OpenSpaceControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -46,9 +48,27 @@ class OpenSpaceControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -96,21 +116,21 @@ class OpenSpaceControllerTest {
 
         Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveHowManyEnginesToUse(p2, 0, sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveHowManyEnginesToUse(p2, 0, sender2);
 
         Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.ENGINE_NUMBER, controller.getPhase());
-        controller.receiveHowManyEnginesToUse(p3, 2, sender);
+        controller.receiveHowManyEnginesToUse(p3, 2, sender3);
 
         Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
-        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender3);
 
         Thread.sleep(200); // Wait for the controller to enter the waiting state
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.EFFECT, controller.getPhase());

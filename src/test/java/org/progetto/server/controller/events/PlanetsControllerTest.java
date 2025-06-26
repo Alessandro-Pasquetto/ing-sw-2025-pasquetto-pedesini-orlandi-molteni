@@ -22,6 +22,7 @@ class PlanetsControllerTest {
 
         //board setup
         GameManager gameManager = new GameManager(0, 2, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
 
         ArrayList<ArrayList<Box>> rewardsForPlanets = new ArrayList<>();
 
@@ -52,7 +53,7 @@ class PlanetsControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -61,8 +62,17 @@ class PlanetsControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -114,27 +124,27 @@ class PlanetsControllerTest {
         //Testing first player
 
         //Test not your turn
-        controller.receiveDecisionToLandPlanet(p2, 0, sender);
+        controller.receiveDecisionToLandPlanet(p2, 0, sender2);
 
         //Test index outOfBound
-        controller.receiveDecisionToLandPlanet(p1, 5, sender);
+        controller.receiveDecisionToLandPlanet(p1, 5, sender1);
 
         //Test landing completed
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveDecisionToLandPlanet(p1, 0, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveDecisionToLandPlanet(p1, 0, sender1);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         //Test not valid coordinates
-        controller.receiveRewardBox(p1, 0, 10, 55, 0, sender);
+        controller.receiveRewardBox(p1, 0, 10, 55, 0, sender1);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         //Test first box chosen
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveRewardBox(p1, 0, 3, 2, 0, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveRewardBox(p1, 0, 3, 2, 0, sender1);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         //Test second box chosen
-        controller.receiveRewardBox(p1, 0, 3, 2, 1, sender);
+        controller.receiveRewardBox(p1, 0, 3, 2, 1, sender1);
 
 
         Thread.sleep(200);
@@ -144,36 +154,36 @@ class PlanetsControllerTest {
 
         //Test not your turn
         Thread.sleep(200);
-        controller.receiveDecisionToLandPlanet(p1, 0, sender);
+        controller.receiveDecisionToLandPlanet(p1, 0, sender1);
         assertEquals(EventPhase.LAND, controller.getPhase());
 
         //Test second land on a taken planet
-        controller.receiveDecisionToLandPlanet(p2, 0, sender);
+        controller.receiveDecisionToLandPlanet(p2, 0, sender2);
         assertEquals(EventPhase.LAND, controller.getPhase());
 
         //Test second land completed
-        controller.receiveDecisionToLandPlanet(p2, 1, sender);
+        controller.receiveDecisionToLandPlanet(p2, 1, sender2);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         //Test not a storage
-        controller.receiveRewardBox(p2, 0, 2, 2, 0, sender);
+        controller.receiveRewardBox(p2, 0, 2, 2, 0, sender2);
 
         //Test invalid box index
         try {
-            controller.receiveRewardBox(p2, 5, 1, 2, 0, sender);
+            controller.receiveRewardBox(p2, 5, 1, 2, 0, sender2);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Caught exception: " + e.getMessage());
         }
 
         //Test valid selection
-        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender2);
 
         //Test wrong storage index
-        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender);
+        controller.receiveRewardBox(p2, 0, 1, 2, 0, sender2);
 
         Thread.sleep(200);
         //Test exit
-        controller.receiveRewardBox(p2, -1, 1, 2, 0, sender);
+        controller.receiveRewardBox(p2, -1, 1, 2, 0, sender2);
         assertEquals(EventPhase.CHOOSE_BOX, controller.getPhase());
 
         Thread.sleep(200);

@@ -23,6 +23,8 @@ class SlaversControllerTest {
     @Test
     void slaversControllerTest() throws InterruptedException, RemoteException {
         GameManager gameManager = new GameManager(0, 3, 1);
+        GameManager.setGameDisconnectionDetectionInterval(Integer.MAX_VALUE);
+
         Slavers slavers = new Slavers(CardType.SLAVERS, 2, "imgPath", 5, 2, -3, 3);
         gameManager.getGame().setActiveEventCard(slavers);
 
@@ -36,7 +38,7 @@ class SlaversControllerTest {
 
         gameManager.getGame().initPlayersSpaceship();
 
-        Sender sender = new Sender() {
+        Sender sender1 = new Sender() {
             @Override
             public void sendMessage(Object msg){
 
@@ -45,9 +47,27 @@ class SlaversControllerTest {
             public void sendPing() {}
         };
 
-        gameManager.addSender(p1, sender);
-        gameManager.addSender(p2, sender);
-        gameManager.addSender(p3, sender);
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg){
+
+            }
+
+            public void sendPing() {}
+        };
+
+        gameManager.addSender(p1, sender1);
+        gameManager.addSender(p2, sender2);
+        gameManager.addSender(p3, sender3);
 
         gameManager.getGame().getBoard().addTraveler(p1);
         gameManager.getGame().getBoard().addTraveler(p2);
@@ -115,37 +135,37 @@ class SlaversControllerTest {
 
         Thread.sleep(200);
         // Discarded crew
-        controller.receiveDiscardedCrew(p1, 2, 1, sender);
+        controller.receiveDiscardedCrew(p1, 2, 1, sender1);
 
         Thread.sleep(200);
         assertEquals(EventPhase.DISCARDED_CREW, controller.getPhase());
-        controller.reconnectPlayer(p1, sender);
-        controller.receiveDiscardedCrew(p1, 3, 1, sender);
+        controller.reconnectPlayer(p1, sender1);
+        controller.receiveDiscardedCrew(p1, 3, 1, sender1);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p2, sender);
-        controller.receiveHowManyCannonsToUse(p2, 0, sender);
+        controller.reconnectPlayer(p2, sender2);
+        controller.receiveHowManyCannonsToUse(p2, 0, sender2);
 
         Thread.sleep(200);
         assertEquals(EventPhase.CANNON_NUMBER, controller.getPhase());
 
         Thread.sleep(200);
-        controller.receiveHowManyCannonsToUse(p3, 1, sender);
+        controller.receiveHowManyCannonsToUse(p3, 1, sender3);
         assertEquals(EventPhase.DISCARDED_BATTERIES, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveDiscardedBatteries(p3, 2, 1, sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveDiscardedBatteries(p3, 2, 1, sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.REWARD_DECISION, controller.getPhase());
 
         Thread.sleep(200);
-        controller.reconnectPlayer(p3, sender);
-        controller.receiveRewardDecision(p3, "YES", sender);
+        controller.reconnectPlayer(p3, sender3);
+        controller.receiveRewardDecision(p3, "YES", sender3);
 
         Thread.sleep(200);
         assertEquals(EventPhase.EFFECT, controller.getPhase());
