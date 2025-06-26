@@ -41,9 +41,41 @@ class PositioningControllerTest {
         List<Object> sentMessagesP2 = new ArrayList<>();
         List<Object> sentMessagesP3 = new ArrayList<>();
 
-        Sender sender1 = sentMessagesP1::add;
-        Sender sender2 = sentMessagesP2::add;
-        Sender sender3 = sentMessagesP3::add;
+        Sender sender1 = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                sentMessagesP1.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
+
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                sentMessagesP2.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
+
+        Sender sender3 = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                sentMessagesP3.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
 
         gameManager.addSender(p1, sender1);
         gameManager.addSender(p2, sender2);

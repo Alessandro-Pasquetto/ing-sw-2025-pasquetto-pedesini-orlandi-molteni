@@ -41,6 +41,8 @@ class SlaversControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         gameManager.addSender(p1, sender);

@@ -68,6 +68,8 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("PermissionDenied", message);}
+
+            public void sendPing() {}
         };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
@@ -79,7 +81,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("FullBoxSlot", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 0, sender);
 
         //test move in the same component
@@ -87,7 +92,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("BoxMoved", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
         //test move redBox in a non RedBoxStorage component
@@ -95,7 +103,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("NullBox", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 0, 2, 3, 1, sender);
 
 
@@ -104,7 +115,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("CantStoreInANonRedStorage", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 3, 2, 1, sender);
 
 
@@ -113,7 +127,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("BoxMoved", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 1, 2, 1, 2, 3, 2, sender);
 
        //test invalid coordinates
@@ -121,7 +138,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("InvalidCoordinates", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 22, 11, 0, 25, 34, 5, sender);
 
         //test correct movement of a box
@@ -130,7 +150,10 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 if(!message.equals("SpaceshipUpdated"))
                     assertEquals("CantStoreInANonRedStorage", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 2, 3, 0, 3, 2, 1, sender);
 
         //test correct movement of a red_box
@@ -139,7 +162,10 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 if(!message.equals("SpaceshipUpdated"))
                     assertEquals("BoxMoved", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.moveBox(gameManager, player, 2, 3, 1, 3, 2, 2, sender);
     }
 
@@ -189,6 +215,8 @@ class SpaceshipControllerTest {
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {}
+
+            public void sendPing() {}
         };
         SpaceshipController.removeBox(gameManager, player, 2, 1, 0, sender);
 
@@ -243,6 +271,8 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("EmptyComponentCell", message);
             }
+
+            public void sendPing() {}
         };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 0, 0, sender);
 
@@ -253,6 +283,8 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertInstanceOf(DestroyedComponentMessage.class, message);
             }
+
+            public void sendPing() {}
         };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 1, 2, sender);
 
@@ -262,7 +294,10 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 if(!(message instanceof DestroyedComponentMessage))
                     assertEquals("AskSelectSpaceshipPart", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.destroyComponentAndCheckValidity(gameManager, player, 2, 2, sender);
     }
 
@@ -300,7 +335,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("EmptyComponentCell", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.startDestroyComponent(gameManager, player, 0, 0, sender);
 
         //test correct removal of the component
@@ -308,7 +346,10 @@ class SpaceshipControllerTest {
             @Override
             public void sendMessage(Object message) {
                 assertEquals("ImpossibleToDestroyCorrectlyPlaced", message);
-            }};
+            }
+
+            public void sendPing() {}
+        };
         SpaceshipController.startDestroyComponent(gameManager, player, 1, 2, sender);
     }
 
@@ -346,6 +387,8 @@ class SpaceshipControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("NotValidCoordinates", message);
             }
+
+            public void sendPing() {}
         };
 
         try{
@@ -359,6 +402,8 @@ class SpaceshipControllerTest {
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {}
+
+            public void sendPing() {}
         };
         Sender finalSender = sender ;
 

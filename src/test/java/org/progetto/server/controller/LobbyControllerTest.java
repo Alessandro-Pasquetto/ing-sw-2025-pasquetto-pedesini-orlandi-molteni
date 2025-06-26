@@ -22,6 +22,8 @@ class LobbyControllerTest {
             @Override
             public void sendMessage(Object msg){
             }
+
+            public void sendPing() {}
         };
 
         //Test game with lvl 1 initialized correctly
@@ -70,6 +72,8 @@ class LobbyControllerTest {
             @Override
             public void sendMessage(Object msg){
             }
+
+            public void sendPing() {}
         };
 
         GameManager gameManager  = LobbyController.createGame("Mario", 1, 4, sender);

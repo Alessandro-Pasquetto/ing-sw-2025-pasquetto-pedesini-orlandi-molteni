@@ -34,6 +34,8 @@ class EpidemicControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         gameManager.addSender(player, sender);

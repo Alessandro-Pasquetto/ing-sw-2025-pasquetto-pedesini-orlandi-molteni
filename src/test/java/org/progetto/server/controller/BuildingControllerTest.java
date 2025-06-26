@@ -35,6 +35,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         assertNull(player.getSpaceship().getBuildingBoard().getHandComponent());
@@ -71,6 +73,8 @@ class BuildingControllerTest {
             @Override
             public void sendMessage(Object message) {
             }
+
+            public void sendPing() {}
         };
 
         buildingBoard.setHandComponent(new Component(ComponentType.CANNON, new int[]{1, 1, 2, 1}, "imgPath"));
@@ -114,6 +118,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
                 lastMessage[0] = msg.toString();
             }
+
+            public void sendPing() {}
         };
 
         gameManager.getGame().setPhase(GamePhase.BUILDING);
@@ -158,6 +164,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
                 // Mock implementation
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.placeLastComponent(gameManager, player, 2, 1, 0, sender);
@@ -196,6 +204,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.placeHandComponentAndPickHiddenComponent(gameManager, player, 2, 1, 0, sender);
@@ -244,6 +254,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         // Set up a visible component in the game for the player
@@ -295,6 +307,8 @@ class BuildingControllerTest {
                 assertEquals("CannotPickUpEventCardDeck", message);
 
             }
+
+            public void sendPing() {}
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
@@ -310,6 +324,8 @@ class BuildingControllerTest {
                 assertEquals("EmptyHandComponent", message);
 
             }
+
+            public void sendPing() {}
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, player, 2, 3, 0, 0, sender);
 
@@ -330,6 +346,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
         BuildingController.placeHandComponentAndPickUpEventCardDeck(gameManager, otherPLayer, 2, 3, 0, 0, sender);
 
@@ -365,6 +383,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.placeHandComponentAndPickBookedComponent(gameManager, player, 2, 1, 0, 0, sender);
@@ -410,6 +430,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.placeHandComponentAndReady(gameManager, player, 2, 1, 0, sender);
@@ -457,6 +479,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         // Simulate the action of readying the building
@@ -492,6 +516,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.discardComponent(gameManager, player, sender);
@@ -531,6 +557,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.bookComponent(gameManager, player, 0, sender);
@@ -575,6 +603,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         // Set up a booked component for the player
@@ -620,6 +650,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 1, sender);
@@ -653,6 +685,8 @@ class BuildingControllerTest {
             @Override
             public void sendMessage(Object message) {
             }
+
+            public void sendPing() {}
         };
         BuildingController.pickUpEventCardDeck(gameManager, otherPLayer, 1, sender);
 
@@ -692,6 +726,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("NoEventCardDeckTaken", message);
             }
+
+            public void sendPing() {}
         };
         BuildingController.putDownEventCardDeck(gameManager, player, sender);
 
@@ -706,6 +742,8 @@ class BuildingControllerTest {
         sender = new Sender() {
             @Override
             public void sendMessage(Object message) {}
+
+            public void sendPing() {}
         };
 
         BuildingController.pickUpEventCardDeck(gameManager, player, 2, sender);
@@ -747,6 +785,8 @@ class BuildingControllerTest {
             public void sendMessage(Object message) {
                 assertEquals("ValidSpaceShip", message);
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
@@ -761,8 +801,11 @@ class BuildingControllerTest {
        sender = new Sender() {
             @Override
             public void sendMessage(Object message) {
-            assertEquals("NotValidSpaceShip", message);
+                assertEquals("NotValidSpaceShip", message);
             }
+
+           public void sendPing() {}
+
        };
 
        BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager);
@@ -782,6 +825,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.buildShip(gameManager, p1, 1, sender);
@@ -799,6 +844,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         BuildingController.buildShip(gameManager2, p3, 1, sender2);
@@ -818,6 +865,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
         gameManager.addSender(player, sender);
 
@@ -852,6 +901,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
         gameManager.addSender(player, sender);
 
@@ -877,6 +928,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
         gameManager.addSender(player, sender);
 
@@ -908,6 +961,8 @@ class BuildingControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
         gameManager.addSender(player, sender);
 

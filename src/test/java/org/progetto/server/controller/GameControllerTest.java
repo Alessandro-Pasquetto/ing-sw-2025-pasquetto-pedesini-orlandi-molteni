@@ -26,6 +26,8 @@ class GameControllerTest {
             @Override
             public void sendMessage(Object msg){
             }
+
+            public void sendPing() {}
         };
 
         assertEquals(GamePhase.WAITING, gameManager.getGame().getPhase());

@@ -33,7 +33,18 @@ class PopulatingControllerTest {
 
         List<Object> sentMessages = new ArrayList<>();
 
-        Sender sender = sentMessages::add;
+        Sender sender = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                sentMessages.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
+
         gameManager.addSender(player, sender);
 
         // Aggiungiamo componenti per abilitare alieno viola

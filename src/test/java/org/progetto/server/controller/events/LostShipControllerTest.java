@@ -39,6 +39,8 @@ class LostShipControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         gameManager.addSender(p1, sender);
@@ -98,6 +100,8 @@ class LostShipControllerTest {
             public void sendMessage(Object msg){
 
             }
+
+            public void sendPing() {}
         };
 
         gameManager.addSender(p3, sender);

@@ -25,8 +25,31 @@ class EventControllerTest {
         gm.getGame().initPlayersSpaceship();
 
         List<Object> messages = new ArrayList<>();
-        Sender sender1 = messages::add;
-        Sender sender2 = messages::add;
+
+        Sender sender1 = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                messages.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
+
+        Sender sender2 = new Sender() {
+            @Override
+            public void sendMessage(Object msg) {
+                messages.add(msg);
+            }
+
+            @Override
+            public void sendPing() {
+
+            }
+        };
+
         gm.addSender(p1, sender1);
         gm.addSender(p2, sender2);
 
