@@ -1218,6 +1218,11 @@ public class GuiHandlerMessage {
                     PageController.getEventView().addChatMessage("You drew the battle", "ORANGE");
                     break;
 
+                case "RaidersDefeated":
+                    PageController.getEventView().setEventLabels("RAIDERS DEFEATED", "Raiders got defeated by someone...");
+                    PageController.getEventView().addChatMessage("Raiders defeated", "GREEN");
+                    break;
+
                 case "YouLost":
                     GameData.getSender().leaveGame();
 
