@@ -18,6 +18,8 @@ public class Spaceship implements Serializable {
     private int exposedConnectorsCount;
     private boolean alienPurple;
     private boolean alienOrange;
+    private boolean increasedShootingPowerByAlien;
+    private boolean increasedEnginePowerByAlien;
     private float normalShootingPower;
     private int halfDoubleCannonCount;  // double cannons with half shooting power
     private int fullDoubleCannonCount;  // double cannons with full shooting power
@@ -88,6 +90,14 @@ public class Spaceship implements Serializable {
         return alienOrange;
     }
 
+    public boolean getIncreasedShootingPowerByAlien() {
+        return increasedShootingPowerByAlien;
+    }
+
+    public boolean getIncreasedEnginePowerByAlien() {
+        return increasedEnginePowerByAlien;
+    }
+
     public float getNormalShootingPower(){
         return normalShootingPower;
     }
@@ -146,6 +156,14 @@ public class Spaceship implements Serializable {
         if(alienOrange && alienPresence)
             throw new IllegalStateException("HasAlreadyOrangeAlien");
         alienOrange = alienPresence;
+    }
+
+    public void setIncreasedShootingPowerByAlien(boolean increasedShootingPowerByAlien) {
+        this.increasedShootingPowerByAlien = increasedShootingPowerByAlien;
+    }
+
+    public void setIncreasedEnginePowerByAlien(boolean increasedEnginePowerByAlien) {
+        this.increasedEnginePowerByAlien = increasedEnginePowerByAlien;
     }
 
     // =======================

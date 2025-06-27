@@ -57,17 +57,22 @@ public class LostShip extends EventCard {
         if (component.getHasOrangeAlien()) {  // if it contains an orange alien
             spaceship.setAlienOrange(false);
             component.setAlienOrange(false);
-            spaceship.addNormalEnginePower(-2);
+            if (spaceship.getIncreasedEnginePowerByAlien()) {
+                spaceship.setIncreasedEnginePowerByAlien(false);
+                spaceship.addNormalEnginePower(-2);
+            }
         }
         else if (component.getHasPurpleAlien()) {  // if it contains a purple alien
             spaceship.setAlienPurple(false);
             component.setAlienPurple(false);
-            spaceship.addNormalShootingPower(-2);
+            if (spaceship.getIncreasedShootingPowerByAlien()) {
+                spaceship.setIncreasedShootingPowerByAlien(false);
+                spaceship.addNormalShootingPower(-2);
+            }
         }
 
         component.decrementCrewCount(spaceship, 1);
     }
-
     /**
      * If the player chooses to take the reward credits, they are moved back by a number of days equal to penaltyDays
      *

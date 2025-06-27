@@ -18,6 +18,7 @@ import org.progetto.messages.toClient.OpenSpace.AnotherPlayerMovedAheadMessage;
 import org.progetto.messages.toClient.OpenSpace.PlayerMovedAheadMessage;
 import org.progetto.messages.toClient.Planets.AnotherPlayerLandedPlanetMessage;
 import org.progetto.messages.toClient.Planets.AvailablePlanetsMessage;
+import org.progetto.messages.toClient.Populating.AlienPlacedMessage;
 import org.progetto.messages.toClient.Populating.AskAlienMessage;
 import org.progetto.messages.toClient.Positioning.StartingPositionsMessage;
 import org.progetto.messages.toClient.Positioning.AskStartingPositionMessage;
@@ -410,6 +411,9 @@ public class GuiHandlerMessage {
 
         else if (messageObj instanceof AskAlienMessage askAlienMessage) {
             PageController.getPopulatingView().askForAlien(askAlienMessage.getColor(), askAlienMessage.getSpaceship());
+        }
+
+        else if (messageObj instanceof AlienPlacedMessage alienPlacedMessage) {
         }
 
         else if (messageObj instanceof PickedEventCardMessage pickedEventCardMessage) {

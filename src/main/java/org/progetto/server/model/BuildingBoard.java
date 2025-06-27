@@ -422,13 +422,21 @@ public class BuildingBoard implements Serializable {
                 HousingUnit hu = (HousingUnit) destroyedComponent;
 
                 if (hu.getHasOrangeAlien()) {
-                    spaceship.addNormalEnginePower(-2);
                     spaceship.setAlienOrange(false);
+
+                    if (spaceship.getIncreasedEnginePowerByAlien()) {
+                        spaceship.setIncreasedEnginePowerByAlien(false);
+                        spaceship.addNormalEnginePower(-2);
+                    }
                 }
 
                 if (hu.getHasPurpleAlien()) {
-                    spaceship.addNormalShootingPower(-2);
                     spaceship.setAlienPurple(false);
+
+                    if (spaceship.getIncreasedShootingPowerByAlien()) {
+                        spaceship.setIncreasedShootingPowerByAlien(false);
+                        spaceship.addNormalShootingPower(-2);
+                    }
                 }
 
                 spaceship.addCrewCount(-hu.getCrewCount());
@@ -482,7 +490,6 @@ public class BuildingBoard implements Serializable {
      * @return true if the cannon is well positioned, false otherwise
      */
     private boolean checkCannonValidity(Component cannon, int x, int y) {
-
         switch (cannon.getRotation()){
             case 0: // up
                 if(y > 0 && spaceshipMatrix[y - 1][x] != null){
@@ -694,7 +701,6 @@ public class BuildingBoard implements Serializable {
      * @param exposedConnectorsCount the num of the exposed connectors in the spaceship
      */
     private void dfsValidity(int x, int y, boolean[][] visited, AtomicInteger numComponentsChecked, AtomicInteger exposedConnectorsCount){
-
         if(visited[y][x])
             return;
 
@@ -768,8 +774,8 @@ public class BuildingBoard implements Serializable {
      * @param visited the already visited component list
      */
     private void deleteDisconnectedComponents(boolean[][] visited){
-        for(int y = 0; y < spaceshipMatrix.length; y++) {
-            for(int x = 0; x < spaceshipMatrix[y].length; x++) {
+        for (int y = 0; y < spaceshipMatrix.length; y++) {
+            for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 
                 if (spaceshipMatrix[y][x] == null)
                     continue;
@@ -779,6 +785,8 @@ public class BuildingBoard implements Serializable {
                 }
             }
         }
+
+        fixAlienPresence();
     }
 
     /**
@@ -810,7 +818,6 @@ public class BuildingBoard implements Serializable {
      * @return doesNotRequirePlayerAction: false if the spaceship needs playerAction, true otherwise
      */
     public boolean checkShipValidityAndFixAliens() {
-
         boolean[][] visited = new boolean[boardMask.length][boardMask[0].length];
 
         AtomicInteger numComponentsChecked = new AtomicInteger(0);
@@ -825,9 +832,9 @@ public class BuildingBoard implements Serializable {
 
         } else {
 
-            for(int y = 0; y < spaceshipMatrix.length && xComponent == -1; y++) {
-                for(int x = 0; x < spaceshipMatrix[y].length; x++) {
-                    if(spaceshipMatrix[y][x] != null){
+            for (int y = 0; y < spaceshipMatrix.length && xComponent == -1; y++) {
+                for (int x = 0; x < spaceshipMatrix[y].length; x++) {
+                    if (spaceshipMatrix[y][x] != null) {
                         xComponent = x;
                         yComponent = y;
                         break;
@@ -855,37 +862,57 @@ public class BuildingBoard implements Serializable {
      * @author Alessandro
      */
     private void fixAlienPresence(){
-        for(int y = 0; y < spaceshipMatrix.length; y++) {
+        for (int y = 0; y < spaceshipMatrix.length; y++) {
             for (int x = 0; x < spaceshipMatrix[y].length; x++) {
 
                 Component component = spaceshipMatrix[y][x];
 
-                if(component == null)
+                if (component == null)
                     continue;
 
-                if(component.getType() == ComponentType.HOUSING_UNIT){
+                if (component.getType() == ComponentType.HOUSING_UNIT){
 
                     HousingUnit hu = (HousingUnit) component;
 
-                    if(!checkAndSetAllowPurpleAlien(hu)){
-                        if(hu.getHasPurpleAlien()){
+                    if (!checkAndSetAllowPurpleAlien(hu)) {
+                        if (hu.getHasPurpleAlien()){
                             hu.setAlienPurple(false);
                             hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienPurple(false);
-                            spaceship.addNormalShootingPower(-2);
+
+                            if (spaceship.getIncreasedShootingPowerByAlien()) {
+                                spaceship.setIncreasedShootingPowerByAlien(false);
+                                spaceship.addNormalShootingPower(-2);
+                            }
                         }
                     }
 
-                    if(!checkAndSetAllowOrangeAlien(hu)){
-                        if(hu.getHasOrangeAlien()){
+                    if (!checkAndSetAllowOrangeAlien(hu)) {
+                        if (hu.getHasOrangeAlien()){
                             hu.setAlienOrange(false);
                             hu.incrementCrewCount(spaceship, -1);
                             spaceship.setAlienOrange(false);
-                            spaceship.addNormalEnginePower(-2);
+
+                            if (spaceship.getIncreasedEnginePowerByAlien()) {
+                                spaceship.setIncreasedEnginePowerByAlien(false);
+                                spaceship.addNormalEnginePower(-2);
+                            }
                         }
                     }
                 }
             }
+        }
+
+        // Check if the spaceship has an increased engine power by alien and has no engines left
+        if (spaceship.getIncreasedEnginePowerByAlien() && (spaceship.getNormalEnginePower() + spaceship.getDoubleEngineCount()) - 2 == 0) {
+            spaceship.setIncreasedEnginePowerByAlien(false);
+            spaceship.addNormalEnginePower(-2);
+        }
+
+        // Check if the spaceship has an increased shooting power by alien and has no cannons left
+        if (spaceship.getIncreasedShootingPowerByAlien() && (spaceship.getNormalShootingPower() + spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount()) - 2 == 0) {
+            spaceship.setIncreasedShootingPowerByAlien(false);
+            spaceship.addNormalShootingPower(-2);
         }
     }
 
@@ -897,7 +924,6 @@ public class BuildingBoard implements Serializable {
      * @return true if it is allowed
      */
     private boolean checkAndSetAllowPurpleAlien(HousingUnit hu){
-
         int x = hu.getX();
         int y = hu.getY();
 
@@ -961,7 +987,6 @@ public class BuildingBoard implements Serializable {
      * @return true if it is allowed
      */
     private boolean checkAndSetAllowOrangeAlien(HousingUnit hu){
-
         int x = hu.getX();
         int y = hu.getY();
 
@@ -1024,7 +1049,6 @@ public class BuildingBoard implements Serializable {
      * @return true if player action isn't needed; false otherwise
      */
     public boolean initSpaceshipParams() {
-
         boolean isAutoPopulated = true;
 
         for(int y = 0; y < spaceshipMatrix.length; y++){
@@ -1118,7 +1142,6 @@ public class BuildingBoard implements Serializable {
      * @author Alessandro
      */
     public void removeBookedComponents() {
-
         for (int i = 0; i < 2; i++) {
             if(booked[i] == null)
                 continue;
@@ -1138,8 +1161,7 @@ public class BuildingBoard implements Serializable {
      * @param exposedConnectorsCount the num of the exposed connectors in the spaceship
      */
     private void dfsKeepSpaceshipPart(int x, int y, boolean[][] visited, AtomicInteger exposedConnectorsCount){
-
-        if(visited[y][x])
+        if (visited[y][x])
             return;
 
         visited[y][x] = true;
@@ -1207,7 +1229,6 @@ public class BuildingBoard implements Serializable {
      * @param yComponent coordinate
      */
     public void keepSpaceshipPart(int xComponent, int yComponent) throws IllegalStateException{
-
         if(xComponent < 0 || xComponent >= boardMask[0].length || yComponent < 0 || yComponent >= boardMask.length)
             throw new IllegalStateException("NotValidCoordinates");
 
@@ -1218,6 +1239,7 @@ public class BuildingBoard implements Serializable {
         dfsKeepSpaceshipPart(xComponent, yComponent, visited, exposedConnectorsCount);
 
         spaceship.setExposedConnectorsCount(exposedConnectorsCount.intValue());
+
         deleteDisconnectedComponents(visited);
     }
 
@@ -1231,7 +1253,6 @@ public class BuildingBoard implements Serializable {
      * @throws IllegalStateException
      */
     public void placeAlienComponent(String alienColor, int xComponent, int yComponent) throws IllegalStateException{
-
         if(xComponent < 0 || yComponent < 0 || xComponent >= boardMask[0].length || yComponent >= boardMask.length)
             throw new IllegalStateException("InvalidCoordinates");
 
@@ -1249,15 +1270,20 @@ public class BuildingBoard implements Serializable {
             case "orange":
                 if (hu.getAllowOrangeAlien()) {
 
-                    if(getSpaceship().getAlienOrange())
+                    if(spaceship.getAlienOrange())
                         throw new IllegalStateException("OrangeAlienAlreadyPlaced");
 
-                    getSpaceship().setAlienOrange(true);
+                    spaceship.setAlienOrange(true);
 
                     hu.setAlienOrange(true);
                     hu.setAllowPurpleAlien(false);
                     hu.incrementCrewCount(spaceship, 1);
-                    spaceship.addNormalEnginePower(2);
+
+                    if (spaceship.getNormalEnginePower() + spaceship.getDoubleEngineCount() > 0) {
+                        spaceship.setIncreasedEnginePowerByAlien(true);
+                        spaceship.addNormalEnginePower(2);
+                    }
+
                 } else {
                     throw new IllegalStateException("CannotContainOrangeAlien");
                 }
@@ -1266,15 +1292,20 @@ public class BuildingBoard implements Serializable {
             case "purple":
                 if (hu.getAllowPurpleAlien()) {
 
-                    if(getSpaceship().getAlienPurple())
+                    if (spaceship.getAlienPurple())
                         throw new IllegalStateException("PurpleAlienAlreadyPlaced");
 
-                    getSpaceship().setAlienPurple(true);
+                    spaceship.setAlienPurple(true);
 
                     hu.setAlienPurple(true);
                     hu.setAllowOrangeAlien(false);
                     hu.incrementCrewCount(spaceship, 1);
-                    spaceship.addNormalShootingPower(2);
+
+                    if (spaceship.getNormalShootingPower() + spaceship.getFullDoubleCannonCount() + spaceship.getHalfDoubleCannonCount() > 0) {
+                        spaceship.setIncreasedShootingPowerByAlien(true);
+                        spaceship.addNormalShootingPower(2);
+                    }
+
                 } else {
                     throw new IllegalStateException("CannotContainPurpleAlien");
                 }

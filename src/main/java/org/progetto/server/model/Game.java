@@ -397,7 +397,7 @@ public class Game {
 
             // forzare componente, todo da rimuovere
 
-            /*
+/*
             int randomPos = 0;
             ComponentType type;
             do{
@@ -405,11 +405,11 @@ public class Game {
 
                 type = componentDeck.get(randomPos).getType();
 
-            } while (!type.equals(ComponentType.BOX_STORAGE) && !type.equals(ComponentType.RED_BOX_STORAGE));
+            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT) && !type.equals(ComponentType.CANNON) && !type.equals(ComponentType.ENGINE) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.DOUBLE_ENGINE));
 
             pickedComponent = componentDeck.remove(randomPos);
+*/
 
-             */
         }
 
 
@@ -483,16 +483,17 @@ public class Game {
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
 
+
 /*
             //forzare eventCard, todo da rimuovere
             int randomPos = 0;
 
             do {
                 randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.SLAVERS));
+            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
 
             pickedEventCard = hiddenEventDeck.remove(randomPos);
- */
+*/
         }
 
         setActiveEventCard(pickedEventCard);
