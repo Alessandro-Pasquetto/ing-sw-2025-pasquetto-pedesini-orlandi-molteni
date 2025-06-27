@@ -80,6 +80,9 @@ public class BuildingView {
     public Button buildShip2Button;
 
     @FXML
+    public Button buildShip3Button;
+
+    @FXML
     public Text remainingFlipsNumber;
 
     @FXML
@@ -252,6 +255,9 @@ public class BuildingView {
         });
         buildShip2Button.setOnAction(x -> {
             GameData.getSender().buildShip(2);
+        });
+        buildShip3Button.setOnAction(x -> {
+            GameData.getSender().buildShip(3);
         });
     }
 

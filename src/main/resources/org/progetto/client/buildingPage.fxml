@@ -74,6 +74,7 @@
                         <HBox spacing="10">
                             <Button fx:id="buildShip1Button" text="Ship 1"></Button>
                             <Button fx:id="buildShip2Button" text="Ship 2"></Button>
+                            <Button fx:id="buildShip3Button" text="Ship 3"></Button>
                         </HBox>
                     </HBox>
 

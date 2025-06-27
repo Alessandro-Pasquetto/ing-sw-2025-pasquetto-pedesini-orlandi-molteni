@@ -237,6 +237,52 @@ public class BuildingController {
                         gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
                         break;
 
+                    case 3:
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 2, 1, 2}, "double-cannon3.jpg"));
+                        bb.placeComponent(2, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 2, 1, 0}, "single-cannon10.jpg"));
+                        bb.placeComponent(1, 1, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{1, 1, 2, 0}, "battery5.jpg", 3));
+                        bb.placeComponent(1, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
+                        bb.placeComponent(1, 3, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 3, 2}, "shield4.jpg"));
+                        bb.placeComponent(0, 3, 3);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 3}, "single-engine1.jpg"));
+                        bb.placeComponent(1, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 0, 0}, "single-cannon6.jpg"));
+                        bb.placeComponent(0, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 2, 0, 1}, "single-engine16.jpg"));
+                        bb.placeComponent(2, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{1, 0, 2, 1}, "blue-box-storage3.jpg", 3));
+                        bb.placeComponent(3, 2, 1);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 1, 3}, "double-cannon1.jpg"));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 1, 3, 2}, "housing-unit7.jpg", 2));
+                        bb.placeComponent(3, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 0, 0, 1}, "red-box-storage3.jpg", 2));
+                        bb.placeComponent(4, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 0, 1, 3}, "shield7.jpg"));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 0}, "single-engine10.jpg"));
+                        bb.placeComponent(3, 4, 0);
+
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        break;
+
                     default:
                         MessageSenderService.sendMessage("IDShipOutOfBounds", sender);
                 }
@@ -376,6 +422,85 @@ public class BuildingController {
                         bb.placeComponent(6, 2, 0);
 
                         bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{0, 0, 0, 2}, "blue-box-storage5.jpg", 3));
+                        bb.placeComponent(6, 4, 0);
+
+                        gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
+                        break;
+
+                    case 3:
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 2, 1, 2}, "double-cannon3.jpg"));
+                        bb.placeComponent(3, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 2, 3, 1}, "single-cannon17.jpg"));
+                        bb.placeComponent(2, 1, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
+                        bb.placeComponent(4, 1, 2);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_CANNON, new int[]{0, 0, 1, 0}, "double-cannon11.jpg"));
+                        bb.placeComponent(4, 0, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ORANGE_HOUSING_UNIT, new int[]{1, 1, 0, 1}, "orange-alien-housing-unit1.jpg"));
+                        bb.placeComponent(4, 2, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{1, 1, 1, 3}, "red-box-storage7.jpg", 1));
+                        bb.placeComponent(2, 2, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{3, 2, 2, 2}, "battery11.jpg", 2));
+                        bb.placeComponent(2, 3, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 1, 1}, "housing-unit2.jpg", 2));
+                        bb.placeComponent(1, 3, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.BOX_STORAGE, new int[]{2, 1, 3, 0}, "blue-box-storage1.jpg", 3));
+                        bb.placeComponent(1, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 1, 2, 0}, "single-cannon7.jpg"));
+                        bb.placeComponent(1, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.PURPLE_HOUSING_UNIT, new int[]{1, 2, 0, 2}, "purple-alien-housing-unit1.jpg"));
+                        bb.placeComponent(0, 3, 1);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 2, 0}, "single-cannon4.jpg"));
+                        bb.placeComponent(0, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{1, 1, 0, 1}, "double-engine5.jpg"));
+                        bb.placeComponent(1, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{3, 0, 0, 1}, "single-engine17.jpg"));
+                        bb.placeComponent(2, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 0, 0}, "single-engine8.jpg"));
+                        bb.placeComponent(0, 4, 0);
+
+                        bb.setHandComponent(new BatteryStorage(ComponentType.BATTERY_STORAGE, new int[]{2, 2, 1, 0}, "battery2.jpg", 3));
+                        bb.placeComponent(3, 3, 3);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 2, 0, 1}, "red-box-storage2.jpg", 2));
+                        bb.placeComponent(4, 3, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{1, 2, 2, 1}, "housing-unit3.jpg", 2));
+                        bb.placeComponent(5, 3, 1);
+
+                        bb.setHandComponent(new Component(ComponentType.SHIELD, new int[]{0, 1, 3, 1}, "shield1.jpg"));
+                        bb.placeComponent(5, 2, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.CANNON, new int[]{0, 0, 0, 1}, "single-cannon13.jpg"));
+                        bb.placeComponent(5, 1, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.DOUBLE_ENGINE, new int[]{2, 2, 0, 2}, "double-engine4.jpg"));
+                        bb.placeComponent(5, 4, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{0, 3, 0, 0}, "single-engine8.jpg"));
+                        bb.placeComponent(4, 4, 0);
+
+                        bb.setHandComponent(new BoxStorage(ComponentType.RED_BOX_STORAGE, new int[]{0, 0, 0, 1}, "red-box-storage3.jpg", 2));
+                        bb.placeComponent(6, 2, 0);
+
+                        bb.setHandComponent(new HousingUnit(ComponentType.HOUSING_UNIT, new int[]{0, 0, 3, 1}, "housing-unit1.jpg", 2));
+                        bb.placeComponent(6, 3, 0);
+
+                        bb.setHandComponent(new Component(ComponentType.ENGINE, new int[]{1, 0, 0, 3}, "single-engine1.jpg"));
                         bb.placeComponent(6, 4, 0);
 
                         gameManager.broadcastGameMessage(new ResponseSpaceshipMessage(player.getSpaceship(), player));
