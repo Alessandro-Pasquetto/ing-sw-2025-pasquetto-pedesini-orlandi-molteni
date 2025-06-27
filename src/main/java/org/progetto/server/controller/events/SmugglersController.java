@@ -568,7 +568,7 @@ public class SmugglersController extends EventControllerAbstract {
         Box box = rewardBoxes.get(rewardIdxBox);
 
         // Checks that reward box is placed correctly in given storage
-        try{
+        try {
             smugglers.chooseRewardBox(player.getSpaceship(), (BoxStorage) component, box, idx);
 
             rewardBoxes.remove(box);
@@ -634,6 +634,9 @@ public class SmugglersController extends EventControllerAbstract {
         }
         else if (phase.equals(EventPhase.REWARD_DECISION)){
             MessageSenderService.sendMessage(new AcceptRewardBoxesAndPenaltyDaysMessage(smugglers.getRewardBoxes(), smugglers.getPenaltyDays()), sender);
+        }
+        else if (phase.equals(EventPhase.CHOOSE_BOX)){
+            MessageSenderService.sendMessage(new AvailableBoxesMessage(rewardBoxes), sender);
         }
         else if (phase.equals(EventPhase.DISCARDED_BOXES)){
             MessageSenderService.sendMessage(new BoxToDiscardMessage(requestedBoxes), sender);

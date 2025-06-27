@@ -10,7 +10,7 @@ The final vote is: **?/30**.
 
 
 ## The Team
-* [Alessandro Pasquetto](https://github.com/Alessandro-Pasquetto) ()
+* [Alessandro Pasquetto](https://github.com/Alessandro-Pasquetto) (10839850)
 * [Gabriele Pedesini](https://github.com/gabrielepedesini) (10840961)
 * [Lorenzo Orlandi](https://github.com/CreepyToucan) (10821310)
 * [Stefano Molteni](https://github.com/stefano656) (10894104)
