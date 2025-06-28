@@ -137,7 +137,7 @@ public class TuiHandlerMessage {
                     break;
 
                 case "ADJUSTING":
-
+                    System.out.println("Fix your ship deleting miss placed components");
                     break;
 
                 case "POPULATING":
@@ -615,6 +615,10 @@ public class TuiHandlerMessage {
 
                 case "ComponentsNotConnectedGotRemoved":
                     System.out.println("Some components not connected to the central unit have been removed!");
+                    break;
+
+                case "EmptyComponentCell":
+                    System.err.println("Empty component cell!");
                     break;
 
                 case "ValidStartingPosition":

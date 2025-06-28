@@ -54,7 +54,7 @@ The final version includes:
 The tests were made for the Model and Controller package.
 
 | Package    | Methods (%)   | Lines (%)       | Branch (%)      |
-|:-----------|:--------------|:---------------:|:---------------:|
+|:-----------|:--------------|:----------------|:----------------|
 | Model      | 99% (314/316) | 95% (1560/1634) | 78% (1081/1382) |
 | Controller | 78% (202/256) | 74% (2087/2809) | 56% (900/1582)  |
 

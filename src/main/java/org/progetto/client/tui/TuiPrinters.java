@@ -148,12 +148,12 @@ public class TuiPrinters {
             case ENGINE, DOUBLE_ENGINE -> "E";
             case SHIELD -> "S";
             case HOUSING_UNIT, CENTRAL_UNIT -> "H";
-            case ORANGE_HOUSING_UNIT -> ORANGE + "M" + RESET;
-            case PURPLE_HOUSING_UNIT -> PURPLE + "M" + RESET;
+            case ORANGE_HOUSING_UNIT -> "M";
+            case PURPLE_HOUSING_UNIT -> "M";
             case STRUCTURAL_UNIT -> "#";
             case BATTERY_STORAGE -> "B";
-            case RED_BOX_STORAGE -> RED + "X" + RESET;
-            case BOX_STORAGE -> WHITE + "X" + RESET;
+            case RED_BOX_STORAGE -> "X";
+            case BOX_STORAGE -> "X";
             default -> "?";
         };
     }
@@ -429,17 +429,23 @@ public class TuiPrinters {
                     break;
 
                 case ORANGE_HOUSING_UNIT:
+                    color = !component.getIncorrectlyPlaced() ? ORANGE : "";
+                    stopColor = !component.getIncorrectlyPlaced() ? RESET : "";
+
                     lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[2] = leftConnections[1] + "     " + color + abbreviateType + stopColor + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "           " + rightConnections[2];
                     lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
 
                 case PURPLE_HOUSING_UNIT:
+                    color = !component.getIncorrectlyPlaced() ? PURPLE : "";
+                    stopColor = !component.getIncorrectlyPlaced() ? RESET : "";
+
                     lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                     lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                    lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                    lines[2] = leftConnections[1] + "     " + color + abbreviateType + stopColor + "     " + rightConnections[1];
                     lines[3] = leftConnections[2] + "           " + rightConnections[2];
                     lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                     break;
@@ -470,6 +476,9 @@ public class TuiPrinters {
                     boxes = redBoxStorage.getBoxes();
                     boxesStr = new String[boxes.length];
 
+                    color = !component.getIncorrectlyPlaced() ? RED : "";
+                    stopColor = !component.getIncorrectlyPlaced() ? RESET : "";
+
                     for (int i = 0; i < boxes.length; i++) {
                         boxesStr[i] = drawBox(boxes[i]);
                     }
@@ -478,7 +487,7 @@ public class TuiPrinters {
                         case 1:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                            lines[2] = leftConnections[1] + "     " + abbreviateType + "     " + rightConnections[1];
+                            lines[2] = leftConnections[1] + "     " + color + abbreviateType + stopColor + "     " + rightConnections[1];
                             lines[3] = leftConnections[2] + "    [" + boxesStr[0] + "]    " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
@@ -486,7 +495,7 @@ public class TuiPrinters {
                         case 2:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] " + rightConnections[1];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + color + abbreviateType + stopColor + " [" + boxesStr[1] + "] " + rightConnections[1];
                             lines[3] = leftConnections[2] + "           " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
@@ -500,6 +509,9 @@ public class TuiPrinters {
                     boxes = boxStorage.getBoxes();
                     boxesStr = new String[boxes.length];
 
+                    color = !component.getIncorrectlyPlaced() ? WHITE : "";
+                    stopColor = !component.getIncorrectlyPlaced() ? RESET : "";
+
                     for (int i = 0; i < boxes.length; i++) {
                         boxesStr[i] = drawBox(boxes[i]);
                     }
@@ -508,7 +520,7 @@ public class TuiPrinters {
                         case 2:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[1] + "] "  + rightConnections[1];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + color + abbreviateType + stopColor + " [" + boxesStr[1] + "] "  + rightConnections[1];
                             lines[3] = leftConnections[2] + "           " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
@@ -516,7 +528,7 @@ public class TuiPrinters {
                         case 3:
                             lines[0] = " ┌──" + upConnections[0] + "──" + upConnections[1] + "──" + upConnections[2] + "──┐ ";
                             lines[1] = leftConnections[0] + "           " + rightConnections[0];
-                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + abbreviateType + " [" + boxesStr[2] + "] " + rightConnections[1];
+                            lines[2] = leftConnections[1] + " [" + boxesStr[0] + "] " + color + abbreviateType + stopColor + " [" + boxesStr[2] + "] " + rightConnections[1];
                             lines[3] = leftConnections[2] + "    [" + boxesStr[1] + "]    " + rightConnections[2];
                             lines[4] = " └──" + downConnections[0] + "──" + downConnections[1] + "──" + downConnections[2] + "──┘ ";
                             break;
