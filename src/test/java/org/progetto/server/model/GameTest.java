@@ -350,8 +350,6 @@ class GameTest {
             game.putDownEventCardDeck(player2);
         });
         assertEquals("NoEventCardDeckTaken", exception.getMessage());
-
-        //TODO: sistemarlo
     }
 
     @Test

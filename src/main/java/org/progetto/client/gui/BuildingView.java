@@ -249,7 +249,6 @@ public class BuildingView {
         Image image = new Image(String.valueOf(MainClient.class.getResource("img/cardboard/spaceship" + levelShip + ".jpg")));
         spaceShipImage.setImage(image);
 
-        // TODO: remove, just for testing
         buildShip1Button.setOnAction(x -> {
             GameData.getSender().buildShip(1);;
         });

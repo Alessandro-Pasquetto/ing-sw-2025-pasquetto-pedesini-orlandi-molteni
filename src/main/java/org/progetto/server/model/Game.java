@@ -244,7 +244,7 @@ public class Game {
                 Collections.shuffle(lv2Deck);
 
                 /*
-                // forzare uscita carta evento, todo da rimuovereAdd commentMore actions
+                // forzare uscita carta evento, todo da rimuovere
                 while(!lv2Deck.getFirst().getType().equals(CardType.SLAVERS))
                    Collections.shuffle(lv2Deck);
                  */

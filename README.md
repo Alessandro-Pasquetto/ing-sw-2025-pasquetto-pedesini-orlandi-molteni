@@ -12,8 +12,8 @@ The final vote is: **?/30**.
 ## The Team
 * [Alessandro Pasquetto](https://github.com/Alessandro-Pasquetto) (10839850)
 * [Gabriele Pedesini](https://github.com/gabrielepedesini) (10840961)
-* [Lorenzo Orlandi](https://github.com/CreepyToucan) (10821310)
 * [Stefano Molteni](https://github.com/stefano656) (10894104)
+* [Lorenzo Orlandi](https://github.com/CreepyToucan) (10821310)
 
 
 ## Project specification
@@ -55,8 +55,8 @@ The tests were made for the Model and Controller package.
 
 | Package    | Methods (%)   | Lines (%)       | Branch (%)      |
 |:-----------|:--------------|:----------------|:----------------|
-| Model      | 99% (314/316) | 95% (1560/1634) | 78% (1081/1382) |
-| Controller | 78% (202/256) | 74% (2087/2809) | 56% (900/1582)  |
+| Model      | 98% (312/317) | 98% (1560/1634) | 78% (1081/1382) |
+| Controller | 78% (195/249) | 74% (2087/2809) | 56% (900/1582)  |
 
 
 ## Compile and Run
@@ -94,7 +94,7 @@ java -jar client.jar
 ## Software used
 **Signavio** - Initial UML
 
-**sequencediagram.org** - Sequence diagrams
+**sequencediagram.org** - Sequence Diagrams
 
 **Intellij IDEA Ultimate** - Main IDE
 

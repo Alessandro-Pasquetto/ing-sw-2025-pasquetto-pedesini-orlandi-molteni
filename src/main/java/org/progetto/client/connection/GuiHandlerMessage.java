@@ -277,7 +277,6 @@ public class GuiHandlerMessage {
                     PageController.getBuildingView().initPlayersSpaceshipList(playersMessage.getPlayers());
                     break;
 
-                //todo: serve? (nella gui non dovrebbe essere mai chiamato)
                 case "EVENT":
                     PageController.getEventView().initTravelersSpaceshipList(playersMessage.getPlayers());
 

@@ -23,7 +23,6 @@ public class SocketServer extends Thread {
 
                     new ClientHandler(new ObjectOutputStream(clientSocket.getOutputStream()), new ObjectInputStream(clientSocket.getInputStream()));
                 }catch (Exception e){
-                    // todo: sistemare errore quando client fa la connessione di prova per vedere se è davvero un socektServer, il clientHandler della connessione di prova è già automaticamente distrutto
                     System.out.println("Error socket server: " + e.toString());
                 }
             }
