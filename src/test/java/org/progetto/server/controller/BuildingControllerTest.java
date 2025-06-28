@@ -877,11 +877,13 @@ class BuildingControllerTest {
 
     @Test
     void buildShip(){
-        GameManager gameManager = new GameManager(0, 2, 2);
+        GameManager gameManager = new GameManager(0, 3, 2);
         Player p1 = new Player("mario");
         Player p2 = new Player("marco");
+        Player p5 = new Player("valeria");
         gameManager.getGame().addPlayer(p1);
         gameManager.getGame().addPlayer(p2);
+        gameManager.getGame().addPlayer(p5);
         gameManager.getGame().initPlayersSpaceship();
         gameManager.getGame().setPhase(GamePhase.BUILDING);
         Sender sender = new Sender() {
@@ -898,12 +900,15 @@ class BuildingControllerTest {
 
         BuildingController.buildShip(gameManager, p1, 1, sender);
         BuildingController.buildShip(gameManager, p2, 2, sender);
+        BuildingController.buildShip(gameManager, p5, 3, sender);
 
-        GameManager gameManager2 = new GameManager(0, 2, 1);
+        GameManager gameManager2 = new GameManager(0, 3, 1);
         Player p3 = new Player("mario");
         Player p4 = new Player("marco");
+        Player p6 = new Player("marta");
         gameManager2.getGame().addPlayer(p3);
         gameManager2.getGame().addPlayer(p4);
+        gameManager2.getGame().addPlayer(p6);
         gameManager2.getGame().initPlayersSpaceship();
         gameManager2.getGame().setPhase(GamePhase.BUILDING);
         Sender sender2 = new Sender() {
@@ -920,6 +925,7 @@ class BuildingControllerTest {
 
         BuildingController.buildShip(gameManager2, p3, 1, sender2);
         BuildingController.buildShip(gameManager2, p4, 2, sender2);
+        BuildingController.buildShip(gameManager2, p6, 3, sender2);
     }
 
     @Test
