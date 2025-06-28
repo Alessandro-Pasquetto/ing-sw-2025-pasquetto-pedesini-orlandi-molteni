@@ -616,7 +616,7 @@ public class PiratesController extends EventControllerAbstract {
             }
         }
 
-        gameManager.getGameThread().waitParameterPlayersReady(defeatedPlayers);
+        gameManager.getGameThread().waitConnectedParameterPlayersReady(defeatedPlayers);
 
         // Handle disconnected defeated players
         ArrayList<Player> disconnectedDefeatedPlayers = new ArrayList<>(defeatedPlayers

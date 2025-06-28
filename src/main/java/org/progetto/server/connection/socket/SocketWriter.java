@@ -22,8 +22,7 @@ public class SocketWriter implements Sender {
             out.reset();
             out.writeObject(messageObj);
             out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception _) {
         }
     }
 

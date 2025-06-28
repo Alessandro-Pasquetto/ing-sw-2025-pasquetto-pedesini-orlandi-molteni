@@ -235,7 +235,7 @@ public class PopulatingView {
 
         populatingSectionDesc.setText("Select a component to fill it with the " + alienColor + " alien clicking on it...");
 
-        PageController.getPopulatingView().updateSpaceship(ship);
+        updateSpaceship(ship);
         highlightCellsForAlien(ship, alienColor);
 
         clearBtnContainer();

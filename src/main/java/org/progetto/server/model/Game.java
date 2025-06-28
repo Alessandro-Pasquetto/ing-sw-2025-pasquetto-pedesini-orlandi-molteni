@@ -245,9 +245,11 @@ public class Game {
 
                 /*
                 // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.SLAVERS))
+                while(!lv2Deck.getFirst().getType().equals(CardType.METEORSRAIN))
                    Collections.shuffle(lv2Deck);
+
                  */
+
 
                 // Add one lv1 and two lv2 to hidden deck
                 hiddenEventDeck.add(lv1Deck.getFirst());

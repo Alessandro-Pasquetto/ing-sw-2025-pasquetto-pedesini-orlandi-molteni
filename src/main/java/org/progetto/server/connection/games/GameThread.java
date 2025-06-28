@@ -99,6 +99,8 @@ public class GameThread extends Thread {
                         waitPlayersReady();
                         BuildingController.autoReadyBuildingForDisconnectedPlayers(gameManager);
 
+                        sleep(3000);
+
                         if(!BuildingController.checkAllNotReadyStartShipValidityAndAddToTravelers(gameManager)){
                             System.out.println("Adjusting spaceships...");
                             game.setPhase(GamePhase.ADJUSTING);
@@ -108,6 +110,8 @@ public class GameThread extends Thread {
                             waitPlayersReady();
                         }
                         BuildingController.addDisconnectedPlayersWithIllegalSpaceshipToLosingPlayers(gameManager);
+
+                        sleep(3000);
 
                         if(!BuildingController.initializeAllSpaceship(game)){
                             game.setPhase(GamePhase.POPULATING);
@@ -120,6 +124,8 @@ public class GameThread extends Thread {
                             waitPlayersReady();
                         }
                         PopulatingController.fillHumansDisconnectedPlayers(gameManager);
+
+                        sleep(3000);
 
                         // Preparing travelers on the track
                         if (game.getLevel() == 1)
@@ -134,6 +140,8 @@ public class GameThread extends Thread {
                             game.getBoard().updateTravelersBasedOnStartingPosition();
                             game.getBoard().addTravelersOnTrack(game.getLevel());
                         }
+
+                        sleep(3000);
 
                         if(game.getLevel() != 1)
                             game.composeHiddenEventDeck();
@@ -222,6 +230,8 @@ public class GameThread extends Thread {
                             if (game.getBoard().getNumTravelers() > 0)
                                 break;
                         }
+
+                        sleep(3000);
 
                         game.setPhase(GamePhase.ENDGAME);
                         break;
@@ -339,7 +349,6 @@ public class GameThread extends Thread {
      * @throws InterruptedException if the thread is interrupted while waiting
      */
     public void resetTravelersAndWaitConnectedTravelersReady() throws InterruptedException {
-        Game game = gameManager.getGame();
 
         for (Player player : GameController.getAllPlayersInTrackCopy(gameManager)) {
             player.setIsReady(false);
@@ -384,7 +393,7 @@ public class GameThread extends Thread {
      * @author Alessandro
      * @throws InterruptedException if the thread is interrupted while waiting
      */
-    public void waitParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
+    public void waitConnectedParameterPlayersReady(ArrayList<Player> players) throws InterruptedException {
         Game game = gameManager.getGame();
 
         synchronized (gameThreadLock) {

@@ -37,20 +37,8 @@ public class TuiCommandFilter {
     // GETTERS
     // =======================
 
-    public static Object getResponseLock() {
-        return responseLock;
-    }
-
     public static boolean getIsWaitingResponse() {
         return isWaitingResponse;
-    }
-
-    // =======================
-    // SETTERS
-    // =======================
-
-    public static void setIsWaitingResponse(boolean isWaitingResponse) {
-        TuiCommandFilter.isWaitingResponse = isWaitingResponse;
     }
 
     // =======================

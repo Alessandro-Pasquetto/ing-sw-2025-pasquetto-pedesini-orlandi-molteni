@@ -1,6 +1,5 @@
 package org.progetto.server.controller.events;
 
-import org.progetto.messages.toClient.ActivePlayerMessage;
 import org.progetto.messages.toClient.AffectedComponentMessage;
 import org.progetto.messages.toClient.EventGeneric.*;
 import org.progetto.messages.toClient.Spaceship.UpdateOtherTravelersShipMessage;
@@ -250,7 +249,7 @@ public class MeteorsRainController extends EventControllerAbstract {
             askBigMeteorDecision();
         }
 
-        gameManager.getGameThread().waitConnectedTravelersReady();
+        gameManager.getGameThread().waitConnectedParameterPlayersReady(activePlayers);
 
         // Handle disconnected travelers
         ArrayList<Player> disconnectedTravelers = GameController.getDisconnectedTravelers(gameManager);
