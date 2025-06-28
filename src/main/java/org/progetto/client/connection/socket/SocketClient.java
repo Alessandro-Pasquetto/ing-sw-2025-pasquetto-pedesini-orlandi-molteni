@@ -353,6 +353,8 @@ public class SocketClient implements Sender {
                     throw new RuntimeException(e);
                 }
             });
+        } else {
+            System.exit(0);
         }
     }
 }

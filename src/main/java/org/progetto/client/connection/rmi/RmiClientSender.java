@@ -5,6 +5,7 @@ import org.progetto.client.connection.Sender;
 import org.progetto.client.connection.ClientDisconnectionDetection;
 import org.progetto.client.model.GameData;
 import org.progetto.client.gui.PageController;
+import org.progetto.client.tui.TuiCommandFilter;
 import org.progetto.server.connection.rmi.VirtualServer;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -552,7 +553,7 @@ public class RmiClientSender implements Sender {
         server = null;
         System.out.println("You have disconnected!");
 
-        if(GameData.getUIType().equals("GUI")) {
+        if (GameData.getUIType().equals("GUI")) {
             Platform.runLater(() -> {
                 try {
                     PageController.switchScene("connection.fxml");
@@ -560,6 +561,8 @@ public class RmiClientSender implements Sender {
                     throw new RuntimeException(e);
                 }
             });
+        } else {
+            System.exit(0);
         }
     }
 }
