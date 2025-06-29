@@ -716,6 +716,10 @@ public class TuiHandlerMessage {
                     System.err.println("Impossible to destroy a correctly placed component!");
                     break;
 
+                case "PopulatingComplete":
+                    System.out.println("Populating completed!");
+                    break;
+
                 case "BatteryDiscarded":
                     System.out.println("Battery discarded");
                     break;

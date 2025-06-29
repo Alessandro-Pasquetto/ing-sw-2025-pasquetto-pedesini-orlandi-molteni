@@ -243,14 +243,6 @@ public class Game {
                 Collections.shuffle(lv1Deck);
                 Collections.shuffle(lv2Deck);
 
-                /*
-                // forzare uscita carta evento, todo da rimuovere
-                while(!lv2Deck.getFirst().getType().equals(CardType.METEORSRAIN))
-                   Collections.shuffle(lv2Deck);
-
-                 */
-
-
                 // Add one lv1 and two lv2 to hidden deck
                 hiddenEventDeck.add(lv1Deck.getFirst());
                 hiddenEventDeck.addAll(lv2Deck.subList(0, 2));
@@ -396,24 +388,7 @@ public class Game {
 
             int randomPos = (int) (Math.random() * componentDeck.size());
             pickedComponent = componentDeck.remove(randomPos);
-
-            // forzare componente, todo da rimuovere
-
-/*
-            int randomPos = 0;
-            ComponentType type;
-            do{
-                randomPos = (int) (Math.random() * componentDeck.size());
-
-                type = componentDeck.get(randomPos).getType();
-
-            } while (!type.equals(ComponentType.HOUSING_UNIT) && !type.equals(ComponentType.ORANGE_HOUSING_UNIT) && !type.equals(ComponentType.PURPLE_HOUSING_UNIT) && !type.equals(ComponentType.CANNON) && !type.equals(ComponentType.ENGINE) && !type.equals(ComponentType.DOUBLE_CANNON) && !type.equals(ComponentType.DOUBLE_ENGINE));
-
-            pickedComponent = componentDeck.remove(randomPos);
-*/
-
         }
-
 
         player.getSpaceship().getBuildingBoard().setHandComponent(pickedComponent);
 
@@ -484,18 +459,6 @@ public class Game {
 
             int randomPos = (int) (Math.random() * hiddenEventDeck.size());
             pickedEventCard = hiddenEventDeck.remove(randomPos);
-
-
-/*
-            //forzare eventCard, todo da rimuovere
-            int randomPos = 0;
-
-            do {
-                randomPos = (int) (Math.random() * hiddenEventDeck.size());
-            } while (!hiddenEventDeck.get(randomPos).getType().equals(CardType.METEORSRAIN));
-
-            pickedEventCard = hiddenEventDeck.remove(randomPos);
-*/
         }
 
         setActiveEventCard(pickedEventCard);
