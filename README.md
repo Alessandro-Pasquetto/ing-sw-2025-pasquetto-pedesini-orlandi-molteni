@@ -6,7 +6,7 @@
 
 **Teacher**: San Pietro Pierluigi
 
-The final vote is: **?/30**.
+The final vote is: **30L/30**.
 
 
 ## The Team

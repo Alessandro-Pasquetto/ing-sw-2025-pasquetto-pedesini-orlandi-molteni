@@ -6,6 +6,8 @@ public class MessageSenderService {
 
     private static final long SEND_TIMEOUT_MILLIS = 500;
 
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
+
     /**
      * Sends a message object using the provided sender with a timeout of 500 milliseconds
      *
@@ -13,8 +15,6 @@ public class MessageSenderService {
      * @param messageObj The message object to be sent.
      * @param sender The sender responsible for sending the message.
      */
-    private static final ExecutorService executor = Executors.newCachedThreadPool();
-
     public static synchronized void sendMessage(Object messageObj, Sender sender) {
         Future<?> future = executor.submit(() -> {
             try {
